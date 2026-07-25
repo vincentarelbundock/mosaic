@@ -1,0 +1,118 @@
+title = "Mosaic"
+description = "Tree-based slide grids and incremental reveals for Typst."
+theme = "./theme"
+logo = "assets/mosaic-slide.svg"
+logo_alt = "Mosaic"
+pdf = false
+# search = "pagefind"
+asset-dir = "_calepin"
+
+[static]
+include = ["assets/**", "examples/**/*.pdf", "examples/**/cover.jpg"]
+
+[pages]
+exclude = [
+  "_includes/**",
+  "api/_module.typ",
+  "api/modules/**",
+  "tutorial-examples/**",
+  "examples/**",
+]
+
+[toc]
+enabled = true
+depth = 3
+
+[menus]
+
+  [[menus.main]]
+  target = "getting-started.typ"
+  label = "Get started"
+
+  [[menus.main]]
+  target = "grids.typ"
+  label = "Grids"
+
+  [[menus.main]]
+  target = "api/setup.typ"
+  label = "API"
+
+[[footer.item]]
+label = "Mosaic 0.0.1 · Built with Typst and Calepin."
+
+[sidebar]
+fold = true
+
+[[sidebar.section]]
+
+  [[sidebar.section.item]]
+  target = "index.typ"
+
+  [[sidebar.section.item]]
+  target = "getting-started.typ"
+
+  [[sidebar.section.item]]
+  target = "examples.typ"
+
+  [[sidebar.section.item]]
+  target = "templates.typ"
+
+  [[sidebar.section.item]]
+  target = "colors.typ"
+
+  [[sidebar.section.item]]
+  target = "typography.typ"
+
+  [[sidebar.section.item]]
+  target = "grids.typ"
+
+  [[sidebar.section.item]]
+  target = "component-library.typ"
+
+  [[sidebar.section.item]]
+  target = "foreground.typ"
+
+  [[sidebar.section.item]]
+  target = "background.typ"
+
+  [[sidebar.section.item]]
+  target = "incremental.typ"
+
+  [[sidebar.section.item]]
+  target = "math.typ"
+
+  [[sidebar.section.item]]
+  target = "navigation.typ"
+
+  [[sidebar.section.item]]
+  target = "images.typ"
+
+  [[sidebar.section.item]]
+  target = "faq.typ"
+
+  [[sidebar.section.item]]
+  target = "acknowledgments.typ"
+
+[[sidebar.section]]
+title = "API"
+
+  [[sidebar.section.item]]
+  target = "api/setup.typ"
+
+  [[sidebar.section.item]]
+  target = "api/slides.typ"
+
+  [[sidebar.section.item]]
+  target = "api/incremental.typ"
+
+  [[sidebar.section.item]]
+  target = "api/grid.typ"
+
+  [[sidebar.section.item]]
+  target = "api/templates.typ"
+
+  [[sidebar.section.item]]
+  target = "api/color.typ"
+
+  [[sidebar.section.item]]
+  target = "api/components.typ"

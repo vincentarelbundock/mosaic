@@ -1,0 +1,62 @@
+templates-default-columns|columns must be a positive integer
+templates-default-mutated-command|columns must be a positive integer
+templates-default-tracks|tracks must be auto or an array of 2 native Typst track sizes
+templates-default-progress|progress must be none, "1/1", "1", "circle", or "line"
+templates-image-variant|expected one of ("full", "figure", "left", "right", "top", "bottom")
+templates-image-mutated-command|split variants require exactly two tracks
+templates-section-image-unused|variant "plain" does not use image
+templates-section-mutated-command|variant "image-bottom" requires image
+templates-section-tracks|"section" tracks must be auto or an array of 2 native Typst track sizes
+templates-section-tracks-scope|tracks apply only to directional image variants
+color-scheme-name|available schemes:
+color-palette-name|available palettes:
+color-palette-ramp-name|unknown palette "carto-burg"
+setup-colors-role|colors does not accept "unknown"
+slide-colors-type|slide colors must be a dictionary
+slide-colors-role|slide colors does not accept "unknown"
+color-palette-index|palette color index 99 out of range for "tol-bright"; expected 0 through 6
+frozen-counters-type|frozen-counters must contain only counter values
+frozen-states-type|frozen-states must contain only state values
+overflow-policy|features overflow must be "off" or "warn"
+handout-type|setup handout must be a boolean
+setup-paper|setup paper must be "16-9" or "4-3"
+templates-title-authors|"title" authors must be an array
+templates-title-authors-empty|variant "academic" requires at least one author
+author-name|author name must be content or a non-empty string
+author-affiliations|author affiliations must be an array
+author-affiliation|author affiliation 1 id must be a non-empty string
+author-email|author email must be a valid email address
+author-orcid|author orcid must be a valid ORCID iD
+author-corresponding|author corresponding requires email or orcid
+author-raw|author 1 must be created with author()
+author-mutated|author 1 email must be a valid email address
+author-affiliation-conflict|affiliation id "lab" has conflicting names
+templates-title-variant|unsupported variant "unknown"
+templates-title-tracks|"title" tracks must be auto or an array of 2 native Typst track sizes
+templates-title-image-required|variant "image-background" requires image
+templates-title-image-type|image must be content, a non-empty path string, a native path, or a path dictionary
+templates-title-image-path|image path must be a non-empty string
+templates-title-image-size|image does not accept "width"
+templates-title-panel-align|panel-align must use left, center, or right
+templates-title-mutated-command|variant "image-right" requires image
+templates-title-ordinary-authors|author 1 must be created with author()
+templates-title-tracks-scope|tracks apply only to directional image variants
+templates-title-image-unused|variant "left-aligned" does not use image
+templates-title-panel-align-scope|panel-align applies only to variant "image-background"
+image-adjustments-combined|image accepts either lighten or darken, not both
+image-lighten-range|image lighten must be a ratio from 0% to 100% or none
+cell-id-both|cell id must be passed positionally or through id:, not both
+
+split-rule-type|h rule must be none or a native Typst stroke
+components-progress-count|progress count must be "slides" or "sections"
+slide-section-type|section must be a boolean
+
+slide-cell-styles-type|slide cell-styles must be a dictionary
+slide-cell-style-type|slide cell style for "body" must be a dictionary
+slide-cell-style-field|slide cell style for "body" has unsupported field "content-sized"
+slide-cell-style-fit|slide cell style fit for "body" must be none, "auto", "width", or "contain"
+slide-cell-style-background|slide cell style background for "body" must be content or none
+slide-cell-style-id|slide cell-styles contains unknown cell id "missing"
+slide-cell-styles-mutated|slide cell style for "body" has unsupported field "content-sized"
+slide-cell-styles-base-grid-mutated|invalid grid node at root
+cell-surface-ownership|cell visual fields belong in slide cell-styles

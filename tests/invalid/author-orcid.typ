@@ -1,0 +1,3 @@
+#import "@local/mosaic:0.0.1" as mosaic
+
+#mosaic.author([Ada], orcid: "0000-0001-2345-6788")

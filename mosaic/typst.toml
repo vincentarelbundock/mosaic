@@ -1,0 +1,10 @@
+[package]
+name = "mosaic"
+version = "0.0.1"
+entrypoint = "lib.typ"
+authors = ["Vincent Arel-Bundock"]
+license = "MIT"
+description = "Tree-based slide grids and incremental reveals for Typst"
+keywords = ["presentation", "slides", "grid", "incremental"]
+categories = ["presentation"]
+compiler = "0.15.0"

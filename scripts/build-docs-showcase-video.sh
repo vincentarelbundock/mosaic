@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+output="$repo_dir/docs/assets/images/showcase.webm"
+work_dir="$(mktemp -d)"
+trap 'rm -rf "$work_dir"' EXIT
+
+# Keep this list explicit: it is the editorial selection shown on the home page.
+slides=(
+  "docs/assets/tutorials/templates/title-1.svg|"
+  "docs/assets/tutorials/templates/title-4.svg|"
+  "docs/assets/tutorials/templates/title-5.svg|"
+  "docs/assets/tutorials/templates/title-6.svg|"
+  "docs/assets/tutorials/templates/image-figure-1.svg|"
+  "docs/assets/tutorials/color/schemes-8.svg|"
+  "docs/assets/tutorials/incremental/fletcher.pdf|3"
+  "docs/assets/tutorials/incremental/math.pdf|3"
+)
+
+if ! command -v ffmpeg >/dev/null 2>&1; then
+  echo "showcase: FFmpeg is required" >&2
+  exit 1
+fi
+
+if ! command -v pdftoppm >/dev/null 2>&1; then
+  echo "showcase: Poppler's 'pdftoppm' command is required" >&2
+  exit 1
+fi
+
+# FFmpeg has no SVG decoder, so slides exported as SVG are rasterized first.
+# resvg is preferred because it is the same renderer Typst uses internally.
+if command -v resvg >/dev/null 2>&1; then
+  svg_raster="resvg"
+elif command -v rsvg-convert >/dev/null 2>&1; then
+  svg_raster="rsvg-convert"
+elif command -v magick >/dev/null 2>&1; then
+  svg_raster="magick"
+elif command -v convert >/dev/null 2>&1; then
+  svg_raster="convert"
+else
+  echo "showcase: an SVG rasterizer is required (resvg, rsvg-convert, or ImageMagick)" >&2
+  exit 1
+fi
+
+# Rasterize an SVG to PNG at 1920px wide for a crisp downscale to 960px.
+rasterize_svg() {
+  case "$svg_raster" in
+    resvg) resvg -w 1920 "$1" "$2" ;;
+    rsvg-convert) rsvg-convert -w 1920 "$1" -o "$2" ;;
+    magick) magick -density 192 -background none "$1" "$2" ;;
+    convert) convert -density 192 -background none "$1" "$2" ;;
+  esac
+}
+
+frames=()
+for index in "${!slides[@]}"; do
+  IFS="|" read -r relative page <<<"${slides[$index]}"
+  source="$repo_dir/$relative"
+  frame="$work_dir/frame-$(printf '%02d' "$index").png"
+
+  if [[ ! -f "$source" ]]; then
+    echo "showcase: missing slide: $relative" >&2
+    exit 1
+  fi
+
+  render_source="$source"
+  if [[ -n "$page" ]]; then
+    page_prefix="$work_dir/pdf-page-$(printf '%02d' "$index")"
+    pdftoppm -f "$page" -l "$page" -singlefile -png -r 144 \
+      "$source" "$page_prefix"
+    render_source="$page_prefix.png"
+  elif [[ "$source" == *.svg ]]; then
+    raster="$work_dir/svg-$(printf '%02d' "$index").png"
+    rasterize_svg "$source" "$raster"
+    render_source="$raster"
+  fi
+
+  ffmpeg -hide_banner -loglevel error -y \
+    -i "$render_source" \
+    -vf 'scale=960:540:flags=lanczos,format=rgb24' \
+    -frames:v 1 \
+    "$frame"
+  frames+=("$frame")
+done
+
+manifest="$work_dir/frames.txt"
+for frame in "${frames[@]}"; do
+  printf "file '%s'\nduration 1.8\n" "$frame" >>"$manifest"
+done
+# The concat demuxer needs the final frame repeated to honor its duration.
+printf "file '%s'\n" "${frames[-1]}" >>"$manifest"
+
+mkdir -p "$(dirname "$output")"
+ffmpeg -hide_banner -loglevel error -y \
+  -f concat \
+  -safe 0 \
+  -i "$manifest" \
+  -an \
+  -c:v libvpx-vp9 \
+  -crf 32 \
+  -b:v 0 \
+  -pix_fmt yuv420p \
+  -row-mt 1 \
+  "$output"
+
+echo "showcase: wrote ${output#"$repo_dir/"}"
