@@ -1,3 +1,9 @@
+#import "/.calepin/calepin.typ" as calepin
+#import "/_includes/tutorial-gallery.typ": (
+  thumbnail-gallery-items,
+  verbatim-example,
+)
+
 #set document(title: [FAQ])
 #metadata((
   title: "FAQ",
@@ -83,38 +89,66 @@ This is one logical slide.
 ]
 ```
 
-== Do I need named animation waypoints?
+== How do I customize automatic heading slides?
 
-Usually not. Mosaic's `on()` already expresses when content is visible, and
-ordinary Typst variables can give important ranges meaningful names:
+By default a `==` heading builds a slide with
+`templates.default(variant: "header-body")`: the heading fills the header and
+the following content fills the body. To give every automatic slide a different
+look, with your own furniture, colors, or grid, pass an `auto-slide` function
+to `m.setup`. It receives the heading and body as content and returns a
+`m.slide(...)` command, so plain `==` markup can share the exact styling of your
+explicit slides.
 
 ```typ
-#import "@local/mosaic:0.0.1" as m
+#let framed(title, body) = m.slide(
+  grid: m.templates.default(
+    variant: "header-body",
+    inverted: ("header",),
+    progress: "1",
+  ),
+)[#title][#body]
 
-#let steps = (
-  evidence: "2-",
-  conclusion: "3-",
-)
+#show: m.setup.with(auto-slide: framed)
 
-#m.slide[
-  == Results
+== Results
 
-  The question is visible from the beginning.
-
-  #m.on(steps.evidence)[
-    The evidence appears next.
-  ]
-
-  #m.on(steps.conclusion)[
-    The conclusion appears last.
-  ]
-]
+Routed through `framed`, so this `==` slide gets the inverted header bar and
+progress indicator without a single `#slide` call.
 ```
 
-Here `on()` controls visibility while Typst supplies the names and reusable
-values. These names do not renumber themselves. If inserting an earlier step
-changes the animation timeline, update the corresponding range values in one
-place.
+The returned slide may use any grid, not only header-body. A single body cell
+that merges the title and content, an image template, or a custom cell tree all
+work. The one rule is Mosaic's usual one: the grid must accept as many body
+blocks as the function passes it. Passing `none` (the default) keeps the
+built-in header-body slide.
+
+== How do I change the slide aspect ratio?
+
+Mosaic supports the two presentation aspect ratios built into Typst:
+
+- `"16-9"` is the default widescreen format.
+- `"4-3"` is the traditional format.
+
+Choose one with the `paper` argument.
+
+#verbatim-example("basic/aspect-16-9.typ")
+#verbatim-example("basic/aspect-4-3.typ")
+
+#thumbnail-gallery-items(
+  calepin.elements.gallery,
+  (
+    (
+      "/assets/tutorials/basic/aspect-16-9-1.svg",
+      "A widescreen 16:9 slide",
+      [16:9],
+    ),
+    (
+      "/assets/tutorials/basic/aspect-4-3-1.svg",
+      "A traditional 4:3 slide",
+      [4:3],
+    ),
+  ),
+)
 
 == How can I reuse slides and states?
 
