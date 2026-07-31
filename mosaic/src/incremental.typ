@@ -559,13 +559,21 @@
                   cells.push(apply-state(state, visit(item.body)))
                 }
               }
-              return grid(
-                columns: (1em, 1fr),
-                column-gutter: 0.4em,
-                row-gutter: 0.25em,
-                align: (right, left),
-                ..cells,
-              )
+              // Honor the deck's list/enum spacing when one is set.
+              return context {
+                let spacing = if item-kind == list.item {
+                  list.spacing
+                } else {
+                  enum.spacing
+                }
+                grid(
+                  columns: (1em, 1fr),
+                  column-gutter: 0.4em,
+                  row-gutter: if spacing == auto { 0.65em } else { spacing },
+                  align: (right, left),
+                  ..cells,
+                )
+              }
             }
             let index = 0
             let result = ()

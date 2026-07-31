@@ -40,7 +40,8 @@ API_MODULES_DIR := $(DOCS_DIR)/api/modules
 API_MODULE_NAMES := author color components deck-commands deck-state grid-model incremental-core incremental setup shared template-default template-image template-section template-table template-title
 API_STAGED_MODULES := $(addprefix $(API_MODULES_DIR)/,$(addsuffix .typ,$(API_MODULE_NAMES)))
 # These files are both compiled below and read verbatim by the tutorial pages.
-TUTORIAL_EXAMPLE_SOURCES := $(shell find $(TUTORIAL_EXAMPLES_DIR) -type f -name '*.typ' 2>/dev/null | sort)
+# Files whose name starts with "_" are shared includes, not standalone decks.
+TUTORIAL_EXAMPLE_SOURCES := $(shell find $(TUTORIAL_EXAMPLES_DIR) -type f -name '*.typ' ! -name '_*' 2>/dev/null | sort)
 # Multi-frame examples are shipped as one PDF plus a first-frame SVG cover.
 # Derive that set from the docs so adding a slideshow needs no build manifest.
 TUTORIAL_DECK_SLUGS := $(shell perl scripts/list-tutorial-decks.pl $(wildcard $(DOCS_DIR)/*.typ))
@@ -49,6 +50,10 @@ TUTORIAL_IMAGE_SOURCES := $(filter-out $(TUTORIAL_DECK_SOURCES),$(TUTORIAL_EXAMP
 TUTORIAL_DECK_STAMPS := $(patsubst $(TUTORIAL_EXAMPLES_DIR)/%.typ,$(TUTORIAL_STAMP_DIR)/%.stamp,$(TUTORIAL_DECK_SOURCES))
 TUTORIAL_IMAGE_STAMPS := $(patsubst $(TUTORIAL_EXAMPLES_DIR)/%.typ,$(TUTORIAL_STAMP_DIR)/%.stamp,$(TUTORIAL_IMAGE_SOURCES))
 TUTORIAL_STAMPS := $(TUTORIAL_DECK_STAMPS) $(TUTORIAL_IMAGE_STAMPS)
+# Fira Sans ships with TeX Live rather than the system font path; expose it to
+# the tutorial compiles so the metropolis theme demo renders with its fonts.
+FIRA_FONT_DIR := $(shell fira=$$(kpsewhich FiraSans-Regular.otf 2>/dev/null); [ -n "$$fira" ] && dirname "$$fira")
+TUTORIAL_TYPST_FLAGS := $(if $(FIRA_FONT_DIR),--font-path "$(FIRA_FONT_DIR)")
 PACKAGE_SOURCES := $(shell find $(PACKAGE_DIR) -type f 2>/dev/null | sort)
 SHOWCASE_VIDEO := $(WEB_IMAGE_DIR)/showcase.webm
 SHOWCASE_STAMPS := \
@@ -224,8 +229,8 @@ $(TUTORIAL_DECK_STAMPS): $(TUTORIAL_STAMP_DIR)/%.stamp: $(TUTORIAL_EXAMPLES_DIR)
 	@mkdir -p "$(TUTORIAL_ASSETS_DIR)/$(@D:$(TUTORIAL_STAMP_DIR)/%=%)" "$(@D)"
 	@echo "typst compile $< $(TUTORIAL_ASSETS_DIR)/$*.pdf"
 	@find "$(TUTORIAL_ASSETS_DIR)/$(@D:$(TUTORIAL_STAMP_DIR)/%=%)" -maxdepth 1 -type f -name "$(@F:.stamp=)-*.svg" -delete
-	@$(TYPST) compile --root . "$<" "$(TUTORIAL_ASSETS_DIR)/$*.pdf"
-	@$(TYPST) compile --root . --pages 1 "$<" "$(TUTORIAL_ASSETS_DIR)/$*-cover.svg"
+	@$(TYPST) compile --root . $(TUTORIAL_TYPST_FLAGS) "$<" "$(TUTORIAL_ASSETS_DIR)/$*.pdf"
+	@$(TYPST) compile --root . $(TUTORIAL_TYPST_FLAGS) --pages 1 "$<" "$(TUTORIAL_ASSETS_DIR)/$*-cover.svg"
 	@touch "$@"
 
 $(TUTORIAL_IMAGE_STAMPS): $(TUTORIAL_STAMP_DIR)/%.stamp: $(TUTORIAL_EXAMPLES_DIR)/%.typ $(PACKAGE_SOURCES) $(BONSAI_WEBP) $(DOG_WEBP) Makefile | install
@@ -233,8 +238,17 @@ $(TUTORIAL_IMAGE_STAMPS): $(TUTORIAL_STAMP_DIR)/%.stamp: $(TUTORIAL_EXAMPLES_DIR
 	@echo "typst compile $< $(TUTORIAL_ASSETS_DIR)/$*-{0p}.svg"
 	@find "$(TUTORIAL_ASSETS_DIR)/$(@D:$(TUTORIAL_STAMP_DIR)/%=%)" -maxdepth 1 -type f -name "$(@F:.stamp=)-*.svg" -delete
 	@rm -f "$(TUTORIAL_ASSETS_DIR)/$*.pdf"
-	@$(TYPST) compile --root . "$<" "$(TUTORIAL_ASSETS_DIR)/$*-{0p}.svg" --format svg
+	@$(TYPST) compile --root . $(TUTORIAL_TYPST_FLAGS) "$<" "$(TUTORIAL_ASSETS_DIR)/$*-{0p}.svg" --format svg
 	@touch "$@"
+
+# The theme demo wrappers import the shared content file and the example
+# decks' theme files; rebuild their slides when those inputs change. The
+# grayscale demo uses the portfolio example's theme file.
+THEME_DEMO_SLUGS := cream metropolis minimalist grayscale
+$(foreach slug,$(THEME_DEMO_SLUGS),$(TUTORIAL_STAMP_DIR)/themes/$(slug).stamp): \
+	$(TUTORIAL_EXAMPLES_DIR)/themes/_content.typ
+$(foreach slug,$(filter-out grayscale,$(THEME_DEMO_SLUGS)),$(eval $(TUTORIAL_STAMP_DIR)/themes/$(slug).stamp: $(EXAMPLES_DIR)/$(slug)/theme.typ))
+$(TUTORIAL_STAMP_DIR)/themes/grayscale.stamp: $(EXAMPLES_DIR)/portfolio/theme.typ
 
 showcase-video: $(SHOWCASE_VIDEO) ## Build the animated home-page showcase
 
