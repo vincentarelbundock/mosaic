@@ -44,7 +44,11 @@
     wrappers: wrappers,
   ),)
 }
-#let compile-deck(body, section-grid: auto) = {
+// `auto-slide`, when not none, is a user-supplied constructor `(title, body) ->
+// slide command` (the value returned by `mosaic.slide(...)`). It replaces the
+// built-in header-body layout for automatic level-2 heading slides, letting a
+// deck route `==` slides through its own styled `slide` helper.
+#let compile-deck(body, section-grid: auto, auto-slide: none) = {
   let output = ()
   let mode = none
   let section = none
@@ -53,10 +57,19 @@
 
   let flush(mode, section, current) = {
     if mode == "slide" {
-      render-slide(automatic-slide-command(
-        section,
-        current.sum(default: []),
-      ))
+      let body = current.sum(default: [])
+      if auto-slide == none {
+        render-slide(automatic-slide-command(section, body))
+      } else {
+        let produced = auto-slide(section, body)
+        if not is-command(produced, "slide") {
+          fail(
+            "setup auto-slide must return a mosaic.slide(...) command; "
+              + "got " + repr(type(produced)),
+          )
+        }
+        render-slide(produced.value)
+      }
     } else if mode == "section" {
       render-slide(slide-command(
         (section,),

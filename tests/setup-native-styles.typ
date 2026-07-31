@@ -22,3 +22,8 @@
     caption: [Native styled caption],
   )
 ]
+
+#mosaic.slide[
+  - First list item
+  - Second list item
+]

@@ -40,7 +40,7 @@
   gap: 0.7em,
   compact-gap: 0.35em,
   heading-below: 0.75em,
-  list-spacing: 0.5em,
+  list-spacing: 0.8em,
 )
 
 #let default-features = (

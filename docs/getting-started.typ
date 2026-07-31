@@ -47,6 +47,39 @@ provide a lightweight hierarchy without adding any special slide commands.
   "Two sections and three slides",
 )
 
+= Custom heading slides
+
+By default a `==` heading builds a slide with
+`templates.default(variant: "header-body")`: the heading fills the header and
+the following content fills the body. To give every automatic slide a different
+look — your own furniture, colors, or grid — pass an `auto-slide` function to
+`m.setup`. It receives the heading and body as content and returns a
+`m.slide(...)` command, so plain `==` markup can share the exact styling of your
+explicit slides.
+
+```typ
+#let framed(title, body) = m.slide(
+  grid: m.templates.default(
+    variant: "header-body",
+    inverted: ("header",),
+    progress: "1",
+  ),
+)[#title][#body]
+
+#show: m.setup.with(auto-slide: framed)
+
+== Results
+
+Routed through `framed`, so this `==` slide gets the inverted header bar and
+progress indicator without a single `#slide` call.
+```
+
+The returned slide may use any grid, not only header-body — a single body cell
+that merges the title and content, an image template, or a custom cell tree all
+work. The one rule is Mosaic's usual one: the grid must accept as many body
+blocks as the function passes it. Passing `none` (the default) keeps the
+built-in header-body slide.
+
 = Global style
 
 `m.setup` applies presentation-oriented page, typography, heading,

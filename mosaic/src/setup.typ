@@ -42,6 +42,32 @@
   /// States restored to their pre-slide values before each continuation frame.
   /// -> array
   frozen-states: (),
+  /// Constructor for automatic level-2 (`==`) heading slides. By default each
+  /// `==` slide is built with `templates.default(variant: "header-body")`, the
+  /// heading in the header and the following content in the body. Pass a
+  /// function to route those slides through your own layout instead, so a deck
+  /// can write `== Title` markup yet get the same furniture, colors, and grid
+  /// as its explicit slides.
+  ///
+  /// The function receives two positional content arguments — the heading and
+  /// the accumulated body — and must return a `mosaic.slide(...)` command:
+  ///
+  /// ```typ
+  /// #let framed(title, body) = m.slide(
+  ///   grid: m.templates.default(variant: "header-body", inverted: ("header",)),
+  /// )[#title][#body]
+  /// #show: m.setup.with(auto-slide: framed)
+  /// ```
+  ///
+  /// The returned slide may use any grid, not only header-body: a single body
+  /// cell that merges title and content, an image template, or a custom cell
+  /// tree are all valid. The only structural rule is Mosaic's usual one — the
+  /// grid must accept as many body blocks as the function passes it. Constraints
+  /// are reported as `mosaic:` errors, except a parameter-count mismatch, which
+  /// surfaces as Typst's generic "unexpected/missing argument" (Typst exposes no
+  /// way to introspect a function's arity). `none` keeps the built-in slide.
+  /// -> function | none
+  auto-slide: none,
 ) = {
   let paper-presets = (
     "16-9": "presentation-16-9",
@@ -49,6 +75,9 @@
   )
   if type(paper) != str or paper not in paper-presets {
     fail("setup paper must be \"16-9\" or \"4-3\"")
+  }
+  if auto-slide != none and type(auto-slide) != function {
+    fail("setup auto-slide must be a function or none")
   }
   let settings = make-settings(
     colors: colors,
@@ -85,5 +114,6 @@
       align: center + horizon,
       text: settings.type.title,
     )),
+    auto-slide: auto-slide,
   )
 }

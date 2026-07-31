@@ -4,12 +4,8 @@
 #let red = rgb("#c83224")
 #let serif = "Source Serif 4"
 
-#let copy = [Presentations are communication tools that can be used as
-demonstrations, lectures, speeches, reports, and more. It is mostly presented
-before an audience. It serves a variety of purposes, making presentations
-powerful tools for convincing and teaching. Lorem ipsum dolor sit amet,
-consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-dolore magna aliqua.]
+#let copy = [Presentations turn ideas into clear stories for an audience.
+They can inform, persuade, teach, or spark discussion.]
 
 #let photo(name, fit: "cover") = m.image(path("assets/" + name), fit: fit)
 
@@ -21,9 +17,9 @@ dolore magna aliqua.]
 
 // Font and fill are set once via `#set text(font: serif, fill: red)` below;
 // these helpers inherit both and only vary size (and weight for titles).
-#let title(body, size: 31pt) = text(size: size, weight: "bold", body)
+#let title(body, size: 2.21em) = text(size: size, weight: "bold", body)
 
-#let body-text(body, size: 10pt) = text(size: size, body)
+#let body-text(body, size: 1em) = text(size: size, body)
 
 #let slide = m.slide
 #show: m.setup.with(
@@ -38,7 +34,7 @@ dolore magna aliqua.]
   ),
   spacing: (inset: 0pt),
 )
-#set text(font: serif, fill: red)
+#set text(font: serif, fill: red, size: 14pt)
 
 // 01 — Cover
 #m.slide(
@@ -52,7 +48,7 @@ dolore magna aliqua.]
     cover: surface(inset: 45pt, align: left + horizon),
   ),
 )[
-  #title([Minimalist White\ Presentation.], size: 39pt)
+  #title([Minimalist White\ Presentation.], size: 2.79em)
 ]
 
 // 02 — Intro sentence
@@ -61,7 +57,7 @@ dolore magna aliqua.]
     intro-line: surface(align: center + horizon),
   ),
 )[
-  #title([Write a short introduction here.], size: 25pt)
+  #title([Write a short introduction here.], size: 1.79em)
 ]
 
 // 03 — Contents
@@ -70,8 +66,8 @@ dolore magna aliqua.]
     contents: surface(inset: (left: 48pt), align: left + horizon),
   ),
 )[
-  #set enum(numbering: "1.", indent: 0pt, body-indent: 10pt, spacing: 5pt)
-  #text(size: 25pt, weight: "bold")[
+  #set enum(numbering: "1.", indent: 0pt, body-indent: 10pt)
+  #text(size: 1.79em, weight: "bold")[
     + Introduction
     + About Us
     + Our Projects
@@ -86,7 +82,7 @@ dolore magna aliqua.]
     introduction: surface(fill: red, inset: 48pt, align: left + horizon),
   ),
 )[
-  #text(size: 39pt, weight: "bold", fill: cream)[Introduction.]
+  #text(size: 2.79em, weight: "bold", fill: cream)[Introduction.]
 ]
 
 // 05 — Welcome
@@ -99,10 +95,10 @@ dolore magna aliqua.]
     welcome-photo: surface(inset: (top: 44pt, right: 48pt, bottom: 38pt)),
   ),
 )[
-  #title([Welcome to\ Presentation], size: 29pt)
+  #title([Welcome to\ Presentation], size: 2.07em)
   #v(10pt)
   #body-text([I'm Rain, and I'll be sharing with you my beautiful ideas.
-  Follow me at \@reallygreatsite to learn more. #copy], size: 8.5pt)
+  Follow me at \@reallygreatsite to learn more. #copy], size: 0.9em)
 ][
   #rect(width: 100%, height: 100%, stroke: 1.5pt + red, inset: 0pt)[
     #photo("image21.png")
@@ -121,14 +117,15 @@ dolore magna aliqua.]
     questions: surface(inset: (left: 28pt, right: 45pt), align: left + horizon),
   ),
 )[
-  #title([Our company was\ created with the\ vision to be the best\ in the industry.], size: 27pt)
+  #set par(leading: 0.2em)
+  #title([Our company was\ created with the\ vision to be the best\ in the industry.], size: 1.93em)
 ][
   #stack(
     dir: ttb,
     spacing: 22pt,
-    [#title([Who we are?], size: 16pt)#linebreak()#body-text([Elaborate on your topic here. #copy], size: 7.5pt)],
-    [#title([What we do?], size: 16pt)#linebreak()#body-text([Elaborate on your topic here. #copy], size: 7.5pt)],
-    [#title([Why we do?], size: 16pt)#linebreak()#body-text([Elaborate on your topic here. #copy], size: 7.5pt)],
+    [#title([Who we are?], size: 1.14em)#linebreak()#body-text([Introduce the people behind the work.], size: 0.85em)],
+    [#title([What we do?], size: 1.14em)#linebreak()#body-text([Describe the value your company creates.], size: 0.85em)],
+    [#title([Why we do it?], size: 1.14em)#linebreak()#body-text([Explain the purpose that guides the team.], size: 0.85em)],
   )
 ]
 
@@ -138,7 +135,7 @@ dolore magna aliqua.]
     about: surface(fill: red, inset: 48pt, align: left + horizon),
   ),
 )[
-  #text(size: 39pt, weight: "bold", fill: cream)[About Us.]
+  #text(size: 2.79em, weight: "bold", fill: cream)[About Us.]
 ]
 
 // 08 — Our history
@@ -148,7 +145,7 @@ dolore magna aliqua.]
 ),
   cell-styles: (
     history-images: surface(inset: (top: 48pt, left: 48pt, bottom: 42pt)),
-    history-copy: surface(inset: (left: 28pt, right: 45pt), align: right + horizon),
+    history-copy: surface(inset: (left: 28pt, right: 45pt), align: left + horizon),
   ),
 )[
   #grid(
@@ -159,9 +156,9 @@ dolore magna aliqua.]
     photo("image27.png"),
   )
 ][
-  #title([Our History], size: 30pt)
+  #title([Our History], size: 2.14em)
   #v(10pt)
-  #body-text([#copy #copy], size: 8pt)
+  #body-text([#copy], size: 0.9em)
 ]
 
 // 09 — Mission and vision
@@ -170,17 +167,17 @@ dolore magna aliqua.]
   c("vision"),
 ),
   cell-styles: (
-    mission: surface(inset: 45pt, align: center + horizon),
-    vision: surface(fill: red, inset: 45pt, align: center + horizon),
+    mission: surface(inset: 45pt, align: left + horizon),
+    vision: surface(fill: red, inset: 45pt, align: left + horizon),
   ),
 )[
-  #align(center)[#title([Mission], size: 29pt)]
+  #align(center)[#title([Mission], size: 2.07em)]
   #v(14pt)
-  #body-text([#copy #copy], size: 8pt)
+  #body-text([#copy], size: 0.9em)
 ][
-  #align(center)[#text(size: 29pt, weight: "bold", fill: cream)[Vision]]
+  #align(center)[#text(size: 2.07em, weight: "bold", fill: cream)[Vision]]
   #v(14pt)
-  #text(size: 8pt, fill: cream)[#copy #copy]
+  #text(size: 0.9em, fill: cream)[#copy]
 ]
 
 // 10 — Team
@@ -195,7 +192,7 @@ dolore magna aliqua.]
     team-list: surface(inset: (left: 24pt, right: 48pt), align: left + horizon),
   ),
 )[
-  #title([Meet the Team], size: 29pt)
+  #title([Meet the Team], size: 2.07em)
 ][
   #grid(
     columns: (72pt, 1fr),
@@ -203,11 +200,11 @@ dolore magna aliqua.]
     gutter: 14pt,
     row-gutter: 14pt,
     photo("image12.png"),
-    [#title([John Doe], size: 15pt)#linebreak()#body-text([position], size: 8pt)],
+    [#title([John Doe], size: 1.07em)#linebreak()#body-text([position], size: 0.8em)],
     photo("image15.png"),
-    [#title([Jane Doe], size: 15pt)#linebreak()#body-text([position], size: 8pt)],
+    [#title([Jane Doe], size: 1.07em)#linebreak()#body-text([position], size: 0.8em)],
     photo("image2.png"),
-    [#title([John Doe], size: 15pt)#linebreak()#body-text([position], size: 8pt)],
+    [#title([John Doe], size: 1.07em)#linebreak()#body-text([position], size: 0.8em)],
   )
 ]
 
@@ -217,7 +214,7 @@ dolore magna aliqua.]
     projects: surface(fill: red, inset: 48pt, align: left + horizon),
   ),
 )[
-  #text(size: 39pt, weight: "bold", fill: cream)[Our Projects.]
+  #text(size: 2.79em, weight: "bold", fill: cream)[Our Projects.]
 ]
 
 // 12 — Products
@@ -230,15 +227,15 @@ dolore magna aliqua.]
     products-list: surface(inset: (left: 30pt, right: 48pt), align: left + horizon),
   ),
 )[
-  #title([Our Products], size: 29pt)
+  #title([Our Products], size: 2.07em)
 ][
   #stack(
     dir: ttb,
     spacing: 24pt,
     ..range(1, 5).map(n => [
-      #title([Project #("One", "Two", "Three", "Four").at(n - 1)], size: 15pt)
+      #title([Project #("One", "Two", "Three", "Four").at(n - 1)], size: 1.07em)
       #linebreak()
-      #body-text([Elaborate on what you want to discuss.], size: 8pt)
+      #body-text([Elaborate on what you want to discuss.], size: 0.85em)
     ]),
   )
 ]
@@ -255,7 +252,7 @@ dolore magna aliqua.]
     project-one-gallery: surface(inset: (top: 48pt, right: 48pt, bottom: 42pt)),
   ),
 )[
-  #title([Project One is lorem\ ipsum dolor sit\ amet, consectetur\ adipiscing elit, sed\ do eiusmod tempor\ incididunt.], size: 27pt)
+  #title([Project One turns\ a focused idea into\ a clear, useful result.], size: 1.93em)
 ][
   #grid(
     columns: (1fr, 1fr),
@@ -275,14 +272,14 @@ dolore magna aliqua.]
 ),
   cell-styles: (
     project-two-photo: surface(inset: (top: 48pt, left: 48pt, bottom: 42pt)),
-    project-two-copy: surface(inset: (left: 30pt, right: 48pt), align: right + horizon),
+    project-two-copy: surface(inset: (left: 30pt, right: 48pt), align: left + horizon),
   ),
 )[
   #rect(width: 100%, height: 100%, stroke: 1.5pt + red, inset: 0pt)[#photo("image41.png")]
 ][
-  #title([Project Two], size: 29pt)
+  #title([Project Two], size: 2.07em)
   #v(10pt)
-  #body-text([#copy #copy], size: 8pt)
+  #body-text([#copy], size: 0.9em)
 ]
 
 // 15 — Image mosaic
@@ -317,9 +314,9 @@ dolore magna aliqua.]
     research-stats: surface(inset: 44pt, align: left + horizon),
   ),
 )[
-  #title([Market Research], size: 29pt)
+  #title([Market Research], size: 2.07em)
   #v(10pt)
-  #body-text([#copy #copy], size: 8pt)
+  #body-text([#copy], size: 0.9em)
 ][
   #stack(
     dir: ttb,
@@ -329,8 +326,8 @@ dolore magna aliqua.]
       ([+400k], [Elaborate on the statistic here.]),
       ([-12%], [Elaborate on the statistic here.]),
     ).map(pair => [
-      #title(pair.first(), size: 25pt)#linebreak()
-      #body-text(pair.last(), size: 8pt)
+      #title(pair.first(), size: 1.79em)#linebreak()
+      #body-text(pair.last(), size: 0.85em)
     ]),
   )
 ]
@@ -341,8 +338,9 @@ dolore magna aliqua.]
     chart: surface(inset: (top: 42pt, left: 48pt, right: 48pt, bottom: 34pt)),
   ),
 )[
-  #title([Market Research], size: 29pt)
-  #body-text([#copy], size: 8pt)
+  #title([Market Research], size: 2.07em)
+  #linebreak()
+  #body-text([#copy], size: 0.9em)
   #v(12pt)
   #m.image(path("assets/image1.png"), width: 100%, height: 52%, fit: "contain")
 ]
@@ -354,11 +352,11 @@ dolore magna aliqua.]
   ),
 )[
   #align(center)[
-    #title([“], size: 38pt)
+    #title([“], size: 2.71em)
     #v(-8pt)
-    #title([Write an original statement or\ inspiring quote.], size: 26pt)
+    #title([Write an original statement or\ inspiring quote.], size: 1.86em)
     #v(9pt)
-    #body-text([— Include a credit, citation, or supporting message], size: 8pt)
+    #body-text([— Include a credit, citation, or supporting message], size: 0.85em)
   ]
 ]
 
@@ -368,7 +366,7 @@ dolore magna aliqua.]
     contact: surface(inset: 48pt, align: left + horizon),
   ),
 )[
-  #title([Contact Us], size: 29pt)
+  #title([Contact Us], size: 2.07em)
   #v(15pt)
   #body-text([
     123 Anywhere St., Any City, ST 12345 \
@@ -376,5 +374,5 @@ dolore magna aliqua.]
     hello\@reallygreatsite.com \
     reallygreatsite.com \
     \@reallygreatsite
-  ], size: 9pt)
+  ], size: 0.9em)
 ]
