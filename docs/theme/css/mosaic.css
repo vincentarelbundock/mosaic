@@ -105,6 +105,12 @@ body:has(.mosaic-hero) .calepin-website-toc {
   margin-top: 1.5rem;
 }
 
+.mosaic-home-links {
+  width: fit-content;
+  gap: 0.4rem;
+  margin: -1.5rem 0 clamp(2rem, 6vw, 5rem);
+}
+
 .mosaic-feature-showcase {
   display: grid;
   grid-template-columns: minmax(15rem, 0.7fr) minmax(0, 1.3fr);
@@ -193,7 +199,6 @@ body:has(.mosaic-hero) .calepin-website-toc {
   border-radius: 1.3rem;
   background: var(--calepin-surface);
   box-shadow: var(--calepin-shadow-card);
-  transform: rotate(1.25deg);
 }
 
 .calepin-elements-gallery__item {
@@ -535,6 +540,11 @@ body:has(.mosaic-hero) .calepin-website-toc {
 
   .mosaic-feature-showcase {
     grid-template-columns: 1fr;
+  }
+
+  .mosaic-feature-cards {
+    grid-template-rows: none;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
   }
 
   .mosaic-showcase-frame {
