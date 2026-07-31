@@ -30,8 +30,8 @@ depth = 3
   label = "Get started"
 
   [[menus.main]]
-  target = "grids.typ"
-  label = "Grids"
+  target = "examples.typ"
+  label = "Examples"
 
   [[menus.main]]
   target = "api/setup.typ"
@@ -67,13 +67,13 @@ fold = true
   target = "grids.typ"
 
   [[sidebar.section.item]]
-  target = "component-library.typ"
-
-  [[sidebar.section.item]]
   target = "foreground.typ"
 
   [[sidebar.section.item]]
   target = "background.typ"
+
+  [[sidebar.section.item]]
+  target = "components.typ"
 
   [[sidebar.section.item]]
   target = "incremental.typ"

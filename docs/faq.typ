@@ -6,29 +6,26 @@
 
 #title()
 
-== How do I choose a grid?
+== Where are the themes?
 
-Build the grid with `m.grid.h`, `m.grid.v`, and `m.grid.t`, then pass it as the
-first argument to `m.slide()`:
-
-```typ
-#show: m.setup
-
-#m.slide(m.grid.h("left", "right"))[
-  Left
-][
-  Right
-]
-```
-
-The `grid:` parameter is equivalent:
+Mosaic deliberately has no theme object. Where Beamer has themes, Mosaic has
+`setup`, presets, and native Typst rules. Set deck-wide colors, spacing, and
+features once through `m.setup`. Capture a reusable configuration as an
+ordinary Typst value with `.with(...)`; such a value is called a preset:
 
 ```typ
-#m.slide(grid: m.grid.h("left", "right"))[Left][Right]
+#let brand = m.setup.with(
+  colors: m.color.scheme("dark") + (
+    accent: rgb("#e69f00"),
+  ),
+  features: (slide-number: true, progress: true),
+)
+
+#show: brand
 ```
 
-Mosaic validates the composed grid and checks that the supplied body count
-matches its consuming cells.
+Everything else, such as typography, headings, captions, and lists, is styled
+with ordinary `set` and `show` rules after setup.
 
 == Where do slide margins go?
 
@@ -60,7 +57,9 @@ to `0pt`.
 
 == Can headings create slides automatically?
 
-Yes. `setup` detects headings automatically:
+Yes. `setup` detects headings automatically. A depth-one heading (`=`) creates
+an unnumbered section slide, and a depth-two heading (`==`) begins a numbered
+slide:
 
 ```typ
 #import "@local/mosaic:0.0.1" as m
@@ -83,38 +82,6 @@ This is one logical slide.
   - Examine the diagnostics.
 ]
 ```
-
-A source-depth-one heading (one equals sign) creates an unnumbered, centered
-section slide. A source-depth-two heading begins an ordinary numbered slide.
-Deeper headings remain content within the current slide. These boundaries
-continue to use source depth when `heading(offset: ...)` changes the resolved
-native level.
-
-Each source heading remains one canonical native Typst heading across
-incremental frames. Later frames repeat only its body, preventing duplicate
-queries, counters, outline entries, bookmarks, labels, and accessibility
-semantics. Mosaic automatically reapplies the canonical heading's active text,
-block-spacing, and alignment styles to those continuations, including
-heading show-set rules. Headings cannot be placed inside temporal content or
-a temporally controlled grid cell.
-
-Foreground furniture can retrieve the active native heading from an ambient
-context:
-
-```typ
-#m.deck(
-  foreground: context {
-    let section = m.current-heading()
-    if section != none { section.body }
-  },
-)
-```
-
-Automatic slides require a single empty cell in the deck's default grid.
-Setup also accepts explicit `m.slide` calls between automatic slides.
-It rejects section body text and visible content before the first
-structural heading. Presentations that use custom `m.grid.h()` or `m.grid.v()`
-grids should use explicit `m.slide(grid: ...)` calls instead.
 
 == Do I need named animation waypoints?
 
@@ -145,15 +112,13 @@ ordinary Typst variables can give important ranges meaningful names:
 ```
 
 Here `on()` controls visibility while Typst supplies the names and reusable
-values.
+values. These names do not renumber themselves. If inserting an earlier step
+changes the animation timeline, update the corresponding range values in one
+place.
 
-These names do not renumber themselves. If inserting an earlier step changes
-the animation timeline, update the corresponding range values in one place.
+== How can I reuse slides and states?
 
-== How can I reuse an earlier slide?
-
-Define the slide as an ordinary Typst function and call it wherever it should
-appear:
+Define a slide as an ordinary Typst function and call it wherever it should appear:
 
 ```typ
 #let results-slide() = m.slide[
@@ -177,8 +142,5 @@ The second call creates another logical slide and reproduces the same
 incremental sequence. The two calls use the same source, so later edits remain
 synchronized.
 
-== Can I replay only one frame?
-
-Not automatically. A reusable function re-renders the complete logical slide.
-To show only a selected state, parameterize the function or write a small
-summary slide containing that state.
+To show only a selected state without repeating the full sequence, parameterize
+the function or write a small summary slide containing that state.
