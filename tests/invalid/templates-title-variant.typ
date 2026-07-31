@@ -1,3 +1,3 @@
 #import "@local/mosaic:0.0.1" as mosaic
 
-#mosaic.templates.title(variant: "unknown")
+#mosaic.templates.title([Title], variant: "unknown")

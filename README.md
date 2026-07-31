@@ -29,7 +29,7 @@ Write normal Typst content.
 ```
 
 Each `==` heading starts a `templates.default(variant: "header-body")` slide. Its text fills the
-header region, and the content that follows fills the one-column body region.
+header cell, and the content that follows fills the one-column body cell.
 
 Mosaic presentations conventionally use a zero page margin so grids,
 cell surfaces, and visual planes can reach the physical slide edges. Content
@@ -62,9 +62,10 @@ after `setup` has established the document-wide presentation settings.
 #show: brand
 
 #m.slide(grid: m.templates.title(
+  [Mosaic],
   subtitle: [A setup-driven semantic deck],
-  author: [Vincent],
-))[Mosaic]
+  authors: (m.author([Vincent]),),
+))
 
 #m.slide(grid: m.templates.image(
   variant: "figure",
@@ -79,16 +80,20 @@ returns an ordered categorical color array instead of configuring the deck.
 
 The public template collection contains five constructors:
 
-- `default`: optional full-width header and footer regions around an
-  argument-controlled body column grid, with independent regional backgrounds
-  and scheme-derived inverse colors for selected header/footer regions through
+- `default`: optional full-width header and footer cells around an
+  argument-controlled body column grid, with independent per-cell backgrounds
+  and scheme-derived inverse colors for selected header/footer cells through
   `inverted`, native body-column `tracks`, and optional foreground progress via
   `progress: "number"`, `"circle"`, or `"line"`;
 - `title`: `academic`, `left-aligned`, `centered-stack`, `accent-block`,
   `image-left`, `image-right`, `image-top`, `image-bottom`, and
-  `image-background`; the academic structure
+  `image-background`; the title text is the first positional argument and the
+  surrounding `slide` consumes no bodies; the academic structure
   accepts arrays of validated `author()` objects with de-duplicated affiliations,
-  generated superscripts, contacts, and event and date metadata;
+  generated superscripts, contacts, and event and date metadata; `rule`
+  controls the short accent rule (drawn on text variants, omitted on image
+  variants by default) and `align` anchors the `image-background` title
+  stack over the unmodified image;
 - `section`: `plain`, `image-left`, `image-right`, `image-top`, `image-bottom`,
   and `image-background`, with optional numbering and visual-order `tracks`;
 - `image`: `full`, `figure`, `left`, `right`, `top`, and `bottom`, with optional
@@ -99,7 +104,7 @@ Constructors whose rendering uses a semantic accent accept `role`. Put
 `background`, `foreground`, and `numbered` on the surrounding `slide`. Stable
 cell IDs reflect meaning, including `image` and `body`.
 
-Set document-wide colors and spacing with `m.setup`. Put local surface
+Set document-wide colors and spacing with `m.setup`. Put local cell
 styles on `m.grid.cell`, track sizes on `m.grid.t`, and reusable variations in
 ordinary Typst functions or `.with(...)` values.
 
@@ -159,7 +164,7 @@ grid tree with a default `1.25em` inset. The default single-cell grid created by
 body supplied to `slide()`. A fixed-content cell supplies its own content and
 consumes no slide body. `id` must be a non-empty string and must be unique
 within its grid. The optional style dictionary accepts the native
-`m.grid.cell` surface fields `fill`, `inset`, `align`, and `stroke`. It also
+`m.grid.cell` style fields `fill`, `inset`, `align`, and `stroke`. It also
 accepts `before` and `after` fixed content around a consuming body; `fit` as
 `"auto"`, `"width"`, `"contain"`, or `none`; and `text`, a dictionary of native
 Typst `text` arguments applied to the complete combined cell content:
@@ -265,8 +270,9 @@ numbered: true, ..bodies)` validates a tree, assigns bodies to its empty cells,
 and renders one logical slide. `auto` inherits the corresponding deck default,
 `none` disables an inherited visual plane, and explicit content overrides it.
 Background is painted behind the grid; foreground is painted over it.
-Neither plane affects split measurements. Temporal content can cause
-a logical slide to render as multiple PDF pages.
+Neither plane affects split measurements. Incremental content divides a
+logical slide into steps; each step renders as one frame, which is one
+PDF page.
 
 Set `handout: true` on `setup` to render only the final frame of each logical
 slide. Mosaic retains the final state of timed body content, reducers,
@@ -329,7 +335,7 @@ The visual planes occupy the full usable slide area. Native `place()` can
 position any number of canvases, images, logos, labels, or counters within a
 plane. `on()`, `replace()`, and `reduce()` work in fixed cells and visual
 planes; their ranges contribute to the logical slide's incremental frame
-count just like temporal content in a supplied body.
+count just like incremental content in a supplied body.
 
 `slide-number(total: false)` displays the current logical slide number. It
 advances once per numbered `slide()` call, so all incremental frames belonging
@@ -364,7 +370,7 @@ stay as an ordinary `== Heading`. A transformational show rule that adds
 decoration outside `it.body` is not replayed on continuations.
 
 Keep semantic headings structurally stable: placing a heading inside `on`,
-`reveal`, `replace`, or `reduce`, including a cell controlled by a temporal
+`reveal`, `replace`, or `reduce`, including a cell controlled by an incremental
 grid node, is rejected.
 
 `current-heading(level: 1, outlined: true, default: none)` returns the active
@@ -517,7 +523,7 @@ metadata, so its diagrams use the same adapter:
 `"visible"`, `"hidden"`, and `"removed"` work for reduced commands. A
 `"dimmed"` command requires a package-specific `dim` function.
 
-Temporal wrappers also work structurally inside math equations:
+The incremental wrappers also work structurally inside math equations:
 
 ```typ
 $
@@ -537,7 +543,7 @@ $
 
 Public callers construct grids instead of mutating or inspecting their
 internal records. Use string children for ordinary consuming cells,
-`m.grid.cell` for fixed content or surface styles, and `m.grid.t` for explicit
+`m.grid.cell` for fixed content or local styles, and `m.grid.t` for explicit
 track sizes.
 The constructors validate every split, track, gutter, and cell ID.
 
@@ -597,7 +603,7 @@ Internal modules import definitions directly from the module that owns them:
   `slide-runtime.typ` owns handout/frame state and renders logical slides;
   `deck-compiler.typ` compiles top-level document content.
 - `incremental-core.typ` provides shared range/state parsing.
-  `incremental.typ` owns temporal constructors, step discovery, and content
+  `incremental.typ` owns the incremental constructors, step discovery, and content
   transformation; `render.typ` renders one resolved grid-tree frame.
 
 See [`ARCHITECTURE.md`](ARCHITECTURE.md) for the complete dependency layers,

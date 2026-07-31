@@ -22,7 +22,7 @@ expand into that space.
 
 == Final-frame handouts
 
-Set `handout: true` on `setup` to emit one physical page per logical slide:
+Set `handout: true` on `setup` to emit one frame per logical slide:
 
 ```typ
 #show: m.setup.with(handout: true)

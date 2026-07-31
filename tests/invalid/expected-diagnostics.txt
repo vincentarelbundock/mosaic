@@ -37,12 +37,12 @@ templates-title-image-required|variant "image-background" requires image
 templates-title-image-type|image must be content, a non-empty path string, a native path, or a path dictionary
 templates-title-image-path|image path must be a non-empty string
 templates-title-image-size|image does not accept "width"
-templates-title-panel-align|panel-align must use left, center, or right
+templates-title-align|align must use left, center, or right
 templates-title-mutated-command|variant "image-right" requires image
 templates-title-ordinary-authors|author 1 must be created with author()
 templates-title-tracks-scope|tracks apply only to directional image variants
 templates-title-image-unused|variant "left-aligned" does not use image
-templates-title-panel-align-scope|panel-align applies only to variant "image-background"
+templates-title-align-scope|align applies only to variant "image-background"
 image-adjustments-combined|image accepts either lighten or darken, not both
 image-lighten-range|image lighten must be a ratio from 0% to 100% or none
 cell-id-both|cell id must be passed positionally or through id:, not both
@@ -60,3 +60,5 @@ slide-cell-style-id|slide cell-styles contains unknown cell id "missing"
 slide-cell-styles-mutated|slide cell style for "body" has unsupported field "content-sized"
 slide-cell-styles-base-grid-mutated|invalid grid node at root
 cell-surface-ownership|cell visual fields belong in slide cell-styles
+templates-title-content|requires title content as its first positional argument
+templates-title-rule|rule must be auto, true, or false

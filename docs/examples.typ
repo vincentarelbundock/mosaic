@@ -137,54 +137,87 @@
 
 #title()
 
-These are complete, real-world slide decks built with Mosaic. Each one adapts a
-freely licensed presentation into a single self-contained Typst file, so you can
-read the source to see how templates, grids, colors, and image placement come
-together across a full deck rather than one slide at a time.
+Explore four complete decks built with Mosaic. Click a thumbnail to page through
+its slides. The #link(repo)[GitHub repository] contains every deck's full Typst
+source, assets, Makefile, and compiled PDF. See
+#link("acknowledgments.html#example-decks")[Acknowledgments] for sources and
+licenses.
 
-Every deck lives in its own directory under
-#link(repo)[`docs/examples/`] on GitHub. That directory holds the complete data
-for the deck — the `main.typ` source, the `assets/` images, a `Makefile`, and
-the compiled PDF. Build a deck locally by running `make` from its directory.
-Click any thumbnail below to page through the deck as a slideshow, or open its
-PDF directly.
+#if sys.inputs.at("calepin-target", default: "paged") == "html" {
+  html.elem("style", "
+    .examples-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+      gap: 1.25rem;
+      margin-block: 1.5rem;
+    }
 
-Each deck is adapted from a freely licensed source. See the
-#link("acknowledgments.html#example-decks")[Acknowledgments] page for the sources,
-attribution, and licenses.
+    .examples-grid > .tutorial-slideshow {
+      min-width: 0;
+    }
 
-= Cream, Green, and Black
+    .examples-grid .tutorial-slideshow,
+    .examples-grid .tutorial-deck-preview {
+      width: 100%;
+      max-width: none !important;
+      margin: 0;
+    }
 
-A 21-slide minimal deck of cream, sage-green, and black geometric blocks with
-full-bleed photography.
+  ")
 
-#deck("cream-green-black-mosaic", "Cream, Green, and Black", 21, "Cream, Green, and Black deck, first slide")
-
-#link(repo + "/cream-green-black-mosaic")[Source and assets on GitHub]
-
-= Minimalist White
-
-A 19-page presentation on a clean white background with a red accent and serif
-display type.
-
-#deck("minimalist-white-mosaic", "Minimalist White", 19, "Minimalist White deck, first slide")
-
-#link(repo + "/minimalist-white-mosaic")[Source and assets on GitHub]
-
-= Photojournalist Portfolio
-
-A 14-slide photo-forward portfolio deck pairing large images with restrained
-black-and-white typography.
-
-#deck("photojournalist-mosaic", "Photojournalist Portfolio", 14, "Photojournalist Portfolio deck, first slide")
-
-#link(repo + "/photojournalist-mosaic")[Source and assets on GitHub]
-
-= Metropolis
-
-A 33-page adaptation of the Metropolis Beamer theme demo, covering incremental
-reveals, plots, the standout slide, appendix, and a split bibliography.
-
-#deck("metropolis-mosaic", "Metropolis", 33, "Metropolis deck, first slide")
-
-#link(repo + "/metropolis-mosaic")[Source and assets on GitHub]
+  html.elem("div", attrs: (class: "examples-grid"))[
+    #deck(
+      "cream",
+      "Cream, Green, and Black",
+      21,
+      "Cream, Green, and Black deck, first slide",
+    )
+    #deck(
+      "metropolis",
+      "Metropolis",
+      25,
+      "Metropolis deck, first slide",
+    )
+    #deck(
+      "minimalist",
+      "Minimalist White",
+      19,
+      "Minimalist White deck, first slide",
+    )
+    #deck(
+      "portfolio",
+      "Photojournalist Portfolio",
+      14,
+      "Photojournalist Portfolio deck, first slide",
+    )
+  ]
+} else {
+  grid(
+    columns: (1fr, 1fr),
+    gutter: 1em,
+    deck(
+      "cream",
+      "Cream, Green, and Black",
+      21,
+      "Cream, Green, and Black deck, first slide",
+    ),
+    deck(
+      "minimalist",
+      "Minimalist White",
+      19,
+      "Minimalist White deck, first slide",
+    ),
+    deck(
+      "portfolio",
+      "Photojournalist Portfolio",
+      14,
+      "Photojournalist Portfolio deck, first slide",
+    ),
+    deck(
+      "metropolis",
+      "Metropolis",
+      25,
+      "Metropolis deck, first slide",
+    ),
+  )
+}

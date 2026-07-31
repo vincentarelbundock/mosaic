@@ -40,11 +40,11 @@ Touying copyright notice and license:
 The example decks in `docs/examples/` are adapted from free presentation
 templates published by SlidesCarnival:
 
-- `docs/examples/cream-green-black-mosaic/` — adapted from the *Cream, Green,
+- `docs/examples/cream/` — adapted from the *Cream, Green,
   and Black Geometric Blocks Clean Minimal Presentation* template.
-- `docs/examples/minimalist-white-mosaic/` — adapted from the *Minimalist White
+- `docs/examples/minimalist/` — adapted from the *Minimalist White
   Slides* template.
-- `docs/examples/photojournalist-mosaic/` — adapted from the *Photojournalist
+- `docs/examples/portfolio/` — adapted from the *Photojournalist
   Portfolio* template.
 
 Each deck is a Mosaic/Typst re-creation of the corresponding template's layout;
@@ -61,7 +61,7 @@ SlidesCarnival with a link to its website, and the material has been adapted.
 
 ## Metropolis Beamer theme
 
-The `docs/examples/metropolis-mosaic/` deck is a Mosaic/Typst adaptation of the
+The `docs/examples/metropolis/` deck is a Mosaic/Typst adaptation of the
 demonstration slides for the **Metropolis** Beamer theme by Matthias
 Vogelgesang, reconstructed from the theme's upstream `demo/demo.tex`:
 

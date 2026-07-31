@@ -10,6 +10,7 @@
 
 #show: mosaic.setup
 #mosaic.slide(grid: mosaic.templates.title(
+  [Title],
   variant: "academic",
   authors: (ada,),
 ))[Title]

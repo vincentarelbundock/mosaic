@@ -50,8 +50,10 @@
 /// `plain` provides one centered `section` cell. `image-left`, `image-right`,
 /// `image-top`, and `image-bottom` pair that cell with a full-bleed `image`
 /// cell using the same directional layout machinery as `templates.image`.
-/// `image-background` places the image behind the section cell with a black
-/// readability scrim and white text. Image variants require `image`.
+/// `image-background` places the image behind the section cell; the text
+/// keeps the scheme's ordinary color, so pass a pre-adjusted image such as
+/// `mosaic.image(..., darken: 45%)` and override the `section` cell's text
+/// fill for light-on-dark compositions. Image variants require `image`.
 /// Directional `tracks` are two native Typst track sizes in visual order.
 #let section(
   subtitle: none,
@@ -95,17 +97,11 @@
       inset: settings.spacing.inset,
       align: center + horizon,
       fill: if fields.variant == "image-background" {
-        black.transparentize(35%)
+        none
       } else {
         settings.colors.canvas
       },
-      text: settings.type.title + (
-        fill: if fields.variant == "image-background" {
-          white
-        } else {
-          settings.colors.text
-        },
-      ),
+      text: settings.type.title + (fill: settings.colors.text),
     ),
   )
   if fields.variant in semantic-directional-variants {

@@ -52,7 +52,7 @@
   }
 }
 
-#let panel-alignments = (
+#let stack-alignments = (
   left,
   center,
   right,
@@ -74,6 +74,12 @@
       "template \"title\" has unsupported variant " + repr(variant)
         + "; expected one of " + repr(variants),
     )
+  }
+  if type(fields.title) not in (content, str) {
+    fail("template \"title\" requires title content as its first positional argument")
+  }
+  if fields.rule != auto and type(fields.rule) != bool {
+    fail("template \"title\" rule must be auto, true, or false")
   }
   if type(fields.authors) != array {
     fail("template \"title\" authors must be an array")
@@ -98,19 +104,22 @@
     fail("template \"title\" tracks apply only to directional image variants")
   }
   if variant == "image-background" {
-    if fields.panel-align not in panel-alignments {
+    if fields.align not in stack-alignments {
       fail(
-        "template \"title\" panel-align must use left, center, or right, optionally combined with top, horizon, or bottom",
+        "template \"title\" align must use left, center, or right, optionally combined with top, horizon, or bottom",
       )
     }
-  } else if fields.panel-align != left + bottom {
-    fail("template \"title\" panel-align applies only to variant \"image-background\"")
+  } else if fields.align != left + bottom {
+    fail("template \"title\" align applies only to variant \"image-background\"")
   }
   fields
 }
 
 /// Creates a presentation title grid.
 ///
+/// The title text is the first positional argument. The template supplies
+/// every cell's content, so the surrounding `mosaic.slide` consumes no
+/// slide bodies.
 /// `academic` places author names and affiliations inline, with a numbered
 /// affiliation legend.
 /// Every variant accepts the same `authors` array of records created by the
@@ -121,25 +130,35 @@
 /// The other variants are named for their visible structure: `left-aligned`, `centered-stack`,
 /// `accent-block`, `image-left`, `image-right`, `image-top`, `image-bottom`,
 /// and `image-background`. Image variants require `image`; `tracks` controls
-/// directional two-region structure in visual order. Every variant consumes exactly one
-/// slide body in the `title` cell.
+/// directional two-cell structure in visual order.
+/// `rule` controls the short accent-colored rule between the title mass and
+/// the metadata. The `auto` default draws it on the text variants and omits
+/// it on the image variants.
+/// `align` anchors the title stack for `image-background`. That variant
+/// places the stack directly over the image in the scheme's ordinary `text`
+/// color; pass a pre-adjusted image such as `mosaic.image(..., darken: 45%)`
+/// and override the `title` cell's text fill for light-on-dark compositions.
 #let title(
+  title,
   subtitle: none,
   date: none,
   image: none,
   variant: "left-aligned",
   authors: (),
   tracks: auto,
-  panel-align: left + bottom,
+  align: left + bottom,
+  rule: auto,
 ) = {
   let fields = validate-fields((
+    title: title,
     subtitle: subtitle,
     date: date,
     image: image,
     variant: variant,
     authors: authors,
     tracks: tracks,
-    panel-align: panel-align,
+    align: align,
+    rule: rule,
   ))
   make-grid("title", fields, suppress-global-logo: true)
 }
@@ -194,13 +213,13 @@
   settings,
   title-style: none,
   content-sized: false,
-  after: none,
+  content: none,
   align: left + bottom,
   bottom-inset: auto,
 ) = styled-cell(
   id: "title",
+  content: content,
   style: (
-    after: after,
     content-sized: content-sized,
     inset: title-inset(
       settings,
@@ -308,38 +327,48 @@
 #let compact-title-after(
   fields,
   settings,
-  foreground: auto,
   include-details: true,
 ) = {
-  let foreground = if foreground == auto { settings.colors.text } else { foreground }
   let details = if include-details { ordinary-title-details(fields) } else { none }
+  // The auto default gives the looks variety: the accent rule anchors the
+  // text variants, while image variants stay purely photographic.
+  let show-rule = if fields.rule == auto {
+    fields.variant not in semantic-image-variants
+  } else {
+    fields.rule
+  }
   let after = {
     // The subtitle sits tight below the title: together they form the
     // heavy mass of the page.
     if fields.subtitle != none {
       block(
         above: 0.55 * settings.spacing.gap,
+        // No explicit fill: the subtitle inherits the cell's text fill so
+        // slide `cell-styles` color overrides reach the whole stack.
         text(
           ..(
             title-typography(settings).subtitle
-              + (fill: foreground, weight: "regular")
+              + (weight: "regular")
           ),
           fields.subtitle,
         ),
       )
     }
     // A deliberate break, marked by the accent rule, separates the title
-    // mass from the metadata mass.
-    accent-rule(settings, above: 1.3 * settings.spacing.gap)
+    // mass from the metadata mass. Without the rule, extra space marks the
+    // same break.
+    if show-rule {
+      accent-rule(settings, above: 1.3 * settings.spacing.gap)
+    }
     if details != none {
       block(
-        above: 0.8 * settings.spacing.gap,
+        above: if show-rule { 0.8 } else { 1.3 } * settings.spacing.gap,
         {
           set par(leading: 0.55em)
           text(
             ..(
               title-typography(settings).metadata
-                + (fill: foreground, weight: "regular")
+                + (weight: "regular")
             ),
             details,
           )
@@ -350,6 +379,21 @@
   affix(after)
 }
 
+// The complete fixed content of the title cell: the title text followed by
+// the subtitle and metadata stack.
+#let title-stack-content(
+  fields,
+  settings,
+  include-details: true,
+) = {
+  as-content(fields.title)
+  compact-title-after(
+    fields,
+    settings,
+    include-details: include-details,
+  )
+}
+
 #let title-stack(
   fields,
   settings,
@@ -357,15 +401,14 @@
 ) = title-body-cell(
   settings,
   title-style: title-style,
-  after: compact-title-after(fields, settings),
+  content: title-stack-content(fields, settings),
 )
 
 #let resolve-centered-title(fields, settings) = {
-  let after = compact-title-after(fields, settings)
   styled-cell(
     id: "title",
+    content: title-stack-content(fields, settings),
     style: (
-      after: after,
       inset: settings.spacing.inset,
       align: center + horizon,
       fill: settings.colors.canvas,
@@ -421,37 +464,38 @@
   items
 }
 
+// The byline already names each author (with an asterisk for the
+// corresponding author), so the contact line shows only the marker and the
+// address.
 #let academic-contact(author) = {
-  let items = contact-items(author)
   if author.corresponding {
     [\*]
     box(width: 0.2em)
   }
-  as-content(author.name)
-  [: ]
-  join-content(items, separator: [ · ])
+  join-content(contact-items(author), separator: [ · ])
 }
 
 #let resolve-academic-title(fields, settings) = {
   let academic = structured-academic-data(fields.authors)
   let typography = title-typography(settings)
-  // Metadata compresses to two tiers: a byline, then one fine-print line
-  // joining affiliations, contacts, and date. Stacking each of those in its
-  // own row would scatter the composition.
-  let details-items = academic.affiliations.enumerate().map(academic-affiliation)
-  details-items += academic.authors
+  // Metadata compresses to three tiers: a byline, one fine-print line for
+  // the affiliation legend, and one fine-print line joining contacts and
+  // date. More rows than that would scatter the composition.
+  let affiliation-items = academic.affiliations.enumerate().map(academic-affiliation)
+  let contact-line = academic.authors
     .filter(author => author.email != none)
     .map(academic-contact)
   if fields.date != none {
-    details-items.push(as-content(fields.date))
+    contact-line.push(as-content(fields.date))
   }
+  let details-count = affiliation-items.len() + contact-line.len()
   let children = ()
   // The title mass takes the flexible track and aligns to its bottom, so
   // the whole composition anchors to the lower edge of the slide.
   children.push(t(1fr, title-body-cell(
     settings,
     title-style: typography.academic-display,
-    after: compact-title-after(
+    content: title-stack-content(
       fields,
       settings,
       include-details: false,
@@ -473,7 +517,7 @@
         inset: title-inset(
           settings,
           top: settings.spacing.compact-gap,
-          bottom: if details-items.len() > 0 {
+          bottom: if details-count > 0 {
             settings.spacing.compact-gap
           } else {
             settings.spacing.inset
@@ -482,11 +526,22 @@
       ),
     ))
   }
-  if details-items.len() > 0 {
+  if details-count > 0 {
+    let details-content = {
+      if affiliation-items.len() > 0 {
+        join-content(affiliation-items, separator: [ · ])
+      }
+      if affiliation-items.len() > 0 and contact-line.len() > 0 {
+        linebreak()
+      }
+      if contact-line.len() > 0 {
+        join-content(contact-line, separator: [ · ])
+      }
+    }
     children.push(t(
       auto,
       academic-small-cell(
-        join-content(details-items, separator: [ · ]),
+        details-content,
         "details",
         settings,
         bottom: settings.spacing.inset,
@@ -534,7 +589,7 @@
   )
 }
 
-#let background-panel-inset(alignment, settings) = {
+#let background-stack-inset(alignment, settings) = {
   let side-reserve = 35%
   let centered-margin = 18%
   if alignment in (right, right + top, right + horizon, right + bottom) {
@@ -561,48 +616,19 @@
   }
 }
 
-#let background-scrim(alignment) = {
-  let dark = black.transparentize(35%)
-  let clear = black.transparentize(100%)
-  if alignment in (right, right + top, right + horizon, right + bottom) {
-    gradient.linear(
-      (clear, 0%),
-      (clear, 5%),
-      (dark, 40%),
-      (dark, 100%),
-      angle: 0deg,
-    )
-  } else if alignment in (center, center + top, center + horizon, center + bottom) {
-    gradient.linear(
-      (clear, 0%),
-      (dark, 15%),
-      (dark, 85%),
-      (clear, 100%),
-      angle: 0deg,
-    )
-  } else {
-    gradient.linear(
-      (dark, 0%),
-      (dark, 60%),
-      (clear, 95%),
-      (clear, 100%),
-      angle: 0deg,
-    )
-  }
-}
-
 #let resolve-background-title(fields, image, settings) = {
-  let foreground = settings.colors.inverse-text
-  let after = compact-title-after(fields, settings, foreground: foreground)
+  // The image carries the contrast, so the stack keeps the scheme's
+  // ordinary text color. Pass a pre-adjusted image and override the title
+  // cell's text fill for light-on-dark compositions.
   image-background-cell(styled-cell(
     id: "title",
+    content: title-stack-content(fields, settings),
     style: (
-      after: after,
-      inset: background-panel-inset(fields.panel-align, settings),
-      align: fields.panel-align,
-      text: title-typography(settings).display + (fill: foreground),
+      inset: background-stack-inset(fields.align, settings),
+      align: fields.align,
+      text: title-typography(settings).display + (fill: settings.colors.text),
     ),
-  ), image, overlay: background-scrim(fields.panel-align))
+  ), image)
 }
 
 #let resolve-title(command, settings) = {

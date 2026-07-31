@@ -31,7 +31,17 @@
 )
 #myslide[Image-bottom section]
 
+// The image itself carries the contrast: darken it and switch the section
+// cell to light text.
 #let myslide = m.slide.with(
-  grid: m.templates.section(variant: "image-background", image: picture),
+  grid: m.templates.section(
+    variant: "image-background",
+    image: m.image(
+      path("/docs/assets/images/dog.webp"),
+      darken: 45%,
+      alt: "Dog",
+    ),
+  ),
+  cell-styles: (section: (text: (fill: white))),
 )
 #myslide[Image-background section]

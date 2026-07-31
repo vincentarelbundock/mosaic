@@ -7,7 +7,8 @@
     "text", "tracks", "variant",
   ),
   title: (
-    "authors", "date", "image", "panel-align", "subtitle", "tracks", "variant",
+    "align", "authors", "date", "image", "rule", "subtitle", "title",
+    "tracks", "variant",
   ),
   section: ("image", "number", "role", "subtitle", "tracks", "variant"),
   image: ("alt", "fit", "path", "tracks", "variant"),

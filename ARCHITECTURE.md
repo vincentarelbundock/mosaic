@@ -40,7 +40,7 @@ of each definition directly; facades exist only for intentional public namespace
 - `template-support.typ` owns shared content, image, track, and surface helpers.
 - Each `template-{name}.typ` module owns one template's public constructor,
   field validation, and grid resolution. The larger `template-title.typ`
-  remains cohesive around its seven layouts.
+  remains cohesive around its nine variants.
 - `template-resolver.typ` verifies the common record shape, applies local color
   roles, and dispatches to the owning template module.
 - `template-api.typ` defines the public `mosaic.templates` namespace.
@@ -69,7 +69,7 @@ geometry or direct split records.
   visibility-state evaluation. It remains separate because both
   `grid-model.typ` and `incremental.typ` depend on it.
 - `incremental.typ` owns the public `on`, `reveal`, `replace`, and `reduce`
-  constructors together with maximum-step discovery and temporal content
+  constructors together with maximum-step discovery and incremental content
   transformation.
 - `render.typ` consumes an already-resolved grid tree at one incremental step;
   it does not own frame selection or handout policy.

@@ -2,6 +2,5 @@
 
 #mosaic.templates.title(
   [Title],
-  variant: "image-right",
-  image: (alt: "Missing path"),
+  rule: 1,
 )

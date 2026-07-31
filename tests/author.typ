@@ -25,6 +25,7 @@
 
 #show: mosaic.setup
 #mosaic.slide(grid: mosaic.templates.title(
+  [A public academic title],
   variant: "academic",
   authors: (ada, grace),
-))[A public academic title]
+))

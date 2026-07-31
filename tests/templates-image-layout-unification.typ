@@ -8,6 +8,7 @@
 #let section-image = path("/docs/assets/images/dog.webp")
 
 #let title-right-command = mosaic.templates.title(
+  [Shared image geometry],
   variant: "image-right",
   image: title-image,
   tracks: (2fr, 3fr),
@@ -26,10 +27,11 @@
 #assert(title-right.children.at(0).kind == "cell")
 #assert(title-right.children.at(1).id == "image")
 #assert(grid-test.count(title-right) == 2)
-#assert(grid-test.bodies(title-right) == 1)
-#assert(grid-test.info(title-right, "title").cell.style.after != none)
+#assert(grid-test.bodies(title-right) == 0)
+#assert(grid-test.info(title-right, "title").cell.content != none)
 
 #let title-bottom = resolve-template(mosaic.templates.title(
+  [Shared image geometry],
   variant: "image-bottom",
   image: title-image,
   tracks: (3fr, 2fr),
@@ -40,7 +42,7 @@
 #assert(title-bottom.children.at(0).kind == "cell")
 #assert(title-bottom.children.at(1).id == "image")
 #assert(grid-test.count(title-bottom) == 2)
-#assert(grid-test.bodies(title-bottom) == 1)
+#assert(grid-test.bodies(title-bottom) == 0)
 
 #let section-left-command = mosaic.templates.section(
   variant: "image-left",
@@ -99,11 +101,11 @@
 #assert(section-background.kind == "cell")
 #assert(section-background.id == "section")
 #assert(section-background.style.background != none)
-#assert(section-background.style.fill == black.transparentize(35%))
-#assert(section-background.style.text.fill == white)
+#assert(section-background.style.fill == none)
+#assert(section-background.style.text.fill == settings.colors.text)
 #assert(grid-test.count(section-background) == 1)
 #assert(grid-test.bodies(section-background) == 1)
 
 #show: mosaic.setup
-#mosaic.slide(grid: title-right-command)[Shared image geometry]
+#mosaic.slide(grid: title-right-command)
 #mosaic.slide(grid: section-left-command)[Directional sections]

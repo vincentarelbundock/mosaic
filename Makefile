@@ -23,6 +23,10 @@ EXAMPLE_MAKEFILES := $(wildcard $(EXAMPLES_DIR)/*/Makefile)
 EXAMPLE_SLUGS := $(notdir $(patsubst %/,%,$(dir $(EXAMPLE_MAKEFILES))))
 EXAMPLE_STAMP_DIR := .build/examples
 EXAMPLE_STAMPS := $(addprefix $(EXAMPLE_STAMP_DIR)/,$(addsuffix .stamp,$(EXAMPLE_SLUGS)))
+# Watch every hand-authored example input. Generated decks and gallery covers
+# are excluded so they cannot make their own stamps perpetually stale.
+EXAMPLE_SOURCES := $(shell find $(EXAMPLES_DIR) -type f \
+	! -name '*.pdf' ! -name 'cover.jpg' 2>/dev/null | sort)
 
 TUTORIAL_EXAMPLES_DIR := $(DOCS_DIR)/tutorial-examples
 TUTORIAL_ASSETS_DIR := $(DOCS_DIR)/assets/tutorials
@@ -48,11 +52,10 @@ TUTORIAL_STAMPS := $(TUTORIAL_DECK_STAMPS) $(TUTORIAL_IMAGE_STAMPS)
 PACKAGE_SOURCES := $(shell find $(PACKAGE_DIR) -type f 2>/dev/null | sort)
 SHOWCASE_VIDEO := $(WEB_IMAGE_DIR)/showcase.webm
 SHOWCASE_STAMPS := \
-	$(TUTORIAL_STAMP_DIR)/templates/title.stamp \
-	$(TUTORIAL_STAMP_DIR)/templates/image-figure.stamp \
-	$(TUTORIAL_STAMP_DIR)/color/schemes.stamp \
-	$(TUTORIAL_STAMP_DIR)/incremental/fletcher.stamp \
-	$(TUTORIAL_STAMP_DIR)/incremental/math.stamp
+	$(TUTORIAL_STAMP_DIR)/basic/single.stamp \
+	$(EXAMPLE_STAMP_DIR)/cream.stamp \
+	$(EXAMPLE_STAMP_DIR)/metropolis.stamp \
+	$(EXAMPLE_STAMP_DIR)/minimalist.stamp
 
 help: ## Display this help screen
 	@echo -e "\033[1mAvailable commands:\033[0m\n"
@@ -251,7 +254,7 @@ examples: $(EXAMPLE_STAMPS) ## Compile the docs/examples decks (PDF slideshows +
 
 # Build each example deck via its own Makefile (which knows its typst flags and
 # fonts), then render the first page to a JPEG cover for the Examples gallery.
-$(EXAMPLE_STAMP_DIR)/%.stamp: $(EXAMPLES_DIR)/%/main.typ $(EXAMPLES_DIR)/%/Makefile $(PACKAGE_SOURCES) | install
+$(EXAMPLE_STAMP_DIR)/%.stamp: $(EXAMPLE_SOURCES) $(PACKAGE_SOURCES) Makefile | install
 	@mkdir -p "$(@D)"
 	@echo "examples: building $*"
 	@$(MAKE) --no-print-directory -C "$(EXAMPLES_DIR)/$*"

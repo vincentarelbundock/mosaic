@@ -10,10 +10,11 @@
   features: (rounded: true, slide-number: true),
 )
 #let title-grid = mosaic.templates.title(
+  [Mosaic],
   subtitle: [A compact semantic template system],
   authors: (mosaic.author([Mosaic contributors]),),
   date: [2026],
 )
 
 #show: brand
-#mosaic.slide(grid: title-grid)[Mosaic]
+#mosaic.slide(grid: title-grid)

@@ -26,19 +26,8 @@
           ]
         ]
         #html.elem("p")[
-          Write naturally with headings, semantic templates, and composable
-          layouts. Mosaic handles the slide mechanics while your typography,
-          content, and document structure stay native Typst.
-        ]
-        #html.elem("div", attrs: (class: "mosaic-actions"))[
-          #html.elem("a", attrs: (
-            class: "mosaic-button",
-            href: "getting-started.html",
-          ))[Get started]
-          #html.elem("a", attrs: (
-            class: "mosaic-button mosaic-button--secondary",
-            href: "api/setup.html",
-          ))[API reference]
+          Write a deck as an ordinary Typst document. Templates supply
+          the design, and grids of cells place the content.
         ]
       ]
       #html.elem("img", attrs: (
@@ -47,24 +36,44 @@
         alt: "Mosaic slide with a slim orange title band above asymmetric blue and green columns",
       ))
     ]
+    #html.elem("nav", attrs: (
+      class: "mosaic-actions mosaic-home-links",
+      "aria-label": "Explore Mosaic",
+    ))[
+      #html.elem("a", attrs: (
+        class: "mosaic-button mosaic-button--secondary",
+        href: "getting-started.html",
+      ))[Get started]
+      #html.elem("a", attrs: (
+        class: "mosaic-button mosaic-button--secondary",
+        href: "examples.html",
+      ))[Examples]
+      #html.elem("a", attrs: (
+        class: "mosaic-button mosaic-button--secondary",
+        href: "api/setup.html",
+      ))[API]
+    ]
     #html.elem("section", attrs: (class: "mosaic-feature-showcase"))[
       #html.elem("div", attrs: (class: "mosaic-feature-cards"))[
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
-          #html.elem("h2")[Beautiful from the first slide]
+          #html.elem("h2")[Beautiful]
           #html.elem("p")[
-            Professional templates, typography, and color schemes are built in.
+            Title, section, image, and table templates with matching
+            typography and color schemes.
           ]
         ]
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
-          #html.elem("h2")[Stay focused on your story]
+          #html.elem("h2")[Flexible]
           #html.elem("p")[
-            Write structured content naturally while Mosaic handles the slide mechanics.
+            Every slide is a grid: a tree of cells split horizontally or
+            vertically, nested as deeply as needed, styled cell by cell.
           ]
         ]
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
-          #html.elem("h2")[Make every step land]
+          #html.elem("h2")[Typst-native]
           #html.elem("p")[
-            Reveal content progressively while your layout stays stable.
+            A deck is an ordinary Typst document: headings become slides,
+            and math, show rules, and diagrams work unchanged.
           ]
         ]
       ]
@@ -76,7 +85,7 @@
           muted: "muted",
           playsinline: "playsinline",
           poster: "assets/tutorials/templates/title-1.svg",
-          "aria-label": "Animated gallery of Mosaic title slides, image layouts, color schemes, and incremental diagrams",
+          "aria-label": "Animated gallery of Mosaic title slides, image variants, color schemes, and incremental diagrams",
         ))[
           #html.elem("source", attrs: (
             src: "assets/images/showcase.webm",
@@ -94,6 +103,7 @@
   fallback: () => [
     = Beautiful slides with Typst
 
-    Write naturally with headings, semantic templates, and composable layouts.
+    Write a deck as an ordinary Typst document. Templates supply the
+    design, and grids of cells place the content.
   ],
 )

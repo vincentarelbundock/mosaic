@@ -88,7 +88,7 @@ image at one-third width; and the footer is identical. The header and footer
 use the normal scheme colors except that the footer is inverted through
 `templates.default(inverted: ("footer",))`.
 
-Together, the repeated layout exposes every semantic role without a separate
+Together, the repeated structure exposes every semantic role without a separate
 swatch chart. The slide canvas, title, and prose show `canvas` and `text`. The
 inverted footer shows `text` with `inverse-text`. Around the dog image,
 `surface` fills the card, `line` draws its border, `accent` marks its top edge,
@@ -175,7 +175,7 @@ dictionary overrides only the listed roles:
 ```
 
 Slide-local colors apply to the canvas, ordinary text, templates, and
-presentation furniture. Every incremental page belonging to the logical slide
+presentation furniture. Every frame belonging to the logical slide
 uses the same colors; the following slide automatically restores the inherited
 scheme.
 

@@ -14,6 +14,7 @@
 )
 
 #let academic-command = mosaic.templates.title(
+  [A long academic title],
   variant: "academic",
   subtitle: [A multilevel analysis],
   authors: academic-authors,
@@ -28,11 +29,11 @@
 #for id in ("title", "authors", "details") {
   assert(grid-test.info(academic, id).cell.id == id)
 }
-#assert(grid-test.info(academic, "title").cell.content == none)
-#assert(grid-test.info(academic, "title").cell.style.after != none)
+#assert(grid-test.info(academic, "title").cell.content != none)
 #assert(grid-test.info(academic, "authors").cell.content != none)
 
 #let structured-academic = resolve-template(mosaic.templates.title(
+  [Structured authors],
   variant: "academic",
   authors: (
     mosaic.author(
@@ -54,6 +55,7 @@
 }
 
 #let orcid-only = resolve-template(mosaic.templates.title(
+  [ORCID only],
   variant: "academic",
   authors: (
     mosaic.author([Grace Hopper], orcid: "0000-0001-2345-6789"),
@@ -65,6 +67,7 @@
 }
 
 #let left-grid = resolve-template(mosaic.templates.title(
+  [When public data disappears],
   variant: "left-aligned",
   subtitle: [Evidence from twelve public archives],
   authors: (mosaic.author([Vincent Arel-Bundock], affiliations: (udem,)),),
@@ -72,10 +75,10 @@
 ), settings)
 #assert(left-grid.kind == "cell")
 #assert(grid-test.count(left-grid) == 1)
-#assert(grid-test.info(left-grid, "title").cell.content == none)
-#assert(grid-test.info(left-grid, "title").cell.style.after != none)
+#assert(grid-test.info(left-grid, "title").cell.content != none)
 
 #let centered = resolve-template(mosaic.templates.title(
+  [Models and evidence],
   variant: "centered-stack",
   subtitle: [Annual research lecture],
   authors: (mosaic.author([Vincent Arel-Bundock]),),
@@ -84,6 +87,7 @@
 #assert(grid-test.count(centered) == 1)
 
 #let accent = resolve-template(mosaic.templates.title(
+  [From raw data to publication],
   variant: "accent-block",
   subtitle: [Build a reproducible report],
   authors: (mosaic.author([Vincent Arel-Bundock]),),
@@ -95,6 +99,7 @@
 #assert(grid-test.info(accent, "accent").cell.style.fill == settings.colors.accent)
 
 #let split-right = resolve-template(mosaic.templates.title(
+  [Measuring environmental change],
   variant: "image-right",
   image: image-path,
 ), settings)
@@ -106,6 +111,7 @@
 #assert(grid-test.count(split-right) == 2)
 
 #let split-left = resolve-template(mosaic.templates.title(
+  [Measuring environmental change],
   variant: "image-left",
   image: image-path,
   tracks: (3fr, 2fr),
@@ -115,6 +121,7 @@
 #assert(split-left.children.at(1).kind == "cell")
 
 #let band = resolve-template(mosaic.templates.title(
+  [Measuring environmental change],
   variant: "image-top",
   image: image-path,
 ), settings)
@@ -126,32 +133,35 @@
 #assert(grid-test.count(band) == 2)
 
 #let background = resolve-template(mosaic.templates.title(
+  [Cities after dark],
   variant: "image-background",
   image: path("/docs/assets/images/title-city.webp"),
-  panel-align: top + left,
+  align: top + left,
 ), settings)
 #assert(background.kind == "cell")
 #assert(background.id == "title")
-#assert(background.content == none)
+#assert(background.content != none)
 #assert(background.style.background != none)
 #assert(background.style.at("fill", default: none) == none)
-#assert(background.style.text.fill == settings.colors.inverse-text)
+#assert(background.style.text.fill == settings.colors.text)
 #assert(background.style.align == top + left)
 
 #let centered-background = resolve-template(mosaic.templates.title(
+  [Cities after dark],
   variant: "image-background",
   image: image-path,
-  panel-align: center,
+  align: center,
 ), settings)
 #assert(centered-background.style.inset.left == centered-background.style.inset.right)
 
 #let right-background = resolve-template(mosaic.templates.title(
+  [Cities after dark],
   variant: "image-background",
   image: image-path,
-  panel-align: right,
+  align: right,
 ), settings)
 #assert(background.style.inset.left == right-background.style.inset.right)
 #assert(background.style.inset.right == right-background.style.inset.left)
 
 #show: mosaic.setup
-#mosaic.slide(grid: academic-command)[A long academic title]
+#mosaic.slide(grid: academic-command)

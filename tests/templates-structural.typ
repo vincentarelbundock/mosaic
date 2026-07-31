@@ -7,6 +7,7 @@
 #let institute-c = (id: "c", name: [Institute C])
 
 #mosaic.slide(grid: mosaic.templates.title(
+  [Academic title],
   variant: "academic",
   subtitle: [A replication study],
   authors: (
@@ -17,13 +18,13 @@
   ),
 
   date: [July 2027],
-))[Academic title]
-#mosaic.slide(grid: mosaic.templates.title(variant: "left-aligned", subtitle: [Conference · Left subtitle]))[Left-aligned title]
-#mosaic.slide(grid: mosaic.templates.title(variant: "centered-stack", subtitle: [Centered subtitle]))[Centered-stack title]
-#mosaic.slide(grid: mosaic.templates.title(variant: "accent-block", subtitle: [Workshop]))[Accent-block title]
-#mosaic.slide(grid: mosaic.templates.title(variant: "image-right", image: path("/docs/assets/images/title-river.webp")))[Image-right title]
-#mosaic.slide(grid: mosaic.templates.title(variant: "image-top", image: (path: path("/docs/assets/images/title-river.webp"), alt: "Wetlands")))[Image-top title]
-#mosaic.slide(grid: mosaic.templates.title(variant: "image-background", image: path("/docs/assets/images/title-city.webp")))[Image-background title]
+))
+#mosaic.slide(grid: mosaic.templates.title([Left-aligned title], variant: "left-aligned", subtitle: [Conference · Left subtitle]))
+#mosaic.slide(grid: mosaic.templates.title([Centered-stack title], variant: "centered-stack", subtitle: [Centered subtitle]))
+#mosaic.slide(grid: mosaic.templates.title([Accent-block title], variant: "accent-block", subtitle: [Workshop]))
+#mosaic.slide(grid: mosaic.templates.title([Image-right title], variant: "image-right", image: path("/docs/assets/images/title-river.webp")))
+#mosaic.slide(grid: mosaic.templates.title([Image-top title], variant: "image-top", image: (path: path("/docs/assets/images/title-river.webp"), alt: "Wetlands")))
+#mosaic.slide(grid: mosaic.templates.title([Image-background title], variant: "image-background", image: path("/docs/assets/images/title-city.webp")))
 
 #mosaic.slide(grid: mosaic.templates.section())[Plain section]
 #mosaic.slide(grid: mosaic.templates.section(number: [01]))[Numbered section]

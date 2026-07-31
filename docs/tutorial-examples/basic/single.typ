@@ -2,6 +2,17 @@
 
 #show: m.setup
 
+#m.slide(grid: m.templates.title(
+  [Getting started],
+  variant: "image-background",
+  image: (
+    path: path("/docs/assets/images/bonsai.webp"),
+    alt: "A pine bonsai",
+  ),
+  align: top + right,
+  subtitle: [A first Mosaic deck],
+))
+
 == A figure
 
 #align(center + horizon)[

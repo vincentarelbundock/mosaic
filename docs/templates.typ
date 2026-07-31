@@ -34,7 +34,7 @@ individual slide calls focused on content.
 
 = `default()`
 
-Creates one of four named region structures. `variant` accepts `"body"`,
+Creates a grid with one of four named cell structures. `variant` accepts `"body"`,
 `"header-body"`, `"body-footer"`, or `"header-body-footer"`; the complete
 `"header-body-footer"` structure is the default. `columns` controls the number
 of body cells, while `tracks` optionally sets their relative or fixed widths.
@@ -48,9 +48,9 @@ slide foreground, or leave it as `none`. The indicator follows slide-local
 colors. When the template includes a footer, it also follows the footer's
 insets, text size, explicit text fill, and inverted color treatment.
 
-== Regions
+== Cells
 
-The variant determines which named regions are present and therefore the order
+The variant determines which named cells are present and therefore the order
 of the slide's content blocks:
 
 - `variant: "body"` expects `[body]`.
@@ -58,14 +58,14 @@ of the slide's content blocks:
 - `variant: "body-footer"` expects `[body][footer]`.
 - The default `variant: "header-body-footer"` expects `[header][body][footer]`.
 
-This example shows the complete three-region structure:
+This example shows the complete three-cell structure:
 
 #verbatim-example("templates/default-full.typ")
 #thumbnail-gallery(
   calepin.elements.gallery,
   "templates/default-full",
   1,
-  "A slide with header, body, and footer regions",
+  "A slide with header, body, and footer cells",
 )
 
 The header remains content-sized:
@@ -75,7 +75,7 @@ The header remains content-sized:
   calepin.elements.gallery,
   "templates/default-header",
   1,
-  "A slide with a header and one body region",
+  "A slide with a header and one body cell",
 )
 
 == Columns
@@ -94,17 +94,17 @@ differ. Supply one body block per column, after any header block.
 
 == Style
 
-Use `fill`, `text`, `align`, and `inset` dictionaries to style regions by name.
-Omitted region keys keep the setup defaults. List regions in `inverted` to fill
+Use `fill`, `text`, `align`, and `inset` dictionaries to style cells by name.
+Omitted cell keys keep the setup defaults. List cells in `inverted` to fill
 the header, footer, or both with the inherited scheme's `text` color and render
 their content with `inverse-text`; for example, use
 `inverted: ("footer",)` to invert only the footer. The body retains the normal
-`canvas` and `text` roles. Explicit regional `fill` and `text` values override
+`canvas` and `text` roles. Explicit per-cell `fill` and `text` values override
 those inherited defaults. Fills accept native Typst values, including
 gradients. Use `background` with explicit native content such as `image(...)`
-for a region background:
+for a cell background:
 
-This example selects both surrounding regions:
+This example selects both surrounding cells:
 
 #verbatim-example("templates/default-inverted.typ")
 #thumbnail-gallery(
@@ -114,7 +114,7 @@ This example selects both surrounding regions:
   "A default slide with an inverted header and footer",
 )
 
-Regional dictionaries remain available for independent visual styling:
+Per-cell dictionaries remain available for independent visual styling:
 
 #verbatim-example("templates/default-images.typ")
 #thumbnail-gallery(
@@ -126,7 +126,7 @@ Regional dictionaries remain available for independent visual styling:
 
 == Wrapping
 
-Header and footer regions keep their normal one-line height when possible.
+Header and footer cells keep their normal one-line height when possible.
 Because their tracks are content-sized, wrapped text expands their fills
 vertically and leaves the remaining height to the body.
 
@@ -176,19 +176,24 @@ them when the command is resolved.
 
 = `title()`
 
-Creates an opening-slide grid whose sole slide body is the title. The default
+Creates a complete opening-slide grid. The title text is the first positional
+argument, and the template supplies every cell's content, so the surrounding
+`m.slide` call consumes no content blocks. The default
 `"left-aligned"` variant is text-only. The complete set describes the rendered
 structure: `"academic"`, `"left-aligned"`, `"centered-stack"`,
 `"accent-block"`, `"image-left"`, `"image-right"`, `"image-top"`,
 `"image-bottom"`, and `"image-background"`.
 
-Every layout accepts `subtitle`, `authors`, and `date`. The ordinary text,
-accent, and image layouts show author names and affiliations but omit contact
+Every variant accepts `subtitle`, `authors`, and `date`. The ordinary text,
+accent, and image variants show author names and affiliations but omit contact
 details. They compose these values in one title cell as two masses: the title
-and subtitle sit tight together, then a short accent-colored rule separates
-the metadata, which compresses to a byline plus one fine-print line joining
-affiliations and date. `centered-stack` centers that
-complete stack; every other text layout anchors it to the bottom edge.
+and subtitle sit tight together, then the metadata compresses to a byline
+plus one fine-print line joining affiliations and date. A short
+accent-colored rule marks the break between the two masses on the text
+variants; the image variants omit it by default so their looks stay
+photographic. Set `rule: true` or `rule: false` to override either default.
+`centered-stack` centers that
+complete stack; every other text variant anchors it to the bottom edge.
 `accent-block` runs a narrow accent-colored spine along the leading edge. The
 default is `left-aligned`.
 
@@ -198,10 +203,11 @@ order, adds superscripts to author names, and generates one inline affiliation
 legend. Reusing an ID with a different name is an error. A corresponding author
 receives an asterisk. ORCID is represented only by the linked icon beside the
 author's name.
-The title and subtitle share the `title` cell. The `academic` layout
+The title and subtitle share the `title` cell. The `academic` variant
 additionally uses an `authors` byline cell and a single fine-print `details`
-cell that joins the affiliation legend, contact emails, and date on one line.
-Absent optional regions are omitted.
+cell that shows the affiliation legend on one line, then contact emails and
+the date on a second line.
+Absent optional cells are omitted.
 
 Title grids suppress the presentation's global logo. Add a logo, event label,
 or other decoration explicitly with the title slide's `foreground` argument;
@@ -210,13 +216,14 @@ an event may instead be written directly into `subtitle`:
 ```typ
 #m.slide(
   grid: m.templates.title(
+    [Models, evidence, and public decisions],
     subtitle: [Annual Research Lecture · Montréal, 2027],
   ),
   foreground: [
     #place(top + left)[#text(size: 10pt, weight: "bold")[RESEARCH LAB]]
     #place(top + right)[#image("logo.svg", width: 18mm)]
   ],
-)[Models, evidence, and public decisions]
+)
 ```
 
 The five image variants require `image`, either native content, a non-empty path
@@ -225,11 +232,13 @@ image sizing or composition, pass native content instead of a path:
 
 - `image-left` and `image-right` place a full-height image beside the title stack.
 - `image-top` and `image-bottom` place a full-width image above or below the title stack.
-- `image-background` covers the canvas, applies a deterministic alignment-aware
-  readability gradient with inverse typography, and positions its text with native
-  `panel-align`. Combine horizontal and vertical alignment, such as
-  `panel-align: top + left` for a top-left title or `center + horizon` for a
-  centered title.
+- `image-background` covers the canvas with the image and positions the title
+  stack over it with `align`. Combine horizontal and vertical alignment, such
+  as `align: top + left` for a top-left title or `center + horizon` for a
+  centered title. The stack keeps the scheme's ordinary `text` color, so the
+  image must carry the contrast: pass a pre-adjusted image such as
+  `m.image(path(...), darken: 45%)` and override the `title` cell's text fill
+  through `cell-styles` for light-on-dark compositions.
 
 For the four directional variants, `tracks` accepts `auto` or two native Typst
 track sizes in visual order. By default, the image receives `2fr` and the title
@@ -241,7 +250,7 @@ stack receives `3fr`, independent of direction. Image variants expose an `image`
   calepin.elements.gallery,
   "templates/title",
   9,
-  "Nine structural title variants with an inline academic layout, realistic metadata, and images",
+  "Nine structural title variants with inline academic metadata and images",
 )
 
 = `section()`
@@ -251,16 +260,17 @@ and `image` add context. Variants are `plain`, `image-left`, `image-right`,
 `image-top`, `image-bottom`, and `image-background`; image variants require
 `image`. A `number` may accompany any variant. Directional variants use the
 same visual-order `tracks` syntax and transparent `image`/`section` split tree
-as `image()`; `auto` gives the two regions equal space. `image-background`
-keeps a single `section` cell and places the
-image behind it with a black readability scrim and white text.
+as `image()`; `auto` gives the two cells equal space. `image-background`
+keeps a single `section` cell and places the image behind it; as with the
+title template, darken or lighten the image itself and override the cell's
+text fill when the composition needs light-on-dark text.
 
 #verbatim-example("templates/section.typ")
 #thumbnail-gallery(calepin.elements.gallery, "templates/section", 7, "templates.section() directional and background variants")
 
 = `image()`
 
-An image-first template with no header or footer regions:
+An image-first template with no header or footer cells:
 
 - `"full"` gives the image the complete body area without an inset.
 - `"figure"` contains the image within the normal slide inset.

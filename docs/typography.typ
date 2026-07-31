@@ -51,7 +51,7 @@ quote, a number — use `text` directly, or exclude the heading:
 ```
 
 Keep a heading stable across a slide's incremental frames: it cannot be placed
-inside a temporal grid node (`m.grid.on`, `m.reveal`, and related reducers).
+inside an incremental grid node (`m.grid.on`, `m.reveal`, and related reducers).
 
 = Paragraphs and lists
 

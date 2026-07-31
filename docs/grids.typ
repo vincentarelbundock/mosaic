@@ -1,6 +1,5 @@
 #import "/.calepin/calepin.typ" as calepin
 #import "/_includes/tutorial-gallery.typ": slideshow, verbatim-example
-#import "/diagrams/grid-anatomy.typ": diagram as grid-anatomy
 
 #set document(title: [Grids])
 #metadata((title: "Grids")) <website-metadata>
@@ -57,18 +56,6 @@ still work when selected by the author.
 Only vertical overflow is reported; horizontal overflow is not. Disable
 observation if measurement of cells containing complex introspection triggers
 Typst layout-convergence warnings.
-
-= Anatomy of a slide
-
-The slide is the outer rectangle. A grid divides it into named cells, and
-each cell receives one content block. The inset is the internal space between
-a cell's edge and its content.
-
-#html.frame(grid-anatomy)
-
-Most Typst documents also have an inset around the page. In Mosaic, cells
-extend all the way to the slide edge by default, which allows images and
-banners to bleed to the edge of the slide.
 
 = Grids with `h()` and `v()`
 
@@ -136,7 +123,7 @@ m.grid.h("a", m.grid.v("b", "c"))
 )
 
 The outermost function describes the largest division. Work inward one split
-at a time: choose the outer direction, then replace any region that needs
+at a time: choose the outer direction, then replace any cell that needs
 another division with a nested `m.grid.h` or `m.grid.v`.
 
 The same idea can create a regular two-by-two grid. The outer `m.grid.v`
@@ -156,7 +143,7 @@ m.grid.v(m.grid.h("a", "b"), m.grid.h("c", "d"))
 For a larger grid, sketch the largest bands first. This example begins with
 three vertical bands: a title, a main area, and a footer. The main area is
 then divided into two columns, and those columns contain their own nested
-regions:
+splits:
 
 ```typ
 m.grid.v(
@@ -246,7 +233,7 @@ left to right within `m.grid.h`, top to bottom within `m.grid.v`, and
 recursively through nested grids.
 
 This complete example creates three slides: three columns, two rows, and a
-title–columns–footer layout.
+title–columns–footer grid.
 
 #verbatim-example("grids/grid-to-slide.typ")
 
@@ -279,7 +266,7 @@ overrides through `m.slide` as a dictionary keyed by those identities:
 
 The public fields are `fill`, `inset`, `align`, `text`, `stroke`, `radius`,
 `background`, and `fit`. Template defaults are applied first. A slide override
-replaces a surface field, while its `text` dictionary merges with the
+replaces a style field, while its `text` dictionary merges with the
 template's text defaults. Unknown cell IDs and unsupported fields are errors.
 
 = Reusable grids and styles

@@ -1,9 +1,9 @@
 .PHONY: all clean
 
-all: photojournalist-mosaic.pdf
+all: portfolio.pdf
 
-photojournalist-mosaic.pdf: main.typ assets/*.png
+portfolio.pdf: main.typ assets/*.png
 	typst compile --root ../../.. main.typ $@
 
 clean:
-	rm -f photojournalist-mosaic.pdf
+	rm -f portfolio.pdf

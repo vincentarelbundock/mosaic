@@ -9,7 +9,8 @@
 #let udem = (id: "udem", name: [Université de Montréal])
 #let civic = (id: "civic", name: [Institute for Civic Statistics])
 
-#let myslide = m.slide.with(grid: m.templates.title(
+#m.slide(grid: m.templates.title(
+  [Compact academic metadata],
   variant: "academic",
   subtitle: [An inline scholarly title layout],
   authors: (
@@ -24,53 +25,54 @@
   ),
   date: [Toronto · July 2027],
 ))
-#myslide[Compact academic metadata]
 
-#let myslide = m.slide.with(grid: m.templates.title(
-  variant: "left-aligned",
-  subtitle: [What twelve disappearing archives teach us about reproducibility],
-  authors: (m.author([Vincent Arel-Bundock], affiliations: (udem,)),),
-  date: [March 2027],
-))
-#myslide(
+#m.slide(
+  grid: m.templates.title(
+    [When public data disappears],
+    variant: "left-aligned",
+    subtitle: [What twelve disappearing archives teach us about reproducibility],
+    authors: (m.author([Vincent Arel-Bundock], affiliations: (udem,)),),
+    date: [March 2027],
+  ),
   foreground: [
     #place(top + left)[#mark([OPEN DATA DAY], rgb("#2563eb"))]
     #place(top + right)[#mark([MOSAIC LAB], rgb("#0f766e"))]
   ],
-)[When public data disappears]
+)
 
-#let myslide = m.slide.with(grid: m.templates.title(
+#m.slide(grid: m.templates.title(
+  [Models, evidence, and public decisions],
   variant: "centered-stack",
   subtitle: [Annual Research Lecture · A public conversation about uncertainty],
   authors: (m.author([Maya Thompson], affiliations: (civic,)),),
   date: [2027],
 ))
-#myslide[Models, evidence, and public decisions]
 
-#let myslide = m.slide.with(grid: m.templates.title(
+#m.slide(grid: m.templates.title(
+  [Solid accent block],
   variant: "accent-block",
-  subtitle: [A solid color region; no image],
+  subtitle: [A solid color spine; no image],
   authors: (m.author([Variant · accent-block]),),
 ))
-#myslide[Solid accent block]
 
-#let myslide = m.slide.with(grid: m.templates.title(
+#m.slide(grid: m.templates.title(
+  [Image on the right],
   variant: "image-right",
   image: dashboard,
   subtitle: [Text leads; the visual follows],
   authors: (m.author([Variant · image-right]),),
 ))
-#myslide[Image on the right]
 
-#let myslide = m.slide.with(grid: m.templates.title(
+#m.slide(grid: m.templates.title(
+  [Image on the left],
   variant: "image-left",
   image: dashboard,
   subtitle: [The visual leads; text follows],
   authors: (m.author([Variant · image-left]),),
 ))
-#myslide[Image on the left]
 
-#let myslide = m.slide.with(grid: m.templates.title(
+#m.slide(grid: m.templates.title(
+  [Measuring environmental change],
   variant: "image-top",
   image: (
     path: path("/docs/assets/images/title-river.webp"),
@@ -79,9 +81,9 @@
   subtitle: [Field observations from the St. Lawrence wetlands],
   authors: (m.author([River Systems Group]),),
 ))
-#myslide[Measuring environmental change]
 
-#let myslide = m.slide.with(grid: m.templates.title(
+#m.slide(grid: m.templates.title(
+  [Wetlands from above],
   variant: "image-bottom",
   image: (
     path: path("/docs/assets/images/title-river.webp"),
@@ -90,17 +92,22 @@
   subtitle: [A landscape-first account of changing habitats],
   authors: (m.author([River Systems Group]),),
 ))
-#myslide[Wetlands from above]
 
-#let myslide = m.slide.with(grid: m.templates.title(
-  variant: "image-background",
-  image: (
-    path: path("/docs/assets/images/title-city.webp"),
-    alt: "Coastal city lights at night with dark sky and water to the left",
+// The image itself carries the contrast: darken it and switch the title
+// cell to light text.
+#m.slide(
+  grid: m.templates.title(
+    [Cities after dark],
+    variant: "image-background",
+    image: m.image(
+      path("/docs/assets/images/title-city.webp"),
+      darken: 45%,
+      alt: "Coastal city lights at night with dark sky and water to the left",
+    ),
+    align: top + left,
+    subtitle: [Public lecture · Infrastructure, evidence, and life after sunset],
+    authors: (m.author([Amara Johnson], orcid: "0000-0001-2345-6789"),),
+    date: [Montréal · October 2027],
   ),
-  panel-align: top + left,
-  subtitle: [Public lecture · Infrastructure, evidence, and life after sunset],
-  authors: (m.author([Amara Johnson], orcid: "0000-0001-2345-6789"),),
-  date: [Montréal · October 2027],
-))
-#myslide[Cities after dark]
+  cell-styles: (title: (text: (fill: white))),
+)

@@ -45,6 +45,14 @@
     stroke: (paint: blue, thickness: 1.4pt),
   )
 
+  // The outer rectangle is the slide itself.
+  content((6, 7.55), [*Slide*], anchor: "south")
+  line((6, 7.45), (6, 6.85), stroke: blue, mark: arrow)
+
+  // The boundary between two cells is a split.
+  content((9.3, -0.75), [*Split*], anchor: "north")
+  line((9.1, -0.5), (7, 0.9), stroke: blue, mark: arrow)
+
   // Cell annotations.
   content((13.5, 6.0), [*Cell 0*], anchor: "west")
   line((13.25, 5.9), (10.5, 5.55), stroke: blue, mark: arrow)

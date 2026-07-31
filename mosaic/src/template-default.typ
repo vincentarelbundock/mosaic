@@ -64,7 +64,7 @@
     if unknown.len() > 0 {
       fail(
         "template \"default\" " + name + " has unknown "
-          + if unknown.len() == 1 { "region " } else { "regions " }
+          + if unknown.len() == 1 { "cell " } else { "cells " }
           + unknown.map(repr).join(", "),
       )
     }
@@ -72,7 +72,7 @@
   for (region, value) in fields.text {
     if type(value) != dictionary {
       fail(
-        "template \"default\" text style for region "
+        "template \"default\" text style for cell "
           + repr(region) + " must be a dictionary",
       )
     }
@@ -80,7 +80,7 @@
   for (region, value) in fields.background {
     if value != none and type(value) != content {
       fail(
-        "template \"default\" background for region "
+        "template \"default\" background for cell "
           + repr(region) + " must be content or none",
       )
     }
@@ -92,18 +92,18 @@
 ///
 /// The `variant` selects `body`, `header-body`, `body-footer`, or the default
 /// `header-body-footer` structure. The surrounding `mosaic.slide` supplies
-/// content in that region order, with one body block per requested column. The
+/// content in that cell order, with one body block per requested column. The
 /// template resolves to a vertical Mosaic split whose body child is a
 /// horizontal split of ordinary cells.
-/// Regional fills and backgrounds are supplied in dictionaries keyed by
+/// Per-cell fills and backgrounds are supplied in dictionaries keyed by
 /// `header`, `body`, or `footer`. Fill values are native Typst fills;
 /// backgrounds are explicit Typst content such as `image(...)`.
-/// Regional text, alignment, and inset dictionaries use the same keys. The
+/// Per-cell text, alignment, and inset dictionaries use the same keys. The
 /// header cell has no special typography; put a native level-two heading in its
 /// content to style it as a heading and register it with outlines.
-/// List `header`, `footer`, or both in `inverted` to fill those regions with
+/// List `header`, `footer`, or both in `inverted` to fill those cells with
 /// the inherited scheme's `text` color and set their text to `inverse-text`.
-/// Explicit regional `fill` and `text` values override these inherited
+/// Explicit per-cell `fill` and `text` values override these inherited
 /// defaults.
 /// Set `progress` to `1/1`, `1`, `circle`, or `line` to place a progress
 /// indicator on the slide foreground. Its color, scale, and placement follow
@@ -114,13 +114,13 @@
 /// - variant (str): `body`, `header-body`, `body-footer`, or `header-body-footer`.
 /// - columns (int): Number of body columns and required body blocks.
 /// - tracks (auto | array): Native Typst tracks for the body columns.
-/// - inverted (array): Header and footer regions whose colors are inverted from the inherited scheme.
+/// - inverted (array): Header and footer cells whose colors are inverted from the inherited scheme.
 /// - progress (none | str): Foreground progress treatment: `1/1`, `1`, `circle`, `line`, or `none`.
-/// - fill (dictionary): Regional fills keyed by `header`, `body`, or `footer`.
-/// - background (dictionary): Regional background content keyed by `header`, `body`, or `footer`.
-/// - text (dictionary): Regional Typst text styles keyed by `header`, `body`, or `footer`.
-/// - align (dictionary): Regional native Typst alignments.
-/// - inset (dictionary): Regional native Typst insets.
+/// - fill (dictionary): Per-cell fills keyed by `header`, `body`, or `footer`.
+/// - background (dictionary): Per-cell background content keyed by `header`, `body`, or `footer`.
+/// - text (dictionary): Per-cell Typst text styles keyed by `header`, `body`, or `footer`.
+/// - align (dictionary): Per-cell native Typst alignments.
+/// - inset (dictionary): Per-cell native Typst insets.
 /// Pass the returned grid to `mosaic.slide`; content blocks fill `header`,
 /// `body` (or `body-1`, `body-2`, and so on), and `footer` in traversal order.
 ///

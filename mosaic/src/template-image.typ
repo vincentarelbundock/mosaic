@@ -165,7 +165,7 @@
   fields
 }
 
-/// Creates an image-first grid with no header or footer regions.
+/// Creates an image-first grid with no header or footer cells.
 ///
 /// The `full` variant gives the image cell the complete body area without an
 /// inset. The `figure` variant presents one contained image with the standard

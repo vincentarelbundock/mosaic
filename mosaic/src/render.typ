@@ -212,7 +212,7 @@
     if supplied.any(contains-heading) or fixed-content-has-heading(node.child) {
       assert(
         false,
-        message: "mosaic: headings cannot be placed in temporal grid "
+        message: "mosaic: headings cannot be placed in incremental grid "
           + "nodes; keep semantic headings structurally stable across frames",
       )
     }

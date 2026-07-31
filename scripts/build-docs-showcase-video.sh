@@ -9,14 +9,30 @@ trap 'rm -rf "$work_dir"' EXIT
 
 # Keep this list explicit: it is the editorial selection shown on the home page.
 slides=(
-  "docs/assets/tutorials/templates/title-1.svg|"
-  "docs/assets/tutorials/templates/title-4.svg|"
-  "docs/assets/tutorials/templates/title-5.svg|"
-  "docs/assets/tutorials/templates/title-6.svg|"
-  "docs/assets/tutorials/templates/image-figure-1.svg|"
-  "docs/assets/tutorials/color/schemes-8.svg|"
-  "docs/assets/tutorials/incremental/fletcher.pdf|3"
-  "docs/assets/tutorials/incremental/math.pdf|3"
+  # Getting started: title and rounded-grid slides of the first slideshow.
+  "docs/assets/tutorials/basic/single.pdf|1"
+  "docs/assets/tutorials/basic/single.pdf|4"
+  # Cream example: title, agenda, team, gallery.
+  "docs/examples/cream/cream.pdf|1"
+  "docs/examples/cream/cream.pdf|2"
+  "docs/examples/cream/cream.pdf|11"
+  "docs/examples/cream/cream.pdf|17"
+  # Metropolis example: title, then Bellman incremental math, every reveal frame.
+  "docs/examples/metropolis/metropolis.pdf|1"
+  "docs/examples/metropolis/metropolis.pdf|5"
+  "docs/examples/metropolis/metropolis.pdf|6"
+  "docs/examples/metropolis/metropolis.pdf|7"
+  "docs/examples/metropolis/metropolis.pdf|8"
+  # Metropolis example: Bloch-sphere geometry diagram, every reveal frame.
+  "docs/examples/metropolis/metropolis.pdf|18"
+  "docs/examples/metropolis/metropolis.pdf|19"
+  "docs/examples/metropolis/metropolis.pdf|20"
+  "docs/examples/metropolis/metropolis.pdf|21"
+  # Minimalist example: title, portrait, history, statistics.
+  "docs/examples/minimalist/minimalist.pdf|1"
+  "docs/examples/minimalist/minimalist.pdf|5"
+  "docs/examples/minimalist/minimalist.pdf|8"
+  "docs/examples/minimalist/minimalist.pdf|16"
 )
 
 if ! command -v ffmpeg >/dev/null 2>&1; then

@@ -1,35 +1,62 @@
 #import "/.calepin/calepin.typ" as calepin
-#import "/_includes/tutorial-gallery.typ": (
-  slideshow,
-  thumbnail-gallery-items,
-  verbatim-example,
-)
+#import "/_includes/tutorial-gallery.typ": slideshow, verbatim-example
+#import "/diagrams/grid-anatomy.typ": diagram as grid-anatomy
+#import "/diagrams/slide-planes.typ": diagram as slide-planes
 
 #set document(title: [Basics])
 #metadata((title: "Basics")) <website-metadata>
 
 #title()
 
-Mosaic can turn ordinary Typst headings into slides. This keeps a first deck
-short, readable, and easy to edit.
+= Anatomy of a slide deck
+
+A Mosaic *deck* is a sequence of *slides*. Each slide arranges its content on
+a *grid*. A grid is built from horizontal and vertical *splits*. The smallest
+parts of a grid are its named *cells*. Each cell receives one block of
+content. The *inset* is the internal space between a cell's edge and its
+content.
+
+#html.frame(grid-anatomy)
+
+The grid is sandwiched between two full-slide *planes*. The *background*
+plane is painted behind the cells. It typically holds a full-slide image, a
+color wash, or a watermark. The *foreground* plane is painted over the cells.
+It typically holds a slide number, a logo, or a progress indicator. Neither
+plane takes space away from the grid.
+
+#html.frame(slide-planes)
+
+A *template* is a ready-made slide design for a familiar slide kind such as
+a title, section, image, or table. A template provides a grid. It can also
+style cells and place content on the planes. Each template offers several
+named *variants*.
+
+A slide can reveal its content in *steps*. Each step renders as one *frame*.
+Each frame is one page in the PDF. A *scheme* assigns colors to semantic
+*roles*, such as `accent` and `text`, across the whole deck.
 
 = First slideshow
+
+Mosaic can turn ordinary Typst headings into slides. This keeps a first deck
+short, readable, and easy to edit.
 
 After `#show: m.setup`, every `==` signals the start of a new slide. The
 heading becomes the slide title, and the text that follows becomes its
 content.
 
-The example below is a complete three-slide deck. There are no individual
-`slide` calls: write a `==` heading and continue with normal Typst. The code
-block is the exact source for the rendered slideshow beneath it.
+The example below is a complete four-slide deck. It opens with one title
+slide built from the `image-background` title template, with the title
+anchored to the top-right corner. Every slide after that is just a `==`
+heading followed by normal Typst content. The code block is the exact source
+for the rendered slideshow beneath it.
 
 #verbatim-example("basic/single.typ")
 
 #slideshow(
   calepin.elements.gallery,
   "basic/single",
-  3,
-  "A minimal heading-driven deck",
+  4,
+  "A minimal heading-driven deck with an image title slide",
 )
 
 = Sections
@@ -47,48 +74,14 @@ provide a lightweight hierarchy without adding any special slide commands.
   "Two sections and three slides",
 )
 
-= Custom heading slides
-
-By default a `==` heading builds a slide with
-`templates.default(variant: "header-body")`: the heading fills the header and
-the following content fills the body. To give every automatic slide a different
-look — your own furniture, colors, or grid — pass an `auto-slide` function to
-`m.setup`. It receives the heading and body as content and returns a
-`m.slide(...)` command, so plain `==` markup can share the exact styling of your
-explicit slides.
-
-```typ
-#let framed(title, body) = m.slide(
-  grid: m.templates.default(
-    variant: "header-body",
-    inverted: ("header",),
-    progress: "1",
-  ),
-)[#title][#body]
-
-#show: m.setup.with(auto-slide: framed)
-
-== Results
-
-Routed through `framed`, so this `==` slide gets the inverted header bar and
-progress indicator without a single `#slide` call.
-```
-
-The returned slide may use any grid, not only header-body — a single body cell
-that merges the title and content, an image template, or a custom cell tree all
-work. The one rule is Mosaic's usual one: the grid must accept as many body
-blocks as the function passes it. Passing `none` (the default) keeps the
-built-in header-body slide.
-
 = Global style
 
 `m.setup` applies presentation-oriented page, typography, heading,
 caption, list, and cell-inset defaults. Customize native elements with
 ordinary Typst rules after setup:
 
-The default typeface list starts with Inter and ends with Typst's embedded
-Libertinus Serif as a guaranteed terminal family. Typst's last-resort glyph
-fallback also remains enabled. Body text is 28pt, titles are 2em, slide
+The default typeface is Inter, with Typst's embedded Libertinus Serif as a
+guaranteed fallback. Body text is 28pt, titles are 2em, slide
 headings are 1.4em semibold, captions are 0.72em, and supporting text is 0.55em.
 Overflowing content is shown rather than shrunk. Bulleted, numbered, and
 term-list items use 0.5em spacing.
@@ -104,34 +97,6 @@ term-list items use 0.5em spacing.
 #show figure.caption: set text(size: 0.72em, fill: gray)
 ```
 
-= Slide aspect ratio
-
-Mosaic supports the two presentation aspect ratios built into Typst:
-
-- `"16-9"` is the default widescreen format.
-- `"4-3"` is the traditional format.
-
-Choose one with the `paper` argument.
-
-#verbatim-example("basic/aspect-16-9.typ")
-#verbatim-example("basic/aspect-4-3.typ")
-
-#thumbnail-gallery-items(
-  calepin.elements.gallery,
-  (
-    (
-      "/assets/tutorials/basic/aspect-16-9-1.svg",
-      "A widescreen 16:9 slide",
-      [16:9],
-    ),
-    (
-      "/assets/tutorials/basic/aspect-4-3-1.svg",
-      "A traditional 4:3 slide",
-      [4:3],
-    ),
-  ),
-)
-
 = Semantic slide
 
 The simplest semantic grid is `templates.default(variant: "body")`. Its one
@@ -144,9 +109,8 @@ body cell fills the slide.
 ```
 
 Use heading-driven slides for ordinary narrative flow and template grids for
-familiar structures such as title pages, images, and tables. Pass each
-template grid to `m.slide`; both
-forms compile through the same deck pipeline.
+familiar structures such as title slides, images, and tables. Pass each
+template grid to `m.slide`. Both forms mix freely in one deck.
 
 ```typ
 #show: m.setup.with(
@@ -163,7 +127,7 @@ forms compile through the same deck pipeline.
   #lorem(20)
 ]
 
-#m.slide(grid: m.templates.title(subtitle: [A short deck]))[Research result]
+#m.slide(grid: m.templates.title([Research result], subtitle: [A short deck]))
 
 #m.slide(grid: m.templates.image(
   variant: "figure",

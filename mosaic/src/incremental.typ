@@ -231,7 +231,7 @@
   )
 }
 
-/// Defines custom rendering for visible, hidden, and dimmed temporal content.
+/// Defines custom rendering for visible, hidden, and dimmed incremental content.
 ///
 /// -> content
 #let reduce(
