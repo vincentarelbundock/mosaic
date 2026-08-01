@@ -96,8 +96,8 @@ The returned slide may use any grid, not only header-body. A single body cell
 that merges the title and content, an image layout, or a custom cell tree all
 work. The one rule is Mosaic's usual one: the grid must accept as many body
 blocks as the function passes it. Passing `none` (the default) keeps the
-built-in header-body slide. Every theme on the
-#link("themes.html")[Themes] page registers its `default` layout as
+built-in header-body slide. Every theme in
+#link("appearance.html#themes")[Appearance] registers its `default` layout as
 `auto-slide` in exactly this way.
 
 == How do I change the slide aspect ratio?
@@ -212,4 +212,4 @@ and uniform grid model make that kind of design direct rather than an act of
 theme surgery, while everything that is not layout remains plain Typst. Mosaic
 still offers ready-made looks: a few polished themes ship inside the package
 under `m.themes`, and each is a single readable module you can copy and own;
-see the #link("themes.html")[Themes] page.
+see #link("appearance.html#themes")[Appearance].

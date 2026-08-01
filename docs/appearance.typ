@@ -86,8 +86,9 @@ following slide that uses those cell IDs picks the rules up:
   "One grid and one set of reusable cell rules shared by two slides",
 )
 
-A #link("themes.html")[theme] is exactly this pattern at deck scale: an `apply`
-wrapper that calls `m.setup` and adds the deck's cell rules.
+A *theme* (see #link("appearance.html#themes")[Themes], below) is exactly this
+pattern at deck scale: an `apply` wrapper that calls `m.setup` and adds the
+deck's cell rules.
 
 = Typography
 
@@ -294,3 +295,54 @@ Palettes are sourced from
 #link("https://carto.com/carto-colors/")[CARTOColors]; provenance and licensing
 are recorded in `THIRD_PARTY_LICENSES.md`. The
 #link("api/color.html")[Color API] lists exact signatures and diagnostics.
+
+= Themes
+
+A theme packages a deck's whole look. In Mosaic it is a module, not an object:
+one ordinary Typst file exporting a palette, an `apply` wrapper for `#show`, and
+a few layout factories that return `m.slide(...)`. There is no framework
+machinery, no `self`, and no configuration API to learn — deck-wide colors,
+spacing, and features flow through `m.setup`, and everything else is the `set`
+and `show` rules from the sections above, saved in one place.
+
+The file below is a complete theme followed by the deck that uses it: a palette
+of `#let` bindings, three factories, and an `apply` wrapper that hands settings
+to `setup` and paints the cells with native rules. Copy it as a starting point.
+
+#verbatim-example("themes/starter.typ")
+
+#slideshow(
+  calepin.elements.gallery,
+  "themes/starter",
+  5,
+  "The starter theme deck",
+)
+
+Two conventions are worth naming. The `apply` wrapper exists because `set` and
+`show` rules cannot cross an `#import`, so document-wide styling lives inside a
+function applied with `#show: apply`. And the `default` layout is defined before
+the wrapper because `m.setup` captures it as the `auto-slide` handler; after
+that, plain `== Title` markup renders through the theme with no explicit call.
+
+Three polished themes ship inside the package under `m.themes` —
+`metropolis`, `cream`, and `minimalist` — each a single readable module. Import
+Mosaic and pick one:
+
+```typ
+#import "@local/mosaic:0.0.1" as m
+#let theme = m.themes.metropolis
+#show: theme.apply
+
+#theme.title([My talk], subtitle: [With a borrowed look])
+== First slide
+#theme.section([A new chapter])
+```
+
+Each bundled `apply` exposes a few knobs through `.with(...)` (for example
+`#show: theme.apply.with(base-size: 24pt)`). Beyond those, there is no
+configuration API, and that is deliberate: to change anything else, copy the
+theme file from `mosaic/src/themes/` next to your deck, import the copy, and
+edit any line — you own it, with no version coupling. The Grayscale theme in
+`docs/examples/portfolio/` shows the same convention vendored beside its deck.
+See #link("examples.html")[Examples] for complete decks rendered under each
+theme.

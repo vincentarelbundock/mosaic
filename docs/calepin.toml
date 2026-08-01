@@ -67,9 +67,6 @@ fold = true
   target = "furniture.typ"
 
   [[sidebar.section.item]]
-  target = "themes.typ"
-
-  [[sidebar.section.item]]
   target = "examples.typ"
 
   [[sidebar.section.item]]

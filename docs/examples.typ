@@ -140,8 +140,8 @@
 Explore four complete decks built with Mosaic. Click a thumbnail to page through
 its slides. The #link(repo)[GitHub repository] contains every deck's full Typst
 source, assets, Makefile, and compiled PDF. Each deck's reusable look is a
-single-module theme collected on the #link("themes.html")[Themes] page; three
-of them ship inside the package under `m.themes`.
+single-module theme; three ship inside the package under `m.themes`, and
+#link("appearance.html#themes")[Appearance] explains how to write your own.
 See #link("acknowledgments.html#example-decks")[Acknowledgments] for sources
 and licenses.
 

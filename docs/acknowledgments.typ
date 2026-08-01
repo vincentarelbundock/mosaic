@@ -48,8 +48,9 @@ license notices.
 Mosaic's qualitative palettes and source-derived semantic schemes draw from
 Okabe–Ito, Paul Tol, ColorBrewer, CARTOColors, Rosé Pine, Catppuccin, Nord,
 Radix Colors, Flexoki, Everforest, Tokyo Night, and Ayu. Exact source links,
-adaptation notes, and licenses are listed on the
-#link("colors.html#sources")[Colors] page and in the full third-party notices.
+adaptation notes, and licenses are listed under
+#link("appearance.html#palettes")[Appearance] and in the full third-party
+notices.
 
 == Example decks
 
