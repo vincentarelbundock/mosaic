@@ -1,7 +1,7 @@
 // Rendering of validated grid trees for one incremental step.
 #import "shared.typ": array-max, tag
 #import "incremental-core.typ": range-last, status
-#import "grid-model.typ": count-bodies, resolved-tracks, fold-grid
+#import "grid-model.typ": body-cell-ids, resolved-tracks, fold-grid
 #import "incremental.typ": contains-heading, max-step, transform, apply-state
 #import "fit.typ": fit-to-width, fit-to-height
 
@@ -174,18 +174,20 @@
   })
 }
 
+// `contents` is the id -> content map. Each content-bearing cell looks up its
+// own content by id, so there is no positional cursor to thread or keep aligned
+// across branches and removed incremental nodes. Returns (content, removed,
+// style).
 #let render-node(
   node,
-  bodies,
+  contents,
   step,
-  next: 0,
   key: "grid",
   overflow: "off",
   slide: 0,
 ) = {
   if node.kind == "on" {
-    let count = count-bodies(node.child)
-    let supplied = bodies.slice(next, next + count)
+    let supplied = body-cell-ids(node.child).map(id => contents.at(id))
     if supplied.any(contains-heading) or fixed-content-has-heading(node.child) {
       assert(
         false,
@@ -200,19 +202,17 @@
       step,
     )
     if state == "removed" {
-      return ([], next + count-bodies(node.child), true, none)
+      return ([], true, none)
     }
-    let (content, next, removed, style) = render-node(
+    let (child-content, removed, style) = render-node(
       node.child,
-      bodies,
+      contents,
       step,
-      next: next,
       key: key + ".on",
       overflow: overflow,
       slide: slide,
     )
-    let content = apply-state(state, content)
-    return (content, next, removed, style)
+    return (apply-state(state, child-content), removed, style)
   }
   if node.kind == "cell" {
     let style = node.style
@@ -220,40 +220,25 @@
       style.insert("_id", node.id)
     }
     let style = if style.len() == 0 { none } else { style }
-    if node.content == none {
-      (
-        transform(bodies.at(next), step, heading-key: key),
-        next + 1,
-        false,
-        style,
-      )
-    } else {
-      (
-        transform(node.content, step, heading-key: key),
-        next,
-        false,
-        style,
-      )
-    }
+    let body = if node.content == none { contents.at(node.id) } else { node.content }
+    (transform(body, step, heading-key: key), false, style)
   } else {
     let rendered = ()
     let tracks = ()
     let resolved = resolved-tracks(node)
     for (index, child) in node.children.enumerate() {
-      let result = render-node(
+      let (child-content, removed, style) = render-node(
         child,
-        bodies,
+        contents,
         step,
-        next: next,
         key: key + "." + str(index),
         overflow: overflow,
         slide: slide,
       )
-      next = result.at(1)
-      if not result.at(2) {
+      if not removed {
         let content = render-cell(
-          result.at(0),
-          result.at(3),
+          child-content,
+          style,
           overflow: overflow,
           key: key + "." + str(index),
           slide: slide,
@@ -266,7 +251,7 @@
       }
     }
     if rendered.len() == 0 {
-      return ([], next, true, none)
+      return ([], true, none)
     }
     // Interior boundaries between the tracks that survived this step; native
     // grid lines are drawn centered in the gutter.
@@ -299,29 +284,28 @@
         )
       },
     )
-    (content, next, false, none)
+    (content, false, none)
   }
 }
 
-#let render(node, bodies, step, next: 0, overflow: "off", slide: 0) = {
-  let result = render-node(
+#let render(node, contents, step, overflow: "off", slide: 0) = {
+  let (body, removed, style) = render-node(
     node,
-    bodies,
+    contents,
     step,
-    next: next,
     key: "grid",
     overflow: overflow,
     slide: slide,
   )
-  let content = if result.at(3) == none or result.at(2) {
-    result.at(0)
+  if style == none or removed {
+    body
   } else {
     grid(
       columns: (1fr,),
       rows: (1fr,),
       render-cell(
-        result.at(0),
-        result.at(3),
+        body,
+        style,
         overflow: overflow,
         key: "grid",
         slide: slide,
@@ -329,5 +313,4 @@
       ),
     )
   }
-  (content, result.at(1), result.at(2))
 }

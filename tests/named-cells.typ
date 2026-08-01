@@ -2,7 +2,7 @@
 // grid traversal order. Positional content remains the terse shorthand; both
 // normalize to one ordered body array, so equivalent slides render identically.
 #import "@local/mosaic:0.0.1" as mosaic
-#import "../mosaic/src/grid-model.typ": body-cell-ids, resolve-named-content
+#import "../mosaic/src/grid-model.typ": body-cell-ids, resolve-content
 
 #let comparison = mosaic.grid.h(
   mosaic.grid.v(
@@ -15,15 +15,16 @@
 // Content-bearing IDs follow the grid's depth-first declaration order.
 #assert(body-cell-ids(comparison) == ("heading", "left", "right"))
 
-// Named assignment is independent of dictionary order and resolves to the
-// same ordered array the positional form produces.
-#let positional = ([Heading], [Left], [Right])
-#let named = resolve-named-content(comparison, (
+// Named and positional content resolve to the same id -> content map, so
+// dictionary order is irrelevant and the two forms are equivalent.
+#let named = resolve-content(comparison, (
   right: [Right],
   heading: [Heading],
   left: [Left],
-))
-#assert(repr(named) == repr(positional))
+), ())
+#let positional = resolve-content(comparison, (:), ([Heading], [Left], [Right]))
+#assert(named == (heading: [Heading], left: [Left], right: [Right]))
+#assert(named == positional)
 
 // The slide command carries the cells dictionary.
 #let command = mosaic.slide(comparison, cells: (
@@ -40,7 +41,7 @@
   mosaic.grid.cell("body"),
 )
 #assert(body-cell-ids(with-fixed) == ("body",))
-#assert(resolve-named-content(with-fixed, (body: [Body])) == ([Body],))
+#assert(resolve-content(with-fixed, (body: [Body]), ()) == (body: [Body]))
 
 // Incremental destinations are counted by ID too.
 #let temporal = mosaic.grid.v(

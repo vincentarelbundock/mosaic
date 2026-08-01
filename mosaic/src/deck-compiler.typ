@@ -79,9 +79,10 @@
     } else if mode == "section" {
       wrap-content(
         render-slide(slide-command(
-          (section,),
+          (),
           grid: section-grid,
           numbered: false,
+          cells: (section: section),
         )),
         wrappers,
       )

@@ -40,10 +40,11 @@
 // `<mosaic-cell-content>`.
 #let default-layout(title, body) = slide(
   grid: grid.cell("content", inset: 45pt),
-)[
-  #title
-  #body
-]
+  cells: (content: [
+    #title
+    #body
+  ]),
+)
 
 // Opening slide in the style of the deck's cover: a large bold serif title at
 // left-horizon and a thin red rule near the bottom edge. `authors` takes an

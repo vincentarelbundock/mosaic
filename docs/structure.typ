@@ -200,8 +200,9 @@ in source order: left to right within `m.grid.h`, top to bottom within
 
 Positional blocks are terse, but a reader must trace the traversal order to
 know which block lands where, and rearranging the grid moves content even when
-the IDs stay put. For a custom grid with several supplied cells, assign content
-by ID through the `cells` dictionary instead:
+the IDs stay put. Whenever a slide fills more than one cell, prefer the `cells`
+dictionary — it assigns content by ID, so the mapping is explicit and
+order-independent:
 
 ```typ
 #let comparison = m.grid.h(
@@ -226,7 +227,9 @@ it, `cells: (body: [...])` fills it, and `label("mosaic-cell-body")` styles it.
 Every content-bearing cell must have an entry, and an entry naming an unknown
 cell or a fixed-content cell is a reported error. `cells:` and positional
 blocks cannot be mixed in one call. Keep positional blocks for the ordinary
-one-cell slide and for small grids where source order is already obvious.
+one-cell slide; reach for `cells:` as soon as a slide fills more than one. It is
+the form Mosaic's own layout factories and automatic `==` slides use
+internally.
 
 A cell needs fixed content only when the grid, not the slide, owns it — an
 `image` or a logo. Give such a cell `content:` in the grid; it then consumes no
@@ -249,12 +252,13 @@ reuse it with different content:
   colors: m.color.scheme("dark"),
 )
 
-#myslide[== Slide title][Slide content]
+#myslide(cells: (header: [== Slide title], body: [Slide content]))
 ```
 
 This keeps structural options on the layout constructor, slide behavior such as
 `colors`, `background`, and `foreground` on `m.slide.with`, and individual calls
-focused on content. Each layout's cells are labeled `<mosaic-cell-ID>`, so their
+focused on content. The `default` layout's cells are `header`, `body` (or
+`body-1`, `body-2`, … for multiple columns), and `footer`. Each layout's cells are labeled `<mosaic-cell-ID>`, so their
 appearance is native rules; see #link("appearance.html")[Appearance]. Full
 signatures live in the #link("api/layouts.html")[layouts API].
 
@@ -270,10 +274,11 @@ heading styling and registers the heading with outlines. Set `progress` to
 `"1/1"`, `"1"`, `"circle"`, or `"line"` to add a progress indicator on the slide
 foreground; it follows the slide-local accent color.
 
-The variant determines which named cells are present and therefore the order of
-positional content blocks: `[header][body][footer]` for the full structure,
-`[body]` for `"body"`, and so on. `columns` divides the body into equal columns
-by default; set `tracks` to one native track size per column to weight them.
+The variant determines which named cells are present: `header`, `body`, and
+`footer` for the full structure, just `body` for `"body"`, and so on. Fill them
+with `cells: (header: …, body: …, footer: …)`, or positionally in that order.
+`columns` divides the body into equal columns by default (`body-1`, `body-2`,
+…); set `tracks` to one native track size per column to weight them.
 
 #verbatim-example("layouts/default-full.typ")
 #thumbnail-gallery(

@@ -53,12 +53,13 @@
 // `== Title` markup renders through it. Its look lives in `apply`.
 #let default-layout(title, body) = m.slide(
   grid: m.grid.cell("content", inset: 40pt),
-)[
-  #title
-  #line(length: 100%, stroke: 0.6pt + gray)
-  #v(0.8em)
-  #body
-]
+  cells: (content: [
+    #title
+    #line(length: 100%, stroke: 0.6pt + gray)
+    #v(0.8em)
+    #body
+  ]),
+)
 
 // Opening slide: an ink field with a bold white title at left-horizon over a
 // short gray rule, the subtitle and byline in quiet gray beneath. `authors`

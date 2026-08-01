@@ -78,7 +78,8 @@ explicit slides.
 ```typ
 #let framed(title, body) = m.slide(
   grid: m.layouts.default(variant: "header-body", progress: "1"),
-)[#title][#body]
+  cells: (header: title, body: body),
+)
 
 #show: m.setup.with(auto-slide: framed)
 
@@ -94,9 +95,10 @@ progress indicator without a single `#slide` call.
 
 The returned slide may use any grid, not only header-body. A single body cell
 that merges the title and content, an image layout, or a custom cell tree all
-work. The one rule is Mosaic's usual one: the grid must accept as many body
-blocks as the function passes it. Passing `none` (the default) keeps the
-built-in header-body slide. Every theme in
+work. Assigning the heading and body to named cells with `cells:` (rather than
+positional blocks) keeps the mapping explicit and independent of the grid's
+shape; the only rule is that every content-bearing cell is supplied. Passing
+`none` (the default) keeps the built-in header-body slide. Every theme in
 #link("appearance.html#themes")[Appearance] registers its `default` layout as
 `auto-slide` in exactly this way.
 

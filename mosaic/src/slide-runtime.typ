@@ -1,6 +1,6 @@
 // Logical-slide runtime: frame policy, state, resolution, and page rendering.
 #import "shared.typ": fail
-#import "grid-model.typ": cell, validate, count-bodies, resolve-named-content
+#import "grid-model.typ": cell, validate, resolve-content
 #import "incremental.typ": max-step, transform
 #import "render.typ": max-node, render
 #import "settings.typ": settings-state, with-colors
@@ -225,22 +225,13 @@
   }
   validate-plane(resolved-background, "background")
   validate-plane(resolved-foreground, "foreground")
-  // Named and positional content collapse to one ordered body array before
-  // rendering, so the renderer, overflow, and incremental paths stay single.
-  let bodies = if command.cells.len() == 0 {
-    command.bodies
-  } else {
-    resolve-named-content(resolved-grid, command.cells)
-  }
-  let expected = count-bodies(resolved-grid)
-  assert(
-    bodies.len() == expected,
-    message: "mosaic: grid expects " + str(expected)
-      + " bodies, received " + str(bodies.len()),
-  )
+  // Named and positional content collapse to one id -> content map before
+  // rendering, so the renderer, overflow, and incremental paths look content up
+  // by cell id with no positional cursor.
+  let contents = resolve-content(resolved-grid, command.cells, command.bodies)
   let steps = calc.max(
     max-node(resolved-grid),
-    max-step(bodies),
+    max-step(contents.values()),
     max-step(resolved-background),
     max-step(resolved-foreground),
   )
@@ -255,14 +246,13 @@
   let freeze-location = here()
   let handout = handout-state.get()
   for step in physical-steps(steps, handout) {
-    let result = render(
+    let rendered = render(
       resolved-grid,
-      bodies,
+      contents,
       step,
       overflow: settings.features.overflow,
       slide: slide,
     )
-    assert(result.at(1) == expected)
     pagebreak(weak: true)
     prepare-frame(step, steps, freeze-location, handout: handout)
     let background-content = render-plane(resolved-background, step, "background")
@@ -275,7 +265,7 @@
       breakable: false,
       [
         #full-slide-layer(background-content)
-        #full-slide-layer(result.at(0))
+        #full-slide-layer(rendered)
         #full-slide-layer(foreground-content)
         #full-slide-layer(presentation-furniture(
           settings,

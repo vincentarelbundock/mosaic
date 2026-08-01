@@ -67,8 +67,9 @@
 //   ]
 #let default-layout(title, body, number: true) = slide(
   grid: slide-grid,
+  cells: (header: title, body: body),
   foreground: footer(number: number),
-)[#title][#body]
+)
 
 // Opening slide built on Mosaic's `title` layout ("academic" variant). The
 // deck scheme (paper canvas, ink text, orange accent) styles it, so the

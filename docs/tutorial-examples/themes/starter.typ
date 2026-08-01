@@ -13,7 +13,8 @@
 // plain `== Title` markup renders through it.
 #let default(title, body) = m.slide(
   grid: m.layouts.default(variant: "header-body"),
-)[#title][#body]
+  cells: (header: title, body: body),
+)
 
 // 3 — Layout factories for the cover and the section dividers. The grids are
 // purely structural; their look lives in `apply` as label rules.

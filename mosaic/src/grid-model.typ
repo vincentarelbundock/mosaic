@@ -422,36 +422,48 @@
   (node, children) => children.flatten(),
 )
 
-// Validate a `cells` dictionary against a resolved grid and return the bodies
-// in traversal order, so named and positional content share one internal
-// representation. Callers pass this result to `render` exactly as they would a
-// positional body array.
-#let resolve-named-content(node, cells) = {
-  if type(cells) != dictionary {
-    fail("slide cells must be a dictionary")
-  }
+// Resolve a slide's content into one id -> content map, the single internal
+// representation the renderer consumes. Named content (`cells`) is validated
+// against the resolved grid; positional `bodies` are zipped onto the
+// content-bearing cell ids in traversal order. The renderer then looks each
+// cell's content up by id, with no positional cursor to keep in sync.
+#let resolve-content(node, cells, bodies) = {
   let body-ids = body-cell-ids(node)
-  let all-ids = collect-cell-ids(node)
-  for (id, value) in cells {
-    if id not in all-ids {
-      fail("slide cells contains unknown cell id " + repr(id))
+  if cells.len() > 0 {
+    let all-ids = collect-cell-ids(node)
+    for (id, value) in cells {
+      if id not in all-ids {
+        fail("slide cells contains unknown cell id " + repr(id))
+      }
+      if id not in body-ids {
+        fail("slide cells cannot supply fixed-content cell " + repr(id))
+      }
+      if type(value) != content {
+        fail("slide cell content for " + repr(id) + " must be content")
+      }
     }
-    if id not in body-ids {
-      fail("slide cells cannot supply fixed-content cell " + repr(id))
+    let missing = body-ids.filter(id => id not in cells)
+    if missing.len() > 0 {
+      fail(
+        "slide cells is missing content for "
+          + if missing.len() == 1 { "cell " } else { "cells " }
+          + missing.map(repr).join(", "),
+      )
     }
-    if type(value) != content {
-      fail("slide cell content for " + repr(id) + " must be content")
+    cells
+  } else {
+    if bodies.len() != body-ids.len() {
+      fail(
+        "grid expects " + str(body-ids.len())
+          + " bodies, received " + str(bodies.len()),
+      )
     }
+    let map = (:)
+    for (index, id) in body-ids.enumerate() {
+      map.insert(id, bodies.at(index))
+    }
+    map
   }
-  let missing = body-ids.filter(id => id not in cells)
-  if missing.len() > 0 {
-    fail(
-      "slide cells is missing content for "
-        + if missing.len() == 1 { "cell " } else { "cells " }
-        + missing.map(repr).join(", "),
-    )
-  }
-  body-ids.map(id => cells.at(id))
 }
 
 #let resolved-tracks(node) = if node.tracks == auto {

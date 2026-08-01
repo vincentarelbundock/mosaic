@@ -182,7 +182,8 @@
 }
 #let automatic-slide-command(title, body) = {
   slide-command(
-    (title, body),
+    (),
     grid: default(variant: "header-body"),
+    cells: (header: title, body: body),
   )
 }
