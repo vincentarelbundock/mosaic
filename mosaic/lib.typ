@@ -14,4 +14,5 @@
 #import "src/author.typ": author
 #import "src/color-api.typ" as color
 #import "src/component-api.typ" as components
-#import "src/template-api.typ" as templates
+#import "src/layout-api.typ" as layouts
+#import "src/theme-api.typ" as themes

@@ -4,9 +4,9 @@
 #import "incremental.typ": max-step, transform
 #import "render.typ": max-node, render
 #import "settings.typ": settings-state, with-colors
-#import "template-resolver.typ": resolve-template
-#import "template-core.typ": is-template-grid
-#import "template-default.typ": progress-foreground
+#import "layout-resolver.typ": resolve-layout
+#import "layout-core.typ": is-layout-grid
+#import "layout-default.typ": progress-foreground
 #import "deck-state.typ": (
   grid-state,
   background-state,
@@ -181,19 +181,19 @@
 
 #let render-slide-with-settings(command, settings) = context {
   let requested-grid = command.grid
-  let is-section-template = (
-    is-template-grid(requested-grid)
+  let is-section-layout = (
+    is-layout-grid(requested-grid)
       and requested-grid.name == "section"
   )
-  let suppress-global-logo = if is-template-grid(requested-grid) {
+  let suppress-global-logo = if is-layout-grid(requested-grid) {
     requested-grid.suppress-global-logo
   } else {
     false
   }
   let resolved-grid = if requested-grid == auto {
     grid-state.get()
-  } else if is-template-grid(requested-grid) {
-    resolve-template(requested-grid, settings)
+  } else if is-layout-grid(requested-grid) {
+    resolve-layout(requested-grid, settings)
   } else {
     requested-grid
   }
@@ -210,20 +210,20 @@
   } else {
     command.foreground
   }
-  let template-foreground = if (
-    is-template-grid(requested-grid)
+  let layout-foreground = if (
+    is-layout-grid(requested-grid)
       and requested-grid.name == "default"
   ) {
     progress-foreground(requested-grid, settings)
   } else {
     none
   }
-  let resolved-foreground = if template-foreground == none {
+  let resolved-foreground = if layout-foreground == none {
     resolved-foreground
   } else if resolved-foreground == none {
-    template-foreground
+    layout-foreground
   } else {
-    [#resolved-foreground #template-foreground]
+    [#resolved-foreground #layout-foreground]
   }
   validate-plane(resolved-background, "background")
   validate-plane(resolved-foreground, "foreground")
@@ -243,7 +243,7 @@
   if command.numbered {
     logical-slide.step()
   }
-  if command.section or is-section-template {
+  if command.section or is-section-layout {
     logical-section.step()
   }
   let slide = logical-slide.get().first()

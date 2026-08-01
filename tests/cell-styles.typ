@@ -9,13 +9,13 @@
   ),
 )
 #let command = mosaic.slide(
-  grid: mosaic.templates.section(),
+  grid: mosaic.layouts.section(),
   cell-styles: requested,
 )[Section].value
 #assert(command.cell-styles == requested)
 
 // Slide overrides replace surface fields and merge text fields over the
-// template's typography rather than discarding its size and weight.
+// layout's typography rather than discarding its size and weight.
 #let base = styled-cell(
   "section",
   style: (
@@ -34,6 +34,6 @@
 #set page(width: 240pt, height: 135pt, margin: 0pt)
 #show: mosaic.setup
 #mosaic.slide(
-  grid: mosaic.templates.section(),
+  grid: mosaic.layouts.section(),
   cell-styles: requested,
 )[Section]

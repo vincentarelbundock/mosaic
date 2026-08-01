@@ -1,4 +1,4 @@
-// Decorative fixtures shared by the title gallery and complete template example.
+// Decorative fixtures shared by the title gallery and complete layout example.
 #let mark(label, fill) = block(
   width: 2.4cm,
   height: 0.72cm,

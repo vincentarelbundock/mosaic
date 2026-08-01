@@ -40,7 +40,7 @@
 #for name in scheme-names {
   let colors = m.color.scheme(name)
   m.slide(
-    grid: m.templates.default(
+    grid: m.layouts.default(
       columns: 2,
       inverted: ("footer",),
       tracks: (2fr, 1fr),

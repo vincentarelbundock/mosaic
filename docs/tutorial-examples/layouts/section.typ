@@ -1,0 +1,47 @@
+#import "@local/mosaic:0.0.1" as m
+#show: m.setup
+
+#let picture = m.image(
+  path("/docs/assets/images/dog.webp"),
+  alt: "Dog",
+)
+#let myslide = m.slide.with(grid: m.layouts.section())
+#myslide[Plain section]
+
+#let myslide = m.slide.with(grid: m.layouts.section(number: [01]))
+#myslide[Numbered section]
+
+#let myslide = m.slide.with(
+  grid: m.layouts.section(variant: "image-left", image: picture),
+)
+#myslide[Image-left section]
+
+#let myslide = m.slide.with(
+  grid: m.layouts.section(variant: "image-right", image: picture),
+)
+#myslide[Image-right section]
+
+#let myslide = m.slide.with(
+  grid: m.layouts.section(variant: "image-top", image: picture),
+)
+#myslide[Image-top section]
+
+#let myslide = m.slide.with(
+  grid: m.layouts.section(variant: "image-bottom", image: picture),
+)
+#myslide[Image-bottom section]
+
+// The image itself carries the contrast: darken it and switch the section
+// cell to light text.
+#let myslide = m.slide.with(
+  grid: m.layouts.section(
+    variant: "image-background",
+    image: m.image(
+      path("/docs/assets/images/dog.webp"),
+      darken: 45%,
+      alt: "Dog",
+    ),
+  ),
+  cell-styles: (section: (text: (fill: white))),
+)
+#myslide[Image-background section]

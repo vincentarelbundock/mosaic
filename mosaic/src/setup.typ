@@ -21,7 +21,7 @@
   /// Slide aspect ratio. Available values are `16-9` and `4-3`.
   /// -> str
   paper: "16-9",
-  /// Presentation color roles used by Mosaic templates and furniture. Pass
+  /// Presentation color roles used by Mosaic layouts and furniture. Pass
   /// `mosaic.color.scheme(name)` for a complete named scheme, or a dictionary
   /// to override selected roles.
   /// -> dictionary
@@ -43,7 +43,7 @@
   /// -> array
   frozen-states: (),
   /// Constructor for automatic level-2 (`==`) heading slides. By default each
-  /// `==` slide is built with `templates.default(variant: "header-body")`, the
+  /// `==` slide is built with `layouts.default(variant: "header-body")`, the
   /// heading in the header and the following content in the body. Pass a
   /// function to route those slides through your own layout instead, so a deck
   /// can write `== Title` markup yet get the same furniture, colors, and grid
@@ -54,13 +54,13 @@
   ///
   /// ```typ
   /// #let framed(title, body) = m.slide(
-  ///   grid: m.templates.default(variant: "header-body", inverted: ("header",)),
+  ///   grid: m.layouts.default(variant: "header-body", inverted: ("header",)),
   /// )[#title][#body]
   /// #show: m.setup.with(auto-slide: framed)
   /// ```
   ///
   /// The returned slide may use any grid, not only header-body: a single body
-  /// cell that merges title and content, an image template, or a custom cell
+  /// cell that merges title and content, an image layout, or a custom cell
   /// tree are all valid. The only structural rule is Mosaic's usual one — the
   /// grid must accept as many body blocks as the function passes it. Constraints
   /// are reported as `mosaic:` errors, except a parameter-count mismatch, which

@@ -4,8 +4,8 @@
 #show: mosaic.setup.with(spacing: (inset: 8pt))
 #set text(size: 9pt)
 
-// A semantic section template increments the dedicated counter automatically.
-#mosaic.slide(grid: mosaic.templates.section())[
+// A semantic section layout increments the dedicated counter automatically.
+#mosaic.slide(grid: mosaic.layouts.section())[
   First section
   #mosaic.section-number(total: true)
   #mosaic.components.progress(variant: "line", count: "sections")

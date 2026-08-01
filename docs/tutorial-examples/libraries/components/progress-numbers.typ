@@ -3,7 +3,7 @@
 #show: m.setup
 
 #let slide-progress = m.slide.with(
-  grid: m.templates.default(
+  grid: m.layouts.default(
     variant: "header-body",
     progress: "1/1",
   ),

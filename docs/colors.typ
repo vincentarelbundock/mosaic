@@ -86,7 +86,7 @@ Every preview uses the same structure and content. The title is the exact
 scheme name; the body pairs lorem text at two-thirds width with the same dog
 image at one-third width; and the footer is identical. The header and footer
 use the normal scheme colors except that the footer is inverted through
-`templates.default(inverted: ("footer",))`.
+`layouts.default(inverted: ("footer",))`.
 
 Together, the repeated structure exposes every semantic role without a separate
 swatch chart. The slide canvas, title, and prose show `canvas` and `text`. The
@@ -174,7 +174,7 @@ dictionary overrides only the listed roles:
 ]
 ```
 
-Slide-local colors apply to the canvas, ordinary text, templates, and
+Slide-local colors apply to the canvas, ordinary text, layouts, and
 presentation furniture. Every frame belonging to the logical slide
 uses the same colors; the following slide automatically restores the inherited
 scheme.

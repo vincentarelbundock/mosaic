@@ -2,7 +2,7 @@
 
 #show: m.setup
 
-#m.slide(grid: m.templates.title(
+#m.slide(grid: m.layouts.title(
   [Getting started],
   variant: "image-background",
   image: (

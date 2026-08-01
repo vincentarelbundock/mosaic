@@ -196,7 +196,7 @@
 /// the current value, `circle` draws a compact progress ring, and `line` draws
 /// a full-width track.
 /// Set `count` to `sections` to use section slides created with
-/// `templates.section()` or marked with `slide(section: true)`.
+/// `layouts.section()` or marked with `slide(section: true)`.
 /// Explicit `current` and `total` values can be supplied together when the
 /// component should represent another sequence; they override `count`.
 ///

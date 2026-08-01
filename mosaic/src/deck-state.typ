@@ -38,7 +38,7 @@
 
 /// Displays the current semantic section number.
 ///
-/// Section slides created with `templates.section()` are counted
+/// Section slides created with `layouts.section()` are counted
 /// automatically. Custom section layouts opt in with `slide(section: true)`.
 ///
 /// -> content

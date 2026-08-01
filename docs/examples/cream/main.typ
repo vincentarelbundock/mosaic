@@ -1,7 +1,8 @@
-// Palette, helpers, and theme live in preamble.typ; `*` re-exports Mosaic (`m`)
-// and every helper used below.
+// The reusable look (palette, theme, slide constructors) lives in theme.typ;
+// deck-specific helpers live in preamble.typ, which re-exports the theme.
+// `*` re-exports Mosaic (`m`) and every helper used below.
 #import "preamble.typ": *
-#show: deck-theme
+#show: theme.apply
 
 // 01 — Cover
 #slide(

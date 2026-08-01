@@ -26,9 +26,9 @@ plane takes space away from the grid.
 
 #html.frame(slide-planes)
 
-A *template* is a ready-made slide design for a familiar slide kind such as
-a title, section, image, or table. A template provides a grid. It can also
-style cells and place content on the planes. Each template offers several
+A *layout* is a ready-made slide design for a familiar slide kind such as
+a title, section, image, or table. A layout provides a grid. It can also
+style cells and place content on the planes. Each layout offers several
 named *variants*.
 
 A slide can reveal its content in *steps*. Each step renders as one *frame*.
@@ -45,7 +45,7 @@ heading becomes the slide title, and the text that follows becomes its
 content.
 
 The example below is a complete four-slide deck. It opens with one title
-slide built from the `image-background` title template, with the title
+slide built from the `image-background` title layout, with the title
 anchored to the top-right corner. Every slide after that is just a `==`
 heading followed by normal Typst content. The code block is the exact source
 for the rendered slideshow beneath it.
@@ -99,18 +99,18 @@ term-list items use 0.5em spacing.
 
 = Semantic slide
 
-The simplest semantic grid is `templates.default(variant: "body")`. Its one
+The simplest semantic grid is `layouts.default(variant: "body")`. Its one
 body cell fills the slide.
 
 ```typ
-#m.slide(grid: m.templates.default(variant: "body"))[
+#m.slide(grid: m.layouts.default(variant: "body"))[
   #lorem(20)
 ]
 ```
 
-Use heading-driven slides for ordinary narrative flow and template grids for
+Use heading-driven slides for ordinary narrative flow and layout grids for
 familiar structures such as title slides, images, and tables. Pass each
-template grid to `m.slide`. Both forms mix freely in one deck.
+layout grid to `m.slide`. Both forms mix freely in one deck.
 
 ```typ
 #show: m.setup.with(
@@ -123,13 +123,13 @@ template grid to `m.slide`. Both forms mix freely in one deck.
   ),
 )
 
-#m.slide(grid: m.templates.default(variant: "body"))[
+#m.slide(grid: m.layouts.default(variant: "body"))[
   #lorem(20)
 ]
 
-#m.slide(grid: m.templates.title([Research result], subtitle: [A short deck]))
+#m.slide(grid: m.layouts.title([Research result], subtitle: [A short deck]))
 
-#m.slide(grid: m.templates.image(
+#m.slide(grid: m.layouts.image(
   variant: "figure",
   path: path("/docs/assets/images/dog.webp"),
   alt: "Dog",

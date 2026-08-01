@@ -1,11 +1,8 @@
-#import "@local/mosaic:0.0.1" as m
-
-// ── Palette ────────────────────────────────────────────────────────────────
-#let ink = rgb("#111111")
-#let paper = rgb("#f7f7f5")
-#let gray = rgb("#d9d9d9")
-#let small-copy = 11pt
-#let body-copy = 13pt
+// Deck-specific preamble for the Portfolio deck. The reusable look (the
+// Grayscale theme: palette, apply wrapper, layout factories) lives in
+// theme.typ; importing it with `*` re-exports everything to main.typ. The
+// helpers below belong to this deck's content rather than to the theme.
+#import "theme.typ": *
 
 // ── Copy ───────────────────────────────────────────────────────────────────
 #let lorem = [Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -21,13 +18,6 @@ consequat.]
   (fill: none, inset: 0pt, align: top + left) + overrides.named()
 )
 
-#let black-panel(body, inset: 20pt) = block(
-  width: 100%,
-  fill: ink,
-  inset: inset,
-  text(fill: white, body),
-)
-
 #let project-card(number, body) = grid(
   columns: (62pt, 1fr),
   gutter: 15pt,
@@ -36,24 +26,6 @@ consequat.]
   text(size: 11pt, fill: white, body),
 )
 
-// ── Theme ──────────────────────────────────────────────────────────────────
-// Applied in main.typ via `#show: deck-theme`. Show/set rules cannot cross an
-// `#import`, so the document-wide styling lives in this wrapper rather than at
-// the top level of the preamble.
-#let deck-theme(body) = {
-  show: m.setup.with(
-    colors: (
-      canvas: paper,
-      surface: paper,
-      accent: ink,
-      text: ink,
-      inverse-text: white,
-      muted: rgb("#666666"),
-      line: gray,
-    ),
-    spacing: (inset: 0pt),
-  )
-  set text(font: "Inter", size: body-copy, fill: ink)
-  show heading: set text(weight: "bold")
-  body
-}
+// This deck builds every slide by hand, so `slide` is rebound to `m.slide`.
+// The theme's `default` layout still backs `==` headings.
+#let slide = m.slide

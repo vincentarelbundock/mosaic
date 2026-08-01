@@ -9,7 +9,7 @@
 #ada.insert("email", "not-an-email")
 
 #show: mosaic.setup
-#mosaic.slide(grid: mosaic.templates.title(
+#mosaic.slide(grid: mosaic.layouts.title(
   [Title],
   variant: "academic",
   authors: (ada,),

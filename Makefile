@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help install build check core-tests negative-tests template-tests web-images tutorial-slides showcase-video components api-sources examples website docs clean
+.PHONY: help install build check core-tests negative-tests layout-tests web-images tutorial-slides showcase-video components api-sources examples website docs clean
 
 TYPST ?= typst
 CALEPIN ?= calepin
@@ -37,7 +37,7 @@ BONSAI_WEBP := $(WEB_IMAGE_DIR)/bonsai.webp
 DOG_SOURCE := $(WEB_IMAGE_DIR)/dog.jpg
 DOG_WEBP := $(WEB_IMAGE_DIR)/dog.webp
 API_MODULES_DIR := $(DOCS_DIR)/api/modules
-API_MODULE_NAMES := author color components deck-commands deck-state grid-model incremental-core incremental setup shared template-default template-image template-section template-table template-title
+API_MODULE_NAMES := author color components deck-commands deck-state grid-model incremental-core incremental setup shared layout-default layout-image layout-section layout-table layout-title
 API_STAGED_MODULES := $(addprefix $(API_MODULES_DIR)/,$(addsuffix .typ,$(API_MODULE_NAMES)))
 # These files are both compiled below and read verbatim by the tutorial pages.
 # Files whose name starts with "_" are shared includes, not standalone decks.
@@ -82,11 +82,11 @@ install: ## Copy Mosaic into Typst's local package index
 
 build: install check website ## Install the package, then compile tests and documentation
 
-check: install core-tests template-tests negative-tests ## Install the package and run every test
+check: install core-tests layout-tests negative-tests ## Install the package and run every test
 
-core-tests: install ## Compile all non-template positive test decks
+core-tests: install ## Compile all non-layout positive test decks
 	@set -e; for source in tests/*.typ; do \
-		case "$${source##*/}" in templates*.typ|fit.typ) continue ;; esac; \
+		case "$${source##*/}" in layouts*.typ|fit.typ) continue ;; esac; \
 		output=/tmp/mosaic-$${source##*/}; \
 		output=$${output%.typ}.pdf; \
 		echo "typst compile $$source $$output"; \
@@ -176,42 +176,42 @@ negative-tests: install ## Require every diagnostic fixture to fail with a Mosai
 		}; \
 	done < tests/invalid/expected-diagnostics.txt
 
-template-tests: install web-images ## Compile every semantic template test deck
-	@set -e; for source in tests/templates*.typ; do \
-		case "$${source##*/}" in templates-title-responsive.typ) continue ;; esac; \
+layout-tests: install web-images ## Compile every semantic layout test deck
+	@set -e; for source in tests/layouts*.typ; do \
+		case "$${source##*/}" in layouts-title-responsive.typ) continue ;; esac; \
 		output=/tmp/mosaic-$${source##*/}; \
 		output=$${output%.typ}.pdf; \
 		echo "typst compile $$source $$output"; \
 		$(TYPST) compile --root . "$$source" "$$output"; \
 	done
 	@set -e; for paper in 16-9 4-3; do for scheme in light dark; do \
-		output=/tmp/mosaic-templates-title-responsive-$$scheme-$$paper.pdf; \
+		output=/tmp/mosaic-layouts-title-responsive-$$scheme-$$paper.pdf; \
 		echo "typst compile title responsive $$scheme $$paper $$output"; \
 		$(TYPST) compile --root . --input paper=$$paper --input scheme=$$scheme \
-			tests/templates-title-responsive.typ "$$output"; \
+			tests/layouts-title-responsive.typ "$$output"; \
 		warnings=$$($(TYPST) eval --root . --input paper=$$paper --input scheme=$$scheme \
-			'query(<mosaic-overflow-warning>).len()' --in tests/templates-title-responsive.typ); \
+			'query(<mosaic-overflow-warning>).len()' --in tests/layouts-title-responsive.typ); \
 		test "$$warnings" -eq 0; \
 	done; done
 	@$(TYPST) compile --root . tests/fit.typ /tmp/mosaic-fit.pdf
-	@pdftotext -layout /tmp/mosaic-templates-features.pdf /tmp/mosaic-templates-features.txt
-	@grep -F 'Mosaic feature test' /tmp/mosaic-templates-features.txt >/dev/null
-	@grep -F '1/2' /tmp/mosaic-templates-features.txt >/dev/null
-	@grep -F '2/2' /tmp/mosaic-templates-features.txt >/dev/null
-	@$(TYPST) compile --root . tests/templates-cell-style.typ '/tmp/mosaic-templates-cell-style-{p}.svg'
-	@grep -Fi '#123456' /tmp/mosaic-templates-cell-style-1.svg >/dev/null
-	@grep -Fi '#fedcba' /tmp/mosaic-templates-cell-style-1.svg >/dev/null
-	@$(TYPST) compile --root . tests/templates-setup-settings.typ '/tmp/mosaic-setup-settings-{p}.svg'
+	@pdftotext -layout /tmp/mosaic-layouts-features.pdf /tmp/mosaic-layouts-features.txt
+	@grep -F 'Mosaic feature test' /tmp/mosaic-layouts-features.txt >/dev/null
+	@grep -F '1/2' /tmp/mosaic-layouts-features.txt >/dev/null
+	@grep -F '2/2' /tmp/mosaic-layouts-features.txt >/dev/null
+	@$(TYPST) compile --root . tests/layouts-cell-style.typ '/tmp/mosaic-layouts-cell-style-{p}.svg'
+	@grep -Fi '#123456' /tmp/mosaic-layouts-cell-style-1.svg >/dev/null
+	@grep -Fi '#fedcba' /tmp/mosaic-layouts-cell-style-1.svg >/dev/null
+	@$(TYPST) compile --root . tests/layouts-setup-settings.typ '/tmp/mosaic-setup-settings-{p}.svg'
 	@grep -Fi '#123456' /tmp/mosaic-setup-settings-1.svg >/dev/null
 	@grep -Fi '#abcdef' /tmp/mosaic-setup-settings-1.svg >/dev/null
-	@$(TYPST) compile --root . tests/templates-progress.typ '/tmp/mosaic-templates-progress-{p}.svg'
-	@grep -Fi '#d97706' /tmp/mosaic-templates-progress-1.svg >/dev/null
-	@grep -Fi '#ffffff' /tmp/mosaic-templates-progress-2.svg >/dev/null
-	@grep -Fi '#fedcba' /tmp/mosaic-templates-progress-3.svg >/dev/null
-	@grep -Fi '#123456' /tmp/mosaic-templates-progress-4.svg >/dev/null
-	@pdftotext -layout /tmp/mosaic-templates-logo.pdf /tmp/mosaic-templates-logo.txt
-	@test "$$(grep -o 'GLOBAL-LOGO' /tmp/mosaic-templates-logo.txt | wc -l)" -eq 1
-	@test "$$(grep -o 'LOCAL-LOGO' /tmp/mosaic-templates-logo.txt | wc -l)" -eq 0
+	@$(TYPST) compile --root . tests/layouts-progress.typ '/tmp/mosaic-layouts-progress-{p}.svg'
+	@grep -Fi '#d97706' /tmp/mosaic-layouts-progress-1.svg >/dev/null
+	@grep -Fi '#ffffff' /tmp/mosaic-layouts-progress-2.svg >/dev/null
+	@grep -Fi '#fedcba' /tmp/mosaic-layouts-progress-3.svg >/dev/null
+	@grep -Fi '#123456' /tmp/mosaic-layouts-progress-4.svg >/dev/null
+	@pdftotext -layout /tmp/mosaic-layouts-logo.pdf /tmp/mosaic-layouts-logo.txt
+	@test "$$(grep -o 'GLOBAL-LOGO' /tmp/mosaic-layouts-logo.txt | wc -l)" -eq 1
+	@test "$$(grep -o 'LOCAL-LOGO' /tmp/mosaic-layouts-logo.txt | wc -l)" -eq 0
 
 web-images: $(BONSAI_WEBP) $(DOG_WEBP) ## Generate compact WebP derivatives while retaining source images
 
@@ -241,13 +241,13 @@ $(TUTORIAL_IMAGE_STAMPS): $(TUTORIAL_STAMP_DIR)/%.stamp: $(TUTORIAL_EXAMPLES_DIR
 	@$(TYPST) compile --root . $(TUTORIAL_TYPST_FLAGS) "$<" "$(TUTORIAL_ASSETS_DIR)/$*-{0p}.svg" --format svg
 	@touch "$@"
 
-# The theme demo wrappers import the shared content file and the example
-# decks' theme files; rebuild their slides when those inputs change. The
-# grayscale demo uses the portfolio example's theme file.
+# The theme demo wrappers import the shared content file; rebuild their
+# slides when it changes. The cream, metropolis, and minimalist demos use the
+# bundled package themes (covered by PACKAGE_SOURCES); the grayscale demo
+# uses the portfolio example's vendored theme file.
 THEME_DEMO_SLUGS := cream metropolis minimalist grayscale
 $(foreach slug,$(THEME_DEMO_SLUGS),$(TUTORIAL_STAMP_DIR)/themes/$(slug).stamp): \
 	$(TUTORIAL_EXAMPLES_DIR)/themes/_content.typ
-$(foreach slug,$(filter-out grayscale,$(THEME_DEMO_SLUGS)),$(eval $(TUTORIAL_STAMP_DIR)/themes/$(slug).stamp: $(EXAMPLES_DIR)/$(slug)/theme.typ))
 $(TUTORIAL_STAMP_DIR)/themes/grayscale.stamp: $(EXAMPLES_DIR)/portfolio/theme.typ
 
 showcase-video: $(SHOWCASE_VIDEO) ## Build the animated home-page showcase

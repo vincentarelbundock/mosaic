@@ -26,7 +26,7 @@
           ]
         ]
         #html.elem("p")[
-          Write a deck as an ordinary Typst document. Templates supply
+          Write a deck as an ordinary Typst document. Layouts supply
           the design, and grids of cells place the content.
         ]
       ]
@@ -58,7 +58,7 @@
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
           #html.elem("h2")[Beautiful]
           #html.elem("p")[
-            Title, section, image, and table templates with matching
+            Title, section, image, and table layouts with matching
             typography and color schemes.
           ]
         ]
@@ -84,7 +84,7 @@
           loop: "loop",
           muted: "muted",
           playsinline: "playsinline",
-          poster: "assets/tutorials/templates/title-1.svg",
+          poster: "assets/tutorials/layouts/title-1.svg",
           "aria-label": "Animated gallery of Mosaic title slides, image variants, color schemes, and incremental diagrams",
         ))[
           #html.elem("source", attrs: (
@@ -94,7 +94,7 @@
         ]
         #html.elem("img", attrs: (
           class: "mosaic-showcase mosaic-showcase--poster",
-          src: "assets/tutorials/templates/title-1.svg",
+          src: "assets/tutorials/layouts/title-1.svg",
           alt: "Example of an academic title slide made with Mosaic",
         ))
       ]
@@ -103,7 +103,7 @@
   fallback: () => [
     = Beautiful slides with Typst
 
-    Write a deck as an ordinary Typst document. Templates supply the
+    Write a deck as an ordinary Typst document. Layouts supply the
     design, and grids of cells place the content.
   ],
 )

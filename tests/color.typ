@@ -143,7 +143,7 @@
 
 #mosaic.slide[Dark body slide]
 
-#mosaic.slide(grid: mosaic.templates.default())[
+#mosaic.slide(grid: mosaic.layouts.default())[
   == Dark complete structure
 ][
   Body text

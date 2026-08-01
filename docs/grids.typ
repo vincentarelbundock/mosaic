@@ -18,10 +18,10 @@
 
 #title()
 
-Every #link("templates.html")[template] returns a deferred customized-grid
+Every #link("layouts.html")[layout] returns a deferred customized-grid
 dictionary. When passed to `m.slide`, it resolves into the same horizontal and
 vertical split model exposed through `m.grid`. Work with grids directly when a
-slide does not fit a semantic template.
+slide does not fit a semantic layout.
 
 A grid is a tree of rectangular cells. Each cell receives one block of slide
 content. `v` stacks cells vertically, `h` places them side by side, and either
@@ -265,9 +265,9 @@ overrides through `m.slide` as a dictionary keyed by those identities:
 ```
 
 The public fields are `fill`, `inset`, `align`, `text`, `stroke`, `radius`,
-`background`, and `fit`. Template defaults are applied first. A slide override
+`background`, and `fit`. Layout defaults are applied first. A slide override
 replaces a style field, while its `text` dictionary merges with the
-template's text defaults. Unknown cell IDs and unsupported fields are errors.
+layout's text defaults. Unknown cell IDs and unsupported fields are errors.
 
 = Reusable grids and styles
 

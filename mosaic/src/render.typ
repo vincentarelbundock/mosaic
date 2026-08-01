@@ -133,7 +133,9 @@
   let content = if id == none {
     content
   } else {
-    block(width: 100%, height: region-height)[
+    // PROTOTYPE: label the cell's content block so user show rules can
+    // target it natively: show label("mosaic-cell-" + id): ...
+    [#block(width: 100%, height: region-height)[
       #for (name, alignment) in (
         center: center + horizon,
         top: top + center,
@@ -150,7 +152,7 @@
         ]
       }
       #content
-    ]
+    ]#label("mosaic-cell-" + id)]
   }
   if background != none {
     let parts = split-cell-surface(surface)

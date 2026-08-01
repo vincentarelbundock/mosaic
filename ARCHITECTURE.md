@@ -11,16 +11,20 @@ Dependencies flow downward through these layers:
 
 1. **Shared values and parsing** — `shared.typ`, `incremental-core.typ`,
    `color.typ`
-2. **Canonical models** — `grid-model.typ`, `template-core.typ`,
+2. **Canonical models** — `grid-model.typ`, `layout-core.typ`,
    `deck-state.typ`
-3. **Template implementation** — `template-support.typ` and the cohesive
-   `template-default.typ`, `template-title.typ`, `template-section.typ`,
-   `template-image.typ`, and `template-table.typ` modules
-4. **Commands and rendering** — `deck-commands.typ`, `template-resolver.typ`,
+3. **Layout implementation** — `layout-support.typ` and the cohesive
+   `layout-default.typ`, `layout-title.typ`, `layout-section.typ`,
+   `layout-image.typ`, and `layout-table.typ` modules
+4. **Commands and rendering** — `deck-commands.typ`, `layout-resolver.typ`,
    `incremental.typ`, `fit.typ`, `render.typ`, `slide-runtime.typ`
 5. **Document compilation and setup** — `deck-compiler.typ`, `setup.typ`
-6. **Public facades** — `grid-api.typ`, `component-api.typ`,
-   `template-api.typ`, and `mosaic/lib.typ`
+6. **Bundled themes** — `themes/metropolis.typ`, `themes/cream.typ`, and
+   `themes/minimalist.typ`; each imports lower-layer modules directly (never
+   `lib.typ`, which would be circular) and exports the theme convention
+   surface (`apply`, layout factories, `colors`, `palette`)
+7. **Public facades** — `grid-api.typ`, `component-api.typ`,
+   `layout-api.typ`, `theme-api.typ`, and `mosaic/lib.typ`
 
 A lower layer must not import a higher layer. Internal modules import the owner
 of each definition directly; facades exist only for intentional public namespaces.
@@ -33,22 +37,22 @@ of each definition directly; facades exist only for intentional public namespace
   namespace.
 - `render.typ` consumes valid grid trees; it does not construct or mutate them.
 
-## Template subsystem
+## Layout subsystem
 
-- `template-core.typ` owns the common deferred record shape and shared contract
+- `layout-core.typ` owns the common deferred record shape and shared contract
   primitives.
-- `template-support.typ` owns shared content, image, track, and surface helpers.
-- Each `template-{name}.typ` module owns one template's public constructor,
-  field validation, and grid resolution. The larger `template-title.typ`
+- `layout-support.typ` owns shared content, image, track, and surface helpers.
+- Each `layout-{name}.typ` module owns one layout's public constructor,
+  field validation, and grid resolution. The larger `layout-title.typ`
   remains cohesive around its nine variants.
-- `template-resolver.typ` verifies the common record shape, applies local color
-  roles, and dispatches to the owning template module.
-- `template-api.typ` defines the public `mosaic.templates` namespace.
+- `layout-resolver.typ` verifies the common record shape, applies local color
+  roles, and dispatches to the owning layout module.
+- `layout-api.typ` defines the public `mosaic.layouts` namespace.
 
 `component-api.typ` similarly keeps component styling helpers private while
 exposing only the documented `mosaic.components` namespace.
 
-Template resolvers must return canonical grid trees through `cell`, `h`, `v`,
+Layout resolvers must return canonical grid trees through `cell`, `h`, `v`,
 and `t`. They must not bypass those constructors with hidden native layout
 geometry or direct split records.
 
@@ -88,8 +92,8 @@ cannot mask missing declarations.
 
 ## Adding code
 
-- Add template-specific construction, validation, and resolution to the
-  template's own vertical-slice module.
+- Add layout-specific construction, validation, and resolution to the
+  layout's own vertical-slice module.
 - Add grid traversal beside the canonical grid model; keep public grid mutation
   out of the API.
 - Add visual composition to the relevant resolver or renderer.

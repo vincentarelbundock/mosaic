@@ -90,7 +90,7 @@ to show only the current number without the total.
   calepin.elements.gallery,
   "libraries/components/progress-numbers",
   3,
-  "templates.default(progress: \"1/1\")",
+  "layouts.default(progress: \"1/1\")",
 )
 
 == Circle
@@ -102,7 +102,7 @@ Use `"circle"` for a compact visual indicator in a corner or narrow footer.
   calepin.elements.gallery,
   "libraries/components/progress-circle",
   3,
-  "templates.default(progress: \"circle\")",
+  "layouts.default(progress: \"circle\")",
 )
 
 == Line
@@ -114,12 +114,12 @@ Use `"line"` for a prominent edge-to-edge indication of deck progress.
   calepin.elements.gallery,
   "libraries/components/progress-line",
   3,
-  "templates.default(progress: \"line\")",
+  "layouts.default(progress: \"line\")",
 )
 
 == Foreground
 
-You can add a progress indicator to any slide template, or to custom user-created grids, using the `foreground` argument. Here, we create a function called `slide-progress()` which creates a slide with two columns and a progress indicator.
+You can add a progress indicator to any slide layout, or to custom user-created grids, using the `foreground` argument. Here, we create a function called `slide-progress()` which creates a slide with two columns and a progress indicator.
 
 #verbatim-example("libraries/components/custom-slide.typ")
 #slideshow(

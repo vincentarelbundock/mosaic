@@ -18,7 +18,7 @@ A document-wide `set text` sets the base font, size, and fill:
 #set text(font: "EB Garamond", size: 26pt)
 ```
 
-That single rule reaches every slide, including template bodies and hand-built
+That single rule reaches every slide, including layout bodies and hand-built
 grid cells.
 
 = Style titles and headings

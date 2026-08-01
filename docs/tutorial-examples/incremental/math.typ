@@ -26,9 +26,9 @@
   box(height: measure(text(fill: color, $#term$)).height, braced)
 }
 
-// The heading goes in the template's header cell (anchored at the top) and the
+// The heading goes in the layout's header cell (anchored at the top) and the
 // equation fills the body cell, which we align on the horizon to center it.
-#m.slide(m.templates.default(
+#m.slide(m.layouts.default(
   variant: "header-body",
   align: (body: center + horizon),
 ))[

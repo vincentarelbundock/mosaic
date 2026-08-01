@@ -3,6 +3,6 @@
 #show: mosaic.setup
 #mosaic.deck(default-grid: mosaic.grid.h("a", "b"))
 
-== Automatic default template
+== Automatic default layout
 
 The automatic slide ignores the multi-cell deck default and uses one body region.

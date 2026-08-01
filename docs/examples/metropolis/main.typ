@@ -1,26 +1,33 @@
 // ═══════════════════════════════════════════════════════════════════════════
 //  Content
 //
-//  Imports, palette, slide constructors, theme, and inline helpers live in
-//  preamble.typ; `*` re-exports Mosaic (`m`), fletcher, cetz, calepin, and every
-//  helper used below. From here down, each slide is one call to a constructor
-//  defined in the preamble.
+//  The reusable look is the bundled Metropolis theme (m.themes.metropolis),
+//  re-exported as `theme` by theme.typ; deck-specific helpers live in
+//  preamble.typ. `*` re-exports Mosaic (`m`), fletcher, cetz, calepin, and
+//  every helper used below. From here down, each slide is a `== Heading`
+//  routed through the theme's default layout or one call to a theme layout
+//  factory (`theme.title`, `theme.section`, `theme.default`).
 // ═══════════════════════════════════════════════════════════════════════════
 // Root-absolute import: Calepin compiles main.typ from a generated wrapper
 // directory, so a relative "preamble.typ" would not resolve. The Calepin root
 // is this example directory (cf. the "/references.bib" bibliography below).
 #import "/preamble.typ": *
-#show: deck-theme
+#show: theme.apply
 
 #m.deck()
 
 #let ccp = (id: "ccp", name: [Centre for Comparative Politics])
 #let eis = (id: "eis", name: [European Institute for Social Data])
 
-#slide-title(
-  [Technical talk],
-  [Math, Diagrams, and Executable Code],
-  (
+#theme.title(
+  [
+    // `calepin.setup` runs once inside the title content to enable the R
+    // chunks used later in the deck.
+    #calepin.setup(echo: true, eval: true, results: "render")
+    Technical talk
+  ],
+  subtitle: [Math, Diagrams, and Executable Code],
+  authors: (
     m.author(
       [Priya Nair],
       affiliations: (ccp, eis),
@@ -31,7 +38,7 @@
     m.author([Elena García], affiliations: (eis,)),
     m.author([Noah Williams], affiliations: (ccp,)),
   ),
-  [July 30, 2026],
+  date: [July 30, 2026],
 )
 
 == Roadmap
@@ -44,7 +51,7 @@
   [Connect results to evidence],
 )
 
-#slide-section([Model])
+#theme.section([Model])
 
 == Sequential decisions under uncertainty
 
@@ -99,7 +106,7 @@ $
 The recursion separates immediate utility from the expected value of all
 subsequent decisions #cite(<bellman1957>).
 
-#slide-section([Computation])
+#theme.section([Computation])
 
 // `calepin.chunk` runs R at compile time. The first chunk evaluates the code
 // and saves the plot under label "fig-efficiency" (retrieved on the next
@@ -175,7 +182,7 @@ than copied into the deck.
     ```
 ]
 
-#slide-section([Structure])
+#theme.section([Structure])
 
 == File-reader state machine
 
@@ -204,7 +211,7 @@ than copied into the deck.
 )
 ]
 
-#slide-section([Geometry])
+#theme.section([Geometry])
 
 == A qubit as a Bloch vector
 
@@ -261,7 +268,7 @@ than copied into the deck.
 })
 ]
 
-#slide-section([Evidence])
+#theme.section([Evidence])
 
 == What makes a technical slide?
 
@@ -295,7 +302,7 @@ than copied into the deck.
 
 // A real `==` heading in the header block keeps the same heading show rules
 // (and therefore the same size) as the automatic slide headers.
-#slide([
+#theme.default([
 == References
 ], number: false)[
   #set text(size: 0.63em)

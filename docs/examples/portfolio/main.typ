@@ -1,7 +1,10 @@
-// Palette, helpers, and theme live in preamble.typ; `*` re-exports Mosaic (`m`)
-// and every helper used below.
+// The reusable look (the Grayscale theme: palette, theme wrapper, slide
+// constructors) lives in theme.typ; deck-specific helpers live in
+// preamble.typ, which re-exports the theme. `*` re-exports Mosaic (`m`) and
+// every helper used below. This deck builds all of its slides by hand,
+// including the cover; it never calls the theme's \`title\` layout.
 #import "preamble.typ": *
-#show: deck-theme
+#show: apply
 
 // 01 — Cover
 #m.slide(

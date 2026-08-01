@@ -115,7 +115,7 @@
     reddish-purple: rgb("#CC79A7"),
     black: rgb("#000000"),
   ),
-  // Paul Tol, Colour schemes and templates, qualitative schemes.
+  // Paul Tol, Colour schemes and layouts, qualitative schemes.
   // https://sronpersonalpages.nl/~pault/
   "tol-bright": (
     blue: rgb("#4477AA"),

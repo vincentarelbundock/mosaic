@@ -1,12 +1,9 @@
-#import "@local/mosaic:0.0.1" as m
-
-// ── Palette ────────────────────────────────────────────────────────────────
-#let sage = rgb("#aebdb3")
-#let sage-dark = rgb("#93a69b")
-#let cream = rgb("#f2eee5")
-#let ink = rgb("#111111")
-#let white = rgb("#f9f8f3")
-#let sans = "Inter"
+// Deck-specific preamble for the Cream deck. The reusable look is the
+// bundled Cream theme (m.themes.cream); theme.typ re-exports it as `theme`
+// together with its palette tokens, and importing that with `*` re-exports
+// everything to main.typ. The helpers below belong to this deck's content
+// rather than to the theme.
+#import "theme.typ": *
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 #let c = m.grid.cell
@@ -24,36 +21,6 @@ laboris nisi ut aliquip ex ea commodo consequat.]
   ]
 ]
 
+// This deck builds every slide by hand, so `slide` is rebound to `m.slide`.
+// The theme's `default` layout still backs `==` headings.
 #let slide = m.slide
-
-// ── Theme ──────────────────────────────────────────────────────────────────
-// Applied in main.typ via `#show: deck-theme`. Show/set rules cannot cross an
-// `#import`, so the document-wide styling lives in this wrapper rather than at
-// the top level of the preamble.
-//
-// Deck typography is defined once here and driven entirely by heading level.
-// `base` is the single source of truth; heading sizes are `base * factor` in
-// absolute units so they scale from the base without depending on any Mosaic
-// style role (and without compounding with Mosaic's own em-based heading rules).
-// Titles are ordinary headings (`= ...` / `== ...`); bodies are plain text.
-// Cream surfaces switch the text fill to `ink`; sage surfaces keep white.
-#let base = 18pt
-#let deck-theme(body) = {
-  show: m.setup.with(
-    colors: (
-      canvas: sage,
-      surface: sage,
-      accent: cream,
-      text: white,
-      inverse-text: ink,
-      muted: cream,
-      line: white,
-    ),
-    spacing: (inset: 0pt),
-  )
-  set text(font: sans, size: base)
-  show heading.where(level: 1): set text(size: base * 1.9, weight: "bold")
-  show heading.where(level: 2): set text(size: base * 1.25, weight: "bold")
-  show heading: set block(below: 0.5em)
-  body
-}

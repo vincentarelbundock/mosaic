@@ -55,7 +55,10 @@ fold = true
   target = "examples.typ"
 
   [[sidebar.section.item]]
-  target = "templates.typ"
+  target = "themes.typ"
+
+  [[sidebar.section.item]]
+  target = "layouts.typ"
 
   [[sidebar.section.item]]
   target = "colors.typ"
@@ -109,7 +112,7 @@ title = "API"
   target = "api/grid.typ"
 
   [[sidebar.section.item]]
-  target = "api/templates.typ"
+  target = "api/layouts.typ"
 
   [[sidebar.section.item]]
   target = "api/color.typ"

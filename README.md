@@ -28,7 +28,7 @@ Write normal Typst content.
 - Supporting evidence
 ```
 
-Each `==` heading starts a `templates.default(variant: "header-body")` slide. Its text fills the
+Each `==` heading starts a `layouts.default(variant: "header-body")` slide. Its text fills the
 header cell, and the content that follows fills the one-column body cell.
 
 Mosaic presentations conventionally use a zero page margin so grids,
@@ -39,9 +39,9 @@ to the space between their content. Image cells can use `0pt` to bleed to
 their cell edges. `gutter` adds space between adjacent cell surfaces and
 defaults to `0pt`.
 
-## Semantic templates
+## Semantic layouts
 
-`m.templates` is a namespace of semantic template constructors layered above
+`m.layouts` is a namespace of semantic layout constructors layered above
 grids and cells. Constructors emit deferred grid dictionaries; pass one to
 `slide(grid: ...)`. The deck compiler resolves its geometry and appearance only
 after `setup` has established the document-wide presentation settings.
@@ -61,13 +61,13 @@ after `setup` has established the document-wide presentation settings.
 
 #show: brand
 
-#m.slide(grid: m.templates.title(
+#m.slide(grid: m.layouts.title(
   [Mosaic],
   subtitle: [A setup-driven semantic deck],
   authors: (m.author([Vincent]),),
 ))
 
-#m.slide(grid: m.templates.image(
+#m.slide(grid: m.layouts.image(
   variant: "figure",
   path: path("/docs/assets/images/bonsai.webp"),
   alt: "Bonsai tree",
@@ -78,7 +78,7 @@ after `setup` has established the document-wide presentation settings.
 semantic color dictionaries for `setup(colors: ...)`. `m.color.palette`
 returns an ordered categorical color array instead of configuring the deck.
 
-The public template collection contains five constructors:
+The public layout collection contains five constructors:
 
 - `default`: optional full-width header and footer cells around an
   argument-controlled body column grid, with independent per-cell backgrounds
@@ -108,8 +108,36 @@ Set document-wide colors and spacing with `m.setup`. Put local cell
 styles on `m.grid.cell`, track sizes on `m.grid.t`, and reusable variations in
 ordinary Typst functions or `.with(...)` values.
 
-See `docs/tutorial-examples/templates/` for focused, compiled template
+See `docs/tutorial-examples/layouts/` for focused, compiled layout
 examples.
+
+## Bundled themes
+
+`m.themes` bundles three polished themes: `metropolis`, `cream`, and
+`minimalist`. Each is an ordinary Typst module exporting `apply` (the
+document wrapper), the layout factories `default`, `title`, and `section`,
+plus `colors` and `palette`:
+
+```typ
+#import "@local/mosaic:0.0.1" as m
+#let theme = m.themes.metropolis
+
+#show: theme.apply
+
+#theme.title([My talk], subtitle: [A subtitle])
+
+== Ordinary content
+
+Routed through the theme's default layout.
+
+#theme.section([Methods])
+```
+
+`apply` exposes a few knobs via `.with(...)` (for example
+`theme.apply.with(base-size: 24pt)`). For deeper customization, copy the
+theme file from `mosaic/src/themes/` next to your deck, import the copy, and
+edit it freely. The Grayscale theme in `docs/examples/portfolio/` shows that
+vendored, copy-me side of the convention.
 
 ## API
 
@@ -432,7 +460,7 @@ the current slide. These boundaries intentionally use the source heading's
 `depth`, preserving existing behavior when `heading(offset: ...)` changes its
 resolved native `level`. `current-heading` always uses that resolved level.
 
-Automatic `==` slides use `templates.default(variant: "header-body")` independently of the
+Automatic `==` slides use `layouts.default(variant: "header-body")` independently of the
 deck's default grid. Section headings accept no body content before the next
 source-depth-two heading, and visible content before the first slide is an
 error. Use an explicit `slide(grid: ...)` for individual slides that need
@@ -595,16 +623,18 @@ Internal modules import definitions directly from the module that owns them:
   `mosaic.grid` namespace.
 - `component-api.typ` curates the public component namespace without exposing
   implementation imports and helpers.
-- `template-core.typ` and `template-support.typ` provide shared template
-  primitives. Each `template-{name}.typ` module owns that template's
-  constructor, validation, and resolution; `template-api.typ` and
-  `template-resolver.typ` are the curated public and runtime entry points.
+- `layout-core.typ` and `layout-support.typ` provide shared layout
+  primitives. Each `layout-{name}.typ` module owns that layout's
+  constructor, validation, and resolution; `layout-api.typ` and
+  `layout-resolver.typ` are the curated public and runtime entry points.
 - `deck-state.typ` and `deck-commands.typ` define deck-wide state and records.
   `slide-runtime.typ` owns handout/frame state and renders logical slides;
   `deck-compiler.typ` compiles top-level document content.
 - `incremental-core.typ` provides shared range/state parsing.
   `incremental.typ` owns the incremental constructors, step discovery, and content
   transformation; `render.typ` renders one resolved grid-tree frame.
+- `themes/*.typ` are the bundled themes; `theme-api.typ` curates the public
+  `mosaic.themes` namespace.
 
 See [`ARCHITECTURE.md`](ARCHITECTURE.md) for the complete dependency layers,
 module responsibilities, and rules for placing new code.
@@ -658,5 +688,5 @@ typst compile --root . tests/heading-offset.typ
 ```
 
 The negative fixtures under `tests/invalid/` verify clear diagnostics for
-malformed grids and template records, invalid selectors, tracks, timing ranges,
+malformed grids and layout records, invalid selectors, tracks, timing ranges,
 cell operations, heading placement, and conflicting slide arguments.

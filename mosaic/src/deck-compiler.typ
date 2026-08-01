@@ -54,11 +54,16 @@
   let section = none
   let current = ()
   let flushed = none
+  let slide-wrappers = ()
 
-  let flush(mode, section, current) = {
+  // PROTOTYPE: automatic slides re-apply the user's captured set/show
+  // wrappers around the rendered slide, exactly as explicit slide commands
+  // do, so deck-level rules (including label-targeted rules) see the
+  // rendered cell structure.
+  let flush(mode, section, current, wrappers) = {
     if mode == "slide" {
       let body = current.sum(default: [])
-      if auto-slide == none {
+      let rendered = if auto-slide == none {
         render-slide(automatic-slide-command(section, body))
       } else {
         let produced = auto-slide(section, body)
@@ -70,19 +75,23 @@
         }
         render-slide(produced.value)
       }
+      wrap-content(rendered, wrappers)
     } else if mode == "section" {
-      render-slide(slide-command(
-        (section,),
-        grid: section-grid,
-        numbered: false,
-      ))
+      wrap-content(
+        render-slide(slide-command(
+          (section,),
+          grid: section-grid,
+          numbered: false,
+        )),
+        wrappers,
+      )
     } else {
       none
     }
   }
 
-  let flush-current(mode, section, current) = (
-    flush(mode, section, current),
+  let flush-current(mode, section, current, wrappers) = (
+    flush(mode, section, current, wrappers),
     none,
     none,
     (),
@@ -91,6 +100,16 @@
   for entry in top-level-content(body) {
     let value = entry.raw
     let shown = entry.shown
+    // PROTOTYPE: content collected into an automatic slide is re-styled by
+    // the outer wrap in flush(); strip the slide-level wrapper prefix from
+    // each piece so those styles are not applied twice (relative units such
+    // as em sizes would compound). Wrappers nest, so the first N wrappers of
+    // every piece inside the slide match the heading's N wrappers.
+    let inner = if entry.wrappers.len() >= slide-wrappers.len() {
+      wrap-content(value, entry.wrappers.slice(slide-wrappers.len()))
+    } else {
+      shown
+    }
     let level = if (
       type(value) == content and value.func() == heading
     ) {
@@ -100,14 +119,14 @@
     }
 
     if is-command(value, "slide") {
-      (flushed, mode, section, current) = flush-current(mode, section, current)
+      (flushed, mode, section, current) = flush-current(mode, section, current, slide-wrappers)
       if flushed != none { output.push(flushed) }
       output.push(wrap-content(
         render-slide(value.value),
         entry.wrappers,
       ))
     } else if is-command(value, "deck") {
-      (flushed, mode, section, current) = flush-current(mode, section, current)
+      (flushed, mode, section, current) = flush-current(mode, section, current, slide-wrappers)
       if flushed != none { output.push(flushed) }
       output.push(wrap-content(
         configure-deck(
@@ -118,20 +137,21 @@
         entry.wrappers,
       ))
     } else if level in (1, 2) {
-      (flushed, mode, section, current) = flush-current(mode, section, current)
+      (flushed, mode, section, current) = flush-current(mode, section, current, slide-wrappers)
       if flushed != none { output.push(flushed) }
       if level == 1 {
         mode = "section"
-        section = shown
+        section = value
         current = ()
       } else {
         mode = "slide"
-        section = shown
+        section = value
         current = ()
       }
+      slide-wrappers = entry.wrappers
     } else if is-heading-space(value) {
       if mode == "slide" {
-        current.push(shown)
+        current.push(inner)
       }
     } else if (
       mode == none
@@ -140,7 +160,7 @@
     ) {
       output.push(shown)
     } else if mode == "slide" {
-      current.push(shown)
+      current.push(inner)
     } else if mode == "section" {
       fail(
         "automatic section slides cannot contain "
@@ -154,7 +174,7 @@
     }
   }
 
-  let flushed = flush(mode, section, current)
+  let flushed = flush(mode, section, current, slide-wrappers)
   if flushed != none { output.push(flushed) }
   output.sum(default: [])
 }

@@ -12,27 +12,6 @@
 
 #title()
 
-== Where are the themes?
-
-Mosaic deliberately has no theme object. Where Beamer has themes, Mosaic has
-`setup`, presets, and native Typst rules. Set deck-wide colors, spacing, and
-features once through `m.setup`. Capture a reusable configuration as an
-ordinary Typst value with `.with(...)`; such a value is called a preset:
-
-```typ
-#let brand = m.setup.with(
-  colors: m.color.scheme("dark") + (
-    accent: rgb("#e69f00"),
-  ),
-  features: (slide-number: true, progress: true),
-)
-
-#show: brand
-```
-
-Everything else, such as typography, headings, captions, and lists, is styled
-with ordinary `set` and `show` rules after setup.
-
 == Where do slide margins go?
 
 `setup` uses a zero page margin. Put content spacing on the cells:
@@ -92,7 +71,7 @@ This is one logical slide.
 == How do I customize automatic heading slides?
 
 By default a `==` heading builds a slide with
-`templates.default(variant: "header-body")`: the heading fills the header and
+`layouts.default(variant: "header-body")`: the heading fills the header and
 the following content fills the body. To give every automatic slide a different
 look, with your own furniture, colors, or grid, pass an `auto-slide` function
 to `m.setup`. It receives the heading and body as content and returns a
@@ -101,7 +80,7 @@ explicit slides.
 
 ```typ
 #let framed(title, body) = m.slide(
-  grid: m.templates.default(
+  grid: m.layouts.default(
     variant: "header-body",
     inverted: ("header",),
     progress: "1",
@@ -117,10 +96,12 @@ progress indicator without a single `#slide` call.
 ```
 
 The returned slide may use any grid, not only header-body. A single body cell
-that merges the title and content, an image template, or a custom cell tree all
+that merges the title and content, an image layout, or a custom cell tree all
 work. The one rule is Mosaic's usual one: the grid must accept as many body
 blocks as the function passes it. Passing `none` (the default) keeps the
-built-in header-body slide.
+built-in header-body slide. Every theme on the
+#link("themes.html")[Themes] page registers its `default` layout as
+`auto-slide` in exactly this way.
 
 == How do I change the slide aspect ratio?
 
@@ -178,3 +159,60 @@ synchronized.
 
 To show only a selected state without repeating the full sequence, parameterize
 the function or write a small summary slide containing that state.
+
+
+== How does Mosaic compare to Touying?
+
+#link("https://github.com/touying-typ/touying")[Touying] is the most
+established presentation framework for Typst, and it is an excellent project.
+It follows the Beamer tradition: a presentation is built around a theme, and
+the theme is an object that bundles colors, headers, footers, a title slide,
+and special slide constructors. Users pick a theme such as `metropolis` or
+`university`, then adjust it through a unified configuration API
+(`config-info`, `config-colors`, `config-methods`). This design has real
+strengths. Switching themes requires few changes to a document, the ecosystem
+of community themes on Typst Universe is large, and Touying ships integrations
+for tools such as CeTZ, Fletcher, and pdfpc speaker notes.
+
+Mosaic starts from a different premise: the fundamental unit of a slide is not
+a theme but a layout. Every Mosaic slide is a grid, a small tree of horizontal
+and vertical splits whose cells hold content. Semantic layouts such as
+`layouts.title` or `layouts.image` are thin layers that resolve to the same
+canonical grid trees, so there is one layout model to learn and it composes all
+the way down. Touying instead delegates layout to each theme; a theme defines
+how its header, footer, and body fit together, and stepping outside that
+structure means writing or modifying a theme. In Mosaic, an unusual layout is
+just another grid, written inline with the same primitives as every other
+slide.
+
+The second difference is how much machinery sits between your document and
+Typst. Touying implements its own object model: a `self` dictionary threads
+through themes and callbacks, and dynamic content can require callback-style
+functions with a manually specified `repeat` count. This buys Touying
+considerable power, but it also means learning a framework within the
+language. Mosaic keeps its surface deliberately small. A Mosaic theme is a
+plain Typst module rather than an object, and there is no `self`; deck-wide
+settings flow through a single `setup` function, reusable configurations are
+ordinary Typst values built with `.with(...)`, and typography, headings, and
+captions are styled with native `set` and `show` rules. If you already know
+Typst, you already know most of how to style a Mosaic deck.
+
+The two projects also treat incremental content differently. Touying offers
+Beamer-style `#pause` and `#meanwhile` markers plus `only`, `uncover`, and
+`alternatives`, which will feel immediately familiar to Beamer users. Mosaic
+provides declarative constructors, `on`, `reveal`, `replace`, and `reduce`,
+that attach explicit step ranges to content. The step count is discovered
+automatically, visibility is data rather than position, and the same
+constructors work anywhere in a grid, including in backgrounds and
+foregrounds.
+
+Which should you choose? If you want a broad theme gallery and Beamer-like
+conventions, Touying is a mature and capable choice. Mosaic is for
+presentations where layout carries the message: full-bleed images,
+edge-to-edge color fields, and slide designs that vary from one slide to the
+next. Its zero-margin pages, cell insets, background and foreground planes,
+and uniform grid model make that kind of design direct rather than an act of
+theme surgery, while everything that is not layout remains plain Typst. Mosaic
+still offers ready-made looks: a few polished themes ship inside the package
+under `m.themes`, and each is a single readable module you can copy and own;
+see the #link("themes.html")[Themes] page.

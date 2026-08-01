@@ -1,8 +1,8 @@
 // Construction and validation of deferred deck and slide commands.
 #import "shared.typ": tag, fail
 #import "grid-model.typ": cell, is-node, validate, validate-cell-styles
-#import "template-core.typ": is-template-grid
-#import "template-default.typ": default
+#import "layout-core.typ": is-layout-grid
+#import "layout-default.typ": default
 
 #let command-field-keys = (
   deck: ("background", "default-grid", "foreground", "kind", "mosaic"),
@@ -106,7 +106,7 @@
   grid: auto,
   /// Visual overrides keyed by resolved cell ID.
   /// Accepts `fill`, `inset`, `align`, `text`, `stroke`, `radius`,
-  /// `background`, and `fit`. Template defaults are applied first; text
+  /// `background`, and `fit`. Layout defaults are applied first; text
   /// dictionaries merge deeply. Unknown IDs fail after grid resolution.
   /// -> dictionary
   cell-styles: (:),
@@ -125,7 +125,7 @@
   /// -> bool
   numbered: true,
   /// Whether a custom slide layout represents a semantic section divider.
-  /// Slides using `templates.section()` are marked automatically.
+  /// Slides using `layouts.section()` are marked automatically.
   /// -> bool
   section: false,
   /// Cell bodies, optionally preceded by a positional grid.
@@ -144,7 +144,7 @@
     bodies.len() > 0
       and (
         is-node(bodies.first())
-          or is-template-grid(bodies.first())
+          or is-layout-grid(bodies.first())
       )
   ) {
     bodies.remove(0)

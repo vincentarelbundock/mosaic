@@ -24,7 +24,7 @@
   resolved
 }
 
-// Internal cell constructor used by template resolvers and setup defaults.
+// Internal cell constructor used by layout resolvers and setup defaults.
 #let styled-cell(
   ..identifier,
   content: none,

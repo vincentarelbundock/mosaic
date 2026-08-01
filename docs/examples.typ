@@ -139,9 +139,11 @@
 
 Explore four complete decks built with Mosaic. Click a thumbnail to page through
 its slides. The #link(repo)[GitHub repository] contains every deck's full Typst
-source, assets, Makefile, and compiled PDF. See
-#link("acknowledgments.html#example-decks")[Acknowledgments] for sources and
-licenses.
+source, assets, Makefile, and compiled PDF. Each deck's reusable look is a
+single-module theme collected on the #link("themes.html")[Themes] page; three
+of them ship inside the package under `m.themes`.
+See #link("acknowledgments.html#example-decks")[Acknowledgments] for sources
+and licenses.
 
 #if sys.inputs.at("calepin-target", default: "paged") == "html" {
   html.elem("style", "

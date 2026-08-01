@@ -1,4 +1,4 @@
-// Validated author records shared by all title templates.
+// Validated author records shared by all title layouts.
 #import "shared.typ": fail
 
 #let author-keys = (
@@ -91,7 +91,7 @@
   value
 }
 
-/// Creates a validated author for `templates.title(authors: ...)`.
+/// Creates a validated author for `layouts.title(authors: ...)`.
 ///
 /// `email` and `orcid` are independent optional fields. `affiliations` is an
 /// array of `(id: ..., name: ...)` dictionaries. A corresponding author must

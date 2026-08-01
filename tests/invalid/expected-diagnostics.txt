@@ -1,13 +1,13 @@
-templates-default-columns|columns must be a positive integer
-templates-default-mutated-command|columns must be a positive integer
-templates-default-tracks|tracks must be auto or an array of 2 native Typst track sizes
-templates-default-progress|progress must be none, "1/1", "1", "circle", or "line"
-templates-image-variant|expected one of ("full", "figure", "left", "right", "top", "bottom")
-templates-image-mutated-command|split variants require exactly two tracks
-templates-section-image-unused|variant "plain" does not use image
-templates-section-mutated-command|variant "image-bottom" requires image
-templates-section-tracks|"section" tracks must be auto or an array of 2 native Typst track sizes
-templates-section-tracks-scope|tracks apply only to directional image variants
+layouts-default-columns|columns must be a positive integer
+layouts-default-mutated-command|columns must be a positive integer
+layouts-default-tracks|tracks must be auto or an array of 2 native Typst track sizes
+layouts-default-progress|progress must be none, "1/1", "1", "circle", or "line"
+layouts-image-variant|expected one of ("full", "figure", "left", "right", "top", "bottom")
+layouts-image-mutated-command|split variants require exactly two tracks
+layouts-section-image-unused|variant "plain" does not use image
+layouts-section-mutated-command|variant "image-bottom" requires image
+layouts-section-tracks|"section" tracks must be auto or an array of 2 native Typst track sizes
+layouts-section-tracks-scope|tracks apply only to directional image variants
 color-scheme-name|available schemes:
 color-palette-name|available palettes:
 color-palette-ramp-name|unknown palette "carto-burg"
@@ -20,8 +20,8 @@ frozen-states-type|frozen-states must contain only state values
 overflow-policy|features overflow must be "off" or "warn"
 handout-type|setup handout must be a boolean
 setup-paper|setup paper must be "16-9" or "4-3"
-templates-title-authors|"title" authors must be an array
-templates-title-authors-empty|variant "academic" requires at least one author
+layouts-title-authors|"title" authors must be an array
+layouts-title-authors-empty|variant "academic" requires at least one author
 author-name|author name must be content or a non-empty string
 author-affiliations|author affiliations must be an array
 author-affiliation|author affiliation 1 id must be a non-empty string
@@ -31,18 +31,18 @@ author-corresponding|author corresponding requires email or orcid
 author-raw|author 1 must be created with author()
 author-mutated|author 1 email must be a valid email address
 author-affiliation-conflict|affiliation id "lab" has conflicting names
-templates-title-variant|unsupported variant "unknown"
-templates-title-tracks|"title" tracks must be auto or an array of 2 native Typst track sizes
-templates-title-image-required|variant "image-background" requires image
-templates-title-image-type|image must be content, a non-empty path string, a native path, or a path dictionary
-templates-title-image-path|image path must be a non-empty string
-templates-title-image-size|image does not accept "width"
-templates-title-align|align must use left, center, or right
-templates-title-mutated-command|variant "image-right" requires image
-templates-title-ordinary-authors|author 1 must be created with author()
-templates-title-tracks-scope|tracks apply only to directional image variants
-templates-title-image-unused|variant "left-aligned" does not use image
-templates-title-align-scope|align applies only to variant "image-background"
+layouts-title-variant|unsupported variant "unknown"
+layouts-title-tracks|"title" tracks must be auto or an array of 2 native Typst track sizes
+layouts-title-image-required|variant "image-background" requires image
+layouts-title-image-type|image must be content, a non-empty path string, a native path, or a path dictionary
+layouts-title-image-path|image path must be a non-empty string
+layouts-title-image-size|image does not accept "width"
+layouts-title-align|align must use left, center, or right
+layouts-title-mutated-command|variant "image-right" requires image
+layouts-title-ordinary-authors|author 1 must be created with author()
+layouts-title-tracks-scope|tracks apply only to directional image variants
+layouts-title-image-unused|variant "left-aligned" does not use image
+layouts-title-align-scope|align applies only to variant "image-background"
 image-adjustments-combined|image accepts either lighten or darken, not both
 image-lighten-range|image lighten must be a ratio from 0% to 100% or none
 cell-id-both|cell id must be passed positionally or through id:, not both
@@ -60,5 +60,5 @@ slide-cell-style-id|slide cell-styles contains unknown cell id "missing"
 slide-cell-styles-mutated|slide cell style for "body" has unsupported field "content-sized"
 slide-cell-styles-base-grid-mutated|invalid grid node at root
 cell-surface-ownership|cell visual fields belong in slide cell-styles
-templates-title-content|requires title content as its first positional argument
-templates-title-rule|rule must be auto, true, or false
+layouts-title-content|requires title content as its first positional argument
+layouts-title-rule|rule must be auto, true, or false

@@ -1,9 +1,9 @@
-#import "@local/mosaic:0.0.1" as m
-
-// ── Palette ────────────────────────────────────────────────────────────────
-#let cream = rgb("#fffcf9")
-#let red = rgb("#c83224")
-#let serif = "Source Serif 4"
+// Deck-specific preamble for the Minimalist White deck. The reusable look is
+// the bundled Minimalist White theme (m.themes.minimalist); theme.typ
+// re-exports it as `theme` together with its palette tokens, and importing
+// that with `*` re-exports everything to main.typ. The helpers below belong
+// to this deck's content rather than to the theme.
+#import "theme.typ": *
 
 // ── Copy ───────────────────────────────────────────────────────────────────
 #let copy = [Presentations turn ideas into clear stories for an audience.
@@ -18,30 +18,11 @@ They can inform, persuade, teach, or spark discussion.]
 )
 
 // Font and fill are set once via `#set text(font: serif, fill: red)` in the
-// theme below; these helpers inherit both and only vary size (and weight for
+// theme; these helpers inherit both and only vary size (and weight for
 // titles).
 #let title(body, size: 2.21em) = text(size: size, weight: "bold", body)
 #let body-text(body, size: 1em) = text(size: size, body)
 
+// This deck builds every slide by hand, so `slide` is rebound to `m.slide`.
+// The theme's `default` layout still backs `==` headings.
 #let slide = m.slide
-
-// ── Theme ──────────────────────────────────────────────────────────────────
-// Applied in main.typ via `#show: deck-theme`. Show/set rules cannot cross an
-// `#import`, so the document-wide styling lives in this wrapper rather than at
-// the top level of the preamble.
-#let deck-theme(body) = {
-  show: m.setup.with(
-    colors: (
-      canvas: cream,
-      surface: cream,
-      accent: red,
-      text: red,
-      inverse-text: cream,
-      muted: red,
-      line: red,
-    ),
-    spacing: (inset: 0pt),
-  )
-  set text(font: serif, fill: red, size: 14pt)
-  body
-}
