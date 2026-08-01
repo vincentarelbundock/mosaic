@@ -136,5 +136,5 @@ layout grid to `m.slide`. Both forms mix freely in one deck.
 ))
 ```
 
-See the #link("colors.html")[Colors guide] for complete light and dark schemes,
+See #link("appearance.html")[Appearance] for complete light and dark schemes,
 semantic role overrides, and categorical palettes.

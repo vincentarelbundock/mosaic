@@ -52,43 +52,25 @@ fold = true
   target = "getting-started.typ"
 
   [[sidebar.section.item]]
-  target = "examples.typ"
+  target = "structure.typ"
 
   [[sidebar.section.item]]
-  target = "themes.typ"
+  target = "appearance.typ"
 
   [[sidebar.section.item]]
-  target = "layouts.typ"
-
-  [[sidebar.section.item]]
-  target = "colors.typ"
-
-  [[sidebar.section.item]]
-  target = "typography.typ"
-
-  [[sidebar.section.item]]
-  target = "grids.typ"
-
-  [[sidebar.section.item]]
-  target = "foreground.typ"
-
-  [[sidebar.section.item]]
-  target = "background.typ"
-
-  [[sidebar.section.item]]
-  target = "components.typ"
+  target = "blocks.typ"
 
   [[sidebar.section.item]]
   target = "incremental.typ"
 
   [[sidebar.section.item]]
-  target = "math.typ"
+  target = "furniture.typ"
 
   [[sidebar.section.item]]
-  target = "navigation.typ"
+  target = "themes.typ"
 
   [[sidebar.section.item]]
-  target = "images.typ"
+  target = "examples.typ"
 
   [[sidebar.section.item]]
   target = "faq.typ"
