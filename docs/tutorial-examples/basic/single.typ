@@ -13,6 +13,8 @@
   subtitle: [A first Mosaic deck],
 ))
 
+= Content
+
 == A figure
 
 #align(center + horizon)[
@@ -31,8 +33,10 @@
 == Bullet points
 
 - Slides start with `==`.
-- Lists are ordinary Typst.
+- Sections start with `=`.
 - Everything is static by default.
+
+= Composition
 
 == A rounded grid
 

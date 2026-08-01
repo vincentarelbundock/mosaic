@@ -40,38 +40,25 @@ Each frame is one page in the PDF. A *scheme* assigns colors to semantic
 Mosaic can turn ordinary Typst headings into slides. This keeps a first deck
 short, readable, and easy to edit.
 
-After `#show: m.setup`, every `==` signals the start of a new slide. The
-heading becomes the slide title, and the text that follows becomes its
-content.
+After `#show: m.setup`, every `==` starts a new slide — the heading becomes the
+title and the text that follows becomes its content — and every single `=`
+starts an unnumbered section divider, whose title is larger and centered by
+default. Together they give a lightweight hierarchy with no special slide
+commands.
 
-The example below is a complete four-slide deck. It opens with one title
-slide built from the `image-background` title layout, with the title
-anchored to the top-right corner. Every slide after that is just a `==`
-heading followed by normal Typst content. The code block is the exact source
-for the rendered slideshow beneath it.
+The example below is a complete deck. It opens with a title slide built from
+the `image-background` title layout, with the title anchored to the top-right
+corner; groups the rest under two `=` section dividers; and fills every `==`
+slide with ordinary Typst content. The code block is the exact source for the
+rendered slideshow beneath it.
 
 #verbatim-example("basic/single.typ")
 
 #slideshow(
   calepin.elements.gallery,
   "basic/single",
-  4,
-  "A minimal heading-driven deck with an image title slide",
-)
-
-= Sections
-
-A single `=` starts an unnumbered section slide. A double `==` starts a regular
-slide. Section titles are larger and centered by default. Together, they
-provide a lightweight hierarchy without adding any special slide commands.
-
-#verbatim-example("basic/sections.typ")
-
-#slideshow(
-  calepin.elements.gallery,
-  "basic/sections",
-  5,
-  "Two sections and three slides",
+  6,
+  "A heading-driven deck with an image title slide and two sections",
 )
 
 = Global style
