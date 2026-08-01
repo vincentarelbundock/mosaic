@@ -52,5 +52,11 @@ components-progress-count|progress count must be "slides" or "sections"
 slide-section-type|section must be a boolean
 
 cell-surface-ownership|cell accepts only a cell id, optional fixed content, and inset
+slide-cells-type|slide cells must be a dictionary
+slide-cells-unknown|slide cells contains unknown cell id "sidebar"
+slide-cells-fixed|slide cells cannot supply fixed-content cell "logo"
+slide-cells-missing|slide cells is missing content for cell "b"
+slide-cells-content-type|slide cell content for "body" must be content
+slide-cells-mixed|slide cannot combine named and positional cell content
 layouts-title-content|requires title content as its first positional argument
 layouts-title-rule|rule must be auto, true, or false

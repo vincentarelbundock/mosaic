@@ -412,6 +412,48 @@
   cell => cell.content == none,
 )
 
+// The IDs of every content-bearing cell (content == none), in the same
+// depth-first declaration order that positional bodies fill. This is the
+// single ordered destination list; named content is normalized against it.
+#let body-cell-ids(node) = fold-grid(
+  node,
+  cell => if cell.content == none { (cell.id,) } else { () },
+  (node, child) => child,
+  (node, children) => children.flatten(),
+)
+
+// Validate a `cells` dictionary against a resolved grid and return the bodies
+// in traversal order, so named and positional content share one internal
+// representation. Callers pass this result to `render` exactly as they would a
+// positional body array.
+#let resolve-named-content(node, cells) = {
+  if type(cells) != dictionary {
+    fail("slide cells must be a dictionary")
+  }
+  let body-ids = body-cell-ids(node)
+  let all-ids = collect-cell-ids(node)
+  for (id, value) in cells {
+    if id not in all-ids {
+      fail("slide cells contains unknown cell id " + repr(id))
+    }
+    if id not in body-ids {
+      fail("slide cells cannot supply fixed-content cell " + repr(id))
+    }
+    if type(value) != content {
+      fail("slide cell content for " + repr(id) + " must be content")
+    }
+  }
+  let missing = body-ids.filter(id => id not in cells)
+  if missing.len() > 0 {
+    fail(
+      "slide cells is missing content for "
+        + if missing.len() == 1 { "cell " } else { "cells " }
+        + missing.map(repr).join(", "),
+    )
+  }
+  body-ids.map(id => cells.at(id))
+}
+
 #let resolved-tracks(node) = if node.tracks == auto {
   (1fr,) * node.children.len()
 } else {

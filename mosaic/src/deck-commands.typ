@@ -9,6 +9,7 @@
   slide: (
     "background",
     "bodies",
+    "cells",
     "colors",
     "foreground",
     "grid",
@@ -79,6 +80,7 @@
   colors: auto,
   numbered: true,
   section: false,
+  cells: (:),
 ) = (
   mosaic: tag,
   kind: "slide",
@@ -88,6 +90,7 @@
   colors: colors,
   numbered: numbered,
   section: section,
+  cells: cells,
   bodies: bodies,
 )
 
@@ -119,7 +122,18 @@
   /// Slides using `layouts.section()` are marked automatically.
   /// -> bool
   section: false,
-  /// Cell bodies, optionally preceded by a positional grid.
+  /// Content assigned to grid cells by ID: a dictionary mapping each
+  /// content-bearing cell's ID to its content. This is the recommended form
+  /// for custom grids with more than one supplied cell, because assignment no
+  /// longer depends on the grid's traversal order. Every content-bearing cell
+  /// must have an entry; entries targeting an unknown or fixed-content cell
+  /// are errors. Cannot be combined with positional bodies. Leave empty to use
+  /// positional content.
+  /// -> dictionary
+  cells: (:),
+  /// Cell bodies, optionally preceded by a positional grid. A terse
+  /// alternative to `cells:`; the bodies fill content-bearing cells in the
+  /// grid's depth-first declaration order.
   /// -> arguments
   ..bodies
 ) = {
@@ -128,6 +142,9 @@
   }
   if type(section) != bool {
     fail("section must be a boolean")
+  }
+  if type(cells) != dictionary {
+    fail("slide cells must be a dictionary")
   }
   let bodies = bodies.pos()
   let positional-grid = if (
@@ -144,6 +161,9 @@
   if positional-grid != none and grid != auto {
     fail("slide cannot combine a positional grid tree with the grid parameter")
   }
+  if cells.len() > 0 and bodies.len() > 0 {
+    fail("slide cannot combine named and positional cell content")
+  }
   let requested-grid = if positional-grid != none {
     positional-grid
   } else {
@@ -157,6 +177,7 @@
     colors: colors,
     numbered: numbered,
     section: section,
+    cells: cells,
   ))
 }
 #let automatic-slide-command(title, body) = {

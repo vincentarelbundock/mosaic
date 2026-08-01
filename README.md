@@ -294,13 +294,45 @@ the start of the document. A later call changes the defaults for the slides
 that follow it.
 
 `slide(grid: auto, background: auto, foreground: auto, colors: auto,
-numbered: true, ..bodies)` validates a tree, assigns bodies to its empty cells,
-and renders one logical slide. `auto` inherits the corresponding deck default,
-`none` disables an inherited visual plane, and explicit content overrides it.
-Background is painted behind the grid; foreground is painted over it.
-Neither plane affects split measurements. Incremental content divides a
+numbered: true, cells: (:), ..bodies)` validates a tree, assigns content to its
+empty cells, and renders one logical slide. `auto` inherits the corresponding
+deck default, `none` disables an inherited visual plane, and explicit content
+overrides it. Background is painted behind the grid; foreground is painted over
+it. Neither plane affects split measurements. Incremental content divides a
 logical slide into steps; each step renders as one frame, which is one
 PDF page.
+
+Content reaches a cell in one of two equivalent ways. Positional bodies fill
+the content-bearing cells (those with `content: none`) in the grid's
+depth-first declaration order, which is terse for the default `body` cell and
+for layout factories:
+
+```typ
+#m.slide[Ordinary body content]
+```
+
+For a custom grid with several supplied cells, the `cells:` dictionary assigns
+content by cell ID, so placement no longer depends on traversal order and the
+call reads on its own:
+
+```typ
+#m.slide(
+  grid: m.grid.h(m.grid.v("heading", "left"), "right"),
+  cells: (
+    heading: [Heading],
+    left: [Left argument],
+    right: [Right argument],
+  ),
+)
+```
+
+The cell ID is the single handle across all three cell operations:
+`m.grid.cell("body")` defines the destination, `cells: (body: [...])` supplies
+its content, and `show label("mosaic-cell-body")` styles its appearance. Every
+content-bearing cell must have a `cells:` entry; entries naming an unknown or
+fixed-content cell are errors, and `cells:` cannot be combined with positional
+bodies in the same call. Both forms normalize to one ordered body array, so a
+named slide and its positional equivalent render identically.
 
 Set `handout: true` on `setup` to render only the final frame of each logical
 slide. Mosaic retains the final state of timed body content, reducers,

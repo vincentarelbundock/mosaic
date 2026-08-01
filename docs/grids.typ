@@ -243,6 +243,38 @@ title–columns–footer grid.
   "Three slides built from horizontal and vertical grids",
 )
 
+= Assigning content by name
+
+Positional blocks are terse, but a reader must trace the grid's traversal order
+to know which block lands where, and rearranging the grid moves content even
+when the IDs stay put. For a custom grid with several supplied cells, assign
+content by ID through the `cells` dictionary instead:
+
+```typ
+#let comparison = m.grid.h(
+  m.grid.v("heading", "left"),
+  "right",
+)
+
+#m.slide(
+  grid: comparison,
+  cells: (
+    heading: [Heading],
+    left: [Left argument],
+    right: [Right argument],
+  ),
+)
+```
+
+Dictionary order does not matter; each entry is matched to its cell by ID. This
+makes the cell ID the single handle for a cell: `m.grid.cell("body")` defines
+it, `cells: (body: [...])` fills it, and `label("mosaic-cell-body")` styles it.
+
+Every content-bearing cell must have an entry, and an entry naming an unknown
+cell or a fixed-content cell is a reported error. `cells:` and positional
+blocks cannot be mixed in one call. Keep positional blocks for the ordinary
+one-cell slide and for small grids where source order is already obvious.
+
 = Styling named cells
 
 Grid constructors describe structure and stable cell identities. Cells carry

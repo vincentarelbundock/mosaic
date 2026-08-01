@@ -1,6 +1,6 @@
 // Logical-slide runtime: frame policy, state, resolution, and page rendering.
 #import "shared.typ": fail
-#import "grid-model.typ": cell, validate, count-bodies
+#import "grid-model.typ": cell, validate, count-bodies, resolve-named-content
 #import "incremental.typ": max-step, transform
 #import "render.typ": max-node, render
 #import "settings.typ": settings-state, with-colors
@@ -225,15 +225,22 @@
   }
   validate-plane(resolved-background, "background")
   validate-plane(resolved-foreground, "foreground")
+  // Named and positional content collapse to one ordered body array before
+  // rendering, so the renderer, overflow, and incremental paths stay single.
+  let bodies = if command.cells.len() == 0 {
+    command.bodies
+  } else {
+    resolve-named-content(resolved-grid, command.cells)
+  }
   let expected = count-bodies(resolved-grid)
   assert(
-    command.bodies.len() == expected,
+    bodies.len() == expected,
     message: "mosaic: grid expects " + str(expected)
-      + " bodies, received " + str(command.bodies.len()),
+      + " bodies, received " + str(bodies.len()),
   )
   let steps = calc.max(
     max-node(resolved-grid),
-    max-step(command.bodies),
+    max-step(bodies),
     max-step(resolved-background),
     max-step(resolved-foreground),
   )
@@ -250,7 +257,7 @@
   for step in physical-steps(steps, handout) {
     let result = render(
       resolved-grid,
-      command.bodies,
+      bodies,
       step,
       overflow: settings.features.overflow,
       slide: slide,

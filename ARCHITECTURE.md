@@ -63,6 +63,21 @@ When overriding a size the defaults already set (for example the section or
 title display size), prefer absolute sizes; em sizes compound across nested
 rules.
 
+## Content routing: one internal model, two syntaxes
+
+Appearance is native, but content assignment is Mosaic's job: native rules
+cannot route content into cells. `mosaic.slide` accepts content two ways, and
+both normalize to a single ordered body array before rendering. Positional
+bodies fill content-bearing cells (`content: none`) in depth-first declaration
+order; the `cells:` dictionary assigns by cell ID. `resolve-named-content`
+(grid-model) validates a `cells:` dictionary against the resolved grid's
+`body-cell-ids` and returns the bodies in that same traversal order, so the
+renderer, overflow observer, and incremental paths keep one cursor-based
+implementation and named/positional slides render identically by construction.
+The cell ID is therefore the one handle across all three cell operations:
+`cell(id)` defines, `cells: (id: ...)` supplies content, `label("mosaic-cell-id")`
+styles. `cells:` and positional bodies cannot be combined in one call.
+
 ## Grid subsystem
 
 - `grid-model.typ` owns the canonical cell/split records, constructor
