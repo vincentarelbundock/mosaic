@@ -11,11 +11,15 @@
 
 #title()
 
-Cells carry no appearance of their own. Every rendered cell is a single block
-labeled `<mosaic-cell-ID>`, and you style it with ordinary Typst `set` and
-`show` rules. `m.setup` establishes the baseline (font, colors, and the
-canonical cell vocabulary), and every rule you add layers on top. There is no
-styling dictionary to learn.
+Mosaic has one styling idea, and it is the thing that sets Mosaic apart: it
+labels every element it draws, and you style all of it with native Typst rules.
+A slide is a stack of native layers, a background plane, a grid of cells, and a
+foreground plane. The planes are content you supply directly; each cell is a
+single block labeled `<mosaic-cell-ID>`. Style any of it with the ordinary
+`set` and `show` rules you already know. `m.setup` establishes the baseline
+(font, colors, and the canonical cell vocabulary), and every rule you add layers
+on top. There is no styling dictionary, no theme object, and no dozen styling
+functions to learn.
 
 = Styling cells
 

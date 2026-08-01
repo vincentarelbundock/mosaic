@@ -184,17 +184,21 @@ structure means writing or modifying a theme. In Mosaic, an unusual layout is
 just another grid, written inline with the same primitives as every other
 slide.
 
-The second difference is how much machinery sits between your document and
-Typst. Touying implements its own object model: a `self` dictionary threads
-through themes and callbacks, and dynamic content can require callback-style
-functions with a manually specified `repeat` count. This buys Touying
-considerable power, but it also means learning a framework within the
-language. Mosaic keeps its surface deliberately small. A Mosaic theme is a
-plain Typst module rather than an object, and there is no `self`; deck-wide
-settings flow through a single `setup` function, reusable configurations are
-ordinary Typst values built with `.with(...)`, and typography, headings, and
-captions are styled with native `set` and `show` rules. If you already know
-Typst, you already know most of how to style a Mosaic deck.
+The second difference, and Mosaic's real distinguishing feature, is how you
+style a deck. Touying routes styling through its own object model: a `self`
+dictionary threads through themes and callbacks, appearance is configured with a
+framework API (`config-colors`, `config-methods`), and dynamic content can
+require callback-style functions with a manually specified `repeat` count. This
+buys Touying considerable power, but it also means learning a framework within
+the language. Mosaic instead makes every element it draws a native, targetable
+Typst layer: each grid cell and the two visual planes are ordinary Typst layers,
+and every cell carries a stable `<mosaic-cell-ID>` label. You restyle any of it
+with a native `show` or `set` rule. A Mosaic theme is a plain Typst module, not
+an object; there is no `self`, no configuration API, and no styling functions.
+Deck-wide settings flow through a single `setup` function, reusable
+configurations are ordinary `.with(...)` values, and typography, headings, and
+captions are native `set` and `show` rules. If you already know how to style a
+Typst document, you already know how to style a Mosaic deck.
 
 The two projects also treat incremental content differently. Touying offers
 Beamer-style `#pause` and `#meanwhile` markers plus `only`, `uncover`, and
