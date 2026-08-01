@@ -1,6 +1,9 @@
 #import "@local/mosaic:0.0.1" as m
 #show: m.setup
 
+// The thin title cell centers its content through its <mosaic-cell-ID> label.
+#show label("mosaic-cell-a"): set align(center + horizon)
+
 #m.slide(
   m.grid.v(
     m.grid.t(
@@ -9,7 +12,6 @@
     ),
     m.grid.t(4fr, m.grid.h(m.grid.t(2fr, "b"), "c")),
   ),
-  cell-styles: (a: (align: center + horizon)),
 )[
   *A thin title*
 ][

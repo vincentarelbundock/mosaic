@@ -44,9 +44,8 @@ For an explicit titled slide, write `==` in the header block. This keeps normal
 Typst heading styling and registers the heading with outlines.
 
 Set `progress` to `"1/1"`, `"1"`, `"circle"`, or `"line"` to add progress on the
-slide foreground, or leave it as `none`. The indicator follows slide-local
-colors. When the layout includes a footer, it also follows the footer's
-insets, text size, explicit text fill, and inverted color treatment.
+slide foreground, or leave it as `none`. The indicator follows the slide-local
+accent color.
 
 == Cells
 
@@ -94,17 +93,16 @@ differ. Supply one body block per column, after any header block.
 
 == Style
 
-Use `fill`, `text`, `align`, and `inset` dictionaries to style cells by name.
-Omitted cell keys keep the setup defaults. List cells in `inverted` to fill
-the header, footer, or both with the inherited scheme's `text` color and render
-their content with `inverse-text`; for example, use
-`inverted: ("footer",)` to invert only the footer. The body retains the normal
-`canvas` and `text` roles. Explicit per-cell `fill` and `text` values override
-those inherited defaults. Fills accept native Typst values, including
-gradients. Use `background` with explicit native content such as `image(...)`
-for a cell background:
+The layout is structural. Its cells are named `header`, `body` (or `body-1`,
+`body-2`, and so on for multiple columns), and `footer`, and each renders as a
+block labeled `<mosaic-cell-header>`, `<mosaic-cell-body>`, and
+`<mosaic-cell-footer>`. Style them with ordinary Typst rules: `set text` and
+`set align` for typography, and a wrapping `block` for fills, gradients,
+strokes, and rounded corners.
 
-This example selects both surrounding cells:
+To invert a cell, fill it with the scheme's `text` color and switch its own
+text to `inverse-text`. This example reads both from the active scheme and
+applies them to the header and footer:
 
 #verbatim-example("layouts/default-inverted.typ")
 #thumbnail-gallery(
@@ -114,7 +112,8 @@ This example selects both surrounding cells:
   "A default slide with an inverted header and footer",
 )
 
-Per-cell dictionaries remain available for independent visual styling:
+Because the cells are just labeled blocks, any native Typst paint applies,
+including gradients and an image placed behind a cell's content:
 
 #verbatim-example("layouts/default-images.typ")
 #thumbnail-gallery(
@@ -140,9 +139,9 @@ vertically and leaves the remaining height to the body.
 
 == Reusable style
 
-Use Typst's native `.with(...)` to save a configured layout function. The
-resulting `custom` shortcut can create as many grids as needed while each slide
-continues to supply its own header, body, and footer.
+Bundle the cell rules in a transformer and apply it once with `#show:`. Every
+following slide built on the default layout picks up the same look while each
+slide continues to supply its own header, body, and footer.
 
 #verbatim-example("layouts/default-custom.typ")
 #thumbnail-gallery(
@@ -237,8 +236,9 @@ image sizing or composition, pass native content instead of a path:
   as `align: top + left` for a top-left title or `center + horizon` for a
   centered title. The stack keeps the scheme's ordinary `text` color, so the
   image must carry the contrast: pass a pre-adjusted image such as
-  `m.image(path(...), darken: 45%)` and override the `title` cell's text fill
-  through `cell-styles` for light-on-dark compositions.
+  `m.image(path(...), darken: 45%)` and recolor the title with a
+  `show label("mosaic-cell-title"): set text(fill: white)` rule for
+  light-on-dark compositions.
 
 For the four directional variants, `tracks` accepts `auto` or two native Typst
 track sizes in visual order. By default, the image receives `2fr` and the title
@@ -262,8 +262,9 @@ and `image` add context. Variants are `plain`, `image-left`, `image-right`,
 same visual-order `tracks` syntax and transparent `image`/`section` split tree
 as `image()`; `auto` gives the two cells equal space. `image-background`
 keeps a single `section` cell and places the image behind it; as with the
-title layout, darken or lighten the image itself and override the cell's
-text fill when the composition needs light-on-dark text.
+title layout, darken or lighten the image itself and recolor the text with a
+`show label("mosaic-cell-section"): set text(fill: white)` rule when the
+composition needs light-on-dark text.
 
 #verbatim-example("layouts/section.typ")
 #thumbnail-gallery(calepin.elements.gallery, "layouts/section", 7, "layouts.section() directional and background variants")
@@ -326,7 +327,7 @@ to `m.slide`.
 Wraps a native Typst table or other tabular content. Use `title`, `caption`,
 `source`, and `highlight` for explanation.
 The native table remains content inside a `table` cell. Optional surrounding
-rows use the IDs `title`, `highlight`, `caption`, and `source`.
+rows use the IDs `table-title`, `highlight`, `caption`, and `source`.
 
 #verbatim-example("layouts/table.typ")
 #thumbnail-gallery(calepin.elements.gallery, "layouts/table", 4, "layouts.table() metadata configurations")

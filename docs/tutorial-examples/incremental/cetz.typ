@@ -9,17 +9,20 @@
 )
 
 #let grid = m.grid.v(
-  m.grid.t(auto, m.grid.cell("title")),
-  m.grid.cell("diagram"),
+  m.grid.t(auto, m.grid.cell(
+    "title",
+    inset: (top: 0.8em, right: 1.5em, bottom: 0.2em, left: 1.5em),
+  )),
+  m.grid.cell(
+    "diagram",
+    inset: (top: 0.2em, right: 1em, bottom: 0.8em, left: 1em),
+  ),
 )
 
-#m.slide(grid, cell-styles: (
-  title: (inset: (top: 0.8em, right: 1.5em, bottom: 0.2em, left: 1.5em)),
-  diagram: (
-    inset: (top: 0.2em, right: 1em, bottom: 0.8em, left: 1em),
-    align: center + horizon,
-  ),
-))[
+// Center the diagram within its cell through its label.
+#show label("mosaic-cell-diagram"): set align(center + horizon)
+
+#m.slide(grid)[
   == Reveal a Bloch sphere
 ][
   #text(size: 12pt)[

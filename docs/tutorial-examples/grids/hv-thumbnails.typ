@@ -9,65 +9,66 @@
   rgb("#dff3e8"),
   rgb("#fef3c7"),
 )
-#let panel(id) = m.grid.cell(id)
-#let panel-style(index) = (
-  align: center + horizon,
-  stroke: 1pt + white,
-  text: (size: 1.5em, weight: "bold"),
-  fill: colors.at(calc.rem(index, colors.len())),
-)
 
-#m.slide(
-  m.grid.h(panel("a"), panel("b"), panel("c")),
-  cell-styles: (a: panel-style(0), b: panel-style(1), c: panel-style(2)),
-)[a][b][c]
+// Colour each panel through its stable <mosaic-cell-ID> label. Cells are
+// structural, so every visual choice is an ordinary Typst rule.
+#let panels(ids, body) = {
+  let out = body
+  for (index, id) in ids.enumerate() {
+    let fill = colors.at(calc.rem(index, colors.len()))
+    out = {
+      show label("mosaic-cell-" + id): set align(center + horizon)
+      show label("mosaic-cell-" + id): set text(size: 1.5em, weight: "bold")
+      show label("mosaic-cell-" + id): it => block(
+        width: 100%,
+        height: 100%,
+        fill: fill,
+        stroke: 1pt + white,
+        it,
+      )
+      out
+    }
+  }
+  out
+}
 
-#m.slide(
-  m.grid.v(panel("a"), panel("b"), panel("c")),
-  cell-styles: (a: panel-style(0), b: panel-style(1), c: panel-style(2)),
-)[a][b][c]
+#panels(("a", "b", "c"))[
+  #m.slide(m.grid.h("a", "b", "c"))[a][b][c]
+]
 
-#m.slide(m.grid.h(
-  panel("a"),
-  m.grid.v(panel("b"), panel("c")),
-), cell-styles: (a: panel-style(0), b: panel-style(1), c: panel-style(2)))[a][b][c]
+#panels(("a", "b", "c"))[
+  #m.slide(m.grid.v("a", "b", "c"))[a][b][c]
+]
 
-#m.slide(m.grid.v(
-  m.grid.h(panel("a"), panel("b")),
-  m.grid.h(panel("c"), panel("d")),
-), cell-styles: (
-  a: panel-style(0),
-  b: panel-style(1),
-  c: panel-style(2),
-  d: panel-style(3),
-))[a][b][c][d]
+#panels(("a", "b", "c"))[
+  #m.slide(m.grid.h("a", m.grid.v("b", "c")))[a][b][c]
+]
 
-#m.slide(
-  m.grid.v(
-    panel("title"),
-    m.grid.h(
-      m.grid.v(panel("col0"), panel("sidebar-note")),
-      m.grid.v(
-        m.grid.h(panel("col1"), panel("col2")),
-        m.grid.h(
-          panel("chart"),
-          m.grid.v(panel("legend"), panel("annotation")),
+#panels(("a", "b", "c", "d"))[
+  #m.slide(m.grid.v(
+    m.grid.h("a", "b"),
+    m.grid.h("c", "d"),
+  ))[a][b][c][d]
+]
+
+#panels((
+  "title", "col0", "sidebar-note", "col1", "col2", "chart",
+  "legend", "annotation", "footer", "status", "page",
+))[
+  #m.slide(
+    m.grid.v(
+      "title",
+      m.grid.h(
+        m.grid.v("col0", "sidebar-note"),
+        m.grid.v(
+          m.grid.h("col1", "col2"),
+          m.grid.h(
+            "chart",
+            m.grid.v("legend", "annotation"),
+          ),
         ),
       ),
+      m.grid.h("footer", "status", "page"),
     ),
-    m.grid.h(panel("footer"), panel("status"), panel("page")),
-  ),
-  cell-styles: (
-    title: panel-style(0),
-    col0: panel-style(1),
-    sidebar-note: panel-style(2),
-    col1: panel-style(3),
-    col2: panel-style(4),
-    chart: panel-style(5),
-    legend: panel-style(6),
-    annotation: panel-style(7),
-    footer: panel-style(8),
-    status: panel-style(9),
-    page: panel-style(10),
-  ),
-)[title][col0][sidebar-note][col1][col2][chart][legend][annotation][footer][status][page]
+  )[title][col0][sidebar-note][col1][col2][chart][legend][annotation][footer][status][page]
+]

@@ -13,10 +13,34 @@ consequat.]
 // ── Helpers ────────────────────────────────────────────────────────────────
 #let photo(name, fit: "cover") = m.image(path("assets/" + name), fit: fit)
 
-#let cell = m.grid.cell
+// Cells are structural. This deck paints them by hand, so every cell starts
+// with a zero inset; `surface()` carries the padding, which `styled()` applies
+// through the cell's <mosaic-cell-ID> label alongside the fill and alignment.
+#let cell(..args) = m.grid.cell(..args, inset: 0pt)
 #let surface(..overrides) = (
   (fill: none, inset: 0pt, align: top + left) + overrides.named()
 )
+
+// Apply a map of cell id -> surface() as native rules around a slide:
+//   #styled((id: surface(...)), m.slide(grid: ...)[...])
+#let styled(styles, body) = {
+  let out = body
+  for (id, s) in styles {
+    let name = label("mosaic-cell-" + id)
+    out = {
+      show name: set align(s.align)
+      show name: it => block(
+        width: 100%,
+        height: 100%,
+        fill: s.fill,
+        inset: s.inset,
+        it,
+      )
+      out
+    }
+  }
+  out
+}
 
 #let project-card(number, body) = grid(
   columns: (62pt, 1fr),

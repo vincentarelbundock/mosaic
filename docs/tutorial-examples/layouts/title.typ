@@ -94,9 +94,11 @@
 ))
 
 // The image itself carries the contrast: darken it and switch the title
-// cell to light text.
-#m.slide(
-  grid: m.layouts.title(
+// cell to light text through its <mosaic-cell-title> label, scoped to this
+// slide.
+#[
+  #show label("mosaic-cell-title"): set text(fill: white)
+  #m.slide(grid: m.layouts.title(
     [Cities after dark],
     variant: "image-background",
     image: m.image(
@@ -108,6 +110,5 @@
     subtitle: [Public lecture · Infrastructure, evidence, and life after sunset],
     authors: (m.author([Amara Johnson], orcid: "0000-0001-2345-6789"),),
     date: [Montréal · October 2027],
-  ),
-  cell-styles: (title: (text: (fill: white))),
-)
+  ))
+]

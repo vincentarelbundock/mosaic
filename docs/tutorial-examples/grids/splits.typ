@@ -13,14 +13,23 @@
   ),
 )
 
-#m.slide(
-  grid: grid,
-  cell-styles: (
-    main: (align: center + horizon, fill: rgb("#dbeafe")),
-    details: (align: center + horizon, fill: rgb("#dcfce7")),
-    notes: (align: center + horizon, fill: rgb("#fef3c7")),
-  ),
-)[
+// Fill and center each panel through its stable <mosaic-cell-ID> label.
+#let panel(id, color) = it => {
+  show label("mosaic-cell-" + id): set align(center + horizon)
+  show label("mosaic-cell-" + id): body => block(
+    width: 100%,
+    height: 100%,
+    fill: color,
+    body,
+  )
+  it
+}
+
+#show: panel("main", rgb("#dbeafe"))
+#show: panel("details", rgb("#dcfce7"))
+#show: panel("notes", rgb("#fef3c7"))
+
+#m.slide(grid: grid)[
   *Main*
 ][
   *Details*

@@ -27,11 +27,11 @@
 }
 
 // The heading goes in the layout's header cell (anchored at the top) and the
-// equation fills the body cell, which we align on the horizon to center it.
-#m.slide(m.layouts.default(
-  variant: "header-body",
-  align: (body: center + horizon),
-))[
+// equation fills the body cell, which we align on the horizon to center it
+// through the body cell's <mosaic-cell-body> label.
+#show label("mosaic-cell-body"): set align(center + horizon)
+
+#m.slide(m.layouts.default(variant: "header-body"))[
   == Bellman optimality equation
 ][
   $

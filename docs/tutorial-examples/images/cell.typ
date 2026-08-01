@@ -2,11 +2,15 @@
 
 #show: m.setup
 
+// The text cell centers its content vertically through its label.
+#show label("mosaic-cell-b"): set align(left + horizon)
+
 #m.slide(m.grid.h(
   m.grid.t(
     1fr,
     m.grid.cell(
       id: "a",
+      inset: 0pt,
       content: m.image(
         path("/docs/assets/images/dog.webp"),
         alt: "A brown dog",
@@ -17,9 +21,6 @@
     2fr,
     m.grid.cell("b"),
   ),
-), cell-styles: (
-  a: (inset: 0pt),
-  b: (align: left + horizon),
 ))[
   == A full-bleed image cell
 

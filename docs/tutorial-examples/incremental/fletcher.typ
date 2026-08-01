@@ -9,9 +9,11 @@
   hide: fletcher.hide,
 )
 
+// Center the diagram within its cell through its label.
+#show label("mosaic-cell-diagram"): set align(center + horizon)
+
 #m.slide(
   m.grid.cell("diagram"),
-  cell-styles: (diagram: (align: center + horizon)),
 )[
   #diagram(
     node-stroke: 0.1em,

@@ -6,35 +6,38 @@
 // A thin, centered title sits above two uneven columns.
 // Each lower column is split into rows with different proportions.
 #let colors = m.color.palette("okabe-ito")
-#let panel(id) = m.grid.cell(id)
 #let grid = m.grid.v(
-  m.grid.t(auto, panel("title")),
+  m.grid.t(auto, "title"),
   m.grid.h(
     m.grid.t(2fr, m.grid.v(
-      panel("left-top"),
-      m.grid.t(2fr, panel("left-bottom")),
+      "left-top",
+      m.grid.t(2fr, "left-bottom"),
     )),
     m.grid.v(
-      m.grid.t(2fr, panel("right-top")),
-      panel("right-bottom"),
+      m.grid.t(2fr, "right-top"),
+      "right-bottom",
     ),
   ),
 )
 
-#m.slide(grid, cell-styles: (
-  title: (fill: colors.at(0), align: center),
-  left-top: (fill: colors.at(1)),
-  left-bottom: (fill: colors.at(2)),
-  right-top: (fill: colors.at(3)),
-  right-bottom: (fill: colors.at(4)),
-))[
-  0
-][
-  1
-][
-  2
-][
-  3
-][
-  4
-]
+// Fill each panel through its stable <mosaic-cell-ID> label. Cells are
+// structural, so filling one is an ordinary Typst show rule. The full-height
+// panels ask for `height: 100%`; the auto-sized title hugs its content.
+#let fill(id, color, height: 100%) = it => {
+  show label("mosaic-cell-" + id): body => block(
+    width: 100%,
+    height: height,
+    fill: color,
+    body,
+  )
+  it
+}
+
+#show: fill("title", colors.at(0), height: auto)
+#show: fill("left-top", colors.at(1))
+#show: fill("left-bottom", colors.at(2))
+#show: fill("right-top", colors.at(3))
+#show: fill("right-bottom", colors.at(4))
+#show label("mosaic-cell-title"): set align(center)
+
+#m.slide(grid)[0][1][2][3][4]

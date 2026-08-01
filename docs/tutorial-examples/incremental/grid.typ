@@ -1,24 +1,33 @@
 #import "@local/mosaic:0.0.1" as m
 
-#let panel(id) = m.grid.cell(id)
 #let grid = m.grid.h(
   ..m.reveal(
     before: "removed",
     after: "visible",
-    panel("first"),
-    panel("second"),
-    panel("third"),
+    m.grid.cell("first", inset: 1.5em),
+    m.grid.cell("second", inset: 1.5em),
+    m.grid.cell("third", inset: 1.5em),
   ),
 )
 
 #show: m.setup
 #set text(size: 22pt)
 
-#m.slide(grid, cell-styles: (
-  first: (inset: 1.5em, fill: blue.lighten(92%)),
-  second: (inset: 1.5em, fill: green.lighten(92%)),
-  third: (inset: 1.5em, fill: orange.lighten(88%)),
-))[
+// Fill each revealed cell through its stable <mosaic-cell-ID> label.
+#let fill(id, color) = it => {
+  show label("mosaic-cell-" + id): body => block(
+    width: 100%,
+    height: 100%,
+    fill: color,
+    body,
+  )
+  it
+}
+#show: fill("first", blue.lighten(92%))
+#show: fill("second", green.lighten(92%))
+#show: fill("third", orange.lighten(88%))
+
+#m.slide(grid)[
   *Cell 1*
 
   Initially fills the row.

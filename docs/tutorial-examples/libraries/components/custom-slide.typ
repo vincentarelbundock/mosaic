@@ -7,16 +7,21 @@
   m.grid.cell("right"),
 )
 
+// The two panels share a centered, bold look; the right one is tinted. Both
+// are native rules on the structural cells' labels.
+#show label("mosaic-cell-left"): set align(center + horizon)
+#show label("mosaic-cell-left"): set text(size: 2em, weight: "bold")
+#show label("mosaic-cell-right"): set align(center + horizon)
+#show label("mosaic-cell-right"): set text(size: 2em, weight: "bold")
+#show label("mosaic-cell-right"): it => block(
+  width: 100%,
+  height: 100%,
+  fill: luma(94%),
+  it,
+)
+
 #let slide-progress(left-body, right-body) = m.slide(
   grid: slide-grid,
-  cell-styles: (
-    left: (align: center + horizon, text: (size: 2em, weight: "bold")),
-    right: (
-      fill: luma(94%),
-      align: center + horizon,
-      text: (size: 2em, weight: "bold"),
-    ),
-  ),
   foreground: place(
     bottom + left,
     block(width: 100%)[

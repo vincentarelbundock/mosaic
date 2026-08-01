@@ -39,20 +39,31 @@
 
 #for name in scheme-names {
   let colors = m.color.scheme(name)
-  m.slide(
-    grid: m.layouts.default(
-      columns: 2,
-      inverted: ("footer",),
-      tracks: (2fr, 1fr),
-    ),
-    colors: colors,
-  )[
-    == #name
-  ][
-    #text(size: 0.78em)[#lorem(36)]
-  ][
-    #dog-card(colors)
-  ][
-    Mosaic semantic color preview
+  // Invert the footer for this scheme: fill it with the scheme's text color
+  // and switch its own text to the inverse. Both are native rules on the
+  // footer cell's <mosaic-cell-footer> label.
+  [
+    #show label("mosaic-cell-footer"): set text(fill: colors.inverse-text)
+    #show label("mosaic-cell-footer"): it => block(
+      width: 100%,
+      height: 100%,
+      fill: colors.text,
+      it,
+    )
+    #m.slide(
+      grid: m.layouts.default(
+        columns: 2,
+        tracks: (2fr, 1fr),
+      ),
+      colors: colors,
+    )[
+      == #name
+    ][
+      #text(size: 0.78em)[#lorem(36)]
+    ][
+      #dog-card(colors)
+    ][
+      Mosaic semantic color preview
+    ]
   ]
 }

@@ -293,11 +293,19 @@ than copied into the deck.
 )
 
 // One-off closing slide: a full ink-filled cell with centered white text.
-#m.slide(
-  grid: m.grid.cell("questions"),
-  cell-styles: (questions: (fill: ink, align: center + horizon)),
-)[
-  #text(size: 1.6em, weight: "medium", fill: white)[Questions?]
+// Cells are structural, so the fill and centering are native rules on the
+// cell's <mosaic-cell-questions> label, scoped to this slide.
+#[
+  #show label("mosaic-cell-questions"): set align(center + horizon)
+  #show label("mosaic-cell-questions"): it => block(
+    width: 100%,
+    height: 100%,
+    fill: ink,
+    it,
+  )
+  #m.slide(grid: m.grid.cell("questions"))[
+    #text(size: 1.6em, weight: "medium", fill: white)[Questions?]
+  ]
 ]
 
 // A real `==` heading in the header block keeps the same heading show rules

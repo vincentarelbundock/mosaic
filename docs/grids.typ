@@ -50,8 +50,7 @@ typst eval \
 
 Each record identifies the logical slide, physical frame, cell ID or
 structural path, available height, measured height, and a `mosaic:` message.
-Compilation continues. Explicit `fit` overrides in `slide(cell-styles: ...)`
-still work when selected by the author.
+Compilation continues.
 
 Only vertical overflow is reported; horizontal overflow is not. Disable
 observation if measurement of cells containing complex introspection triggers
@@ -246,46 +245,73 @@ title–columns–footer grid.
 
 = Styling named cells
 
-Grid constructors describe structure and stable cell identities. Supply visual
-overrides through `m.slide` as a dictionary keyed by those identities:
+Grid constructors describe structure and stable cell identities. Cells carry
+no appearance of their own. Every rendered cell is a single block labeled
+`<mosaic-cell-ID>`, so you style cells with ordinary Typst `set` and `show`
+rules keyed on that label:
 
 ```typ
-#m.slide(
-  m.grid.h("copy", "image"),
-  cell-styles: (
-    copy: (
-      fill: white,
-      inset: 1.5em,
-      align: left + horizon,
-      text: (fill: black, size: 1.1em),
-    ),
-    image: (inset: 0pt),
-  ),
-)[Copy][Image]
+#show label("mosaic-cell-copy"): set align(left + horizon)
+#show label("mosaic-cell-copy"): set text(fill: black, size: 1.1em)
+#show label("mosaic-cell-copy"): it => block(
+  width: 100%,
+  height: 100%,
+  fill: white,
+  it,
+)
+
+#m.slide(m.grid.h("copy", "image"))[Copy][Image]
 ```
 
-The public fields are `fill`, `inset`, `align`, `text`, `stroke`, `radius`,
-`background`, and `fit`. Layout defaults are applied first. A slide override
-replaces a style field, while its `text` dictionary merges with the
-layout's text defaults. Unknown cell IDs and unsupported fields are errors.
+There is no styling dictionary to learn: font, size, color, and alignment are
+`set text`, `set par`, and `set align`; fills, strokes, rounded corners, and
+insets are the `block` you wrap the cell in. The one structural knob that
+lives on the cell itself is `inset`, because padding affects layout
+measurement:
+
+```typ
+#m.grid.cell("image", inset: 0pt)
+```
+
+A full-height cell (`1fr` or a fixed track) fills its region when the wrapping
+block asks for `height: 100%`. A content-sized cell (an `auto` track) should
+omit the height so its fill hugs the content.
+
+Precedence is ordinary rule nesting. Mosaic's `setup` and any theme establish
+baseline cell rules; a rule you write after `#show: m.setup` overrides them
+deck-wide; and a rule scoped inside a block around a single `m.slide` call
+overrides them for that slide only:
+
+```typ
+#[
+  #show label("mosaic-cell-body"): set align(center + horizon)
+  #m.slide[Centered for this slide only]
+]
+```
 
 = Reusable grids and styles
 
-Save structure and named styles in separate variables when several slides
-should share both. Pass both values to each `m.slide` instead of rebuilding
-them.
-
-Use `m.grid.cell` when a leaf needs fixed content, and wrap a child with
-`m.grid.t` when its track should differ from its siblings:
+Save the structure in a variable, and bundle the cell rules in a transformer,
+when several slides should share both. Apply the transformer once and every
+following slide that uses those cell IDs picks the rules up:
 
 ```typ
 #let grid = m.grid.h(
   m.grid.t(2fr, "a"),
   m.grid.cell("b"),
 )
-#let styles = (b: (fill: blue))
+#let styled(body) = {
+  show label("mosaic-cell-b"): it => block(
+    width: 100%,
+    height: 100%,
+    fill: blue,
+    it,
+  )
+  body
+}
 
-#m.slide(grid, cell-styles: styles)[Left][Right]
+#show: styled
+#m.slide(grid)[Left][Right]
 ```
 
 #verbatim-example("grids/reusable.typ")
@@ -294,5 +320,5 @@ Use `m.grid.cell` when a leaf needs fixed content, and wrap a child with
   calepin.elements.gallery,
   "grids/reusable",
   2,
-  "One grid and named style map reused for two slides",
+  "One grid and one set of reusable cell rules shared by two slides",
 )

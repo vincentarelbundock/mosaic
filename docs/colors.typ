@@ -85,8 +85,9 @@ The dark scheme currently resolves to:
 Every preview uses the same structure and content. The title is the exact
 scheme name; the body pairs lorem text at two-thirds width with the same dog
 image at one-third width; and the footer is identical. The header and footer
-use the normal scheme colors except that the footer is inverted through
-`layouts.default(inverted: ("footer",))`.
+use the normal scheme colors except that the footer is inverted with a native
+rule that fills its `<mosaic-cell-footer>` label with the scheme's `text` color
+and sets its content to `inverse-text`.
 
 Together, the repeated structure exposes every semantic role without a separate
 swatch chart. The slide canvas, title, and prose show `canvas` and `text`. The

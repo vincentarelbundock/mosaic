@@ -3,8 +3,8 @@
 #show: m.setup
 #set text(size: 22pt)
 
-#m.deck(default-grid: m.grid.cell("body"))
-#let slide = m.slide.with(cell-styles: (body: (inset: 1.5em)))
+#m.deck(default-grid: m.grid.cell("body", inset: 1.5em))
+#let slide = m.slide
 
 #slide[
   == `on`: words and sentences

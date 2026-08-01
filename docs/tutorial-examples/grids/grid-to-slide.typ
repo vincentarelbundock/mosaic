@@ -2,34 +2,38 @@
 
 #show: m.setup
 #set text(size: 22pt)
-#let panel(id) = m.grid.cell(id)
-#let panel-style = (
-  align: center + horizon,
-  stroke: 1pt + black,
-  text: (size: 1.5em, weight: "bold"),
-)
+
+// Cells are structural. Give each panel a shared look by targeting its stable
+// <mosaic-cell-ID> label with ordinary Typst rules.
+#let panel(id) = it => {
+  show label("mosaic-cell-" + id): set align(center + horizon)
+  show label("mosaic-cell-" + id): set text(size: 1.5em, weight: "bold")
+  show label("mosaic-cell-" + id): body => block(
+    width: 100%,
+    height: 100%,
+    stroke: 1pt + black,
+    body,
+  )
+  it
+}
+
+#show: panel("a")
+#show: panel("b")
+#show: panel("c")
+#show: panel("d")
 
 // Slide 1
 
-#let columns = m.grid.h(panel("a"), panel("b"), panel("c"))
-#m.slide(columns, cell-styles: (a: panel-style, b: panel-style, c: panel-style))[a][b][c]
+#m.slide(m.grid.h("a", "b", "c"))[a][b][c]
 
 // Slide 2
 
-#m.slide(
-  m.grid.v(panel("a"), panel("b")),
-  cell-styles: (a: panel-style, b: panel-style),
-)[a][b]
+#m.slide(m.grid.v("a", "b"))[a][b]
 
 // Slide 3
 
 #m.slide(m.grid.v(
-  panel("a"),
-  m.grid.h(panel("b"), panel("c")),
-  panel("d"),
-), cell-styles: (
-  a: panel-style,
-  b: panel-style,
-  c: panel-style,
-  d: panel-style,
+  "a",
+  m.grid.h("b", "c"),
+  "d",
 ))[a][b][c][d]

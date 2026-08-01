@@ -14,27 +14,24 @@
 
 == Where do slide margins go?
 
-`setup` uses a zero page margin. Put content spacing on the cells:
+`setup` uses a zero page margin. Put content spacing on the cells with each
+cell's `inset`:
 
 ```typ
 #show: m.setup
 
 #let grid = m.grid.v(
-  m.grid.cell("a"),
-  m.grid.h("b", "c"),
+  m.grid.cell("a", inset: 1.5em),
+  m.grid.h(
+    m.grid.cell("b", inset: 1.5em),
+    m.grid.cell("c", inset: 1.5em),
+  ),
 )
 
-#m.slide(
-  grid,
-  cell-styles: (
-    a: (inset: 1.5em),
-    b: (inset: 1.5em),
-    c: (inset: 1.5em),
-  ),
-)[Top][Bottom left][Bottom right]
+#m.slide(grid)[Top][Bottom left][Bottom right]
 ```
 
-The named `inset` overrides keep content away from cell edges. The default inset is applied
+The per-cell `inset` keeps content away from cell edges. The default inset is applied
 uniformly to every side of every cell, so adjacent cells contribute one inset
 each to the space between their content. An explicit inset overrides the
 default. The grid's `gutter` adds space between cell surfaces and defaults
@@ -80,14 +77,14 @@ explicit slides.
 
 ```typ
 #let framed(title, body) = m.slide(
-  grid: m.layouts.default(
-    variant: "header-body",
-    inverted: ("header",),
-    progress: "1",
-  ),
+  grid: m.layouts.default(variant: "header-body", progress: "1"),
 )[#title][#body]
 
 #show: m.setup.with(auto-slide: framed)
+
+// Invert the header bar for every slide built on the default layout.
+#show label("mosaic-cell-header"): set text(fill: white)
+#show label("mosaic-cell-header"): it => block(width: 100%, fill: black, it)
 
 == Results
 

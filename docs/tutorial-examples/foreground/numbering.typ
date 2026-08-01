@@ -1,6 +1,6 @@
 #import "@local/mosaic:0.0.1" as m
 
-#let grid = m.grid.cell("body")
+#let grid = m.grid.cell("body", inset: 1.5em)
 #let numbering = [
   #place(bottom + right)[
     #pad(right: 1.5em, bottom: 0.9em)[
@@ -17,7 +17,7 @@
 #set text(size: 22pt)
 
 #m.deck(default-grid: grid, foreground: numbering)
-#m.slide(cell-styles: (body: (inset: 1.5em)))[
+#m.slide[
   == Numbering in the foreground
 
   #m.reveal[

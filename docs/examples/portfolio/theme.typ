@@ -10,6 +10,9 @@
 //   - `colors`, the semantic Mosaic color roles,
 //   - `palette`, the theme's raw design tokens.
 // Copy this file next to your deck and `#import "theme.typ" as theme`.
+//
+// Cells are structural. The theme paints them with native `show label(...)`
+// rules in `apply`; the factories only build the grid and its content.
 #import "@local/mosaic:0.0.1" as m
 
 // ── Palette ────────────────────────────────────────────────────────────────
@@ -47,13 +50,9 @@
 // ── Layouts ────────────────────────────────────────────────────────────────
 // The ordinary content slide: a paper page with a bold heading over a thin
 // gray rule, body below. Registered as `auto-slide` in `apply`, so plain
-// `== Title` markup renders through it. `cell-styles` is forwarded so decks
-// can override the theme's defaults per slide.
-#let default-layout(title, body, cell-styles: (:)) = m.slide(
-  grid: m.grid.cell("content"),
-  cell-styles: (
-    content: (fill: paper, inset: 40pt, align: top + left),
-  ) + cell-styles,
+// `== Title` markup renders through it. Its look lives in `apply`.
+#let default-layout(title, body) = m.slide(
+  grid: m.grid.cell("content", inset: 40pt),
 )[
   #title
   #line(length: 100%, stroke: 0.6pt + gray)
@@ -69,12 +68,8 @@
   subtitle: none,
   authors: (),
   date: none,
-  cell-styles: (:),
 ) = m.slide(
-  grid: m.grid.cell("cover"),
-  cell-styles: (
-    cover: (fill: ink, inset: 45pt, align: left + horizon),
-  ) + cell-styles,
+  grid: m.grid.cell("cover", inset: 45pt),
 )[
   #text(size: 44pt, weight: "bold", fill: white)[#title]
   #v(0.5em)
@@ -95,16 +90,12 @@
 
 // Section-divider slide: a black band on the left third of the page, the rest
 // left as paper margin.
-#let section-layout(title, subtitle: none, cell-styles: (:)) = m.slide(
+#let section-layout(title, subtitle: none) = m.slide(
   grid: m.grid.h(
-    m.grid.t(0.38fr, m.grid.cell("band")),
+    m.grid.t(0.38fr, m.grid.cell("band", inset: 28pt)),
     m.grid.t(0.62fr, m.grid.cell("rest", content: [])),
   ),
   section: true,
-  cell-styles: (
-    band: (fill: ink, inset: 28pt, align: left + horizon),
-    rest: (fill: paper),
-  ) + cell-styles,
 )[
   #text(size: 30pt, weight: "bold", fill: white)[#title]
   #if subtitle != none [
@@ -128,7 +119,8 @@
 // ── Apply ──────────────────────────────────────────────────────────────────
 // Applied in the deck via `#show: theme.apply`. Show/set rules cannot cross
 // an `#import`, so the document-wide styling lives in this wrapper rather
-// than at the top level of the file.
+// than at the top level of the file. The cell looks are native rules on each
+// cell's <mosaic-cell-ID> label.
 #let apply(body) = {
   show: m.setup.with(
     colors: colors,
@@ -143,5 +135,34 @@
   set list(spacing: 0.9em)
   set enum(spacing: 0.9em)
   show heading: set text(weight: "bold")
+  // Content slide: paper field, top-left content.
+  show label("mosaic-cell-content"): it => block(
+    width: 100%,
+    height: 100%,
+    fill: paper,
+    it,
+  )
+  // Cover: full ink field, content at left-horizon.
+  show label("mosaic-cell-cover"): set align(left + horizon)
+  show label("mosaic-cell-cover"): it => block(
+    width: 100%,
+    height: 100%,
+    fill: ink,
+    it,
+  )
+  // Section divider: ink band at left-horizon, paper margin at right.
+  show label("mosaic-cell-band"): set align(left + horizon)
+  show label("mosaic-cell-band"): it => block(
+    width: 100%,
+    height: 100%,
+    fill: ink,
+    it,
+  )
+  show label("mosaic-cell-rest"): it => block(
+    width: 100%,
+    height: 100%,
+    fill: paper,
+    it,
+  )
   body
 }
