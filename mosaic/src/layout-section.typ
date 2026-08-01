@@ -88,6 +88,8 @@
     settings.type.subtitle,
     above: settings.spacing.compact-gap,
   )
+  // Structural only: the section cell's centered arrangement and title
+  // typography come from the <mosaic-cell-section> label rules in `setup`.
   let section-cell = styled-cell(
     id: "section",
     style: (
@@ -95,13 +97,6 @@
       after: affix(after),
       content-sized: fields.variant in semantic-directional-variants,
       inset: settings.spacing.inset,
-      align: center + horizon,
-      fill: if fields.variant == "image-background" {
-        none
-      } else {
-        settings.colors.canvas
-      },
-      text: settings.type.title + (fill: settings.colors.text),
     ),
   )
   if fields.variant in semantic-directional-variants {

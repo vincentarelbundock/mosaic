@@ -36,15 +36,13 @@
 )
 
 // ── Layouts ────────────────────────────────────────────────────────────────
-// The ordinary content slide: a full-bleed sage surface with the heading and
-// body stacked top-left. Registered as `auto-slide` in `apply`, so plain
-// `== Title` markup renders through it. `cell-styles` is forwarded so decks
-// can override the theme's defaults per slide.
-#let default-layout(title, body, cell-styles: (:)) = slide(
-  grid: grid.cell("content"),
-  cell-styles: (
-    content: (fill: palette.sage, inset: 42pt, align: top + left),
-  ) + cell-styles,
+// The ordinary content slide: a full-bleed sage surface (the page canvas)
+// with the heading and body stacked top-left. Registered as `auto-slide` in
+// `apply`, so plain `== Title` markup renders through it. Override its look
+// per slide with scoped native rules around the call, targeting
+// `<mosaic-cell-content>`.
+#let default-layout(title, body) = slide(
+  grid: grid.cell("content", inset: 42pt),
 )[
   #title
   #body
@@ -58,12 +56,8 @@
   subtitle: none,
   authors: (),
   date: none,
-  cell-styles: (:),
 ) = slide(
-  grid: grid.cell("cover"),
-  cell-styles: (
-    cover: (fill: palette.cream, inset: 42pt, align: left + horizon),
-  ) + cell-styles,
+  grid: grid.cell("cover", inset: 42pt),
   foreground: place(bottom + left, dx: 42pt, dy: -56pt)[
     #line(length: 55%, stroke: 1pt + palette.ink)
   ],
@@ -86,12 +80,9 @@
 
 // Section-divider slide: a sage field with a bold white title over a short
 // white rule.
-#let section-layout(title, subtitle: none, cell-styles: (:)) = slide(
-  grid: grid.cell("section"),
+#let section-layout(title, subtitle: none) = slide(
+  grid: grid.cell("section", inset: 42pt),
   section: true,
-  cell-styles: (
-    section: (fill: palette.sage, inset: 42pt, align: left + horizon),
-  ) + cell-styles,
 )[
   #text(size: 1.9em, weight: "bold", fill: palette.white)[#title]
   #if subtitle != none [
@@ -135,5 +126,21 @@
   show heading.where(level: 1): set text(size: base-size * 1.9, weight: "bold")
   show heading.where(level: 2): set text(size: base-size * 1.25, weight: "bold")
   show heading: set block(below: 0.5em)
+  // Cell styling is native: cells are blocks labeled <mosaic-cell-ID>. The
+  // cream cover field with ink text sits over the sage canvas; section
+  // dividers reset setup's display typography (absolute size, since em sizes
+  // compound across nested rules) and anchor left.
+  show label("mosaic-cell-cover"): set align(horizon)
+  show label("mosaic-cell-cover"): it => block(
+    width: 100%,
+    height: 100%,
+    fill: palette.cream,
+    it,
+  )
+  show label("mosaic-cell-section"): set align(left + horizon)
+  show label("mosaic-cell-section"): set text(
+    size: base-size,
+    weight: "regular",
+  )
   body
 }

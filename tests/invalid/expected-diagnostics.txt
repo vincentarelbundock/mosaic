@@ -51,14 +51,6 @@ split-rule-type|h rule must be none or a native Typst stroke
 components-progress-count|progress count must be "slides" or "sections"
 slide-section-type|section must be a boolean
 
-slide-cell-styles-type|slide cell-styles must be a dictionary
-slide-cell-style-type|slide cell style for "body" must be a dictionary
-slide-cell-style-field|slide cell style for "body" has unsupported field "content-sized"
-slide-cell-style-fit|slide cell style fit for "body" must be none, "auto", "width", or "contain"
-slide-cell-style-background|slide cell style background for "body" must be content or none
-slide-cell-style-id|slide cell-styles contains unknown cell id "missing"
-slide-cell-styles-mutated|slide cell style for "body" has unsupported field "content-sized"
-slide-cell-styles-base-grid-mutated|invalid grid node at root
-cell-surface-ownership|cell visual fields belong in slide cell-styles
+cell-surface-ownership|cell accepts only a cell id, optional fixed content, and inset
 layouts-title-content|requires title content as its first positional argument
 layouts-title-rule|rule must be auto, true, or false

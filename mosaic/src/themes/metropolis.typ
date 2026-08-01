@@ -53,21 +53,20 @@
   }
 ]
 
-// Shared "header-body" layout for ordinary content slides: an inverted
-// (dark) title bar above a left-aligned, vertically centered body.
-#let slide-grid = semantic.default(
-  variant: "header-body",
-  inverted: ("header",),
-  text: (header: (weight: "medium")),
-  align: (body: left + horizon),
-)
+// Shared "header-body" layout for ordinary content slides. The grid is
+// purely structural; the inverted (dark) header bar and the vertically
+// centered body are label-targeted rules in `apply`.
+#let slide-grid = semantic.default(variant: "header-body")
 
 // The ordinary content slide. Registered as `auto-slide` in `apply`, so
-// plain `== Title` markup renders through it. `cell-styles` is forwarded to
-// `slide` so decks can override the theme's defaults per slide.
-#let default-layout(title, body, number: true, cell-styles: (:)) = slide(
+// plain `== Title` markup renders through it. Override its look per slide
+// with scoped native rules around the call:
+//   #[
+//     #show label("mosaic-cell-body"): set text(size: 0.8em)
+//     #theme.default([Title])[...]
+//   ]
+#let default-layout(title, body, number: true) = slide(
   grid: slide-grid,
-  cell-styles: cell-styles,
   foreground: footer(number: number),
 )[#title][#body]
 
@@ -92,12 +91,9 @@
 
 // Section-divider slide: large left-aligned title over a progress bar that
 // fills as we advance through the deck's sections.
-#let section-layout(title, subtitle: none, cell-styles: (:)) = slide(
+#let section-layout(title, subtitle: none) = slide(
   grid: grid.cell("section"),
   section: true,
-  cell-styles: (
-    section: (fill: palette.paper, align: left + horizon),
-  ) + cell-styles,
 )[
   #text(size: 1.6em, weight: "medium")[#title]
   #if subtitle != none [
@@ -165,5 +161,23 @@
   // semibold 1.4em heading role. Metropolis wants a lighter, slightly
   // smaller title (0.75 × 1.4 ≈ 1.05 × body).
   show heading.where(depth: 2): set text(size: 0.75em, weight: "regular")
+  // Cell styling is native: every Mosaic cell is a block labeled
+  // <mosaic-cell-ID>. The inverted (ink) header bar with paper text, and the
+  // vertically centered body, are ordinary label-targeted rules. These sit
+  // inside setup's defaults, so they win; a deck can in turn override them
+  // with rules scoped around a single slide command.
+  show label("mosaic-cell-header"): it => block(
+    width: 100%,
+    fill: palette.ink,
+    text(fill: palette.paper, weight: "medium", it),
+  )
+  show label("mosaic-cell-body"): set align(horizon)
+  // Section dividers: reset setup's display typography (absolute size, since
+  // em sizes compound across nested rules), then anchor left.
+  show label("mosaic-cell-section"): set align(left + horizon)
+  show label("mosaic-cell-section"): set text(
+    size: base-size,
+    weight: "regular",
+  )
   body
 }

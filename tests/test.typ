@@ -27,31 +27,19 @@
 #assert(first-row.tracks.at(0).affects == ("a",))
 #assert(grid-test.info(stacked, "b").id == "b")
 
-// Track sizes are structural; named cell surfaces are supplied to the slide.
+// Track sizes and insets are structural; appearance comes from native rules
+// targeting each cell's <mosaic-cell-ID> label.
 #let pink = rgb("#f8dce5")
 #let configured = mosaic.grid.v(
   mosaic.grid.t(
     auto,
-    mosaic.grid.cell("title"),
+    mosaic.grid.cell("banner", inset: 4pt),
   ),
-  mosaic.grid.cell("body"),
-)
-#let configured-styles = (
-  title: (
-    fill: pink,
-    inset: 4pt,
-    text: (size: 1.2em, fill: blue, weight: "bold"),
-  ),
-  body: (inset: 4pt, stroke: 0.5pt + gray),
+  mosaic.grid.cell("body", inset: 4pt),
 )
 #assert(configured.tracks == (auto, 1fr))
-#assert(grid-test.info(configured, "title").cell.id == "title")
-#assert(configured-styles.title.fill == pink)
-#assert(configured-styles.title.inset == 4pt)
-#assert(configured-styles.title.text.size == 1.2em)
-#assert(configured-styles.title.text.fill == blue)
-#assert(configured-styles.title.text.weight == "bold")
-#assert(configured-styles.body.stroke == 0.5pt + gray)
+#assert(grid-test.info(configured, "banner").cell.id == "banner")
+#assert(grid-test.info(configured, "banner").cell.style.inset == 4pt)
 
 // Nested cells expose both controlling axes. A parent track can affect more
 // than one leaf, while the nested perpendicular track remains cell-specific.
@@ -74,12 +62,13 @@
 #assert(temporal-info.tracks.at(0).affects == ("first",))
 #assert(temporal-grid.tracks == (auto, 1fr))
 
-// A fixed image cell owns content; its slide owns named surface styles.
+// A fixed image cell owns content; appearance stays native.
 #let image-grid = mosaic.grid.h(
   mosaic.grid.t(
     30%,
     mosaic.grid.cell(
       id: "image",
+      inset: 0pt,
       content: image(
         "../docs/assets/images/mosaic-logo.svg",
         width: 100%,
@@ -91,14 +80,9 @@
   ),
   mosaic.grid.cell("text"),
 )
-#let image-styles = (
-  image: (inset: 0pt, fill: white),
-  text: (align: center + horizon, fill: pink),
-)
 #let image-info = grid-test.info(image-grid, "image")
 #assert(image-info.cell.content != none)
-#assert(image-styles.image.inset == 0pt)
-#assert(image-styles.image.fill == white)
+#assert(image-info.cell.style.inset == 0pt)
 
 // Set the deck-wide default; slides can still override it explicitly.
 #show: mosaic.setup.with(
@@ -144,7 +128,8 @@
   )
 ]
 
-// Page 4: named text styles apply to both fixed and supplied cell content.
+// Page 4: label-targeted rules style both fixed and supplied cell content;
+// scoping them in a block limits them to this one slide.
 #let text-grid = mosaic.grid.v(
   mosaic.grid.cell(
     id: "fixed",
@@ -152,40 +137,48 @@
   ),
   mosaic.grid.cell("supplied"),
 )
-#mosaic.slide(
-  text-grid,
-  cell-styles: (
-    fixed: (text: (size: 0.8em, fill: blue)),
-    supplied: (text: (size: 1.2em, weight: "bold")),
-  ),
-)[Supplied content]
+#[
+  #show label("mosaic-cell-fixed"): set text(size: 0.8em, fill: blue)
+  #show label("mosaic-cell-supplied"): set text(size: 1.2em, weight: "bold")
+  #mosaic.slide(text-grid)[Supplied content]
+]
 
 // Fixed cell content is declared directly, so only the remaining cell consumes
-// a slide body.
-#mosaic.slide(mosaic.grid.h(
-  mosaic.grid.t(
-    30%,
-    mosaic.grid.cell(
-      id: "a",
-      content: image(
-        "../docs/assets/images/mosaic-logo.svg",
-        width: 100%,
-        height: 100%,
-        fit: "contain",
-        alt: "Mosaic logo",
+// a slide body. Fills and alignment are native label rules.
+#[
+  #show label("mosaic-cell-a"): it => block(
+    width: 100%,
+    height: 100%,
+    fill: white,
+    it,
+  )
+  #show label("mosaic-cell-b"): set align(center + horizon)
+  #show label("mosaic-cell-b"): it => block(
+    width: 100%,
+    height: 100%,
+    fill: pink,
+    it,
+  )
+  #mosaic.slide(mosaic.grid.h(
+    mosaic.grid.t(
+      30%,
+      mosaic.grid.cell(
+        id: "a",
+        inset: 2pt,
+        content: image(
+          "../docs/assets/images/mosaic-logo.svg",
+          width: 100%,
+          height: 100%,
+          fit: "contain",
+          alt: "Mosaic logo",
+        ),
       ),
     ),
-  ),
-  mosaic.grid.cell("b"),
-), cell-styles: (
-  a: (inset: 2pt, fill: white),
-  b: (align: center + horizon, fill: pink),
-))[Configured grid]
+    mosaic.grid.cell("b"),
+  ))[Configured grid]
 
-#mosaic.slide(mosaic.grid.h(
-  mosaic.grid.cell("a"),
-  mosaic.grid.cell("b"),
-), cell-styles: (
-  a: (fill: pink),
-  b: (fill: white),
-))[A][B]
+  #mosaic.slide(mosaic.grid.h(
+    mosaic.grid.cell("a"),
+    mosaic.grid.cell("b"),
+  ))[A][B]
+]

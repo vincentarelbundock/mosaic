@@ -143,8 +143,10 @@
 #assert(background.content != none)
 #assert(background.style.background != none)
 #assert(background.style.at("fill", default: none) == none)
-#assert(background.style.text.fill == settings.colors.text)
-#assert(background.style.align == top + left)
+// Structural cells carry no text or align styles; typography comes from the
+// <mosaic-cell-title> label rules and the anchor is applied in the content.
+#assert("text" not in background.style)
+#assert("align" not in background.style)
 
 #let centered-background = resolve-layout(mosaic.layouts.title(
   [Cities after dark],

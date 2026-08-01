@@ -1,6 +1,6 @@
 // Logical-slide runtime: frame policy, state, resolution, and page rendering.
 #import "shared.typ": fail
-#import "grid-model.typ": cell, validate, count-bodies, apply-cell-styles
+#import "grid-model.typ": cell, validate, count-bodies
 #import "incremental.typ": max-step, transform
 #import "render.typ": max-node, render
 #import "settings.typ": settings-state, with-colors
@@ -197,8 +197,6 @@
   } else {
     requested-grid
   }
-  validate(resolved-grid)
-  let resolved-grid = apply-cell-styles(resolved-grid, command.cell-styles)
   validate(resolved-grid)
   let resolved-background = if command.background == auto {
     background-state.get()

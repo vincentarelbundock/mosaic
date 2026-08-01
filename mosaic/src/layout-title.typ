@@ -9,7 +9,7 @@
 #import "layout-support.typ": (
   affix,
   as-content,
-  fixed-text-cell,
+  fixed-cell,
 )
 #import "layout-image.typ": (
   directional-image-layout,
@@ -163,20 +163,14 @@
   make-grid("title", fields, suppress-global-logo: true)
 }
 
+// Metadata tiers inside the composed title stack keep pt-anchored sizes so
+// they do not compound with the display scale supplied by the
+// <mosaic-cell-title> label rules.
 #let title-typography(settings) = {
   let base = settings.type.body.size
-  // Display type wants tighter lines and tracking than body text; multi-line
-  // titles should read as one mass, not stacked strips. `leading` is split
-  // out and applied as paragraph leading by the renderer.
-  let display-metrics = (leading: 0.42em, tracking: -0.015em)
   (
-    display: settings.type.title + (size: 2 * base) + display-metrics,
-    compact-display: settings.type.title + (size: 1.7 * base) + display-metrics,
-    academic-display: settings.type.title + (size: 1.6 * base) + display-metrics,
     subtitle: settings.type.subtitle + (size: 1.05 * base),
-    byline: settings.type.caption + (size: 0.8 * base),
     metadata: settings.type.caption + (size: 0.72 * base),
-    small: settings.type.small + (size: 0.55 * base),
   )
 }
 
@@ -187,38 +181,25 @@
   left: settings.spacing.inset,
 )
 
-#let title-fixed-cell(
-  body,
-  id,
-  settings,
-  text-style,
-  align: left + horizon,
-  inset: 0pt,
-  fill: auto,
-  content-sized: true,
-) = fixed-text-cell(
-  body,
-  id,
-  settings,
-  text-style,
-  align: align,
-  inset: inset,
-  content-sized: content-sized,
-  surface: (
-    fill: if fill == auto { settings.colors.canvas } else { fill },
-  ),
-)
-
+// The title cell's display typography comes from the <mosaic-cell-title>
+// label rules that `setup` emits. Variants that want a smaller display scale
+// apply a relative `scale` factor inline, so a user or theme rule that
+// resizes the title scales every variant proportionally. The `anchor` is
+// variant semantics and is applied inline; pick another variant (or the
+// image-background `align:` field) to change it.
 #let title-body-cell(
   settings,
-  title-style: none,
+  scale: 1em,
   content-sized: false,
   content: none,
-  align: left + bottom,
+  anchor: left + bottom,
   bottom-inset: auto,
 ) = styled-cell(
   id: "title",
-  content: content,
+  content: align(
+    anchor,
+    if scale == 1em { content } else { text(size: scale, content) },
+  ),
   style: (
     content-sized: content-sized,
     inset: title-inset(
@@ -227,18 +208,13 @@
       // Anchored compositions want real breathing room at the bottom edge.
       bottom: if bottom-inset == auto { settings.spacing.inset } else { bottom-inset },
     ),
-    align: align,
-    fill: settings.colors.canvas,
-    text: (if title-style == none { title-typography(settings).display } else { title-style })
-      + (fill: settings.colors.text),
   ),
 )
 
-#let academic-small-cell(body, id, settings, bottom: auto) = title-fixed-cell(
+#let academic-small-cell(body, id, settings, bottom: auto) = fixed-cell(
   body,
   id,
   settings,
-  title-typography(settings).small,
   inset: title-inset(
     settings,
     bottom: if bottom == auto { settings.spacing.compact-gap } else { bottom },
@@ -344,7 +320,7 @@
       block(
         above: 0.55 * settings.spacing.gap,
         // No explicit fill: the subtitle inherits the cell's text fill so
-        // slide `cell-styles` color overrides reach the whole stack.
+        // label-targeted color overrides reach the whole stack.
         text(
           ..(
             title-typography(settings).subtitle
@@ -397,23 +373,21 @@
 #let title-stack(
   fields,
   settings,
-  title-style: none,
+  scale: 1em,
 ) = title-body-cell(
   settings,
-  title-style: title-style,
+  scale: scale,
   content: title-stack-content(fields, settings),
 )
 
 #let resolve-centered-title(fields, settings) = {
   styled-cell(
     id: "title",
-    content: title-stack-content(fields, settings),
-    style: (
-      inset: settings.spacing.inset,
-      align: center + horizon,
-      fill: settings.colors.canvas,
-      text: title-typography(settings).display + (fill: settings.colors.text),
+    content: align(
+      center + horizon,
+      title-stack-content(fields, settings),
     ),
+    style: (inset: settings.spacing.inset),
   )
 }
 
@@ -477,7 +451,6 @@
 
 #let resolve-academic-title(fields, settings) = {
   let academic = structured-academic-data(fields.authors)
-  let typography = title-typography(settings)
   // Metadata compresses to three tiers: a byline, one fine-print line for
   // the affiliation legend, and one fine-print line joining contacts and
   // date. More rows than that would scatter the composition.
@@ -494,7 +467,7 @@
   // the whole composition anchors to the lower edge of the slide.
   children.push(t(1fr, title-body-cell(
     settings,
-    title-style: typography.academic-display,
+    scale: 0.8em,
     content: title-stack-content(
       fields,
       settings,
@@ -506,14 +479,10 @@
     let author-content = join-content(academic.authors.map(academic-author))
     children.push(t(
       auto,
-      title-fixed-cell(
+      fixed-cell(
         author-content,
         "authors",
         settings,
-        typography.byline + (
-          fill: settings.colors.text,
-          weight: "medium",
-        ),
         inset: title-inset(
           settings,
           top: settings.spacing.compact-gap,
@@ -555,15 +524,13 @@
   // A narrow spine, not a slab: an empty panel wide enough to dominate the
   // page reads as missing content, while a spine reads as a deliberate mark.
   h(
-    t(4%, title-fixed-cell(
+    t(4%, fixed-cell(
       [],
       "accent",
       settings,
-      title-typography(settings).subtitle + (fill: settings.colors.inverse-text),
-      align: left + bottom,
       inset: 0pt,
-      fill: settings.colors.accent,
       content-sized: false,
+      surface: (fill: settings.colors.accent),
     )),
     t(1fr, title-stack(fields, settings)),
   )
@@ -573,7 +540,7 @@
   let text-region = title-stack(
     fields,
     settings,
-    title-style: title-typography(settings).compact-display,
+    scale: 0.85em,
   )
   let position = semantic-image-position(fields.variant)
   let tracks = if fields.tracks == auto {
@@ -622,11 +589,12 @@
   // cell's text fill for light-on-dark compositions.
   image-background-cell(styled-cell(
     id: "title",
-    content: title-stack-content(fields, settings),
+    content: align(
+      fields.align,
+      title-stack-content(fields, settings),
+    ),
     style: (
       inset: background-stack-inset(fields.align, settings),
-      align: fields.align,
-      text: title-typography(settings).display + (fill: settings.colors.text),
     ),
   ), image)
 }

@@ -97,6 +97,31 @@
   set list(spacing: settings.spacing.list-spacing)
   set enum(spacing: settings.spacing.list-spacing)
   set terms(spacing: settings.spacing.list-spacing)
+  // Canonical cell typography and arrangement. Every rendered cell is one
+  // block labeled <mosaic-cell-ID>, so defaults for the canonical cell
+  // vocabulary are ordinary label-targeted rules. Rules defined later (in a
+  // theme's `apply`, after `#show: setup`, or scoped around one slide
+  // command) sit inside these and therefore win.
+  show label("mosaic-cell-section"): set align(center + horizon)
+  show label("mosaic-cell-section"): set text-element(..settings.type.title)
+  show label("mosaic-cell-footer"): set text-element(..settings.type.small)
+  show label("mosaic-cell-title"): set text-element(
+    ..(settings.type.title + (size: 2em, tracking: -0.015em)),
+  )
+  show label("mosaic-cell-title"): set par(leading: 0.42em)
+  show label("mosaic-cell-authors"): set text-element(
+    size: 0.8em,
+    weight: "medium",
+  )
+  show label("mosaic-cell-details"): set text-element(..settings.type.small)
+  show label("mosaic-cell-table-title"): set text-element(
+    ..settings.type.heading,
+  )
+  show label("mosaic-cell-caption"): set text-element(..settings.type.caption)
+  show label("mosaic-cell-source"): set text-element(..settings.type.small)
+  show label("mosaic-cell-highlight"): set text-element(
+    ..(settings.type.small + (fill: settings.colors.accent)),
+  )
   configure-settings(settings)
   configure-deck(
     default-grid: styled-cell(
@@ -111,8 +136,6 @@
     body,
     section-grid: styled-cell(id: "section", style: (
       inset: settings.spacing.inset,
-      align: center + horizon,
-      text: settings.type.title,
     )),
     auto-slide: auto-slide,
   )

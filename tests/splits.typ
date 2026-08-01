@@ -33,20 +33,15 @@
   "auto", "fixed", "ratio", "relative", "fraction",
 ))
 
-// Cells carry structure and identity; slides own named visual overrides.
-#let structural = mosaic.grid.cell("flat")
+// Cells carry structure and identity; appearance is supplied natively via
+// each cell's <mosaic-cell-ID> label.
+#let structural = mosaic.grid.cell("flat", inset: 4pt)
 #assert(structural.id == "flat")
 #assert(structural.content == none)
-#let styled-command = mosaic.slide(
-  grid: structural,
-  cell-styles: (
-    flat: (fill: red, inset: 4pt, align: center + horizon),
-  ),
-)[Body].value
-#assert(styled-command.grid == structural)
-#assert(styled-command.cell-styles.flat.fill == red)
-#assert(styled-command.cell-styles.flat.inset == 4pt)
-#assert(styled-command.cell-styles.flat.align == center + horizon)
+#assert(structural.style.inset == 4pt)
+#let structural-command = mosaic.slide(grid: structural)[Body].value
+#assert(structural-command.grid == structural)
+#assert("cell-styles" not in structural-command.keys())
 
 // Rules stroke the interior track boundaries of a split.
 #assert(grid.rule == none)

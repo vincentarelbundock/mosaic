@@ -44,87 +44,28 @@
 #assert(grid-test.info(resolved-structured, "body-2").cell.content == none)
 #assert(grid-test.info(resolved-structured, "footer").cell.content == none)
 #assert(grid-test.info(resolved-structured, "footer").cell.style.content-sized)
+// Cells are structural: no text, fill, or align styles are threaded through
+// the grid record. Appearance is native, via <mosaic-cell-ID> label rules.
 #assert(
-  grid-test.info(resolved-structured, "footer").cell.style.text.size
-    == settings.type.small.size,
+  "text" not in grid-test.info(resolved-structured, "footer").cell.style,
+)
+#assert(
+  "fill" not in grid-test.info(resolved-structured, "header").cell.style,
 )
 #let structured = mosaic.slide(grid: structured-grid)[Structured header][Left body][Right body][Structured footer]
 
-#let colored-grid = mosaic.layouts.default(
-  fill: (
-    header: rgb("#1f4b66"),
-    body: rgb("#e8f2f8"),
-    footer: rgb("#c9deea"),
-  ),
-  text: (
-    header: (fill: white, weight: "bold"),
-    body: (fill: rgb("#123456")),
-    footer: (size: 18pt),
-  ),
-  align: (footer: right),
-  inset: (footer: 8pt),
-)
-#let resolved-colored = resolve-layout(colored-grid, settings)
-#assert(grid-test.info(resolved-colored, "header").cell.style.fill == rgb("#1f4b66"))
-#assert(grid-test.info(resolved-colored, "body").cell.style.fill == rgb("#e8f2f8"))
-#assert(grid-test.info(resolved-colored, "footer").cell.style.fill == rgb("#c9deea"))
-#assert(grid-test.info(resolved-colored, "header").cell.style.text.fill == white)
-#assert(grid-test.info(resolved-colored, "header").cell.style.text.weight == "bold")
-#assert(grid-test.info(resolved-colored, "body").cell.style.text.fill == rgb("#123456"))
-#assert(grid-test.info(resolved-colored, "footer").cell.style.text.size == 18pt)
-#assert(grid-test.info(resolved-colored, "footer").cell.style.align == right)
-#assert(grid-test.info(resolved-colored, "footer").cell.style.inset == 8pt)
-#let colored = mosaic.slide(grid: colored-grid)[Colored regions][Body region][Independent footer fill]
-
-#let inverted-grid = mosaic.layouts.default(
-  inverted: ("header", "footer"),
-)
-#let resolved-inverted = resolve-layout(inverted-grid, settings)
-#assert(grid-test.info(resolved-inverted, "header").cell.style.fill == settings.colors.text)
-#assert(grid-test.info(resolved-inverted, "header").cell.style.text.fill == settings.colors.inverse-text)
-#assert(grid-test.info(resolved-inverted, "body").cell.style.fill == settings.colors.canvas)
-// A plain body region declares no text delta: it inherits ambient `set text`.
-#assert(grid-test.info(resolved-inverted, "body").cell.style.text == (:))
-#assert(grid-test.info(resolved-inverted, "footer").cell.style.fill == settings.colors.text)
-#assert(grid-test.info(resolved-inverted, "footer").cell.style.text.fill == settings.colors.inverse-text)
-#let inverted = mosaic.slide(grid: inverted-grid)[
-  == Inverted regions
-][
-  The body retains the scheme canvas and ordinary text.
-][
-  Header and footer inherit inverse colors.
+// Native rules restyle the default layout's canonical cells, deck-wide or
+// scoped to one slide command.
+#let styled = [
+  #show label("mosaic-cell-header"): it => block(
+    width: 100%,
+    fill: rgb("#1f4b66"),
+    text(fill: white, weight: "bold", it),
+  )
+  #show label("mosaic-cell-body"): set text(fill: rgb("#123456"))
+  #show label("mosaic-cell-footer"): set align(right)
+  #mosaic.slide(grid: mosaic.layouts.default())[Styled header][Body region][Independent footer style]
 ]
-
-#let inverted-overrides-grid = mosaic.layouts.default(
-  inverted: ("header", "footer"),
-  fill: (header: rgb("#1f4b66")),
-  text: (footer: (fill: rgb("#c9deea"))),
-)
-#let resolved-inverted-overrides = resolve-layout(inverted-overrides-grid, settings)
-#assert(grid-test.info(resolved-inverted-overrides, "header").cell.style.fill == rgb("#1f4b66"))
-#assert(grid-test.info(resolved-inverted-overrides, "footer").cell.style.text.fill == rgb("#c9deea"))
-
-#let footer-inverted-grid = mosaic.layouts.default(
-  inverted: ("footer",),
-)
-#let resolved-footer-inverted = resolve-layout(footer-inverted-grid, settings)
-#assert(grid-test.info(resolved-footer-inverted, "header").cell.style.fill == settings.colors.canvas)
-#assert(grid-test.info(resolved-footer-inverted, "header").cell.style.text == (:))
-#assert(grid-test.info(resolved-footer-inverted, "footer").cell.style.fill == settings.colors.text)
-#assert(grid-test.info(resolved-footer-inverted, "footer").cell.style.text.fill == settings.colors.inverse-text)
-
-#let imaged-grid = mosaic.layouts.default(
-  background: (
-    header: image("/docs/assets/images/bonsai.webp"),
-    body: image("/docs/assets/images/dog.webp", fit: "cover"),
-    footer: image("/docs/assets/images/bonsai.webp"),
-  ),
-)
-#let resolved-imaged = resolve-layout(imaged-grid, settings)
-#assert(type(grid-test.info(resolved-imaged, "header").cell.style.background) == content)
-#assert(type(grid-test.info(resolved-imaged, "body").cell.style.background) == content)
-#assert(type(grid-test.info(resolved-imaged, "footer").cell.style.background) == content)
-#let imaged = mosaic.slide(grid: imaged-grid)[Image-backed regions][Foreground content][Every region accepts an image]
 
 #let header-body-layout = mosaic.layouts.default(variant: "header-body")
 #let header-body-grid = resolve-layout(header-body-layout, settings)
@@ -141,8 +82,6 @@
 #show: mosaic.setup
 #basic
 #structured
-#colored
-#inverted
-#imaged
+#styled
 #header-body
 #body-footer

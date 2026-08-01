@@ -81,10 +81,11 @@ returns an ordered categorical color array instead of configuring the deck.
 The public layout collection contains five constructors:
 
 - `default`: optional full-width header and footer cells around an
-  argument-controlled body column grid, with independent per-cell backgrounds
-  and scheme-derived inverse colors for selected header/footer cells through
-  `inverted`, native body-column `tracks`, and optional foreground progress via
-  `progress: "number"`, `"circle"`, or `"line"`;
+  argument-controlled body column grid, with native body-column `tracks` and
+  optional foreground progress via `progress: "number"`, `"circle"`, or
+  `"line"`; appearance (fills, inverse header bars, typography) is supplied
+  by rules targeting `<mosaic-cell-header>`, `<mosaic-cell-body>`, and
+  `<mosaic-cell-footer>`;
 - `title`: `academic`, `left-aligned`, `centered-stack`, `accent-block`,
   `image-left`, `image-right`, `image-top`, `image-bottom`, and
   `image-background`; the title text is the first positional argument and the
@@ -186,16 +187,16 @@ Continue with headings.
 `deck()` and `slide()` create deferred Mosaic commands. They must appear in
 the document controlled by `#show: m.setup`.
 
-`m.grid.cell(content: none, style: (:), id: none)` creates a named leaf in the
-grid tree with a default `1.25em` inset. The default single-cell grid created by
-`setup` receives `spacing.inset`. With no `content`, a cell consumes one
-body supplied to `slide()`. A fixed-content cell supplies its own content and
-consumes no slide body. `id` must be a non-empty string and must be unique
-within its grid. The optional style dictionary accepts the native
-`m.grid.cell` style fields `fill`, `inset`, `align`, and `stroke`. It also
-accepts `before` and `after` fixed content around a consuming body; `fit` as
-`"auto"`, `"width"`, `"contain"`, or `none`; and `text`, a dictionary of native
-Typst `text` arguments applied to the complete combined cell content:
+`m.grid.cell(content: none, id: none, inset: auto)` creates a named leaf in
+the grid tree with a default `1.25em` inset. The default single-cell grid
+created by `setup` receives `spacing.inset`. With no `content`, a cell
+consumes one body supplied to `slide()`. A fixed-content cell supplies its
+own content and consumes no slide body. `id` must be a non-empty string and
+must be unique within its grid.
+
+Cells are structural. Every rendered cell is one block labeled
+`<mosaic-cell-ID>`, so appearance is supplied with ordinary Typst rules
+targeting that label; there is no styling dictionary to learn:
 
 ```typ
 #let numbered = m.grid.v(
@@ -205,22 +206,21 @@ Typst `text` arguments applied to the complete combined cell content:
   ])),
 )
 
-#let highlighted = m.grid.cell(
-  id: "body",
-  style: (
-    fill: rgb("#f8dce5"),
-    inset: 0.55em,
-    text: (
-      size: 1.2em,
-      weight: "bold",
-    ),
-  ),
-)
+// Deck-wide: restyle the body cell everywhere.
+#show label("mosaic-cell-body"): set text(size: 1.2em, weight: "bold")
+#show label("mosaic-cell-body"): it => block(fill: rgb("#f8dce5"), it)
+
+// One slide only: scope the rules in a block around the command.
+#[
+  #show label("mosaic-cell-body"): set align(horizon)
+  #m.slide[Centered body]
+]
 ```
 
-Cell `text` styling is useful when the complete cell has one typographic role,
-such as a title band. Semantic headings remain native Typst elements and
-should be styled with ordinary `set heading` and `show heading` rules.
+Rules defined later sit inside earlier ones and win, so setup defaults lose
+to theme rules, which lose to deck-level rules, which lose to slide-scoped
+rules. Semantic headings remain native Typst elements and should be styled
+with ordinary `set heading` and `show heading` rules.
 
 `image(source, width: 100%, height: 100%, fit: "cover", lighten: none,
 darken: none, ..native)` is a slide-sized convenience around Typst's native
@@ -288,7 +288,7 @@ assigning fixed colors to names such as “warning.”
 Cells require a non-empty string `id`; string children passed to `m.grid.h` and
 `m.grid.v` are shorthand for consuming cells with that ID.
 
-`deck(default-grid: m.grid.cell(), background: none, foreground: none)` sets
+`deck(default-grid: m.grid.cell("body"), background: none, foreground: none)` sets
 the grid and visual planes inherited by subsequent slides. Call it once near
 the start of the document. A later call changes the defaults for the slides
 that follow it.
@@ -335,7 +335,7 @@ remain ordinary content blocks:
 
 ```typ
 #m.deck(
-  default-grid: m.grid.cell(style: (inset: 32pt)),
+  default-grid: m.grid.cell("body", inset: 32pt),
   foreground: [
     #place(bottom + right)[
       #pad(right: 32pt, bottom: 20pt)[
@@ -571,40 +571,32 @@ $
 
 Public callers construct grids instead of mutating or inspecting their
 internal records. Use string children for ordinary consuming cells,
-`m.grid.cell` for fixed content or local styles, and `m.grid.t` for explicit
-track sizes.
+`m.grid.cell` for fixed content or a custom inset, and `m.grid.t` for
+explicit track sizes.
 The constructors validate every split, track, gutter, and cell ID.
 
-Grids can be nested freely:
+Grids can be nested freely, and label-targeted rules style any cell:
 
 ```typ
-#let common-cell = (
-  inset: 0.55em,
-  stroke: 1pt + gray,
-)
-
 #let feature = m.grid.v(
   gutter: 0.8em,
-  m.grid.t(auto, m.grid.cell(
-    id: "title",
-    style: common-cell + (
-      fill: rgb("#f8dce5"),
-      text: (size: 1.45em, weight: "bold"),
-    ),
-  )),
+  m.grid.t(auto, m.grid.cell(id: "banner", inset: 0.55em)),
   m.grid.h(
     gutter: 1em,
-    m.grid.t(2fr, m.grid.cell(id: "left", style: common-cell)),
+    m.grid.t(2fr, m.grid.cell(id: "left", inset: 0.55em)),
     m.grid.v(
       gutter: 0.6em,
-      m.grid.cell(id: "middle-top", style: common-cell),
-      m.grid.cell(id: "middle-bottom", style: common-cell),
+      m.grid.cell(id: "middle-top", inset: 0.55em),
+      m.grid.cell(id: "middle-bottom", inset: 0.55em),
     ),
   ),
-  m.grid.t(auto, m.grid.cell(id: "footer", style: common-cell)),
+  m.grid.t(auto, m.grid.cell(id: "footer", inset: 0.55em)),
 )
 
-#m.slide(feature)[Title][Left][Middle top][Middle bottom][Footer]
+#show label("mosaic-cell-banner"): set text(size: 1.45em, weight: "bold")
+#show label("mosaic-cell-banner"): it => block(fill: rgb("#f8dce5"), it)
+
+#m.slide(feature)[Banner][Left][Middle top][Middle bottom][Footer]
 ```
 
 For grids requiring spans or coordinates, put a native Typst `grid` inside a

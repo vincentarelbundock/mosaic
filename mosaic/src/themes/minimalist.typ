@@ -33,15 +33,13 @@
 )
 
 // ── Layouts ────────────────────────────────────────────────────────────────
-// The ordinary content slide: a quiet cream page with the heading and body
-// stacked top-left. Registered as `auto-slide` in `apply`, so plain
-// `== Title` markup renders through it. `cell-styles` is forwarded so decks
-// can override the theme's defaults per slide.
-#let default-layout(title, body, cell-styles: (:)) = slide(
-  grid: grid.cell("content"),
-  cell-styles: (
-    content: (fill: palette.cream, inset: 45pt, align: top + left),
-  ) + cell-styles,
+// The ordinary content slide: a quiet cream page (the page canvas) with the
+// heading and body stacked top-left. Registered as `auto-slide` in `apply`,
+// so plain `== Title` markup renders through it. Override its look per slide
+// with scoped native rules around the call, targeting
+// `<mosaic-cell-content>`.
+#let default-layout(title, body) = slide(
+  grid: grid.cell("content", inset: 45pt),
 )[
   #title
   #body
@@ -55,12 +53,8 @@
   subtitle: none,
   authors: (),
   date: none,
-  cell-styles: (:),
 ) = slide(
-  grid: grid.cell("cover"),
-  cell-styles: (
-    cover: (fill: palette.cream, inset: 45pt, align: left + horizon),
-  ) + cell-styles,
+  grid: grid.cell("cover", inset: 45pt),
   foreground: place(bottom + left, dx: 45pt, dy: -45pt)[
     #line(length: 100% - 90pt, stroke: 1pt + palette.red)
   ],
@@ -82,12 +76,9 @@
 
 // Section-divider slide: one centered serif sentence, as in the deck's
 // interstitial pages.
-#let section-layout(title, subtitle: none, cell-styles: (:)) = slide(
+#let section-layout(title, subtitle: none) = slide(
   grid: grid.cell("section"),
   section: true,
-  cell-styles: (
-    section: (fill: palette.cream, align: center + horizon),
-  ) + cell-styles,
 )[
   #text(size: 1.79em, weight: "bold")[#title]
   #if subtitle != none [
@@ -128,5 +119,14 @@
   show heading.where(level: 1): set text(size: base-size * 2.2, weight: "bold")
   show heading.where(level: 2): set text(size: base-size * 1.79, weight: "bold")
   show heading: set block(below: 0.6em)
+  // Cell styling is native: cells are blocks labeled <mosaic-cell-ID>. The
+  // cover anchors at left-horizon; section dividers reset setup's display
+  // typography (absolute size, since em sizes compound across nested rules)
+  // and keep the centered default.
+  show label("mosaic-cell-cover"): set align(horizon)
+  show label("mosaic-cell-section"): set text(
+    size: base-size,
+    weight: "regular",
+  )
   body
 }

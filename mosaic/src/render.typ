@@ -42,19 +42,24 @@
   (node, children) => array-max(children),
 )
 
-#let split-cell-surface(surface) = {
-  let native = surface
-  let fill = native.remove("fill", default: none)
-  let inset = native.remove("inset")
-  let alignment = native.remove("align", default: left + top)
-  let stroke = native.remove("stroke", default: none)
-  (
-    native: native,
-    fill: fill,
-    inset: inset,
-    alignment: alignment,
-    stroke: stroke,
-  )
+// Resolve em components of an inset against a captured base text size, so
+// label-targeted typography rules cannot scale cell geometry.
+#let resolve-inset-part(value, base) = if type(value) == length {
+  value.abs + value.em * base
+} else if type(value) == relative {
+  value.ratio + resolve-inset-part(value.length, base)
+} else {
+  value
+}
+
+#let resolve-inset(inset, base) = if type(inset) == dictionary {
+  let resolved = (:)
+  for (side, value) in inset {
+    resolved.insert(side, resolve-inset-part(value, base))
+  }
+  resolved
+} else {
+  resolve-inset-part(inset, base)
 }
 
 #let render-cell(
@@ -75,12 +80,11 @@
   }
   let surface = style
   let id = surface.remove("_id", default: none)
-  let text-style = surface.remove("text", default: (:))
-  // Paragraph leading rides along in the text style dictionary; it must be
-  // split out because it belongs to `par`, not `text`.
-  let text-leading = text-style.remove("leading", default: none)
   let before = surface.remove("before", default: [])
   let after = surface.remove("after", default: [])
+  let inset = surface.remove("inset")
+  let fill = surface.remove("fill", default: none)
+  let stroke = surface.remove("stroke", default: none)
   let radius = surface.remove("radius", default: 0pt)
   let background = surface.remove("background", default: none)
   let content-sized = surface.remove("content-sized", default: false)
@@ -94,19 +98,6 @@
   let auto-height = vertical and track == auto
   let region-height = if content-sized or auto-height { auto } else { 100% }
   let content = before + content + after
-  let content = if text-style.len() == 0 {
-    content
-  } else {
-    text(..text-style, content)
-  }
-  let content = if text-leading == none {
-    content
-  } else {
-    {
-      set par(leading: text-leading)
-      content
-    }
-  }
   let content = if fit == "width" {
     fit-to-width(width: if fit-width == auto { 1fr } else { fit-width }, grow: false, content)
   } else if fit in ("auto", "contain") {
@@ -130,73 +121,57 @@
       step,
     )
   }
-  let content = if id == none {
-    content
-  } else {
-    // PROTOTYPE: label the cell's content block so user show rules can
-    // target it natively: show label("mosaic-cell-" + id): ...
-    [#block(width: 100%, height: region-height)[
-      #for (name, alignment) in (
-        center: center + horizon,
-        top: top + center,
-        right: right + horizon,
-        bottom: bottom + center,
-        left: left + horizon,
-        "top-left": top + left,
-        "top-right": top + right,
-        "bottom-left": bottom + left,
-        "bottom-right": bottom + right,
-      ) {
-        place(alignment)[
-          #metadata(none)#label("mosaic-cell-" + id + "-" + name)
-        ]
+  // One block carries the whole cell, including its internal paint, and is
+  // labeled <mosaic-cell-ID>. Native rules target it directly:
+  //   show label("mosaic-cell-" + id): set text(...)
+  //   show label("mosaic-cell-" + id): set align(horizon)
+  //   show label("mosaic-cell-" + id): it => block(fill: ..., it)
+  // The inset lives inside the label so wrapping rules paint edge to edge,
+  // but em insets are resolved against the text size just outside the label,
+  // so cell typography rules do not scale cell geometry.
+  grid.cell(inset: 0pt, context {
+    let base = text.size
+    let body = block(
+      width: 100%,
+      height: region-height,
+      fill: fill,
+      stroke: stroke,
+      radius: radius,
+      clip: background != none,
+    )[
+      #if background != none {
+        place(top + left, block(width: 100%, height: 100%, background))
       }
-      #content
-    ]#label("mosaic-cell-" + id)]
-  }
-  if background != none {
-    let parts = split-cell-surface(surface)
-    grid.cell(
-      ..parts.native,
-      inset: 0pt,
-      block(
+      #if id != none {
+        for (name, alignment) in (
+          center: center + horizon,
+          top: top + center,
+          right: right + horizon,
+          bottom: bottom + center,
+          left: left + horizon,
+          "top-left": top + left,
+          "top-right": top + right,
+          "bottom-left": bottom + left,
+          "bottom-right": bottom + right,
+        ) {
+          place(alignment)[
+            #metadata(none)#label("mosaic-cell-" + id + "-" + name)
+          ]
+        }
+      }
+      #block(
         width: 100%,
         height: region-height,
-        fill: parts.fill,
-        stroke: parts.stroke,
-        radius: radius,
-        clip: true,
-      )[
-        #place(
-          top + left,
-          block(width: 100%, height: 100%, background),
-        )
-        #block(
-          width: 100%,
-          height: region-height,
-          inset: parts.inset,
-          align(parts.alignment, content),
-        )
-      ],
-    )
-  } else if radius == 0pt {
-    grid.cell(..surface, content)
-  } else {
-    let parts = split-cell-surface(surface)
-    grid.cell(
-      ..parts.native,
-      inset: 0pt,
-      block(
-        width: 100%,
-        height: region-height,
-        fill: parts.fill,
-        inset: parts.inset,
-        stroke: parts.stroke,
-        radius: radius,
-        align(parts.alignment, content),
-      ),
-    )
-  }
+        inset: resolve-inset(inset, base),
+        content,
+      )
+    ]
+    if id == none {
+      body
+    } else {
+      [#body#label("mosaic-cell-" + id)]
+    }
+  })
 }
 
 #let render-node(

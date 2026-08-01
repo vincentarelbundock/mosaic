@@ -1,6 +1,6 @@
 // Construction and validation of deferred deck and slide commands.
 #import "shared.typ": tag, fail
-#import "grid-model.typ": cell, is-node, validate, validate-cell-styles
+#import "grid-model.typ": cell, is-node, validate
 #import "layout-core.typ": is-layout-grid
 #import "layout-default.typ": default
 
@@ -9,7 +9,6 @@
   slide: (
     "background",
     "bodies",
-    "cell-styles",
     "colors",
     "foreground",
     "grid",
@@ -80,7 +79,6 @@
   colors: auto,
   numbered: true,
   section: false,
-  cell-styles: (:),
 ) = (
   mosaic: tag,
   kind: "slide",
@@ -90,7 +88,6 @@
   colors: colors,
   numbered: numbered,
   section: section,
-  cell-styles: cell-styles,
   bodies: bodies,
 )
 
@@ -104,12 +101,6 @@
   /// Grid tree or `auto` to inherit the deck default.
   /// -> auto | dictionary
   grid: auto,
-  /// Visual overrides keyed by resolved cell ID.
-  /// Accepts `fill`, `inset`, `align`, `text`, `stroke`, `radius`,
-  /// `background`, and `fit`. Layout defaults are applied first; text
-  /// dictionaries merge deeply. Unknown IDs fail after grid resolution.
-  /// -> dictionary
-  cell-styles: (:),
   /// Slide background override.
   /// -> auto | content | none
   background: auto,
@@ -138,7 +129,6 @@
   if type(section) != bool {
     fail("section must be a boolean")
   }
-  let cell-styles = validate-cell-styles(cell-styles)
   let bodies = bodies.pos()
   let positional-grid = if (
     bodies.len() > 0
@@ -167,7 +157,6 @@
     colors: colors,
     numbered: numbered,
     section: section,
-    cell-styles: cell-styles,
   ))
 }
 #let automatic-slide-command(title, body) = {

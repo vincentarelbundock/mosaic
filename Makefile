@@ -198,9 +198,9 @@ layout-tests: install web-images ## Compile every semantic layout test deck
 	@grep -F 'Mosaic feature test' /tmp/mosaic-layouts-features.txt >/dev/null
 	@grep -F '1/2' /tmp/mosaic-layouts-features.txt >/dev/null
 	@grep -F '2/2' /tmp/mosaic-layouts-features.txt >/dev/null
-	@$(TYPST) compile --root . tests/layouts-cell-style.typ '/tmp/mosaic-layouts-cell-style-{p}.svg'
-	@grep -Fi '#123456' /tmp/mosaic-layouts-cell-style-1.svg >/dev/null
-	@grep -Fi '#fedcba' /tmp/mosaic-layouts-cell-style-1.svg >/dev/null
+	@$(TYPST) compile --root . tests/layouts-label-style.typ '/tmp/mosaic-layouts-label-style-{p}.svg'
+	@grep -Fi '#123456' /tmp/mosaic-layouts-label-style-1.svg >/dev/null
+	@grep -Fi '#fedcba' /tmp/mosaic-layouts-label-style-1.svg >/dev/null
 	@$(TYPST) compile --root . tests/layouts-setup-settings.typ '/tmp/mosaic-setup-settings-{p}.svg'
 	@grep -Fi '#123456' /tmp/mosaic-setup-settings-1.svg >/dev/null
 	@grep -Fi '#abcdef' /tmp/mosaic-setup-settings-1.svg >/dev/null

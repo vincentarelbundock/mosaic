@@ -1,7 +1,7 @@
 // Construction, validation, and resolution of the table layout.
 #import "grid-model.typ": styled-cell, v, t
 #import "layout-core.typ": make-grid, validate-role
-#import "layout-support.typ": fixed-text-cell
+#import "layout-support.typ": fixed-cell
 
 #let validate-fields(fields) = {
   let _ = validate-role(fields)
@@ -32,11 +32,10 @@
   if fields.title != none {
     children.push(t(
       auto,
-      fixed-text-cell(
+      fixed-cell(
         fields.title,
-        "title",
+        "table-title",
         settings,
-        settings.type.heading + (fill: settings.colors.text),
         inset: settings.spacing.inset,
       ),
     ))
@@ -48,19 +47,21 @@
       // Inherit ambient text so the deck's font/size flow into the table body.
       style: (
         inset: settings.spacing.inset,
-        align: left + top,
       ),
     ),
   ))
-  for (name, body, text-style) in (
-    ("highlight", fields.highlight, settings.type.small + (fill: settings.colors.accent)),
-    ("caption", fields.caption, settings.type.caption),
-    ("source", fields.source, settings.type.small),
+  // Typography for these canonical cells comes from the label rules in
+  // `setup` (<mosaic-cell-highlight>, <mosaic-cell-caption>,
+  // <mosaic-cell-source>).
+  for (name, body) in (
+    ("highlight", fields.highlight),
+    ("caption", fields.caption),
+    ("source", fields.source),
   ) {
     if body != none {
       children.push(t(
         auto,
-        fixed-text-cell(body, name, settings, text-style),
+        fixed-cell(body, name, settings),
       ))
     }
   }

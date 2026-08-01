@@ -1,6 +1,17 @@
 # SPEC: Theme conventions, layout vocabulary, and bundled themes
 
-**Status:** Parts 1a, 1b, and 1c implemented; Part 2 deferred pending evidence; Part 3 withdrawn
+> **Superseded (July 2026).** The native-labels break made cells purely
+> structural: `cell-styles`, per-cell `text`/`fill`/`align` threading, and the
+> layout styling dictionaries were removed. Appearance is supplied by native
+> rules targeting each cell's `<mosaic-cell-ID>` label, with precedence given
+> by rule nesting (setup defaults < theme `apply` rules < deck rules <
+> slide-scoped rules). This closes Part 2: the styles-precedence problem it
+> addressed no longer exists, and neither Option A (`m.slide(styles:)`) nor
+> Option B (`m.layouts.define`) will be built. Factories no longer accept
+> `cell-styles`; per-slide overrides are scoped show rules. See
+> `ARCHITECTURE.md`, "Styling model: structural cells, native rules."
+
+**Status:** Parts 1a, 1b, and 1c implemented; Part 2 closed by the native-labels break; Part 3 withdrawn
 **Scope:** Vocabulary, theme-module convention, bundled themes, documentation, and a gated engine proposal for layout default styles
 **Compatibility:** Mosaic is unreleased; no compatibility aliases were kept
 

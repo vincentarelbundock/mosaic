@@ -29,6 +29,40 @@ Dependencies flow downward through these layers:
 A lower layer must not import a higher layer. Internal modules import the owner
 of each definition directly; facades exist only for intentional public namespaces.
 
+## Styling model: structural cells, native rules
+
+Mosaic owns structure; Typst owns appearance. Grid cells are structural
+records (id, optional fixed content, inset, sizing and fit behavior, plus
+layout-internal fill/background paint for image variants). They carry no text
+styles, alignment, or user-facing surface fields, and `mosaic.slide` accepts
+no styling arguments.
+
+Every rendered cell is one block labeled `<mosaic-cell-ID>` (with placed
+`<mosaic-cell-ID-{center,top,...}>` anchor points inside it). Appearance is
+supplied with ordinary label-targeted rules:
+
+```typst
+#show label("mosaic-cell-header"): set text(weight: "medium")
+#show label("mosaic-cell-body"): set align(horizon)
+#show label("mosaic-cell-body"): it => block(fill: luma(240), it)
+```
+
+Precedence is native rule nesting: `setup` emits defaults for the canonical
+cell vocabulary (`section`, `title`, `authors`, `details`, `footer`,
+`table-title`, `caption`, `source`, `highlight`); a theme's `apply` rules are
+defined inside them and win; deck-level rules after `#show: setup` win over
+both; rules scoped in a block around a single slide command override
+everything for that slide only. The compiler captures top-level set/show
+wrappers and re-applies them around rendered slides (automatic and explicit),
+so label rules always see the rendered cell structure.
+
+Two mechanics keep this predictable: em insets are resolved against the text
+size just outside the label, so typography rules cannot scale cell geometry;
+and the inset lives inside the label, so wrapping rules paint edge to edge.
+When overriding a size the defaults already set (for example the section or
+title display size), prefer absolute sizes; em sizes compound across nested
+rules.
+
 ## Grid subsystem
 
 - `grid-model.typ` owns the canonical cell/split records, constructor

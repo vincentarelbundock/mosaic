@@ -101,8 +101,10 @@
 #assert(section-background.kind == "cell")
 #assert(section-background.id == "section")
 #assert(section-background.style.background != none)
-#assert(section-background.style.fill == none)
-#assert(section-background.style.text.fill == settings.colors.text)
+// Structural cells carry no fill or text styles; appearance comes from the
+// <mosaic-cell-section> label rules.
+#assert(section-background.style.at("fill", default: none) == none)
+#assert("text" not in section-background.style)
 #assert(grid-test.count(section-background) == 1)
 #assert(grid-test.bodies(section-background) == 1)
 

@@ -81,22 +81,25 @@
   rule: true,
 ))
 
-#mosaic.slide(
-  grid: mosaic.layouts.title(
-    [Cities after dark],
-    variant: "image-background",
-    image: mosaic.image(
-      path("/docs/assets/images/title-city.webp"),
-      darken: 45%,
-      alt: "Coastal city lights at night",
+#[
+  // Light-on-dark composition: a scoped label rule recolors the title cell.
+  #show label("mosaic-cell-title"): set text(fill: white)
+  #mosaic.slide(
+    grid: mosaic.layouts.title(
+      [Cities after dark],
+      variant: "image-background",
+      image: mosaic.image(
+        path("/docs/assets/images/title-city.webp"),
+        darken: 45%,
+        alt: "Coastal city lights at night",
+      ),
+      align: left + bottom,
+      subtitle: [Public lecture · Infrastructure, evidence, and life after sunset],
+      authors: (mosaic.author([Amara Johnson], orcid: "0000-0001-2345-6789"),),
+      date: [Montréal · October 2027],
     ),
-    align: left + bottom,
-    subtitle: [Public lecture · Infrastructure, evidence, and life after sunset],
-    authors: (mosaic.author([Amara Johnson], orcid: "0000-0001-2345-6789"),),
-    date: [Montréal · October 2027],
-  ),
-  cell-styles: (title: (text: (fill: white))),
-)
+  )
+]
 
 #mosaic.slide(grid: mosaic.layouts.title(
   [Cities after dark, unadjusted],

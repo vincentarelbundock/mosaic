@@ -75,16 +75,6 @@
   }
 }
 
-#let region-surface(fill, background, settings) = {
-  let surface = (
-    fill: if fill == auto { settings.colors.canvas } else { fill },
-  )
-  if background != none {
-    surface.insert("background", background)
-  }
-  surface
-}
-
 #let framed-surface(settings, fill: auto, stroke: auto) = (
   radius: if settings.features.rounded { settings.shape.radius } else { 0pt },
   fill: if fill == auto { settings.colors.surface } else { fill },
@@ -95,13 +85,13 @@
   },
 )
 
-#let fixed-text-cell(
+// Structural fixed-content cell. Typography is not threaded here: the cell's
+// <mosaic-cell-ID> label carries it through native show rules.
+#let fixed-cell(
   body,
   id,
   settings,
-  text-style,
   inset: none,
-  align: left + horizon,
   content-sized: true,
   surface: (:),
 ) = styled-cell(
@@ -110,7 +100,5 @@
   style: (
     content-sized: content-sized,
     inset: if inset == none { settings.spacing.compact-gap } else { inset },
-    align: align,
-    text: text-style,
   ) + surface,
 )

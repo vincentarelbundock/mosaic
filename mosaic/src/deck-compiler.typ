@@ -56,10 +56,10 @@
   let flushed = none
   let slide-wrappers = ()
 
-  // PROTOTYPE: automatic slides re-apply the user's captured set/show
-  // wrappers around the rendered slide, exactly as explicit slide commands
-  // do, so deck-level rules (including label-targeted rules) see the
-  // rendered cell structure.
+  // Automatic slides re-apply the user's captured set/show wrappers around
+  // the rendered slide, exactly as explicit slide commands do, so deck-level
+  // rules (including label-targeted cell rules) see the rendered cell
+  // structure.
   let flush(mode, section, current, wrappers) = {
     if mode == "slide" {
       let body = current.sum(default: [])
@@ -100,7 +100,7 @@
   for entry in top-level-content(body) {
     let value = entry.raw
     let shown = entry.shown
-    // PROTOTYPE: content collected into an automatic slide is re-styled by
+    // Content collected into an automatic slide is re-styled by
     // the outer wrap in flush(); strip the slide-level wrapper prefix from
     // each piece so those styles are not applied twice (relative units such
     // as em sizes would compound). Wrappers nest, so the first N wrappers of

@@ -46,8 +46,9 @@
 
 /// Creates a structural leaf cell in a Mosaic grid tree.
 ///
-/// Visual properties are supplied by stable cell ID through
-/// `slide(cell-styles: ...)`.
+/// Cells are structural only. Every rendered cell is labeled
+/// `<mosaic-cell-ID>`, so appearance is supplied with native Typst rules:
+/// `show label("mosaic-cell-" + id): set text(...)`.
 ///
 /// -> dictionary
 #let cell(
@@ -62,54 +63,20 @@
   /// positionally.
   /// -> str
   id: none,
+  /// Native Typst inset applied inside the cell's labeled block, or `auto`
+  /// for the Mosaic default.
+  /// -> auto | length | relative | dictionary
+  inset: auto,
 ) = {
   if identifier.named().len() > 0 {
-    fail("cell visual fields belong in slide cell-styles")
+    fail("cell accepts only a cell id, optional fixed content, and inset")
   }
   let id = resolve-cell-id(identifier, id, "cell")
-  styled-cell(id: id, content: content)
-}
-
-#let public-cell-style-fields = (
-  "align", "background", "fill", "fit", "inset", "radius", "stroke", "text",
-)
-
-#let validate-cell-styles(styles) = {
-  if type(styles) != dictionary {
-    fail("slide cell-styles must be a dictionary")
-  }
-  for (id, style) in styles {
-    if type(style) != dictionary {
-      fail("slide cell style for " + repr(id) + " must be a dictionary")
-    }
-    let unsupported = style.keys().find(
-      key => key not in public-cell-style-fields,
-    )
-    if unsupported != none {
-      fail(
-        "slide cell style for " + repr(id)
-          + " has unsupported field " + repr(unsupported),
-      )
-    }
-    if "text" in style and type(style.text) != dictionary {
-      fail("slide cell style text for " + repr(id) + " must be a dictionary")
-    }
-    if "fit" in style and style.fit not in (none, "auto", "width", "contain") {
-      fail(
-        "slide cell style fit for " + repr(id)
-          + " must be none, \"auto\", \"width\", or \"contain\"",
-      )
-    }
-    if "background" in style and (
-      style.background != none and type(style.background) != content
-    ) {
-      fail(
-        "slide cell style background for " + repr(id)
-          + " must be content or none",
-      )
-    }
-  }
-  styles
+  styled-cell(
+    id: id,
+    content: content,
+    style: if inset == auto { (:) } else { (inset: inset) },
+  )
 }
 
 #let valid-track-size(size) = (
@@ -195,11 +162,10 @@
     and "inset" in style
     and style.keys().all(
       key => key in (
-        "after", "align", "background", "before", "content-sized", "fill",
-        "fit", "inset", "radius", "stroke", "text", "_fit-reserve", "_fit-width",
+        "after", "background", "before", "content-sized", "fill",
+        "fit", "inset", "radius", "stroke", "_fit-reserve", "_fit-width",
       ),
     )
-    and type(style.at("text", default: (:))) == dictionary
     and type(style.at("before", default: [])) == content
     and type(style.at("after", default: [])) == content
     and style.at("fit", default: none) in (none, "auto", "width", "contain")
@@ -287,37 +253,6 @@
 #let validate(node, path: "root") = {
   validate-shape(node, path: path)
   require-unique-cell-ids(node, path: path)
-}
-
-#let apply-cell-styles(node, styles) = {
-  let styles = validate-cell-styles(styles)
-  let ids = collect-cell-ids(node)
-  let unknown = styles.keys().find(id => id not in ids)
-  if unknown != none {
-    fail("slide cell-styles contains unknown cell id " + repr(unknown))
-  }
-  let apply(node) = if node.kind == "cell" {
-    if node.id not in styles {
-      node
-    } else {
-      let override = styles.at(node.id)
-      let merged = node.style + override
-      if "text" in override {
-        merged.insert(
-          "text",
-          node.style.at("text", default: (:)) + override.text,
-        )
-      }
-      node + (style: merged)
-    }
-  } else if node.kind == "on" {
-    node + (child: apply(node.child))
-  } else {
-    node + (children: node.children.map(apply))
-  }
-  let result = apply(node)
-  validate(result)
-  result
 }
 
 #let valid-rule(value) = (

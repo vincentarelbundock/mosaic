@@ -2,10 +2,7 @@
 #import "shared.typ": tag, fail, reject-unknown-keys, valid-path
 
 #let layout-field-keys = (
-  default: (
-    "align", "background", "columns", "fill", "inset", "inverted", "progress",
-    "text", "tracks", "variant",
-  ),
+  default: ("columns", "progress", "tracks", "variant"),
   title: (
     "align", "authors", "date", "image", "rule", "subtitle", "title",
     "tracks", "variant",

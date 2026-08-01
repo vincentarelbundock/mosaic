@@ -5,7 +5,6 @@
 #import "layout-support.typ": (
   framed-surface,
   path-image,
-  region-surface,
   track-children,
   visual-content,
 )
@@ -73,14 +72,10 @@
     (
       content-sized: false,
       inset: 0pt,
-      align: center + horizon,
-      fill: none,
-      radius: 0pt,
     )
   } else {
     framed-surface(settings, fill: settings.colors.canvas, stroke: none) + (
       inset: settings.spacing.inset,
-      align: center + horizon,
     )
   },
 )
@@ -209,12 +204,11 @@
 #let body-cell(settings) = styled-cell(
   id: "body",
   // No text delta: the body inherits ambient `set text` so themes and native
-  // overrides compose. Surface colors remain explicit.
+  // overrides compose.
   style: (
     content-sized: false,
     inset: settings.spacing.inset,
-    align: left + top,
-  ) + region-surface(auto, none, settings),
+  ),
 )
 
 #let resolve-image(command, settings) = {

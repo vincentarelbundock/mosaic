@@ -17,30 +17,25 @@
 #mosaic.slide(
   grid: mosaic.layouts.default(
     progress: "circle",
-    inverted: ("footer",),
   ),
+  colors: (accent: rgb("#ffffff")),
 )[
-  == Inverted circle
+  == White circle
 ][
-  The circle uses the inverse footer color.
+  The circle uses the slide-local accent.
 ][
-  Inverted footer
+  Footer
 ]
 
 #mosaic.slide(
   grid: mosaic.layouts.default(
     progress: "circle",
-    inverted: ("footer",),
-    text: (footer: (
-      fill: rgb("#fedcba"),
-      size: 30pt,
-    )),
-    inset: (footer: (x: 18pt, y: 12pt)),
   ),
+  colors: (accent: rgb("#fedcba")),
 )[
   == Styled circle
 ][
-  Explicit footer color, size, and insets also style progress.
+  The slide-local accent also styles progress.
 ][
   Styled footer
 ]
