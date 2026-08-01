@@ -8,7 +8,7 @@
 #import "preamble.typ": *
 #show: theme.apply
 
-// 01 — Cover
+// 01. Cover
 #styled(
   (cover: surface(inset: 45pt, align: left + horizon)),
   m.slide(
@@ -23,7 +23,7 @@
   ],
 )
 
-// 02 — Intro sentence
+// 02. Intro sentence
 #styled(
   (intro-line: surface(align: center + horizon)),
   slide(grid: c("intro-line"))[
@@ -31,7 +31,7 @@
   ],
 )
 
-// 03 — Contents
+// 03. Contents
 #styled(
   (contents: surface(inset: (left: 48pt), align: left + horizon)),
   slide(grid: c("contents"))[
@@ -46,7 +46,7 @@
   ],
 )
 
-// 04 — Section
+// 04. Section
 #styled(
   (introduction: surface(fill: red, inset: 48pt, align: left + horizon)),
   slide(grid: c("introduction"))[
@@ -54,7 +54,7 @@
   ],
 )
 
-// 05 — Welcome
+// 05. Welcome
 #styled(
   (
     welcome-copy: surface(inset: (left: 48pt, right: 24pt), align: left + horizon),
@@ -75,7 +75,7 @@
   ],
 )
 
-// 06 — Three questions
+// 06. Three questions
 #styled(
   (
     vision: surface(inset: 48pt, align: left + horizon),
@@ -100,7 +100,7 @@
   ],
 )
 
-// 07 — Section
+// 07. Section
 #styled(
   (about: surface(fill: red, inset: 48pt, align: left + horizon)),
   slide(grid: c("about"))[
@@ -108,7 +108,7 @@
   ],
 )
 
-// 08 — Our history
+// 08. Our history
 #styled(
   (
     history-images: surface(inset: (top: 48pt, left: 48pt, bottom: 42pt)),
@@ -132,7 +132,7 @@
   ],
 )
 
-// 09 — Mission and vision
+// 09. Mission and vision
 #styled(
   (
     mission: surface(inset: 45pt, align: left + horizon),
@@ -152,7 +152,7 @@
   ],
 )
 
-// 10 — Team
+// 10. Team
 #styled(
   (
     team-title: surface(inset: 48pt, align: left + horizon),
@@ -181,7 +181,7 @@
   ],
 )
 
-// 11 — Section
+// 11. Section
 #styled(
   (projects: surface(fill: red, inset: 48pt, align: left + horizon)),
   slide(grid: c("projects"))[
@@ -189,7 +189,7 @@
   ],
 )
 
-// 12 — Products
+// 12. Products
 #styled(
   (
     products-title: surface(inset: 48pt, align: left + horizon),
@@ -213,7 +213,7 @@
   ],
 )
 
-// 13 — Project one
+// 13. Project one
 #styled(
   (
     project-one-title: surface(inset: 48pt, align: left + horizon),
@@ -239,7 +239,7 @@
   ],
 )
 
-// 14 — Project two
+// 14. Project two
 #styled(
   (
     project-two-photo: surface(inset: (top: 48pt, left: 48pt, bottom: 42pt)),
@@ -257,7 +257,7 @@
   ],
 )
 
-// 15 — Image mosaic
+// 15. Image mosaic
 #styled(
   (mosaic: surface(inset: (top: 48pt, left: 48pt, right: 48pt, bottom: 42pt))),
   slide(grid: c("mosaic"))[
@@ -276,7 +276,7 @@
   ],
 )
 
-// 16 — Market research statistics
+// 16. Market research statistics
 #styled(
   (
     research-copy: surface(inset: 48pt, align: left + horizon),
@@ -307,7 +307,7 @@
   ],
 )
 
-// 17 — Line chart
+// 17. Line chart
 #styled(
   (chart: surface(inset: (top: 42pt, left: 48pt, right: 48pt, bottom: 34pt))),
   slide(grid: c("chart"))[
@@ -319,7 +319,7 @@
   ],
 )
 
-// 18 — Quote
+// 18. Quote
 #styled(
   (quote: surface(align: center + horizon)),
   slide(grid: c("quote"))[
@@ -328,12 +328,12 @@
       #v(-8pt)
       #title([Write an original statement or\ inspiring quote.], size: 1.86em)
       #v(9pt)
-      #body-text([— Include a credit, citation, or supporting message], size: 0.85em)
+      #body-text([Include a credit, citation, or supporting message], size: 0.85em)
     ]
   ],
 )
 
-// 19 — Contact
+// 19. Contact
 #styled(
   (contact: surface(inset: 48pt, align: left + horizon)),
   slide(grid: c("contact"))[

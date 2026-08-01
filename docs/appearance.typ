@@ -13,8 +13,8 @@
 
 Cells carry no appearance of their own. Every rendered cell is a single block
 labeled `<mosaic-cell-ID>`, and you style it with ordinary Typst `set` and
-`show` rules. `m.setup` establishes the baseline — font, colors, and the
-canonical cell vocabulary — and every rule you add layers on top. There is no
+`show` rules. `m.setup` establishes the baseline (font, colors, and the
+canonical cell vocabulary), and every rule you add layers on top. There is no
 styling dictionary to learn.
 
 = Styling cells
@@ -113,7 +113,7 @@ including `fill`, `tracking`, and `style`:
 
 A `heading` is semantic: it feeds the outline, PDF bookmarks, and
 `m.current-heading`, and drives automatic section slides. For large type that
-should *not* appear in navigation — a cover word, a pull quote, a number — use
+should *not* appear in navigation (a cover word, a pull quote, a number), use
 `text` directly, or exclude the heading:
 
 ```typ
@@ -127,7 +127,7 @@ by default; override where a slide needs it:
 
 ```typ
 #set par(leading: 0.8em)
-#set list(marker: [—])
+#set list(marker: [→])
 #show figure.caption: set text(size: 0.8em, style: "italic")
 ```
 
@@ -159,8 +159,8 @@ neutral foundations. Six presentation schemes give distinct directions:
 `"conference"` (crisp, institutional), and `"spotlight"` (dark auditorium).
 Exact role values are listed in the #link("api/color.html")[Color API].
 
-Each preview below uses the same slide — a titled body beside a card, over an
-inverted footer — so the repeated structure exposes every role at once.
+Each preview below uses the same slide (a titled body beside a card, over an
+inverted footer), so the repeated structure exposes every role at once.
 
 #thumbnail-gallery-items(
   calepin.elements.gallery,
@@ -251,7 +251,7 @@ expression; click to copy the `m.color.palette(...)` call.
       #for (key, value) in record {
         let color-value = repr(value)
         let color-hex = color-value.slice(5, 12)
-        let description = str(index) + ": " + key + " — " + color-value
+        let description = str(index) + ": " + key + ", " + color-value
         html.elem(
           "span",
           attrs: (
@@ -289,7 +289,7 @@ accessibility properties):
 ```
 
 Palettes are sourced from
-#link("https://jfly.uni-koeln.de/color/")[Okabe–Ito],
+#link("https://jfly.uni-koeln.de/color/")[Okabe-Ito],
 #link("https://sronpersonalpages.nl/~pault/")[Paul Tol],
 #link("https://colorbrewer2.org/")[ColorBrewer], and
 #link("https://carto.com/carto-colors/")[CARTOColors]; provenance and licensing
@@ -301,7 +301,7 @@ are recorded in `THIRD_PARTY_LICENSES.md`. The
 A theme packages a deck's whole look. In Mosaic it is a module, not an object:
 one ordinary Typst file exporting a palette, an `apply` wrapper for `#show`, and
 a few layout factories that return `m.slide(...)`. There is no framework
-machinery, no `self`, and no configuration API to learn — deck-wide colors,
+machinery, no `self`, and no configuration API to learn. Deck-wide colors,
 spacing, and features flow through `m.setup`, and everything else is the `set`
 and `show` rules from the sections above, saved in one place.
 
@@ -324,8 +324,8 @@ function applied with `#show: apply`. And the `default` layout is defined before
 the wrapper because `m.setup` captures it as the `auto-slide` handler; after
 that, plain `== Title` markup renders through the theme with no explicit call.
 
-Three polished themes ship inside the package under `m.themes` —
-`metropolis`, `cream`, and `minimalist` — each a single readable module. Import
+Three polished themes ship inside the package under `m.themes`
+(`metropolis`, `cream`, and `minimalist`), each a single readable module. Import
 Mosaic and pick one:
 
 ```typ
@@ -342,7 +342,7 @@ Each bundled `apply` exposes a few knobs through `.with(...)` (for example
 `#show: theme.apply.with(base-size: 24pt)`). Beyond those, there is no
 configuration API, and that is deliberate: to change anything else, copy the
 theme file from `mosaic/src/themes/` next to your deck, import the copy, and
-edit any line — you own it, with no version coupling. The Grayscale theme in
+edit any line. You own it, with no version coupling. The Grayscale theme in
 `docs/examples/portfolio/` shows the same convention vendored beside its deck.
 See #link("examples.html")[Examples] for complete decks rendered under each
 theme.

@@ -40,11 +40,11 @@ Touying copyright notice and license:
 The example decks in `docs/examples/` are adapted from free presentation
 templates published by SlidesCarnival:
 
-- `docs/examples/cream/` — adapted from the *Cream, Green,
+- `docs/examples/cream/`: adapted from the *Cream, Green,
   and Black Geometric Blocks Clean Minimal Presentation* template.
-- `docs/examples/minimalist/` — adapted from the *Minimalist White
+- `docs/examples/minimalist/`: adapted from the *Minimalist White
   Slides* template.
-- `docs/examples/portfolio/` — adapted from the *Photojournalist
+- `docs/examples/portfolio/`: adapted from the *Photojournalist
   Portfolio* template.
 
 Each deck is a Mosaic/Typst re-creation of the corresponding template's layout;
@@ -108,7 +108,7 @@ templates*:
 The schemes are included with source attribution; the source page does not
 state a separate software license for the published color values.
 
-## Okabe–Ito palette
+## Okabe-Ito palette
 
 The `okabe-ito` color definitions in `mosaic/src/color.typ` reproduce the eight-color
 black variant of the Color Universal Design palette developed by Masataka Okabe

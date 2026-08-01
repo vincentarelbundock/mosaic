@@ -8,7 +8,7 @@
 #import "preamble.typ": *
 #show: theme.apply
 
-// 01 — Cover
+// 01. Cover
 #styled(
   (
     cover: surface(fill: cream, inset: 42pt),
@@ -28,7 +28,7 @@
   ),
 )
 
-// 02 — Agenda
+// 02. Agenda
 #styled(
   (
     agenda: surface(fill: cream, inset: 42pt),
@@ -61,7 +61,7 @@
   ],
 )
 
-// 03 — Introduction section
+// 03. Introduction section
 #styled(
   (
     intro: surface(inset: 70pt, align: left + horizon),
@@ -79,7 +79,7 @@
   ],
 )
 
-// 04 — Welcome
+// 04. Welcome
 #styled(
   (
     welcome-left: surface(inset: 45pt, align: left + horizon),
@@ -103,7 +103,7 @@
   ],
 )
 
-// 05 — Topic
+// 05. Topic
 #styled(
   (
     topic-copy: surface(inset: 42pt, align: top),
@@ -122,7 +122,7 @@
   ],
 )
 
-// 06 — Four topics
+// 06. Four topics
 #styled(
   (four-topics: surface(inset: 34pt)),
   slide(grid: c("four-topics"), foreground: [#frame])[
@@ -141,7 +141,7 @@
   ],
 )
 
-// 07 — About us
+// 07. About us
 #styled(
   (
     about: surface(fill: cream, inset: 25pt, align: center + horizon),
@@ -165,7 +165,7 @@
   ],
 )
 
-// 08 — Topics on cream
+// 08. Topics on cream
 #styled(
   (
     cream-topics: surface(fill: cream, inset: 35pt),
@@ -192,7 +192,7 @@
   ],
 )
 
-// 09 — Topic one
+// 09. Topic one
 #styled(
   (
     topic-one-title: surface(fill: cream, inset: 38pt, align: center + horizon),
@@ -223,7 +223,7 @@
   ],
 )
 
-// 10 — Topic two
+// 10. Topic two
 #styled(
   (
     topic-two-photo: surface(fill: cream),
@@ -239,7 +239,7 @@
   ],
 )
 
-// 12 — Team
+// 12. Team
 #styled(
   (team: surface(fill: cream, inset: 18pt)),
   slide(grid: c("team"))[
@@ -270,7 +270,7 @@
   ],
 )
 
-// 13 — Picture statement
+// 13. Picture statement
 #styled(
   (
     picture-left: surface(fill: none),
@@ -293,7 +293,7 @@
   ],
 )
 
-// 14 — Projects section
+// 14. Projects section
 #styled(
   (
     projects-section: surface(inset: 25pt, align: center + horizon),
@@ -313,7 +313,7 @@
   ],
 )
 
-// 15 — Projects list
+// 15. Projects list
 #styled(
   (
     projects-list: surface(inset: 35pt),
@@ -337,7 +337,7 @@
   ],
 )
 
-// 16 — Market research
+// 16. Market research
 #styled(
   (
     research-photo: surface(),
@@ -364,7 +364,7 @@
   ],
 )
 
-// 17 — Donut statistics
+// 17. Donut statistics
 #styled(
   (
     donuts: surface(inset: 22pt),
@@ -401,7 +401,7 @@
   ],
 )
 
-// 18 — Gallery image
+// 18. Gallery image
 #styled(
   (
     gallery-title: surface(inset: 38pt),
@@ -425,7 +425,7 @@
   ],
 )
 
-// 20 — Contact
+// 20. Contact
 #styled(
   (
     contact-photo: surface(),

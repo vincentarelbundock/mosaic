@@ -279,7 +279,7 @@
 /// Pass `color` as a zero-based integer index or stable color name to return one
 /// color instead of the complete array.
 ///
-/// Available palettes include qualitative systems from Okabe–Ito, Paul Tol,
+/// Available palettes include qualitative systems from Okabe-Ito, Paul Tol,
 /// ColorBrewer, and CARTOColors.
 ///
 /// -> array | color

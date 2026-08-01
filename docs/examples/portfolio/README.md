@@ -1,4 +1,4 @@
-# Photojournalist Portfolio — Mosaic adaptation
+# Photojournalist Portfolio: Mosaic adaptation
 
 A static Mosaic/Typst adaptation of the *Photojournalist Portfolio* presentation
 template published by [SlidesCarnival](https://www.slidescarnival.com/), which

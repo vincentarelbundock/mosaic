@@ -9,21 +9,21 @@ unless explicitly staged for API docs.
 
 Dependencies flow downward through these layers:
 
-1. **Shared values and parsing** — `shared.typ`, `incremental-core.typ`,
+1. **Shared values and parsing**: `shared.typ`, `incremental-core.typ`,
    `color.typ`
-2. **Canonical models** — `grid-model.typ`, `layout-core.typ`,
+2. **Canonical models**: `grid-model.typ`, `layout-core.typ`,
    `deck-state.typ`
-3. **Layout implementation** — `layout-support.typ` and the cohesive
+3. **Layout implementation**: `layout-support.typ` and the cohesive
    `layout-default.typ`, `layout-title.typ`, `layout-section.typ`,
    `layout-image.typ`, and `layout-table.typ` modules
-4. **Commands and rendering** — `deck-commands.typ`, `layout-resolver.typ`,
+4. **Commands and rendering**: `deck-commands.typ`, `layout-resolver.typ`,
    `incremental.typ`, `fit.typ`, `render.typ`, `slide-runtime.typ`
-5. **Document compilation and setup** — `deck-compiler.typ`, `setup.typ`
-6. **Bundled themes** — `themes/metropolis.typ`, `themes/cream.typ`, and
+5. **Document compilation and setup**: `deck-compiler.typ`, `setup.typ`
+6. **Bundled themes**: `themes/metropolis.typ`, `themes/cream.typ`, and
    `themes/minimalist.typ`; each imports lower-layer modules directly (never
    `lib.typ`, which would be circular) and exports the theme convention
    surface (`apply`, layout factories, `colors`, `palette`)
-7. **Public facades** — `grid-api.typ`, `component-api.typ`,
+7. **Public facades**: `grid-api.typ`, `component-api.typ`,
    `layout-api.typ`, `theme-api.typ`, and `mosaic/lib.typ`
 
 A lower layer must not import a higher layer. Internal modules import the owner

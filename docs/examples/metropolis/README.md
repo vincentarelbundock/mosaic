@@ -1,4 +1,4 @@
-# Metropolis — Mosaic adaptation
+# Metropolis: Mosaic adaptation
 
 A technical Mosaic/Typst deck that adapts the visual design of the
 **Metropolis** Beamer theme by Matthias Vogelgesang

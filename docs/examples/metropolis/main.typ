@@ -156,7 +156,7 @@ ggplot(mtcars, aes(hp, mpg, color = factor(am))) +
     - The fitted lines summarize association, not causation.
     #v(14pt)
     #text(size: 0.6em, fill: rgb("#657377"))[
-      Data: `mtcars`, 32 model-year 1973–74 automobiles.
+      Data: `mtcars`, 32 model-year 1973 to 1974 automobiles.
     ]
   ],
 )

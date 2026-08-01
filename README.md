@@ -33,7 +33,7 @@ text fills the header cell and the content that follows fills the body. Mosaic
 uses a zero page margin so cells and planes can reach the slide edges; content
 spacing is each cell's `inset`.
 
-Mosaic has three concepts — structure, content, and appearance.
+Mosaic has three concepts: structure, content, and appearance.
 
 ## Structure
 
@@ -48,8 +48,8 @@ size. Each string is a stable cell ID.
 )
 ```
 
-`m.layouts` provides ready-made grids for familiar structures — `default`,
-`title`, `section`, `image`, and `table` — each resolving to the same grid
+`m.layouts` provides ready-made grids for familiar structures (`default`,
+`title`, `section`, `image`, and `table`), each resolving to the same grid
 model. Pass one to `m.slide(grid: ...)`.
 
 ## Content
@@ -120,8 +120,8 @@ frame. `setup(handout: true)` emits only the final frame of each logical slide.
 
 ## Bundled themes
 
-`m.themes` bundles three polished themes — `metropolis`, `cream`, and
-`minimalist` — each an ordinary Typst module exporting `apply` (the document
+`m.themes` bundles three polished themes (`metropolis`, `cream`, and
+`minimalist`), each an ordinary Typst module exporting `apply` (the document
 wrapper), the layout factories `default`, `title`, and `section`, plus `colors`
 and `palette`:
 

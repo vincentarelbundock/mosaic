@@ -1,4 +1,4 @@
-# Cream, Green, and Black — Mosaic adaptation
+# Cream, Green, and Black: Mosaic adaptation
 
 A static Mosaic/Typst adaptation of the *Cream, Green, and Black Geometric
 Blocks Clean Minimal Presentation* template published by

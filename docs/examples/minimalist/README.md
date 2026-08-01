@@ -1,4 +1,4 @@
-# Minimalist White — Mosaic adaptation
+# Minimalist White: Mosaic adaptation
 
 A static Mosaic/Typst adaptation of the *Minimalist White Slides* template
 published by [SlidesCarnival](https://www.slidescarnival.com/), which

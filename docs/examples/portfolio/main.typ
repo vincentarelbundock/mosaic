@@ -10,7 +10,7 @@
 #import "preamble.typ": *
 #show: apply
 
-// 01 — Cover
+// 01. Cover
 #styled((cover: surface()), m.slide(
   grid: cell("cover", content: []),
   background: photo("image4.png"),
@@ -22,7 +22,7 @@
   ],
 ))
 
-// 02 — Contents
+// 02. Contents
 #styled(
   (
     contents-margin: surface(fill: white),
@@ -56,7 +56,7 @@
   ),
 )
 
-// 03 — Hello
+// 03. Hello
 #styled(
   (
     hello-copy: surface(fill: white, inset: 28pt, align: center + horizon),
@@ -79,7 +79,7 @@
   ],
 )
 
-// 04 — About us
+// 04. About us
 #styled(
   (
     about-photo: surface(),
@@ -107,7 +107,7 @@
   ],
 )
 
-// 05 — Paired portraits
+// 05. Paired portraits
 #styled(
   (
     pier: surface(fill: white, inset: 25pt),
@@ -125,7 +125,7 @@
   ],
 )
 
-// 06 — Mission & vision
+// 06. Mission & vision
 #styled(
   (
     mission-body: surface(fill: white, inset: 28pt),
@@ -157,7 +157,7 @@
   ],
 )
 
-// 07 — Full-bleed statement
+// 07. Full-bleed statement
 #styled((statement: surface(fill: white, inset: 10pt)), m.slide(
   grid: cell("statement", content: photo("image19.png")),
   foreground: [
@@ -170,7 +170,7 @@
   ],
 ))
 
-// 08 — Best shots
+// 08. Best shots
 #styled(
   (
     best-intro: surface(fill: white, inset: 28pt),
@@ -199,7 +199,7 @@
   ],
 )
 
-// 09 — Four-image gallery
+// 09. Four-image gallery
 #styled((gallery: surface(fill: white, inset: 28pt)), m.slide(
   grid: cell("gallery"),
 )[
@@ -215,7 +215,7 @@
   )
 ])
 
-// 10 — Numbered projects
+// 10. Numbered projects
 #styled(
   (numbered: surface(
     fill: ink,
@@ -236,7 +236,7 @@
   ],
 )
 
-// 11 — Big number
+// 11. Big number
 #styled((metric: surface()), m.slide(
   grid: cell("metric", content: []),
   background: photo("image6.png"),
@@ -254,7 +254,7 @@
   ],
 ))
 
-// 12 — Chart
+// 12. Chart
 #styled(
   (
     chart-copy: surface(fill: ink, inset: 27pt),
@@ -273,7 +273,7 @@
   ],
 )
 
-// 13 — Exhibitions
+// 13. Exhibitions
 #styled(
   (
     exhibitions-title: surface(
@@ -327,7 +327,7 @@
   ],
 )
 
-// 14 — Closing
+// 14. Closing
 #styled(
   (
     thanks: surface(fill: ink, inset: 32pt),

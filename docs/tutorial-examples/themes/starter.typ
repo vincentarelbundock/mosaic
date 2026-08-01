@@ -4,19 +4,19 @@
 // `setup` and paints the structural cells with native rules.
 #import "@local/mosaic:0.0.1" as m
 
-// 1 — The palette: plain values, no registry.
+// 1. The palette: plain values, no registry.
 #let navy = rgb("#1f2a44")
 #let gold = rgb("#d9a441")
 #let mist = rgb("#f4f1ea")
 
-// 2 — The ordinary content slide. Registered as `auto-slide` below, so
+// 2. The ordinary content slide. Registered as `auto-slide` below, so
 // plain `== Title` markup renders through it.
 #let default(title, body) = m.slide(
   grid: m.layouts.default(variant: "header-body"),
   cells: (header: title, body: body),
 )
 
-// 3 — Layout factories for the cover and the section dividers. The grids are
+// 3. Layout factories for the cover and the section dividers. The grids are
 // purely structural; their look lives in `apply` as label rules.
 #let title(title, subtitle: none) = m.slide(
   grid: m.grid.cell("cover", inset: 3em),
@@ -33,10 +33,10 @@
   #text(size: 1.8em, weight: "bold", fill: navy)[#title]
 ]
 
-// 4 — The factories grouped for programmatic use (theme switching, tests).
+// 4. The factories grouped for programmatic use (theme switching, tests).
 #let layouts = (default: default, title: title, section: section)
 
-// 5 — The wrapper: deck-wide settings flow through `setup`; the cell looks
+// 5. The wrapper: deck-wide settings flow through `setup`; the cell looks
 // are native `show label(...)` rules, and everything else is an ordinary
 // `set` or `show` rule.
 #let apply(body) = {

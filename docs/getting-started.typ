@@ -40,8 +40,8 @@ Each frame is one page in the PDF. A *scheme* assigns colors to semantic
 Mosaic can turn ordinary Typst headings into slides. This keeps a first deck
 short, readable, and easy to edit.
 
-After `#show: m.setup`, every `==` starts a new slide — the heading becomes the
-title and the text that follows becomes its content — and every single `=`
+After `#show: m.setup`, every `==` starts a new slide (the heading becomes the
+title and the text that follows becomes its content), and every single `=`
 starts an unnumbered section divider, whose title is larger and centered by
 default. Together they give a lightweight hierarchy with no special slide
 commands.

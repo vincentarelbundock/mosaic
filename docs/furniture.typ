@@ -7,7 +7,7 @@
 #title()
 
 Grids and cells occupy the main slide body. Two full-slide *planes* sit around
-it — a background painted behind and a foreground painted over — and neither
+it (a background painted behind and a foreground painted over), and neither
 changes the grid's row or column measurements. Together with headings, they
 carry a deck's furniture: page numbers, logos, decoration, and navigation. Set a
 recurring plane with `m.deck`, or pass one to a specific `m.slide`; a slide

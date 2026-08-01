@@ -23,8 +23,8 @@
 #title()
 
 A Mosaic slide is a grid of cells. Build a grid directly with `m.grid` when a
-slide needs a custom shape, or reach for a *layout* — a named, ready-made grid
-for a familiar structure — and pass it to `m.slide(grid: ...)`. Either way you
+slide needs a custom shape, or reach for a *layout* (a named, ready-made grid
+for a familiar structure) and pass it to `m.slide(grid: ...)`. Either way you
 fill cells with content and style them separately with native Typst rules; see
 #link("appearance.html")[Appearance] for the styling model.
 
@@ -201,7 +201,7 @@ in source order: left to right within `m.grid.h`, top to bottom within
 Positional blocks are terse, but a reader must trace the traversal order to
 know which block lands where, and rearranging the grid moves content even when
 the IDs stay put. Whenever a slide fills more than one cell, prefer the `cells`
-dictionary — it assigns content by ID, so the mapping is explicit and
+dictionary. It assigns content by ID, so the mapping is explicit and
 order-independent:
 
 ```typ
@@ -231,7 +231,7 @@ one-cell slide; reach for `cells:` as soon as a slide fills more than one. It is
 the form Mosaic's own layout factories and automatic `==` slides use
 internally.
 
-A cell needs fixed content only when the grid, not the slide, owns it — an
+A cell needs fixed content only when the grid, not the slide, owns it, such as an
 `image` or a logo. Give such a cell `content:` in the grid; it then consumes no
 slide body:
 
@@ -290,7 +290,7 @@ with `cells: (header: …, body: …, footer: …)`, or positionally in that ord
 
 The `header`, `body` (or `body-1`, `body-2`, …), and `footer` cells are styled
 with native rules. Fill a cell, invert it against the scheme, or place an image
-behind its content — all through its label:
+behind its content, all through its label:
 
 #verbatim-example("layouts/default-inverted.typ")
 #thumbnail-gallery(

@@ -16,6 +16,6 @@
   #m.on("3-")[*confirmed*].
 
   #m.on("2-4", before: "hidden", after: "removed")[
-    This sentence occupies space on steps 2–4.
+    This sentence occupies space on steps 2 to 4.
   ]
 ]

@@ -102,7 +102,7 @@ work inside cells.
 
 = Components
 
-`m.components` provides reusable Typst content to place inside cells — or inside
+`m.components` provides reusable Typst content to place inside cells, or inside
 any native Typst composition. Each function has an independent example and
 gallery.
 
