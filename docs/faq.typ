@@ -163,8 +163,8 @@ the function or write a small summary slide containing that state.
 == How does Mosaic compare to Touying?
 
 #link("https://github.com/touying-typ/touying")[Touying] is the most
-established presentation framework for Typst, and it is an excellent project.
-It follows the Beamer tradition: a presentation is built around a theme, and
+established presentation framework for Typst. It follows the Beamer tradition:
+a presentation is built around a theme, and
 the theme is an object that bundles colors, headers, footers, a title slide,
 and special slide constructors. Users pick a theme such as `metropolis` or
 `university`, then adjust it through a unified configuration API
@@ -177,28 +177,23 @@ Mosaic starts from a different premise: the fundamental unit of a slide is not
 a theme but a layout. Every Mosaic slide is a grid, a small tree of horizontal
 and vertical splits whose cells hold content. Semantic layouts such as
 `layouts.title` or `layouts.image` are thin layers that resolve to the same
-canonical grid trees, so there is one layout model to learn and it composes all
-the way down. Touying instead delegates layout to each theme; a theme defines
+canonical grid trees, so there is one layout model, and it nests to any depth.
+Touying instead delegates layout to each theme; a theme defines
 how its header, footer, and body fit together, and stepping outside that
 structure means writing or modifying a theme. In Mosaic, an unusual layout is
 just another grid, written inline with the same primitives as every other
 slide.
 
-The second difference, and Mosaic's real distinguishing feature, is how you
-style a deck. Touying routes styling through its own object model: a `self`
-dictionary threads through themes and callbacks, appearance is configured with a
-framework API (`config-colors`, `config-methods`), and dynamic content can
-require callback-style functions with a manually specified `repeat` count. This
-buys Touying considerable power, but it also means learning a framework within
-the language. Mosaic instead makes every element it draws a native, targetable
-Typst layer: each grid cell and the two visual planes are ordinary Typst layers,
-and every cell carries a stable `<mosaic-cell-ID>` label. You restyle any of it
-with a native `show` or `set` rule. A Mosaic theme is a plain Typst module, not
-an object; there is no `self`, no configuration API, and no styling functions.
-Deck-wide settings flow through a single `setup` function, reusable
-configurations are ordinary `.with(...)` values, and typography, headings, and
-captions are native `set` and `show` rules. If you already know how to style a
-Typst document, you already know how to style a Mosaic deck.
+The second difference is how styling works. Touying routes styling through its
+own object model: a `self` dictionary threads through themes and callbacks,
+appearance is configured with a framework API (`config-colors`,
+`config-methods`), and dynamic content can require callback-style functions with
+a manually specified `repeat` count. Mosaic labels every grid cell
+(`<mosaic-cell-ID>`) and treats the background and foreground as native content
+planes, so styling is ordinary Typst `show` and `set` rules on those labels and
+planes. A Mosaic theme is a Typst module rather than an object: there is no
+`self` and no configuration API. Deck-wide settings flow through a single
+`setup` function, and reusable configurations are ordinary `.with(...)` values.
 
 The two projects also treat incremental content differently. Touying offers
 Beamer-style `#pause` and `#meanwhile` markers plus `only`, `uncover`, and
@@ -209,13 +204,11 @@ automatically, visibility is data rather than position, and the same
 constructors work anywhere in a grid, including in backgrounds and
 foregrounds.
 
-Which should you choose? If you want a broad theme gallery and Beamer-like
-conventions, Touying is a mature and capable choice. Mosaic is for
-presentations where layout carries the message: full-bleed images,
-edge-to-edge color fields, and slide designs that vary from one slide to the
-next. Its zero-margin pages, cell insets, background and foreground planes,
-and uniform grid model make that kind of design direct rather than an act of
-theme surgery, while everything that is not layout remains plain Typst. Mosaic
-still offers ready-made looks: a few polished themes ship inside the package
-under `m.themes`, and each is a single readable module you can copy and own;
-see #link("appearance.html#themes")[Appearance].
+If you want a broad theme gallery and Beamer-like conventions, Touying is a
+mature choice. Mosaic suits presentations where the layout varies from slide to
+slide: full-bleed images, edge-to-edge color fields, and per-slide arrangements.
+Its zero-margin pages, cell insets, and background and foreground planes make
+those directly, without modifying a theme, and everything that is not layout
+remains plain Typst. Mosaic also ships a few themes under `m.themes`, each a
+single module you can copy and edit; see
+#link("appearance.html#themes")[Appearance].

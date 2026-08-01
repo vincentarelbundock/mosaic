@@ -35,13 +35,11 @@ A slide can reveal its content in *steps*. Each step renders as one *frame*.
 Each frame is one page in the PDF. A *scheme* assigns colors to semantic
 *roles*, such as `accent` and `text`, across the whole deck.
 
-Every one of these elements is a native Typst layer. The background and
-foreground are content you supply directly; each grid cell is a block Mosaic
-labels `<mosaic-cell-ID>`. You style all of them the same way, with the
-ordinary `show` and `set` rules you already use in Typst. This is Mosaic's
-central idea: it arranges the layers and labels the cells, then gets out of the
-way. There is no theme object, no `self`, and no dozen styling functions to
-learn. See #link("appearance.html")[Appearance].
+Each of these elements is a native Typst layer. The background and foreground
+are content you supply directly; each grid cell is a block Mosaic labels
+`<mosaic-cell-ID>`. You style them with ordinary `show` and `set` rules, the
+same way you style any Typst document. Styling does not go through a theme
+object or a separate API. See #link("appearance.html")[Appearance].
 
 = First slideshow
 

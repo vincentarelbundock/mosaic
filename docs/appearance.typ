@@ -11,15 +11,12 @@
 
 #title()
 
-Mosaic has one styling idea, and it is the thing that sets Mosaic apart: it
-labels every element it draws, and you style all of it with native Typst rules.
-A slide is a stack of native layers, a background plane, a grid of cells, and a
-foreground plane. The planes are content you supply directly; each cell is a
-single block labeled `<mosaic-cell-ID>`. Style any of it with the ordinary
-`set` and `show` rules you already know. `m.setup` establishes the baseline
-(font, colors, and the canonical cell vocabulary), and every rule you add layers
-on top. There is no styling dictionary, no theme object, and no dozen styling
-functions to learn.
+A slide is a stack of native Typst layers: a background plane, a grid of cells,
+and a foreground plane. The planes are content you supply directly; each cell is
+a single block labeled `<mosaic-cell-ID>`. You style all of it with ordinary
+`set` and `show` rules. `m.setup` establishes the baseline (font, colors, and
+the canonical cell vocabulary), and every rule you add layers on top. Styling
+does not go through a dictionary, a theme object, or a separate API.
 
 = Styling cells
 
@@ -303,11 +300,11 @@ are recorded in `THIRD_PARTY_LICENSES.md`. The
 = Themes
 
 A theme packages a deck's whole look. In Mosaic it is a module, not an object:
-one ordinary Typst file exporting a palette, an `apply` wrapper for `#show`, and
-a few layout factories that return `m.slide(...)`. There is no framework
-machinery, no `self`, and no configuration API to learn. Deck-wide colors,
-spacing, and features flow through `m.setup`, and everything else is the `set`
-and `show` rules from the sections above, saved in one place.
+one Typst file exporting a palette, an `apply` wrapper for `#show`, and a few
+layout factories that return `m.slide(...)`. It has no `self` and no
+configuration API. Deck-wide colors, spacing, and features flow through
+`m.setup`, and everything else is the `set` and `show` rules from the sections
+above, saved in one place.
 
 The file below is a complete theme followed by the deck that uses it: a palette
 of `#let` bindings, three factories, and an `apply` wrapper that hands settings
@@ -328,8 +325,8 @@ function applied with `#show: apply`. And the `default` layout is defined before
 the wrapper because `m.setup` captures it as the `auto-slide` handler; after
 that, plain `== Title` markup renders through the theme with no explicit call.
 
-Three polished themes ship inside the package under `m.themes`
-(`metropolis`, `cream`, and `minimalist`), each a single readable module. Import
+Three themes ship inside the package under `m.themes`
+(`metropolis`, `cream`, and `minimalist`), each a single module. Import
 Mosaic and pick one:
 
 ```typ

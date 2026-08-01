@@ -12,7 +12,7 @@
     #html.elem("section", attrs: (class: "mosaic-hero"))[
       #html.elem("div")[
         #html.elem("h1")[
-          Create beautiful
+          Make
           #html.elem("br")
           slides with
           #html.elem("span", attrs: (
@@ -26,10 +26,9 @@
           ]
         ]
         #html.elem("p")[
-          Write a deck as an ordinary Typst document. Mosaic labels every
-          element it draws, so you style all of it with the native Typst
-          show and set rules you already know. No framework, no theme
-          objects, no styling functions.
+          Write a deck as an ordinary Typst document. Each slide is a grid of
+          cells between a background and foreground plane. Mosaic labels the
+          cells; you style them with native Typst show and set rules.
         ]
       ]
       #html.elem("img", attrs: (
@@ -58,25 +57,25 @@
     #html.elem("section", attrs: (class: "mosaic-feature-showcase"))[
       #html.elem("div", attrs: (class: "mosaic-feature-cards"))[
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
-          #html.elem("h2")[Beautiful]
+          #html.elem("h2")[Layouts]
           #html.elem("p")[
-            Title, section, image, and table layouts with matching
+            Title, section, image, and table layouts, with matching
             typography and color schemes.
           ]
         ]
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
-          #html.elem("h2")[Flexible]
+          #html.elem("h2")[Grids]
           #html.elem("p")[
             Every slide is a grid: a tree of cells split horizontally or
             vertically, nested as deeply as needed.
           ]
         ]
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
-          #html.elem("h2")[Targetable]
+          #html.elem("h2")[Native styling]
           #html.elem("p")[
-            Cell, background, and foreground are native Typst layers, and
-            every cell carries a stable label. Restyle any of them with an
-            ordinary show or set rule. There is no styling API to learn.
+            Cells, background, and foreground are native Typst layers, and
+            every cell has a stable label. Style them with ordinary show and
+            set rules, not a separate API.
           ]
         ]
       ]
@@ -104,11 +103,10 @@
     ]
   ],
   fallback: () => [
-    = Beautiful slides with Typst
+    = Slides with Typst
 
-    Write a deck as an ordinary Typst document. Mosaic labels every element
-    it draws, so you style all of it with the native Typst show and set
-    rules you already know. No framework, no theme objects, no styling
-    functions.
+    Write a deck as an ordinary Typst document. Each slide is a grid of cells
+    between a background and foreground plane. Mosaic labels the cells; you
+    style them with native Typst show and set rules.
   ],
 )

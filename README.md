@@ -1,16 +1,12 @@
 # Mosaic
 
-Mosaic 0.0.1 is a minimal slide package for Typst. A slide is a grid of cells;
-Mosaic owns the structure and content routing, and appearance stays native
-Typst.
-
-Its distinguishing idea is native targeting: every element Mosaic draws is a
-native Typst layer, and every grid cell carries a stable `<mosaic-cell-ID>`
-label, so you style all of it with the `show` and `set` rules you already know.
-There is no framework object, no `self`, and no styling functions. Mosaic
-manages grids, page boundaries, logical slide numbering, full-slide background
-and foreground planes, and incremental visibility. Page setup, typography,
-headings, figures, colors, and document semantics remain ordinary Typst rules.
+Mosaic 0.0.1 is a slide package for Typst. A slide is a grid of cells between a
+background and foreground plane. Mosaic labels every cell `<mosaic-cell-ID>`, and
+styling is ordinary Typst `show` and `set` rules on those labels; there is no
+separate styling API. Mosaic manages grids, page boundaries, logical slide
+numbering, full-slide background and foreground planes, and incremental
+visibility. Page setup, typography, headings, figures, colors, and document
+semantics remain ordinary Typst rules.
 
 The full guide and API reference live in `docs/` (build with `make website`) and
 the architecture is documented in [`ARCHITECTURE.md`](ARCHITECTURE.md). This
@@ -125,7 +121,7 @@ frame. `setup(handout: true)` emits only the final frame of each logical slide.
 
 ## Bundled themes
 
-`m.themes` bundles three polished themes (`metropolis`, `cream`, and
+`m.themes` bundles three themes (`metropolis`, `cream`, and
 `minimalist`), each an ordinary Typst module exporting `apply` (the document
 wrapper), the layout factories `default`, `title`, and `section`, plus `colors`
 and `palette`:
