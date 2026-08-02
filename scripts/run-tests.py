@@ -74,6 +74,24 @@ def pdf_text(stem: str) -> Path:
     return target
 
 
+def pdf_page_text(stem: str, page: int) -> Path:
+    source = TMP / f"mosaic-{stem}.pdf"
+    target = TMP / f"mosaic-{stem}-page-{page}.txt"
+    command([
+        "pdftotext", "-layout", "-f", str(page), "-l", str(page),
+        str(source), str(target),
+    ])
+    return target
+
+
+def pdf_info(stem: str) -> Path:
+    source = TMP / f"mosaic-{stem}.pdf"
+    target = TMP / f"mosaic-{stem}-pdfinfo.txt"
+    result = command(["pdfinfo", str(source)], capture=True)
+    target.write_text(result.stdout, encoding="utf-8")
+    return target
+
+
 def run_core(typst: str, sources: list[str]) -> None:
     compile_group(typst, sources)
 
@@ -121,6 +139,100 @@ def run_core(typst: str, sources: list[str]) -> None:
     handout_off = pdf_text("handout-off")
     for expected in ("ORDINARY FIRST", "ORDINARY FINAL"):
         require_contains(handout_off, expected)
+
+    speaker_slides = pdf_text("speaker-notes-output")
+    for forbidden in ("GENERAL OUTPUT NOTE", "FIRST FRAME NOTE", "SECOND FRAME NOTE"):
+        require_contains(speaker_slides, forbidden, absent=True)
+    for expected in ("FIRST VISUAL", "SECOND VISUAL"):
+        require_contains(speaker_slides, expected)
+
+    reducer_text = pdf_text("speaker-notes-reducer")
+    require_contains(reducer_text, "VISIBLE REDUCER FRAME")
+    require_contains(reducer_text, "REDUCER SLOT", absent=True)
+    require_contains(reducer_text, "REDUCER SECRET NOTE", absent=True)
+    require_contains(reducer_text, "NESTED REDUCER SECRET NOTE", absent=True)
+    metadata_show_text = pdf_text("speaker-notes-metadata-show")
+    require_contains(metadata_show_text, "VISIBLE CONTENT")
+    require_contains(metadata_show_text, "NESTED SECRET NOTE", absent=True)
+    require_contains(metadata_show_text, "speaker-notes", absent=True)
+
+    themed_text = pdf_text("speaker-notes-theme")
+    require_contains(themed_text, "Themed speaker slide")
+    require_contains(themed_text, "THEMED SPEAKER NOTE")
+    themed_info = pdf_info("speaker-notes-theme")
+    require_contains(themed_info, "Pages:           1")
+    require_contains(themed_info, "595.276 x 841.89 pts (A4)")
+    typst_compile(
+        typst,
+        "speaker-notes-theme.typ",
+        TMP / "mosaic-speaker-notes-theme-{0p}.svg",
+        "--format",
+        "svg",
+    )
+    themed_svg = TMP / "mosaic-speaker-notes-theme-1.svg"
+    require_contains(themed_svg, "#23373b")
+    require_contains(themed_svg, "#fafafa")
+
+    for output in ("speaker", "notes"):
+        typst_compile(
+            typst,
+            "speaker-notes-output.typ",
+            TMP / f"mosaic-{output}-output.pdf",
+            "--input",
+            f"output={output}",
+        )
+    speaker_first = pdf_page_text("speaker-output", 1)
+    speaker_second = pdf_page_text("speaker-output", 2)
+    for expected in ("FIRST VISUAL", "GENERAL OUTPUT NOTE", "FIRST FRAME NOTE"):
+        require_contains(speaker_first, expected)
+    for forbidden in ("SECOND VISUAL", "SECOND FRAME NOTE"):
+        require_contains(speaker_first, forbidden, absent=True)
+    for expected in (
+        "FIRST VISUAL", "SECOND VISUAL", "GENERAL OUTPUT NOTE",
+        "FIRST FRAME NOTE", "SECOND FRAME NOTE",
+    ):
+        require_contains(speaker_second, expected)
+
+    notes_first = pdf_page_text("notes-output", 1)
+    notes_second = pdf_page_text("notes-output", 2)
+    for stem in ("speaker-output", "notes-output"):
+        info = pdf_info(stem)
+        require_contains(info, "Pages:           2")
+        require_contains(info, "595.276 x 841.89 pts (A4)")
+    for page in (notes_first, notes_second):
+        for forbidden in ("FIRST VISUAL", "SECOND VISUAL"):
+            require_contains(page, forbidden, absent=True)
+    for expected in ("GENERAL OUTPUT NOTE", "FIRST FRAME NOTE"):
+        require_contains(notes_first, expected)
+    require_contains(notes_first, "SECOND FRAME NOTE", absent=True)
+    for expected in ("GENERAL OUTPUT NOTE", "FIRST FRAME NOTE", "SECOND FRAME NOTE"):
+        require_contains(notes_second, expected)
+
+    for output in ("speaker", "notes"):
+        typst_compile(
+            typst,
+            "speaker-notes-handout.typ",
+            TMP / f"mosaic-{output}-handout.pdf",
+            "--input",
+            f"output={output}",
+        )
+    speaker_handout = pdf_text("speaker-handout")
+    for expected in (
+        "FINAL HANDOUT FRAME", "GENERAL HANDOUT NOTE",
+        "FIRST HANDOUT NOTE", "FINAL HANDOUT NOTE", "Frame 2 of 2",
+    ):
+        require_contains(speaker_handout, expected)
+    notes_handout = pdf_text("notes-handout")
+    for stem in ("speaker-handout", "notes-handout"):
+        info = pdf_info(stem)
+        require_contains(info, "Pages:           1")
+        require_contains(info, "595.276 x 841.89 pts (A4)")
+    require_contains(notes_handout, "FINAL HANDOUT FRAME", absent=True)
+    for expected in (
+        "GENERAL HANDOUT NOTE", "FIRST HANDOUT NOTE",
+        "FINAL HANDOUT NOTE", "Frame 2 of 2",
+    ):
+        require_contains(notes_handout, expected)
 
     query = [typst, "eval", "--root", ".", "query(<mosaic-overflow-warning>).len()", "--in"]
     warning_count = command(query + ["tests/overflow-warning.typ"], capture=True).stdout.strip()

@@ -14,9 +14,9 @@ IMPORT = re.compile(
 )
 LET = re.compile(r"(?m)^#let\s+([A-Za-z_][A-Za-z0-9_-]*)\b")
 
-NEUTRAL_API = {"setup", "slide", "surface", "grid", "layouts", "steps", "components", "themes"}
-SHARED_API = {"slide", "surface", "grid", "layouts", "steps", "components"}
-THEMED_API = {"setup", "slide", "surface", "grid", "layouts", "steps", "components"}
+NEUTRAL_API = {"setup", "slide", "note", "surface", "grid", "layouts", "steps", "components", "themes"}
+SHARED_API = {"slide", "note", "surface", "grid", "layouts", "steps", "components"}
+THEMED_API = {"setup", "slide", "note", "surface", "grid", "layouts", "steps", "components"}
 THEMED_LAYOUTS = {"default", "title", "section", "author"}
 
 EXPECTED = {

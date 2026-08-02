@@ -16,7 +16,8 @@ Dependencies flow downward through these layers:
    `deck-state.typ` own validated records and state.
 3. **Focused transformation support**: `incremental-command.typ`,
    `incremental-heading.typ`, `incremental-analysis.typ`,
-   `incremental-transform.typ`, `layout-support.typ`, and
+   `incremental-transform.typ`, `note-command.typ`, `note-analysis.typ`,
+   `layout-support.typ`, and
    `layout-image-support.typ` own one transformation concern each.
 4. **Vertical implementations**: `layout-default.typ`, `layout-title.typ`,
    `layout-section.typ`, `components.typ`, `fit.typ`, and `render.typ` implement
@@ -44,13 +45,13 @@ namespace rather than one implementation symbol.
 The neutral facade exports exactly:
 
 ```text
-setup, slide, grid, layouts, steps, components, themes
+setup, slide, note, surface, grid, layouts, steps, components, themes
 ```
 
 A themed facade exports exactly:
 
 ```text
-setup, slide, grid, layouts, steps, components
+setup, slide, note, surface, grid, layouts, steps, components
 ```
 
 The supported public components are `frame`, `callout`, `label`, `quote`,
@@ -149,8 +150,9 @@ component constructors, not style dictionaries or state helpers.
 - `deck-state.typ` owns background/foreground planes and logical slide/section
   state.
 - `slide-command.typ` constructs and validates deferred slide commands.
-- `slide-runtime.typ` owns handout mode, frozen counters/states, physical-frame
-  planning, global furniture, and logical-slide rendering.
+- `slide-runtime.typ` owns output and handout modes, frozen counters/states,
+  physical-frame planning, global furniture, queryable frame-note metadata, and
+  logical-slide rendering.
 - `deck-compiler.typ` groups headings and body content into automatic or explicit
   slide commands while preserving surrounding native Typst rules.
 - `setup.typ` owns document defaults and compiler configuration.
@@ -168,11 +170,20 @@ module:
 - `incremental-analysis.typ`: maximum-step discovery;
 - `incremental-transform.typ`: command reduction and content reconstruction for
   one step;
+- `note-command.typ`: canonical non-rendering `mosaic.note` records;
+- `note-analysis.typ`: frame-aware note extraction through the same temporal
+  command model;
 - `steps-api.typ`: the curated public `mosaic.steps` namespace.
 
 `slide-runtime.typ` selects frames and invokes analysis/transformation.
 `render.typ` consumes an already-resolved grid at one step; it does not own
-handout policy or public commands.
+handout/output policy or public commands. Notes are collected once per physical
+frame, stripped from visual content, and emitted both as printable note content
+and `<mosaic-speaker-notes>` metadata. Note-only timing does not contribute to
+maximum-step discovery. A private absolute logical-slide counter identifies every
+emitted slide, including unnumbered title and section slides, independently of
+the presentation-number counter used by furniture. Printable outputs enforce a
+single bounded A4 page per emitted frame and fail explicitly when notes overflow.
 
 ## Bundled themes
 

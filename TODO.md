@@ -16,14 +16,9 @@ grid and visual-plane configuration.
 
 - [ ] Add concise sequential and parallel advancement primitives comparable
   to `pause`, `meanwhile`, `jump`, or independent reveal strands.
-- [ ] Add progressive raw-code display with configurable reveal points and
-  styling for past, current, and future lines.
-
-## Handouts
-
-- [ ] Allow a slide to retain the first, last, selected, ranged, or
-  waypoint-selected frames in handout mode.
-- [ ] Support handout-only slides and inline handout-only content.
+- [ ] Add progressive raw-code display with optional line numbers,
+  configurable reveal and highlight ranges, and styling for past, current,
+  and future lines.
 
 ## Speaker notes and presenting
 
@@ -39,7 +34,7 @@ grid and visual-plane configuration.
 - [ ] Make the heading depth that creates slides configurable and support
   subsection/subsubsection structure plus optional automatic divider slides.
 - [ ] Add structural controls for hidden, skipped-divider, unnumbered,
-  unoutlined, unbookmarked, and handout-only headings/slides.
+  unoutlined, and unbookmarked headings/slides.
 - [ ] Add appendix mode with an appendix-aware main-slide count and
   denominator.
 - [ ] Support short heading/title variants for navigation furniture without

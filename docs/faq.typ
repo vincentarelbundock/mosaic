@@ -145,6 +145,34 @@ Define a slide as an ordinary Typst function and call it wherever it should appe
 Each call creates another logical slide with the same incremental sequence. To
 show only one state, parameterize the function or write a summary slide.
 
+== How do I link to a slide?
+
+Use native Typst labels and links. A label on a heading slide becomes the link
+target directly:
+
+```typ
+== Results <results>
+
+See #link(<details>)[the details slide].
+```
+
+For an explicit slide, put labeled, zero-output metadata at the beginning of
+its content:
+
+```typ
+#m.slide[
+  #metadata(none) <details>
+  == Details
+
+  Return to #link(<results>)[the results slide].
+]
+```
+
+Typst writes these as internal PDF destinations, so Mosaic does not need a
+separate slide-ID or deep-link API. Use your own unique labels for navigation;
+the repeated `<mosaic-cell-ID>` labels identify cells for styling and are not
+slide IDs.
+
 == How do I inspect overflowing cells?
 
 Mosaic emits non-fatal metadata when a rendered cell is taller than its
@@ -163,8 +191,85 @@ observation with `features: (overflow: "off")`; see the
 == How does Mosaic compare to Touying?
 
 #link("https://github.com/touying-typ/touying")[Touying] is the most
-established Typst presentation framework. The projects emphasize different
-workflows:
+established Typst presentation framework. It works like LaTeX Beamer: you
+pick a theme, the theme decides what slides look like, and you adjust the
+result through the framework's configuration system. Colors, title and author
+information, and page settings each have their own configuration function,
+and the theme reads those values back when it draws headers, footers, and
+title slides:
+
+```typ
+#show: metropolis-theme.with(
+  aspect-ratio: "16-9",
+  config-colors(primary: rgb("#1a6b8a")),
+  config-info(title: [My talk], author: [Author Name]),
+)
+```
+
+This works well when a theme's options cover what you want. Enter your title
+and author once and every theme knows where to display them, so switching
+themes is often a one-line change. The cost is that each adjustment has its
+own framework mechanism to discover: a different page background means
+learning that `set page` is off limits (the framework resets it) and that
+page changes go through `config-page`, while changing colors partway through
+a deck means learning `touying-set-config`. The load grows most when you want
+a slide the theme did not anticipate. Small tweaks fit through configuration,
+but a genuinely different layout means writing a theme method that receives
+the framework's internal state (called `self`), builds the header and footer
+from it, and merges page settings before handing off. This is condensed from
+Touying's own theme tutorial:
+
+```typ
+#let slide(title: auto, ..args) = touying-slide-wrapper(self => {
+  let header(self) = {
+    show: components.cell.with(fill: self.colors.primary, inset: 1em)
+    utils.call-or-display(self, self.store.title)
+  }
+  self = utils.merge-dicts(self, config-page(header: header))
+  touying-slide(self: self, ..args)
+})
+```
+
+Writing this requires several Touying concepts at once: the `self` state,
+wrapper functions, configuration merging, and the utility helpers. The
+tutorial is upfront about it, saying Touying "opts for functionality over
+simplicity," and suggests that most users instead copy a built-in theme file
+and edit it.
+
+Mosaic also ships layouts and themes, and you can get beautiful, full-featured slides with little effort.  But Mosaic's core is different than Touying's: any slide can be assembled from a grid of named cells and styled with the same `set` and `show` rules you would use in any Typst document. There is less to learn because Mosaic adds almost nothing of its own. After `m.setup`, styling is ordinary Typst; the one new idea is that every cell carries a label you can target with a rule:
+
+```typ
+#show: m.setup
+#set page(fill: rgb("#111827"))
+#set text(fill: white)
+#show label("mosaic-cell-header"): set text(size: 1.4em)
+```
+
+If you know how `set` and `show` rules work in Typst, you already know how to
+style a Mosaic deck, including scoping a rule to a single slide. A one-off
+slide is just a slide with a different grid, and a reusable design is an
+ordinary function with no internal state to receive and nothing to register.
+The cell IDs are arbitrary names you choose; each one becomes a
+`mosaic-cell-ID` label that ordinary rules can target:
+
+```typ
+#let framed(title, body) = m.slide(
+  grid: m.grid.v("banner", "copy"),
+  content: (banner: title, copy: body),
+)
+
+#show label("mosaic-cell-banner"): set text(size: 1.4em, weight: "bold")
+#show label("mosaic-cell-copy"): set align(left + horizon)
+
+#framed([Results])[The body.]
+```
+
+The same function can drive every `==` heading slide through the `auto-slide`
+hook described above, and a Mosaic theme is nothing more than a module that
+exports a `setup` and layout functions like this one; the bundled themes are
+copyable starting points (see #link("appearance.html#themes")[Appearance]).
+
+The differences in brief:
 
 #table(
   columns: (auto, 1fr, 1fr),
@@ -172,11 +277,12 @@ workflows:
   table.header([Concern], [Mosaic], [Touying]),
   [Layout], [Composable grid trees], [Theme-defined structures],
   [Styling], [Native Typst rules], [Framework configuration],
-  [Reveals], [Explicit ranges and reducers], [Beamer-style markers],
-  [Ecosystem], [Small and layout-focused], [Mature themes and integrations],
+  [Custom slides], [Ordinary functions and grids], [Theme methods receiving framework state],
+  [Page control], [Native `set page`], [`config-page`; direct `set page` reserved],
 )
 
-Choose Touying for its broad theme ecosystem and familiar Beamer conventions.
-Choose Mosaic when layouts vary slide by slide and native Typst composition is
-the priority. Mosaic's bundled themes remain copyable modules; see
-#link("appearance.html#themes")[Appearance].
+Both projects ship ready-made themes, so that alone does not decide the
+question. Choose Touying if you want to stay close to Beamer conventions and
+draw on a larger catalog of themes, integrations, and community examples.
+Choose Mosaic if your slides vary a lot from one to the next, or if you would
+rather learn a little more Typst than a separate framework.

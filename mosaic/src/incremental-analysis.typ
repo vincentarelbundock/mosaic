@@ -3,12 +3,22 @@
 #import "incremental-core.typ": range-last
 #import "incremental-command.typ": is-command-on, is-temporal
 #import "incremental-heading.typ": typst-sequence, typst-styled
+#import "note-command.typ": is-note
+
+#let typst-space = [ ].func()
 
 #let max-step(value) = {
+  if is-note(value) {
+    return 0
+  }
   if is-command-on(value) {
+    let nested = max-step(value.body)
+    if nested == 0 {
+      return 0
+    }
     return calc.max(
       range-last(value.range),
-      max-step(value.body),
+      nested,
     )
   }
   if type(value) == array {
@@ -17,15 +27,13 @@
   if type(value) != content {
     return 1
   }
+  if value == [] or value.func() in (typst-space, parbreak) {
+    return 0
+  }
   if is-temporal(value) {
     let timed = value.value
     if timed.kind == "temporal-reducer" {
       return max-step(timed.args)
-    }
-    let own = if timed.kind == "temporal-on" {
-      range-last(timed.range)
-    } else {
-      timed.start + timed.count - 1
     }
     let nested = if timed.kind == "temporal-on" {
       max-step(timed.body)
@@ -33,6 +41,14 @@
       max-step(timed.items)
     } else {
       max-step(timed.bodies)
+    }
+    if nested == 0 {
+      return 0
+    }
+    let own = if timed.kind == "temporal-on" {
+      range-last(timed.range)
+    } else {
+      timed.start + timed.count - 1
     }
     return calc.max(own, nested)
   }

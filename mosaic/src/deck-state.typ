@@ -5,6 +5,7 @@
 #let background-state = state("mosaic:0.0.1:background", none)
 #let foreground-state = state("mosaic:0.0.1:foreground", none)
 #let logical-slide = counter("mosaic:0.0.1:logical-slide")
+#let logical-slide-id = counter("mosaic:0.0.1:logical-slide-id")
 #let logical-section = counter("mosaic:0.0.1:logical-section")
 #let current-numbered = state("mosaic:0.0.1:numbered", true)
 

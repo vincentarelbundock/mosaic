@@ -62,9 +62,11 @@ noncanonical-command-on|invalid command-on record
 noncanonical-layout-record|invalid grid node at root
 noncanonical-slide-command|invalid slide command record
 noncanonical-temporal-record|invalid temporal-on record
+notes-output-overflow|notes output notes overflow on frame 1
 overflow-policy|features overflow must be "off" or "warn"
 reserved-cell-id|cell id "background" is reserved for the background plane
 setup-features-unknown|features does not accept "bogus"
+setup-output|setup output must be "slides", "speaker", or "notes"
 setup-paper|setup paper must be "16-9" or "4-3"
 slide-content-fixed|slide content cannot supply fixed-content cell "logo"
 slide-content-missing|slide content is missing cell "b"
@@ -75,6 +77,9 @@ slide-content-value-type|slide content for "body" must be content
 slide-plane-value-type|background must be content or none
 slide-named-argument|slide does not accept named argument "bogus"
 slide-section-type|section must be a boolean
+speaker-note-body|speaker note body must be content
+speaker-note-overflow|speaker output notes overflow on frame 1
+speaker-note-record|invalid speaker note record
 split-rule-type|h rule must be none or a native Typst stroke
 temporal-heading|headings cannot be wrapped in on, reveal, replace, or reduce; keep semantic headings structurally stable across frames
 temporal-heading-grid|headings cannot be placed in incremental grid nodes; keep semantic headings structurally stable across frames

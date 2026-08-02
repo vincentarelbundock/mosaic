@@ -16,6 +16,35 @@
   typst-sequence,
   typst-styled,
 )
+#import "note-command.typ": is-note
+
+#let body-containers = (
+  block, box, pad, hide, strong, emph, smallcaps, sub, super,
+  underline, overline, strike, highlight, figure, grid.cell,
+  list.item, enum.item, quote, footnote,
+)
+#let special-body-containers = (align, place, link)
+#let children-containers = (grid, list, enum, stack)
+
+#let visually-empty(value) = {
+  if is-note(value) {
+    return true
+  }
+  if type(value) != content {
+    return false
+  }
+  if value.func() == typst-sequence {
+    return value.children.all(visually-empty)
+  }
+  if value.func() in body-containers + special-body-containers {
+    let child = value.fields().at("body", default: none)
+    return child != none and visually-empty(child)
+  }
+  if value.func() in children-containers {
+    return value.children.all(visually-empty)
+  }
+  false
+}
 
 #let command-array(value) = {
   if value == none {
@@ -103,6 +132,9 @@
   let visit(body) = {
     if type(body) != content {
       return body
+    }
+    if is-note(body) {
+      return []
     }
     if body.func() == heading {
       if contains-heading(body.body) {
@@ -237,7 +269,7 @@
           step,
           value.hide,
           value.dim,
-        )
+        ).map(visit).filter(command => not visually-empty(command))
         return (value.render)(
           ..value.kwargs,
           commands,
@@ -264,30 +296,22 @@
         [#equation#label]
       }
     }
-    if heading-mode == "visual" and contains-heading(body) {
+    let has-visual-heading = heading-mode == "visual" and contains-heading(body)
+    if body.func() in body-containers + special-body-containers + children-containers {
       let fields = body.fields()
-      _ = fields.remove("label", default: none)
-      let rebuilt = if body.func() in (
-        block,
-        box,
-        pad,
-        hide,
-        strong,
-        emph,
-        smallcaps,
-        sub,
-        super,
-        underline,
-        overline,
-        strike,
-        highlight,
-        figure,
-        grid.cell,
-        list.item,
-        enum.item,
-        quote,
-        footnote,
-      ) {
+      let label = fields.remove("label", default: none)
+      let body-container = body.func() in body-containers
+      if body-container and "body" not in fields {
+        if has-visual-heading {
+          fail(
+            "cannot create a structurally inert continuation for a heading "
+              + "nested in " + repr(body.func())
+              + "; move the heading into ordinary slide flow",
+          )
+        }
+        return body
+      }
+      let rebuilt = if body.func() in body-containers {
         let child = fields.remove("body")
         (body.func())(visit(child), ..fields)
       } else if body.func() == align {
@@ -302,17 +326,11 @@
         let dest = fields.remove("dest")
         let child = fields.remove("body")
         link(dest, visit(child))
-      } else if body.func() in (grid, list, enum, stack) {
+      } else if body.func() in children-containers {
         let children = fields.remove("children")
         (body.func())(..children.map(visit), ..fields)
-      } else {
-        fail(
-          "cannot create a structurally inert continuation for a heading "
-            + "nested in " + repr(body.func())
-            + "; move the heading into ordinary slide flow",
-        )
       }
-      if contains-heading(rebuilt) {
+      if has-visual-heading and contains-heading(rebuilt) {
         fail(
           "cannot create a structurally inert continuation for every "
             + "heading nested in " + repr(body.func())
@@ -320,8 +338,19 @@
         )
       }
       // Labels on repeated visual containers would create duplicate
-      // destinations, so only the canonical first-frame container keeps them.
-      return rebuilt
+      // destinations. Ordinary containers retain their native labels.
+      return if label == none or has-visual-heading {
+        rebuilt
+      } else {
+        [#rebuilt#label]
+      }
+    }
+    if has-visual-heading {
+      fail(
+        "cannot create a structurally inert continuation for a heading "
+          + "nested in " + repr(body.func())
+          + "; move the heading into ordinary slide flow",
+      )
     }
     body
   }

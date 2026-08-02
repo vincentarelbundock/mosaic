@@ -45,6 +45,11 @@
   /// Whether to emit only the final frame of each logical slide.
   /// -> bool
   handout: false,
+  /// Output document. `"slides"` renders the presentation, `"speaker"`
+  /// renders each frame above its applicable notes, and `"notes"` renders
+  /// notes without the slide image.
+  /// -> str
+  output: "slides",
   /// Counters restored to their pre-slide values before each continuation
   /// frame, so repeated semantic content advances them once per logical slide.
   /// -> array
@@ -89,15 +94,27 @@
   if auto-slide != none and type(auto-slide) != function {
     fail("setup auto-slide must be a function or none")
   }
+  if output not in ("slides", "speaker", "notes") {
+    fail("setup output must be \"slides\", \"speaker\", or \"notes\"")
+  }
   let settings = make-settings(
     spacing: spacing,
     features: features,
   )
-  set page(
-    paper: paper-presets.at(paper),
-    margin: 0pt,
-    fill: default-canvas,
-  )
+  let page-options = if output == "slides" {
+    (
+      paper: paper-presets.at(paper),
+      margin: 0pt,
+      fill: default-canvas,
+    )
+  } else {
+    (
+      paper: "a4",
+      margin: 15mm,
+      fill: white,
+    )
+  }
+  set page(..page-options)
   set text-element(..settings.type.body)
   show heading-element.where(depth: 1): set text-element(..settings.type.title)
   show heading-element.where(depth: 2): set text-element(..settings.type.heading)
@@ -147,6 +164,8 @@
     frozen-counters: frozen-counters,
     frozen-states: frozen-states,
     handout: handout,
+    output: output,
+    paper: paper,
   )
   compile-deck(
     body,

@@ -3,7 +3,7 @@
 #import mosaic.themes.minimalist as minimalist
 
 #let expected = (
-  "setup", "slide", "grid", "layouts", "steps", "components",
+  "setup", "slide", "note", "surface", "grid", "layouts", "steps", "components",
 )
 
 #for theme in (cream, minimalist) {

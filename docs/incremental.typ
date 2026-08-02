@@ -60,6 +60,55 @@ Mosaic restores each listed value before continuation frames; the final update
 remains visible to the next logical slide. Unlisted values keep native Typst
 behavior.
 
+== Speaker notes
+
+Use `m.note[...]` to attach ordinary Typst content to the current logical slide.
+Notes do not render in the presentation and never increase the number of frames:
+
+```typ
+#m.slide[
+  #m.note[Introduce the result.]
+
+  #m.steps.reveal(
+    [
+      The estimate is positive.
+      #m.note[Explain the sign and magnitude.]
+    ],
+    [
+      The interval excludes zero.
+      #m.note[Discuss uncertainty.]
+    ],
+  )
+]
+```
+
+A note outside a timing command applies to every frame. A note inside
+`m.steps.on`, `m.steps.reveal`, or `m.steps.replace` follows that command's
+existing frame semantics, so notes next to revealed content receive their frame
+assignment automatically. Multiple applicable blocks accumulate in source
+order.
+
+The default `output: "slides"` writes the ordinary presentation PDF. Select a
+printable A4 companion document through `setup`:
+
+```typ
+// The current frame as a thumbnail, followed by its applicable notes.
+#show: m.setup.with(output: "speaker")
+
+// Applicable notes without a visible slide thumbnail.
+#show: m.setup.with(output: "notes")
+```
+
+Both companion outputs write exactly one page per emitted physical frame. If a
+frame's notes do not fit in the available A4 notes region, compilation fails
+with an explicit overflow diagnostic instead of silently adding a continuation
+page. Combining either output with `handout: true` retains Mosaic's
+final-frame-only policy. Every
+emitted frame also contains native Typst metadata labeled
+`<mosaic-speaker-notes>`; its value records `logical-slide`, `frame`, and the
+applicable `notes`, making the same data available to external tools through
+Typst's `query` function.
+
 = Reveal bullets
 
 Wrap a list in `m.steps.reveal` to show one more item on each step.

@@ -39,7 +39,7 @@ BONSAI_WEBP := $(WEB_IMAGE_DIR)/bonsai.webp
 DOG_SOURCE := $(WEB_IMAGE_DIR)/dog.jpg
 DOG_WEBP := $(WEB_IMAGE_DIR)/dog.webp
 API_MODULES_DIR := $(DOCS_DIR)/api/modules
-API_MODULE_NAMES := author components slide-command surface grid-model image incremental-command setup layout-default layout-section layout-title
+API_MODULE_NAMES := author components slide-command note-command surface grid-model image incremental-command setup layout-default layout-section layout-title
 API_STAGED_MODULES := $(addprefix $(API_MODULES_DIR)/,$(addsuffix .typ,$(API_MODULE_NAMES)))
 # These files are both compiled below and embedded verbatim in their owning pages.
 # Files whose name starts with "_" are shared includes, not standalone decks.

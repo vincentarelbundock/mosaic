@@ -120,6 +120,36 @@ frame. `setup(handout: true)` emits only the final frame of each logical slide.
 ]
 ```
 
+## Speaker notes
+
+`m.note[...]` attaches non-rendering Typst content to the current logical slide.
+Ordinary notes apply to every frame. Put a note inside `m.steps.on`,
+`m.steps.reveal`, or `m.steps.replace` to give it the same automatic frame
+assignment as nearby incremental content; notes never create frames themselves.
+
+```typ
+#m.slide[
+  #m.note[Introduce the result.]
+  #m.steps.reveal(
+    [Estimate #m.note[Explain the sign and magnitude.]],
+    [Interval #m.note[Discuss uncertainty.]],
+  )
+]
+```
+
+The default `output: "slides"` omits note text from the presentation. Build a
+printable A4 companion document with either `output: "speaker"` (slide thumbnail
+plus applicable notes) or `output: "notes"` (notes only):
+
+```typ
+#show: m.setup.with(output: "speaker")
+```
+
+Every emitted frame also carries queryable `<mosaic-speaker-notes>` metadata
+with its logical slide number, frame number, and applicable note content.
+Companion output is one A4 page per emitted frame; compilation reports an
+explicit overflow error when the applicable notes do not fit that page.
+
 ## Bundled themes
 
 `m.themes` bundles three complete Mosaic facades (`metropolis`, `cream`, and
