@@ -1,9 +1,10 @@
 // Construction, validation, and resolution of the default layout.
 #import "shared.typ": fail
 #import "grid-model.typ": styled-cell, h, v, t, valid-track-size
-#import "layout-core.typ": make-grid
+#import "layout-core.typ": make-grid, validate-accent
 #import "layout-support.typ": track-children
 #import "components.typ": progress as progress-component
+#import "color-defaults.typ": default-accent, default-line
 
 #let variants = (
   "body",
@@ -13,6 +14,7 @@
 )
 
 #let validate-fields(fields) = {
+  validate-accent(fields, "default")
   let variant = fields.variant
   if type(variant) != str or variant not in variants {
     fail(
@@ -63,9 +65,9 @@
 /// `show label("mosaic-cell-header"): it => block(fill: ..., it)`.
 /// The header cell has no special typography; put a native level-two heading
 /// in its content to style it as a heading and register it with outlines.
-/// Set `progress` to `1/1`, `1`, `circle`, or `line` to place a progress
-/// indicator on the slide foreground. Its color and placement follow the
-/// active slide colors. Use `none` to omit it.
+/// Use `"1/1"`, `"1"`, `"circle"`, or `"line"` to place a progress
+/// indicator on the slide foreground. `accent` colors the active decoration;
+/// use `none` to omit it.
 /// Automatic level-two heading slides use this layout with one body column
 /// and place the heading in `header`.
 ///
@@ -82,12 +84,16 @@
   columns: 1,
   tracks: auto,
   progress: none,
+  /// Color used by optional progress decoration.
+  /// -> color
+  accent: default-accent,
 ) = {
   let fields = validate-fields((
     variant: variant,
     columns: columns,
     tracks: tracks,
     progress: progress,
+    accent: accent,
   ))
   make-grid("default", fields)
 }
@@ -113,8 +119,8 @@
       variant: fields.progress,
       size: 1em,
       thickness: 0.12em,
-      color: settings.colors.accent,
-      track: settings.colors.line,
+      color: fields.accent,
+      track: default-line,
     ),
   )
   if fields.progress == "line" {

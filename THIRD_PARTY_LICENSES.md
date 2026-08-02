@@ -37,14 +37,14 @@ Touying copyright notice and license:
 
 ## SlidesCarnival presentation templates
 
-The example decks in `docs/examples/` are adapted from free presentation
+The example decks in `docs/examples/decks/` are adapted from free presentation
 templates published by SlidesCarnival:
 
-- `docs/examples/cream/`: adapted from the *Cream, Green,
+- `docs/examples/decks/cream/`: adapted from the *Cream, Green,
   and Black Geometric Blocks Clean Minimal Presentation* template.
-- `docs/examples/minimalist/`: adapted from the *Minimalist White
+- `docs/examples/decks/minimalist/`: adapted from the *Minimalist White
   Slides* template.
-- `docs/examples/portfolio/`: adapted from the *Photojournalist
+- `docs/examples/decks/portfolio/`: adapted from the *Photojournalist
   Portfolio* template.
 
 Each deck is a Mosaic/Typst re-creation of the corresponding template's layout;
@@ -61,7 +61,7 @@ SlidesCarnival with a link to its website, and the material has been adapted.
 
 ## Metropolis Beamer theme
 
-The `docs/examples/metropolis/` deck is a Mosaic/Typst adaptation of the
+The `docs/examples/decks/metropolis/` deck is a Mosaic/Typst adaptation of the
 demonstration slides for the **Metropolis** Beamer theme by Matthias
 Vogelgesang, reconstructed from the theme's upstream `demo/demo.tex`:
 
@@ -74,44 +74,9 @@ visual design; attribution is given to Matthias Vogelgesang and the adaptation
 is offered under the same CC BY-SA 4.0 license. The original theme sources are
 not redistributed here.
 
-## ColorBrewer palettes
-
-The `brewer-dark2`, `brewer-set2`, and `brewer-paired` color definitions in
-`mosaic/src/color.typ` are derived from ColorBrewer by Cynthia A. Brewer, Mark Harrower,
-and The Pennsylvania State University:
-
-- <https://colorbrewer2.org/>
-- <https://github.com/axismaps/colorbrewer>
-
-ColorBrewer is distributed under the Apache License 2.0:
-<https://www.apache.org/licenses/LICENSE-2.0>.
-
-## CARTOColors palettes
-
-The `carto-*` color definitions in `mosaic/src/color.typ` reproduce the six complete
-qualitative CARTOColors palettes displayed on CARTO's palette website:
-
-- <https://carto.com/carto-colors/>
-- <https://github.com/CartoDB/CartoColor>
-
-CARTOColors is licensed under the Creative Commons Attribution 4.0
-International License: <https://creativecommons.org/licenses/by/4.0/>.
-
-## Paul Tol palettes
-
-The `tol-bright` and `tol-muted` color definitions in `mosaic/src/color.typ` reproduce
-the qualitative color schemes published by Paul Tol in *Colour schemes and
-templates*:
-
-- <https://sronpersonalpages.nl/~pault/>
-
-The schemes are included with source attribution; the source page does not
-state a separate software license for the published color values.
-
 ## Okabe-Ito palette
 
-The `okabe-ito` color definitions in `mosaic/src/color.typ` reproduce the eight-color
-black variant of the Color Universal Design palette developed by Masataka Okabe
-and Kei Ito:
+The explicit color arrays in the grid and incremental tutorial examples use
+the Color Universal Design palette developed by Masataka Okabe and Kei Ito:
 
 - <https://jfly.uni-koeln.de/color/>

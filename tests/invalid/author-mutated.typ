@@ -1,7 +1,7 @@
 #import "@local/mosaic:0.0.1" as mosaic
 
 #let lab = (id: "lab", name: [Lab])
-#let ada = mosaic.author(
+#let ada = mosaic.layouts.author(
   [Ada],
   affiliations: (lab,),
   email: "ada@example.org",

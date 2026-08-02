@@ -8,9 +8,9 @@
 #let udem = (id: "udem", name: [Universite de Montreal])
 #let cirano = (id: "cirano", name: [CIRANO])
 #let academic-authors = (
-  mosaic.author([Ada Lovelace], affiliations: (udem, cirano)),
-  mosaic.author([Grace Hopper], affiliations: (cirano,)),
-  mosaic.author([Katherine Johnson], affiliations: (udem,)),
+  mosaic.layouts.author([Ada Lovelace], affiliations: (udem, cirano)),
+  mosaic.layouts.author([Grace Hopper], affiliations: (cirano,)),
+  mosaic.layouts.author([Katherine Johnson], affiliations: (udem,)),
 )
 
 #let academic-command = mosaic.layouts.title(
@@ -36,14 +36,14 @@
   [Structured authors],
   variant: "academic",
   authors: (
-    mosaic.author(
+    mosaic.layouts.author(
       [Ada Lovelace],
       affiliations: (udem, cirano),
       email: "ada@example.org",
       orcid: "0000-0001-2345-6789",
       corresponding: true,
     ),
-    mosaic.author(
+    mosaic.layouts.author(
       [Grace Hopper],
       affiliations: (cirano,),
     ),
@@ -58,7 +58,7 @@
   [ORCID only],
   variant: "academic",
   authors: (
-    mosaic.author([Grace Hopper], orcid: "0000-0001-2345-6789"),
+    mosaic.layouts.author([Grace Hopper], orcid: "0000-0001-2345-6789"),
   ),
 ), settings)
 #assert(grid-test.count(orcid-only) == 2)
@@ -70,7 +70,7 @@
   [When public data disappears],
   variant: "left-aligned",
   subtitle: [Evidence from twelve public archives],
-  authors: (mosaic.author([Vincent Arel-Bundock], affiliations: (udem,)),),
+  authors: (mosaic.layouts.author([Vincent Arel-Bundock], affiliations: (udem,)),),
   date: [March 2027],
 ), settings)
 #assert(left-grid.kind == "cell")
@@ -81,22 +81,24 @@
   [Models and evidence],
   variant: "centered-stack",
   subtitle: [Annual research lecture],
-  authors: (mosaic.author([Vincent Arel-Bundock]),),
+  authors: (mosaic.layouts.author([Vincent Arel-Bundock]),),
 ), settings)
 #assert(centered.kind == "cell")
 #assert(grid-test.count(centered) == 1)
 
+#let accent-color = rgb("#765432")
 #let accent = resolve-layout(mosaic.layouts.title(
   [From raw data to publication],
   variant: "accent-block",
   subtitle: [Build a reproducible report],
-  authors: (mosaic.author([Vincent Arel-Bundock]),),
+  authors: (mosaic.layouts.author([Vincent Arel-Bundock]),),
+  accent: accent-color,
 ), settings)
 #assert(accent.kind == "split")
 #assert(accent.axis == "width")
 #assert(accent.tracks == (4%, 1fr))
 #assert(grid-test.count(accent) == 2)
-#assert(grid-test.info(accent, "accent").cell.style.fill == settings.colors.accent)
+#assert(grid-test.info(accent, "accent").cell.style.fill == accent-color)
 
 #let split-right = resolve-layout(mosaic.layouts.title(
   [Measuring environmental change],

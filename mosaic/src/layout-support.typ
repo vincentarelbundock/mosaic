@@ -2,6 +2,7 @@
 #import "grid-model.typ": styled-cell, t
 #import "image.typ": image as mosaic-image
 #import "layout-core.typ": validate-visual-spec
+#import "color-defaults.typ": default-surface, default-line
 
 #let optional(body, styles, above: 0pt) = if body == none {
   []
@@ -76,10 +77,10 @@
 }
 
 #let framed-surface(settings, fill: auto, stroke: auto) = (
-  radius: if settings.features.rounded { settings.shape.radius } else { 0pt },
-  fill: if fill == auto { settings.colors.surface } else { fill },
+  radius: settings.shape.radius,
+  fill: if fill == auto { default-surface } else { fill },
   stroke: if stroke == auto {
-    settings.shape.stroke + settings.colors.line
+    settings.shape.stroke + default-line
   } else {
     stroke
   },

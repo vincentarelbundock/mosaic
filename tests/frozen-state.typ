@@ -20,17 +20,17 @@
 
 #mosaic.slide[
   #tick("Reveal")
-  #mosaic.reveal[First frame][Second frame]
+  #mosaic.steps.reveal[First frame][Second frame]
 ]
 
 #mosaic.slide[
   #tick("On")
-  #mosaic.on(2)[Second frame]
+  #mosaic.steps.on(2)[Second frame]
 ]
 
 #mosaic.slide[
   #tick("Replace")
-  #mosaic.replace([First frame], [Second frame])
+  #mosaic.steps.replace([First frame], [Second frame])
 ]
 
 #mosaic.slide[

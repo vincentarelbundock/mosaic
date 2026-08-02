@@ -43,14 +43,11 @@ Kröpelin through
 and to ntjess. Mosaic preserves these credits in its source and third-party
 license notices.
 
-== Color systems
+== Tutorial colors
 
-Mosaic's qualitative palettes and source-derived semantic schemes draw from
-Okabe-Ito, Paul Tol, ColorBrewer, CARTOColors, Rosé Pine, Catppuccin, Nord,
-Radix Colors, Flexoki, Everforest, Tokyo Night, and Ayu. Exact source links,
-adaptation notes, and licenses are listed under
-#link("appearance.html#palettes")[Appearance] and in the full third-party
-notices.
+The explicit color arrays in several tutorials use the Okabe-Ito Color
+Universal Design palette. Source attribution is recorded in the full
+third-party notices.
 
 == Example decks
 

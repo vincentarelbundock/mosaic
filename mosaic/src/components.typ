@@ -2,7 +2,6 @@
 #import "shared.typ": fail, require-dictionary
 #import "deck-state.typ": logical-slide, logical-section
 #import "component-style.typ": (
-  roles as component-roles,
   role as component-role,
   normalize-style,
   styled-body,
@@ -304,8 +303,3 @@
     ]
   }
 }
-
-/// Semantic color roles used by Mosaic components.
-///
-/// -> dictionary
-#let roles = component-roles

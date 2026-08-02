@@ -1,9 +1,9 @@
 #import "/api/_module.typ": api-module
 
 #api-module(
-  "Slides and navigation",
+  "Slides",
   (
-    "/api/modules/deck-commands.typ",
-    "/api/modules/deck-state.typ",
+    "/api/modules/slide-command.typ",
+    "/api/modules/surface.typ",
   ),
 )

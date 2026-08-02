@@ -3,6 +3,6 @@
 #show: mosaic.setup
 
 #mosaic.slide[
-  #mosaic.on("2-", before: "ghosted")[Invalid visibility state]
+  #mosaic.steps.on("2-", before: "ghosted")[Invalid visibility state]
 ]
 

@@ -1,0 +1,38 @@
+{
+  "decks": [
+    {
+      "slug": "cream",
+      "title": "Cream, Green, and Black",
+      "frames": 18,
+      "alt": "Cream, Green, and Black deck, first slide",
+      "showcase_pages": [1, 2, 11, 17]
+    },
+    {
+      "slug": "metropolis",
+      "title": "Metropolis",
+      "frames": 25,
+      "alt": "Metropolis deck, first slide",
+      "showcase_pages": [1, 5, 6, 7, 8, 18, 19, 20, 21]
+    },
+    {
+      "slug": "minimalist",
+      "title": "Minimalist White",
+      "frames": 19,
+      "alt": "Minimalist White deck, first slide",
+      "showcase_pages": [1, 5, 8, 16]
+    },
+    {
+      "slug": "portfolio",
+      "title": "Photojournalist Portfolio",
+      "frames": 14,
+      "alt": "Photojournalist Portfolio deck, first slide",
+      "showcase_pages": []
+    }
+  ],
+  "showcase_intro": [
+    {
+      "source": "docs/assets/examples/getting-started/first-slideshow.pdf",
+      "pages": [1, 4]
+    }
+  ]
+}

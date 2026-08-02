@@ -4,7 +4,7 @@
 #let frozen-state = state("mosaic-handout-frozen-state", 0)
 #let native-counter = counter("mosaic-handout-native")
 #let native-state = state("mosaic-handout-native-state", 0)
-#let command-list = mosaic.reduce.with(
+#let command-list = mosaic.steps.reduce.with(
   render: values => values.join(" | "),
   hide: values => values,
 )
@@ -24,34 +24,36 @@
 
 #mosaic.slide[
   #tick
-  #mosaic.replace([REPLACE FIRST], [REPLACE FINAL])
-  HANDOUT STEP #mosaic.step-number(total: true)
+  #mosaic.steps.replace([REPLACE FIRST], [REPLACE FINAL])
+  HANDOUT FINAL FRAME
 ]
 
 #mosaic.slide[
-  #mosaic.reveal[REVEAL FIRST][REVEAL FINAL]
+  #mosaic.steps.reveal[REVEAL FIRST][REVEAL FINAL]
 ]
 
 #mosaic.slide[
   ON BASE
-  #mosaic.on(2, before: "removed")[ON FINAL]
+  #mosaic.steps.on(2, before: "removed")[ON FINAL]
 ]
 
 #mosaic.slide[
   #command-list((
     [REDUCER BASE],
-    mosaic.on(2, [REDUCER FINAL]),
+    mosaic.steps.on(2, [REDUCER FINAL]),
   ))
 ]
 
 #mosaic.slide(
-  background: mosaic.replace(
-    [#place(top + left, dx: 30pt, dy: 20pt)[BACKGROUND FIRST]],
-    [#place(top + left, dx: 30pt, dy: 20pt)[BACKGROUND FINAL]],
-  ),
-  foreground: mosaic.replace(
-    [#move(dx: 500pt, dy: 20pt)[FOREGROUND FIRST]],
-    [#move(dx: 500pt, dy: 20pt)[FOREGROUND FINAL]],
+  content: (
+    background: mosaic.steps.replace(
+      [#place(top + left, dx: 30pt, dy: 20pt)[BACKGROUND FIRST]],
+      [#place(top + left, dx: 30pt, dy: 20pt)[BACKGROUND FINAL]],
+    ),
+    foreground: mosaic.steps.replace(
+      [#move(dx: 500pt, dy: 20pt)[FOREGROUND FIRST]],
+      [#move(dx: 500pt, dy: 20pt)[FOREGROUND FINAL]],
+    ),
   ),
 )[#align(center + horizon)[PLANE BODY]]
 

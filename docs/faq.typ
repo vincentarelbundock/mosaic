@@ -1,7 +1,7 @@
 #import "/.calepin/calepin.typ" as calepin
-#import "/_includes/tutorial-gallery.typ": (
+#import "/_includes/embedded-examples.typ": (
+  example-source,
   thumbnail-gallery-items,
-  verbatim-example,
 )
 
 #set document(title: [FAQ])
@@ -31,16 +31,14 @@ cell's `inset`:
 #m.slide(grid)[Top][Bottom left][Bottom right]
 ```
 
-The per-cell `inset` keeps content away from cell edges. The default inset is applied
-uniformly to every side of every cell, so adjacent cells contribute one inset
-each to the space between their content. An explicit inset overrides the
-default. The grid's `gutter` adds space between cell surfaces and defaults
-to `0pt`.
+`inset` separates content from a cell's edges; adjacent cells each contribute
+their own inset. A grid `gutter` instead separates the cell surfaces and
+defaults to `0pt`.
 
-== Can headings create slides automatically?
+== Can headings create slides?
 
-Yes. `setup` detects headings automatically. A depth-one heading (`=`) creates
-an unnumbered section slide, and a depth-two heading (`==`) begins a numbered
+Yes. After `#show: m.setup`, a depth-one heading (`=`) writes an unnumbered
+section slide, and a depth-two heading (`==`) writes a numbered heading
 slide:
 
 ```typ
@@ -58,27 +56,23 @@ This is one logical slide.
 
 == Model
 
-#m.reveal[
+#m.steps.reveal[
   - Specify the model.
   - Estimate its parameters.
   - Examine the diagnostics.
 ]
 ```
 
-== How do I customize automatic heading slides?
+== How do I customize heading slides?
 
-By default a `==` heading builds a slide with
-`layouts.default(variant: "header-body")`: the heading fills the header and
-the following content fills the body. To give every automatic slide a different
-look, with your own furniture, colors, or grid, pass an `auto-slide` function
-to `m.setup`. It receives the heading and body as content and returns a
-`m.slide(...)` command, so plain `==` markup can share the exact styling of your
-explicit slides.
+Pass an `auto-slide` function to `m.setup`. It receives the heading and body and
+returns an `m.slide` command, so a plain `==` heading slide can use your grid
+and furniture.
 
 ```typ
 #let framed(title, body) = m.slide(
   grid: m.layouts.default(variant: "header-body", progress: "1"),
-  cells: (header: title, body: body),
+  content: (header: title, body: body),
 )
 
 #show: m.setup.with(auto-slide: framed)
@@ -93,14 +87,10 @@ Routed through `framed`, so this `==` slide gets the inverted header bar and
 progress indicator without a single `#slide` call.
 ```
 
-The returned slide may use any grid, not only header-body. A single body cell
-that merges the title and content, an image layout, or a custom cell tree all
-work. Assigning the heading and body to named cells with `cells:` (rather than
-positional blocks) keeps the mapping explicit and independent of the grid's
-shape; the only rule is that every content-bearing cell is supplied. Passing
-`none` (the default) keeps the built-in header-body slide. Every theme in
-#link("appearance.html#themes")[Appearance] registers its `default` layout as
-`auto-slide` in exactly this way.
+Any grid works; named cells keep title/body assignment independent of tree
+order. The default `none` uses Mosaic's built-in header-body slide. Themes use
+the same hook; see #link("appearance.html#themes")[Appearance] and the
+#link("api/setup.html")[Setup API].
 
 == How do I change the slide aspect ratio?
 
@@ -111,19 +101,19 @@ Mosaic supports the two presentation aspect ratios built into Typst:
 
 Choose one with the `paper` argument.
 
-#verbatim-example("basic/aspect-16-9.typ")
-#verbatim-example("basic/aspect-4-3.typ")
+#example-source("faq/aspect-ratio-16-9")
+#example-source("faq/aspect-ratio-4-3")
 
 #thumbnail-gallery-items(
   calepin.elements.gallery,
   (
     (
-      "/assets/tutorials/basic/aspect-16-9-1.svg",
+      "/assets/examples/faq/aspect-ratio-16-9-1.svg",
       "A widescreen 16:9 slide",
       [16:9],
     ),
     (
-      "/assets/tutorials/basic/aspect-4-3-1.svg",
+      "/assets/examples/faq/aspect-ratio-4-3-1.svg",
       "A traditional 4:3 slide",
       [4:3],
     ),
@@ -138,7 +128,7 @@ Define a slide as an ordinary Typst function and call it wherever it should appe
 #let results-slide() = m.slide[
   == Results
 
-  #m.reveal[
+  #m.steps.reveal[
     - The estimate is positive.
     - The interval excludes zero.
     - The result is practically important.
@@ -152,63 +142,41 @@ Define a slide as an ordinary Typst function and call it wherever it should appe
 #results-slide()
 ```
 
-The second call creates another logical slide and reproduces the same
-incremental sequence. The two calls use the same source, so later edits remain
-synchronized.
+Each call creates another logical slide with the same incremental sequence. To
+show only one state, parameterize the function or write a summary slide.
 
-To show only a selected state without repeating the full sequence, parameterize
-the function or write a small summary slide containing that state.
+== How do I inspect overflowing cells?
 
+Mosaic emits non-fatal metadata when a rendered cell is taller than its
+allocation. Query those records with:
+
+```sh
+typst eval \
+  'query(<mosaic-overflow-warning>).map(it => it.value)' \
+  --in slides.typ
+```
+
+Each record identifies the slide, frame, cell, and measured height. Disable
+observation with `features: (overflow: "off")`; see the
+#link("api/setup.html")[Setup API].
 
 == How does Mosaic compare to Touying?
 
 #link("https://github.com/touying-typ/touying")[Touying] is the most
-established presentation framework for Typst. It follows the Beamer tradition:
-a presentation is built around a theme, and
-the theme is an object that bundles colors, headers, footers, a title slide,
-and special slide constructors. Users pick a theme such as `metropolis` or
-`university`, then adjust it through a unified configuration API
-(`config-info`, `config-colors`, `config-methods`). This design has real
-strengths. Switching themes requires few changes to a document, the ecosystem
-of community themes on Typst Universe is large, and Touying ships integrations
-for tools such as CeTZ, Fletcher, and pdfpc speaker notes.
+established Typst presentation framework. The projects emphasize different
+workflows:
 
-Mosaic starts from a different premise: the fundamental unit of a slide is not
-a theme but a layout. Every Mosaic slide is a grid, a small tree of horizontal
-and vertical splits whose cells hold content. Semantic layouts such as
-`layouts.title` or `layouts.image` are thin layers that resolve to the same
-canonical grid trees, so there is one layout model, and it nests to any depth.
-Touying instead delegates layout to each theme; a theme defines
-how its header, footer, and body fit together, and stepping outside that
-structure means writing or modifying a theme. In Mosaic, an unusual layout is
-just another grid, written inline with the same primitives as every other
-slide.
+#table(
+  columns: (auto, 1fr, 1fr),
+  inset: 0.5em,
+  table.header([Concern], [Mosaic], [Touying]),
+  [Layout], [Composable grid trees], [Theme-defined structures],
+  [Styling], [Native Typst rules], [Framework configuration],
+  [Reveals], [Explicit ranges and reducers], [Beamer-style markers],
+  [Ecosystem], [Small and layout-focused], [Mature themes and integrations],
+)
 
-The second difference is how styling works. Touying routes styling through its
-own object model: a `self` dictionary threads through themes and callbacks,
-appearance is configured with a framework API (`config-colors`,
-`config-methods`), and dynamic content can require callback-style functions with
-a manually specified `repeat` count. Mosaic labels every grid cell
-(`<mosaic-cell-ID>`) and treats the background and foreground as native content
-planes, so styling is ordinary Typst `show` and `set` rules on those labels and
-planes. A Mosaic theme is a Typst module rather than an object: there is no
-`self` and no configuration API. Deck-wide settings flow through a single
-`setup` function, and reusable configurations are ordinary `.with(...)` values.
-
-The two projects also treat incremental content differently. Touying offers
-Beamer-style `#pause` and `#meanwhile` markers plus `only`, `uncover`, and
-`alternatives`, which will feel immediately familiar to Beamer users. Mosaic
-provides declarative constructors, `on`, `reveal`, `replace`, and `reduce`,
-that attach explicit step ranges to content. The step count is discovered
-automatically, visibility is data rather than position, and the same
-constructors work anywhere in a grid, including in backgrounds and
-foregrounds.
-
-If you want a broad theme gallery and Beamer-like conventions, Touying is a
-mature choice. Mosaic suits presentations where the layout varies from slide to
-slide: full-bleed images, edge-to-edge color fields, and per-slide arrangements.
-Its zero-margin pages, cell insets, and background and foreground planes make
-those directly, without modifying a theme, and everything that is not layout
-remains plain Typst. Mosaic also ships a few themes under `m.themes`, each a
-single module you can copy and edit; see
+Choose Touying for its broad theme ecosystem and familiar Beamer conventions.
+Choose Mosaic when layouts vary slide by slide and native Typst composition is
+the priority. Mosaic's bundled themes remain copyable modules; see
 #link("appearance.html#themes")[Appearance].

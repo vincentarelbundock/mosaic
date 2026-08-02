@@ -1,7 +1,6 @@
 #import "@local/mosaic:0.0.1" as mosaic
 
-#show: mosaic.setup
-#mosaic.deck(default-grid: mosaic.grid.h("a", "b"))
+#show: mosaic.setup.with(default-grid: mosaic.grid.h("a", "b"))
 
 == Automatic default layout
 

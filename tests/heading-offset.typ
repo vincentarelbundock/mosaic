@@ -7,20 +7,6 @@
 )
 #set text(size: 9pt)
 
-#mosaic.deck(
-  foreground: context {
-    let page = counter(page).get().first()
-    assert(mosaic.current-heading(level: 1) == none)
-    if page == 1 {
-      assert(mosaic.current-heading(level: 2).body == [Offset section])
-      assert(mosaic.current-heading(level: 3) == none)
-    } else {
-      assert(mosaic.current-heading(level: 2).body == [Offset section])
-      assert(mosaic.current-heading(level: 3).body == [Offset slide])
-    }
-  },
-)
-
 = Offset section
 
 == Offset slide

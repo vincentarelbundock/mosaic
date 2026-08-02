@@ -1,17 +1,19 @@
 // Construction, validation, and resolution of the title layout.
 #import "shared.typ": fail
-#import "author.typ": validate-author
+#import "author.typ": analyze-authors
 #import "grid-model.typ": styled-cell, h, v, t
 #import "layout-core.typ": (
   make-grid,
+  validate-accent,
   validate-visual-spec,
 )
+#import "color-defaults.typ": default-accent
 #import "layout-support.typ": (
   affix,
   as-content,
   fixed-cell,
 )
-#import "layout-image.typ": (
+#import "layout-image-support.typ": (
   directional-image-layout,
   image-background-cell,
   image-region,
@@ -31,26 +33,6 @@
 ) + semantic-image-variants
 
 
-#let validate-structured-authors(authors) = {
-  let known-affiliations = (:)
-  for (author-index, author) in authors.enumerate() {
-    let subject = "layout \"title\" author " + str(author-index + 1)
-    let author = validate-author(author, subject: subject)
-    for affiliation in author.affiliations {
-      let id = affiliation.id
-      if id in known-affiliations {
-        if repr(known-affiliations.at(id)) != repr(affiliation.name) {
-          fail(
-            "layout \"title\" affiliation id " + repr(id)
-              + " has conflicting names",
-          )
-        }
-      } else {
-        known-affiliations.insert(id, affiliation.name)
-      }
-    }
-  }
-}
 
 #let stack-alignments = (
   left,
@@ -68,6 +50,7 @@
 )
 
 #let validate-fields(fields) = {
+  validate-accent(fields, "title")
   let variant = fields.variant
   if type(variant) != str or variant not in variants {
     fail(
@@ -76,7 +59,7 @@
     )
   }
   if type(fields.title) not in (content, str) {
-    fail("layout \"title\" requires title content as its first positional argument")
+    fail("layout \"title\" requires title content through title:")
   }
   if fields.rule != auto and type(fields.rule) != bool {
     fail("layout \"title\" rule must be auto, true, or false")
@@ -84,8 +67,8 @@
   if type(fields.authors) != array {
     fail("layout \"title\" authors must be an array")
   }
-  validate-structured-authors(fields.authors)
-  let _ = validate-semantic-image-use(fields, "layout \"title\"")
+  let _ = analyze-authors(fields.authors)
+  validate-semantic-image-use(fields, "layout \"title\"")
   if fields.image != none {
     let _ = validate-visual-spec(
       fields.image,
@@ -99,7 +82,7 @@
     }
   }
   if variant in semantic-directional-variants {
-    let _ = validate-directional-tracks(fields.tracks, "layout \"title\" tracks")
+    validate-directional-tracks(fields.tracks, "layout \"title\" tracks")
   } else if fields.tracks != auto {
     fail("layout \"title\" tracks apply only to directional image variants")
   }
@@ -117,7 +100,7 @@
 
 /// Creates a presentation title grid.
 ///
-/// The title text is the first positional argument. The layout supplies
+/// Pass the title text explicitly through `title:`. The layout supplies
 /// every cell's content, so the surrounding `mosaic.slide` consumes no
 /// slide bodies.
 /// `academic` places author names and affiliations inline, with a numbered
@@ -135,11 +118,11 @@
 /// the metadata. The `auto` default draws it on the text variants and omits
 /// it on the image variants.
 /// `align` anchors the title stack for `image-background`. That variant
-/// places the stack directly over the image in the scheme's ordinary `text`
-/// color; pass a pre-adjusted image such as `mosaic.image(..., darken: 45%)`
+/// places the stack directly over the image in the surrounding native text
+/// color; pass a pre-adjusted image such as `mosaic.components.image(..., darken: 45%)`
 /// and override the `title` cell's text fill for light-on-dark compositions.
 #let title(
-  title,
+  title: none,
   subtitle: none,
   date: none,
   image: none,
@@ -148,7 +131,21 @@
   tracks: auto,
   align: left + bottom,
   rule: auto,
+  /// Color used by the title rule and accent-block spine.
+  /// -> color
+  accent: default-accent,
+  ..legacy-title,
 ) = {
+  let positional = legacy-title.pos()
+  if legacy-title.named().len() > 0 or positional.len() > 1 {
+    fail("layout \"title\" accepts one legacy positional title and named arguments")
+  }
+  if positional.len() == 1 {
+    if title != none {
+      fail("layout \"title\" cannot receive both a positional title and title:")
+    }
+    title = positional.first()
+  }
   let fields = validate-fields((
     title: title,
     subtitle: subtitle,
@@ -159,6 +156,7 @@
     tracks: tracks,
     align: align,
     rule: rule,
+    accent: accent,
   ))
   make-grid("title", fields, suppress-global-logo: true)
 }
@@ -253,17 +251,9 @@
 }
 
 #let ordinary-title-details(fields) = {
-  let author-names = fields.authors.map(author => author-name(author))
-  let affiliation-ids = ()
-  let affiliations = ()
-  for author in fields.authors {
-    for affiliation in author.affiliations {
-      if affiliation.id not in affiliation-ids {
-        affiliation-ids.push(affiliation.id)
-        affiliations.push(as-content(affiliation.name))
-      }
-    }
-  }
+  let analyzed = analyze-authors(fields.authors)
+  let author-names = analyzed.authors.map(author => author-name(author))
+  let affiliations = analyzed.affiliations.map(item => as-content(item.name))
   // Two tiers at most: a byline, then one fine-print line joining
   // affiliations and date. More rows would dilute the grouping.
   let fine-print = affiliations
@@ -285,14 +275,14 @@
 
 // Short accent-colored rule: the one non-text gesture shared by every title
 // variant. Sized from the body type so it is stable across display scales.
-#let accent-rule(settings, above: 0pt) = {
+#let accent-rule(accent, settings, above: 0pt) = {
   let base = settings.type.body.size
   block(
     above: above,
     line(
       length: 1.6 * base,
       stroke: (
-        paint: settings.colors.accent,
+        paint: accent,
         thickness: 0.12 * base,
         cap: "round",
       ),
@@ -334,7 +324,7 @@
     // mass from the metadata mass. Without the rule, extra space marks the
     // same break.
     if show-rule {
-      accent-rule(settings, above: 1.3 * settings.spacing.gap)
+      accent-rule(fields.accent, settings, above: 1.3 * settings.spacing.gap)
     }
     if details != none {
       block(
@@ -391,29 +381,6 @@
   )
 }
 
-#let structured-academic-data(authors) = {
-  let affiliation-ids = ()
-  let affiliations = ()
-  let normalized-authors = ()
-  for author in authors {
-    let record = author
-    let numbers = ()
-    for affiliation in record.affiliations {
-      let index = affiliation-ids.position(id => id == affiliation.id)
-      if index == none {
-        affiliation-ids.push(affiliation.id)
-        affiliations.push(affiliation)
-        index = affiliation-ids.len() - 1
-      }
-      numbers.push(index + 1)
-    }
-    normalized-authors.push(record + (numbers: numbers,))
-  }
-  (
-    authors: normalized-authors,
-    affiliations: affiliations,
-  )
-}
 
 #let academic-author(author, show-numbers: true) = {
   author-name(author)
@@ -450,7 +417,7 @@
 }
 
 #let resolve-academic-title(fields, settings) = {
-  let academic = structured-academic-data(fields.authors)
+  let academic = analyze-authors(fields.authors)
   // Metadata compresses to three tiers: a byline, one fine-print line for
   // the affiliation legend, and one fine-print line joining contacts and
   // date. More rows than that would scatter the composition.
@@ -530,7 +497,7 @@
       settings,
       inset: 0pt,
       content-sized: false,
-      surface: (fill: settings.colors.accent),
+      surface: (fill: fields.accent),
     )),
     t(1fr, title-stack(fields, settings)),
   )
@@ -584,9 +551,9 @@
 }
 
 #let resolve-background-title(fields, image, settings) = {
-  // The image carries the contrast, so the stack keeps the scheme's
-  // ordinary text color. Pass a pre-adjusted image and override the title
-  // cell's text fill for light-on-dark compositions.
+  // The image carries the contrast, so the stack inherits the surrounding
+  // native text color. Pass a pre-adjusted image and override the title cell's
+  // text fill for light-on-dark compositions.
   image-background-cell(styled-cell(
     id: "title",
     content: align(

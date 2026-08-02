@@ -5,9 +5,8 @@
 #let base = mosaic.grid.cell(id: "main")
 #assert(grid-test.count(base) == 1)
 #assert(grid-test.info(base, "main").id == "main")
-#assert("roles" in mosaic.components)
+#assert("image" in mosaic.components)
 #assert("progress" in mosaic.components)
-#assert("warning" in mosaic.components.roles)
 #show: mosaic.setup.with(
   spacing: (inset: 8pt),
 )

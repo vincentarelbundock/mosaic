@@ -15,7 +15,7 @@
 #mosaic.slide[
   == Automatically styled <styled-heading>
 
-  #mosaic.reveal[
+  #mosaic.steps.reveal[
     - First frame. #metadata(none) <stable-body>
     - Second frame.
     - Third frame.

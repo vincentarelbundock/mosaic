@@ -15,7 +15,6 @@ exclude = [
   "_includes/**",
   "api/_module.typ",
   "api/modules/**",
-  "tutorial-examples/**",
   "examples/**",
 ]
 
@@ -26,12 +25,12 @@ depth = 3
 [menus]
 
   [[menus.main]]
-  target = "getting-started.typ"
-  label = "Get started"
-
-  [[menus.main]]
   target = "examples.typ"
   label = "Examples"
+
+  [[menus.main]]
+  target = "basics.typ"
+  label = "Get started"
 
   [[menus.main]]
   target = "api/setup.typ"
@@ -49,25 +48,25 @@ fold = true
   target = "index.typ"
 
   [[sidebar.section.item]]
-  target = "getting-started.typ"
+  target = "examples.typ"
+
+  [[sidebar.section.item]]
+  target = "basics.typ"
 
   [[sidebar.section.item]]
   target = "structure.typ"
 
   [[sidebar.section.item]]
-  target = "appearance.typ"
+  target = "content.typ"
 
   [[sidebar.section.item]]
-  target = "blocks.typ"
+  target = "appearance.typ"
 
   [[sidebar.section.item]]
   target = "incremental.typ"
 
   [[sidebar.section.item]]
   target = "furniture.typ"
-
-  [[sidebar.section.item]]
-  target = "examples.typ"
 
   [[sidebar.section.item]]
   target = "faq.typ"
@@ -85,16 +84,13 @@ title = "API"
   target = "api/slides.typ"
 
   [[sidebar.section.item]]
-  target = "api/incremental.typ"
+  target = "api/steps.typ"
 
   [[sidebar.section.item]]
   target = "api/grid.typ"
 
   [[sidebar.section.item]]
   target = "api/layouts.typ"
-
-  [[sidebar.section.item]]
-  target = "api/color.typ"
 
   [[sidebar.section.item]]
   target = "api/components.typ"

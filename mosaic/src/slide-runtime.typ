@@ -1,12 +1,15 @@
 // Logical-slide runtime: frame policy, state, resolution, and page rendering.
 #import "shared.typ": fail
 #import "grid-model.typ": cell, validate, resolve-content
-#import "incremental.typ": max-step, transform
+#import "incremental-analysis.typ": max-step
+#import "incremental-transform.typ": transform
 #import "render.typ": max-node, render
-#import "settings.typ": settings-state, with-colors
+#import "settings.typ": settings-state
+#import "color-defaults.typ": default-muted, default-line, default-accent
 #import "layout-resolver.typ": resolve-layout
 #import "layout-core.typ": is-layout-grid
 #import "layout-default.typ": progress-foreground
+#import "components.typ": progress as progress-component
 #import "deck-state.typ": (
   grid-state,
   background-state,
@@ -14,16 +17,10 @@
   logical-slide,
   logical-section,
   current-numbered,
-  current-heading,
   slide-number,
-  display-number,
 )
-#import "deck-commands.typ": validate-plane, validate-deck-config
+#import "slide-command.typ": validate-plane, validate-deck-config
 
-#let current-step = state(
-  "mosaic:0.0.1:step",
-  (current: 1, total: 1),
-)
 #let frozen-counters-state = state("mosaic:0.0.1:frozen-counters", ())
 #let frozen-states-state = state("mosaic:0.0.1:frozen-states", ())
 #let handout-state = state("mosaic:0.0.1:handout", false)
@@ -64,8 +61,7 @@
   range(1, total + 1)
 }
 
-#let prepare-frame(step, total, location, handout: false) = context {
-  current-step.update((current: step, total: total))
+#let prepare-frame(step, location, handout: false) = context {
   if not handout and step > 1 {
     for value in frozen-counters-state.get() + frozen-states-state.get() {
       value.update(value.at(selector(location)))
@@ -73,32 +69,29 @@
   }
 }
 
-/// Displays the current incremental step number.
-///
-/// -> content
-#let step-number(
-  /// Whether to display the final total as `current / total`.
-  /// -> bool
-  total: false,
-) = context {
-  let value = current-step.get()
-  display-number(value.current, value.total, total)
-}
 
 #let full-slide-layer(body) = place(
   top + left,
   block(width: 100%, height: 100%, body),
 )
 
+// A plane renders as one full-slide block labeled <mosaic-cell-ID> (ID is
+// "background" or "foreground"), so the same native label rules that style
+// cells also style planes.
 #let render-plane(value, step, heading-key) = if value == none {
   []
 } else {
-  transform(
-    value,
-    step,
-    headings: "visual",
-    heading-key: heading-key,
+  let body = block(
+    width: 100%,
+    height: 100%,
+    transform(
+      value,
+      step,
+      headings: "visual",
+      heading-key: heading-key,
+    ),
   )
+  [#body#label("mosaic-cell-" + heading-key)]
 }
 
 #let configure-deck(
@@ -121,17 +114,7 @@
 #let presentation-furniture(settings, show-logo: true) = {
   let features = settings.features
   let inset = settings.spacing.inset
-  if features.section-label {
-    let active = current-heading(level: 1, default: none)
-    if active != none {
-      place(
-        top + left,
-        dx: inset,
-        dy: settings.spacing.compact-gap,
-        text(..settings.type.small, fill: settings.colors.muted, active.body),
-      )
-    }
-  }
+
   if show-logo and features.logo != none {
     place(
       top + right,
@@ -145,7 +128,7 @@
       bottom + left,
       dx: inset,
       dy: -settings.spacing.compact-gap,
-      text(..settings.type.small, fill: settings.colors.muted, features.footer),
+      text(..settings.type.small, fill: default-muted, features.footer),
     )
   }
   if features.slide-number {
@@ -155,7 +138,7 @@
       dy: -settings.spacing.compact-gap,
       text(
         ..settings.type.small,
-        fill: settings.colors.muted,
+        fill: default-muted,
         slide-number(total: features.slide-total),
       ),
     )
@@ -163,18 +146,13 @@
   if features.progress {
     place(
       bottom + left,
-      block(width: 100%, height: 3pt)[
-        #rect(width: 100%, height: 3pt, fill: settings.colors.line)
-        #place(left, context {
-          let current = logical-slide.get().first()
-          let final = logical-slide.final().first()
-          rect(
-            width: if final == 0 { 0% } else { 100% * current / final },
-            height: 3pt,
-            fill: settings.colors.accent,
-          )
-        })
-      ],
+      progress-component(
+        variant: "line",
+        width: 100%,
+        thickness: 3pt,
+        track: default-line,
+        color: default-accent,
+      ),
     )
   }
 }
@@ -198,15 +176,21 @@
     requested-grid
   }
   validate(resolved-grid)
-  let resolved-background = if command.background == auto {
+  // The reserved plane ids live in the same content map as the cells. Absent
+  // means inherit the deck plane, content overrides it for this slide, and
+  // none omits it.
+  let content-map = command.content
+  let background-override = content-map.remove("background", default: auto)
+  let foreground-override = content-map.remove("foreground", default: auto)
+  let resolved-background = if background-override == auto {
     background-state.get()
   } else {
-    command.background
+    background-override
   }
-  let resolved-foreground = if command.foreground == auto {
+  let resolved-foreground = if foreground-override == auto {
     foreground-state.get()
   } else {
-    command.foreground
+    foreground-override
   }
   let layout-foreground = if (
     is-layout-grid(requested-grid)
@@ -228,7 +212,7 @@
   // Named and positional content collapse to one id -> content map before
   // rendering, so the renderer, overflow, and incremental paths look content up
   // by cell id with no positional cursor.
-  let contents = resolve-content(resolved-grid, command.cells, command.bodies)
+  let contents = resolve-content(resolved-grid, content-map, command.bodies)
   let steps = calc.max(
     max-node(resolved-grid),
     max-step(contents.values()),
@@ -254,7 +238,7 @@
       slide: slide,
     )
     pagebreak(weak: true)
-    prepare-frame(step, steps, freeze-location, handout: handout)
+    prepare-frame(step, freeze-location, handout: handout)
     let background-content = render-plane(resolved-background, step, "background")
     let foreground-content = render-plane(resolved-foreground, step, "foreground")
     block(
@@ -278,12 +262,5 @@
 
 #let render-slide(command) = context {
   let settings = settings-state.get()
-  if command.colors == auto {
-    render-slide-with-settings(command, settings)
-  } else {
-    settings = with-colors(settings, command.colors)
-    set page(fill: settings.colors.canvas)
-    set text(fill: settings.colors.text)
-    render-slide-with-settings(command, settings)
-  }
+  render-slide-with-settings(command, settings)
 }

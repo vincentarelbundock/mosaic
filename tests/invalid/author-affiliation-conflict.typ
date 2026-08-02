@@ -6,7 +6,7 @@
   [Title],
   variant: "academic",
   authors: (
-    mosaic.author([Ada], affiliations: (first,)),
-    mosaic.author([Grace], affiliations: (second,)),
+    mosaic.layouts.author([Ada], affiliations: (first,)),
+    mosaic.layouts.author([Grace], affiliations: (second,)),
   ),
 )

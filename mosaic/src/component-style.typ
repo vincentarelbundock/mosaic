@@ -24,7 +24,7 @@
 #let normalize-style(style: (:), role-name: "neutral", defaults: (:)) = {
   require-dictionary(style, "component style")
   let allowed = (
-    "fill", "stroke", "radius", "inset", "align", "accent", "text",
+    "fill", "stroke", "radius", "inset", "align", "text",
   )
   reject-unknown-keys(style, allowed, "component style")
   require-dictionary(style.at("text", default: (:)), "component style text")
@@ -35,7 +35,6 @@
     radius: 6pt,
     inset: 0.65em,
     align: left,
-    accent: colors.accent,
     text: (fill: colors.text),
   ) + defaults + style
 }

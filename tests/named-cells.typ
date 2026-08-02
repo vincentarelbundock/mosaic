@@ -1,4 +1,4 @@
-// Named cell content: `cells:` assigns content by cell ID, independent of
+// Named cell content: `content:` assigns content by cell ID, independent of
 // grid traversal order. Positional content remains the terse shorthand; both
 // normalize to one ordered body array, so equivalent slides render identically.
 #import "@local/mosaic:0.0.1" as mosaic
@@ -26,13 +26,13 @@
 #assert(named == (heading: [Heading], left: [Left], right: [Right]))
 #assert(named == positional)
 
-// The slide command carries the cells dictionary.
-#let command = mosaic.slide(comparison, cells: (
+// The slide command carries the content dictionary.
+#let command = mosaic.slide(comparison, content: (
   heading: [H],
   left: [L],
   right: [R],
 )).value
-#assert(command.cells.keys().sorted() == ("heading", "left", "right"))
+#assert(command.content.keys().sorted() == ("heading", "left", "right"))
 #assert(command.bodies == ())
 
 // A fixed-content cell is owned by the grid and is not a named destination.
@@ -46,7 +46,7 @@
 // Incremental destinations are counted by ID too.
 #let temporal = mosaic.grid.v(
   mosaic.grid.cell("top"),
-  mosaic.on("2-", mosaic.grid.cell("bottom")),
+  mosaic.steps.on("2-", mosaic.grid.cell("bottom")),
 )
 #assert(body-cell-ids(temporal) == ("top", "bottom"))
 
@@ -54,7 +54,7 @@
 #show: mosaic.setup
 
 // Named and equivalent positional slides render identically.
-#mosaic.slide(comparison, cells: (
+#mosaic.slide(comparison, content: (
   right: [Right],
   heading: [Heading],
   left: [Left],
@@ -62,7 +62,7 @@
 #mosaic.slide(comparison)[Heading][Left][Right]
 
 // Named content into a fixed-cell grid supplies only the open cell.
-#mosaic.slide(with-fixed, cells: (body: [Body]))
+#mosaic.slide(with-fixed, content: (body: [Body]))
 
 // Named content flows through incremental cells.
-#mosaic.slide(temporal, cells: (top: [Top], bottom: [Bottom]))
+#mosaic.slide(temporal, content: (top: [Top], bottom: [Bottom]))

@@ -1,7 +1,7 @@
 // Compilation of top-level Typst content into explicit and automatic slides.
 #import "shared.typ": fail
-#import "deck-commands.typ": is-command, slide-command, automatic-slide-command
-#import "slide-runtime.typ": configure-deck, render-slide
+#import "slide-command.typ": is-slide-command, slide-command, automatic-slide-command
+#import "slide-runtime.typ": render-slide
 
 #let typst-sequence = [].func()
 #let typst-space = [ ].func()
@@ -67,7 +67,7 @@
         render-slide(automatic-slide-command(section, body))
       } else {
         let produced = auto-slide(section, body)
-        if not is-command(produced, "slide") {
+        if not is-slide-command(produced) {
           fail(
             "setup auto-slide must return a mosaic.slide(...) command; "
               + "got " + repr(type(produced)),
@@ -82,7 +82,7 @@
           (),
           grid: section-grid,
           numbered: false,
-          cells: (section: section),
+          content: (section: section),
         )),
         wrappers,
       )
@@ -119,22 +119,11 @@
       none
     }
 
-    if is-command(value, "slide") {
+    if is-slide-command(value) {
       (flushed, mode, section, current) = flush-current(mode, section, current, slide-wrappers)
       if flushed != none { output.push(flushed) }
       output.push(wrap-content(
         render-slide(value.value),
-        entry.wrappers,
-      ))
-    } else if is-command(value, "deck") {
-      (flushed, mode, section, current) = flush-current(mode, section, current, slide-wrappers)
-      if flushed != none { output.push(flushed) }
-      output.push(wrap-content(
-        configure-deck(
-          default-grid: value.value.default-grid,
-          background: value.value.background,
-          foreground: value.value.foreground,
-        ),
         entry.wrappers,
       ))
     } else if level in (1, 2) {

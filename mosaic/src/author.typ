@@ -59,29 +59,32 @@
 }
 
 #let validate-author(value, subject: "author") = {
-  if type(value) != dictionary or value.at("kind", default: none) != "mosaic-author" {
+  if (
+    type(value) != dictionary
+      or value.keys().sorted() != author-keys
+      or value.kind != "mosaic-author"
+  ) {
     fail(subject + " must be created with author()")
   }
-  reject-record-keys(value, author-keys, subject)
-  if not valid-name(value.at("name", default: none)) {
+  if not valid-name(value.name) {
     fail(subject + " name must be content or a non-empty string")
   }
-  let affiliations = value.at("affiliations", default: ())
+  let affiliations = value.affiliations
   if type(affiliations) != array {
     fail(subject + " affiliations must be an array")
   }
   for (index, affiliation) in affiliations.enumerate() {
     validate-affiliation(affiliation, subject + " affiliation " + str(index + 1))
   }
-  let email = value.at("email", default: none)
+  let email = value.email
   if email != none and not valid-email(email) {
     fail(subject + " email must be a valid email address")
   }
-  let orcid = value.at("orcid", default: none)
+  let orcid = value.orcid
   if orcid != none and not valid-orcid(orcid) {
     fail(subject + " orcid must be a valid ORCID iD")
   }
-  let corresponding = value.at("corresponding", default: false)
+  let corresponding = value.corresponding
   if type(corresponding) != bool {
     fail(subject + " corresponding must be a boolean")
   }
@@ -89,6 +92,40 @@
     fail(subject + " corresponding requires email or orcid")
   }
   value
+}
+
+// Canonical relationship analysis shared by validation and title renderers.
+#let analyze-authors(values, subject: "layout \"title\" author") = {
+  let known = (:)
+  let affiliations = ()
+  let authors = ()
+  for (author-index, value) in values.enumerate() {
+    let author = validate-author(
+      value,
+      subject: subject + " " + str(author-index + 1),
+    )
+    let numbers = ()
+    for affiliation in author.affiliations {
+      let id = affiliation.id
+      if id in known {
+        let existing = known.at(id)
+        if repr(existing.name) != repr(affiliation.name) {
+          fail(
+            "layout \"title\" affiliation id " + repr(id)
+              + " has conflicting names",
+          )
+        }
+        numbers.push(existing.index + 1)
+      } else {
+        let index = affiliations.len()
+        known.insert(id, (index: index, name: affiliation.name))
+        affiliations.push(affiliation)
+        numbers.push(index + 1)
+      }
+    }
+    authors.push(author + (numbers: numbers,))
+  }
+  (authors: authors, affiliations: affiliations)
 }
 
 /// Creates a validated author for `layouts.title(authors: ...)`.

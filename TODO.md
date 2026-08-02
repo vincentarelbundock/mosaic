@@ -6,15 +6,11 @@ inventory, not a commitment to reproduce either framework. New APIs should
 preserve Mosaic's small, Typst-native grid model.
 
 The comparison does not repeat features Mosaic already has: heading-driven
-and explicit slides, automatic section slides, logical/step/page counters,
+and explicit slides, automatic section slides, logical slide/section and step progress,
 background and foreground planes, native outlines and bookmarks, range-based
 visibility, item-by-item reveals, space-preserving alternatives, math
 overlays, CeTZ/Fletcher reducers, composable grids, or per-slide inherited
 grid and visual-plane configuration.
-
-## Images
-
-- [ ] #img() helper which is the same as #image() but with lighten/darken and some other helpers for common behaviors in slides.
 
 ## Incremental content
 
@@ -62,10 +58,6 @@ grid and visual-plane configuration.
 
 ## Documentation
 
-- [ ] Document MiTeX and Pinit composition using Mosaic's native content and
-  generic reducer extension points.
-- [ ] Document theorem-package use, including frozen theorem counters on
-  incremental slides.
 - [ ] Document citation workflows using native Typst footnotes and
   bibliographies.
 - [ ] Document compatible presentation workflows without adding

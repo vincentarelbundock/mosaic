@@ -7,7 +7,5 @@
     "/api/modules/layout-default.typ",
     "/api/modules/layout-title.typ",
     "/api/modules/layout-section.typ",
-    "/api/modules/layout-image.typ",
-    "/api/modules/layout-table.typ",
   ),
 )

@@ -7,23 +7,20 @@
 // A semantic section layout increments the dedicated counter automatically.
 #mosaic.slide(grid: mosaic.layouts.section())[
   First section
-  #mosaic.section-number(total: true)
-  #mosaic.components.progress(variant: "line", count: "sections")
+  #mosaic.components.progress(variant: "1/1", count: "sections")
 ]
 
 // Custom section layouts opt in explicitly and are independent of slide
 // numbering. Incremental frames must still represent one section.
 #mosaic.slide(section: true, numbered: false)[
   Custom section
-  #mosaic.reveal[One][Two][Three]
-  #mosaic.section-number(total: true)
+  #mosaic.steps.reveal[One][Two][Three]
   #mosaic.components.progress(variant: "1/1", count: "sections")
 ]
 
 // Ordinary slides retain the active section without incrementing it.
 #mosaic.slide[
   Body
-  Active section: #mosaic.section-number(total: true)
   #mosaic.components.progress(variant: "line", count: "slides")
 ]
 

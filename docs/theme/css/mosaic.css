@@ -205,11 +205,11 @@ body:has(.mosaic-hero) .calepin-website-toc {
   border-radius: var(--calepin-radius-lg) !important;
 }
 
-.tutorial-slideshow {
+.pdf-slideshow {
   margin: 1.2rem 0 2.25rem;
 }
 
-.tutorial-deck-preview {
+.pdf-slideshow-preview {
   display: block;
   position: relative;
   isolation: isolate;
@@ -223,7 +223,7 @@ body:has(.mosaic-hero) .calepin-website-toc {
   text-decoration: none;
 }
 
-.tutorial-deck-preview::after {
+.pdf-slideshow-preview::after {
   content: "";
   pointer-events: none;
   position: absolute;
@@ -232,7 +232,7 @@ body:has(.mosaic-hero) .calepin-website-toc {
   background: linear-gradient(to top, rgba(10, 18, 31, 0.72), transparent 38%);
 }
 
-.tutorial-deck-preview__image {
+.pdf-slideshow-preview__image {
   display: block;
   width: 100%;
   height: auto;
@@ -240,7 +240,7 @@ body:has(.mosaic-hero) .calepin-website-toc {
   object-fit: cover;
 }
 
-.tutorial-deck-preview__caption {
+.pdf-slideshow-preview__caption {
   position: absolute;
   left: 0.85rem;
   right: 0.85rem;
@@ -253,12 +253,12 @@ body:has(.mosaic-hero) .calepin-website-toc {
   line-height: 1.25;
 }
 
-.tutorial-deck-preview:focus-visible {
+.pdf-slideshow-preview:focus-visible {
   outline: 0.18rem solid var(--calepin-color-accent);
   outline-offset: 0.18rem;
 }
 
-.tutorial-deck-dialog {
+.pdf-slideshow-dialog {
   width: min(96vw, 90rem);
   max-width: none;
   height: min(94vh, 64rem);
@@ -272,20 +272,20 @@ body:has(.mosaic-hero) .calepin-website-toc {
   box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.35);
 }
 
-.tutorial-deck-dialog::backdrop {
+.pdf-slideshow-dialog::backdrop {
   background: rgba(6, 12, 22, 0.82);
   backdrop-filter: blur(0.25rem);
 }
 
-.tutorial-deck-dialog__shell {
+.pdf-slideshow-dialog__shell {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
   width: 100%;
   height: 100%;
 }
 
-.tutorial-deck-dialog__header,
-.tutorial-deck-dialog__controls {
+.pdf-slideshow-dialog__header,
+.pdf-slideshow-dialog__controls {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -296,24 +296,24 @@ body:has(.mosaic-hero) .calepin-website-toc {
   background: var(--calepin-surface);
 }
 
-.tutorial-deck-dialog__header {
+.pdf-slideshow-dialog__header {
   border-bottom: 1px solid var(--calepin-color-border);
 }
 
-.tutorial-deck-dialog__controls {
+.pdf-slideshow-dialog__controls {
   flex-wrap: wrap;
   border-top: 1px solid var(--calepin-color-border);
 }
 
-.tutorial-deck-dialog__title {
+.pdf-slideshow-dialog__title {
   margin: 0;
   font-size: 1rem;
   line-height: 1.3;
 }
 
-.tutorial-deck-dialog__close,
-.tutorial-deck-dialog__controls button,
-.tutorial-deck-dialog__open {
+.pdf-slideshow-dialog__close,
+.pdf-slideshow-dialog__controls button,
+.pdf-slideshow-dialog__open {
   width: auto;
   min-width: 0;
   margin: 0;
@@ -328,26 +328,26 @@ body:has(.mosaic-hero) .calepin-website-toc {
   text-decoration: none;
 }
 
-.tutorial-deck-dialog__close {
+.pdf-slideshow-dialog__close {
   padding: 0.25rem 0.55rem;
   font-size: 1.2rem;
 }
 
-.tutorial-deck-dialog__controls button:hover,
-.tutorial-deck-dialog__controls button:focus-visible,
-.tutorial-deck-dialog__close:hover,
-.tutorial-deck-dialog__close:focus-visible,
-.tutorial-deck-dialog__open:hover,
-.tutorial-deck-dialog__open:focus-visible {
+.pdf-slideshow-dialog__controls button:hover,
+.pdf-slideshow-dialog__controls button:focus-visible,
+.pdf-slideshow-dialog__close:hover,
+.pdf-slideshow-dialog__close:focus-visible,
+.pdf-slideshow-dialog__open:hover,
+.pdf-slideshow-dialog__open:focus-visible {
   border-color: var(--calepin-color-accent);
   color: var(--calepin-color-accent);
 }
 
-.tutorial-deck-dialog__controls button:disabled {
+.pdf-slideshow-dialog__controls button:disabled {
   opacity: 0.45;
 }
 
-.tutorial-deck-dialog__stage {
+.pdf-slideshow-dialog__stage {
   display: grid;
   place-items: center;
   min-height: 0;
@@ -356,7 +356,7 @@ body:has(.mosaic-hero) .calepin-website-toc {
   background: #111827;
 }
 
-.tutorial-deck-dialog__canvas {
+.pdf-slideshow-dialog__canvas {
   display: none;
   max-width: none;
   margin: auto;
@@ -364,19 +364,19 @@ body:has(.mosaic-hero) .calepin-website-toc {
   box-shadow: 0 0.6rem 2rem rgba(0, 0, 0, 0.35);
 }
 
-.tutorial-deck-dialog__message {
+.pdf-slideshow-dialog__message {
   margin: auto;
   color: white;
   text-align: center;
 }
 
-.tutorial-deck-dialog__group {
+.pdf-slideshow-dialog__group {
   display: flex;
   align-items: center;
   gap: 0.45rem;
 }
 
-.tutorial-deck-dialog__status {
+.pdf-slideshow-dialog__status {
   min-width: 6.5rem;
   color: var(--calepin-color-muted);
   font-size: 0.78rem;
@@ -384,47 +384,47 @@ body:has(.mosaic-hero) .calepin-website-toc {
 }
 
 @media (max-width: 44rem) {
-  .tutorial-deck-dialog {
+  .pdf-slideshow-dialog {
     width: 100vw;
     height: 100dvh;
     border: 0;
     border-radius: 0;
   }
 
-  .tutorial-deck-dialog__controls {
+  .pdf-slideshow-dialog__controls {
     justify-content: center;
   }
 }
 
-.tutorial-slideshow .calepin-elements-gallery {
+.pdf-slideshow .calepin-elements-gallery {
   margin: 0 !important;
 }
 
-.tutorial-slideshow:not(.tutorial-slideshow--catalog)
+.pdf-slideshow:not(.pdf-slideshow--catalog)
   .calepin-elements-gallery__item:not(:first-child) {
   display: none;
 }
 
-.tutorial-slideshow:not(.tutorial-slideshow--catalog)
+.pdf-slideshow:not(.pdf-slideshow--catalog)
   .calepin-elements-gallery__item:first-child {
   margin: 0;
   border: 1px solid var(--calepin-color-border);
   box-shadow: var(--calepin-shadow-card);
 }
 
-.tutorial-slideshow:not(.tutorial-slideshow--catalog)
+.pdf-slideshow:not(.pdf-slideshow--catalog)
   .calepin-elements-gallery__item:first-child::after {
   display: block !important;
   opacity: 1 !important;
   background: linear-gradient(to top, rgba(10, 18, 31, 0.72), transparent 38%);
 }
 
-.tutorial-slideshow .calepin-elements-gallery__image {
+.pdf-slideshow .calepin-elements-gallery__image {
   aspect-ratio: 16 / 9;
   object-fit: cover;
 }
 
-.tutorial-slideshow .calepin-elements-gallery__caption {
+.pdf-slideshow .calepin-elements-gallery__caption {
   position: absolute !important;
   display: block !important;
   left: 0.85rem !important;
@@ -437,99 +437,13 @@ body:has(.mosaic-hero) .calepin-website-toc {
   line-height: 1.25 !important;
 }
 
-.tutorial-slideshow--catalog .calepin-elements-gallery__item {
+.pdf-slideshow--catalog .calepin-elements-gallery__item {
   border: 1px solid var(--calepin-color-border);
   box-shadow: 0 0.2rem 0.65rem rgba(15, 23, 42, 0.12);
 }
 
-.tutorial-slideshow--catalog .calepin-elements-gallery__caption {
+.pdf-slideshow--catalog .calepin-elements-gallery__caption {
   display: none !important;
-}
-
-.palette-swatch {
-  margin: 0.75rem 0;
-}
-
-.palette-swatch__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 0.3rem;
-}
-
-.palette-swatch__title {
-  padding: 0;
-  background: transparent;
-  color: var(--calepin-color-text);
-  font-size: 0.82rem;
-  font-weight: 750;
-}
-
-.palette-swatch__status {
-  min-width: 4.2rem;
-  color: var(--mosaic-green);
-  font-family: var(--calepin-font-mono);
-  font-size: 0.68rem;
-  font-weight: 750;
-  text-align: right;
-  text-transform: uppercase;
-}
-
-.palette-swatch__band {
-  display: flex;
-  width: 100%;
-  height: 1.4rem;
-  min-height: 0;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  appearance: none;
-  border: 1px solid var(--calepin-color-border);
-  border-radius: 0.28rem;
-  background: var(--calepin-surface-muted);
-  box-shadow: none;
-  cursor: pointer;
-}
-
-.palette-swatch__band:hover {
-  border-color: var(--calepin-color-accent);
-  box-shadow: 0 0 0 2px
-    color-mix(in srgb, var(--calepin-color-accent) 18%, transparent);
-}
-
-.palette-swatch__band:focus-visible {
-  outline: 2px solid var(--calepin-color-accent);
-  outline-offset: 2px;
-}
-
-.palette-swatch__band[data-copied="true"] {
-  border-color: var(--mosaic-green);
-  box-shadow: 0 0 0 2px
-    color-mix(in srgb, var(--mosaic-green) 22%, transparent);
-}
-
-.palette-swatch__segment {
-  flex: 1 1 0;
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  background: var(--swatch-color);
-}
-
-.palette-swatch__segment + .palette-swatch__segment {
-  border-left: 1px solid rgb(255 255 255 / 18%);
-}
-
-.palette-swatch__visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
 }
 
 @media (max-width: 800px) {

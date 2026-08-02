@@ -12,7 +12,7 @@
     #html.elem("section", attrs: (class: "mosaic-hero"))[
       #html.elem("div")[
         #html.elem("h1")[
-          Make
+          Create beautiful
           #html.elem("br")
           slides with
           #html.elem("span", attrs: (
@@ -43,7 +43,7 @@
     ))[
       #html.elem("a", attrs: (
         class: "mosaic-button mosaic-button--secondary",
-        href: "getting-started.html",
+        href: "basics.html",
       ))[Get started]
       #html.elem("a", attrs: (
         class: "mosaic-button mosaic-button--secondary",
@@ -59,8 +59,8 @@
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
           #html.elem("h2")[Layouts]
           #html.elem("p")[
-            Title, section, image, and table layouts, with matching
-            typography and color schemes.
+            Default, title, and section layouts, with matching typography and
+            explicit accent controls.
           ]
         ]
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
@@ -86,8 +86,8 @@
           loop: "loop",
           muted: "muted",
           playsinline: "playsinline",
-          poster: "assets/tutorials/layouts/title-1.svg",
-          "aria-label": "Animated gallery of Mosaic title slides, image variants, color schemes, and incremental diagrams",
+          poster: "assets/examples/structure/title-layout-1.svg",
+          "aria-label": "Animated gallery of Mosaic title slides, native styling, and incremental diagrams",
         ))[
           #html.elem("source", attrs: (
             src: "assets/images/showcase.webm",
@@ -96,7 +96,7 @@
         ]
         #html.elem("img", attrs: (
           class: "mosaic-showcase mosaic-showcase--poster",
-          src: "assets/tutorials/layouts/title-1.svg",
+          src: "assets/examples/structure/title-layout-1.svg",
           alt: "Example of an academic title slide made with Mosaic",
         ))
       ]

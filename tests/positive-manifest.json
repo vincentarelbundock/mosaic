@@ -1,0 +1,53 @@
+{
+  "core": [
+    "author.typ",
+    "components.typ",
+    "content-sized-radius.typ",
+    "frozen-state.typ",
+    "handout-off.typ",
+    "handout.typ",
+    "heading-offset.typ",
+    "heading-style-continuation.typ",
+    "headings-default-layout.typ",
+    "headings-multi-cell.typ",
+    "headings.typ",
+    "image.typ",
+    "incremental.typ",
+    "mixed-authoring.typ",
+    "named-cells.typ",
+    "native-labels.typ",
+    "numbering.typ",
+    "overflow-off.typ",
+    "overflow-warning.typ",
+    "public-api-minimal.typ",
+    "section-counter.typ",
+    "sections.typ",
+    "settings.typ",
+    "setup-deck-defaults.typ",
+    "setup-inherited-font.typ",
+    "setup-native-defaults.typ",
+    "setup-native-styles.typ",
+    "setup-paper.typ",
+    "single.typ",
+    "splits.typ",
+    "grid-runtime.typ",
+    "theme-facade-metropolis.typ",
+    "theme-facades.typ"
+  ],
+  "layout": [
+    "fit.typ",
+    "layout-accents.typ",
+    "layouts-default.typ",
+    "layouts-features.typ",
+    "layouts-label-style.typ",
+    "layouts-logo.typ",
+    "layouts-progress.typ",
+    "layouts-setup-settings.typ",
+    "layouts-structural.typ",
+    "layouts-title-variants.typ",
+    "layouts.typ"
+  ],
+  "responsive": [
+    "layouts-title-responsive.typ"
+  ]
+}

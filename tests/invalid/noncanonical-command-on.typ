@@ -1,8 +1,8 @@
 #import "@local/mosaic:0.0.1" as mosaic
 
-#let command = mosaic.on("2-", "later")
+#let command = mosaic.steps.on("2-", "later")
 #command.insert("unknown", true)
-#let canvas = mosaic.reduce.with(
+#let canvas = mosaic.steps.reduce.with(
   render: commands => commands.join(", "),
   hide: commands => commands,
 )

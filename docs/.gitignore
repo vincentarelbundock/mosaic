@@ -1,2 +1,4 @@
 .calepin/
 api/modules/
+_calepin/*
+!_calepin/favicon.svg

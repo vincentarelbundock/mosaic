@@ -3,11 +3,12 @@
 #import "grid-model.typ": styled-cell
 #import "layout-core.typ": (
   make-grid,
-  validate-role,
+  validate-accent,
   validate-visual-spec,
 )
+#import "color-defaults.typ": default-accent
 #import "layout-support.typ": optional, affix
-#import "layout-image.typ": (
+#import "layout-image-support.typ": (
   directional-image-layout,
   image-background-cell,
   image-region,
@@ -22,7 +23,7 @@
 #let variants = ("plain",) + semantic-image-variants
 
 #let validate-fields(fields) = {
-  let _ = validate-role(fields)
+  validate-accent(fields, "section")
   let variant = fields.variant
   if type(variant) != str or variant not in variants {
     fail(
@@ -30,7 +31,7 @@
         + "; expected one of " + repr(variants),
     )
   }
-  let _ = validate-semantic-image-use(fields, "layout \"section\"")
+  validate-semantic-image-use(fields, "layout \"section\"")
   if fields.image != none {
     let _ = validate-visual-spec(
       fields.image,
@@ -38,7 +39,7 @@
     )
   }
   if variant in semantic-directional-variants {
-    let _ = validate-directional-tracks(fields.tracks, "layout \"section\" tracks")
+    validate-directional-tracks(fields.tracks, "layout \"section\" tracks")
   } else if fields.tracks != auto {
     fail("layout \"section\" tracks apply only to directional image variants")
   }
@@ -49,10 +50,12 @@
 ///
 /// `plain` provides one centered `section` cell. `image-left`, `image-right`,
 /// `image-top`, and `image-bottom` pair that cell with a full-bleed `image`
-/// cell using the same directional layout machinery as `layouts.image`.
+/// cell using the same private directional machinery as image-bearing title
+/// layouts.
 /// `image-background` places the image behind the section cell; the text
-/// keeps the scheme's ordinary color, so pass a pre-adjusted image such as
-/// `mosaic.image(..., darken: 45%)` and override the `section` cell's text
+/// inherits the surrounding native text color, so pass a pre-adjusted image
+/// such as
+/// `mosaic.components.image(..., darken: 45%)` and override the `section` cell's text
 /// fill for light-on-dark compositions. Image variants require `image`.
 /// Directional `tracks` are two native Typst track sizes in visual order.
 #let section(
@@ -60,7 +63,9 @@
   number: none,
   image: none,
   variant: "plain",
-  role: "accent",
+  /// Color used by the optional section number.
+  /// -> color
+  accent: default-accent,
   tracks: auto,
 ) = {
   let fields = validate-fields((
@@ -68,7 +73,7 @@
     number: number,
     image: image,
     variant: variant,
-    role: role,
+    accent: accent,
     tracks: tracks,
   ))
   make-grid("section", fields)
@@ -78,7 +83,7 @@
   let fields = validate-fields(command.fields)
   let image = optional-fixed-image(fields.image, "layout \"section\" image")
   let before = if fields.number != none {
-    text(..settings.type.small, fill: settings.colors.accent, fields.number)
+    text(..settings.type.small, fill: fields.accent, fields.number)
     parbreak()
   } else {
     []
@@ -96,6 +101,7 @@
       before: affix(before),
       after: affix(after),
       content-sized: fields.variant in semantic-directional-variants,
+      fit: "width",
       inset: settings.spacing.inset,
     ),
   )

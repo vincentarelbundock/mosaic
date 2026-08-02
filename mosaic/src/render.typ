@@ -2,7 +2,9 @@
 #import "shared.typ": array-max, tag
 #import "incremental-core.typ": range-last, status
 #import "grid-model.typ": body-cell-ids, resolved-tracks, fold-grid
-#import "incremental.typ": contains-heading, max-step, transform, apply-state
+#import "incremental-analysis.typ": max-step
+#import "incremental-heading.typ": contains-heading, apply-state
+#import "incremental-transform.typ": transform
 #import "fit.typ": fit-to-width, fit-to-height
 
 #let observe-overflow(body, cell, slide, step) = layout(region => {

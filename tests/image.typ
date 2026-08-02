@@ -2,7 +2,7 @@
 
 #set page(width: 240pt, height: 160pt, margin: 0pt)
 
-#let defaults = mosaic.image(
+#let defaults = mosaic.components.image(
   path("/docs/assets/images/dog.webp"),
   alt: "A brown dog",
 )
@@ -12,7 +12,7 @@
 #assert(defaults.at("fit") == "cover")
 #assert(defaults.at("alt") == "A brown dog")
 
-#let configured = mosaic.image(
+#let configured = mosaic.components.image(
   path("/docs/assets/images/dog.webp"),
   width: 40pt,
   height: 30pt,
@@ -29,12 +29,12 @@
 
 #grid(
   columns: (1fr, 1fr),
-  mosaic.image(
+  mosaic.components.image(
     path("/docs/assets/images/dog.webp"),
     darken: 35%,
     alt: "A darkened brown dog",
   ),
-  mosaic.image(
+  mosaic.components.image(
     path("/docs/assets/images/dog.webp"),
     lighten: 20%,
     alt: "A lightened brown dog",

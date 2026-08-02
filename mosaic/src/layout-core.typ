@@ -2,14 +2,12 @@
 #import "shared.typ": tag, fail, reject-unknown-keys, valid-path
 
 #let layout-field-keys = (
-  default: ("columns", "progress", "tracks", "variant"),
+  default: ("accent", "columns", "progress", "tracks", "variant"),
   title: (
-    "align", "authors", "date", "image", "rule", "subtitle", "title",
+    "accent", "align", "authors", "date", "image", "rule", "subtitle", "title",
     "tracks", "variant",
   ),
-  section: ("image", "number", "role", "subtitle", "tracks", "variant"),
-  image: ("alt", "fit", "path", "tracks", "variant"),
-  table: ("caption", "highlight", "role", "source", "title"),
+  section: ("accent", "image", "number", "subtitle", "tracks", "variant"),
 )
 
 #let make-grid(name, fields, suppress-global-logo: false) = (
@@ -19,6 +17,12 @@
   fields: fields,
   suppress-global-logo: suppress-global-logo,
 )
+
+#let validate-accent(fields, name) = {
+  if type(fields.accent) != color {
+    fail("layout " + repr(name) + " accent must be a color")
+  }
+}
 
 #let is-layout-grid(value) = if (
   type(value) != dictionary
@@ -36,13 +40,6 @@
   value.fields.keys().sorted() == layout-field-keys.at(value.name)
 }
 
-#let validate-role(fields) = {
-  let role = fields.at("role", default: none)
-  if role != none and type(role) not in (str, color) {
-    fail("layout role must be a setup color name or a color")
-  }
-  fields
-}
 
 #let validate-visual-spec(
   value,

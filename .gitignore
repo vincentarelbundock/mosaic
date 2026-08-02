@@ -1,2 +1,6 @@
 .build/
-docs/examples/*/.calepin/
+__pycache__/
+*.pyc
+.claude/settings.local.json
+.hermes/
+docs/examples/decks/*/.calepin/

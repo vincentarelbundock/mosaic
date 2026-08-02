@@ -11,10 +11,10 @@
   variant: "academic",
   subtitle: [A replication study],
   authors: (
-    mosaic.author([Ada], affiliations: (institute-a,)),
-    mosaic.author([Grace], affiliations: (institute-b,)),
-    mosaic.author([Katherine], affiliations: (institute-c,)),
-    mosaic.author([Dorothy], affiliations: (institute-a,)),
+    mosaic.layouts.author([Ada], affiliations: (institute-a,)),
+    mosaic.layouts.author([Grace], affiliations: (institute-b,)),
+    mosaic.layouts.author([Katherine], affiliations: (institute-c,)),
+    mosaic.layouts.author([Dorothy], affiliations: (institute-a,)),
   ),
 
   date: [July 2027],

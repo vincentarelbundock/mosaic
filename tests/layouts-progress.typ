@@ -6,23 +6,23 @@
   grid: mosaic.layouts.default(
     variant: "header-body",
     progress: "1/1",
+    accent: rgb("#d97706"),
   ),
-  colors: (accent: rgb("#d97706")),
 )[
-  == Slide-local number
+  == Layout-accent number
 ][
-  The number uses the slide-local accent.
+  The number uses the layout accent.
 ]
 
 #mosaic.slide(
   grid: mosaic.layouts.default(
     progress: "circle",
+    accent: rgb("#ffffff"),
   ),
-  colors: (accent: rgb("#ffffff")),
 )[
   == White circle
 ][
-  The circle uses the slide-local accent.
+  The circle uses the layout accent.
 ][
   Footer
 ]
@@ -30,12 +30,12 @@
 #mosaic.slide(
   grid: mosaic.layouts.default(
     progress: "circle",
+    accent: rgb("#fedcba"),
   ),
-  colors: (accent: rgb("#fedcba")),
 )[
   == Styled circle
 ][
-  The slide-local accent also styles progress.
+  The explicit layout accent also styles progress.
 ][
   Styled footer
 ]
@@ -44,12 +44,12 @@
   grid: mosaic.layouts.default(
     variant: "header-body",
     progress: "line",
+    accent: rgb("#123456"),
   ),
-  colors: (accent: rgb("#123456")),
 )[
-  == Slide-local line
+  == Layout-accent line
 ][
-  The line uses the slide-local accent.
+  The line uses the layout accent.
 ]
 
 #mosaic.slide(

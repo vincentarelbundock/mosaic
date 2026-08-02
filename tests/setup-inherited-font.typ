@@ -1,6 +1,6 @@
 // Ambient `set text` must flow into layout-driven cells. Body regions carry
-// no text delta, so a deck's font (or any native override) reaches the default,
-// image, and table layout bodies. Each probe asserts the inherited font.
+// no text delta, so a deck's font (or any native override) reaches default,
+// title, and section layout bodies. Each probe asserts the inherited font.
 #import "@local/mosaic:0.0.1" as mosaic
 
 #show: mosaic.setup
@@ -20,14 +20,6 @@
   #probe("default body")
 ]
 
-// "right" body order is (body, image); probe the text body, supply a plain
-// rectangle as the image so the test needs no asset.
-#mosaic.slide(grid: mosaic.layouts.image(variant: "right"))[
-  #probe("image body")
-][
-  #rect(width: 10pt, height: 10pt)
-]
+#mosaic.slide(grid: mosaic.layouts.title([#probe("title body")]))
 
-#mosaic.slide(grid: mosaic.layouts.table(title: [T]))[
-  #table(columns: 1, [#probe("table body")])
-]
+#mosaic.slide(grid: mosaic.layouts.section())[#probe("section body")]

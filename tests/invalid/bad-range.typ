@@ -3,5 +3,5 @@
 #show: mosaic.setup
 
 #mosaic.slide[
-  #mosaic.on("3-2")[Invalid descending range]
+  #mosaic.steps.on("3-2")[Invalid descending range]
 ]

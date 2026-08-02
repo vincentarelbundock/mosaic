@@ -2,6 +2,10 @@
 #import "shared.typ": tag, fail
 #import "incremental-core.typ": parse-range, validate-state
 
+// Reserved ids addressing the full-slide planes through the slide `content:`
+// map. They are never grid cells, so grid trees cannot claim them.
+#let plane-ids = ("background", "foreground")
+
 #let resolve-cell-id(identifier, id, name) = {
   if identifier.named().len() > 0 {
     fail(name + " accepts only a cell id and optional fixed content")
@@ -20,6 +24,9 @@
   }
   if type(resolved) != str or resolved == "" {
     fail("cell id must be a non-empty string")
+  }
+  if resolved in plane-ids {
+    fail("cell id " + repr(resolved) + " is reserved for the " + resolved + " plane")
   }
   resolved
 }
@@ -400,18 +407,6 @@
   }
 }
 
-#let count-matching-cells(node, matches) = fold-grid(
-  node,
-  cell => if matches(cell) { 1 } else { 0 },
-  (node, child) => child,
-  (node, children) => children.sum(),
-)
-
-#let count-bodies(node) = count-matching-cells(
-  node,
-  cell => cell.content == none,
-)
-
 // The IDs of every content-bearing cell (content == none), in the same
 // depth-first declaration order that positional bodies fill. This is the
 // single ordered destination list; named content is normalized against it.
@@ -423,34 +418,35 @@
 )
 
 // Resolve a slide's content into one id -> content map, the single internal
-// representation the renderer consumes. Named content (`cells`) is validated
+// representation the renderer consumes. Named content (`named`, the slide's
+// `content:` dictionary with the plane keys already extracted) is validated
 // against the resolved grid; positional `bodies` are zipped onto the
 // content-bearing cell ids in traversal order. The renderer then looks each
 // cell's content up by id, with no positional cursor to keep in sync.
-#let resolve-content(node, cells, bodies) = {
+#let resolve-content(node, named, bodies) = {
   let body-ids = body-cell-ids(node)
-  if cells.len() > 0 {
+  if named.len() > 0 {
     let all-ids = collect-cell-ids(node)
-    for (id, value) in cells {
+    for (id, value) in named {
       if id not in all-ids {
-        fail("slide cells contains unknown cell id " + repr(id))
+        fail("slide content contains unknown cell id " + repr(id))
       }
       if id not in body-ids {
-        fail("slide cells cannot supply fixed-content cell " + repr(id))
+        fail("slide content cannot supply fixed-content cell " + repr(id))
       }
       if type(value) != content {
-        fail("slide cell content for " + repr(id) + " must be content")
+        fail("slide content for " + repr(id) + " must be content")
       }
     }
-    let missing = body-ids.filter(id => id not in cells)
+    let missing = body-ids.filter(id => id not in named)
     if missing.len() > 0 {
       fail(
-        "slide cells is missing content for "
+        "slide content is missing "
           + if missing.len() == 1 { "cell " } else { "cells " }
           + missing.map(repr).join(", "),
       )
     }
-    cells
+    named
   } else {
     if bodies.len() != body-ids.len() {
       fail(

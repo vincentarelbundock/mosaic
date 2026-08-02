@@ -6,39 +6,32 @@
   "left",
   mosaic.grid.t(
     auto,
-    mosaic.grid.cell(id: "right", content: align(right)[
-      Slide #mosaic.slide-number(total: true)
-      · Step #mosaic.step-number(total: true)
-      · Page #mosaic.page-number(total: true)
-    ]),
+    mosaic.grid.cell(id: "right", content: align(right)[Fixed furniture]),
   ),
 )
 #assert(grid-test.count(numbered-grid) == 2)
 
 #show: mosaic.setup.with(
   spacing: (inset: 5pt),
+  default-grid: numbered-grid,
+  features: (slide-number: true, slide-total: true),
+  background: [Inherited background],
+  foreground: [Inherited foreground],
 )
 #set text(size: 7pt)
-
-#mosaic.deck(
-  default-grid: numbered-grid,
-  background: [Inherited background],
-  foreground: [
-    Inherited foreground · #mosaic.slide-number(total: true)
-  ],
-)
 
 // Two frames, one logical slide, and one supplied body. The fixed cell does
 // not consume a body.
 #mosaic.slide[
-  #mosaic.reveal[First][Second]
+  #mosaic.steps.reveal[First][Second]
 ]
 
 // An unnumbered slide is excluded from the logical number and total. Its
-// inherited slide-number() produces no content; none disables the background.
+// built-in numbering produces no content; the reserved `background` entry set
+// to none disables the inherited plane.
 #mosaic.slide(
   grid: mosaic.grid.cell(id: "body"),
-  background: none,
+  content: (background: none),
   numbered: false,
 )[Unnumbered]
 
@@ -46,19 +39,18 @@
 // foreground. This is logical slide 2.
 #mosaic.slide(
   grid: mosaic.grid.cell(id: "body"),
-  foreground: [
-    Slide #mosaic.slide-number(total: true)
-    · Step #mosaic.step-number(total: true)
-  ],
+  content: (foreground: [Local foreground]),
 )[
-  #mosaic.replace[Before][After]
+  #mosaic.steps.replace[Before][After]
 ]
 
 // Temporal foreground content contributes frames even when the body is static.
 #mosaic.slide(
   grid: mosaic.grid.cell(id: "body"),
-  background: none,
-  foreground: mosaic.on("2-")[Foreground step],
+  content: (
+    background: none,
+    foreground: mosaic.steps.on("2-")[Foreground step],
+  ),
 )[Static body]
 
 #context assert(counter(page).final().first() == 7)

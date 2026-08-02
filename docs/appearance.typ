@@ -1,10 +1,6 @@
 #import "/.calepin/calepin.typ" as calepin
-#import "/_includes/tutorial-gallery.typ": (
-  slideshow,
-  thumbnail-gallery-items,
-  verbatim-example,
-)
-#import "/api/modules/color.typ": palette-record
+#import "/_includes/embedded-examples.typ": embedded-example
+
 
 #set document(title: [Appearance])
 #metadata((title: "Appearance")) <website-metadata>
@@ -14,42 +10,62 @@
 A slide is a stack of native Typst layers: a background plane, a grid of cells,
 and a foreground plane. The planes are content you supply directly; each cell is
 a single block labeled `<mosaic-cell-ID>`. You style all of it with ordinary
-`set` and `show` rules. `m.setup` establishes the baseline (font, colors, and
-the canonical cell vocabulary), and every rule you add layers on top. Styling
-does not go through a dictionary, a theme object, or a separate API.
+`set` and `show` rules. `m.setup` establishes the baseline (font, page and text
+defaults, and the canonical cell vocabulary), and every rule you add layers on
+top. Styling does not go through a dictionary, theme object, or separate API.
 
 = Styling cells
 
 Target a cell by its label. Font, size, color, and alignment are `set text`,
-`set par`, and `set align`; fills, strokes, rounded corners, and images behind
-content are the `block` you wrap the cell in:
+`set par`, and `set align`; the cell's own fill, stroke, and corner radius go
+through `m.surface`:
 
 ```typ
 #show label("mosaic-cell-copy"): set align(left + horizon)
 #show label("mosaic-cell-copy"): set text(fill: black, size: 1.1em)
+#show label("mosaic-cell-copy"): m.surface(fill: white)
+
+#let columns = m.grid.h("copy", "image")
+#m.slide(grid: columns, content: (
+  copy: [Copy],
+  image: [Image],
+))
+```
+
+== Content rules and surface rules
+
+Two kinds of rules cover a cell, split by what they touch. Properties of the
+content *inside* the cell (text, alignment, paragraphs, lists) pass through
+the label as ordinary `set` rules. Properties of the cell's *own block* (fill,
+stroke, corner radius) cannot, because that block is constructed before any
+rule applies; the only way to paint it is to wrap the labeled block in a new
+block that carries the paint. `m.surface(..)` builds exactly that wrapper, so
+it is shorthand for the native transform, not a separate styling system:
+
+```typ
+#show label("mosaic-cell-copy"): m.surface(fill: white)
+// is the same rule as
 #show label("mosaic-cell-copy"): it => block(
   width: 100%,
   height: 100%,
   fill: white,
   it,
 )
-
-#m.slide(m.grid.h("copy", "image"))[Copy][Image]
 ```
 
-A full-height cell (`1fr` or a fixed track) fills its region when the wrapping
-block asks for `height: 100%`; a content-sized cell (an `auto` track) should
-omit the height so its fill hugs the content. The one structural knob that lives
+A full-height cell (`1fr` or a fixed track) fills its region with the default
+`height: 100%`; for a content-sized cell (an `auto` track) pass
+`height: auto` so the fill hugs the content. The full-slide planes carry the
+labels `<mosaic-cell-background>` and `<mosaic-cell-foreground>`, so the same
+two kinds of rules style them as well. The one structural knob that lives
 on the cell itself is `inset`, because padding affects layout measurement:
 
 ```typ
 #m.grid.cell("image", inset: 0pt)
 ```
 
-Precedence is ordinary rule nesting. `m.setup` and any theme establish baseline
-cell rules; a rule you write after `#show: m.setup` overrides them deck-wide;
-and a rule scoped inside a block around a single `m.slide` call overrides them
-for that slide only:
+Rules after `#show: m.setup` override the baseline deck-wide. Scope a rule and
+slide inside a block to change only that slide:
 
 ```typ
 #[
@@ -60,8 +76,7 @@ for that slide only:
 
 == Reusable looks
 
-Bundle cell rules in a transformer and apply it once with `#show:`. Every
-following slide that uses those cell IDs picks the rules up:
+Bundle repeated cell rules in a transformer and apply it once with `#show:`:
 
 ```typ
 #let styled(body) = {
@@ -78,272 +93,128 @@ following slide that uses those cell IDs picks the rules up:
 #m.slide(m.grid.h("a", "b"))[Left][Right]
 ```
 
-#verbatim-example("grids/reusable.typ")
-
-#slideshow(
+#embedded-example(
   calepin.elements.gallery,
-  "grids/reusable",
-  2,
-  "One grid and one set of reusable cell rules shared by two slides",
+  "appearance/reusable-look",
+  frames: 2,
+  title: "One grid and one set of reusable cell rules shared by two slides",
 )
 
-A *theme* (see #link("appearance.html#themes")[Themes], below) is exactly this
-pattern at deck scale: an `apply` wrapper that calls `m.setup` and adds the
-deck's cell rules.
+A #link("appearance.html#themes")[theme] packages this pattern at deck scale.
 
 = Typography
 
-Style type with Typst's native `text`, `heading`, `par`, and `list` rules,
-placed after the `m.setup` show rule so they apply throughout the deck. A
-document-wide `set text` sets the base font, size, and fill, reaching every
-slide including layout bodies and hand-built cells:
+Place native Typst text and heading rules after `m.setup` so they apply across
+the deck:
 
 ```typ
 #show: m.setup
 #set text(font: "EB Garamond", size: 26pt)
-```
-
-Level-1 headings are section titles and level-2 headings are slide titles.
-Style them with show rules keyed on `heading`; anything `text` accepts works,
-including `fill`, `tracking`, and `style`:
-
-```typ
 #show heading.where(depth: 1): set text(font: "Inter", weight: "black")
 #show heading.where(depth: 2): set text(size: 1.4em)
 ```
 
-A `heading` is semantic: it feeds the outline, PDF bookmarks, and
-`m.current-heading`, and drives automatic section slides. For large type that
-should *not* appear in navigation (a cover word, a pull quote, a number), use
-`text` directly, or exclude the heading:
+A semantic heading feeds outlines, bookmarks, and heading slides. Use `text`
+directly for display type that should not appear in
+navigation, or exclude the heading:
 
 ```typ
 #text(size: 60pt, weight: "black")[BOLD]
 #heading(outlined: false, bookmarked: false)[Aside]
 ```
 
-Leading, spacing, and list markers belong to `par`, `list`, `enum`, and
-`terms`; figure captions to `figure.caption`. Mosaic sets sensible list spacing
-by default; override where a slide needs it:
-
-```typ
-#set par(leading: 0.8em)
-#set list(marker: [→])
-#show figure.caption: set text(size: 0.8em, style: "italic")
-```
+Leading, lists, and captions remain native `par`, `list`, `enum`, `terms`, and
+`figure.caption` styling.
 
 A heading cannot be placed inside an incremental grid node (`m.grid.on`,
-`m.reveal`, and related reducers); keep it structurally stable across a slide's
+`m.steps.reveal`, and related reducers); keep it structurally stable across a slide's
 frames.
 
-= Color schemes
+= Color
 
-Mosaic separates semantic color schemes from categorical palettes. A scheme is
-a complete dictionary of named roles consumed by `m.setup(colors: ...)`; a
-palette is an ordered array for charts, diagrams, and independently styled
-cells. Both live in the `m.color` namespace.
-
-`m.color.scheme(name)` returns every semantic role Mosaic uses:
-
-- `canvas`: the overall slide background.
-- `surface`: a raised or grouped content surface.
-- `accent`: the single attention-directing color.
-- `text`: ordinary titles, headings, and body text.
-- `inverse-text`: text placed on strongly contrasting fills.
-- `muted`: supporting text and lower-emphasis content.
-- `line`: borders, rules, and other quiet separators.
-
-The unbranded `"light"` (default, warm white) and `"dark"` (slate) schemes are
-neutral foundations. Six presentation schemes give distinct directions:
-`"gallery"` (understated, architectural), `"editorial"` (warm page, red accent),
-`"botanical"` (research and teaching), `"studio"` (restrained plum),
-`"conference"` (crisp, institutional), and `"spotlight"` (dark auditorium).
-Exact role values are listed in the #link("api/color.html")[Color API].
-
-Each preview below uses the same slide (a titled body beside a card, over an
-inverted footer), so the repeated structure exposes every role at once.
-
-#thumbnail-gallery-items(
-  calepin.elements.gallery,
-  (
-    ("/assets/tutorials/color/schemes-1.svg", "Light semantic color scheme"),
-    ("/assets/tutorials/color/schemes-2.svg", "Dark semantic color scheme"),
-    ("/assets/tutorials/color/schemes-3.svg", "Gallery semantic color scheme"),
-    ("/assets/tutorials/color/schemes-4.svg", "Editorial semantic color scheme"),
-    ("/assets/tutorials/color/schemes-5.svg", "Botanical semantic color scheme"),
-    ("/assets/tutorials/color/schemes-6.svg", "Studio semantic color scheme"),
-    ("/assets/tutorials/color/schemes-7.svg", "Conference semantic color scheme"),
-    ("/assets/tutorials/color/schemes-8.svg", "Spotlight semantic color scheme"),
-  ),
-  columns: 2,
-  max-width: 46em,
-  show-captions: false,
-)
-
-Apply a scheme in `setup`; schemes are ordinary dictionaries, so dictionary
-addition gives selective overrides. Pass a complete scheme (or a partial
-dictionary) to `m.slide(colors: ...)` to change one logical slide, after which
-the next slide restores the inherited scheme:
+Set page and text color natively after `m.setup`:
 
 ```typ
-#show: m.setup.with(colors: m.color.scheme("dark") + (accent: rgb("#ffb703")))
-
-#m.slide(colors: m.color.scheme("editorial"))[Only this slide is Editorial.]
-#m.slide(colors: (accent: rgb("#d97706")))[Inherit every role except accent.]
+#show: m.setup
+#set page(fill: rgb("#111827"))
+#set text(fill: rgb("#f3f4f6"))
 ```
 
-= Palettes
-
-`m.color.palette(name)` returns an ordered color array of established
-qualitative palettes for charts, diagrams, and categorical distinctions.
-Hover a band for each color's zero-based index, stable name, and Typst
-expression; click to copy the `m.color.palette(...)` call.
-
-#let general-palette-names = (
-  "okabe-ito",
-  "tol-bright",
-  "tol-muted",
-  "brewer-dark2",
-  "brewer-set2",
-  "brewer-paired",
-)
-
-#let carto-qualitative-names = (
-  "carto-antique",
-  "carto-bold",
-  "carto-pastel",
-  "carto-prism",
-  "carto-safe",
-  "carto-vivid",
-)
-
-#let palette-band(name) = {
-  let record = palette-record(name)
-  let copy-value = "m.color.palette(" + repr(name) + ")"
-  html.elem(
-    "section",
-    attrs: (
-      class: "palette-swatch",
-      "data-palette": name,
-      "data-copy": copy-value,
-      "aria-label": name + " color palette",
-    ),
-  )[
-    #html.elem("div", attrs: (class: "palette-swatch__header"))[
-      #html.elem("code", attrs: (class: "palette-swatch__title"))[#name]
-      #html.elem(
-        "span",
-        attrs: (
-          class: "palette-swatch__status",
-          "aria-live": "polite",
-        ),
-      )
-    ]
-    #html.elem(
-      "button",
-      attrs: (
-        class: "palette-swatch__band",
-        type: "button",
-        "data-palette-copy": "",
-        "aria-label": "Copy " + name + " palette expression",
-      ),
-    )[
-      #let index = 0
-      #for (key, value) in record {
-        let color-value = repr(value)
-        let color-hex = color-value.slice(5, 12)
-        let description = str(index) + ": " + key + ", " + color-value
-        html.elem(
-          "span",
-          attrs: (
-            class: "palette-swatch__segment",
-            "data-index": str(index),
-            "data-color": key,
-            style: "--swatch-color: " + color-hex,
-            title: description,
-          ),
-        )[
-          #html.elem(
-            "span",
-            attrs: (class: "palette-swatch__visually-hidden"),
-          )[#description]
-        ]
-        index += 1
-      }
-    ]
-  ]
-}
-
-#for name in general-palette-names + carto-qualitative-names {
-  palette-band(name)
-}
-
-Call `palette()` without `color` for the ordinary array; pass a zero-based
-integer or stable string name to extract one value, and `lighten` or `darken`
-to transform the whole palette first (which no longer guarantees the source's
-accessibility properties):
+Without these rules, Mosaic keeps its warm-white default. Built-in layouts that
+draw decoration accept `accent:`, which colors only that layout's rule, spine,
+section number, or progress indicator:
 
 ```typ
-#let colors = m.color.palette("tol-bright")
-#let blue = m.color.palette("tol-bright", color: "blue")
-#let fills = m.color.palette("brewer-set2", lighten: 20%)
+#let accent = rgb("#e69f00")
+
+#m.slide(grid: m.layouts.title(
+  title: [Research result],
+  accent: accent,
+))
+
+#m.slide(grid: m.layouts.default(
+  variant: "header-body",
+  progress: "line",
+  accent: accent,
+))[Title][Body]
 ```
 
-Palettes are sourced from
-#link("https://jfly.uni-koeln.de/color/")[Okabe-Ito],
-#link("https://sronpersonalpages.nl/~pault/")[Paul Tol],
-#link("https://colorbrewer2.org/")[ColorBrewer], and
-#link("https://carto.com/carto-colors/")[CARTOColors]; provenance and licensing
-are recorded in `THIRD_PARTY_LICENSES.md`. The
-#link("api/color.html")[Color API] lists exact signatures and diagnostics.
+For one dark slide, scope a native text rule around a background override:
+
+```typ
+#[
+  #show label("mosaic-cell-body"): set text(fill: white)
+  #m.slide(
+    content: (background: block(width: 100%, height: 100%, fill: rgb("#111827"))),
+  )[Dark for this slide only]
+]
+```
+
+Color collections remain ordinary Typst arrays. Define them near the chart or
+diagram that uses them, or import a focused color package. Component `role:`
+values remain local to components such as `frame`, `label`, and `quote`.
 
 = Themes
 
-A theme packages a deck's whole look. In Mosaic it is a module, not an object:
-one Typst file exporting a palette, an `apply` wrapper for `#show`, and a few
-layout factories that return `m.slide(...)`. It has no `self` and no
-configuration API. Deck-wide colors, spacing, and features flow through
-`m.setup`, and everything else is the `set` and `show` rules from the sections
-above, saved in one place.
+A theme is a complete Mosaic facade with specialized `setup` and `layouts`.
+Its setup packages native page, text, and cell rules; its layout factories
+return the same deferred recipes consumed by `m.slide`.
 
-The file below is a complete theme followed by the deck that uses it: a palette
-of `#let` bindings, three factories, and an `apply` wrapper that hands settings
-to `setup` and paints the cells with native rules. Copy it as a starting point.
+The complete theme below is designed to be copied as a starting point.
 
-#verbatim-example("themes/starter.typ")
-
-#slideshow(
+#embedded-example(
   calepin.elements.gallery,
-  "themes/starter",
-  5,
-  "The starter theme deck",
+  "appearance/starter-theme",
+  frames: 5,
+  title: "The starter theme deck",
 )
 
-Two conventions are worth naming. The `apply` wrapper exists because `set` and
-`show` rules cannot cross an `#import`, so document-wide styling lives inside a
-function applied with `#show: apply`. And the `default` layout is defined before
-the wrapper because `m.setup` captures it as the `auto-slide` handler; after
-that, plain `== Title` markup renders through the theme with no explicit call.
+Because `set` and `show` rules cannot cross an import, document-wide styling
+lives inside the themed `setup`. It also registers `layouts.default()` for
+`==` heading slides and `layouts.section()` for section slides.
 
 Three themes ship inside the package under `m.themes`
-(`metropolis`, `cream`, and `minimalist`), each a single module. Import
-Mosaic and pick one:
+(`metropolis`, `cream`, and `minimalist`). Import one as the active Mosaic facade:
 
 ```typ
-#import "@local/mosaic:0.0.1" as m
-#let theme = m.themes.metropolis
-#show: theme.apply
+#import "@local/mosaic:0.0.1" as mosaic
+#import mosaic.themes.metropolis as m
+#show: m.setup
 
-#theme.title([My talk], subtitle: [With a borrowed look])
+#m.slide(grid: m.layouts.title(
+  title: [My talk],
+  subtitle: [With a borrowed look],
+))
 == First slide
-#theme.section([A new chapter])
+#m.slide(
+  grid: m.layouts.section(),
+  content: (section: [A new chapter]),
+  section: true,
+  numbered: false,
+)
 ```
 
-Each bundled `apply` exposes a few knobs through `.with(...)` (for example
-`#show: theme.apply.with(base-size: 24pt)`). Beyond those, there is no
-configuration API, and that is deliberate: to change anything else, copy the
-theme file from `mosaic/src/themes/` next to your deck, import the copy, and
-edit any line. You own it, with no version coupling. The Grayscale theme in
-`docs/examples/portfolio/` shows the same convention vendored beside its deck.
-See #link("examples.html")[Examples] for complete decks rendered under each
-theme.
+Use `.with(...)` for the few exposed knobs. For deeper changes, copy the theme
+from `mosaic/src/themes/` beside your deck and edit it directly. The Grayscale
+example follows that convention; #link("examples.html")[Examples] shows the
+complete rendered decks.

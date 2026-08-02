@@ -5,7 +5,7 @@
 #mosaic.slide[Normal content fits.]
 
 #mosaic.slide[
-  #mosaic.reveal[
+  #mosaic.steps.reveal[
     #lorem(180)
   ][
     Overflow remains authored at the normal text size.

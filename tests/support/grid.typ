@@ -1,7 +1,7 @@
 // Test-only inspection helpers. Public callers construct grids with h/v/cell/t.
 #import "../../mosaic/src/grid-model.typ": (
   validate,
-  count-bodies,
+  body-cell-ids,
   resolved-tracks,
 )
 
@@ -109,5 +109,5 @@
 
 #let bodies(grid) = {
   validate(grid)
-  count-bodies(grid)
+  body-cell-ids(grid).len()
 }
