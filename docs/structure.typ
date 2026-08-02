@@ -96,56 +96,12 @@ m.grid.h(m.grid.t(2fr, "a"), "b")
 Tracks accept native `auto`, fixed lengths, percentages, and `fr` values. The
 #link("api/grid.html")[Grid API] lists exact accepted forms and diagnostics.
 
-= Filling cells
-
-Pass the completed grid as the first argument to `slide` and provide one
-content block per content-bearing cell. Positional blocks follow the cell IDs
-in source order: left to right within `m.grid.h`, top to bottom within
-`m.grid.v`, and recursively through nested grids.
-
-#embedded-example(
-  calepin.elements.gallery,
-  "structure/filling-cells",
-  frames: 3,
-  title: "Three slides built from horizontal and vertical grids",
-)
-
-Positional blocks are useful for a one-cell slide. For multiple cells, prefer
-the `cells` dictionary: IDs make assignment explicit and independent of tree
-order.
-
-```typ
-#let comparison = m.grid.h(
-  m.grid.v("heading", "left"),
-  "right",
-)
-
-#m.slide(
-  grid: comparison,
-  content: (
-    heading: [Heading],
-    left: [Left argument],
-    right: [Right argument],
-  ),
-)
-```
-
-The cell ID is its single handle: `m.grid.cell("body")` defines it,
-`content: (body: [...])` fills it, and `label("mosaic-cell-body")` styles it. Every
-content-bearing cell must be supplied; unknown IDs and mixing cell entries with
-positional bodies are errors.
-
-When the grid owns fixed content such as an image or logo, put it directly on
-the cell; it then consumes no slide body:
-
-```typ
-#m.grid.cell("logo", content: image("logo.svg"))
-```
-
 = Layouts
 
-A layout is a ready-made grid. Pass it to `m.slide`, or bind it once with
-`m.slide.with` and reuse the resulting slide function:
+A layout is a ready-made grid. It reaches the slide through the same `grid:`
+argument as a hand-built grid, so everything else on this page still applies.
+Pass it to `m.slide` directly, or bind it once with `m.slide.with` and reuse
+the resulting slide function:
 
 ```typ
 #let accent = rgb("#e69f00")
@@ -204,9 +160,15 @@ Bundle reusable cell rules in a transformer so every default slide shares them:
 
 == `title()`
 
-Use `title()` for an opening slide with optional subtitle, authors, date, and
-image. It includes ordinary, academic, accent, and image compositions; title
-metadata belongs to the layout, so the surrounding `m.slide` needs no body.
+Use `title()` for an opening slide. Title metadata (subtitle, authors, date,
+image) belongs to the layout itself, so the surrounding `m.slide` needs no
+body. The nine frames below move from metadata-heavy to image-first: inline
+academic metadata with affiliations and ORCID, a left-aligned variant with
+foreground marks placed over the layout, a centered stack, a solid accent
+spine, and the image variants (`image-right`, `image-left`, `image-top`,
+`image-bottom`, `image-background`). In the final frame the image itself
+carries the contrast: `darken:` dims the photograph and a scoped rule on the
+`<mosaic-cell-title>` label switches that one slide to light text.
 
 #embedded-example(
   calepin.elements.gallery,
@@ -218,7 +180,11 @@ metadata belongs to the layout, so the surrounding `m.slide` needs no body.
 
 == `section()`
 
-Use `section()` for a section divider with optional subtitle, number, or image.
+Use `section()` for a section divider with optional subtitle, number, or
+image. The frames below grow the same divider one argument at a time: plain,
+numbered, then each image placement. The last frame repeats the pattern from
+the title layout, pairing a darkened `image-background` with white text
+through the `<mosaic-cell-section>` label, scoped to that slide alone.
 
 #embedded-example(
   calepin.elements.gallery,

@@ -8,12 +8,7 @@
 #let panel(id) = it => {
   show label("mosaic-cell-" + id): set align(center + horizon)
   show label("mosaic-cell-" + id): set text(size: 1.5em, weight: "bold")
-  show label("mosaic-cell-" + id): body => block(
-    width: 100%,
-    height: 100%,
-    stroke: 1pt + black,
-    body,
-  )
+  show label("mosaic-cell-" + id): m.surface(stroke: 1pt + black)
   it
 }
 

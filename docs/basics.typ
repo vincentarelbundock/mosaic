@@ -10,7 +10,7 @@
 // One step of the canonical semantic-slide example, shown through the same
 // PDF slideshow treatment as every other embedded example. The preview image
 // is that step's frame; the dialog pages through the whole walkthrough.
-#let semantic-frames = 7
+#let semantic-frames = 5
 #let semantic-thumbnail(frame, alt) = {
   if sys.inputs.at("calepin-target", default: "paged") == "html" {
     pdf-slideshow(
@@ -64,12 +64,10 @@ A slide can reveal its content in *steps*. Each step renders as one *frame*.
 Each frame is one page in the PDF. Page and text color are ordinary Typst
 settings; built-in colored layout decoration takes an explicit `accent:`.
 
-Each of these elements is a native Typst layer. The background and foreground
-are content you supply directly; each grid cell is a single block that carries
-a native *label*, `<mosaic-cell-ID>`. You style them with ordinary `show` and
-`set` rules, the same way you style any Typst document. Styling does not go
-through a theme object or a separate API. See
-#link("appearance.html")[Appearance].
+Each of these elements is a native Typst layer, and every cell carries a
+native *label*, `<mosaic-cell-ID>`, so ordinary `show` and `set` rules style
+the whole stack; #link("appearance.html")[Appearance] presents the styling
+model.
 
 = First slideshow
 
@@ -102,14 +100,11 @@ content to those names with `content:`, and style the labeled cells with
 native Typst rules. The same canonical composition grows through each step
 below.
 
-The styling layer comes first here. Every rendered cell is one block labeled
-`<mosaic-cell-ID>`, so the rules below run once, ahead of the first slide, and
-tint each named cell used in this walkthrough. That is why every thumbnail
-shows its grid structure in color: the styles are global `show` rules, not
-arguments to `slide` or `grid`. `m.surface` paints the cell's own block behind
-whatever the cell contains, while `set` rules style the content inside it,
-like the vertically centered text below. The distinction between the two is
-explained in
+The styling layer comes first here. The rules below run once, ahead of the
+first slide, and tint each named cell used in this walkthrough. That is why
+every thumbnail shows its grid structure in color: the styles are global
+`show` rules on cell labels, not arguments to `slide` or `grid`. How
+`m.surface` and `set` rules divide that work is explained in
 #link("appearance.html#content-rules-and-surface-rules")[Appearance: content rules and surface rules].
 
 ```typ
@@ -217,27 +212,8 @@ content.
 == Built-in layouts
 
 Built-in layouts are ready-made semantic grids. Assign a layout to a value,
-then pass that value to `slide` just like the custom grids above.
-
-=== `title()`
-
-The title layout owns its title content, so the surrounding slide needs no
-`content:` dictionary.
-
-```typ
-#let title-layout = m.layouts.title(
-  title: [Built-in layouts],
-  subtitle: [Ready-made semantic grids],
-  variant: "accent-block",
-)
-#m.slide(grid: title-layout)
-```
-
-#semantic-thumbnail(5, "The built-in accent-block title layout")
-
-=== `default()`
-
-The default layout supplies familiar named regions for ordinary slides.
+then pass that value to `slide` just like the custom grids above. Here the
+default layout supplies a familiar header-and-body structure:
 
 ```typ
 #let default-layout = m.layouts.default(variant: "header-body")
@@ -247,24 +223,11 @@ The default layout supplies familiar named regions for ordinary slides.
 ))
 ```
 
-#semantic-thumbnail(6, "The built-in header-and-body default layout")
+#semantic-thumbnail(5, "The built-in header-and-body default layout")
 
-=== `section()`
-
-The section layout supplies a centered `section` cell and can add supporting
-content through its layout arguments.
-
-```typ
-#let section-layout = m.layouts.section(
-  subtitle: [Optional supporting text],
-)
-#m.slide(
-  grid: section-layout,
-  content: (section: [Section layout]),
-)
-```
-
-#semantic-thumbnail(7, "The built-in section layout")
+`m.layouts.title` and `m.layouts.section` work the same way for opening and
+divider slides; #link("structure.html")[Structure] walks through all three
+layouts and their variants.
 
 Continue with #link("structure.html")[Structure] for the complete grid and
 layout model, #link("content.html")[Content] for material placed in cells, and

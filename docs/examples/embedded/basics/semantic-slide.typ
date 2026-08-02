@@ -70,14 +70,7 @@
   ),
 )
 
-// Built-in layouts are grids too: assign each one before passing it to slide.
-#let title-layout = m.layouts.title(
-  title: [Built-in layouts],
-  subtitle: [Ready-made semantic grids],
-  variant: "accent-block",
-)
-#m.slide(grid: title-layout)
-
+// Built-in layouts are grids too: assign one before passing it to slide.
 #let default-layout = m.layouts.default(variant: "header-body")
 #m.slide(
   grid: default-layout,
@@ -85,10 +78,4 @@
     header: [== Default layout],
     body: [A familiar header-and-body structure.],
   ),
-)
-
-#let section-layout = m.layouts.section(subtitle: [Optional supporting text])
-#m.slide(
-  grid: section-layout,
-  content: (section: [Section layout]),
 )
