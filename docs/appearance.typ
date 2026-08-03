@@ -160,6 +160,29 @@ Native rules after `m.setup` are still the right tool for typography or a specia
 ]
 ```
 
+== Styling a whole slide
+
+The resolved cell grid also carries `<mosaic-slide>`, so one rule reaches every
+cell of a slide at once. Reach for it when a slide's whole composition changes
+together — light-on-dark type over a photograph is the common case:
+
+```typ
+#[
+  #show label("mosaic-slide"): set text(fill: white)
+  #m.slide(
+    layout: "image",
+    variant: "left",
+    image: (path: path("cover.webp"), scrim: black.transparentize(40%)),
+  )[== Header][Body — both cells white from one rule]
+]
+```
+
+Naming each cell instead works, but couples the rule to the cells the layout
+happens to produce: change the variant and a cell can silently keep the deck's
+ordinary color. `<mosaic-slide>` sits outside the per-cell labels, so a
+`<mosaic-cell-*>` rule still refines it — set the slide's color once, then
+override one cell.
+
 Color collections remain ordinary Typst arrays. Define them near the chart or diagram that uses them, or import a focused color package. Component `role:` values remain local to components such as `frame`, `label`, and `quote`.
 
 = Themes

@@ -43,6 +43,21 @@
 #assert(body-cell-ids(with-fixed) == ("body",))
 #assert(resolve-content(with-fixed, (body: [Body]), ()) == (body: [Body]))
 
+// Every open cell is optional. Omitted named or positional cells resolve to
+// empty content while supplied cells keep declaration order.
+#assert(
+  resolve-content(comparison, (right: [Right]), ())
+    == (heading: [], left: [], right: [Right]),
+)
+#assert(
+  resolve-content(comparison, (:), ([Heading],))
+    == (heading: [Heading], left: [], right: []),
+)
+#assert(
+  resolve-content(comparison, (:), ())
+    == (heading: [], left: [], right: []),
+)
+
 // Incremental destinations are counted by ID too.
 #let temporal = mosaic.grid.v(
   mosaic.grid.cell("top"),

@@ -16,8 +16,8 @@
 // representation the renderer consumes. Setup defaults are fallbacks for
 // content-bearing cells that exist in this resolved grid. Named slide content
 // overrides those defaults; `none` explicitly suppresses one. Positional bodies
-// may either fill every cell (the backward-compatible full form) or only cells
-// not already satisfied by defaults.
+// may either fill every cell (the full override form) or the leading cells not
+// already satisfied by defaults. Any omitted content-bearing cell becomes [].
 //
 // `none` means "suppress", so suppressing a cell this layout does not have is
 // already true and resolves to a no-op. That matches a setup-level default for
@@ -54,13 +54,10 @@
       explicit.insert(id, if value == none { [] } else { value })
     }
     let resolved = inherited + explicit
-    let missing = body-ids.filter(id => id not in resolved)
-    if missing.len() > 0 {
-      fail(
-        "slide content is missing "
-          + if missing.len() == 1 { "cell " } else { "cells " }
-          + missing.map(repr).join(", "),
-      )
+    for id in body-ids {
+      if id not in resolved {
+        resolved.insert(id, [])
+      }
     }
     resolved
   } else {
@@ -69,7 +66,7 @@
     } else {
       body-ids.filter(id => id not in inherited)
     }
-    if bodies.len() != destination-ids.len() {
+    if bodies.len() > destination-ids.len() {
       if inherited.len() == 0 {
         fail(
           "grid expects " + str(body-ids.len())
@@ -84,10 +81,8 @@
     }
     let resolved = if destination-ids.len() == body-ids.len() { (:) } else { inherited }
     for (index, id) in destination-ids.enumerate() {
-      resolved.insert(id, bodies.at(index))
+      resolved.insert(id, bodies.at(index, default: []))
     }
     resolved
   }
 }
-
-

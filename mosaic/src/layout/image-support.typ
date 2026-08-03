@@ -32,14 +32,35 @@
   }
 }
 
+// Two spellings, because authors ask two different questions. An array of 2 is
+// visual order — "what occupies each side" — and must be mirrored by hand when
+// the variant flips. A single track size answers "how much room does the
+// picture get", which is side-independent: the companion region takes the
+// remaining `1fr`, so `image-left` and `image-right` stay mirror images of each
+// other without the caller reordering anything.
 #let validate-directional-tracks(tracks, subject) = {
-  if tracks != auto and (
+  if tracks != auto and not valid-track-size(tracks) and (
     type(tracks) != array
       or tracks.len() != 2
       or not tracks.all(valid-track-size)
   ) {
-    fail(subject + " must be auto or an array of 2 native Typst track sizes")
+    fail(
+      subject
+        + " must be auto, one native Typst track size for the image, or an"
+        + " array of 2 native Typst track sizes in visual order",
+    )
   }
+}
+
+// Resolves either spelling to the visual-order pair the grid expects.
+#let directional-tracks(tracks, image-first) = if tracks == auto {
+  auto
+} else if type(tracks) == array {
+  tracks
+} else if image-first {
+  (tracks, 1fr)
+} else {
+  (1fr, tracks)
 }
 
 #let fixed-image-content(value, subject) = visual-content(
@@ -78,13 +99,17 @@
   // `variant` is always the output of `semantic-image-position`, so it is one
   // of left/right/top/bottom by construction.
   validate-directional-tracks(tracks, "directional image layout tracks")
-  let children = if variant in ("left", "top") {
+  let image-first = variant in ("left", "top")
+  let children = if image-first {
     (image, body)
   } else {
     (body, image)
   }
   let split = if variant in ("left", "right") { h } else { v }
-  split(gutter: gutter, ..track-children(children, tracks))
+  split(
+    gutter: gutter,
+    ..track-children(children, directional-tracks(tracks, image-first)),
+  )
 }
 
 // Any tonal adjustment belongs to the picture itself (see the image spec's

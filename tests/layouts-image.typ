@@ -42,10 +42,9 @@
   content: (body: [== Over the picture]),
 )
 
-// An empty body gives a bare full-bleed slide.
+// An omitted body gives a bare full-bleed slide.
 #mosaic.slide(
   layout: mosaic.layouts.image(photo, variant: "full"),
-  content: (body: []),
 )
 
 // `fit` overrides the per-variant default.
@@ -76,3 +75,15 @@
   image: photo,
   content: (body: [== Named selection, full bleed]),
 )
+
+// A scalar track sizes the picture and is side-independent: the same value
+// mirrors cleanly across variants, with the companion region taking 1fr.
+#for side in ("left", "right", "top", "bottom") {
+  mosaic.slide(
+    layout: "image",
+    variant: side,
+    image: photo,
+    tracks: 2fr,
+    content: (header: [== Scalar track #side], body: [Companion takes 1fr.]),
+  )
+}

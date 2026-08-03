@@ -40,7 +40,7 @@ Pass a dictionary to the named `content:` argument to associate each body with a
   title: "Three bodies assigned explicitly by cell ID",
 )
 
-The cell ID connects all three layers: `m.grid.cell("body")` defines the cell, `content: (body: [...])` fills it, and `label("mosaic-cell-body")` styles it. Every content-bearing cell must be supplied, and unknown IDs are errors.
+The cell ID connects all three layers: `m.grid.cell("body")` defines the cell, `content: (body: [...])` fills it, and `label("mosaic-cell-body")` styles it. Content-bearing cells are optional and resolve to empty content when omitted; unknown IDs are errors.
 
 When a grid owns fixed content such as an image or logo, put it directly on the cell. Fixed cell content needs no positional body or `content:` entry:
 

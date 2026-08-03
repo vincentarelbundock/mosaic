@@ -35,7 +35,7 @@ layouts-image-scrim-type|layout "image" image scrim must be a color, gradient, o
 layouts-section-accent|layout "section" accent must be a color
 layouts-section-image-unused|variant "plain" does not use image
 layouts-section-mutated-command|variant "image-bottom" requires image
-layouts-section-tracks|"section" tracks must be auto or an array of 2 native Typst track sizes
+layouts-section-tracks|"section" tracks must be auto, one native Typst track size for the image, or an array of 2 native Typst track sizes in visual order
 layouts-section-tracks-scope|tracks apply only to directional image variants
 layouts-title-accent|layout "title" accent must be a color
 layouts-title-align|align must use left, center, or right
@@ -51,7 +51,7 @@ layouts-title-image-unused|variant "left-aligned" does not use image
 layouts-title-mutated-command|variant "image-right" requires image
 layouts-title-ordinary-authors|author 1 must be created with author()
 layouts-title-rule|rule must be auto, true, or false
-layouts-title-tracks|"title" tracks must be auto or an array of 2 native Typst track sizes
+layouts-title-tracks|"title" tracks must be auto, one native Typst track size for the image, or an array of 2 native Typst track sizes in visual order
 layouts-title-tracks-scope|tracks apply only to directional image variants
 layouts-title-variant|unsupported variant "unknown"
 noncanonical-cell-record|invalid grid node at root
@@ -83,7 +83,6 @@ setup-paper|setup paper must be "16-9" or "4-3"
 setup-section-grid-removed|setup does not accept "section-grid"
 setup-title-type|setup title must be content, a string, or none
 slide-content-fixed|slide content cannot supply fixed-content cell "logo"
-slide-content-missing|slide content is missing cell "b"
 slide-content-mixed|slide cannot combine named and positional cell content
 slide-content-type|slide content must be a dictionary
 slide-content-unknown|slide content contains unknown cell id "sidebar"
@@ -107,7 +106,7 @@ temporal-heading-grid|headings cannot be placed in incremental grid nodes; keep 
 theme-definition-option-conflict|theme option "paper" conflicts with setup
 theme-definition-unknown|theme does not accept "mystery"
 theme-layouts-incomplete|theme layouts requires "title"
-too-few|grid expects 2 bodies, received 1
 too-many|grid expects 1 bodies with setup defaults or 2 bodies to override them, received 3
 slide-image-layout-missing-image|layout "image" requires an image
 setup-layouts-image-not-configurable|setup layouts does not accept "image"
+image-tracks-invalid|layout "image" tracks must be auto, one native Typst track size for the image, or an array of 2 native Typst track sizes in visual order

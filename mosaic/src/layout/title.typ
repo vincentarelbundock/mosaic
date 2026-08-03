@@ -175,7 +175,14 @@
 
 // Metadata tiers inside the composed title stack keep pt-anchored sizes so
 // they do not compound with the display scale supplied by the
-// <mosaic-cell-title> label rules.
+// <mosaic-cell-title> label rules. `setup` sets `size: 2em` on the whole title
+// cell, so an em-relative subtitle would resolve to 1.05em x 2em and overflow.
+//
+// The cost is that a native `set text(size: ..)` on that label moves only the
+// display line, since that rule *is* the display size. Scaling the stack as a
+// unit would mean applying the display size to the title line rather than to
+// the cell, which is a change to every title composition rather than a local
+// fix.
 //
 // Their muted `fill` survives only while the cell carries the deck's ordinary
 // text color; see `adapt-fill`. That is what lets one rule on

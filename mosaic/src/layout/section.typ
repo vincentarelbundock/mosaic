@@ -58,7 +58,8 @@
 /// `image: (path: "cover.webp", scrim: black.transparentize(55%))`, and
 /// override the `section` cell's text fill for light-on-dark compositions.
 /// Image variants require `image`.
-/// Directional `tracks` are two native Typst track sizes in visual order.
+/// Directional `tracks` are one native Typst track size for the image, or two
+/// in visual order.
 #let section(
   subtitle: none,
   number: none,

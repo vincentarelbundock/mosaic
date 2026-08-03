@@ -321,13 +321,25 @@
   let paper = paper-state.get()
   let slide-fill = if page.fill == auto { settings.colors.canvas } else { page.fill }
   for step in physical-steps(steps, handout) {
-    let rendered = render(
-      resolved-grid,
-      contents,
-      step,
-      overflow: settings.overflow,
-      slide: slide,
-    )
+    // The whole cell grid carries <mosaic-slide>, so one native rule can reach
+    // every cell of a slide at once:
+    //
+    //   show label("mosaic-slide"): set text(fill: white)
+    //
+    // Without it, styling a slide means naming each cell the resolved layout
+    // happens to produce, and a change of variant silently leaves a cell
+    // behind. Per-cell labels still apply, and sit inside this one, so a
+    // <mosaic-cell-*> rule refines what this sets.
+    let rendered = [
+      #render(
+        resolved-grid,
+        contents,
+        step,
+        overflow: settings.overflow,
+        slide: slide,
+      )
+      #label("mosaic-slide")
+    ]
     pagebreak(weak: true)
     prepare-frame(step, freeze-location, handout: handout)
     let background-content = render-plane(resolved-background, step, "background")
