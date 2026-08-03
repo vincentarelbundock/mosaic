@@ -1,5 +1,5 @@
 // Exact callable Dark layout namespace.
-#import "../../layout-api.typ" as _base
+#import "../../layout/api.typ" as _base
 #import "../../author.typ": author
 
 #let content(
@@ -12,6 +12,21 @@
   columns: columns,
   tracks: tracks,
   fit: fit,
+)
+
+// Purely structural: the image layout carries no Dark-specific tokens.
+#let image(
+  image,
+  variant: "figure",
+  caption: none,
+  fit: auto,
+  tracks: auto,
+) = _base.image(
+  image,
+  variant: variant,
+  caption: caption,
+  fit: fit,
+  tracks: tracks,
 )
 
 #let title(

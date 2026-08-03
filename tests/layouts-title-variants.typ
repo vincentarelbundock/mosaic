@@ -1,6 +1,6 @@
 #import "@local/mosaic:0.0.1" as mosaic
 #import "support/grid.typ" as grid-test
-#import "../mosaic/src/layout-resolver.typ": resolve-layout
+#import "../mosaic/src/layout/resolver.typ": resolve-layout
 #import "../mosaic/src/settings.typ": make-settings
 
 #let settings = make-settings()

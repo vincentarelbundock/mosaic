@@ -24,14 +24,14 @@ frozen-counters-type|frozen-counters must contain only counter values
 frozen-states-type|frozen-states must contain only state values
 handout-type|setup handout must be a boolean
 headings-preamble|content appears before the first level-1 or level-2 heading handled by setup
-image-adjustments-combined|image accepts either lighten or darken, not both
-image-lighten-range|image lighten must be a ratio from 0% to 100% or none
+image-scrim-type|image scrim must be a color, gradient, or tiling
 layouts-content-columns|columns must be a positive integer
 layouts-content-mutated-command|columns must be a positive integer
 layouts-content-progress-removed|native:unexpected argument: progress
 layouts-content-tracks|tracks must be auto or an array of 2 native Typst track sizes
 layouts-content-variant|layout "content" has unsupported variant "sidebar"; expected one of (
 layouts-default-removed|native:module `layouts` does not contain `default`
+layouts-image-scrim-type|layout "image" image scrim must be a color, gradient, or tiling
 layouts-section-accent|layout "section" accent must be a color
 layouts-section-image-unused|variant "plain" does not use image
 layouts-section-mutated-command|variant "image-bottom" requires image
@@ -88,13 +88,16 @@ slide-content-mixed|slide cannot combine named and positional cell content
 slide-content-type|slide content must be a dictionary
 slide-content-unknown|slide content contains unknown cell id "sidebar"
 slide-content-value-type|slide content for "body" must be content or none
-slide-grid-removed|slide does not accept named argument "grid"
+slide-grid-removed|slide layout "content" has no field "grid"; expected one of ("columns", "fit", "tracks", "variant")
+slide-layout-fields-explicit|slide cannot combine layout fields with an explicit layout value; pass "variant" to the layout constructor instead
+slide-layout-fields-raw-grid|the configured content layout is a raw grid, which cannot carry layout fields
+slide-layout-fields-scope|slide layout "title" has no field "columns"
 slide-layout-invalid|slide layout must be a Mosaic grid tree or layout
-slide-layout-name-unknown|slide layout name must be "content", "title", or "section"
-slide-named-argument|slide does not accept named argument "bogus"
+slide-layout-name-unknown|slide layout name must be one of ("content", "title", "section", "image")
+slide-named-argument|slide layout "content" has no field "bogus"; expected one of ("columns", "fit", "tracks", "variant")
 slide-plane-value-type|background must be content or none
-slide-role-removed|slide does not accept named argument "role"
-slide-section-removed|slide does not accept named argument "section"
+slide-role-removed|slide layout "content" has no field "role"; expected one of ("columns", "fit", "tracks", "variant")
+slide-section-removed|slide layout "content" has no field "section"; expected one of ("columns", "fit", "tracks", "variant")
 speaker-note-body|speaker note body must be content
 speaker-note-overflow|speaker output notes overflow on frame 1
 speaker-note-record|invalid speaker note record
@@ -106,3 +109,5 @@ theme-definition-unknown|theme does not accept "mystery"
 theme-layouts-incomplete|theme layouts requires "title"
 too-few|grid expects 2 bodies, received 1
 too-many|grid expects 1 bodies with setup defaults or 2 bodies to override them, received 3
+slide-image-layout-missing-image|layout "image" requires an image
+setup-layouts-image-not-configurable|setup layouts does not accept "image"

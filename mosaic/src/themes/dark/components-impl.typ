@@ -1,4 +1,4 @@
-#import "../../component-api.typ" as _base
+#import "../../component/api.typ" as _base
 #import "../../shared.typ": fail as _fail
 #import "tokens.typ" as _tokens
 
@@ -117,4 +117,4 @@
   )
 }
 
-#import "../../component-api.typ": image
+#import "../../component/api.typ": image

@@ -2,7 +2,7 @@
 // grid traversal order. Positional content remains the terse shorthand; both
 // normalize to one ordered body array, so equivalent slides render identically.
 #import "@local/mosaic:0.0.1" as mosaic
-#import "../mosaic/src/grid-model.typ": body-cell-ids, resolve-content
+#import "../mosaic/src/grid/content.typ": body-cell-ids, resolve-content
 
 #let comparison = mosaic.grid.h(
   mosaic.grid.v(

@@ -1,5 +1,5 @@
 // Passive Metropolis design definition; the Mosaic engine owns setup.
-#import "../../component-api.typ" as components
+#import "../../component/api.typ" as components
 #import "layouts.typ" as layouts
 #import "tokens.typ" as tokens
 

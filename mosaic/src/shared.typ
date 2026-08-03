@@ -3,9 +3,27 @@
 
 #let fail(message) = assert(false, message: "mosaic: " + message)
 
+// Typst's structural element functions have no public constructors.
+#let typst-sequence = [].func()
+#let typst-styled = text(red)[].func()
+#let typst-space = [ ].func()
+
 #let valid-path(value) = type(value) == path or (
   type(value) == str and value != ""
 )
+
+// A scrim is an ordinary Typst paint, so it accepts exactly what a `fill`
+// accepts and needs no Mosaic-specific vocabulary of its own. One validator
+// serves both the component and every layout that carries an image, so the
+// spelling cannot drift between them.
+#let valid-paint(value) = type(value) in (color, gradient, tiling)
+
+#let validate-scrim(value, subject) = {
+  if value != none and not valid-paint(value) {
+    fail(subject + " scrim must be a color, gradient, or tiling")
+  }
+  value
+}
 
 #let require-dictionary(value, name) = {
   if type(value) != dictionary {

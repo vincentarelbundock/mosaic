@@ -1,5 +1,5 @@
 #import "@local/mosaic:0.0.1" as mosaic
-#import "../mosaic/src/grid-model.typ": styled-cell
+#import "../mosaic/src/grid/constructors.typ": styled-cell
 #show: mosaic.setup
 
 #let compact = styled-cell(

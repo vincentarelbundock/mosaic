@@ -1,5 +1,5 @@
 // Private shared adapters for themes whose recipes differ only by accent token.
-#import "../layout-api.typ" as layouts
+#import "../layout/api.typ" as layouts
 
 #let content() = layouts.content(variant: "header-body")
 
@@ -29,3 +29,7 @@
   subtitle: subtitle,
   accent: accent,
 )
+
+// Purely structural: the image layout carries no theme-specific tokens, so
+// themes sharing these adapters re-export it unchanged.
+#let image = layouts.image

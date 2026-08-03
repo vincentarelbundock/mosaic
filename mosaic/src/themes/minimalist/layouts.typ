@@ -5,3 +5,5 @@
 #let content = _common.content
 #let title(..args) = _common.title(auto, ..args)
 #let section(subtitle: none) = _common.section(auto, subtitle: subtitle)
+
+#let image = _common.image

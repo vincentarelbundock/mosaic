@@ -1,5 +1,5 @@
 // Exact callable Metropolis layout namespace.
-#import "../../layout-api.typ" as _layouts
+#import "../../layout/api.typ" as _layouts
 #import "../../author.typ": author
 
 #let content() = _layouts.content(variant: "header-body")
@@ -29,3 +29,6 @@
   subtitle: subtitle,
   accent: auto,
 )
+
+// Purely structural: the image layout carries no Metropolis-specific tokens.
+#let image = _layouts.image

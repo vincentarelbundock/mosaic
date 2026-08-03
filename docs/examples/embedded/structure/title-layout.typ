@@ -101,9 +101,9 @@
   #m.slide(layout: m.layouts.title(
     title: [Cities after dark],
     variant: "image-background",
-    image: m.components.image(
-      path("/docs/assets/images/title-city.webp"),
-      darken: 45%,
+    image: (
+      path: path("/docs/assets/images/title-city.webp"),
+      scrim: black.transparentize(55%),
       alt: "Coastal city lights at night with dark sky and water to the left",
     ),
     align: top + left,

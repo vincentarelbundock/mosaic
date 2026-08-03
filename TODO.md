@@ -74,7 +74,7 @@ grid and visual-plane configuration.
 ## Layout and styling
 
 - [ ] Let the title stack scale as a unit, for example a `scale:` argument on
-  `m.layouts.title`. `title-typography` (`layout-title.typ`) anchors the
+  `m.layouts.title`. `title-typography` (`layout/title.typ`) anchors the
   subtitle and metadata tiers to `settings.type.body.size` in pt so they do not
   compound with the display scale supplied by the `<mosaic-cell-title>` label
   rules. That correctly resists compounding, but it also means a label rule that

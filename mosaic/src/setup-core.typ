@@ -1,11 +1,11 @@
 // Sane presentation defaults, applied as a document-wide show rule.
-#import "slide-runtime.typ": configure-deck
+#import "slide/runtime.typ": configure-deck
 #import "deck-compiler.typ": compile-deck
-#import "render.typ": overflow-report
+#import "grid/render.typ": overflow-report
 #import "settings.typ": make-settings, configure-settings, resolve-colors
 #import "shared.typ": fail, reject-unknown-keys
 #import "color-defaults.typ": default-colors
-#import "layout-config.typ": standard-layouts, validate-layouts
+#import "layout/config.typ": standard-layouts, validate-layouts
 
 #let text-element = text
 #let heading-element = heading

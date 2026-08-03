@@ -5,6 +5,7 @@
   (
     "/api/modules/author.typ",
     "/api/modules/layout-content.typ",
+    "/api/modules/layout-image.typ",
     "/api/modules/layout-title.typ",
     "/api/modules/layout-section.typ",
   ),

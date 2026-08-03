@@ -1,11 +1,8 @@
 // Compilation of top-level Typst content into explicit and automatic slides.
-#import "shared.typ": fail
-#import "slide-command.typ": is-slide-command, slide-command
-#import "slide-runtime.typ": render-slide
+#import "shared.typ": fail, typst-sequence, typst-space, typst-styled
+#import "slide/command.typ": is-slide-command, slide-command
+#import "slide/runtime.typ": render-slide
 
-#let typst-sequence = [].func()
-#let typst-space = [ ].func()
-#let typst-styled = text(red)[].func()
 #let typst-context = (context []).func()
 #let is-heading-space(value) = (
   value == []

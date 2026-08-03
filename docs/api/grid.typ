@@ -2,5 +2,5 @@
 
 #api-module(
   "mosaic.grid constructors",
-  ("/api/modules/grid-model.typ",),
+  ("/api/modules/grid-constructors.typ",),
 )

@@ -72,7 +72,7 @@ Native `place` positions images, shapes, and other Typst content independently o
 
 == Photographic backgrounds
 
-Pass a slide-sized image through the reserved `background` entry. The optional `lighten` and `darken` washes of `m.components.image()` quiet the photograph and improve contrast with the text in front of it.
+Pass a slide-sized image through the reserved `background` entry. The optional `scrim` of `m.components.image()` paints a translucent layer over the photograph, quieting it so the text in front reads against a predictable tone. The #link("content.html#scrims")[Scrims] section covers the flat, gradient, and light variants.
 
 #embedded-example(
   calepin.elements.gallery,

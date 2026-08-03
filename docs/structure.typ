@@ -82,7 +82,31 @@ Start with Mosaic's ready-made content layout:
 #m.slide(layout: "content")[Slide content]
 ```
 
-The other recognized names are `"title"` and `"section"`. Because `"content"` is the default, you can usually omit it. Use `m.layouts.*` only when choosing a variant, or pass one of the custom grids described above.
+The other recognized names are `"title"` and `"section"`. Because `"content"` is the default, you can usually omit it. Pass `m.layouts.*` to build a layout from scratch, or one of the custom grids described above.
+
+== Layout fields on a slide
+
+Any named argument `slide` does not recognize is a field of the selected layout. So a single slide can change one aspect of the configured layout without restating it:
+
+```typ
+#m.slide(layout: "title", variant: "academic")
+#m.slide(layout: "section", number: [03])[Methods]
+#m.slide(columns: 2)[Left column][Right column]
+```
+
+This differs from passing `m.layouts.title(variant: "academic")`, which *replaces* the configured layout. Named arguments *refine* it: whatever the theme or `m.setup` set for that layout, such as an accent color or a background image, survives. Only the fields you name change.
+
+The two forms are mutually exclusive on one slide. With an explicit `m.layouts.*` value, pass the fields to that constructor instead, because that is where they belong:
+
+```typ
+// Refines the configured title layout.
+#m.slide(layout: "title", variant: "academic")
+
+// Replaces it; the fields go to the constructor.
+#m.slide(layout: m.layouts.title(variant: "academic"))
+```
+
+Field names are checked against the selected layout, so `m.slide(layout: "title", columns: 2)` fails at compile time rather than being silently ignored. Fields also require a layout chosen by name: if `m.setup` configures that layout as a raw grid rather than an `m.layouts.*` value, there are no fields to refine and Mosaic says so. The #link("api/layouts.html")[Layouts API] lists the fields each layout accepts.
 
 == `content()`
 
@@ -122,7 +146,7 @@ Use `layout: "title"` for an opening slide. Declare the deck's title information
   title: "Title information shared across a deck",
 )
 
-Pass `m.layouts.title(...)` directly when one title slide needs different content or a different variant. The gallery moves from text-based titles to layouts that place an image beside, above, below, or behind the title.
+To change one field for one slide, name it on `slide`: `m.slide(layout: "title", variant: "academic")`. Pass `m.layouts.title(...)` directly when the slide needs a title layout built from scratch rather than a refinement of the configured one. The gallery moves from text-based titles to layouts that place an image beside, above, below, or behind the title.
 
 #embedded-example(
   calepin.elements.gallery,
@@ -134,7 +158,7 @@ Pass `m.layouts.title(...)` directly when one title slide needs different conten
 
 == `section()`
 
-Use `layout: "section"` for a section divider. Its configured `section()` layout may include a subtitle, number, or image. The frames below grow the same divider one argument at a time: plain, numbered, then each image placement. The last frame repeats the pattern from the title layout, pairing a darkened `image-background` with white text through the `<mosaic-cell-section>` label, scoped to that slide alone.
+Use `layout: "section"` for a section divider. Its configured `section()` layout may include a subtitle, number, or image. The frames below grow the same divider one argument at a time: plain, numbered, then each image placement. The last frame repeats the pattern from the title layout, pairing an `image-background` carrying a #link("content.html#scrims")[scrim] with white text through the `<mosaic-cell-section>` label, scoped to that slide alone.
 
 #embedded-example(
   calepin.elements.gallery,

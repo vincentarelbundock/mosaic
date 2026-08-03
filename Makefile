@@ -39,8 +39,30 @@ BONSAI_WEBP := $(WEB_IMAGE_DIR)/bonsai.webp
 DOG_SOURCE := $(WEB_IMAGE_DIR)/dog.jpg
 DOG_WEBP := $(WEB_IMAGE_DIR)/dog.webp
 API_MODULES_DIR := $(DOCS_DIR)/api/modules
-API_MODULE_NAMES := author components slide-command note-command pause-command surface grid-model image incremental-command setup theme-extension layout-content layout-section layout-title
-API_STAGED_MODULES := $(addprefix $(API_MODULES_DIR)/,$(addsuffix .typ,$(API_MODULE_NAMES)))
+# Staged Tidy module name -> package source path, both without the .typ suffix.
+# The staged names stay flat because the docs pages reference them by name.
+API_MODULE_MAP := \
+  author:author \
+  component-frame:component/frame \
+  component-callout:component/callout \
+  component-label:component/label \
+  component-quote:component/quote \
+  component-divider:component/divider \
+  component-progress:component/progress \
+  slide-command:slide/command \
+  note-command:note/command \
+  pause-command:incremental/pause \
+  surface:surface \
+  grid-constructors:grid/constructors \
+  image:component/image \
+  incremental-command:incremental/command \
+  theme-extension:themes/extension \
+  layout-content:layout/content \
+  layout-image:layout/image \
+  layout-section:layout/section \
+  layout-title:layout/title
+API_MAPPED_MODULES := $(foreach entry,$(API_MODULE_MAP),$(API_MODULES_DIR)/$(word 1,$(subst :, ,$(entry))).typ)
+API_STAGED_MODULES := $(API_MAPPED_MODULES) $(API_MODULES_DIR)/setup.typ
 # These files are both compiled below and embedded verbatim in their owning pages.
 # Files whose name starts with "_" are shared includes, not standalone decks.
 EMBEDDED_EXAMPLE_SOURCES := $(shell find $(EMBEDDED_EXAMPLES_DIR) -type f -name '*.typ' ! -name '_*' 2>/dev/null | sort)
@@ -145,7 +167,11 @@ components: install ## Compile the public facade and components test deck
 
 api-sources: $(API_STAGED_MODULES) ## Stage public modules for Tidy inside the Calepin root
 
-$(API_MODULES_DIR)/%.typ: $(PACKAGE_DIR)/src/%.typ
+$(foreach entry,$(API_MODULE_MAP),$(eval \
+  $(API_MODULES_DIR)/$(word 1,$(subst :, ,$(entry))).typ: \
+  $(PACKAGE_DIR)/src/$(word 2,$(subst :, ,$(entry))).typ))
+
+$(API_MAPPED_MODULES):
 	mkdir -p $(API_MODULES_DIR)
 	cp $< $@
 

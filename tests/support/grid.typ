@@ -1,9 +1,7 @@
 // Test-only inspection helpers. Public callers construct grids with h/v/cell/t.
-#import "../../mosaic/src/grid-model.typ": (
-  validate,
-  body-cell-ids,
-  resolved-tracks,
-)
+#import "../../mosaic/src/grid/validation.typ": validate
+#import "../../mosaic/src/grid/content.typ": body-cell-ids
+#import "../../mosaic/src/grid/traversal.typ": resolved-tracks
 
 #let count-cells(node) = if node.kind == "cell" {
   1

@@ -27,16 +27,32 @@
 #assert(configured.at("alt") == "A contained brown dog")
 #assert(configured.at("scaling") == "smooth")
 
+// A scrim wraps the picture in a clipped block, so the result is no longer a
+// bare image element.
+#let scrimmed = mosaic.components.image(
+  path("/docs/assets/images/dog.webp"),
+  scrim: black.transparentize(65%),
+  alt: "A darkened brown dog",
+)
+#assert(scrimmed.func() != image)
+
+// Every Typst paint is accepted, so a white wash and a gradient need no
+// separate syntax of their own.
 #grid(
-  columns: (1fr, 1fr),
+  columns: (1fr, 1fr, 1fr),
+  scrimmed,
   mosaic.components.image(
     path("/docs/assets/images/dog.webp"),
-    darken: 35%,
-    alt: "A darkened brown dog",
+    scrim: white.transparentize(80%),
+    alt: "A lightened brown dog",
   ),
   mosaic.components.image(
     path("/docs/assets/images/dog.webp"),
-    lighten: 20%,
-    alt: "A lightened brown dog",
+    scrim: gradient.linear(
+      black.transparentize(100%),
+      black.transparentize(20%),
+      angle: 90deg,
+    ),
+    alt: "A brown dog under a gradient scrim",
   ),
 )

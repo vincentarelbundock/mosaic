@@ -151,6 +151,8 @@ def run_core(typst: str, sources: list[str]) -> None:
     image = TMP / "mosaic-image-1.svg"
     require_contains(image, "#00000059")
     require_contains(image, "#ffffff33")
+    # A scrim takes any paint, so a gradient reaches the page unflattened.
+    require_contains(image, "linearGradient")
 
     typst_compile(
         typst,

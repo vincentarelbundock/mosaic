@@ -62,6 +62,7 @@
     "fit.typ",
     "layout-accents.typ",
     "layouts-content.typ",
+    "layouts-image.typ",
     "setup-foreground-furniture.typ",
     "layouts-label-style.typ",
     "layouts-progress.typ",
@@ -69,7 +70,8 @@
     "layouts-stack-fill.typ",
     "layouts-structural.typ",
     "layouts-title-variants.typ",
-    "layouts.typ"
+    "layouts.typ",
+    "slide-layout-fields.typ"
   ],
   "responsive": [
     "layouts-title-responsive.typ"

@@ -75,7 +75,17 @@ The standard names are `content`, `title`, and `section`. Note that `layout: "co
 
 Content slides are numbered by default; title and section slides are not. Section slides advance the section counter. `numbered:` explicitly overrides the numbering default.
 
-Use a layout factory (`m.layouts.*`) only when choosing a variant or passing arguments:
+Any named argument `slide` does not recognize is a field of the selected layout, overlaid on the *configured* layout so the theme's other fields survive:
+
+```typ
+#m.slide(layout: "title", variant: "academic")
+#m.slide(layout: "section", number: [03])[Methods]
+#m.slide(columns: 2)[Left column][Right column]
+```
+
+Field names are validated against the selected layout, so a name that layout does not have is a compile error. Fields require a layout selected by name (or `auto`); they cannot accompany an explicit `m.layouts.*` value, which replaces rather than refines the configured layout. Pass the fields to that constructor instead.
+
+Use a layout factory (`m.layouts.*`) when building a layout from scratch rather than refining the configured one:
 
 ```typ
 #m.slide(
@@ -106,7 +116,7 @@ Variants:
 - **Section**: `plain` and the same five image variants.
 - **Content**: `body`, `header-body`, `body-footer`, `header-body-footer`.
 
-`m.layouts.title()` inherits `title`, `subtitle`, `authors`, and `date` from setup, so `m.slide(layout: "title")` needs no body. An explicit layout argument wins; pass `none` (or `()` for `authors`) to suppress an inherited field on one slide. For image variants, `darken:` or `lighten:` on the image quiets the photograph; pair `image-background` with a scoped text-color rule on the `<mosaic-cell-title>` or `<mosaic-cell-section>` label for contrast. One such rule recolors the whole stack: the subtitle and metadata are muted only while the cell carries the deck's ordinary text color, and follow any override, so light-on-dark titles need no hand-built grid.
+`m.layouts.title()` inherits `title`, `subtitle`, `authors`, and `date` from setup, so `m.slide(layout: "title")` needs no body. An explicit layout argument wins; pass `none` (or `()` for `authors`) to suppress an inherited field on one slide. For image variants, `scrim:` on the image spec quiets the photograph, as in `image: (path: "cover.webp", scrim: black.transparentize(55%))`; pair `image-background` with a scoped text-color rule on the `<mosaic-cell-title>` or `<mosaic-cell-section>` label for contrast. One such rule recolors the whole stack: the subtitle and metadata are muted only while the cell carries the deck's ordinary text color, and follow any override, so light-on-dark titles need no hand-built grid.
 
 `m.layouts.content(fit: ...)` shrinks body content that would otherwise overflow its column: `"contain"` scales it to the body height, `"auto"` scales and reflows at the smaller size (the best default for prose), and `"width"` scales to the column width. It applies to body columns only; header and footer size to their own content. Prefer `fit:` over hand-tuning per-slide text sizes, which stops working as soon as the deck's global size changes.
 
@@ -250,7 +260,7 @@ The cell ID connects all three layers: `m.grid.cell("body")` defines the cell, `
 
 Useful content values:
 
-- `m.components.image(path("photo.webp"), alt: "...")`: like native `image()` but defaults `width`/`height` to `100%` and `fit` to `"cover"`. Mutually exclusive `lighten:`/`darken:` add a white or black wash (ratio = wash opacity). Use Typst's `path()` so the location anchors to the calling document across the package boundary. For a full-bleed image, set the cell's `inset: 0pt`.
+- `m.components.image(path("photo.webp"), alt: "...")`: like native `image()` but defaults `width`/`height` to `100%` and `fit` to `"cover"`. `scrim:` paints a layer over the picture and takes any Typst paint, so `scrim: black.transparentize(55%)` darkens the whole frame and a `gradient.linear(..)` darkens only the band the text occupies. The same key is accepted in the image dictionaries the `title`, `section`, and `image` layouts take. Use Typst's `path()` so the location anchors to the calling document across the package boundary. For a full-bleed image, set the cell's `inset: 0pt`.
 - `m.components.frame()` (clipped semantic frame), `callout()` (side stripe with optional title), `label()` (compact inline label), `quote()` (attribution treatment), `divider()` (horizontal rule), `progress()` (position indicator). All return ordinary content for any cell or plane. Component `role:` values (`neutral`, `accent`) resolve from the theme palette.
 - Native math, `figure` with captions and references, MiTeX for LaTeX math, ctheorems for theorem environments: all work unchanged inside cells.
 
@@ -307,7 +317,7 @@ Keep three concerns distinct:
 - **Planes** are the reserved `background` and `foreground` content entries. They cover the full usable slide area without changing grid measurements. A slide inherits the setup plane by default, replaces it with its own entry, or suppresses it with `none`.
 - **Runtime state** supplies logical slide, section, and frame counters, read by components such as `m.components.progress()`.
 
-A logo is ordinary setup foreground content: `place(top + right, dx: .., dy: ..)[#image(..)]` inside `m.setup(content: (foreground: ...))`. A photographic background is a slide-sized `m.components.image` (with `darken:` for contrast) in the `background` entry.
+A logo is ordinary setup foreground content: `place(top + right, dx: .., dy: ..)[#image(..)]` inside `m.setup(content: (foreground: ...))`. A photographic background is a slide-sized `m.components.image` (with `scrim:` for contrast) in the `background` entry.
 
 `m.components.progress()` follows the logical slide counter (all frames of one slide share a number). Its `variant:` is `"1/1"` (default), `"1"`, `"circle"`, or `"line"`. `count:` selects the `"slides"` (default) or `"sections"` counter; `current:` and `total:` override the counter explicitly. Appearance goes through `role:` (default `"accent"`), `color:`, `track:` (the inactive color), `width:` (line variant), `size:` (circle diameter), and `thickness:`.
 

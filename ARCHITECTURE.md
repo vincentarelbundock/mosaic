@@ -9,26 +9,26 @@ unless a public facade deliberately re-exports them.
 
 Dependencies flow downward through these layers:
 
-1. **Shared leaves**: `shared.typ`, `incremental-core.typ`, and
+1. **Shared leaves**: `shared.typ`, `incremental/core.typ`, and
    `color-defaults.typ` own tags, errors, parsing primitives, visibility status,
    and color defaults.
-2. **Canonical models**: `grid-model.typ`, `layout-core.typ`, `author.typ`, and
+2. **Canonical models**: the modules under `grid/`, `layout/core.typ`, `author.typ`, and
    `deck-state.typ` own validated records and state.
-3. **Focused transformation support**: `incremental-command.typ`,
-   `incremental-heading.typ`, `incremental-analysis.typ`,
-   `incremental-transform.typ`, `note-command.typ`, `note-analysis.typ`,
-   `layout-support.typ`, and
-   `layout-image-support.typ` own one transformation concern each.
-4. **Vertical implementations**: `layout-content.typ`, `layout-title.typ`,
-   `layout-section.typ`, `components.typ`, `fit.typ`, and `render.typ` implement
+3. **Focused transformation support**: `incremental/command.typ`,
+   `incremental/heading.typ`, `incremental/analysis.typ`,
+   `incremental/transform.typ`, `note/command.typ`, `note/analysis.typ`,
+   `layout/support.typ`, and
+   `layout/image-support.typ` own one transformation concern each.
+4. **Vertical implementations**: `layout/content.typ`, `layout/title.typ`,
+   `layout/section.typ`, `components.typ`, `fit.typ`, and `grid/render.typ` implement
    complete semantic features against canonical models.
-5. **Slide orchestration**: `slide-command.typ`, `layout-resolver.typ`, and
-   `slide-runtime.typ` validate deferred slide commands, resolve layouts, plan
+5. **Slide orchestration**: `slide/command.typ`, `layout/resolver.typ`, and
+   `slide/runtime.typ` validate deferred slide commands, resolve layouts, plan
    physical frames, and invoke rendering.
 6. **Document compilation**: `deck-compiler.typ` groups top-level Typst content
    into slides; private `setup-core.typ` installs resolved semantic defaults and
    starts compilation.
-7. **Theme interpretation**: `theme-engine.typ` validates passive theme
+7. **Theme interpretation**: `themes/engine.typ` validates passive theme
    definitions, resolves their palette/defaults/options/layout hooks, applies
    their native-rule callback, and invokes `setup-core.typ`. Themes never call
    setup, settings, or compiler helpers.
@@ -36,8 +36,8 @@ Dependencies flow downward through these layers:
    passive definitions, callable layout modules, and thin facades that bind
    those definitions directly through the public theme extension. Light owns
    the canonical implementation; root Mosaic re-exports its facade exactly.
-9. **Public facades**: `grid-api.typ`, `component-api.typ`, `layout-api.typ`,
-   `steps-api.typ`, `theme-extension.typ`, `theme-api.typ`, `shared-api.typ`, and
+9. **Public facades**: `grid/api.typ`, `component/api.typ`, `layout/api.typ`,
+   `incremental/api.typ`, `themes/extension.typ`, `themes/api.typ`, `shared-api.typ`, and
    `mosaic/lib.typ` assemble intentional namespaces without implementing
    behavior.
 
@@ -97,7 +97,7 @@ wrapping show rule to paint edge to edge.
 ## Content routing
 
 `mosaic.slide` accepts positional bodies or a `content:` dictionary. Both normalize
-through `grid-model.typ` to one cell-ID-to-content dictionary before rendering.
+through `grid/content.typ` to one cell-ID-to-content dictionary before rendering.
 Positional bodies fill content-bearing cells in depth-first declaration order;
 `content:` assigns cells by stable ID and addresses the planes through the
 reserved `background` and `foreground` entries. `resolve-content` validates the
@@ -113,26 +113,29 @@ cell(id) → content: (id: ...) → label("mosaic-cell-id")
 
 ## Grid subsystem
 
-- `grid-model.typ` owns canonical cell/split records, constructors, validation,
-  traversal, track introspection, and content routing.
-- `grid-api.typ` exposes constructors through `mosaic.grid`.
-- `render.typ` consumes valid trees and never constructs ad hoc split records.
+- `grid/model.typ` owns canonical values and node predicates.
+- `grid/validation.typ` validates node shape, tracks, styles, and unique IDs.
+- `grid/constructors.typ` owns public and layout-internal constructors.
+- `grid/traversal.typ` owns tree folds, cell-ID collection, and track inspection.
+- `grid/content.typ` normalizes positional and named slide content.
+- `grid/render.typ` consumes valid trees and never constructs ad hoc split records.
+- `grid/api.typ` exposes the curated constructors through `mosaic.grid`.
 
 Layout resolvers must return trees built through `cell`, `h`, `v`, and `t`; they
 must not hide native layout geometry behind noncanonical records.
 
 ## Layout and author subsystem
 
-- `layout-core.typ` owns the deferred layout record and common contract checks.
-- `layout-config.typ` owns the standard `content`, `title`, and `section` layout
+- `layout/core.typ` owns the deferred layout record and common contract checks.
+- `layout/config.typ` owns the standard `content`, `title`, and `section` layout
   names, validates layout dictionaries, and supplies neutral complete defaults.
-- `layout-support.typ` owns shared content, image, track, and surface mechanics.
-- `layout-image-support.typ` owns private title/section image composition and
+- `layout/support.typ` owns shared content, image, track, and surface mechanics.
+- `layout/image-support.typ` owns private title/section image composition and
   side-effect-only image/track assertions.
-- Each `layout-{name}.typ` module owns one constructor, its field contract, and
+- Each `layout/{name}.typ` module owns one constructor, its field contract, and
   grid resolution.
-- `layout-resolver.typ` verifies the common shape and dispatches to the owner.
-- `layout-api.typ` defines `mosaic.layouts`.
+- `layout/resolver.typ` verifies the common shape and dispatches to the owner.
+- `layout/api.typ` defines `mosaic.layouts`.
 
 `author.typ` owns the canonical author record and one `analyze-authors` pass. That
 pass validates authors, rejects conflicting affiliation names, deduplicates
@@ -150,15 +153,15 @@ Validators are explicit about their role. Assertion procedures such as
 `components.typ` owns component validation and rendering. Global progress
 furniture and layout-supplied progress both call the same private implementation
 behind `components.progress`; counter selection, percentage calculation, and line
-rendering therefore have one owner. `component-api.typ` exposes only documented
+rendering therefore have one owner. `component/api.typ` exposes only documented
 component constructors, not style dictionaries or state helpers.
 
 ## Slide and deck subsystem
 
 - `deck-state.typ` owns the active named-layout dictionary and logical
   slide/section counters.
-- `slide-command.typ` constructs and validates deferred slide commands.
-- `slide-runtime.typ` owns output and handout modes, frozen counters/states,
+- `slide/command.typ` constructs and validates deferred slide commands.
+- `slide/runtime.typ` owns output and handout modes, frozen counters/states,
   physical-frame planning, queryable frame-note metadata, plane inheritance,
   and logical-slide rendering.
 - `deck-compiler.typ` groups headings and body content into automatic or explicit
@@ -167,7 +170,7 @@ component constructors, not style dictionaries or state helpers.
   automatic and explicit slides share one runtime path.
 - `setup-core.typ` owns private semantic defaults, compiler configuration,
   standard document metadata, and the queryable `<mosaic-deck-metadata>` record;
-  `theme-engine.typ` feeds it resolved definitions and root `lib.typ` re-exports
+  `themes/engine.typ` feeds it resolved definitions and root `lib.typ` re-exports
   Light's complete facade directly.
 - `settings.typ` stores the resolved six-role semantic palette, canonical deck
   identity (`title`, `subtitle`, `authors`, and `date`), partial cell-content
@@ -192,23 +195,23 @@ component constructors, not style dictionaries or state helpers.
 Incremental behavior is split by responsibility rather than kept in one large
 module:
 
-- `incremental-core.typ`: step-range parsing and visibility-state evaluation;
-- `incremental-command.typ`: public `on`, `reveal`, `replace`, and `reduce`
+- `incremental/core.typ`: step-range parsing and visibility-state evaluation;
+- `incremental/command.typ`: public `on`, `reveal`, `replace`, and `reduce`
   constructors plus canonical deferred records;
-- `pause-command.typ`: the public non-rendering `pause` marker, canonical
+- `incremental/pause.typ`: the public non-rendering `pause` marker, canonical
   validation, and source-order segment splitting;
-- `incremental-heading.typ`: heading inspection, style capture, inert
+- `incremental/heading.typ`: heading inspection, style capture, inert
   continuations, and state application;
-- `incremental-analysis.typ`: maximum-step discovery;
-- `incremental-transform.typ`: command reduction and content reconstruction for
+- `incremental/analysis.typ`: maximum-step discovery;
+- `incremental/transform.typ`: command reduction and content reconstruction for
   one step;
-- `note-command.typ`: canonical non-rendering `mosaic.note` records;
-- `note-analysis.typ`: frame-aware note extraction through the same temporal
+- `note/command.typ`: canonical non-rendering `mosaic.note` records;
+- `note/analysis.typ`: frame-aware note extraction through the same temporal
   command model;
-- `steps-api.typ`: the curated public `mosaic.steps` namespace.
+- `incremental/api.typ`: the curated public `mosaic.steps` namespace.
 
-`slide-runtime.typ` selects frames and invokes analysis/transformation.
-`render.typ` consumes an already-resolved grid at one step; it does not own
+`slide/runtime.typ` selects frames and invokes analysis/transformation.
+`grid/render.typ` consumes an already-resolved grid at one step; it does not own
 handout/output policy or public commands. Notes are collected once per physical
 frame, stripped from visual content, and emitted both as printable note content
 and `<mosaic-speaker-notes>` metadata. Note-only timing does not contribute to
@@ -223,7 +226,7 @@ step offsets; empty markers therefore contribute neither content nor frames.
 
 ## Bundled themes
 
-`theme-engine.typ` owns positional-option rejection, setup/default merging,
+`themes/engine.typ` owns positional-option rejection, setup/default merging,
 semantic color resolution, complete named-layout selection, and list
 normalization. It consumes an exact passive definition with
 design colors, setup defaults, theme-specific option defaults, optional text
@@ -328,10 +331,10 @@ external image CLI.
 - Add record invariants and traversal beside the canonical model that owns them.
 - Add layout construction, validation, and resolution to that layout's vertical
   module; move a cross-layout relationship to one explicit shared owner.
-- Add incremental public syntax to `incremental-command.typ`, analysis to
-  `incremental-analysis.typ`, heading mechanics to `incremental-heading.typ`, and
-  reconstruction to `incremental-transform.typ`.
-- Add frame and handout policy to `slide-runtime.typ`, not the renderer.
+- Add incremental public syntax to `incremental/command.typ`, analysis to
+  `incremental/analysis.typ`, heading mechanics to `incremental/heading.typ`, and
+  reconstruction to `incremental/transform.typ`.
+- Add frame and handout policy to `slide/runtime.typ`, not the renderer.
 - Keep facade files declarative: import and re-export, never implement behavior.
 - Add a fixture to the appropriate explicit manifest before implementation.
 - Add an embedded example through one canonical slug and make the integrity

@@ -13,7 +13,7 @@
   grid,
   content: (background: m.components.image(
     path("/docs/assets/images/bonsai.webp"),
-    lighten: 35%,
+    scrim: white.transparentize(65%),
     alt: "A pine bonsai",
   )),
 )[
