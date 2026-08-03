@@ -2,5 +2,5 @@
 
 #show: mosaic.setup
 #mosaic.slide(
-  grid: mosaic.grid.cell("background"),
+  layout: mosaic.grid.cell("background"),
 )[Body]

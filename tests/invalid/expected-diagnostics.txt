@@ -14,11 +14,10 @@ bad-split-child|h/v children must be string cell IDs or Mosaic grid nodes
 bad-split-gutter|h gutter must be a native Typst track size
 bad-split-track-size|t size must be auto, a fixed or relative length, or a fractional length
 bad-state|before must be one of "visible", "hidden", "dimmed", "removed", received "ghosted"
-bare-track-wrapper|invalid grid node at root
+bare-track-wrapper|slide layout must be a Mosaic grid tree or layout
 cell-id-both|cell id must be passed positionally or through id:, not both
 cell-surface-ownership|cell accepts only a cell id, optional fixed content, and inset
 components-progress-count|progress count must be "slides" or "sections"
-conflicting-grid|slide cannot combine a positional grid tree with the grid parameter
 duplicate-cell-id|duplicate cell id "same" in grid at root
 empty-split|h must contain at least one child
 frozen-counters-type|frozen-counters must contain only counter values
@@ -28,12 +27,12 @@ headings-preamble|content appears before the first level-1 or level-2 heading ha
 headings-section-content|automatic section slides cannot contain content before the next level-2 heading
 image-adjustments-combined|image accepts either lighten or darken, not both
 image-lighten-range|image lighten must be a ratio from 0% to 100% or none
-layouts-default-accent|layout "default" accent must be a color
-layouts-default-columns|columns must be a positive integer
-layouts-default-mutated-command|columns must be a positive integer
-layouts-default-progress|progress must be none, "1/1", "1", "circle", or "line"
-layouts-default-tracks|tracks must be auto or an array of 2 native Typst track sizes
-layouts-default-variant|layout "default" has unsupported variant "sidebar"; expected one of (
+layouts-content-columns|columns must be a positive integer
+layouts-content-mutated-command|columns must be a positive integer
+layouts-content-progress-removed|native:unexpected argument: progress
+layouts-content-tracks|tracks must be auto or an array of 2 native Typst track sizes
+layouts-content-variant|layout "content" has unsupported variant "sidebar"; expected one of (
+layouts-default-removed|native:module `layouts` does not contain `default`
 layouts-section-accent|layout "section" accent must be a color
 layouts-section-image-unused|variant "plain" does not use image
 layouts-section-mutated-command|variant "image-bottom" requires image
@@ -59,29 +58,51 @@ layouts-title-variant|unsupported variant "unknown"
 noncanonical-cell-record|invalid grid node at root
 noncanonical-cell-style|invalid grid node at root
 noncanonical-command-on|invalid command-on record
-noncanonical-layout-record|invalid grid node at root
+noncanonical-layout-record|slide layout must be a Mosaic grid tree or layout
 noncanonical-slide-command|invalid slide command record
 noncanonical-temporal-record|invalid temporal-on record
 notes-output-overflow|notes output notes overflow on frame 1
-overflow-policy|features overflow must be "off" or "warn"
+overflow-policy|setup overflow must be "off" or "warn"
+pause-record|invalid pause record
 reserved-cell-id|cell id "background" is reserved for the background plane
-setup-features-unknown|features does not accept "bogus"
+setup-authors-type|setup authors must be an array
+setup-auto-slide-removed|setup does not accept "auto-slide"
+setup-background-theme-top-level|setup does not accept "background"
+setup-colors-type|setup colors accent must be a color
+setup-colors-unknown|setup colors does not accept "brand"
+setup-content-empty-id|setup content cell id must be non-empty
+setup-content-type|setup content must be a dictionary
+setup-content-value|setup content for "footer" must be content, a string, or none
+setup-default-grid-removed|setup does not accept "default-grid"
+setup-features-slide-number|setup does not accept "features"
+setup-layout-invalid|setup layouts "content" must be a Mosaic grid tree or layout
+setup-layouts-type|setup layouts must be a dictionary
+setup-layouts-unknown|setup layouts does not accept "aside"
 setup-output|setup output must be "slides", "speaker", or "notes"
 setup-paper|setup paper must be "16-9" or "4-3"
+setup-section-grid-removed|setup does not accept "section-grid"
+setup-title-type|setup title must be content, a string, or none
 slide-content-fixed|slide content cannot supply fixed-content cell "logo"
 slide-content-missing|slide content is missing cell "b"
 slide-content-mixed|slide cannot combine named and positional cell content
 slide-content-type|slide content must be a dictionary
 slide-content-unknown|slide content contains unknown cell id "sidebar"
-slide-content-value-type|slide content for "body" must be content
-slide-plane-value-type|background must be content or none
+slide-content-value-type|slide content for "body" must be content or none
+slide-grid-removed|slide does not accept named argument "grid"
+slide-layout-invalid|slide layout must be a Mosaic grid tree or layout
+slide-layout-name-unknown|slide layout name must be "content", "title", or "section"
 slide-named-argument|slide does not accept named argument "bogus"
-slide-section-type|section must be a boolean
+slide-plane-value-type|background must be content or none
+slide-role-removed|slide does not accept named argument "role"
+slide-section-removed|slide does not accept named argument "section"
 speaker-note-body|speaker note body must be content
 speaker-note-overflow|speaker output notes overflow on frame 1
 speaker-note-record|invalid speaker note record
 split-rule-type|h rule must be none or a native Typst stroke
 temporal-heading|headings cannot be wrapped in on, reveal, replace, or reduce; keep semantic headings structurally stable across frames
 temporal-heading-grid|headings cannot be placed in incremental grid nodes; keep semantic headings structurally stable across frames
+theme-definition-option-conflict|theme option "paper" conflicts with setup
+theme-definition-unknown|theme does not accept "mystery"
+theme-layouts-incomplete|theme layouts requires "title"
 too-few|grid expects 2 bodies, received 1
-too-many|grid expects 1 bodies, received 2
+too-many|grid expects 1 bodies with setup defaults or 2 bodies to override them, received 3

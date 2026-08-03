@@ -29,7 +29,7 @@
 // through the body cell's <mosaic-cell-body> label.
 #show label("mosaic-cell-body"): set align(center + horizon)
 
-#m.slide(m.layouts.default(variant: "header-body"))[
+#m.slide(layout: m.layouts.content(variant: "header-body"))[
   == Bellman optimality equation
 ][
   $

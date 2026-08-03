@@ -87,7 +87,7 @@
 // Set the deck-wide default; slides can still override it explicitly.
 #show: mosaic.setup.with(
   spacing: (inset: 5pt),
-  default-grid: mosaic.grid.h("a", "b"),
+  layouts: (content: mosaic.grid.h("a", "b")),
 )
 #set text(size: 7pt)
 
@@ -116,10 +116,10 @@
     mosaic.grid.t(auto, "right"),
   ),
 )
-#mosaic.slide(grid: nested)[1][2][3][4][5]
+#mosaic.slide(layout: nested)[1][2][3][4][5]
 
 // Page 3: an explicit single-cell override containing a native grid.
-#mosaic.slide(grid: mosaic.grid.cell(id: "body"))[
+#mosaic.slide(layout: mosaic.grid.cell(id: "body"))[
   #grid(
     columns: (1fr, 1fr),
     rows: (1fr, 1fr),
@@ -139,7 +139,7 @@
 #[
   #show label("mosaic-cell-fixed"): set text(size: 0.8em, fill: blue)
   #show label("mosaic-cell-supplied"): set text(size: 1.2em, weight: "bold")
-  #mosaic.slide(text-grid)[Supplied content]
+  #mosaic.slide(layout: text-grid)[Supplied content]
 ]
 
 // Fixed cell content is declared directly, so only the remaining cell consumes
@@ -158,7 +158,7 @@
     fill: pink,
     it,
   )
-  #mosaic.slide(mosaic.grid.h(
+  #mosaic.slide(layout: mosaic.grid.h(
     mosaic.grid.t(
       30%,
       mosaic.grid.cell(
@@ -176,7 +176,7 @@
     mosaic.grid.cell("b"),
   ))[Configured grid]
 
-  #mosaic.slide(mosaic.grid.h(
+  #mosaic.slide(layout: mosaic.grid.h(
     mosaic.grid.cell("a"),
     mosaic.grid.cell("b"),
   ))[A][B]

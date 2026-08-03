@@ -4,4 +4,4 @@
 #grid.style.remove("inset")
 
 #show: mosaic.setup
-#mosaic.slide(grid: grid)[Malformed cell]
+#mosaic.slide(layout: grid)[Malformed cell]

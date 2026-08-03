@@ -5,6 +5,6 @@
 // Planes carry the same label vocabulary as cells, so native rules style them.
 #show label("mosaic-cell-background"): set text(fill: rgb("#77aa11"))
 #mosaic.slide(
-  grid: mosaic.layouts.default(variant: "body"),
+  layout: mosaic.layouts.content(variant: "body"),
   content: (background: place(bottom + left)[Styled plane]),
 )[Styled layout]

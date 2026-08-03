@@ -15,7 +15,7 @@
 // Center the diagram within its cell through its label.
 #show label("mosaic-cell-diagram"): set align(center + horizon)
 
-#m.slide(
+#m.slide(layout: 
   m.grid.cell("diagram"),
 )[
   #diagram(

@@ -62,6 +62,13 @@ class ExportScannerTests(unittest.TestCase):
         )
         self.assertEqual(actual, {"one", "renamed", "three", "tools"})
 
+    def test_private_module_alias_is_not_exported(self) -> None:
+        actual = self.exports(
+            '#import "dependency.typ" as _private\n#let public = 1\n',
+            {"dependency.typ": "#let internal = 1\n"},
+        )
+        self.assertEqual(actual, {"public"})
+
 
 if __name__ == "__main__":
     unittest.main()

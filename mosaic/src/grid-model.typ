@@ -418,15 +418,23 @@
 )
 
 // Resolve a slide's content into one id -> content map, the single internal
-// representation the renderer consumes. Named content (`named`, the slide's
-// `content:` dictionary with the plane keys already extracted) is validated
-// against the resolved grid; positional `bodies` are zipped onto the
-// content-bearing cell ids in traversal order. The renderer then looks each
-// cell's content up by id, with no positional cursor to keep in sync.
-#let resolve-content(node, named, bodies) = {
+// representation the renderer consumes. Setup defaults are fallbacks for
+// content-bearing cells that exist in this resolved grid. Named slide content
+// overrides those defaults; `none` explicitly suppresses one. Positional bodies
+// may either fill every cell (the backward-compatible full form) or only cells
+// not already satisfied by defaults.
+#let resolve-content(node, named, bodies, defaults: (:)) = {
   let body-ids = body-cell-ids(node)
+  let inherited = (:)
+  for id in body-ids {
+    if id in defaults {
+      let value = defaults.at(id)
+      inherited.insert(id, if value == none { [] } else { value })
+    }
+  }
   if named.len() > 0 {
     let all-ids = collect-cell-ids(node)
+    let explicit = (:)
     for (id, value) in named {
       if id not in all-ids {
         fail("slide content contains unknown cell id " + repr(id))
@@ -434,11 +442,13 @@
       if id not in body-ids {
         fail("slide content cannot supply fixed-content cell " + repr(id))
       }
-      if type(value) != content {
-        fail("slide content for " + repr(id) + " must be content")
+      if value != none and type(value) != content {
+        fail("slide content for " + repr(id) + " must be content or none")
       }
+      explicit.insert(id, if value == none { [] } else { value })
     }
-    let missing = body-ids.filter(id => id not in named)
+    let resolved = inherited + explicit
+    let missing = body-ids.filter(id => id not in resolved)
     if missing.len() > 0 {
       fail(
         "slide content is missing "
@@ -446,19 +456,31 @@
           + missing.map(repr).join(", "),
       )
     }
-    named
+    resolved
   } else {
-    if bodies.len() != body-ids.len() {
+    let destination-ids = if bodies.len() == body-ids.len() {
+      body-ids
+    } else {
+      body-ids.filter(id => id not in inherited)
+    }
+    if bodies.len() != destination-ids.len() {
+      if inherited.len() == 0 {
+        fail(
+          "grid expects " + str(body-ids.len())
+            + " bodies, received " + str(bodies.len()),
+        )
+      }
       fail(
-        "grid expects " + str(body-ids.len())
-          + " bodies, received " + str(bodies.len()),
+        "grid expects " + str(destination-ids.len())
+          + " bodies with setup defaults or " + str(body-ids.len())
+          + " bodies to override them, received " + str(bodies.len()),
       )
     }
-    let map = (:)
-    for (index, id) in body-ids.enumerate() {
-      map.insert(id, bodies.at(index))
+    let resolved = if destination-ids.len() == body-ids.len() { (:) } else { inherited }
+    for (index, id) in destination-ids.enumerate() {
+      resolved.insert(id, bodies.at(index))
     }
-    map
+    resolved
   }
 }
 

@@ -3,10 +3,12 @@
 #show: m.setup
 
 #let slide-progress = m.slide.with(
-  grid: m.layouts.default(
-    variant: "header-body",
-    progress: "1/1",
-  ),
+  layout: m.layouts.content(variant: "header-body"),
+  content: (foreground: [
+    #place(bottom + right, dx: -1.25em, dy: -0.35em)[
+      #m.components.progress(variant: "1/1")
+    ]
+  ]),
 )
 
 #slide-progress[

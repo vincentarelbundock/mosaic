@@ -9,7 +9,7 @@
 // Anchor the body content to the right, past the image, through its label.
 #show label("mosaic-cell-body"): set align(right + horizon)
 
-#m.slide(
+#m.slide(layout: 
   grid,
   content: (background: m.components.image(
     path("/docs/assets/images/bonsai.webp"),

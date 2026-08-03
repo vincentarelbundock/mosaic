@@ -27,13 +27,13 @@
 #show: fill("a", colors.at(5))
 #show: fill("b", colors.at(4))
 
-#m.slide(two-columns)[
+#m.slide(layout: two-columns)[
   *slide 0 cell 0*
 ][
   *slide 0 cell 1*
 ]
 
-#m.slide(two-columns)[
+#m.slide(layout: two-columns)[
   *slide 1 cell 0*
 ][
   *slide 1 cell 1*

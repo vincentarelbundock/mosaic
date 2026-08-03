@@ -1,4 +1,4 @@
-// Deck-specific preamble. The vendored Grayscale theme is the active Mosaic
+// Deck-specific preamble. The vendored Greyscale theme is the active Mosaic
 // facade, imported as `m`; the helpers below belong only to this deck.
 #import "theme.typ" as m
 #import "theme-tokens.typ" as _tokens
@@ -31,7 +31,7 @@ consequat.]
 )
 
 // Apply a map of cell id -> surface() as native rules around a slide:
-//   #styled((id: surface(...)), m.slide(grid: ...)[...])
+//   #styled((id: surface(...)), m.slide(layout: ...)[...])
 #let styled(styles, body) = {
   let out = body
   for (id, s) in styles {

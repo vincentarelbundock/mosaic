@@ -39,8 +39,8 @@
 #assert(structural.id == "flat")
 #assert(structural.content == none)
 #assert(structural.style.inset == 4pt)
-#let structural-command = mosaic.slide(grid: structural)[Body].value
-#assert(structural-command.grid == structural)
+#let structural-command = mosaic.slide(layout: structural)[Body].value
+#assert(structural-command.layout == structural)
 #assert("cell-styles" not in structural-command.keys())
 
 // Rules stroke the interior track boundaries of a split.
@@ -49,8 +49,8 @@
 #assert(ruled.rule == 0.6pt + red)
 
 #show: mosaic.setup
-#mosaic.slide(grid: grid)[Main][Details][Notes]
-#mosaic.slide(grid: mosaic.grid.v(
+#mosaic.slide(layout: grid)[Main][Details][Notes]
+#mosaic.slide(layout: mosaic.grid.v(
   rule: 0.5pt + blue,
   mosaic.grid.t(2fr, mosaic.grid.h(rule: 1pt + red, gutter: 1.5em, "a", "b", "c")),
   mosaic.grid.t(1fr, "d"),

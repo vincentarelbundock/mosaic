@@ -22,7 +22,7 @@
 // Center the diagram within its cell through its label.
 #show label("mosaic-cell-diagram"): set align(center + horizon)
 
-#m.slide(grid)[
+#m.slide(layout: grid)[
   == Reveal a Bloch sphere
 ][
   #text(size: 12pt)[

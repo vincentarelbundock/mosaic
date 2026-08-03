@@ -22,10 +22,32 @@ expand into that space.
 
 Choose the smallest command for the timing you need:
 
+- `m.pause` advances subsequent source-order content to the next frame.
 - `m.steps.on(range)[content]` shows content over an exact step range.
 - `m.steps.reveal[...]` accumulates a list or sequence one item at a time.
 - `m.steps.replace[first][second]` swaps alternatives in one stable slot.
 - `m.steps.reduce` connects the same timing model to custom structures.
+
+== Pause between blocks
+
+Use `m.pause` when source order already expresses the reveal order:
+
+```typ
+#m.slide[
+  The estimate is positive.
+
+  #m.pause
+
+  The interval excludes zero.
+]
+```
+
+The first frame contains only the estimate. The second retains the estimate and
+adds the interval. Pauses are scoped to their containing content stream, so they
+also work inside blocks, fixed grid cells, and background or foreground planes.
+If a segment contains `m.steps.reveal`, `m.steps.replace`, or another explicit
+timing command, that segment completes before the following segment starts.
+Empty leading, trailing, or consecutive pause markers never create blank frames.
 
 == Final-frame handouts
 
@@ -82,7 +104,8 @@ Notes do not render in the presentation and never increase the number of frames:
 ]
 ```
 
-A note outside a timing command applies to every frame. A note inside
+A note outside timing commands or paused segments applies to every frame. A note
+after `m.pause`, or inside
 `m.steps.on`, `m.steps.reveal`, or `m.steps.replace` follows that command's
 existing frame semantics, so notes next to revealed content receive their frame
 assignment automatically. Multiple applicable blocks accumulate in source

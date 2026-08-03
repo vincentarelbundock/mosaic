@@ -16,10 +16,10 @@
   )
 }
 
-#mosaic.slide(grid: mosaic.layouts.default(variant: "body"))[
+#mosaic.slide(layout: mosaic.layouts.content(variant: "body"))[
   #probe("default body")
 ]
 
-#mosaic.slide(grid: mosaic.layouts.title([#probe("title body")]))
+#mosaic.slide(layout: mosaic.layouts.title([#probe("title body")]))
 
-#mosaic.slide(grid: mosaic.layouts.section())[#probe("section body")]
+#mosaic.slide(layout: mosaic.layouts.section())[#probe("section body")]

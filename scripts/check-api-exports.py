@@ -14,26 +14,33 @@ IMPORT = re.compile(
 )
 LET = re.compile(r"(?m)^#let\s+([A-Za-z_][A-Za-z0-9_-]*)\b")
 
-NEUTRAL_API = {"setup", "slide", "note", "surface", "grid", "layouts", "steps", "components", "themes"}
-SHARED_API = {"slide", "note", "surface", "grid", "layouts", "steps", "components"}
-THEMED_API = {"setup", "slide", "note", "surface", "grid", "layouts", "steps", "components"}
-THEMED_LAYOUTS = {"default", "title", "section", "author"}
+NEUTRAL_API = {"setup", "slide", "note", "pause", "surface", "grid", "layouts", "steps", "components", "theme", "themes"}
+SHARED_API = {"slide", "note", "pause", "surface", "grid", "layouts", "steps", "components", "theme"}
+THEMED_API = {"setup", "slide", "note", "pause", "surface", "grid", "layouts", "steps", "components", "theme"}
+THEMED_LAYOUTS = {"content", "title", "section", "author"}
+THEMED_COMPONENTS = {"frame", "callout", "label", "quote", "divider", "progress", "image"}
 
 EXPECTED = {
     "mosaic/lib.typ": NEUTRAL_API,
     "mosaic/src/shared-api.typ": SHARED_API,
     "mosaic/src/grid-api.typ": {"cell", "h", "v", "t"},
     "mosaic/src/surface.typ": {"surface"},
-    "mosaic/src/layout-api.typ": {"default", "title", "section", "author"},
+    "mosaic/src/layout-api.typ": {"content", "title", "section", "author"},
     "mosaic/src/steps-api.typ": {"on", "reveal", "replace", "reduce"},
-    "mosaic/src/component-api.typ": {"frame", "callout", "label", "quote", "divider", "progress", "image"},
-    "mosaic/src/theme-api.typ": {"metropolis", "cream", "minimalist"},
+    "mosaic/src/component-api.typ": THEMED_COMPONENTS,
+    "mosaic/src/theme-extension.typ": {"setup"},
+    "mosaic/src/theme-api.typ": {"metropolis", "cream", "minimalist", "light", "dark"},
+    "mosaic/src/themes/light.typ": THEMED_API,
+    "mosaic/src/themes/light/layouts.typ": THEMED_LAYOUTS,
+    "mosaic/src/themes/dark.typ": THEMED_API,
     "mosaic/src/themes/metropolis.typ": THEMED_API,
     "mosaic/src/themes/cream.typ": THEMED_API,
     "mosaic/src/themes/minimalist.typ": THEMED_API,
     "mosaic/src/themes/metropolis/layouts.typ": THEMED_LAYOUTS,
     "mosaic/src/themes/cream/layouts.typ": THEMED_LAYOUTS,
     "mosaic/src/themes/minimalist/layouts.typ": THEMED_LAYOUTS,
+    "mosaic/src/themes/dark/layouts.typ": THEMED_LAYOUTS,
+    "mosaic/src/themes/dark/components.typ": THEMED_COMPONENTS,
 }
 
 
@@ -99,7 +106,9 @@ def selected_names(spec: str) -> set[str]:
         parts = item.strip().split()
         if not parts or parts[0] == "*":
             continue
-        names.add(parts[-1] if len(parts) >= 3 and parts[-2] == "as" else parts[0])
+        name = parts[-1] if len(parts) >= 3 and parts[-2] == "as" else parts[0]
+        if not name.startswith("_"):
+            names.add(name)
     return names
 
 
@@ -108,7 +117,7 @@ def exports(path: Path, active: frozenset[Path] = frozenset()) -> set[str]:
     if path in active:
         raise RuntimeError(f"cyclic wildcard facade import involving {path}")
     text = strip_comments(path.read_text(encoding="utf-8"))
-    result = set(LET.findall(text))
+    result = {name for name in LET.findall(text) if not name.startswith("_")}
     for match in IMPORT.finditer(text):
         raw, alias, spec = match.groups()
         if raw.startswith("@"):
@@ -119,7 +128,8 @@ def exports(path: Path, active: frozenset[Path] = frozenset()) -> set[str]:
             continue
         target = resolve_import(path, raw)
         if alias:
-            result.add(alias)
+            if not alias.startswith("_"):
+                result.add(alias)
         elif spec and "*" in spec:
             result.update(exports(target, active | {path}))
         elif spec:

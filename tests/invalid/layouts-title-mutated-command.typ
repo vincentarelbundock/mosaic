@@ -4,4 +4,4 @@
 #command.fields.insert("variant", "image-right")
 
 #show: mosaic.setup
-#mosaic.slide(grid: command)
+#mosaic.slide(layout: command)

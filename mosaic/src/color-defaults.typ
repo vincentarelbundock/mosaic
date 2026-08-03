@@ -7,3 +7,11 @@
 #let default-text = rgb("#1c1917")
 #let default-muted = rgb("#78716c")
 #let default-line = rgb("#e7e5e4")
+#let default-colors = (
+  canvas: default-canvas,
+  surface: default-surface,
+  accent: default-accent,
+  text: default-text,
+  muted: default-muted,
+  line: default-line,
+)

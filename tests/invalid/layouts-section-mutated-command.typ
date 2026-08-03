@@ -4,4 +4,4 @@
 #command.fields.insert("variant", "image-bottom")
 
 #show: mosaic.setup
-#mosaic.slide(grid: command)[Body]
+#mosaic.slide(layout: command)[Body]

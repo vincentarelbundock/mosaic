@@ -12,6 +12,8 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
+from PIL import Image
+
 from deck_metadata import load_manifest  # type: ignore[import-not-found]
 from embedded_examples import ExampleCall, parse_calls
 
@@ -19,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
 SOURCES = DOCS / "examples/embedded"
 ASSETS = DOCS / "assets/examples"
+GREYSCALE_DECK = DOCS / "examples/decks/portfolio"
 
 
 class IntegrityError(RuntimeError):
@@ -63,6 +66,17 @@ def pdf_pages(path: Path) -> int:
     if not match:
         raise IntegrityError(f"could not read PDF page count: {path}")
     return int(match.group(1))
+
+
+def check_greyscale_theme(manifest: dict, errors: list[str]) -> None:
+    entry = next((item for item in manifest["decks"] if item["slug"] == "portfolio"), None)
+    if entry is None or entry["title"] != "Greyscale":
+        errors.append('portfolio deck must be presented as the "Greyscale" theme')
+
+    for path in sorted((GREYSCALE_DECK / "assets").glob("*.png")):
+        red, green, blue = Image.open(path).convert("RGB").split()
+        if red.tobytes() != green.tobytes() or green.tobytes() != blue.tobytes():
+            errors.append(f"greyscale theme contains a color image: {path.relative_to(ROOT)}")
 
 
 def check_sources() -> tuple[list[ExampleCall], set[Path]]:
@@ -120,6 +134,7 @@ def check_sources() -> tuple[list[ExampleCall], set[Path]]:
         errors.append(f"stale embedded assets: {stale}")
 
     manifest = load_manifest()
+    check_greyscale_theme(manifest, errors)
     for item in manifest["showcase_intro"]:
         source = ROOT / item["source"]
         if not source.is_file():

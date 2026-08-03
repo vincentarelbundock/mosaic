@@ -33,19 +33,19 @@
 }
 
 #panels(("a", "b", "c"))[
-  #m.slide(m.grid.h("a", "b", "c"))[a][b][c]
+  #m.slide(layout: m.grid.h("a", "b", "c"))[a][b][c]
 ]
 
 #panels(("a", "b", "c"))[
-  #m.slide(m.grid.v("a", "b", "c"))[a][b][c]
+  #m.slide(layout: m.grid.v("a", "b", "c"))[a][b][c]
 ]
 
 #panels(("a", "b", "c"))[
-  #m.slide(m.grid.h("a", m.grid.v("b", "c")))[a][b][c]
+  #m.slide(layout: m.grid.h("a", m.grid.v("b", "c")))[a][b][c]
 ]
 
 #panels(("a", "b", "c", "d"))[
-  #m.slide(m.grid.v(
+  #m.slide(layout: m.grid.v(
     m.grid.h("a", "b"),
     m.grid.h("c", "d"),
   ))[a][b][c][d]
@@ -55,7 +55,7 @@
   "title", "col0", "sidebar-note", "col1", "col2", "chart",
   "legend", "annotation", "footer", "status", "page",
 ))[
-  #m.slide(
+  #m.slide(layout: 
     m.grid.v(
       "title",
       m.grid.h(

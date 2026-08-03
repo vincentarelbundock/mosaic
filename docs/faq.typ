@@ -28,7 +28,7 @@ cell's `inset`:
   ),
 )
 
-#m.slide(grid)[Top][Bottom left][Bottom right]
+#m.slide(layout: grid)[Top][Bottom left][Bottom right]
 ```
 
 `inset` separates content from a cell's edges; adjacent cells each contribute
@@ -65,31 +65,37 @@ This is one logical slide.
 
 == How do I customize heading slides?
 
-Pass an `auto-slide` function to `m.setup`. It receives the heading and body and
-returns an `m.slide` command, so a plain `==` heading slide can use your grid
-and furniture.
+Override the `content` layout in `m.setup`. Both explicit content slides
+and plain `==` heading slides select that layout, so they share one spatial
+contract and the same inherited foreground content.
 
 ```typ
-#let framed(title, body) = m.slide(
-  grid: m.layouts.default(variant: "header-body", progress: "1"),
-  content: (header: title, body: body),
+#show: m.setup.with(
+  layouts: (
+    content: m.layouts.content(variant: "header-body"),
+  ),
+  content: (
+    foreground: [
+      #place(bottom + right, dx: -1.25em, dy: -0.35em)[
+        #m.components.progress(variant: "1")
+      ]
+    ],
+  ),
 )
 
-#show: m.setup.with(auto-slide: framed)
-
-// Invert the header bar for every slide built on the default layout.
+// Invert the header bar for every content-layout slide.
 #show label("mosaic-cell-header"): set text(fill: white)
 #show label("mosaic-cell-header"): it => block(width: 100%, fill: black, it)
 
 == Results
 
-Routed through `framed`, so this `==` slide gets the inverted header bar and
-progress indicator without a single `#slide` call.
+The content layout gives this `==` slide the inverted header bar and progress
+indicator without a single `#slide` call.
 ```
 
-Any grid works; named cells keep title/body assignment independent of tree
-order. The default `none` uses Mosaic's built-in header-body slide. Themes use
-the same hook; see #link("appearance.html#themes")[Appearance] and the
+Any layout whose cells accept the automatic `header` and `body` content works.
+Themes provide a complete layout dictionary, and setup overrides may replace
+only the named layouts that differ; see #link("appearance.html#themes")[Appearance] and the
 #link("api/setup.html")[Setup API].
 
 == How do I change the slide aspect ratio?
@@ -185,7 +191,7 @@ typst eval \
 ```
 
 Each record identifies the slide, frame, cell, and measured height. Disable
-observation with `features: (overflow: "off")`; see the
+observation with `setup(overflow: "off")`; see the
 #link("api/setup.html")[Setup API].
 
 == How does Mosaic compare to Touying?
@@ -254,7 +260,7 @@ The cell IDs are arbitrary names you choose; each one becomes a
 
 ```typ
 #let framed(title, body) = m.slide(
-  grid: m.grid.v("banner", "copy"),
+  layout: m.grid.v("banner", "copy"),
   content: (banner: title, copy: body),
 )
 
@@ -264,10 +270,10 @@ The cell IDs are arbitrary names you choose; each one becomes a
 #framed([Results])[The body.]
 ```
 
-The same function can drive every `==` heading slide through the `auto-slide`
-hook described above, and a Mosaic theme is nothing more than a module that
-exports a `setup` and layout functions like this one; the bundled themes are
-copyable starting points (see #link("appearance.html#themes")[Appearance]).
+The same grid can become the configured `content` layout, which also drives
+every `==` heading slide. A Mosaic theme is a passive definition plus an exact
+facade and callable layout namespace; the bundled themes are copyable starting
+points (see #link("appearance.html#themes")[Appearance]).
 
 The differences in brief:
 

@@ -4,24 +4,21 @@
 #show: m.setup
 
 #m.slide(
-  grid: m.layouts.title(
+  layout: m.layouts.title(
     title: [A starter theme],
     subtitle: [A small facade over Mosaic],
   ),
-  numbered: false,
 )
 
 == The whole theme stays structural
 
 #m.steps.reveal[
-  - `setup` specializes Mosaic's document wrapper.
-  - `layouts` returns ordinary layout recipes.
-  - Visual tokens remain private implementation details.
+  - `setup` binds one passive definition in the facade.
+  - `layouts` owns its callable recipes directly.
+  - Tokens and components are separate only when genuinely shared.
 ]
 
 #m.slide(
-  grid: m.layouts.section(),
+  layout: m.layouts.section(),
   content: (section: [That is all there is]),
-  section: true,
-  numbered: false,
 )

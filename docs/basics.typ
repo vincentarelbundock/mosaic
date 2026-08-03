@@ -38,11 +38,17 @@
 
 = Anatomy of a slide deck
 
-A Mosaic *deck* is a sequence of *slides*. Each slide arranges its content on
-a *grid*. A grid is built from horizontal and vertical *splits*. The smallest
-parts of a grid are its named *cells*. Each cell receives one block of
-content. The *inset* is the internal space between a cell's edge and its
-content.
+- *Deck*: a sequence of slides.
+- *Slide*: one unit of a presentation.
+- *Grid*: named cells arranged with horizontal and vertical splits.
+- *Split*: a horizontal or vertical division.
+- *Cell*: a named area that holds content.
+- *Inset*: space between a cell's edge and its content.
+- *Background*: content drawn behind the grid across the full slide.
+- *Foreground*: content drawn over the grid across the full slide.
+- *Layout*: a ready-made slide arrangement with a grid and, when needed,
+  built-in content or decoration.
+- *Theme*: a coordinated set of colors, text styles, and layouts.
 
 #html.frame(grid-anatomy)
 
@@ -128,7 +134,7 @@ focused on content assignment.
 #let single = m.grid.cell("main")
 
 #m.slide(
-  grid: single,
+  layout: single,
   content: (main: [A semantic slide starts with one named cell.]),
 )
 ```
@@ -144,7 +150,7 @@ passing it to the slide; each dictionary key matches one cell ID.
 #let columns = m.grid.h("main", "aside")
 
 #m.slide(
-  grid: columns,
+  layout: columns,
   content: (
     main: [The main argument],
     aside: [Supporting evidence],
@@ -170,7 +176,7 @@ one declaration. The finished grid still lives outside `slide`.
 )
 
 #m.slide(
-  grid: composition,
+  layout: composition,
   content: (
     main: [The main argument],
     notes: [Two parts notes],
@@ -189,7 +195,7 @@ content.
 
 ```typ
 #m.slide(
-  grid: composition,
+  layout: composition,
   content: (
     main: [
       == Composition
@@ -211,24 +217,20 @@ content.
 
 == Built-in layouts
 
-Built-in layouts are ready-made semantic grids. Assign a layout to a value,
-then pass that value to `slide` just like the custom grids above. Here the
-default layout supplies a familiar header-and-body structure:
+Built-in layouts are complete deferred page-placement contracts. Assign a
+layout to a value, then pass it to `slide` just like a custom grid. Here the
+content layout supplies a familiar header-and-body structure:
 
 ```typ
-#let default-layout = m.layouts.default(variant: "header-body")
-#m.slide(grid: default-layout, content: (
-  header: [== Default layout],
+#let content-layout = m.layouts.content(variant: "header-body")
+#m.slide(layout: content-layout, content: (
+  header: [== Content layout],
   body: [A familiar header-and-body structure.],
 ))
 ```
 
-#semantic-thumbnail(5, "The built-in header-and-body default layout")
+#semantic-thumbnail(5, "The built-in header-and-body content layout")
 
 `m.layouts.title` and `m.layouts.section` work the same way for opening and
 divider slides; #link("structure.html")[Structure] walks through all three
 layouts and their variants.
-
-Continue with #link("structure.html")[Structure] for the complete grid and
-layout model, #link("content.html")[Content] for material placed in cells, and
-#link("appearance.html")[Appearance] for reusable native styling.

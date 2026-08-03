@@ -2,6 +2,6 @@
 
 #show: mosaic.setup
 #mosaic.slide(
-  grid: mosaic.grid.h(mosaic.grid.cell("a"), mosaic.grid.cell("b")),
+  layout: mosaic.grid.h(mosaic.grid.cell("a"), mosaic.grid.cell("b")),
   content: (a: [Named]),
 )[Positional]

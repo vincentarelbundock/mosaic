@@ -31,15 +31,15 @@
 }
 
 #panels((a: colors.at(0), b: colors.at(1)))[
-  #m.slide(m.grid.h(m.grid.t(2fr, "a"), "b"))[a][b]
+  #m.slide(layout: m.grid.h(m.grid.t(2fr, "a"), "b"))[a][b]
 ]
 
 #panels((a: colors.at(0), b: colors.at(1)))[
-  #m.slide(m.grid.v(m.grid.t(25%, "a"), "b"))[a][b]
+  #m.slide(layout: m.grid.v(m.grid.t(25%, "a"), "b"))[a][b]
 ]
 
 #panels((a: colors.at(0), b: colors.at(1), c: colors.at(2)))[
-  #m.slide(
+  #m.slide(layout: 
     m.grid.h(
       m.grid.t(1fr, "a"),
       m.grid.t(2fr, "b"),

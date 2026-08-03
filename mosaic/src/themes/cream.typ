@@ -1,4 +1,5 @@
 // Exact public Cream facade: shared Mosaic API plus themed setup/layouts.
-#import "../shared-api.typ": slide, note, surface, grid, steps, components
-#import "cream/setup.typ": setup
+#import "../shared-api.typ": slide, note, pause, surface, grid, steps, components, theme
+#import "cream/definition.typ": definition as _definition
 #import "cream/layouts.typ" as layouts
+#let setup = theme.setup(_definition)

@@ -15,6 +15,7 @@ exclude = [
   "_includes/**",
   "api/_module.typ",
   "api/modules/**",
+  "api/sources/**",
   "examples/**",
 ]
 
@@ -79,6 +80,9 @@ title = "API"
 
   [[sidebar.section.item]]
   target = "api/setup.typ"
+
+  [[sidebar.section.item]]
+  target = "api/theme.typ"
 
   [[sidebar.section.item]]
   target = "api/slides.typ"

@@ -2,6 +2,6 @@
 
 #show: mosaic.setup
 #mosaic.slide(
-  grid: mosaic.grid.cell("body"),
+  layout: mosaic.grid.cell("body"),
   content: (body: 5),
 )

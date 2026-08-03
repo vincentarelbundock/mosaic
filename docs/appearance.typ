@@ -11,8 +11,10 @@ A slide is a stack of native Typst layers: a background plane, a grid of cells,
 and a foreground plane. The planes are content you supply directly; each cell is
 a single block labeled `<mosaic-cell-ID>`. You style all of it with ordinary
 `set` and `show` rules. `m.setup` establishes the baseline (font, page and text
-defaults, and the canonical cell vocabulary), and every rule you add layers on
-top. Styling does not go through a dictionary, theme object, or separate API.
+defaults, canonical deck metadata, semantic colors, and the canonical cell
+vocabulary), and every rule you add layers on top. Cell structure and local
+styling remain ordinary Typst rather than going through a theme object or
+separate styling DSL.
 
 = Styling cells
 
@@ -26,7 +28,7 @@ through `m.surface`:
 #show label("mosaic-cell-copy"): m.surface(fill: white)
 
 #let columns = m.grid.h("copy", "image")
-#m.slide(grid: columns, content: (
+#m.slide(layout: columns, content: (
   copy: [Copy],
   image: [Image],
 ))
@@ -90,7 +92,7 @@ Bundle repeated cell rules in a transformer and apply it once with `#show:`:
 }
 
 #show: styled
-#m.slide(m.grid.h("a", "b"))[Left][Right]
+#m.slide(layout: m.grid.h("a", "b"))[Left][Right]
 ```
 
 #embedded-example(
@@ -101,6 +103,60 @@ Bundle repeated cell rules in a transformer and apply it once with `#show:`:
 )
 
 A #link("appearance.html#themes")[theme] packages this pattern at deck scale.
+
+= Deck identity
+
+Declare document-wide title information once in `m.setup`. The values feed
+Mosaic's deferred title layouts, standard Typst document metadata, and the
+queryable `<mosaic-deck-metadata>` record:
+
+```typ
+#let authors = (m.layouts.author(
+  "Ada Lovelace",
+  affiliations: ((id: "lab", name: [Systems Lab]),),
+),)
+
+#show: m.setup.with(
+  title: [Reliable systems],
+  subtitle: [One source of truth],
+  authors: authors,
+  date: [2026],
+)
+
+#m.slide(layout: "title")
+```
+
+`m.layouts.title()` inherits `title`, `subtitle`, `authors`, and `date` from
+setup. An explicit layout argument wins; pass `none` (or `()` for `authors`) to
+suppress an inherited optional field on one title slide:
+
+```typ
+#m.slide(layout: m.layouts.title(
+  title: [Alternate cover],
+  subtitle: none,
+  authors: (),
+  date: none,
+))
+```
+
+Mosaic does not create a title slide automatically: setup declares deck
+identity, while each `m.slide(layout: "title")` chooses where it
+is shown. String author names are also written to Typst's standard `document.author`
+field; rich-content names remain available in Mosaic's metadata and title
+layout. Tooling can inspect the complete record with
+`typst eval 'query(<mosaic-deck-metadata>).map(it => it.value)' --in document.typ`.
+
+The same setup may declare partial cell-content defaults such as `footer`.
+Unlike deck metadata, these are rendering fallbacks: they apply only when the
+resolved layout contains that cell ID, and explicit slide content or `none`
+overrides them. See #link("structure.html#content")[the content layout].
+
+#embedded-example(
+  calepin.elements.gallery,
+  "appearance/setup-deck",
+  frames: 2,
+  title: "Setup metadata, semantic colors, and inherited footer content",
+)
 
 = Typography
 
@@ -132,34 +188,39 @@ frames.
 
 = Color
 
-Set page and text color natively after `m.setup`:
+Each active facade supplies a complete semantic palette. Override only the
+deck-wide roles that differ through `m.setup`; omitted roles retain the selected
+theme's defaults:
 
 ```typ
-#show: m.setup
-#set page(fill: rgb("#111827"))
-#set text(fill: rgb("#f3f4f6"))
-```
-
-Without these rules, Mosaic keeps its warm-white default. Built-in layouts that
-draw decoration accept `accent:`, which colors only that layout's rule, spine,
-section number, or progress indicator:
-
-```typ
-#let accent = rgb("#e69f00")
-
-#m.slide(grid: m.layouts.title(
-  title: [Research result],
-  accent: accent,
+#show: m.setup.with(colors: (
+  canvas: rgb("#f4f8f7"),
+  accent: rgb("#007f73"),
 ))
-
-#m.slide(grid: m.layouts.default(
-  variant: "header-body",
-  progress: "line",
-  accent: accent,
-))[Title][Body]
 ```
 
-For one dark slide, scope a native text rule around a background override:
+The accepted roles are `canvas`, `surface`, `text`, `muted`, `line`, and
+`accent`. Unknown roles and non-color values are errors. Canvas, typography,
+rules, runtime-aware components, and semantic layouts consume the resolved
+values. Explicit component colors remain local overrides:
+
+```typ
+#m.slide(
+  layout: m.layouts.content(variant: "header-body"),
+  content: (foreground: [
+    #place(bottom + left)[
+      #m.components.progress(
+        variant: "line",
+        width: 100%,
+        color: rgb("#e69f00"),
+      )
+    ]
+  ]),
+)[Title][Body]
+```
+
+Native rules after `m.setup` are still the right tool for typography or a
+special local composition:
 
 ```typ
 #[
@@ -176,11 +237,107 @@ values remain local to components such as `frame`, `label`, and `quote`.
 
 = Themes
 
-A theme is a complete Mosaic facade with specialized `setup` and `layouts`.
-Its setup packages native page, text, and cell rules; its layout factories
-return the same deferred recipes consumed by `m.slide`.
+Themes separate a deck's content from its visual system. Use a bundled theme
+when its palette and typography fit the talk; develop a theme when the design
+needs to become reusable.
 
-The complete theme below is designed to be copied as a starting point.
+== Using themes
+
+Five themes ship inside the package under `m.themes`: `light`, `dark`,
+`metropolis`, `cream`, and `minimalist`. Import one as the active Mosaic facade:
+
+```typ
+#import "@local/mosaic:0.0.1" as mosaic
+#import mosaic.themes.metropolis as m
+#show: m.setup.with(
+  title: [My talk],
+  subtitle: [With a borrowed look],
+)
+
+#m.slide(layout: m.layouts.title())
+== First slide
+#m.slide(
+  layout: m.layouts.section(),
+  content: (section: [A new chapter]),
+)
+```
+
+The imported facade supplies the complete Mosaic API, so the same `m.slide`,
+`m.layouts`, `m.components`, notes, pauses, and incremental commands remain
+available. Use `m.setup.with(...)` for deck metadata, partial semantic-color
+overrides, inherited content, output modes, and options exposed by that theme.
+
+The root facade is exactly the bundled light facade, not a similar-looking copy:
+
+```typ
+// Default spelling
+#import "@local/mosaic:0.0.1" as m
+```
+
+```typ
+// Explicit light spelling
+#import "@local/mosaic:0.0.1" as mosaic
+#import mosaic.themes.light as m
+```
+
+Choose the dark facade for a complete technical-talk palette. It carries the
+same public API while applying dark semantic colors to the canvas, layout
+decoration, furniture, code, tables, links, and muted text:
+
+```typ
+#import "@local/mosaic:0.0.1" as mosaic
+#import mosaic.themes.dark as m
+#show: m.setup
+```
+
+#embedded-example(
+  calepin.elements.gallery,
+  "appearance/dark-theme",
+  frames: 3,
+  title: "The bundled dark theme across title, technical content, and section slides",
+)
+
+== Developing themes
+
+Start locally in one presentation file. Define the complete semantic palette,
+add static text arguments or native rules only when needed, and bind the
+dictionary directly:
+
+```typ
+#import "@local/mosaic:0.0.1" as m
+
+#let theme = (
+  colors: (
+    canvas: white,
+    surface: rgb("#f5f5f5"),
+    text: rgb("#17243a"),
+    muted: rgb("#52657f"),
+    line: rgb("#aeb9c8"),
+    accent: rgb("#a23b72"),
+  ),
+  text: (font: "Inter", size: 20pt),
+)
+
+#show: m.theme.setup(theme)
+```
+
+Only `colors` is required. `name`, `defaults`, `options`, `text`,
+`normalize-lists`, `layouts`, and `apply` are optional. `text` may be a static
+dictionary as above. Use `text: options => (...)` only when callers must be able
+to override theme-specific typography options.
+
+A reusable complete facade keeps three core files: `theme.typ` binds and exports
+the public API, `definition.typ` contains passive design decisions, and
+`layouts.typ` is the exact callable layout namespace. Add `tokens.typ`,
+`components.typ`, or assets only when the design genuinely needs them. The
+facade binds once with `mosaic.theme.setup(definition)`; no setup forwarding file
+or layout implementation forwarding file is needed.
+
+Mosaic continues to own setup validation, metadata, content inheritance, output
+modes, overflow policy, counters, heading slides, and compilation. Definitions
+never import setup internals or forward Mosaic's setup arguments.
+
+The complete theme below demonstrates that reusable three-file structure.
 
 #embedded-example(
   calepin.elements.gallery,
@@ -189,32 +346,21 @@ The complete theme below is designed to be copied as a starting point.
   title: "The starter theme deck",
 )
 
-Because `set` and `show` rules cannot cross an import, document-wide styling
-lives inside the themed `setup`. It also registers `layouts.default()` for
-`==` heading slides and `layouts.section()` for section slides.
+The starter's `definition` dictionary is the only theme-specific input to the
+engine. Its six semantic color roles are `canvas`, `surface`, `text`, `muted`,
+`line`, and `accent`. Static `text` values become native text arguments;
+`text(options)` remains available for configurable theme options.
+`apply(body, colors:, options:)` scopes unrestricted native rules around the
+body. Complete `layouts.content`, `layouts.title`, and `layouts.section` values
+define the named layouts used by explicit and automatic slides. Theme-specific defaults in `options` are consumed
+by the engine before ordinary setup validation. Generic components using the
+`neutral` or `accent` role resolve those roles contextually from the same theme
+palette; a facade may still export a specialized component module for additional
+role treatments.
 
-Three themes ship inside the package under `m.themes`
-(`metropolis`, `cream`, and `minimalist`). Import one as the active Mosaic facade:
-
-```typ
-#import "@local/mosaic:0.0.1" as mosaic
-#import mosaic.themes.metropolis as m
-#show: m.setup
-
-#m.slide(grid: m.layouts.title(
-  title: [My talk],
-  subtitle: [With a borrowed look],
-))
-== First slide
-#m.slide(
-  grid: m.layouts.section(),
-  content: (section: [A new chapter]),
-  section: true,
-  numbered: false,
-)
-```
-
-Use `.with(...)` for the few exposed knobs. For deeper changes, copy the theme
-from `mosaic/src/themes/` beside your deck and edit it directly. The Grayscale
-example follows that convention; #link("examples.html")[Examples] shows the
-complete rendered decks.
+For a packaged theme, copy Light's `definition.typ`, `layouts.typ`, and exact
+facade, then change only design values and genuine layout deltas. Other built-ins
+use the same engine rather than inheriting Light's palette or typography. The
+Greyscale example follows the vendored-theme convention;
+#link("api/theme.html")[Theme authoring API] documents the exact binding, and
+#link("examples.html")[Examples] shows complete rendered decks.

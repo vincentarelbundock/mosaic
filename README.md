@@ -1,221 +1,278 @@
 # Mosaic
 
-Mosaic 0.0.1 is a slide package for Typst. A slide is a grid of cells between a
-background and foreground plane. Mosaic labels every cell `<mosaic-cell-ID>`, and
-styling is ordinary Typst `show` and `set` rules on those labels; there is no
-separate styling API. Mosaic manages grids, page boundaries, logical slide
-numbering, full-slide background and foreground planes, and incremental
-visibility. Page setup, typography, headings, figures, colors, and document
-semantics remain ordinary Typst rules.
+Mosaic is a slide package for [Typst](https://typst.app/). Write ordinary Typst headings and content for most slides, choose a named layout when you need a title or section divider, and drop down to a grid of named cells for custom composition.
 
-The full guide and API reference live in `docs/` (build with `make website`) and
-the architecture is documented in [`ARCHITECTURE.md`](ARCHITECTURE.md). This
-file is a quick start.
+![An academic title slide made with Mosaic](docs/assets/examples/structure/title-layout-1.svg)
 
-## Quick start
+Mosaic provides:
+
+- automatic slides from level-one and level-two headings;
+- content, title, and section layouts with visual variants;
+- nested horizontal and vertical grids with stable cell names;
+- native Typst styling through `show` and `set` rules;
+- incremental reveals, speaker notes, handouts, and printable notes;
+- five bundled themes with the same authoring API.
+
+Mosaic 0.0.1 requires Typst 0.15 or newer. It is currently installed from source as a local Typst package.
+
+## Install
+
+```sh
+git clone https://github.com/vincentarelbundock/mosaic.git
+cd mosaic
+make install
+```
+
+`make install` copies Mosaic to Typst's local package index as `@local/mosaic:0.0.1`.
+
+## Your first deck
+
+Save this as `talk.typ`:
 
 ```typ
 #import "@local/mosaic:0.0.1" as m
 
-#show: m.setup
+#show: m.setup.with(
+  title: [A short talk],
+  subtitle: [Built with Typst and Mosaic],
+  colors: (accent: rgb("#007f73")),
+)
 
-== Ordinary slide
+#m.slide(layout: "title")
 
-Write normal Typst content.
+= Why Mosaic
 
-== Results
+== Ordinary Typst
 
-- Main result
-- Supporting evidence
+Headings create slides. Paragraphs, lists, equations, figures, and tables remain ordinary Typst content.
+
+== One more point
+
+- Level-one headings create section slides.
+- Level-two headings create content slides.
 ```
 
-Each `==` heading writes a heading slide on `layouts.default(variant: "header-body")`: its
-text fills the header cell and the content that follows fills the body. Mosaic
-uses a zero page margin so cells and planes can reach the slide edges; content
-spacing is each cell's `inset`.
+Compile it with:
 
-Mosaic has three concepts: structure, content, and appearance.
+```sh
+typst compile talk.typ
+```
 
-## Structure
+Mosaic creates the title slide explicitly. It does not insert one during setup.
 
-Grids are trees of cells. `m.grid.h` places cells side by side, `m.grid.v`
-stacks them, either nests, and `m.grid.t(size, child)` sets a non-default track
-size. Each string is a stable cell ID.
+## How authoring works
+
+### Headings for ordinary slides
+
+After `#show: m.setup`, a level-one heading creates an unnumbered section slide:
 
 ```typ
-#let grid = m.grid.h(
+= Methods
+```
+
+A level-two heading creates a numbered content slide. The heading fills the layout's `header` cell and the following content fills `body`:
+
+```typ
+== Results
+
+The estimate is positive.
+```
+
+### Named layouts for explicit slides
+
+`layout` selects the slide design and its standard behavior:
+
+```typ
+#m.slide()                    // configured content layout
+#m.slide(layout: "content")
+#m.slide(layout: "title")
+#m.slide(layout: "section")[Methods]
+```
+
+The standard names are `content`, `title`, and `section`. Content slides are numbered by default; title and section slides are not. An explicit `numbered:` value overrides that default.
+
+Use a layout factory to select a variant or adjust one slide:
+
+```typ
+#m.slide(
+  layout: m.layouts.content(
+    variant: "header-body",
+    columns: 2,
+    tracks: (2fr, 1fr),
+  ),
+  content: (
+    header: [Comparison],
+    body-1: [Main result],
+    body-2: [Supporting evidence],
+  ),
+)
+```
+
+Layout factories are deferred recipes. They resolve against the active setup and theme when the slide renders.
+
+### Named cells for custom composition
+
+A grid is a transparent tree of cells. `m.grid.h` splits horizontally, `m.grid.v` splits vertically, and `m.grid.t` assigns a native Typst track size:
+
+```typ
+#let comparison = m.grid.h(
   m.grid.t(2fr, "main"),
   m.grid.v("details", "notes"),
 )
-```
-
-`m.layouts` provides ready-made grids for familiar structures (`default`,
-`title`, and `section`), each resolving to the same grid model. Pass one to
-`m.slide(grid: ...)`; compose images and tables with native Typst content.
-
-## Content
-
-Fill a grid's content-bearing cells (those with `content: none`) positionally
-in traversal order, or by ID with `content:`. Both are equivalent; `content:` reads
-on its own for multi-cell grids and does not depend on grid order.
-
-```typ
-#m.slide(grid)[Main][Details][Notes]
 
 #m.slide(
-  grid: grid,
-  content: (main: [Main], details: [Details], notes: [Notes]),
+  layout: comparison,
+  content: (
+    main: [Main result],
+    details: [Supporting detail],
+    notes: [Interpretation],
+  ),
 )
 ```
 
-A cell whose content the grid owns (an image, a logo) gets `content:` in the
-grid and consumes no slide body:
+You may also fill content-bearing cells positionally in traversal order:
 
 ```typ
-#m.grid.cell("logo", content: image("logo.svg"))
+#m.slide(layout: comparison)[Main result][Supporting detail][Interpretation]
 ```
 
-## Appearance
+Use named `content:` for multi-cell grids when the relationship between content and cells should remain obvious after the grid changes.
 
-Cells are structural and carry no styling. Every rendered cell is one block
-labeled `<mosaic-cell-ID>`, so you style it with ordinary rules. The cell ID is
-the single handle: `cell(id)` defines, `content: (id: …)` fills,
-`label("mosaic-cell-id")` styles.
+### Native Typst styling
+
+Every rendered cell has a native label named `<mosaic-cell-ID>`. Style it with ordinary Typst rules:
 
 ```typ
 #show label("mosaic-cell-body"): set align(horizon)
-#show label("mosaic-cell-body"): it => block(width: 100%, height: 100%, fill: luma(240), it)
+#show label("mosaic-cell-body"): it => block(
+  width: 100%,
+  height: 100%,
+  fill: luma(240),
+  inset: 1.2em,
+  it,
+)
 ```
 
-Typography, headings, captions, page color, and text color are native `set`/`show`
-rules placed after `#show: m.setup`. Spacing and furniture flow through `setup`;
-built-in colored layout decoration takes an explicit `accent:`:
+Typography, headings, figures, tables, and one-off local styling also use native `set` and `show` rules. Put deck-level rules after `#show: m.setup`.
+
+## Deck setup
+
+Declare deck metadata, semantic colors, recurring cell defaults, and full-slide planes once:
 
 ```typ
-#show: m.setup.with(
-  features: (slide-number: true, progress: true),
+#let authors = (
+  m.layouts.author("Ada Lovelace"),
 )
-#set page(fill: rgb("#111827"))
-#set text(font: "EB Garamond", size: 26pt, fill: rgb("#f3f4f6"))
-#show heading.where(depth: 2): set text(size: 1.4em)
+
+#show: m.setup.with(
+  title: [Reliable systems],
+  subtitle: [One source of truth],
+  authors: authors,
+  date: [2026],
+  colors: (accent: rgb("#007f73")),
+  content: (
+    footer: [Mosaic · Engineering],
+    foreground: [
+      #place(bottom + right, dx: -1.25em, dy: -0.35em)[
+        #m.components.progress()
+      ]
+    ],
+  ),
+)
 ```
 
-Precedence is native rule nesting: `setup` and themes set baselines, deck-level
-rules override them, and a rule scoped in a block around one `m.slide` overrides
-them for that slide only.
+The semantic color keys are `canvas`, `surface`, `accent`, `text`, `muted`, and `line`. Overrides are partial, so omitted colors retain the active theme's values.
 
-## Incremental content
+`content:` also owns recurring values for stable cell IDs. The reserved `background` and `foreground` entries fill the two full-slide planes. Set an inherited entry to `none` on a slide to suppress it.
 
-`m.steps.on`, `m.steps.reveal`, `m.steps.replace`, and `m.steps.reduce` attach explicit step ranges to
-content; the step count is discovered automatically and each step renders as one
-frame. `setup(handout: true)` emits only the final frame of each logical slide.
+## Incremental content and notes
+
+Use `m.pause` for a persistent source-order reveal:
 
 ```typ
 #m.slide[
   == Findings
-  #m.steps.reveal[
-    - The estimate is positive.
-    - The interval excludes zero.
-  ]
+  - The estimate is positive.
+  #m.pause
+  - The interval excludes zero.
 ]
 ```
 
-## Speaker notes
+Mosaic discovers the frame count. `m.steps.on`, `m.steps.reveal`, `m.steps.replace`, and `m.steps.reduce` provide explicit timing and replacement when a pause is not enough. `setup(handout: true)` emits only the final frame of each logical slide.
 
-`m.note[...]` attaches non-rendering Typst content to the current logical slide.
-Ordinary notes apply to every frame. Put a note inside `m.steps.on`,
-`m.steps.reveal`, or `m.steps.replace` to give it the same automatic frame
-assignment as nearby incremental content; notes never create frames themselves.
+Attach non-rendering notes with `m.note[...]`:
 
 ```typ
 #m.slide[
-  #m.note[Introduce the result.]
-  #m.steps.reveal(
-    [Estimate #m.note[Explain the sign and magnitude.]],
-    [Interval #m.note[Discuss uncertainty.]],
-  )
+  #m.note[Explain the assumptions before showing the result.]
+  == Main result
+  The estimate is positive.
 ]
 ```
 
-The default `output: "slides"` omits note text from the presentation. Build a
-printable A4 companion document with either `output: "speaker"` (slide thumbnail
-plus applicable notes) or `output: "notes"` (notes only):
+The default `output: "slides"` omits note text. Use `output: "speaker"` for slide thumbnails with notes or `output: "notes"` for notes alone.
 
-```typ
-#show: m.setup.with(output: "speaker")
-```
+## Themes
 
-Every emitted frame also carries queryable `<mosaic-speaker-notes>` metadata
-with its logical slide number, frame number, and applicable note content.
-Companion output is one A4 page per emitted frame; compilation reports an
-explicit overflow error when the applicable notes do not fit that page.
-
-## Bundled themes
-
-`m.themes` bundles three complete Mosaic facades (`metropolis`, `cream`, and
-`minimalist`). Import one as `m`; it provides themed `setup` and `layouts`
-alongside the ordinary Mosaic API:
+The root package is the light theme. To use another bundled theme, import its facade as `m`:
 
 ```typ
 #import "@local/mosaic:0.0.1" as mosaic
-#import mosaic.themes.metropolis as m
+#import mosaic.themes.dark as m
 
 #show: m.setup
-
-#m.slide(
-  grid: m.layouts.title([My talk], subtitle: [A subtitle]),
-  numbered: false,
-)
-
-== Ordinary content
-
-#m.slide(
-  grid: m.layouts.section(),
-  content: (section: [Methods]),
-  section: true,
-  numbered: false,
-)
 ```
 
-The themed `setup` exposes a few knobs via `.with(...)`. For deeper changes,
-copy the theme beside your deck, import the copy as `m`, and edit it freely.
-A theme is a small Mosaic facade plus native rules;
-the Grayscale theme in `docs/examples/decks/portfolio/` shows the vendored, copy-me
-side of the convention.
+The bundled themes are `light`, `dark`, `cream`, `metropolis`, and `minimalist`. Each exposes the same `setup`, `slide`, `grid`, `layouts`, `steps`, and `components` API.
+
+See [`docs/appearance.typ`](docs/appearance.typ) for theme customization and the copyable external-theme examples.
+
+## Documentation and examples
+
+- [Basics](docs/basics.typ): deck anatomy, the first slideshow, and a complete named-cell walkthrough
+- [Structure](docs/structure.typ): layouts, grids, tracks, and content assignment
+- [Appearance](docs/appearance.typ): native styling, semantic colors, planes, and themes
+- [Incremental content](docs/incremental.typ): pauses, ranges, reveals, and replacement
+- [Slides and notes API](docs/api/slides.typ): explicit slides, speaker notes, and companion outputs
+- [Examples](docs/examples.typ): complete decks and focused examples
+- [API sources](docs/api/): public functions grouped by topic
+- [Architecture](ARCHITECTURE.md): internals and extension boundaries
+
+Build the HTML guide locally with:
+
+```sh
+make website
+```
+
+The generated site starts at `docs/index.html`.
+
+## Agent skill
+
+This repository includes an installable Agent Skill that teaches compatible coding agents Mosaic's authoring model and verification workflow. The current `skills` CLI requires Node 22.20 or newer.
+
+List the skill without installing it:
+
+```sh
+npx skills add vincentarelbundock/mosaic --list
+```
+
+Install it for a detected agent:
+
+```sh
+npx skills add vincentarelbundock/mosaic --skill mosaic
+```
+
+Target Hermes Agent or Codex explicitly with `--agent hermes-agent` or `--agent codex`. The skill source is [`skills/mosaic/SKILL.md`](skills/mosaic/SKILL.md).
 
 ## Development
 
 ```sh
-make doctor          # report required, target-specific, and optional tools/fonts
-make install         # copy mosaic/ into Typst's local package index
-make check           # run package, diagnostic, and documentation-integrity tests
-make website         # build examples, API reference, and the Calepin site
-make build           # validate prerequisites, test, and build the complete site
+make doctor    # report required and optional tools
+make check     # run package, diagnostics, and documentation-integrity tests
+make website   # build examples, API pages, and the website
+make build     # run the complete validation and documentation pipeline
 ```
 
-`make check` and `make website` install the package first, so their
-`@local/mosaic:0.0.1` imports always use the current sources. Individual decks
-compile directly, for example `typst compile --root . tests/grid-runtime.typ`. The
-negative fixtures under `tests/invalid/` verify clear diagnostics for malformed
-grids, layouts, tracks, timing ranges, cell operations, heading placement, and
-conflicting slide arguments. Every positive deck is classified explicitly in
-`tests/positive-manifest.json`; every invalid fixture has an exact message in
-`tests/invalid/expected-diagnostics.txt`. `scripts/run-tests.py` owns output
-inspection instead of embedding assertions in Make recipes.
+`make check` and `make website` install the current worktree before compiling, so `@local/mosaic:0.0.1` never resolves to a stale package during repository development.
 
-Core checks require Python, Typst, Poppler's `pdftotext`, and `pdfinfo`.
-Documentation builds additionally require Calepin, Poppler's `pdftoppm`,
-FFmpeg, and Pillow. `kpsewhich`, R, `jupyter_client`, and the bundled-theme fonts
-reported by `make doctor` are optional. Missing optional fonts change metrics or
-produce warnings but do not invalidate package tests.
-
-Generated files have three lifetimes. `make clean` removes ephemeral staging and
-stamp files. `make clean-generated` also removes reproducible PDFs, covers,
-embedded assets, WebP derivatives, and the showcase video. `make distclean`
-additionally removes published HTML and Calepin cache files. The repository keeps
-authored documentation and intentional publication artifacts in `docs/`, while
-Calepin's regenerable `_calepin` cache is ignored except for the published
-favicon.
-
-See [`ARCHITECTURE.md`](ARCHITECTURE.md) for the module layers and the rules for
-placing new code.
+Mosaic is licensed under MIT; see [`mosaic/typst.toml`](mosaic/typst.toml).

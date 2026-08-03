@@ -9,7 +9,7 @@
 #let udem = (id: "udem", name: [Université de Montréal])
 #let civic = (id: "civic", name: [Institute for Civic Statistics])
 
-#m.slide(grid: m.layouts.title(
+#m.slide(layout: m.layouts.title(
   title: [Compact academic metadata],
   variant: "academic",
   subtitle: [An inline scholarly title layout],
@@ -27,7 +27,7 @@
 ))
 
 #m.slide(
-  grid: m.layouts.title(
+  layout: m.layouts.title(
     title: [When public data disappears],
     variant: "left-aligned",
     subtitle: [What twelve disappearing archives teach us about reproducibility],
@@ -40,7 +40,7 @@
   ]),
 )
 
-#m.slide(grid: m.layouts.title(
+#m.slide(layout: m.layouts.title(
   title: [Models, evidence, and public decisions],
   variant: "centered-stack",
   subtitle: [Annual Research Lecture · A public conversation about uncertainty],
@@ -48,14 +48,14 @@
   date: [2027],
 ))
 
-#m.slide(grid: m.layouts.title(
+#m.slide(layout: m.layouts.title(
   title: [Solid accent block],
   variant: "accent-block",
   subtitle: [A solid color spine; no image],
   authors: (m.layouts.author([Variant · accent-block]),),
 ))
 
-#m.slide(grid: m.layouts.title(
+#m.slide(layout: m.layouts.title(
   title: [Image on the right],
   variant: "image-right",
   image: dashboard,
@@ -63,7 +63,7 @@
   authors: (m.layouts.author([Variant · image-right]),),
 ))
 
-#m.slide(grid: m.layouts.title(
+#m.slide(layout: m.layouts.title(
   title: [Image on the left],
   variant: "image-left",
   image: dashboard,
@@ -71,7 +71,7 @@
   authors: (m.layouts.author([Variant · image-left]),),
 ))
 
-#m.slide(grid: m.layouts.title(
+#m.slide(layout: m.layouts.title(
   title: [Measuring environmental change],
   variant: "image-top",
   image: (
@@ -82,7 +82,7 @@
   authors: (m.layouts.author([River Systems Group]),),
 ))
 
-#m.slide(grid: m.layouts.title(
+#m.slide(layout: m.layouts.title(
   title: [Wetlands from above],
   variant: "image-bottom",
   image: (
@@ -98,7 +98,7 @@
 // slide.
 #[
   #show label("mosaic-cell-title"): set text(fill: white)
-  #m.slide(grid: m.layouts.title(
+  #m.slide(layout: m.layouts.title(
     title: [Cities after dark],
     variant: "image-background",
     image: m.components.image(

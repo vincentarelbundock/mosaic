@@ -4,6 +4,6 @@
 
 #show: mosaic.setup
 
-#mosaic.slide(grid: delayed)[
+#mosaic.slide(layout: delayed)[
   == A heading cannot be in a delayed cell
 ]

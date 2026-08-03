@@ -20,13 +20,15 @@
 }
 
 #show: m.setup.with(
-  foreground: [
-    #place(top + right)[
-      #pad(top: 0.9em, right: 1.35em)[
-        #text(size: 0.65em, fill: luma(35%))[#breadcrumb()]
+  content: (
+    foreground: [
+      #place(top + right)[
+        #pad(top: 0.9em, right: 1.35em)[
+          #text(size: 0.65em, fill: luma(35%))[#breadcrumb()]
+        ]
       ]
-    ]
-  ],
+    ],
+  ),
 )
 #set text(size: 22pt)
 

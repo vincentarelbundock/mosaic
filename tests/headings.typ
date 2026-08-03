@@ -3,7 +3,6 @@
 #set page(width: 160pt, height: 90pt, margin: 5pt)
 #show: mosaic.setup.with(
   spacing: (inset: 5pt),
-  features: (slide-number: true, slide-total: true),
 )
 #set text(size: 7pt)
 #show heading.where(depth: 1): set text(size: 1.9em)

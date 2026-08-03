@@ -1,13 +1,11 @@
 #import "@local/mosaic:0.0.1" as mosaic
 
 #let public-layout-names = (
-  "default", "title", "section", "author",
+  "content", "title", "section", "author",
 )
 #assert(public-layout-names.all(name => name in mosaic.layouts))
 
-#let brand = mosaic.setup.with(
-  features: (slide-number: true),
-)
+#let brand = mosaic.setup
 #let title-grid = mosaic.layouts.title(
   [Mosaic],
   subtitle: [A compact semantic layout system],
@@ -18,4 +16,4 @@
 
 #show: brand
 #set text(fill: rgb("#17324d"))
-#mosaic.slide(grid: title-grid)
+#mosaic.slide(layout: title-grid)

@@ -3,3 +3,5 @@
 #import "themes/metropolis.typ"
 #import "themes/cream.typ"
 #import "themes/minimalist.typ"
+#import "themes/light.typ"
+#import "themes/dark.typ"

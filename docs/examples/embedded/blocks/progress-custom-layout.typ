@@ -21,7 +21,7 @@
 )
 
 #let slide-progress(left-body, right-body) = m.slide(
-  grid: slide-grid,
+  layout: slide-grid,
   content: (foreground: place(
     bottom + left,
     block(width: 100%)[

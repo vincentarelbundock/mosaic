@@ -6,7 +6,7 @@
 
 #assert(expected.all(name => name in m))
 #assert(("cell", "h", "t", "v").all(name => name in m.grid))
-#assert(("author", "default", "section", "title").all(name => name in m.layouts))
+#assert(("author", "content", "section", "title").all(name => name in m.layouts))
 #assert(("on", "reduce", "replace", "reveal").all(name => name in m.steps))
 #assert((
   "callout", "divider", "frame", "image", "label", "progress", "quote",

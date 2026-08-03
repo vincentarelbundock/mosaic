@@ -24,7 +24,7 @@
 #assert(not grace.corresponding)
 
 #show: mosaic.setup
-#mosaic.slide(grid: mosaic.layouts.title(
+#mosaic.slide(layout: mosaic.layouts.title(
   [A public academic title],
   variant: "academic",
   authors: (ada, grace),

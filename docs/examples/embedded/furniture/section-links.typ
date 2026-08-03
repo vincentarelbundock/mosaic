@@ -27,11 +27,13 @@
 }
 
 #show: m.setup.with(
-  foreground: [
-    #place(bottom + center)[
-      #pad(bottom: 0.7em)[#section-links()]
-    ]
-  ],
+  content: (
+    foreground: [
+      #place(bottom + center)[
+        #pad(bottom: 0.7em)[#section-links()]
+      ]
+    ],
+  ),
 )
 #set text(size: 22pt)
 

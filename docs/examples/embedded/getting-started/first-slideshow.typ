@@ -5,7 +5,7 @@
 
 // Use an explicit slide when you want a specialized layout. This title layout
 // places the image behind the text and anchors that text in the top-right.
-#m.slide(grid: m.layouts.title(
+#m.slide(layout: m.layouts.title(
   title: [Getting started],
   variant: "image-background",
   image: (

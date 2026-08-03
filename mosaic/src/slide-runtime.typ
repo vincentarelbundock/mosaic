@@ -1,28 +1,23 @@
 // Logical-slide runtime: frame policy, state, resolution, and page rendering.
 #import "shared.typ": fail, tag
-#import "grid-model.typ": cell, validate, resolve-content
+#import "grid-model.typ": validate, resolve-content
 #import "incremental-analysis.typ": max-step
 #import "incremental-transform.typ": transform
 #import "note-analysis.typ": notes-at, fixed-grid-notes-at
 #import "note-command.typ": is-note
 #import "render.typ": max-node, render
 #import "settings.typ": settings-state
-#import "color-defaults.typ": default-canvas, default-muted, default-line, default-accent
+#import "color-defaults.typ": default-line
 #import "layout-resolver.typ": resolve-layout
-#import "layout-core.typ": is-layout-grid
-#import "layout-default.typ": progress-foreground
-#import "components.typ": progress as progress-component
+#import "layout-core.typ": is-layout
+#import "layout-config.typ": validate-layouts
 #import "deck-state.typ": (
-  grid-state,
-  background-state,
-  foreground-state,
+  layouts-state,
   logical-slide,
   logical-slide-id,
   logical-section,
-  current-numbered,
-  slide-number,
 )
-#import "slide-command.typ": validate-plane, validate-deck-config
+#import "slide-command.typ": validate-plane
 
 #let frozen-counters-state = state("mosaic:0.0.1:frozen-counters", ())
 #let frozen-states-state = state("mosaic:0.0.1:frozen-states", ())
@@ -215,19 +210,14 @@
 }
 
 #let configure-deck(
-  default-grid: cell(id: "body"),
-  background: none,
-  foreground: none,
+  layouts: (:),
   frozen-counters: (),
   frozen-states: (),
   handout: auto,
   output: "slides",
   paper: "16-9",
 ) = {
-  validate-deck-config(default-grid, background, foreground)
-  grid-state.update(default-grid)
-  background-state.update(background)
-  foreground-state.update(foreground)
+  layouts-state.update(validate-layouts(layouts))
   configure-freezing(counters: frozen-counters, states: frozen-states)
   if handout != auto {
     configure-handout(handout)
@@ -241,69 +231,26 @@
   output-state.update(output)
   paper-state.update(paper)
 }
-#let presentation-furniture(settings, show-logo: true) = {
-  let features = settings.features
-  let inset = settings.spacing.inset
 
-  if show-logo and features.logo != none {
-    place(
-      top + right,
-      dx: -inset,
-      dy: settings.spacing.compact-gap,
-      features.logo,
-    )
-  }
-  if features.footer != none {
-    place(
-      bottom + left,
-      dx: inset,
-      dy: -settings.spacing.compact-gap,
-      text(..settings.type.small, fill: default-muted, features.footer),
-    )
-  }
-  if features.slide-number {
-    place(
-      bottom + right,
-      dx: -inset,
-      dy: -settings.spacing.compact-gap,
-      text(
-        ..settings.type.small,
-        fill: default-muted,
-        slide-number(total: features.slide-total),
-      ),
-    )
-  }
-  if features.progress {
-    place(
-      bottom + left,
-      progress-component(
-        variant: "line",
-        width: 100%,
-        thickness: 3pt,
-        track: default-line,
-        color: default-accent,
-      ),
-    )
-  }
+#let select-layout(value, configured) = if value == auto {
+  ("content", configured.content)
+} else if type(value) == str {
+  (value, configured.at(value))
+} else if is-layout(value) {
+  (value.name, value)
+} else {
+  ("content", value)
 }
 
 #let render-slide-with-settings(command, settings) = context {
-  let requested-grid = command.grid
-  let is-section-layout = (
-    is-layout-grid(requested-grid)
-      and requested-grid.name == "section"
+  let (layout-name, requested-layout) = select-layout(
+    command.layout,
+    layouts-state.get(),
   )
-  let suppress-global-logo = if is-layout-grid(requested-grid) {
-    requested-grid.suppress-global-logo
+  let resolved-grid = if is-layout(requested-layout) {
+    resolve-layout(requested-layout, settings)
   } else {
-    false
-  }
-  let resolved-grid = if requested-grid == auto {
-    grid-state.get()
-  } else if is-layout-grid(requested-grid) {
-    resolve-layout(requested-grid, settings)
-  } else {
-    requested-grid
+    requested-layout
   }
   validate(resolved-grid)
   // The reserved plane ids live in the same content map as the cells. Absent
@@ -313,48 +260,42 @@
   let background-override = content-map.remove("background", default: auto)
   let foreground-override = content-map.remove("foreground", default: auto)
   let resolved-background = if background-override == auto {
-    background-state.get()
+    settings.content.at("background", default: none)
   } else {
     background-override
   }
   let resolved-foreground = if foreground-override == auto {
-    foreground-state.get()
+    settings.content.at("foreground", default: none)
   } else {
     foreground-override
-  }
-  let layout-foreground = if (
-    is-layout-grid(requested-grid)
-      and requested-grid.name == "default"
-  ) {
-    progress-foreground(requested-grid, settings)
-  } else {
-    none
-  }
-  let resolved-foreground = if layout-foreground == none {
-    resolved-foreground
-  } else if resolved-foreground == none {
-    layout-foreground
-  } else {
-    [#resolved-foreground #layout-foreground]
   }
   validate-plane(resolved-background, "background")
   validate-plane(resolved-foreground, "foreground")
   // Named and positional content collapse to one id -> content map before
   // rendering, so the renderer, overflow, and incremental paths look content up
   // by cell id with no positional cursor.
-  let contents = resolve-content(resolved-grid, content-map, command.bodies)
+  let contents = resolve-content(
+    resolved-grid,
+    content-map,
+    command.bodies,
+    defaults: settings.content,
+  )
   let steps = calc.max(
     max-node(resolved-grid),
     max-step(contents.values()),
     max-step(resolved-background),
     max-step(resolved-foreground),
   )
-  current-numbered.update(command.numbered)
   logical-slide-id.step()
-  if command.numbered {
+  let numbered = if command.numbered == auto {
+    layout-name == "content"
+  } else {
+    command.numbered
+  }
+  if numbered {
     logical-slide.step()
   }
-  if command.section or is-section-layout {
+  if layout-name == "section" {
     logical-section.step()
   }
   let slide = logical-slide-id.get().first()
@@ -362,13 +303,13 @@
   let handout = handout-state.get()
   let output = output-state.get()
   let paper = paper-state.get()
-  let slide-fill = if page.fill == auto { default-canvas } else { page.fill }
+  let slide-fill = if page.fill == auto { settings.colors.canvas } else { page.fill }
   for step in physical-steps(steps, handout) {
     let rendered = render(
       resolved-grid,
       contents,
       step,
-      overflow: settings.features.overflow,
+      overflow: settings.overflow,
       slide: slide,
     )
     pagebreak(weak: true)
@@ -386,10 +327,6 @@
         #full-slide-layer(background-content)
         #full-slide-layer(rendered)
         #full-slide-layer(foreground-content)
-        #full-slide-layer(presentation-furniture(
-          settings,
-          show-logo: not suppress-global-logo,
-        ))
     ]
     place(hide([
       #metadata((

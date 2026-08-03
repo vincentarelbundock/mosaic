@@ -2,11 +2,11 @@
 #import "shared.typ": fail
 #import "grid-model.typ": styled-cell
 #import "layout-core.typ": (
-  make-grid,
+  make-layout,
   validate-accent,
   validate-visual-spec,
 )
-#import "color-defaults.typ": default-accent
+
 #import "layout-support.typ": optional, affix
 #import "layout-image-support.typ": (
   directional-image-layout,
@@ -22,8 +22,8 @@
 
 #let variants = ("plain",) + semantic-image-variants
 
-#let validate-fields(fields) = {
-  validate-accent(fields, "section")
+#let validate-fields(fields, allow-auto: false) = {
+  validate-accent(fields, "section", allow-auto: allow-auto)
   let variant = fields.variant
   if type(variant) != str or variant not in variants {
     fail(
@@ -63,9 +63,10 @@
   number: none,
   image: none,
   variant: "plain",
-  /// Color used by the optional section number.
-  /// -> color
-  accent: default-accent,
+  /// Color used by the optional section number. `auto` inherits the semantic
+  /// accent resolved by `setup`.
+  /// -> color | auto
+  accent: auto,
   tracks: auto,
 ) = {
   let fields = validate-fields((
@@ -75,12 +76,14 @@
     variant: variant,
     accent: accent,
     tracks: tracks,
-  ))
-  make-grid("section", fields)
+  ), allow-auto: true)
+  make-layout("section", fields)
 }
 
 #let resolve-section(command, settings) = {
-  let fields = validate-fields(command.fields)
+  let fields = validate-fields(command.fields + (
+    accent: if command.fields.accent == auto { settings.colors.accent } else { command.fields.accent },
+  ))
   let image = optional-fixed-image(fields.image, "layout \"section\" image")
   let before = if fields.number != none {
     text(..settings.type.small, fill: fields.accent, fields.number)

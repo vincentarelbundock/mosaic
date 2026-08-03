@@ -14,7 +14,7 @@
     cover-photo: surface(fill: cream, inset: (top: 28pt, right: 28pt, bottom: 28pt)),
   ),
   slide(
-    grid: m.grid.h(
+    layout: m.grid.h(
       m.grid.t(0.62fr, c("cover", content: [])),
       m.grid.t(0.38fr, c("cover-photo", content: photo("image2.jpg"))),
     ),
@@ -34,7 +34,7 @@
     agenda-photo: surface(fill: cream),
   ),
   slide(
-    grid: m.grid.h(
+    layout: m.grid.h(
       m.grid.t(0.55fr, c("agenda")),
       m.grid.t(0.45fr, c("agenda-photo", content: photo("image10.png"))),
     ),
@@ -67,7 +67,7 @@
     intro-photo: surface(),
   ),
   slide(
-    grid: m.grid.h(
+    layout: m.grid.h(
       m.grid.t(0.56fr, c("intro")),
       m.grid.t(0.44fr, c("intro-photo", content: photo("image8.jpg"))),
     ),
@@ -85,7 +85,7 @@
     welcome-right: surface(inset: 28pt),
   ),
   slide(
-    grid: m.grid.h(
+    layout: m.grid.h(
       c("welcome-left"),
       c("welcome-right"),
     ),
@@ -109,7 +109,7 @@
     topic-photo: surface(),
   ),
   slide(
-    grid: m.grid.h(
+    layout: m.grid.h(
       m.grid.t(0.54fr, c("topic-copy")),
       m.grid.t(0.46fr, c("topic-photo", content: photo("image4.png"))),
     ),
@@ -124,7 +124,7 @@
 // 06. Four topics
 #styled(
   (four-topics: surface(inset: 34pt)),
-  slide(grid: c("four-topics"), content: (foreground: [#frame]))[
+  slide(layout: c("four-topics"), content: (foreground: [#frame]))[
     #grid(
       columns: (0.36fr, 0.32fr, 0.32fr),
       rows: (1fr, 1fr),
@@ -147,7 +147,7 @@
     about-photo: surface(fill: cream),
   ),
   slide(
-    grid: m.grid.h(
+    layout: m.grid.h(
       m.grid.t(0.62fr, c("about")),
       m.grid.t(0.38fr, c("about-photo", content: photo("image1.jpg"))),
     ),
@@ -171,7 +171,7 @@
     cream-photo: surface(fill: cream, inset: 24pt),
   ),
   slide(
-    grid: m.grid.h(
+    layout: m.grid.h(
       m.grid.t(0.67fr, c("cream-topics")),
       m.grid.t(0.33fr, c("cream-photo", content: photo("image7.png"))),
     ),
@@ -200,7 +200,7 @@
     topic-one-photo: surface(fill: cream),
   ),
   slide(
-    grid: m.grid.h(
+    layout: m.grid.h(
       m.grid.t(0.53fr, m.grid.v(
         c("topic-one-title"),
         c("topic-one-left-copy"),
@@ -228,7 +228,7 @@
     topic-two-photo: surface(fill: cream),
     topic-two-copy: surface(fill: cream, inset: 30pt, align: horizon),
   ),
-  slide(grid: m.grid.h(
+  slide(layout: m.grid.h(
     c("topic-two-photo", content: photo("image20.png")),
     c("topic-two-copy"),
   ))[
@@ -241,7 +241,7 @@
 // 12. Team
 #styled(
   (team: surface(fill: cream, inset: 18pt)),
-  slide(grid: c("team"))[
+  slide(layout: c("team"))[
     #set text(fill: ink)
     #align(center)[
       = THE TEAM
@@ -277,7 +277,7 @@
     picture-right: surface(fill: none),
   ),
   slide(
-    grid: m.grid.h(
+    layout: m.grid.h(
       c("picture-left", content: []),
       m.grid.t(22pt, c("picture-caption")),
       c("picture-right", content: []),
@@ -299,7 +299,7 @@
     projects-photo: surface(),
   ),
   slide(
-    grid: m.grid.h(
+    layout: m.grid.h(
       m.grid.t(0.61fr, c("projects-section")),
       m.grid.t(0.39fr, c("projects-photo", content: photo("image28.jpg"))),
     ),
@@ -318,7 +318,7 @@
     projects-list: surface(inset: 35pt),
     projects-pattern: surface(),
   ),
-  slide(grid: m.grid.h(
+  slide(layout: m.grid.h(
     m.grid.t(0.64fr, c("projects-list")),
     m.grid.t(0.36fr, c("projects-pattern", content: photo("image34.png"))),
   ), content: (foreground: [#frame]))[
@@ -342,7 +342,7 @@
     research-photo: surface(),
     research-list: surface(inset: 32pt),
   ),
-  slide(grid: m.grid.h(
+  slide(layout: m.grid.h(
     m.grid.t(0.58fr, c("research-photo")),
     m.grid.t(0.42fr, c("research-list")),
   ), content: (foreground: [#frame]))[
@@ -369,7 +369,7 @@
     donuts: surface(inset: 22pt),
     donut-photo: surface(),
   ),
-  slide(grid: m.grid.h(
+  slide(layout: m.grid.h(
     m.grid.t(0.78fr, c("donuts")),
     m.grid.t(0.22fr, c("donut-photo", content: photo("image37.png"))),
   ), content: (foreground: [#frame]))[
@@ -404,9 +404,9 @@
 #styled(
   (
     gallery-title: surface(inset: 38pt),
-    gallery-grid: surface(inset: 0pt),
+    gallery-layout: surface(inset: 0pt),
   ),
-  slide(grid: m.grid.h(
+  slide(layout: m.grid.h(
     m.grid.t(0.34fr, c("gallery-title")),
     m.grid.t(0.66fr, c("gallery-grid")),
   ), content: (foreground: [#frame]))[
@@ -430,7 +430,7 @@
     contact-photo: surface(),
     contact: surface(inset: 44pt, align: left + horizon),
   ),
-  slide(grid: m.grid.h(
+  slide(layout: m.grid.h(
     m.grid.t(0.46fr, c("contact-photo", content: photo("image47.png"))),
     m.grid.t(0.54fr, c("contact")),
   ), content: (foreground: [#frame]))[

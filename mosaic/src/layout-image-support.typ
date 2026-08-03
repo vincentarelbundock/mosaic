@@ -2,7 +2,7 @@
 #import "shared.typ": fail
 #import "grid-model.typ": styled-cell, h, v, valid-track-size
 #import "layout-support.typ": framed-surface, track-children, visual-content
-#import "color-defaults.typ": default-canvas
+
 
 #let directional-variants = ("left", "right", "top", "bottom")
 #let semantic-directional-variants = (
@@ -66,7 +66,7 @@
       inset: 0pt,
     )
   } else {
-    framed-surface(settings, fill: default-canvas, stroke: none) + (
+    framed-surface(settings, fill: settings.colors.canvas, stroke: none) + (
       inset: settings.spacing.inset,
     )
   },

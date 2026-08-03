@@ -4,4 +4,4 @@
 #let _ = malformed.remove("id")
 
 #show: mosaic.setup
-#mosaic.slide(grid: malformed)[Rejected noncanonical cell record]
+#mosaic.slide(layout: malformed)[Rejected noncanonical cell record]

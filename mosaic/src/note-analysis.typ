@@ -8,11 +8,17 @@
 )
 #import "note-command.typ": is-note
 #import "grid-model.typ": fold-grid
+#import "pause-command.typ": has-pause, is-pause, pause-schedule
+#import "incremental-analysis.typ": max-step
+#import "incremental-heading.typ": typst-sequence
 
 #let notes-at(value, step) = {
   let visit(value) = {
     if is-note(value) {
       return (value.value.body,)
+    }
+    if is-pause(value) {
+      return ()
     }
     if is-command-on(value) {
       let state = status(value.range, value.before, value.after, step)
@@ -87,6 +93,18 @@
       }
       if timed.kind == "temporal-reducer" {
         return visit(timed.args)
+      }
+    }
+    if value.func() == typst-sequence {
+      if has-pause(value.children) {
+        let result = ()
+        for segment in pause-schedule(value.children, max-step) {
+          let local-step = step - segment.start + 1
+          if local-step > 0 {
+            result += notes-at(segment.children, local-step)
+          }
+        }
+        return result
       }
     }
     if value.func() == metadata {

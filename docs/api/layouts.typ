@@ -4,7 +4,7 @@
   "Semantic layouts",
   (
     "/api/modules/author.typ",
-    "/api/modules/layout-default.typ",
+    "/api/modules/layout-content.typ",
     "/api/modules/layout-title.typ",
     "/api/modules/layout-section.typ",
   ),

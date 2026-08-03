@@ -1,6 +1,6 @@
 // Compilation of top-level Typst content into explicit and automatic slides.
 #import "shared.typ": fail
-#import "slide-command.typ": is-slide-command, slide-command, automatic-slide-command
+#import "slide-command.typ": is-slide-command, slide-command
 #import "slide-runtime.typ": render-slide
 
 #let typst-sequence = [].func()
@@ -44,11 +44,8 @@
     wrappers: wrappers,
   ),)
 }
-// `auto-slide`, when not none, is a user-supplied constructor `(title, body) ->
-// slide command` (the value returned by `mosaic.slide(...)`). It replaces the
-// built-in header-body layout for automatic level-2 heading slides, letting a
-// deck route `==` slides through its own styled `slide` helper.
-#let compile-deck(body, section-grid: auto, auto-slide: none) = {
+// Automatic and explicit pages use the same layout-based slide command.
+#let compile-deck(body) = {
   let output = ()
   let mode = none
   let section = none
@@ -63,25 +60,19 @@
   let flush(mode, section, current, wrappers) = {
     if mode == "slide" {
       let body = current.sum(default: [])
-      let rendered = if auto-slide == none {
-        render-slide(automatic-slide-command(section, body))
-      } else {
-        let produced = auto-slide(section, body)
-        if not is-slide-command(produced) {
-          fail(
-            "setup auto-slide must return a mosaic.slide(...) command; "
-              + "got " + repr(type(produced)),
-          )
-        }
-        render-slide(produced.value)
-      }
-      wrap-content(rendered, wrappers)
+      wrap-content(
+        render-slide(slide-command(
+          (),
+          layout: "content",
+          content: (header: section, body: body),
+        )),
+        wrappers,
+      )
     } else if mode == "section" {
       wrap-content(
         render-slide(slide-command(
           (),
-          grid: section-grid,
-          numbered: false,
+          layout: "section",
           content: (section: section),
         )),
         wrappers,

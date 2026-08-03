@@ -1,7 +1,7 @@
 #import "@local/mosaic:0.0.1" as mosaic
 
 #let malformed = mosaic.layouts.title([Title])
-#let _ = malformed.remove("suppress-global-logo")
+#let _ = malformed.insert("extra", true)
 
 #show: mosaic.setup
-#mosaic.slide(grid: malformed)
+#mosaic.slide(layout: malformed)

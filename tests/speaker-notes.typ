@@ -26,7 +26,7 @@ HEADING SLIDE BODY
 NOTE-FREE SLIDE BODY
 
 #m.slide(
-  grid: m.grid.h("left", "right"),
+  layout: m.grid.h("left", "right"),
   content: (
     left: [#m.note[FIRST CELL NOTE] FIRST CELL],
     right: [#m.note[SECOND CELL NOTE] SECOND CELL],

@@ -1,8 +1,6 @@
 #import "@local/mosaic:0.0.1" as m
 
-#show: m.setup
-
-#m.slide(
+#show: m.setup.with(
   content: (foreground: [
     #place(
       right + horizon,
@@ -15,7 +13,9 @@
       ),
     )
   ]),
-)[
+)
+
+#m.slide[
   #block(width: 52%)[
     == Logos
 

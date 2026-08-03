@@ -9,7 +9,7 @@ The deck demonstrates the material common to a technical talk: substantive
 bullet points, incrementally annotated mathematics, Fletcher and CeTZ diagrams,
 executable R code, a generated ggplot2 figure, computed model results, inline
 citations, a bibliography, and backup slides. Its workhorse `frame` helper is
-derived from `m.layouts.default`.
+derived from `m.layouts.content`.
 
 The Metropolis theme is licensed under
 [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/).

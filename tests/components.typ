@@ -12,7 +12,7 @@
 )
 #set text(size: 9pt)
 
-#mosaic.slide(mosaic.grid.h("a", "b"))[
+#mosaic.slide(layout: mosaic.grid.h("a", "b"))[
   #mosaic.components.frame(role: "information")[
     #mosaic.components.label(
       radius: 999pt,
@@ -31,7 +31,7 @@
 ]
 
 #mosaic.slide(
-  mosaic.grid.h("first", "second", "third"),
+  layout: mosaic.grid.h("first", "second", "third"),
 )[
   #mosaic.components.frame(role: "information")[Panel body]
 ][
@@ -45,7 +45,7 @@
 ]
 
 #mosaic.slide(
-  mosaic.grid.h("numbers", "circle", "line"),
+  layout: mosaic.grid.h("numbers", "circle", "line"),
 )[
   #mosaic.components.progress(variant: "1/1")
 ][

@@ -2,7 +2,7 @@
 #import "shared.typ": tag, fail, reject-unknown-keys, valid-path
 
 #let layout-field-keys = (
-  default: ("accent", "columns", "progress", "tracks", "variant"),
+  content: ("columns", "tracks", "variant"),
   title: (
     "accent", "align", "authors", "date", "image", "rule", "subtitle", "title",
     "tracks", "variant",
@@ -10,30 +10,28 @@
   section: ("accent", "image", "number", "subtitle", "tracks", "variant"),
 )
 
-#let make-grid(name, fields, suppress-global-logo: false) = (
+#let make-layout(name, fields) = (
   mosaic: tag,
-  kind: "layout-grid",
+  kind: "layout",
   name: name,
   fields: fields,
-  suppress-global-logo: suppress-global-logo,
 )
 
-#let validate-accent(fields, name) = {
-  if type(fields.accent) != color {
+#let validate-accent(fields, name, allow-auto: false) = {
+  if type(fields.accent) != color and not (allow-auto and fields.accent == auto) {
     fail("layout " + repr(name) + " accent must be a color")
   }
 }
 
-#let is-layout-grid(value) = if (
+#let is-layout(value) = if (
   type(value) != dictionary
     or value.keys().sorted()
-      != ("fields", "kind", "mosaic", "name", "suppress-global-logo")
+      != ("fields", "kind", "mosaic", "name")
     or value.mosaic != tag
-    or value.kind != "layout-grid"
+    or value.kind != "layout"
     or type(value.name) != str
     or value.name not in layout-field-keys
     or type(value.fields) != dictionary
-    or type(value.suppress-global-logo) != bool
 ) {
   false
 } else {

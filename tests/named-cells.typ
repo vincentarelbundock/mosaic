@@ -27,7 +27,7 @@
 #assert(named == positional)
 
 // The slide command carries the content dictionary.
-#let command = mosaic.slide(comparison, content: (
+#let command = mosaic.slide(layout: comparison, content: (
   heading: [H],
   left: [L],
   right: [R],
@@ -54,15 +54,15 @@
 #show: mosaic.setup
 
 // Named and equivalent positional slides render identically.
-#mosaic.slide(comparison, content: (
+#mosaic.slide(layout: comparison, content: (
   right: [Right],
   heading: [Heading],
   left: [Left],
 ))
-#mosaic.slide(comparison)[Heading][Left][Right]
+#mosaic.slide(layout: comparison)[Heading][Left][Right]
 
 // Named content into a fixed-cell grid supplies only the open cell.
-#mosaic.slide(with-fixed, content: (body: [Body]))
+#mosaic.slide(layout: with-fixed, content: (body: [Body]))
 
 // Named content flows through incremental cells.
-#mosaic.slide(temporal, content: (top: [Top], bottom: [Bottom]))
+#mosaic.slide(layout: temporal, content: (top: [Top], bottom: [Bottom]))

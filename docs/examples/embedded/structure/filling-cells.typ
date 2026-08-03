@@ -19,15 +19,15 @@
 
 // Slide 1
 
-#m.slide(m.grid.h("a", "b", "c"))[a][b][c]
+#m.slide(layout: m.grid.h("a", "b", "c"))[a][b][c]
 
 // Slide 2
 
-#m.slide(m.grid.v("a", "b"))[a][b]
+#m.slide(layout: m.grid.v("a", "b"))[a][b]
 
 // Slide 3
 
-#m.slide(m.grid.v(
+#m.slide(layout: m.grid.v(
   "a",
   m.grid.h("b", "c"),
   "d",

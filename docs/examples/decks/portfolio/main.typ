@@ -1,4 +1,4 @@
-// theme.typ exposes the vendored Grayscale facade as `m`; preamble.typ
+// theme.typ exposes the vendored Greyscale facade as `m`; preamble.typ
 // re-exports it with the deck-specific helpers used below. This deck builds
 // every slide by hand, including the cover.
 //
@@ -6,16 +6,20 @@
 // applied natively through `styled(...)`, which turns a map of cell id ->
 // surface() into `show label("mosaic-cell-ID")` rules.
 #import "preamble.typ": *
+#assert((
+  "setup", "slide", "note", "pause", "surface",
+  "grid", "layouts", "steps", "components",
+).all(name => name in m))
 #show: m.setup
 
-// 01. Cover
+// 01. Greyscale cover
 #styled((cover: surface()), m.slide(
-  grid: cell("cover", content: []),
+  layout: cell("cover", content: []),
   content: (
     background: photo("image4.png"),
     foreground: [
       #place(top + left, dx: 28pt, dy: 26pt)[
-        #text(size: 76pt, weight: "bold", fill: white)[PORTFOLIO]
+        #text(size: 76pt, weight: "bold", fill: white)[GREYSCALE]
       ]
 
     ],
@@ -30,7 +34,7 @@
     contents-edge: surface(fill: white),
   ),
   m.slide(
-    grid: m.grid.h(
+    layout: m.grid.h(
       m.grid.t(0.16fr, cell("contents-margin", content: [])),
       m.grid.t(0.64fr, cell("contents-image", content: photo("image13.png"))),
       m.grid.t(0.20fr, cell("contents-edge", content: [])),
@@ -63,7 +67,7 @@
     hello-photo: surface(),
   ),
   m.slide(
-    grid: m.grid.h(
+    layout: m.grid.h(
       m.grid.t(0.48fr, cell("hello-copy")),
       m.grid.t(0.52fr, cell("hello-photo", content: photo("image21.png"))),
     ),
@@ -86,7 +90,7 @@
     about-copy: surface(fill: white, inset: 24pt),
   ),
   m.slide(
-    grid: m.grid.v(
+    layout: m.grid.v(
       m.grid.t(1.05fr, cell("about-photo")),
       m.grid.t(0.95fr, cell("about-copy")),
     ),
@@ -115,7 +119,7 @@
     story: surface(fill: white, inset: 30pt, align: center + horizon),
   ),
   m.slide(
-    grid: m.grid.h(
+    layout: m.grid.h(
       m.grid.t(0.72fr, cell("pier", content: photo("image12.png"))),
       m.grid.t(0.72fr, cell("portrait", content: photo("image9.png"))),
       m.grid.t(1.05fr, cell("story")),
@@ -132,7 +136,7 @@
     mission-photo: surface(),
   ),
   m.slide(
-    grid: m.grid.h(
+    layout: m.grid.h(
       m.grid.t(1.3fr, cell("mission-body")),
       m.grid.t(0.7fr, cell("mission-photo", content: photo("image1.png"))),
     ),
@@ -159,7 +163,7 @@
 
 // 07. Full-bleed statement
 #styled((statement: surface(fill: white, inset: 10pt)), m.slide(
-  grid: cell("statement", content: photo("image19.png")),
+  layout: cell("statement", content: photo("image19.png")),
   content: (foreground: [
     #place(bottom + right, dx: -35pt, dy: -19pt)[
       #black-panel(
@@ -178,7 +182,7 @@
     best-list: surface(fill: ink, inset: 22pt, align: center + horizon),
   ),
   m.slide(
-    grid: m.grid.h(
+    layout: m.grid.h(
       m.grid.t(0.95fr, cell("best-intro")),
       m.grid.t(0.62fr, cell("best-photo", content: photo("image5.png"))),
       m.grid.t(0.9fr, cell("best-list")),
@@ -201,7 +205,7 @@
 
 // 09. Four-image gallery
 #styled((gallery: surface(fill: white, inset: 28pt)), m.slide(
-  grid: cell("gallery"),
+  layout: cell("gallery"),
 )[
   #grid(
     columns: (1fr, 1fr),
@@ -222,7 +226,7 @@
     inset: (x: 105pt, y: 72pt),
     align: center + horizon,
   )),
-  m.slide(grid: cell("numbered"))[
+  m.slide(layout: cell("numbered"))[
     #grid(
       columns: (1fr, 1fr),
       rows: (1fr, 1fr),
@@ -238,7 +242,7 @@
 
 // 11. Big number
 #styled((metric: surface()), m.slide(
-  grid: cell("metric", content: []),
+  layout: cell("metric", content: []),
   content: (
     background: photo("image6.png"),
     foreground: [
@@ -263,7 +267,7 @@
     chart-graphic: surface(fill: white, inset: 18pt),
   ),
   m.slide(
-    grid: m.grid.h(
+    layout: m.grid.h(
       m.grid.t(0.85fr, cell("chart-copy")),
       m.grid.t(1.15fr, cell("chart-graphic", content: photo("image8.png", fit: "contain"))),
     ),
@@ -288,7 +292,7 @@
     exhibition-3: surface(fill: ink, inset: 14pt),
   ),
   m.slide(
-    grid: m.grid.v(
+    layout: m.grid.v(
       m.grid.t(0.28fr, cell("exhibitions-title")),
       m.grid.t(1fr, m.grid.h(
         cell("exhibition-1"),
@@ -339,7 +343,7 @@
     ),
   ),
   m.slide(
-    grid: m.grid.h(
+    layout: m.grid.h(
       m.grid.t(0.42fr, cell("thanks")),
       m.grid.t(0.58fr, cell(
         "closing-photo",

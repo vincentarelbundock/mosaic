@@ -2,65 +2,69 @@
 
 #show: mosaic.setup
 
+#let progress(variant, color) = if variant == "line" {
+  [#place(bottom + left)[
+    #mosaic.components.progress(
+      variant: "line",
+      width: 100%,
+      thickness: 0.12em,
+      color: color,
+    )
+  ]]
+} else {
+  [#place(bottom + right, dx: -1.25em, dy: -0.35em)[
+    #mosaic.components.progress(
+      variant: variant,
+      size: 1em,
+      thickness: 0.12em,
+      color: color,
+    )
+  ]]
+}
+
 #mosaic.slide(
-  grid: mosaic.layouts.default(
-    variant: "header-body",
-    progress: "1/1",
-    accent: rgb("#d97706"),
-  ),
+  layout: mosaic.layouts.content(variant: "header-body"),
+  content: (foreground: progress("1/1", rgb("#d97706"))),
 )[
-  == Layout-accent number
+  == Foreground number
 ][
-  The number uses the layout accent.
+  The number is ordinary foreground content.
 ]
 
 #mosaic.slide(
-  grid: mosaic.layouts.default(
-    progress: "circle",
-    accent: rgb("#ffffff"),
-  ),
+  layout: mosaic.layouts.content(),
+  content: (foreground: progress("circle", rgb("#ffffff"))),
 )[
   == White circle
 ][
-  The circle uses the layout accent.
-][
-  Footer
-]
+  The circle is composed with the public progress component.
+][Footer]
 
 #mosaic.slide(
-  grid: mosaic.layouts.default(
-    progress: "circle",
-    accent: rgb("#fedcba"),
-  ),
+  layout: mosaic.layouts.content(),
+  content: (foreground: progress("circle", rgb("#fedcba"))),
 )[
   == Styled circle
 ][
-  The explicit layout accent also styles progress.
-][
-  Styled footer
-]
+  Explicit component color styles progress.
+][Styled footer]
 
 #mosaic.slide(
-  grid: mosaic.layouts.default(
-    variant: "header-body",
-    progress: "line",
-    accent: rgb("#123456"),
-  ),
+  layout: mosaic.layouts.content(variant: "header-body"),
+  content: (foreground: progress("line", rgb("#123456"))),
 )[
-  == Layout-accent line
+  == Foreground line
 ][
-  The line uses the layout accent.
+  The line is ordinary foreground content.
 ]
 
 #mosaic.slide(
-  grid: mosaic.layouts.default(
-    variant: "header-body",
-    progress: none,
-  ),
+  layout: mosaic.layouts.content(variant: "header-body"),
+  content: (foreground: none),
 )[
   == No progress
 ][
-  `none` adds no layout foreground.
+  `none` adds no foreground content.
 ]
 
 #context assert(counter(page).final().first() == 5)

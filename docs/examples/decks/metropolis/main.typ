@@ -4,8 +4,8 @@
 //  theme.typ imports the bundled Metropolis facade as `m` and defines
 //  deck-local colors; preamble.typ re-exports it with Fletcher, CeTZ, Calepin,
 //  and the helpers used below. From here down, each slide is a `== Heading`
-//  routed through the theme's default layout or one call to a theme layout
-//  recipe (`m.layouts.title`, `m.layouts.section`, or `m.layouts.default`).
+//  routed through the theme's content layout or one call to a theme layout
+//  recipe (`m.layouts.title`, `m.layouts.section`, or `m.layouts.content`).
 // ═══════════════════════════════════════════════════════════════════════════
 // Root-absolute import: Calepin compiles main.typ from a generated wrapper
 // directory, so a relative "preamble.typ" would not resolve. The Calepin root
@@ -16,7 +16,7 @@
 #let ccp = (id: "ccp", name: [Centre for Comparative Politics])
 #let eis = (id: "eis", name: [European Institute for Social Data])
 
-#m.slide(grid: m.layouts.title(
+#m.slide(layout: m.layouts.title(
   title: [
     // `calepin.setup` runs once inside the title content to enable the R
     // chunks used later in the deck.
@@ -49,10 +49,8 @@
 )
 
 #m.slide(
-  grid: m.layouts.section(),
+  layout: m.layouts.section(),
   content: (section: [Model]),
-  section: true,
-  numbered: false,
 )
 
 == Sequential decisions under uncertainty
@@ -109,10 +107,8 @@ The recursion separates immediate utility from the expected value of all
 subsequent decisions #cite(<bellman1957>).
 
 #m.slide(
-  grid: m.layouts.section(),
+  layout: m.layouts.section(),
   content: (section: [Computation]),
-  section: true,
-  numbered: false,
 )
 
 // `calepin.chunk` runs R at compile time. The first chunk evaluates the code
@@ -190,10 +186,8 @@ than copied into the deck.
 ]
 
 #m.slide(
-  grid: m.layouts.section(),
+  layout: m.layouts.section(),
   content: (section: [Structure]),
-  section: true,
-  numbered: false,
 )
 
 == File-reader state machine
@@ -224,10 +218,8 @@ than copied into the deck.
 ]
 
 #m.slide(
-  grid: m.layouts.section(),
+  layout: m.layouts.section(),
   content: (section: [Geometry]),
-  section: true,
-  numbered: false,
 )
 
 == A qubit as a Bloch vector
@@ -286,10 +278,8 @@ than copied into the deck.
 ]
 
 #m.slide(
-  grid: m.layouts.section(),
+  layout: m.layouts.section(),
   content: (section: [Evidence]),
-  section: true,
-  numbered: false,
 )
 
 == What makes a technical slide?
@@ -325,7 +315,7 @@ than copied into the deck.
     fill: ink,
     it,
   )
-  #m.slide(grid: m.grid.cell("questions"))[
+  #m.slide(layout: m.grid.cell("questions"))[
     #text(size: 1.6em, weight: "medium", fill: white)[Questions?]
   ]
 ]
@@ -333,7 +323,7 @@ than copied into the deck.
 // A real `==` heading in the header block keeps the same heading show rules
 // (and therefore the same size) as the automatic slide headers.
 #m.slide(
-  grid: m.layouts.default(),
+  layout: m.layouts.content(),
   numbered: false,
   content: (
     header: [== References],

@@ -5,7 +5,7 @@
 #show: m.setup
 #set text(size: 22pt)
 
-#m.slide(
+#m.slide(layout: 
   grid,
   content: (background: [
     #place(center)[

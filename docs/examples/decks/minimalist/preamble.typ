@@ -21,7 +21,7 @@ They can inform, persuade, teach, or spark discussion.]
 )
 
 // Apply a map of cell id -> surface() as native rules around a slide:
-//   #styled((id: surface(...)), m.slide(grid: ...)[...])
+//   #styled((id: surface(...)), m.slide(layout: ...)[...])
 #let styled(styles, body) = {
   let out = body
   for (id, s) in styles {

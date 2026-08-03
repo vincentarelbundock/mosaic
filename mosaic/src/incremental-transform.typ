@@ -17,6 +17,8 @@
   typst-styled,
 )
 #import "note-command.typ": is-note
+#import "pause-command.typ": has-pause, is-pause, pause-schedule
+#import "incremental-analysis.typ": max-step
 
 #let body-containers = (
   block, box, pad, hide, strong, emph, smallcaps, sub, super,
@@ -134,6 +136,9 @@
       return body
     }
     if is-note(body) {
+      return []
+    }
+    if is-pause(body) {
       return []
     }
     if body.func() == heading {
@@ -277,6 +282,24 @@
       }
     }
     if body.func() == typst-sequence {
+      if has-pause(body.children) {
+        let result = ()
+        for (index, segment) in pause-schedule(
+          body.children,
+          max-step,
+        ).enumerate() {
+          let segment-body = segment.children.sum(default: [])
+          let local-step = step - segment.start + 1
+          let transformed = transform(
+            segment-body,
+            calc.max(local-step, 1),
+            headings: heading-mode,
+            heading-key: heading-key + ":pause-" + str(index),
+          )
+          result.push(if local-step < 1 { hide(transformed) } else { transformed })
+        }
+        return result.sum(default: [])
+      }
       return body.children.map(visit).sum(default: [])
     }
     if body.func() == typst-styled {

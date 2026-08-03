@@ -1,5 +1,9 @@
 #import "/.calepin/calepin.typ" as calepin
-#import "/_includes/embedded-examples.typ": embedded-example, slideshow
+#import "/_includes/embedded-examples.typ": (
+  embedded-example,
+  slideshow,
+  thumbnail-gallery,
+)
 
 #set document(title: [Furniture])
 #metadata((title: "Furniture")) <website-metadata>
@@ -10,20 +14,87 @@ Grids and cells occupy the main slide body. Two full-slide *planes* sit around
 it (a background painted behind and a foreground painted over), and neither
 changes the grid's row or column measurements. Together with headings, they
 carry a deck's furniture: page numbers, logos, decoration, and navigation. Set a
-recurring plane through `m.setup`, or address one on a specific `m.slide`
-through the reserved `background` and `foreground` entries of its `content:`
-dictionary. A slide inherits the deck plane by default; a content entry
-replaces it for that slide, and an entry set to `none` omits it. Each rendered
+recurring plane through the reserved `background` and `foreground` entries of
+`m.setup(content:)`, or use the same entries in one `m.slide(content:)`. A slide
+inherits the setup plane by default; a slide entry replaces it, and an entry set
+to `none` omits it. Each rendered
 plane is labeled like a cell (`<mosaic-cell-background>` and
 `<mosaic-cell-foreground>`), so native `show label(...)` rules style planes
-too.
+too. Recurring footer text is different: it belongs in the grid's real `footer`
+cell, where it participates in layout instead of floating over the slide.
+
+Keep three concerns distinct:
+
+- *Cells* such as `header`, `body`, and `footer` participate in the resolved grid.
+  Setup values are defaults only for real cells present in that grid.
+- *Planes* are the reserved `background` and `foreground` content entries. They
+  cover the page independently of grid structure.
+- *Runtime state* supplies logical slide, section, and frame counters. Components
+  such as `m.components.progress()` read that state but still return ordinary
+  content, which you place in a cell or plane yourself.
+
+This means there is no separate footer, logo, numbering, or progress feature.
+Reusable authored visuals go through setup `content:`; slide-specific visuals go
+through slide `content:`; runtime-aware components merely construct those values.
+
+= Default footer content
+
+Most decks repeat the same source, confidentiality notice, event name, or
+organization in every ordinary slide footer. Declare that value once as partial
+setup content:
+
+```typ
+#show: m.setup.with(
+  content: (
+    footer: [Mosaic · Engineering],
+  ),
+)
+```
+
+The default applies whenever the resolved layout contains a content-bearing
+cell named `footer`. A title slide has no such cell, so it is unaffected. With a
+default footer, positional content supplies only the remaining cells:
+
+```typ
+#m.slide(
+  layout: m.layouts.content(variant: "header-body-footer"),
+)[RESULTS][Main result]
+```
+
+Named content can likewise omit `footer`. An explicit value overrides the deck
+default, while `none` suppresses it on one slide:
+
+```typ
+#m.slide(
+  layout: m.layouts.content(variant: "header-body-footer"),
+  content: (
+    header: [APPENDIX],
+    body: [Supporting details],
+    footer: none,
+  ),
+)
+```
+
+A complete positional body list remains valid and overrides every corresponding
+default. Footer content has only this cell-based mechanism—there is no separate
+global footer feature—so it cannot unexpectedly overlap slide numbers,
+progress, or the slide body.
+
+#embedded-example(
+  calepin.elements.gallery,
+  "structure/setup-content",
+  frames: 3,
+  title: "A default footer, a slide override, and explicit suppression",
+  renderer: thumbnail-gallery,
+)
 
 = Foreground
 
 Foreground content is painted over the slide body. Deck foregrounds float above
-every inherited grid. Built-in slide numbering and progress are enabled through
-`setup(features:)`; all incremental frames from one slide share a logical slide
-number.
+every inherited grid. Numbering and progress are ordinary
+`m.components.progress()` values placed in that foreground. The component reads
+Mosaic's logical counters, so all incremental frames from one slide share a
+logical slide number.
 
 #embedded-example(
   calepin.elements.gallery,
@@ -43,8 +114,11 @@ shapes, labels, or counters independently of the slide grid.
   title: "Arbitrary foreground objects",
 )
 
-A logo is just placed foreground content: the alignment selects an anchor such
-as `top + left` or `bottom + right`, and `dx`/`dy` offset it from there.
+There is no special logo feature. A reusable logo is ordinary setup foreground
+content: put `place(...)` inside `m.setup(content: (foreground: ...))`. The
+alignment selects an anchor such as `top + left` or `bottom + right`, and
+`dx`/`dy` offset it from there. Because it is the default foreground, any slide
+can override it or suppress it with `content: (foreground: none)`.
 
 #embedded-example(
   calepin.elements.gallery,
@@ -66,14 +140,14 @@ variant below sits on the slide foreground, but the component is ordinary
   calepin.elements.gallery,
   "blocks/progress-numbers",
   frames: 3,
-  title: "layouts.default(progress: \"1/1\")",
+  title: "Foreground numbering with components.progress()",
 )
 
 #slideshow(
   calepin.elements.gallery,
   "blocks/progress-line",
   3,
-  "layouts.default(progress: \"line\")",
+  "Foreground line with components.progress()",
 )
 
 Add a progress indicator to any layout, or to a custom grid, through the
@@ -90,6 +164,8 @@ two-column slide with a foreground bar:
 = Background
 
 Background content is painted behind the slide body over the full usable area.
+Declare a recurring background with `m.setup(content: (background: ...))`, then
+override or suppress it with the same key in one slide's `content:` dictionary.
 
 == Placed content
 

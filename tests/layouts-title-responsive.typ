@@ -4,7 +4,7 @@
 #let appearance = sys.inputs.at("appearance", default: "light")
 #show: mosaic.setup.with(
   paper: paper,
-  features: (overflow: "warn"),
+  overflow: "warn",
 )
 #show: body => {
   if appearance == "dark" {
@@ -19,7 +19,7 @@
 #let lpe = (id: "lpe", name: [Laboratory for Public Evidence])
 #let eamc = (id: "eamc", name: [East Asia Methods Centre])
 
-#mosaic.slide(grid: mosaic.layouts.title(
+#mosaic.slide(layout: mosaic.layouts.title(
   [When measurement choices change substantive conclusions],
   variant: "academic",
   subtitle: [Evidence from a coordinated replication],
@@ -36,7 +36,7 @@
   date: [Toronto · July 2027],
 ))
 
-#mosaic.slide(grid: mosaic.layouts.title(
+#mosaic.slide(layout: mosaic.layouts.title(
   [Compact academic metadata],
   variant: "academic",
   subtitle: [An explicit inline author layout],
@@ -47,7 +47,7 @@
   date: [Toronto · July 2027],
 ))
 
-#mosaic.slide(grid: mosaic.layouts.title(
+#mosaic.slide(layout: mosaic.layouts.title(
   [When public data disappears],
   variant: "left-aligned",
   subtitle: [Open Data Day 2027 · What disappearing archives teach us about reproducibility],
@@ -55,7 +55,7 @@
   date: [March 2027],
 ))
 
-#mosaic.slide(grid: mosaic.layouts.title(
+#mosaic.slide(layout: mosaic.layouts.title(
   [Models, evidence, and public decisions],
   variant: "centered-stack",
   subtitle: [Annual Research Lecture · A public conversation about uncertainty],
@@ -63,14 +63,14 @@
   date: [2027],
 ))
 
-#mosaic.slide(grid: mosaic.layouts.title(
+#mosaic.slide(layout: mosaic.layouts.title(
   [From raw data to publication],
   variant: "accent-block",
   subtitle: [Hands-on session · Build and publish a reproducible report],
   authors: (mosaic.layouts.author([Facilitator · Jordan Lee]),),
 ))
 
-#mosaic.slide(grid: mosaic.layouts.title(
+#mosaic.slide(layout: mosaic.layouts.title(
   [Measuring environmental change],
   variant: "image-right",
   image: (path: path("/docs/assets/images/title-river.webp"), alt: "Autumn wetlands"),
@@ -78,7 +78,7 @@
   authors: (mosaic.layouts.author([River Systems Group]),),
 ))
 
-#mosaic.slide(grid: mosaic.layouts.title(
+#mosaic.slide(layout: mosaic.layouts.title(
   [Measuring environmental change],
   variant: "image-bottom",
   image: (path: path("/docs/assets/images/title-river.webp"), alt: "Autumn wetlands"),
@@ -91,7 +91,7 @@
   // Light-on-dark composition: a scoped label rule recolors the title cell.
   #show label("mosaic-cell-title"): set text(fill: white)
   #mosaic.slide(
-    grid: mosaic.layouts.title(
+    layout: mosaic.layouts.title(
       [Cities after dark],
       variant: "image-background",
       image: mosaic.components.image(
@@ -107,7 +107,7 @@
   )
 ]
 
-#mosaic.slide(grid: mosaic.layouts.title(
+#mosaic.slide(layout: mosaic.layouts.title(
   [Cities after dark, unadjusted],
   variant: "image-background",
   image: (path: path("/docs/assets/images/title-city.webp"), alt: "Coastal city lights at night"),

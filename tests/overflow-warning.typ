@@ -1,6 +1,6 @@
 #import "@local/mosaic:0.0.1" as mosaic
 
-#show: mosaic.setup.with(features: (overflow: "warn"))
+#show: mosaic.setup.with(overflow: "warn")
 
 #mosaic.slide[Normal content fits.]
 

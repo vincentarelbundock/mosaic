@@ -27,7 +27,7 @@
 #show: fill("second", green.lighten(92%))
 #show: fill("third", orange.lighten(88%))
 
-#m.slide(grid)[
+#m.slide(layout: grid)[
   *Cell 1*
 
   Initially fills the row.

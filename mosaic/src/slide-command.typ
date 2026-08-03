@@ -1,17 +1,15 @@
 // Construction and validation of deferred slide commands.
 #import "shared.typ": tag, fail
-#import "grid-model.typ": is-node, validate, plane-ids
-#import "layout-core.typ": is-layout-grid
-#import "layout-default.typ": default
+#import "grid-model.typ": plane-ids
+#import "layout-config.typ": layout-names, validate-layout-value
 
 #let slide-command-field-keys = (
   "bodies",
   "content",
-  "grid",
   "kind",
+  "layout",
   "mosaic",
   "numbered",
-  "section",
 )
 
 #let is-slide-command(value) = {
@@ -36,118 +34,89 @@
   }
 }
 
-#let validate-deck-config(default-grid, background, foreground) = {
-  validate(default-grid)
-  validate-plane(background, "background")
-  validate-plane(foreground, "foreground")
+#let validate-layout-selection(value) = {
+  if value == auto {
+    return value
+  }
+  if type(value) == str {
+    if value not in layout-names {
+      fail("slide layout name must be \"content\", \"title\", or \"section\"")
+    }
+    return value
+  }
+  validate-layout-value(value, "slide layout")
 }
 
 #let slide-command(
   bodies,
-  grid: auto,
-  numbered: true,
-  section: false,
+  layout: auto,
+  numbered: auto,
   content: (:),
 ) = (
   mosaic: tag,
   kind: "slide",
-  grid: grid,
+  layout: layout,
   numbered: numbered,
-  section: section,
   content: content,
   bodies: bodies,
 )
 
-/// Creates a logical slide command.
+/// Creates one logical slide command.
 ///
-/// The grid may be passed through `grid` or as the first positional
-/// argument. Positional content blocks fill its cells.
+/// `layout: auto` selects the configured `content` layout. The strings
+/// `"content"`, `"title"`, and `"section"` select the corresponding entry in
+/// `setup(layouts:)` and determine numbering and section lifecycle. A direct
+/// `m.layouts.*` value carries its own semantic layout name; a raw `m.grid.*`
+/// tree is treated as a content layout.
+///
+/// Content may be supplied either as positional bodies or as one `content:`
+/// dictionary keyed by cell id. Do not mix the two forms. The reserved
+/// `background` and `foreground` keys control the full-slide planes: absent
+/// inherits setup content, `none` suppresses it, and content overrides it.
+///
+/// The default `numbered: auto` numbers content layouts and leaves title and
+/// section layouts unnumbered. An explicit boolean always wins.
 ///
 /// -> content
 #let slide(
-  /// Grid tree or `auto` to inherit the deck default.
-  /// -> auto | dictionary
-  grid: auto,
+  /// Configured layout name, semantic layout, raw grid, or `auto` for content.
+  /// -> auto | str | dictionary
+  layout: auto,
   /// Whether the slide contributes to logical slide numbering.
-  /// -> bool
-  numbered: true,
-  /// Whether a custom slide layout represents a semantic section divider.
-  /// Slides using `layouts.section()` are marked automatically.
-  /// -> bool
-  section: false,
-  /// Content assigned by ID: a dictionary mapping each content-bearing cell's
-  /// ID to its content, plus the reserved plane IDs `background` and
-  /// `foreground`. This is the recommended form for custom grids with more
-  /// than one supplied cell, because assignment no longer depends on the
-  /// grid's traversal order. Every content-bearing cell must have an entry;
-  /// entries targeting an unknown or fixed-content cell are errors. The plane
-  /// entries are optional overrides of the deck planes: content replaces the
-  /// inherited plane for this slide and `none` omits it. Cell entries cannot
-  /// be combined with positional bodies; plane entries can. Leave cell
-  /// entries out to use positional content.
+  /// -> auto | bool
+  numbered: auto,
+  /// Named cell and plane content.
   /// -> dictionary
   content: (:),
-  /// Cell bodies, optionally preceded by a positional grid. A terse
-  /// alternative to cell entries in `content:`; the bodies fill
-  /// content-bearing cells in the grid's depth-first declaration order.
+  /// Positional cell bodies in depth-first layout order.
   /// -> arguments
   ..bodies
 ) = {
-  if type(numbered) != bool {
-    fail("numbered must be a boolean")
+  if bodies.named().len() > 0 {
+    let name = bodies.named().keys().sorted().first()
+    fail("slide does not accept named argument " + repr(name))
   }
-  if type(section) != bool {
-    fail("section must be a boolean")
+  let bodies = bodies.pos()
+  let layout = validate-layout-selection(layout)
+  if numbered != auto and type(numbered) != bool {
+    fail("slide numbered must be auto or a boolean")
   }
   if type(content) != dictionary {
     fail("slide content must be a dictionary")
   }
-  for key in plane-ids {
-    if key in content {
-      validate-plane(content.at(key), key)
+  for name in plane-ids {
+    if name in content {
+      validate-plane(content.at(name), name)
     }
   }
-  let named-bodies = bodies.named()
-  if named-bodies.len() > 0 {
-    let name = named-bodies.keys().sorted().first()
-    fail("slide does not accept named argument " + repr(name))
-  }
-  let bodies = bodies.pos()
-  let positional-grid = if (
-    bodies.len() > 0
-      and (
-        is-node(bodies.first())
-          or is-layout-grid(bodies.first())
-      )
-  ) {
-    bodies.remove(0)
-  } else {
-    none
-  }
-  if positional-grid != none and grid != auto {
-    fail("slide cannot combine a positional grid tree with the grid parameter")
-  }
   let cell-keys = content.keys().filter(key => key not in plane-ids)
-  if cell-keys.len() > 0 and bodies.len() > 0 {
+  if bodies.len() > 0 and cell-keys.len() > 0 {
     fail("slide cannot combine named and positional cell content")
-  }
-  let requested-grid = if positional-grid != none {
-    positional-grid
-  } else {
-    grid
   }
   metadata(slide-command(
     bodies,
-    grid: requested-grid,
+    layout: layout,
     numbered: numbered,
-    section: section,
     content: content,
   ))
-}
-#let automatic-slide-command(title, body) = {
-  slide-command(
-    (),
-    grid: default(variant: "header-body"),
-    content: (header: title, body: body),
-  )
 }

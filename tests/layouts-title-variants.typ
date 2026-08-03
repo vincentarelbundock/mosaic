@@ -168,4 +168,4 @@
 #assert(background.style.inset.right == right-background.style.inset.left)
 
 #show: mosaic.setup
-#mosaic.slide(grid: academic-command)
+#mosaic.slide(layout: academic-command)

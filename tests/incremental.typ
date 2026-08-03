@@ -19,7 +19,7 @@
   mosaic.steps.on(1, after: "removed", mosaic.grid.cell(id: "first")),
   mosaic.steps.on("2-", before: "removed", mosaic.grid.cell(id: "second")),
 )
-#mosaic.slide(grid: changing-columns)[First cell][Second cell]
+#mosaic.slide(layout: changing-columns)[First cell][Second cell]
 
 // Three pages: list items are recognized inside ordinary list markup.
 #mosaic.slide[

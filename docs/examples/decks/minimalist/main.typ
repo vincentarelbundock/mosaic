@@ -11,7 +11,7 @@
 #styled(
   (cover: surface(inset: 45pt, align: left + horizon)),
   m.slide(
-    grid: c("cover"),
+    layout: c("cover"),
     content: (foreground: [
       #place(bottom + left, dx: 45pt, dy: -45pt)[
         #line(length: 752pt, stroke: 1pt + red)
@@ -25,7 +25,7 @@
 // 02. Intro sentence
 #styled(
   (intro-line: surface(align: center + horizon)),
-  slide(grid: c("intro-line"))[
+  slide(layout: c("intro-line"))[
     #title([Write a short introduction here.], size: 1.79em)
   ],
 )
@@ -33,7 +33,7 @@
 // 03. Contents
 #styled(
   (contents: surface(inset: (left: 48pt), align: left + horizon)),
-  slide(grid: c("contents"))[
+  slide(layout: c("contents"))[
     #set enum(numbering: "1.", indent: 0pt, body-indent: 10pt)
     #text(size: 1.79em, weight: "bold")[
       + Introduction
@@ -48,7 +48,7 @@
 // 04. Section
 #styled(
   (introduction: surface(fill: red, inset: 48pt, align: left + horizon)),
-  slide(grid: c("introduction"))[
+  slide(layout: c("introduction"))[
     #text(size: 2.79em, weight: "bold", fill: cream)[Introduction.]
   ],
 )
@@ -59,7 +59,7 @@
     welcome-copy: surface(inset: (left: 48pt, right: 24pt), align: left + horizon),
     welcome-photo: surface(inset: (top: 44pt, right: 48pt, bottom: 38pt)),
   ),
-  slide(grid: m.grid.h(
+  slide(layout: m.grid.h(
     m.grid.t(1fr, c("welcome-copy")),
     m.grid.t(0.72fr, c("welcome-photo")),
   ))[
@@ -80,7 +80,7 @@
     vision: surface(inset: 48pt, align: left + horizon),
     questions: surface(inset: (left: 28pt, right: 45pt), align: left + horizon),
   ),
-  slide(grid: m.grid.h(
+  slide(layout: m.grid.h(
     rule: 0.8pt + red,
     gutter: 0.04fr,
     m.grid.t(0.95fr, c("vision")),
@@ -102,7 +102,7 @@
 // 07. Section
 #styled(
   (about: surface(fill: red, inset: 48pt, align: left + horizon)),
-  slide(grid: c("about"))[
+  slide(layout: c("about"))[
     #text(size: 2.79em, weight: "bold", fill: cream)[About Us.]
   ],
 )
@@ -113,7 +113,7 @@
     history-images: surface(inset: (top: 48pt, left: 48pt, bottom: 42pt)),
     history-copy: surface(inset: (left: 28pt, right: 45pt), align: left + horizon),
   ),
-  slide(grid: m.grid.h(
+  slide(layout: m.grid.h(
     m.grid.t(1fr, c("history-images")),
     m.grid.t(1fr, c("history-copy")),
   ))[
@@ -137,7 +137,7 @@
     mission: surface(inset: 45pt, align: left + horizon),
     vision: surface(fill: red, inset: 45pt, align: left + horizon),
   ),
-  slide(grid: m.grid.h(
+  slide(layout: m.grid.h(
     c("mission"),
     c("vision"),
   ))[
@@ -157,7 +157,7 @@
     team-title: surface(inset: 48pt, align: left + horizon),
     team-list: surface(inset: (left: 24pt, right: 48pt), align: left + horizon),
   ),
-  slide(grid: m.grid.h(
+  slide(layout: m.grid.h(
     rule: 0.8pt + red,
     gutter: 0.05fr,
     m.grid.t(0.98fr, c("team-title")),
@@ -183,7 +183,7 @@
 // 11. Section
 #styled(
   (projects: surface(fill: red, inset: 48pt, align: left + horizon)),
-  slide(grid: c("projects"))[
+  slide(layout: c("projects"))[
     #text(size: 2.79em, weight: "bold", fill: cream)[Our Projects.]
   ],
 )
@@ -194,7 +194,7 @@
     products-title: surface(inset: 48pt, align: left + horizon),
     products-list: surface(inset: (left: 30pt, right: 48pt), align: left + horizon),
   ),
-  slide(grid: m.grid.h(
+  slide(layout: m.grid.h(
     c("products-title"),
     c("products-list"),
   ))[
@@ -218,7 +218,7 @@
     project-one-title: surface(inset: 48pt, align: left + horizon),
     project-one-gallery: surface(inset: (top: 48pt, right: 48pt, bottom: 42pt)),
   ),
-  slide(grid: m.grid.h(
+  slide(layout: m.grid.h(
     rule: 0.8pt + red,
     gutter: 0.05fr,
     m.grid.t(0.95fr, c("project-one-title")),
@@ -244,7 +244,7 @@
     project-two-photo: surface(inset: (top: 48pt, left: 48pt, bottom: 42pt)),
     project-two-copy: surface(inset: (left: 30pt, right: 48pt), align: left + horizon),
   ),
-  slide(grid: m.grid.h(
+  slide(layout: m.grid.h(
     c("project-two-photo"),
     c("project-two-copy"),
   ))[
@@ -259,7 +259,7 @@
 // 15. Image mosaic
 #styled(
   (mosaic: surface(inset: (top: 48pt, left: 48pt, right: 48pt, bottom: 42pt))),
-  slide(grid: c("mosaic"))[
+  slide(layout: c("mosaic"))[
     #grid(
       columns: (1.05fr, 0.85fr, 0.85fr),
       rows: (1fr, 1fr),
@@ -281,7 +281,7 @@
     research-copy: surface(inset: 48pt, align: left + horizon),
     research-stats: surface(inset: 44pt, align: left + horizon),
   ),
-  slide(grid: m.grid.h(
+  slide(layout: m.grid.h(
     rule: 0.8pt + red,
     gutter: 0.04fr,
     m.grid.t(1.05fr, c("research-copy")),
@@ -309,7 +309,7 @@
 // 17. Line chart
 #styled(
   (chart: surface(inset: (top: 42pt, left: 48pt, right: 48pt, bottom: 34pt))),
-  slide(grid: c("chart"))[
+  slide(layout: c("chart"))[
     #title([Market Research], size: 2.07em)
     #linebreak()
     #body-text([#copy], size: 0.9em)
@@ -321,7 +321,7 @@
 // 18. Quote
 #styled(
   (quote: surface(align: center + horizon)),
-  slide(grid: c("quote"))[
+  slide(layout: c("quote"))[
     #align(center)[
       #title([“], size: 2.71em)
       #v(-8pt)
@@ -335,7 +335,7 @@
 // 19. Contact
 #styled(
   (contact: surface(inset: 48pt, align: left + horizon)),
-  slide(grid: c("contact"))[
+  slide(layout: c("contact"))[
     #title([Contact Us], size: 2.07em)
     #v(15pt)
     #body-text([

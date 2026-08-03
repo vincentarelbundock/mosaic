@@ -4,7 +4,7 @@
 #import "@local/mosaic:0.0.1" as mosaic
 
 // The slide command carries no styling fields.
-#let command = mosaic.slide(grid: mosaic.layouts.section())[Section].value
+#let command = mosaic.slide(layout: mosaic.layouts.section())[Section].value
 #assert("cell-styles" not in command.keys())
 
 // Structural inset is the only visual-adjacent knob on a public cell.
@@ -25,7 +25,7 @@
   it,
 )
 
-#mosaic.slide(grid: mosaic.layouts.section())[Section]
+#mosaic.slide(layout: mosaic.layouts.section())[Section]
 
 // A scoped rule overrides the deck-wide rules for one slide only.
 #[
@@ -35,7 +35,7 @@
     fill: blue,
     it,
   )
-  #mosaic.slide(grid: mosaic.layouts.section())[Scoped section]
+  #mosaic.slide(layout: mosaic.layouts.section())[Scoped section]
 ]
 
-#mosaic.slide(grid: mosaic.layouts.section())[Deck-wide again]
+#mosaic.slide(layout: mosaic.layouts.section())[Deck-wide again]

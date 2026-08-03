@@ -1,7 +1,7 @@
 #import "@local/mosaic:0.0.1" as m
 #import "@preview/mitex:0.2.7": mi, mitex
 
-#show: m.setup.with(default-grid: m.grid.cell("body", inset: 1.5em))
+#show: m.setup.with(layouts: (content: m.grid.cell("body", inset: 1.5em)))
 #set text(size: 20pt)
 #let slide = m.slide
 

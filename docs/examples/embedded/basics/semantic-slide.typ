@@ -18,7 +18,7 @@
 #let single = m.grid.cell("main")
 
 #m.slide(
-  grid: single,
+  layout: single,
   content: (main: [A semantic slide starts with one named cell.]),
 )
 
@@ -26,7 +26,7 @@
 #let columns = m.grid.h("main", "aside")
 
 #m.slide(
-  grid: columns,
+  layout: columns,
   content: (
     main: [The main argument],
     aside: [Supporting evidence],
@@ -43,7 +43,7 @@
 )
 
 #m.slide(
-  grid: composition,
+  layout: composition,
   content: (
     main: [The main argument],
     notes: [Two parts notes],
@@ -53,7 +53,7 @@
 
 // Fill those stable cell IDs with ordinary Typst content.
 #m.slide(
-  grid: composition,
+  layout: composition,
   content: (
     main: [
       == Composition
@@ -70,12 +70,12 @@
   ),
 )
 
-// Built-in layouts are grids too: assign one before passing it to slide.
-#let default-layout = m.layouts.default(variant: "header-body")
+// Built-in layouts resolve to grids: assign one before passing it to slide.
+#let content-layout = m.layouts.content(variant: "header-body")
 #m.slide(
-  grid: default-layout,
+  layout: content-layout,
   content: (
-    header: [== Default layout],
+    header: [== Content layout],
     body: [A familiar header-and-body structure.],
   ),
 )

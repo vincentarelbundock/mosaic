@@ -66,7 +66,7 @@
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
           #html.elem("h2")[Grids]
           #html.elem("p")[
-            Every slide is a grid: a tree of cells split horizontally or
+            Every slide is a layout: a tree of cells split horizontally or
             vertically, nested as deeply as needed.
           ]
         ]

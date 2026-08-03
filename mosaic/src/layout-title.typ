@@ -3,11 +3,10 @@
 #import "author.typ": analyze-authors
 #import "grid-model.typ": styled-cell, h, v, t
 #import "layout-core.typ": (
-  make-grid,
+  make-layout,
   validate-accent,
   validate-visual-spec,
 )
-#import "color-defaults.typ": default-accent
 #import "layout-support.typ": (
   affix,
   as-content,
@@ -49,8 +48,8 @@
   right + bottom,
 )
 
-#let validate-fields(fields) = {
-  validate-accent(fields, "title")
+#let validate-fields(fields, allow-auto: false) = {
+  validate-accent(fields, "title", allow-auto: allow-auto)
   let variant = fields.variant
   if type(variant) != str or variant not in variants {
     fail(
@@ -58,16 +57,24 @@
         + "; expected one of " + repr(variants),
     )
   }
-  if type(fields.title) not in (content, str) {
+  if type(fields.title) not in (content, str) and not (allow-auto and fields.title == auto) {
     fail("layout \"title\" requires title content through title:")
+  }
+  for name in ("subtitle", "date") {
+    let value = fields.at(name)
+    if value != none and type(value) not in (content, str) and not (allow-auto and value == auto) {
+      fail("layout \"title\" " + name + " must be content, a string, none, or auto")
+    }
   }
   if fields.rule != auto and type(fields.rule) != bool {
     fail("layout \"title\" rule must be auto, true, or false")
   }
-  if type(fields.authors) != array {
+  if type(fields.authors) != array and not (allow-auto and fields.authors == auto) {
     fail("layout \"title\" authors must be an array")
   }
-  let _ = analyze-authors(fields.authors)
+  if type(fields.authors) == array {
+    let _ = analyze-authors(fields.authors)
+  }
   validate-semantic-image-use(fields, "layout \"title\"")
   if fields.image != none {
     let _ = validate-visual-spec(
@@ -77,7 +84,7 @@
     )
   }
   if variant == "academic" {
-    if fields.authors.len() == 0 {
+    if type(fields.authors) == array and fields.authors.len() == 0 {
       fail("layout \"title\" variant " + repr(variant) + " requires at least one author")
     }
   }
@@ -100,9 +107,11 @@
 
 /// Creates a presentation title grid.
 ///
-/// Pass the title text explicitly through `title:`. The layout supplies
-/// every cell's content, so the surrounding `mosaic.slide` consumes no
-/// slide bodies.
+/// With no explicit metadata, the layout inherits `title`, `subtitle`,
+/// `authors`, and `date` from `setup`. Explicit values override setup; use
+/// `none` for optional text/date fields and `()` for authors to suppress an
+/// inherited value. The layout supplies every cell's content, so the
+/// surrounding `mosaic.slide` consumes no slide bodies.
 /// `academic` places author names and affiliations inline, with a numbered
 /// affiliation legend.
 /// Every variant accepts the same `authors` array of records created by the
@@ -122,18 +131,19 @@
 /// color; pass a pre-adjusted image such as `mosaic.components.image(..., darken: 45%)`
 /// and override the `title` cell's text fill for light-on-dark compositions.
 #let title(
-  title: none,
-  subtitle: none,
-  date: none,
+  title: auto,
+  subtitle: auto,
+  date: auto,
   image: none,
   variant: "left-aligned",
-  authors: (),
+  authors: auto,
   tracks: auto,
   align: left + bottom,
   rule: auto,
-  /// Color used by the title rule and accent-block spine.
-  /// -> color
-  accent: default-accent,
+  /// Color used by the title rule and accent-block spine. `auto` inherits the
+  /// semantic accent resolved by `setup`.
+  /// -> color | auto
+  accent: auto,
   ..legacy-title,
 ) = {
   let positional = legacy-title.pos()
@@ -141,7 +151,7 @@
     fail("layout \"title\" accepts one legacy positional title and named arguments")
   }
   if positional.len() == 1 {
-    if title != none {
+    if title != auto {
       fail("layout \"title\" cannot receive both a positional title and title:")
     }
     title = positional.first()
@@ -157,8 +167,8 @@
     align: align,
     rule: rule,
     accent: accent,
-  ))
-  make-grid("title", fields, suppress-global-logo: true)
+  ), allow-auto: true)
+  make-layout("title", fields)
 }
 
 // Metadata tiers inside the composed title stack keep pt-anchored sizes so
@@ -567,7 +577,14 @@
 }
 
 #let resolve-title(command, settings) = {
-  let fields = validate-fields(command.fields)
+  let inherited = command.fields
+  let fields = validate-fields(inherited + (
+    title: if inherited.title == auto { settings.deck.title } else { inherited.title },
+    subtitle: if inherited.subtitle == auto { settings.deck.subtitle } else { inherited.subtitle },
+    authors: if inherited.authors == auto { settings.deck.authors } else { inherited.authors },
+    date: if inherited.date == auto { settings.deck.date } else { inherited.date },
+    accent: if inherited.accent == auto { settings.colors.accent } else { inherited.accent },
+  ))
   let image = optional-fixed-image(fields.image, "layout \"title\" image")
   if fields.variant == "academic" {
     resolve-academic-title(fields, settings)

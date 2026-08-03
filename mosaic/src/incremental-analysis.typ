@@ -4,11 +4,12 @@
 #import "incremental-command.typ": is-command-on, is-temporal
 #import "incremental-heading.typ": typst-sequence, typst-styled
 #import "note-command.typ": is-note
+#import "pause-command.typ": has-pause, is-pause, pause-schedule
 
 #let typst-space = [ ].func()
 
 #let max-step(value) = {
-  if is-note(value) {
+  if is-note(value) or is-pause(value) {
     return 0
   }
   if is-command-on(value) {
@@ -53,6 +54,12 @@
     return calc.max(own, nested)
   }
   if value.func() == typst-sequence {
+    if has-pause(value.children) {
+      return pause-schedule(value.children, max-step).fold(
+        0,
+        (last, segment) => segment.start + segment.duration - 1,
+      )
+    }
     return max-step(value.children)
   }
   if value.func() == typst-styled {
@@ -61,5 +68,6 @@
   if value.func() == math.equation {
     return max-step(value.body)
   }
-  1
+  let nested = max-step(value.fields().values())
+  calc.max(1, nested)
 }

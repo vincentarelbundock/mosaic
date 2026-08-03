@@ -4,15 +4,15 @@
 #show: mosaic.setup.with(spacing: (inset: 8pt))
 #set text(size: 9pt)
 
-// A semantic section layout increments the dedicated counter automatically.
-#mosaic.slide(grid: mosaic.layouts.section())[
+// A section layout increments the dedicated counter automatically.
+#mosaic.slide(layout: "section")[
   First section
   #mosaic.components.progress(variant: "1/1", count: "sections")
 ]
 
-// Custom section layouts opt in explicitly and are independent of slide
+// A direct section layout carries the same semantics and is independent of slide
 // numbering. Incremental frames must still represent one section.
-#mosaic.slide(section: true, numbered: false)[
+#mosaic.slide(layout: mosaic.layouts.section(), numbered: false)[
   Custom section
   #mosaic.steps.reveal[One][Two][Three]
   #mosaic.components.progress(variant: "1/1", count: "sections")

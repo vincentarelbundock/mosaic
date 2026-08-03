@@ -11,12 +11,19 @@
 )
 #assert(grid-test.count(numbered-grid) == 2)
 
+#let slide-number = [
+  #place(bottom + right, dx: -5pt, dy: -5pt)[
+    #mosaic.components.progress(variant: "1/1")
+  ]
+]
+
 #show: mosaic.setup.with(
   spacing: (inset: 5pt),
-  default-grid: numbered-grid,
-  features: (slide-number: true, slide-total: true),
-  background: [Inherited background],
-  foreground: [Inherited foreground],
+  layouts: (content: numbered-grid),
+  content: (
+    background: [Inherited background],
+    foreground: [Inherited foreground #slide-number],
+  ),
 )
 #set text(size: 7pt)
 
@@ -27,29 +34,29 @@
 ]
 
 // An unnumbered slide is excluded from the logical number and total. Its
-// built-in numbering produces no content; the reserved `background` entry set
-// to none disables the inherited plane.
+// foreground set to none explicitly suppresses both inherited furniture and
+// the number; background none disables the inherited background plane.
 #mosaic.slide(
-  grid: mosaic.grid.cell(id: "body"),
-  content: (background: none),
+  layout: mosaic.grid.cell(id: "body"),
+  content: (background: none, foreground: none),
   numbered: false,
 )[Unnumbered]
 
 // Two replacement frames inherit the deck background and override only the
 // foreground. This is logical slide 2.
 #mosaic.slide(
-  grid: mosaic.grid.cell(id: "body"),
-  content: (foreground: [Local foreground]),
+  layout: mosaic.grid.cell(id: "body"),
+  content: (foreground: [Local foreground #slide-number]),
 )[
   #mosaic.steps.replace[Before][After]
 ]
 
 // Temporal foreground content contributes frames even when the body is static.
 #mosaic.slide(
-  grid: mosaic.grid.cell(id: "body"),
+  layout: mosaic.grid.cell(id: "body"),
   content: (
     background: none,
-    foreground: mosaic.steps.on("2-")[Foreground step],
+    foreground: [#mosaic.steps.on("2-")[Foreground step] #slide-number],
   ),
 )[Static body]
 

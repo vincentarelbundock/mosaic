@@ -15,7 +15,7 @@
 #show: framed("a")
 #show: framed("b")
 
-#m.slide(
+#m.slide(layout: 
   m.grid.h(
     m.grid.cell("a"),
     m.grid.cell("b"),

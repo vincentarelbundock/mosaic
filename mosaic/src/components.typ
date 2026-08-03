@@ -26,8 +26,8 @@
   /// Native block height.
   /// -> auto | length | relative | fraction
   height: auto,
-) = {
-  let it = normalize-style(style: style, role-name: role)
+) = context {
+  let it = normalize-style(style: style, role-name: role, contextual: true)
   block(
     width: width,
     height: height,
@@ -56,8 +56,8 @@
   /// Component-style overrides.
   /// -> dictionary
   style: (:),
-) = {
-  let colors = component-role(kind)
+) = context {
+  let colors = component-role(kind, contextual: true)
   frame(
     [
       #if title != none {
@@ -73,10 +73,11 @@
   )
 }
 
-#let _compact(body, role, style, radius: 999pt) = {
+#let _compact(body, role, style, radius: 999pt) = context {
   let it = normalize-style(
     style: style,
     role-name: role,
+    contextual: true,
     defaults: (radius: radius, inset: (x: 0.55em, y: 0.18em)),
   )
   box(
@@ -194,8 +195,7 @@
 /// The `1/1` variant displays the current and final values, `1` displays only
 /// the current value, `circle` draws a compact progress ring, and `line` draws
 /// a full-width track.
-/// Set `count` to `sections` to use section slides created with
-/// `layouts.section()` or marked with `slide(section: true)`.
+/// Set `count` to `sections` to use slides with `layout: "section"`.
 /// Explicit `current` and `total` values can be supplied together when the
 /// component should represent another sequence; they override `count`.
 ///
@@ -265,7 +265,7 @@
   ) {
     fail("progress requires integers satisfying 0 <= current <= total and total >= 1")
   }
-  let colors = component-role(role)
+  let colors = component-role(role, contextual: true)
   let track = if track == auto { colors.fill } else { track }
   let active = if color == auto { colors.accent } else { color }
   let amount = 100% * current / total

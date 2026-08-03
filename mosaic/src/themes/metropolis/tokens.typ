@@ -4,3 +4,11 @@
 #let paper = rgb("#fafafa")
 #let dot = rgb("#667477")
 #let track = rgb("#b8b1a8")
+#let colors = (
+  canvas: paper,
+  surface: paper,
+  text: ink,
+  muted: dot,
+  line: track,
+  accent: orange,
+)

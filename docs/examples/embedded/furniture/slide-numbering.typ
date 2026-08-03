@@ -3,16 +3,21 @@
 #let grid = m.grid.cell("body", inset: 1.5em)
 
 #show: m.setup.with(
-  default-grid: grid,
-  features: (
-    slide-number: true,
-    slide-total: true,
-    progress: true,
+  layouts: (content: grid),
+  content: (
+    foreground: [
+      #place(bottom + right, dx: -1.5em, dy: -0.6em)[
+        #m.components.progress(variant: "1/1")
+      ]
+      #place(bottom + left)[
+        #m.components.progress(variant: "line", width: 100%, thickness: 3pt)
+      ]
+    ],
   ),
 )
 #set text(size: 22pt)
 #m.slide[
-  == Built-in numbering and progress
+  == Content-based numbering and progress
 
   #m.steps.reveal[
     - The logical slide number remains stable across frames.

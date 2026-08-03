@@ -5,29 +5,29 @@
   path("/docs/assets/images/dog.webp"),
   alt: "Dog",
 )
-#let myslide = m.slide.with(grid: m.layouts.section())
+#let myslide = m.slide.with(layout: m.layouts.section())
 #myslide[Plain section]
 
-#let myslide = m.slide.with(grid: m.layouts.section(number: [01]))
+#let myslide = m.slide.with(layout: m.layouts.section(number: [01]))
 #myslide[Numbered section]
 
 #let myslide = m.slide.with(
-  grid: m.layouts.section(variant: "image-left", image: picture),
+  layout: m.layouts.section(variant: "image-left", image: picture),
 )
 #myslide[Image-left section]
 
 #let myslide = m.slide.with(
-  grid: m.layouts.section(variant: "image-right", image: picture),
+  layout: m.layouts.section(variant: "image-right", image: picture),
 )
 #myslide[Image-right section]
 
 #let myslide = m.slide.with(
-  grid: m.layouts.section(variant: "image-top", image: picture),
+  layout: m.layouts.section(variant: "image-top", image: picture),
 )
 #myslide[Image-top section]
 
 #let myslide = m.slide.with(
-  grid: m.layouts.section(variant: "image-bottom", image: picture),
+  layout: m.layouts.section(variant: "image-bottom", image: picture),
 )
 #myslide[Image-bottom section]
 
@@ -36,7 +36,7 @@
 // slide.
 #[
   #show label("mosaic-cell-section"): set text(fill: white)
-  #m.slide(grid: m.layouts.section(
+  #m.slide(layout: m.layouts.section(
     variant: "image-background",
     image: m.components.image(
       path("/docs/assets/images/dog.webp"),

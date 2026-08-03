@@ -21,10 +21,10 @@
 
 #title()
 
-A Mosaic slide is a grid of cells. Build a grid directly with `m.grid` when a
-slide needs a custom shape, or reach for a *layout* (a named, ready-made grid
-for a familiar structure) and pass it to `m.slide(grid: ...)`. Either way you
-fill cells with content and style them separately with native Typst rules; see
+A slide's *layout* expresses its purpose and placement contract: `content`,
+`title`, or `section`. The layout resolves to a low-level *grid* of cells.
+Override it directly when one slide needs a custom shape. Either way, fill cells
+with content and style them separately with native Typst rules; see
 #link("appearance.html")[Appearance] for the styling model.
 
 A grid is a tree of rectangular cells. `v` stacks cells vertically, `h` places
@@ -98,20 +98,30 @@ Tracks accept native `auto`, fixed lengths, percentages, and `fr` values. The
 
 = Layouts
 
-A layout is a ready-made grid. It reaches the slide through the same `grid:`
-argument as a hand-built grid, so everything else on this page still applies.
-Pass it to `m.slide` directly, or bind it once with `m.slide.with` and reuse
-the resulting slide function:
+A layout is a complete deferred page-placement contract with one of three
+standard names: `content`, `title`, or `section`. `layout: auto` selects the
+configured content layout. A string selects the matching `setup(layouts:)`
+entry; a direct `m.layouts.*` value carries its own name; and a hand-built grid
+is treated as content. The selected layout determines default numbering and
+section counting.
+
+Override one named layout deck-wide with a partial dictionary:
 
 ```typ
-#let accent = rgb("#e69f00")
+#show: m.setup.with(layouts: (
+  section: m.layouts.section(variant: "image-background", image: "chapter.jpg"),
+))
+```
+
+For a reusable per-slide override, bind `layout:` with `m.slide.with`:
+
+```typ
 #set page(fill: rgb("#111827"))
 #set text(fill: rgb("#f3f4f6"))
 
 #let myslide = m.slide.with(
-  grid: m.layouts.default(
+  layout: m.layouts.content(
     variant: "header-body",
-    accent: accent,
   ),
 )
 
@@ -124,35 +134,39 @@ and appearance in native `set` and `show` rules. Every layout cell has a
 variants, cell IDs, and arguments live in the
 #link("api/layouts.html")[Layouts API].
 
-== `default()`
+== `content()`
 
-Use `default()` for ordinary body slides, optionally with a header, footer,
-multiple columns, or progress indicator. Mosaic also uses its header-body form
-for `==` heading slides.
+Use `content()` for ordinary slides, optionally with a header, footer, or
+multiple columns. Mosaic uses the active content layout for `==` heading
+slides as well.
 
 #embedded-example(
   calepin.elements.gallery,
-  "structure/default-layout-full",
+  "structure/content-layout-full",
   frames: 1,
   title: "A slide with header, body, and footer cells",
   renderer: thumbnail-gallery,
 )
 
+A reusable footer is ordinary inherited content for the layout's `footer` cell,
+not a global overlay. Configure it once with `setup(content:)`; see
+#link("furniture.html#default-footer-content")[Default footer content].
+
 Style its header, body, and footer labels with native rules:
 
 #embedded-example(
   calepin.elements.gallery,
-  "structure/default-layout-inverted",
+  "structure/content-layout-inverted",
   frames: 1,
-  title: "A default slide with an inverted header and footer",
+  title: "A content slide with an inverted header and footer",
   renderer: thumbnail-gallery,
 )
 
-Bundle reusable cell rules in a transformer so every default slide shares them:
+Bundle reusable cell rules in a transformer so every content slide shares them:
 
 #embedded-example(
   calepin.elements.gallery,
-  "structure/default-layout-custom",
+  "structure/content-layout-custom",
   frames: 2,
   title: "Slides made with a reusable custom look",
   renderer: thumbnail-gallery,
@@ -160,9 +174,9 @@ Bundle reusable cell rules in a transformer so every default slide shares them:
 
 == `title()`
 
-Use `title()` for an opening slide. Title metadata (subtitle, authors, date,
-image) belongs to the layout itself, so the surrounding `m.slide` needs no
-body. The nine frames below move from metadata-heavy to image-first: inline
+Use `layout: "title"` for an opening slide. Its configured `title()` layout
+inherits setup metadata (subtitle, authors, and date), so the surrounding
+`m.slide(layout: "title")` needs no body. The nine frames below move from metadata-heavy to image-first: inline
 academic metadata with affiliations and ORCID, a left-aligned variant with
 foreground marks placed over the layout, a centered stack, a solid accent
 spine, and the image variants (`image-right`, `image-left`, `image-top`,
@@ -180,8 +194,8 @@ carries the contrast: `darken:` dims the photograph and a scoped rule on the
 
 == `section()`
 
-Use `section()` for a section divider with optional subtitle, number, or
-image. The frames below grow the same divider one argument at a time: plain,
+Use `layout: "section"` for a section divider. Its configured `section()` layout
+may include a subtitle, number, or image. The frames below grow the same divider one argument at a time: plain,
 numbered, then each image placement. The last frame repeats the pattern from
 the title layout, pairing a darkened `image-background` with white text
 through the `<mosaic-cell-section>` label, scoped to that slide alone.

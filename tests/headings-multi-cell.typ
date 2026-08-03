@@ -1,7 +1,9 @@
 #import "@local/mosaic:0.0.1" as mosaic
 
-#show: mosaic.setup.with(default-grid: mosaic.grid.h("a", "b"))
+#show: mosaic.setup.with(
+  layouts: (content: mosaic.grid.h("header", "body")),
+)
 
-== Automatic default layout
+== Automatic content layout
 
-The automatic slide ignores the multi-cell deck default and uses one body region.
+The automatic slide uses the configured multi-cell content layout.

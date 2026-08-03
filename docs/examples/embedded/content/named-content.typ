@@ -16,7 +16,7 @@
 )
 
 #m.slide(
-  grid: comparison,
+  layout: comparison,
   content: (
     heading: [Heading],
     left: [Left argument],

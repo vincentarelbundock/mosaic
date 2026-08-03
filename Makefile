@@ -39,7 +39,7 @@ BONSAI_WEBP := $(WEB_IMAGE_DIR)/bonsai.webp
 DOG_SOURCE := $(WEB_IMAGE_DIR)/dog.jpg
 DOG_WEBP := $(WEB_IMAGE_DIR)/dog.webp
 API_MODULES_DIR := $(DOCS_DIR)/api/modules
-API_MODULE_NAMES := author components slide-command note-command surface grid-model image incremental-command setup layout-default layout-section layout-title
+API_MODULE_NAMES := author components slide-command note-command pause-command surface grid-model image incremental-command setup theme-extension layout-content layout-section layout-title
 API_STAGED_MODULES := $(addprefix $(API_MODULES_DIR)/,$(addsuffix .typ,$(API_MODULE_NAMES)))
 # These files are both compiled below and embedded verbatim in their owning pages.
 # Files whose name starts with "_" are shared includes, not standalone decks.
@@ -92,7 +92,7 @@ build: doctor install check website ## Validate prerequisites, then compile test
 check: install api-contract core-tests layout-tests negative-tests doc-integrity ## Run package, fixture, and documentation integrity tests
 
 api-contract: ## Verify exact neutral, themed, and nested facade exports
-	cd tests && $(PYTHON) -m unittest test_check_api_exports
+	cd tests && $(PYTHON) -m unittest test_check_api_exports test_theme_architecture
 	$(PYTHON) scripts/check-api-exports.py
 
 core-tests: install ## Run explicitly classified non-layout positive tests
@@ -146,6 +146,10 @@ components: install ## Compile the public facade and components test deck
 api-sources: $(API_STAGED_MODULES) ## Stage public modules for Tidy inside the Calepin root
 
 $(API_MODULES_DIR)/%.typ: $(PACKAGE_DIR)/src/%.typ
+	mkdir -p $(API_MODULES_DIR)
+	cp $< $@
+
+$(API_MODULES_DIR)/setup.typ: $(DOCS_DIR)/api/sources/setup.typ
 	mkdir -p $(API_MODULES_DIR)
 	cp $< $@
 

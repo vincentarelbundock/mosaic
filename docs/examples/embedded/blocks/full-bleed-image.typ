@@ -5,7 +5,7 @@
 // The text cell centers its content vertically through its label.
 #show label("mosaic-cell-b"): set align(left + horizon)
 
-#m.slide(m.grid.h(
+#m.slide(layout: m.grid.h(
   m.grid.t(
     1fr,
     m.grid.cell(

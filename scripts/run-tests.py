@@ -100,10 +100,101 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(native, "#fafaf9")
     require_contains(native, "#1c1917")
 
+    deck_metadata = pdf_text("setup-deck-metadata")
+    for expected in (
+        "INHERITED TITLE", "INHERITED SUBTITLE", "Ada Lovelace",
+        "Platform Engineering", "INHERITED DATE", "EXPLICIT TITLE",
+    ):
+        require_contains(deck_metadata, expected)
+    explicit_title = pdf_page_text("setup-deck-metadata", 2)
+    for inherited in ("INHERITED SUBTITLE", "Ada Lovelace", "INHERITED DATE"):
+        require_contains(explicit_title, inherited, absent=True)
+    deck_info = pdf_info("setup-deck-metadata")
+    require_contains(deck_info, "Title:           INHERITED TITLE")
+    require_contains(deck_info, "Author:          Ada Lovelace")
+    typst_compile(
+        typst,
+        "setup-deck-metadata.typ",
+        TMP / "mosaic-setup-deck-metadata-{0p}.svg",
+        "--format",
+        "svg",
+    )
+    inherited_title = TMP / "mosaic-setup-deck-metadata-1.svg"
+    require_contains(inherited_title, "#f5f7fb")
+    require_contains(inherited_title, "#7c3aed")
+
+    content_defaults = pdf_text("setup-content-defaults")
+    require_contains(content_defaults, "SETUP FOOTER", count=2)
+    for expected in ("FULL FOOTER", "NAMED FOOTER", "BODY ONLY"):
+        require_contains(content_defaults, expected)
+    for page in (1, 3):
+        require_contains(pdf_page_text("setup-content-defaults", page), "SETUP FOOTER")
+    require_contains(pdf_page_text("setup-content-defaults", 2), "FULL FOOTER")
+    require_contains(pdf_page_text("setup-content-defaults", 2), "SETUP FOOTER", absent=True)
+    require_contains(pdf_page_text("setup-content-defaults", 4), "NAMED FOOTER")
+    for page in (5, 6):
+        page_text = pdf_page_text("setup-content-defaults", page)
+        for footer in ("SETUP FOOTER", "FULL FOOTER", "NAMED FOOTER"):
+            require_contains(page_text, footer, absent=True)
+
+    plane_defaults = pdf_text("setup-plane-content-defaults")
+    for expected in ("SETUP BACKGROUND", "SETUP LOGO"):
+        require_contains(plane_defaults, expected, count=2)
+    for expected in ("LOCAL BACKGROUND", "LOCAL FOREGROUND"):
+        require_contains(plane_defaults, expected, count=1)
+    require_contains(
+        pdf_page_text("setup-plane-content-defaults", 2),
+        "SETUP LOGO",
+    )
+
     typst_compile(typst, "image.typ", TMP / "mosaic-image-{0p}.svg", "--format", "svg")
     image = TMP / "mosaic-image-1.svg"
     require_contains(image, "#00000059")
     require_contains(image, "#ffffff33")
+
+    typst_compile(
+        typst,
+        "theme-dark.typ",
+        TMP / "mosaic-theme-dark-{0p}.svg",
+        "--format",
+        "svg",
+    )
+    dark_pages = [TMP / f"mosaic-theme-dark-{page}.svg" for page in (1, 2, 3)]
+    for page in dark_pages:
+        require_contains(page, "#0d1117")
+        require_contains(page, "#e6edf3")
+        for light_color in ("#fafaf9", "#1c1917", "#2563eb", "#78716c", "#e7e5e4"):
+            require_contains(page, light_color, absent=True)
+    require_contains(dark_pages[0], "#58a6ff")
+    for dark_color in ("#13233a", "#161b22", "#30363d", "#d2a8ff", "#ff7b72", "#ffa657"):
+        require_contains(dark_pages[1], dark_color)
+
+    typst_compile(
+        typst,
+        "theme-dark-components.typ",
+        TMP / "mosaic-theme-dark-components-{0p}.svg",
+        "--format",
+        "svg",
+    )
+    dark_components = TMP / "mosaic-theme-dark-components-1.svg"
+    for dark_color in (
+        "#102a22", "#13233a", "#161b22", "#241d33", "#2f2710",
+        "#321b1e", "#56d364", "#58a6ff", "#bc8cff", "#d29922", "#ff7b72",
+    ):
+        require_contains(dark_components, dark_color)
+    for light_color in ("#fafaf9", "#1c1917", "#2563eb", "#78716c", "#e7e5e4"):
+        require_contains(dark_components, light_color, absent=True)
+
+    typst_compile(
+        typst,
+        "theme-definition.typ",
+        TMP / "mosaic-theme-definition-{0p}.svg",
+        "--format",
+        "svg",
+    )
+    passive_body = TMP / "mosaic-theme-definition-2.svg"
+    require_contains(passive_body, "#a23b72")
+    require_contains(passive_body, "#0072b2", absent=True)
 
     frozen = pdf_text("frozen-state")
     require_contains(frozen, "Reveal: frozen 1/1", count=2)
@@ -155,6 +246,49 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(metadata_show_text, "VISIBLE CONTENT")
     require_contains(metadata_show_text, "NESTED SECRET NOTE", absent=True)
     require_contains(metadata_show_text, "speaker-notes", absent=True)
+
+    pause_pages = [pdf_page_text("pause", page) for page in (1, 2, 3)]
+    require_contains(pause_pages[0], "PAUSE FIRST")
+    require_contains(pause_pages[0], "PAUSE SECOND", absent=True)
+    require_contains(pause_pages[0], "PAUSE THIRD", absent=True)
+    require_contains(pause_pages[1], "PAUSE FIRST")
+    require_contains(pause_pages[1], "PAUSE SECOND")
+    require_contains(pause_pages[1], "PAUSE THIRD", absent=True)
+    for expected in ("PAUSE FIRST", "PAUSE SECOND", "PAUSE THIRD"):
+        require_contains(pause_pages[2], expected)
+
+    compose_pages = [pdf_page_text("pause-compose", page) for page in (1, 2, 3)]
+    require_contains(compose_pages[0], "COMPOSE FIRST")
+    require_contains(compose_pages[0], "COMPOSE SECOND", absent=True)
+    require_contains(compose_pages[1], "COMPOSE SECOND")
+    require_contains(compose_pages[1], "COMPOSE THIRD", absent=True)
+    require_contains(compose_pages[2], "COMPOSE THIRD")
+
+    nested_first = pdf_page_text("pause-nested", 1)
+    nested_second = pdf_page_text("pause-nested", 2)
+    require_contains(nested_first, "NESTED FIRST")
+    require_contains(nested_first, "NESTED SECOND", absent=True)
+    require_contains(nested_second, "NESTED SECOND")
+
+    fixed_first = pdf_page_text("pause-fixed-grid", 1)
+    fixed_second = pdf_page_text("pause-fixed-grid", 2)
+    require_contains(fixed_first, "FIXED PAUSE FIRST")
+    require_contains(fixed_first, "FIXED PAUSE SECOND", absent=True)
+    require_contains(fixed_second, "FIXED PAUSE SECOND")
+
+    empty_markers = pdf_text("pause-empty-markers")
+    require_contains(empty_markers, "EMPTY MARKER VISUAL")
+    require_contains(empty_markers, "pause", absent=True)
+    require_contains(pdf_info("pause-empty-markers"), "Pages:           1")
+
+    pause_handout = pdf_text("pause-handout")
+    for expected in (
+        "PAUSE HANDOUT FIRST",
+        "PAUSE HANDOUT SECOND",
+        "PAUSE HANDOUT FINAL",
+    ):
+        require_contains(pause_handout, expected)
+    require_contains(pdf_info("pause-handout"), "Pages:           1")
 
     themed_text = pdf_text("speaker-notes-theme")
     require_contains(themed_text, "Themed speaker slide")
@@ -273,12 +407,13 @@ def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
                 raise TestFailure(f"responsive title emitted overflow warnings for {appearance}/{paper}")
 
     typst_compile(typst, "layout-accents.typ", TMP / "mosaic-layout-accents-{0p}.svg", "--format", "svg")
-    for page, color in enumerate(("#123456", "#654321", "#a1b2c3", "#bc3172"), 1):
+    for page, color in enumerate(("#654321", "#a1b2c3"), 1):
         require_contains(TMP / f"mosaic-layout-accents-{page}.svg", color)
 
-    features = pdf_text("layouts-features")
-    for expected in ("Mosaic feature test", "1/2", "2/2"):
-        require_contains(features, expected)
+    furniture = pdf_text("setup-foreground-furniture")
+    for expected in ("Mosaic furniture test", "1/3", "2/3", "No furniture"):
+        require_contains(furniture, expected)
+    require_contains(furniture, "3/3", count=0)
 
     for source, output in (
         ("layouts-label-style.typ", "mosaic-layouts-label-style-{p}.svg"),
@@ -292,11 +427,6 @@ def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
         require_contains(TMP / "mosaic-setup-settings-1.svg", color)
     for page, color in enumerate(("#d97706", "#ffffff", "#fedcba", "#123456"), 1):
         require_contains(TMP / f"mosaic-layouts-progress-{page}.svg", color)
-
-    logos = pdf_text("layouts-logo")
-    require_contains(logos, "GLOBAL-LOGO", count=1)
-    require_contains(logos, "LOCAL-LOGO", count=0)
-
 
 def negative_expectations() -> dict[str, str]:
     expectations: dict[str, str] = {}
@@ -331,7 +461,9 @@ def run_negative(typst: str) -> None:
         (TMP / f"mosaic-invalid-{stem}.log").write_text(log, encoding="utf-8")
         if result.returncode == 0:
             raise TestFailure(f"expected {source} to fail")
-        if "mosaic:" not in log:
+        native = expected.startswith("native:")
+        expected = expected.removeprefix("native:")
+        if not native and "mosaic:" not in log:
             raise TestFailure(f"{source} did not emit a Mosaic diagnostic")
         if expected not in log:
             raise TestFailure(f"{source} did not emit expected diagnostic: {expected}")

@@ -26,7 +26,7 @@ matches them to cell IDs in source order, left to right within `m.grid.h`, top
 to bottom within `m.grid.v`, and recursively through nested grids.
 
 ```typ
-#m.slide(m.grid.h("a", "b", "c"))[a][b][c]
+#m.slide(layout: m.grid.h("a", "b", "c"))[a][b][c]
 ```
 
 #embedded-example(

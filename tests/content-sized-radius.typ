@@ -13,7 +13,7 @@
   ),
 )
 
-#mosaic.slide(grid: mosaic.grid.v(
+#mosaic.slide(layout: mosaic.grid.v(
   mosaic.grid.t(auto, compact),
   mosaic.grid.cell(id: "body"),
 ))[Body]
