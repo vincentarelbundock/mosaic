@@ -1,20 +1,25 @@
-// Import Mosaic, then install its document-wide slide behavior.
+// Import Mosaic, then install its document-wide slide behavior. Deck identity
+// declared here feeds the built-in title layout.
 #import "@local/mosaic:0.0.1" as m
 
-#show: m.setup
-
-// Use an explicit slide when you want a specialized layout. This title layout
-// places the image behind the text and anchors that text in the top-right.
-#m.slide(layout: m.layouts.title(
+#show: m.setup.with(
   title: [Getting started],
-  variant: "image-background",
-  image: (
-    path: path("/docs/assets/images/bonsai.webp"),
-    alt: "A pine bonsai",
-  ),
-  align: top + right,
   subtitle: [A first Mosaic deck],
-))
+)
+
+// The built-in title layout reads that metadata, so this slide needs no body.
+// Its `image-background` variant paints the picture behind the text, and
+// `align` moves the text clear of the tree.
+#m.slide(
+  layout: m.layouts.title(
+    variant: "image-background",
+    image: (
+      path: path("/docs/assets/images/bonsai.webp"),
+      alt: "A pine bonsai",
+    ),
+    align: right + top,
+  ),
+)
 
 // A level-one heading starts a section slide.
 = Content

@@ -13,8 +13,8 @@
 /// #show label("mosaic-cell-body"): surface(fill: luma(240))
 /// ```
 ///
-/// The full-slide planes carry the labels `<mosaic-cell-background>` and
-/// `<mosaic-cell-foreground>`, so the same rule paints them.
+/// The full-slide planes carry the labels `<mosaic-background>` and
+/// `<mosaic-foreground>`, so the same rule paints them.
 ///
 /// -> function
 #let surface(

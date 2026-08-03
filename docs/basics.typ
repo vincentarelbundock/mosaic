@@ -36,99 +36,67 @@
 
 #title()
 
-= Anatomy of a slide deck
-
-- *Deck*: a sequence of slides.
-- *Slide*: one unit of a presentation.
-- *Grid*: named cells arranged with horizontal and vertical splits.
-- *Split*: a horizontal or vertical division.
-- *Cell*: a named area that holds content.
-- *Inset*: space between a cell's edge and its content.
-- *Background*: content drawn behind the grid across the full slide.
-- *Foreground*: content drawn over the grid across the full slide.
-- *Layout*: a ready-made slide arrangement with a grid and, when needed,
-  built-in content or decoration.
-- *Theme*: a coordinated set of colors, text styles, and layouts.
-
-#html.frame(grid-anatomy)
-
-The grid is sandwiched between two full-slide *planes*. The *background*
-plane is painted behind the cells. It typically holds a full-slide image, a
-color wash, or a watermark. The *foreground* plane is painted over the cells.
-It typically holds a slide number, a logo, or a progress indicator. Neither
-plane takes space away from the grid.
-
-#html.frame(slide-planes)
-
-A *layout* is a ready-made slide design for a familiar slide kind such as
-a title or section. A layout provides a structural grid and may supply fixed
-content or limited structural decoration for that design. Cell appearance and
-full-slide planes remain ordinary Typst rules and explicit slide arguments.
-Each layout offers several named *variants*.
-
-A slide can reveal its content in *steps*. Each step renders as one *frame*.
-Each frame is one page in the PDF. Page and text color are ordinary Typst
-settings; built-in colored layout decoration takes an explicit `accent:`.
-
-Each of these elements is a native Typst layer, and every cell carries a
-native *label*, `<mosaic-cell-ID>`, so ordinary `show` and `set` rules style
-the whole stack; #link("appearance.html")[Appearance] presents the styling
-model.
-
 = First slideshow
 
-Mosaic turns ordinary Typst headings into slides. This keeps a first deck
-short, readable, and easy to edit.
+First, import Mosaic and apply its setup rule:
 
-After `#show: m.setup`, every `==` writes a *heading slide*: the heading
-becomes the title and the text that follows becomes its content. Every single
-`=` writes an unnumbered *section slide*, whose title is larger and centered
-by default. Together they give a lightweight hierarchy with no special slide
-commands.
+```typ
+#import "@local/mosaic:0.0.1" as m
+#show: m.setup
+```
 
-The example below is a complete deck. It opens with a title slide built from
-the `image-background` title layout, with the title anchored to the top-right
-corner; groups the rest under two section slides; and fills every heading
-slide with ordinary Typst content. The code block is the exact source for the
-rendered slideshow beneath it.
+`m.setup` applies the page and theme defaults and turns headings and explicit `m.slide` commands into slides.
+
+After `#show: m.setup`, every `==` starts a *content slide*: the heading becomes the title and the text that follows becomes its content. A single `=` starts an unnumbered *section slide* with a larger, centered title.
+
+The example below is a complete deck. It declares its title and subtitle once in `m.setup`, opens with the built-in `title` layout, groups the rest under two section slides, and fills every content slide with ordinary Typst content.
 
 #embedded-example(
   calepin.elements.gallery,
   "getting-started/first-slideshow",
   frames: 5,
-  title: "A deck of heading slides with an image title slide and two sections",
+  title: "A deck of content slides with an image title slide and two sections",
 )
+
+= Concepts
+
+On this website, we will refer to the different components of a slide deck in these terms:
+
+- *Slide*: one unit of a presentation.
+- *Deck*: a sequence of slides.
+- *Cell*: a named area that holds content.
+- *Grid*: named cells arranged with horizontal and vertical splits.
+- *Split*: a horizontal or vertical division between cells.
+- *Inset*: space between a cell's edge and its content.
+- *Background*: content drawn behind the content grid across the full slide.
+- *Foreground*: content drawn over the content grid across the full slide.
+- *Layout*: a ready-made slide arrangement with a grid and, when needed, built-in content or decoration.
+- *Theme*: a coordinated set of colors, text styles, and layouts.
+
+= Anatomy of a slide deck
+
+#html.frame(grid-anatomy)\
+#v(1em)
+
+The grid is sandwiched between two full-slide planes. The *background* plane is painted behind the cells. It typically holds a full-slide image, a color wash, or a watermark. The *foreground* plane is painted over the cells. It typically holds a slide number, a logo, or a progress indicator. Neither plane takes space away from the grid.
+
+#v(1em)\
+#html.frame(slide-planes)
+#v(1em)\
+
+A *layout* is a ready-made slide design for a familiar slide kind such as a title or section. A layout provides a structural grid and may supply fixed content or limited structural decoration for that design. Each layout offers several named *variants*.
+
+Each of the elements of a slide is a native Typst layer, and every cell, the foreground, and the background all carry a Typst-native *label*: `<mosaic-cell-ID>`, `<mosaic-foreground>`, and `<mosaic-background>`. This means that we can style each element of the stack using ordinary Typst `show` and `set` rules. See the #link("appearance.html")[Appearance Page] for a detailed tutorial.
 
 = Semantic slide
 
-Build a semantic slide in three separate layers: define its named grid, assign
-content to those names with `content:`, and style the labeled cells with
-native Typst rules. The same canonical composition grows through each step
-below.
+The first slideshow used `==` headings to separate content into standard slides. For a custom composition, write a slide with `m.slide` and name its regions by purpose, such as `header`, `body`, `footer`, `aside`, or `notes`. This is *semantic* structure: content and styling refer to what each region means instead of where it appears.
 
-The styling layer comes first here. The rules below run once, ahead of the
-first slide, and tint each named cell used in this walkthrough. That is why
-every thumbnail shows its grid structure in color: the styles are global
-`show` rules on cell labels, not arguments to `slide` or `grid`. How
-`m.surface` and `set` rules divide that work is explained in
-#link("appearance.html#content-rules-and-surface-rules")[Appearance: content rules and surface rules].
-
-```typ
-#show label("mosaic-cell-main"): m.surface(fill: rgb("#7fa8cc"))
-#show label("mosaic-cell-main"): set align(left + horizon)
-#show label("mosaic-cell-aside"): m.surface(fill: rgb("#c9a75e"))
-#show label("mosaic-cell-aside"): set align(left + horizon)
-#show label("mosaic-cell-notes"): m.surface(fill: rgb("#85b892"))
-#show label("mosaic-cell-notes"): set align(left + horizon)
-#show label("mosaic-cell-source"): m.surface(fill: rgb("#c9a75e"))
-#show label("mosaic-cell-source"): set align(left + horizon)
-```
+Build a semantic slide in three separate layers: define its named grid, assign content to those names with `content:`, and style the labeled cells with native Typst rules. The same canonical composition grows through each step below.
 
 == One named cell
 
-Start with a structural value and pass it to `slide`. Keeping the grid outside
-the call gives it a name, makes it reusable, and leaves the slide invocation
-focused on content assignment.
+Start with one named cell and pass it to `slide` as the layout.
 
 ```typ
 #let single = m.grid.cell("main")
@@ -143,8 +111,7 @@ focused on content assignment.
 
 == Split the grid
 
-`m.grid.h` places cells side by side. Assign the split to `columns` before
-passing it to the slide; each dictionary key matches one cell ID.
+`m.grid.h` places cells side by side. Each key in `content:` matches one cell ID.
 
 ```typ
 #let columns = m.grid.h("main", "aside")
@@ -162,9 +129,7 @@ passing it to the slide; each dictionary key matches one cell ID.
 
 == Nest splits and size tracks
 
-Splits nest directly: `v` stacks the sidebar cells, `t` assigns their
-proportions, and `h` combines the nested sidebar with the main region, all in
-one declaration. The finished grid still lives outside `slide`.
+Splits nest directly: `v` stacks the sidebar cells, `t` assigns their proportions, and `h` combines the sidebar with the main region.
 
 ```typ
 #let composition = m.grid.h(
@@ -189,9 +154,7 @@ one declaration. The finished grid still lives outside `slide`.
 
 == Add content
 
-The grid remains unchanged while the `content:` dictionary receives ordinary
-Typst markup: headings, lists, emphasis, figures, equations, or any custom
-content.
+The grid remains unchanged while the `content:` dictionary receives ordinary Typst markup: headings, lists, emphasis, figures, equations, or any custom content.
 
 ```typ
 #m.slide(
@@ -215,22 +178,15 @@ content.
 
 #semantic-thumbnail(4, "The canonical grid filled with semantic Typst content")
 
-== Built-in layouts
+== Style the cells
 
-Built-in layouts are complete deferred page-placement contracts. Assign a
-layout to a value, then pass it to `slide` just like a custom grid. Here the
-content layout supplies a familiar header-and-body structure:
+Once the cells and content are in place, target each cell by its label. `m.surface` paints the cell, while `set align` positions its content.
 
 ```typ
-#let content-layout = m.layouts.content(variant: "header-body")
-#m.slide(layout: content-layout, content: (
-  header: [== Content layout],
-  body: [A familiar header-and-body structure.],
-))
+#show label("mosaic-cell-main"): m.surface(fill: rgb("#7fa8cc"))
+#show label("mosaic-cell-main"): set align(left + horizon)
+#show label("mosaic-cell-notes"): m.surface(fill: rgb("#85b892"))
+#show label("mosaic-cell-source"): m.surface(fill: rgb("#c9a75e"))
 ```
 
-#semantic-thumbnail(5, "The built-in header-and-body content layout")
-
-`m.layouts.title` and `m.layouts.section` work the same way for opening and
-divider slides; #link("structure.html")[Structure] walks through all three
-layouts and their variants.
+See #link("appearance.html#content-rules-and-surface-rules")[Appearance] for styling details. The #link("structure.html")[Structure] page continues with grid sizes and built-in layouts.

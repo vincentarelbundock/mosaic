@@ -14,8 +14,7 @@
 
 == Where do slide margins go?
 
-`setup` uses a zero page margin. Put content spacing on the cells with each
-cell's `inset`:
+`setup` uses a zero page margin. Put content spacing on the cells with each cell's `inset`:
 
 ```typ
 #show: m.setup
@@ -31,15 +30,11 @@ cell's `inset`:
 #m.slide(layout: grid)[Top][Bottom left][Bottom right]
 ```
 
-`inset` separates content from a cell's edges; adjacent cells each contribute
-their own inset. A grid `gutter` instead separates the cell surfaces and
-defaults to `0pt`.
+`inset` separates content from a cell's edges; adjacent cells each contribute their own inset. A grid `gutter` instead separates the cell surfaces and defaults to `0pt`.
 
 == Can headings create slides?
 
-Yes. After `#show: m.setup`, a depth-one heading (`=`) writes an unnumbered
-section slide, and a depth-two heading (`==`) writes a numbered heading
-slide:
+Yes. After `#show: m.setup`, `=` starts an unnumbered section slide and `==` starts a numbered content slide:
 
 ```typ
 #import "@local/mosaic:0.0.1" as m
@@ -63,11 +58,11 @@ This is one logical slide.
 ]
 ```
 
-== How do I customize heading slides?
+See #link("basics.html#first-slideshow")[First slideshow] for a complete example.
 
-Override the `content` layout in `m.setup`. Both explicit content slides
-and plain `==` heading slides select that layout, so they share one spatial
-contract and the same inherited foreground content.
+== How do I customize content slides?
+
+Set the `content` layout in `m.setup`. Explicit content slides and slides created with `==` will then use the same layout and recurring foreground content.
 
 ```typ
 #show: m.setup.with(
@@ -89,13 +84,9 @@ contract and the same inherited foreground content.
 
 == Results
 
-The content layout gives this `==` slide the inverted header bar and progress
-indicator without a single `#slide` call.
-```
+The content layout gives this `==` slide the inverted header bar and progress indicator without a single `#slide` call. ```
 
-Any layout whose cells accept the automatic `header` and `body` content works.
-Themes provide a complete layout dictionary, and setup overrides may replace
-only the named layouts that differ; see #link("appearance.html#themes")[Appearance] and the
+Any layout whose cells accept the automatic `header` and `body` content works. Themes provide a complete layout dictionary, and setup overrides may replace only the named layouts that differ; see #link("appearance.html#themes")[Appearance] and the
 #link("api/setup.html")[Setup API].
 
 == How do I change the slide aspect ratio?
@@ -148,22 +139,18 @@ Define a slide as an ordinary Typst function and call it wherever it should appe
 #results-slide()
 ```
 
-Each call creates another logical slide with the same incremental sequence. To
-show only one state, parameterize the function or write a summary slide.
+Each call creates another logical slide with the same incremental sequence. To show only one state, parameterize the function or write a summary slide.
 
 == How do I link to a slide?
 
-Use native Typst labels and links. A label on a heading slide becomes the link
-target directly:
+Use native Typst labels and links. A label on a content slide becomes the link target directly:
 
 ```typ
 == Results <results>
 
-See #link(<details>)[the details slide].
-```
+See #link(<details>)[the details slide]. ```
 
-For an explicit slide, put labeled, zero-output metadata at the beginning of
-its content:
+For an explicit slide, put labeled, zero-output metadata at the beginning of its content:
 
 ```typ
 #m.slide[
@@ -174,108 +161,23 @@ its content:
 ]
 ```
 
-Typst writes these as internal PDF destinations, so Mosaic does not need a
-separate slide-ID or deep-link API. Use your own unique labels for navigation;
-the repeated `<mosaic-cell-ID>` labels identify cells for styling and are not
-slide IDs.
+Typst writes these as internal PDF destinations, so Mosaic does not need a separate slide-ID or deep-link API. Use your own unique labels for navigation; the repeated `<mosaic-cell-ID>` labels identify cells for styling and are not slide IDs.
 
 == How do I inspect overflowing cells?
 
-Mosaic emits non-fatal metadata when a rendered cell is taller than its
-allocation. Query those records with:
+Mosaic emits non-fatal metadata when a rendered cell is taller than its allocation. Query those records with:
 
-```sh
-typst eval \
+```sh typst eval \
   'query(<mosaic-overflow-warning>).map(it => it.value)' \
   --in slides.typ
 ```
 
-Each record identifies the slide, frame, cell, and measured height. Disable
-observation with `setup(overflow: "off")`; see the
+Each record identifies the slide, frame, cell, and measured height. Disable observation with `setup(overflow: "off")`; see the
 #link("api/setup.html")[Setup API].
 
 == How does Mosaic compare to Touying?
 
-#link("https://github.com/touying-typ/touying")[Touying] is the most
-established Typst presentation framework. It works like LaTeX Beamer: you
-pick a theme, the theme decides what slides look like, and you adjust the
-result through the framework's configuration system. Colors, title and author
-information, and page settings each have their own configuration function,
-and the theme reads those values back when it draws headers, footers, and
-title slides:
-
-```typ
-#show: metropolis-theme.with(
-  aspect-ratio: "16-9",
-  config-colors(primary: rgb("#1a6b8a")),
-  config-info(title: [My talk], author: [Author Name]),
-)
-```
-
-This works well when a theme's options cover what you want. Enter your title
-and author once and every theme knows where to display them, so switching
-themes is often a one-line change. The cost is that each adjustment has its
-own framework mechanism to discover: a different page background means
-learning that `set page` is off limits (the framework resets it) and that
-page changes go through `config-page`, while changing colors partway through
-a deck means learning `touying-set-config`. The load grows most when you want
-a slide the theme did not anticipate. Small tweaks fit through configuration,
-but a genuinely different layout means writing a theme method that receives
-the framework's internal state (called `self`), builds the header and footer
-from it, and merges page settings before handing off. This is condensed from
-Touying's own theme tutorial:
-
-```typ
-#let slide(title: auto, ..args) = touying-slide-wrapper(self => {
-  let header(self) = {
-    show: components.cell.with(fill: self.colors.primary, inset: 1em)
-    utils.call-or-display(self, self.store.title)
-  }
-  self = utils.merge-dicts(self, config-page(header: header))
-  touying-slide(self: self, ..args)
-})
-```
-
-Writing this requires several Touying concepts at once: the `self` state,
-wrapper functions, configuration merging, and the utility helpers. The
-tutorial is upfront about it, saying Touying "opts for functionality over
-simplicity," and suggests that most users instead copy a built-in theme file
-and edit it.
-
-Mosaic also ships layouts and themes, and you can get beautiful, full-featured slides with little effort.  But Mosaic's core is different than Touying's: any slide can be assembled from a grid of named cells and styled with the same `set` and `show` rules you would use in any Typst document. There is less to learn because Mosaic adds almost nothing of its own. After `m.setup`, styling is ordinary Typst; the one new idea is that every cell carries a label you can target with a rule:
-
-```typ
-#show: m.setup
-#set page(fill: rgb("#111827"))
-#set text(fill: white)
-#show label("mosaic-cell-header"): set text(size: 1.4em)
-```
-
-If you know how `set` and `show` rules work in Typst, you already know how to
-style a Mosaic deck, including scoping a rule to a single slide. A one-off
-slide is just a slide with a different grid, and a reusable design is an
-ordinary function with no internal state to receive and nothing to register.
-The cell IDs are arbitrary names you choose; each one becomes a
-`mosaic-cell-ID` label that ordinary rules can target:
-
-```typ
-#let framed(title, body) = m.slide(
-  layout: m.grid.v("banner", "copy"),
-  content: (banner: title, copy: body),
-)
-
-#show label("mosaic-cell-banner"): set text(size: 1.4em, weight: "bold")
-#show label("mosaic-cell-copy"): set align(left + horizon)
-
-#framed([Results])[The body.]
-```
-
-The same grid can become the configured `content` layout, which also drives
-every `==` heading slide. A Mosaic theme is a passive definition plus an exact
-facade and callable layout namespace; the bundled themes are copyable starting
-points (see #link("appearance.html#themes")[Appearance]).
-
-The differences in brief:
+#link("https://github.com/touying-typ/touying")[Touying] and Mosaic both create presentations in Typst. Touying centers its workflow on themes and their configuration options. Mosaic centers its workflow on named grid cells and native Typst `set` and `show` rules. Touying is a good fit when an existing theme already matches the presentation. Mosaic is a good fit when you want to compose and style slides directly.
 
 #table(
   columns: (auto, 1fr, 1fr),
@@ -286,9 +188,3 @@ The differences in brief:
   [Custom slides], [Ordinary functions and grids], [Theme methods receiving framework state],
   [Page control], [Native `set page`], [`config-page`; direct `set page` reserved],
 )
-
-Both projects ship ready-made themes, so that alone does not decide the
-question. Choose Touying if you want to stay close to Beamer conventions and
-draw on a larger catalog of themes, integrations, and community examples.
-Choose Mosaic if your slides vary a lot from one to the next, or if you would
-rather learn a little more Typst than a separate framework.

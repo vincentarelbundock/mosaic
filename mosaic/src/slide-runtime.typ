@@ -190,9 +190,9 @@
   )
 })
 
-// A plane renders as one full-slide block labeled <mosaic-cell-ID> (ID is
-// "background" or "foreground"), so the same native label rules that style
-// cells also style planes.
+// A plane renders as one full-slide block labeled <mosaic-ID> (ID is
+// "background" or "foreground"), so native label rules can style it without
+// conflating planes with grid cells.
 #let render-plane(value, step, heading-key) = if value == none {
   []
 } else {
@@ -206,7 +206,7 @@
       heading-key: heading-key,
     ),
   )
-  [#body#label("mosaic-cell-" + heading-key)]
+  [#body#label("mosaic-" + heading-key)]
 }
 
 #let configure-deck(
