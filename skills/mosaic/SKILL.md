@@ -1,6 +1,6 @@
 ---
 name: mosaic
-description: Complete tutorial and workflow for creating slide decks with the Mosaic package for Typst. Use when creating, editing, styling, debugging, or verifying Typst presentations built with Mosaic, or when the user mentions Mosaic slides, Typst slides, slide grids, named cells, themes, incremental reveals, speaker notes, handouts, or Mosaic compilation errors.
+description: Complete tutorial and workflow for creating slide decks with the Mosaic package for Typst. Use when creating, editing, styling, debugging, or verifying Typst presentations built with Mosaic, or when the user mentions Mosaic slides, Typst slides, slide grids, named cells, themes, incremental reveals, speaker notes, handouts, or Mosaic compilation errors. Also covers common slide types: title, section divider, bulleted content, two-column, figure, image-beside-text, full-bleed photograph, big-number, and table slides.
 ---
 
 # Mosaic for Typst
@@ -69,9 +69,10 @@ Vocabulary used throughout: *slide* (one unit), *deck* (sequence of slides), *ce
 #m.slide(layout: "content")
 #m.slide(layout: "title")
 #m.slide(layout: "section")
+#m.slide(layout: "image", image: path("fig/chart.png"))
 ```
 
-The standard names are `content`, `title`, and `section`. Note that `layout: "content"` resolves to the *configured* content layout, whose stock value is `m.layouts.content(variant: "header-body")`, whereas the `m.layouts.content()` factory defaults to `variant: "header-body-footer"`. The two spellings are not interchangeable; a theme or a setup `layouts:` override changes the former only.
+The selectable names are `content`, `title`, `section`, and `image`. The first three are also *configurable*: they have defaults, headings create them automatically, and `setup(layouts:)` or a theme can replace them. `image` is selectable but not configurable, since nothing creates an image slide automatically; supply its fields at the call site. Note that `layout: "content"` resolves to the *configured* content layout, whose stock value is `m.layouts.content(variant: "header-body")`, whereas the `m.layouts.content()` factory defaults to `variant: "header-body-footer"`. The two spellings are not interchangeable; a theme or a setup `layouts:` override changes the former only.
 
 Content slides are numbered by default; title and section slides are not. Section slides advance the section counter. `numbered:` explicitly overrides the numbering default.
 
@@ -115,6 +116,7 @@ Variants:
 - **Title**: `academic`, `left-aligned`, `centered-stack`, `accent-block`, `image-left`, `image-right`, `image-top`, `image-bottom`, `image-background`.
 - **Section**: `plain` and the same five image variants.
 - **Content**: `body`, `header-body`, `body-footer`, `header-body-footer`.
+- **Image**: `figure` (the default), `full`, `left`, `right`, `top`, `bottom`.
 
 `m.layouts.title()` inherits `title`, `subtitle`, `authors`, and `date` from setup, so `m.slide(layout: "title")` needs no body. An explicit layout argument wins; pass `none` (or `()` for `authors`) to suppress an inherited field on one slide. For image variants, `scrim:` on the image spec quiets the photograph, as in `image: (path: "cover.webp", scrim: black.transparentize(55%))`; pair `image-background` with a scoped text-color rule on the `<mosaic-cell-title>` or `<mosaic-cell-section>` label for contrast. One such rule recolors the whole stack: the subtitle and metadata are muted only while the cell carries the deck's ordinary text color, and follow any override, so light-on-dark titles need no hand-built grid.
 
@@ -133,7 +135,93 @@ To replace a named layout deck-wide, configure it once in setup; to reuse one fo
 #myslide(content: (header: [== Slide title], body: [Slide content]))
 ```
 
-## 4. Configure the deck once
+## 4. Common slide types
+
+Most decks are built from a handful of recurring shapes. Reach for the named form below before composing a grid by hand; each one is one line and stays correct when the deck's font size, paper, or theme changes.
+
+**Title slide.** `#m.slide(layout: "title")` with nothing else: it inherits `title`, `subtitle`, `authors`, and `date` from setup. Choose a stock variant when the preset suits the deck. When the deck wants type much quieter or more idiosyncratic than any preset, use the image layout's `full` variant as the escape hatch and write the title as ordinary text:
+
+```typ
+#m.slide(layout: "image", variant: "full", image: path("fig/cover.jpg"))[
+  #set text(fill: white)
+  #text(size: 1.5em)[Économie et Politique]
+
+  POL1025
+
+  Vincent Arel-Bundock
+]
+```
+
+**Section divider.** A bare `= Section name` is enough. Text written between the `=` and the next heading becomes the section slide's subtitle, so a tagline costs no extra slide. Use `setup(layouts: (section: ...))` when every divider should carry the same photograph.
+
+**Bulleted content slide.** A bare `== Slide title` followed by a list. Do not write `m.slide` for this.
+
+**Two-column slide.** `columns: 2` on the content layout, then three positional blocks: header, left, right.
+
+```typ
+#m.slide(layout: "content", columns: 2)[== Comparison][
+  Left column
+][
+  Right column
+]
+```
+
+Use it for side-by-side figures too, wrapping each in `m.components.image(..., fit: "contain")` so neither is cropped. Add `tracks: (2fr, 1fr)` for an uneven split.
+
+**Figure slide.** The image layout's default variant: a header above a contained picture, with an optional caption beneath.
+
+```typ
+#m.slide(layout: "image", image: path("fig/gdp.png"))[== Growth since 1950]
+#m.slide(layout: "image", image: path("fig/pie.png"), caption: [Teaching, research, admin])[== My job]
+```
+
+`figure` defaults to `fit: "contain"`, which is what a chart needs: never crop data. `caption:` composes a native Typst `figure`, so it takes the deck's own `show figure.caption` rules and figure numbering; switch numbering off with `set figure(numbering: none)`. `caption:` is rejected by every other variant. The `figure` variant has header, image, and caption cells but no body, so a single standing line of commentary belongs in `caption:`.
+
+**Picture beside text.** The directional variants `left`, `right`, `top`, and `bottom` pair a full-bleed picture with a header and body region, filled by two positional blocks:
+
+```typ
+#m.slide(layout: "image", variant: "right", image: path("fig/book.jpg"))[== Readings][
+  - Almost every week
+  - PDFs on the course site
+]
+```
+
+Pass `[]` as the second block when the picture needs a title but no body. `tracks:` sizes the picture region and is side-independent, so `tracks: 40%` means the same thing under `left` and `right` and the two stay mirror images. These variants default to `fit: "cover"`; pass `fit: "contain"` for a chart, a screenshot, or any picture whose edges carry meaning.
+
+**Full-bleed photograph with text over it.** The `full` variant puts the picture behind a single body cell:
+
+```typ
+#m.slide(
+  layout: "image",
+  variant: "full",
+  image: (path: path("fig/auditorium.png"), scrim: black.transparentize(55%)),
+)[
+  #set text(fill: white)
+  == Who are you?
+]
+```
+
+`full` inherits the deck's ordinary text color, so it needs both halves of the contrast pair: a `scrim:` on the image spec to quiet the photograph, and a text fill override in the body. Omit the body entirely (`#m.slide(layout: "image", variant: "full", image: ...)`) for a bare picture slide with no text at all. Prefer `full` over `image-background` on a title or section layout when the composition is free-form rather than a titled preset.
+
+**One big number or phrase.** Scope a centering rule around a single content slide:
+
+```typ
+#[
+  #show label("mosaic-cell-body"): set align(center + horizon)
+  #m.slide(content: (body: text(size: 6em, weight: "bold")[15 000 000]))
+]
+```
+
+**Table slide.** Native Typst `table` inside an ordinary `==` slide, wrapped in `align(center + horizon)`. Mosaic adds nothing here; use `stroke: (x, y) => ...` for booktabs-style rules.
+
+**Continuation slide.** Repeating a title verbatim collides in the outline and in link targets. Repeat the heading and give it a distinct label: `== Appeals #metadata(none) <appeals-2>`.
+
+Two recurring choices worth making once per deck:
+
+- **`path()`, not a bare string.** Image paths inside layout and component arguments cross the package boundary, so a bare `"fig/x.png"` is searched for inside the installed Mosaic package and fails with `file not found (searched at .../packages/local/mosaic/...)`. Wrap every asset path in Typst's `path()`.
+- **`fit:` on the content layout is for prose.** `layouts: (content: m.layouts.content(variant: "header-body", fit: "auto"))` is the right default for a text-heavy deck. Leave it off for an image-heavy deck: the fitter scales from the top-left, so fitting a figure sized with `height: 100%` drops its centering.
+
+## 5. Configure the deck once
 
 Put deck identity, semantic colors, layout overrides, recurring cell defaults, and page planes in `m.setup`:
 
@@ -175,7 +263,7 @@ Key setup arguments:
 
 Do not introduce a separate footer, logo, background, or foreground feature API: recurring named-cell content and the reserved `content.background` / `content.foreground` planes own those jobs.
 
-## 5. Themes
+## 6. Themes
 
 Import one facade as `m` and keep the rest of the deck unchanged:
 
@@ -210,7 +298,7 @@ To develop a theme, start locally: define the complete semantic palette and bind
 
 Only `colors` is required; `name`, `defaults`, `options`, `text`, `normalize-lists`, `layouts`, and `apply` are optional. A reusable packaged facade keeps three core files: `theme.typ` (binds and exports the public API), `definition.typ` (passive design decisions), and `layouts.typ` (the callable layout namespace), bound once with `mosaic.theme.setup(definition)`. Copy Light's files and change only design values. Theme definitions are passive data consumed by Mosaic's engine; never call setup internals from a theme or forward Mosaic's setup arguments.
 
-## 6. Custom grids
+## 7. Custom grids
 
 Build custom structure only when headings and layout factories are insufficient. A Mosaic grid is a transparent tree of named cells:
 
@@ -240,7 +328,7 @@ Build custom structure only when headings and layout factories are insufficient.
 
 Cell insets provide slide margins (`setup` uses a zero page margin). Adjacent cells each contribute their own inset; a grid `gutter` separates cell surfaces and defaults to `0pt`. Use a layout factory instead of rebuilding a standard title, section, header/body, or footer structure as a raw grid.
 
-## 7. Fill cells with content
+## 8. Fill cells with content
 
 A slide accepts cell content in two distinct forms. Do not mix them in one slide.
 
@@ -264,7 +352,7 @@ Useful content values:
 - `m.components.frame()` (clipped semantic frame), `callout()` (side stripe with optional title), `label()` (compact inline label), `quote()` (attribution treatment), `divider()` (horizontal rule), `progress()` (position indicator). All return ordinary content for any cell or plane. Component `role:` values (`neutral`, `accent`) resolve from the theme palette.
 - Native math, `figure` with captions and references, MiTeX for LaTeX math, ctheorems for theorem environments: all work unchanged inside cells.
 
-## 8. Style with native Typst rules
+## 9. Style with native Typst rules
 
 Two kinds of rules cover a cell, split by what they touch:
 
@@ -309,7 +397,7 @@ Typography is native rules after setup:
 
 A semantic heading feeds outlines and bookmarks; use `text(...)` directly for display type that should not appear in navigation, or `heading(outlined: false, bookmarked: false)[...]`. Do not invent a separate Mosaic styling API or put decorative styling into the grid tree. Use `m.surface` and `m.components` when their documented semantic treatments fit; otherwise use native Typst.
 
-## 9. Furniture: footers, planes, navigation
+## 10. Furniture: footers, planes, navigation
 
 Keep three concerns distinct:
 
@@ -328,7 +416,7 @@ Navigation stays native because headings stay native:
 - Section links: `query(heading.where(level: 1, outlined: true))`; each result gives a label via `body` and a target via `location()`.
 - Slide links: label a content slide (`== Results <results>`) and `#link(<results>)[...]`. For an explicit slide, put `#metadata(none) <id>` at the start of its content.
 
-## 10. Incremental reveals
+## 11. Incremental reveals
 
 Write one logical slide; Mosaic adds frames until the last timed command has run and discovers the frame count. Hidden content keeps its space by default so the slide stays still; use `before: "removed"` when surrounding content should expand into that space. Choose the smallest command:
 
@@ -354,7 +442,7 @@ Constraints and options:
 - Native counters and states advance once per physical frame by default. List them in `setup(frozen-counters: (...), frozen-states: (...))` to advance once per logical slide instead.
 - Reveal one part of an equation at a time by replacing plain terms with colored underbraces via steps commands; the layout stays fixed.
 
-## 11. Speaker notes and outputs
+## 12. Speaker notes and outputs
 
 Attach notes with `m.note[...]`. Notes never render in the default `output: "slides"` and never add frames. A note outside timing commands applies to every frame; a note after `m.pause` or inside a steps command follows that command's frame assignment. Multiple applicable notes accumulate in source order.
 
@@ -365,7 +453,7 @@ Attach notes with `m.note[...]`. Notes never render in the default `output: "sli
 
 Both companion outputs write one page per emitted frame and fail with an explicit overflow diagnostic when notes do not fit. Every frame carries `<mosaic-speaker-notes>` metadata (`logical-slide`, `frame`, `notes`) queryable with Typst's `query`.
 
-## 12. Recipes
+## 13. Recipes
 
 - **Reuse a slide**: define it as a function and call it wherever it should appear; each call is a new logical slide with the same incremental sequence.
 - **One-off dark slide**: scope `set text(fill: white)` and a `background` block inside `#[ ... ]` around one slide.
@@ -382,7 +470,7 @@ Both companion outputs write one page per emitted frame and fail with an explici
   typst eval 'query(<mosaic-deck-metadata>).map(it => it.value)' --in deck.typ
   ```
 
-## 13. Diagnose before changing structure
+## 14. Diagnose before changing structure
 
 When compilation fails:
 
@@ -396,7 +484,7 @@ When compilation fails:
 
 Do not add compatibility aliases for removed APIs. In particular, slides use `layout:`, not a separate semantic selector.
 
-## 14. Verify the result
+## 15. Verify the result
 
 For a deck change:
 
@@ -424,7 +512,7 @@ Completion requires:
 - documentation examples use the same public API as the package;
 - removed APIs were not reintroduced as aliases.
 
-## 15. Reflect and improve this skill
+## 16. Reflect and improve this skill
 
 After completing the task, reflect on the session and update *this* SKILL.md if something generalizable was learned.
 

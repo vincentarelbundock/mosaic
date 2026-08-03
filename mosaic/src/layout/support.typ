@@ -46,10 +46,19 @@
 // Edge regions (headers, footers, captions) hug their own content vertically
 // while keeping the deck's horizontal inset, so they align with body text.
 // Shared by the content and image layouts.
-#let compact-region-insets(settings) = (
-  top: settings.spacing.compact-gap,
+// Edge regions — headers, footers — sit against one slide edge and face the
+// body on the other side. The two sides want different space, so they get it:
+// the slide edge takes the deck's full inset, framing the region like every
+// other margin, while the inner side takes the compact gap so a title stays
+// visually attached to the content it introduces.
+//
+// Using the compact gap on both sides is what leaves a heading almost touching
+// the top of the slide while its left margin is several times larger, which
+// reads as a mistake rather than a choice.
+#let edge-region-insets(settings, edge: top) = (
+  top: if edge == top { settings.spacing.inset } else { settings.spacing.compact-gap },
   right: settings.spacing.inset,
-  bottom: settings.spacing.compact-gap,
+  bottom: if edge == bottom { settings.spacing.inset } else { settings.spacing.compact-gap },
   left: settings.spacing.inset,
 )
 

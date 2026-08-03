@@ -3,7 +3,7 @@
 #import "../grid/constructors.typ": styled-cell, h, v, t, validate-fit
 #import "../grid/model.typ": valid-track-size
 #import "core.typ": make-layout
-#import "support.typ": compact-region-insets, track-children
+#import "support.typ": edge-region-insets, track-children
 
 #let variants = (
   "body",
@@ -92,15 +92,15 @@
 #let region-cell(
   id,
   settings,
-  edge: false,
+  edge: none,
   content-sized: false,
   fit: none,
 ) = styled-cell(
   id: id,
   style: (
     content-sized: content-sized,
-    inset: if edge {
-      compact-region-insets(settings)
+    inset: if edge != none {
+      edge-region-insets(settings, edge: edge)
     } else {
       settings.spacing.inset
     },
@@ -112,14 +112,14 @@
   if fields.variant in ("header-body", "header-body-footer") {
     children.push(t(
       auto,
-      region-cell("header", settings, edge: true, content-sized: true),
+      region-cell("header", settings, edge: top, content-sized: true),
     ))
   }
   children.push(t(1fr, body))
   if fields.variant in ("body-footer", "header-body-footer") {
     children.push(t(
       auto,
-      region-cell("footer", settings, edge: true, content-sized: true),
+      region-cell("footer", settings, edge: bottom, content-sized: true),
     ))
   }
   v(..children)

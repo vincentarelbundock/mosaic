@@ -8,7 +8,7 @@
 #import "../grid/constructors.typ": styled-cell, v, t
 #import "core.typ": make-layout, validate-visual-spec
 #import "support.typ": (
-  compact-region-insets,
+  edge-region-insets,
   visual-content,
 )
 #import "image-support.typ": (
@@ -127,12 +127,12 @@
   make-layout("image", fields)
 }
 
-#let text-cell(id, settings, content-sized: false, edge: false) = styled-cell(
+#let text-cell(id, settings, content-sized: false, edge: none) = styled-cell(
   id: id,
   style: (
     content-sized: content-sized,
-    inset: if edge {
-      compact-region-insets(settings)
+    inset: if edge != none {
+      edge-region-insets(settings, edge: edge)
     } else {
       settings.spacing.inset
     },
@@ -142,7 +142,7 @@
 // Header above, body filling the rest: the arrangement that sits beside a
 // directional image and over a full-bleed one.
 #let text-region(settings) = v(
-  t(auto, text-cell("header", settings, content-sized: true, edge: true)),
+  t(auto, text-cell("header", settings, content-sized: true, edge: top)),
   t(1fr, text-cell("body", settings)),
 )
 
@@ -202,7 +202,7 @@
       })
     }
     let children = (
-      t(auto, text-cell("header", settings, content-sized: true, edge: true)),
+      t(auto, text-cell("header", settings, content-sized: true, edge: top)),
       // The picture owns a fixed cell, so the slide supplies no block for it.
       t(1fr, styled-cell(
         id: "image",
@@ -220,7 +220,7 @@
     // and the deck reads wrong if the same `== Heading` sits lower here than on
     // an ordinary content slide.
     image-background-cell(
-      text-cell("body", settings, content-sized: false, edge: true),
+      text-cell("body", settings, content-sized: false, edge: top),
       picture,
     )
   } else {
