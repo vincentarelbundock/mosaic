@@ -29,11 +29,6 @@
   small: (size: 0.55em, fill: default-muted),
 )
 
-#let default-shape = (
-  radius: 8pt,
-  stroke: 0.8pt,
-)
-
 #let default-spacing = (
   inset: 1.25em,
   gap: 0.7em,
@@ -41,6 +36,11 @@
   heading-below: 0.75em,
   list-spacing: 0.8em,
 )
+
+// Overflow observation policy. "warn" emits queryable
+// <mosaic-overflow-warning> metadata and keeps compiling; "error" emits it and
+// fails the compile, so a build stops instead of shipping a clipped slide.
+#let overflow-modes = ("off", "warn", "error")
 
 #let default-content = (:)
 
@@ -131,8 +131,8 @@
   let content = make-content-defaults(content)
   let deck = make-deck(..deck)
   let spacing = merge-record(default-spacing, spacing, "spacing")
-  if overflow not in ("off", "warn") {
-    fail("setup overflow must be \"off\" or \"warn\"")
+  if overflow not in overflow-modes {
+    fail("setup overflow must be \"off\", \"warn\", or \"error\"")
   }
   (
     colors: colors,
@@ -144,7 +144,6 @@
       caption: default-type.caption + (fill: colors.muted,),
       small: default-type.small + (fill: colors.muted,),
     ),
-    shape: default-shape,
     spacing: spacing,
     overflow: overflow,
   )
@@ -166,15 +165,13 @@
   }
   let _ = make-deck(..deck)
   if (
-    value.keys().sorted() != ("colors", "content", "deck", "overflow", "shape", "spacing", "type")
+    value.keys().sorted() != ("colors", "content", "deck", "overflow", "spacing", "type")
       or type(value.type) != dictionary
       or value.type.keys().sorted() != default-type.keys().sorted()
       or not value.type.values().all(item => type(item) == dictionary)
-      or type(value.shape) != dictionary
-      or value.shape.keys().sorted() != default-shape.keys().sorted()
       or type(value.spacing) != dictionary
       or value.spacing.keys().sorted() != default-spacing.keys().sorted()
-      or value.overflow not in ("off", "warn")
+      or value.overflow not in overflow-modes
   ) {
     fail("invalid internal presentation settings")
   }

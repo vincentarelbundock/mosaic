@@ -42,6 +42,16 @@
   (shrink and ratio < 100%) or (grow and ratio > 100%)
 )
 
+// A fitter only has a problem to solve inside a real allocation. Under
+// `measure` there is none: the region is reported unbounded, and a `1fr`
+// height inside it resolves to zero. Both degenerate cases would drive the
+// ratios to infinity or zero and make the refinement steps divide by zero, so
+// the fitters detect them and return the body untouched. Overflow observation
+// measures every cell, so this is a routine path, not an edge case.
+#let unsolvable(length) = (
+  float.is-infinite(length.pt()) or float.is-nan(length.pt()) or length <= 0pt
+)
+
 #let size-to-pt(size, container-dimension) = {
   let resolved = size
   if type(size) == fraction {
@@ -55,14 +65,10 @@
   }
 }
 
-#let limit-content-width(width: none, body, container-size) = {
-  let resolved = if width == none {
-    calc.min(container-size.width, measure(body).width)
-  } else {
-    size-to-pt(width, container-size.width)
-  }
-  box(width: resolved, body)
-}
+#let limit-content-width(body, container-size) = box(
+  width: calc.min(container-size.width, measure(body).width),
+  body,
+)
 
 /// Fits content to a width, shrinking or growing it only when requested.
 #let fit-to-width(
@@ -71,8 +77,14 @@
   shrink: true,
   body,
 ) = layout(layout-size => {
+  if unsolvable(layout-size.width) {
+    return body
+  }
   let content-width = measure(body).width
   let available-width = size-to-pt(width, layout-size.width)
+  if unsolvable(available-width) {
+    return body
+  }
   let ratio = if content-width == 0pt {
     100%
   } else {
@@ -96,39 +108,30 @@
 #let fit-to-height(
   height: 1fr,
   width: auto,
-  prescale-width: none,
   grow: true,
   shrink: true,
   reflow: true,
-  force-height: false,
-  reserve: none,
   body,
 ) = context {
   let layout-content(
     width: auto,
-    prescale-width: none,
     grow: true,
     shrink: true,
-    reserve: none,
     height,
     body,
   ) = layout(container-size => {
+    if unsolvable(container-size.width) or unsolvable(container-size.height) {
+      return body
+    }
     let available-height = if type(height) == fraction {
       container-size.height
     } else {
       size-to-pt(height, container-size.height)
     }
-    let reserved-height = if reserve == none {
-      0pt
-    } else {
-      measure(block(width: container-size.width, reserve)).height
+    if unsolvable(available-height) {
+      return body
     }
-    available-height = calc.max(0pt, available-height - reserved-height)
-    let boxed-content = limit-content-width(
-      width: prescale-width,
-      body,
-      container-size,
-    )
+    let boxed-content = limit-content-width(body, container-size)
     let size = measure(boxed-content)
     if size.height == 0pt or size.width == 0pt {
       return body
@@ -139,6 +142,9 @@
       container-size.width
     } else {
       size-to-pt(width, container-size.width)
+    }
+    if unsolvable(available-width) {
+      return body
     }
     let width-ratio = available-width / size.width
     let ratio = calc.min(height-ratio, width-ratio) * 100%
@@ -184,14 +190,12 @@
         )
       }
 
-      if not force-height {
-        let scaled-width = reflowed-size(ratio, boxed-content).width
-        let current-width = measure(boxed-content).width
-        boxed-content = box(
-          width: current-width * (available-width / scaled-width),
-          body,
-        )
-      }
+      let scaled-width = reflowed-size(ratio, boxed-content).width
+      let current-width = measure(boxed-content).width
+      boxed-content = box(
+        width: current-width * (available-width / scaled-width),
+        body,
+      )
     }
 
     if should-scale(ratio, grow, shrink) {
@@ -203,10 +207,8 @@
 
   let fitted = layout-content(
     width: width,
-    prescale-width: prescale-width,
     grow: grow,
     shrink: shrink,
-    reserve: reserve,
     height,
     body,
   )

@@ -1,5 +1,5 @@
 // Validated author records shared by all title layouts.
-#import "shared.typ": fail
+#import "shared.typ": fail, reject-unknown-keys
 
 #let author-keys = (
   "affiliations",
@@ -11,13 +11,6 @@
 )
 #let affiliation-keys = ("id", "name")
 
-#let reject-record-keys(record, allowed, subject) = {
-  let unknown = record.keys().filter(key => key not in allowed)
-  if unknown.len() > 0 {
-    fail(subject + " does not accept " + repr(unknown.first()))
-  }
-}
-
 #let valid-name(value) = value != none and (
   type(value) == content
     or (type(value) == str and value != "")
@@ -27,7 +20,7 @@
   if type(record) != dictionary {
     fail(subject + " must be a dictionary with id and name")
   }
-  reject-record-keys(record, affiliation-keys, subject)
+  reject-unknown-keys(record, affiliation-keys, subject)
   let id = record.at("id", default: none)
   let name = record.at("name", default: none)
   if type(id) != str or id == "" {

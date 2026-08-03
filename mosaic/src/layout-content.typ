@@ -1,6 +1,6 @@
 // Construction, validation, and resolution of the content layout.
 #import "shared.typ": fail
-#import "grid-model.typ": styled-cell, h, v, t, valid-track-size
+#import "grid-model.typ": styled-cell, h, v, t, valid-track-size, validate-fit
 #import "layout-core.typ": make-layout
 #import "layout-support.typ": track-children
 
@@ -34,6 +34,7 @@
         + str(columns) + " native Typst track sizes",
     )
   }
+  let _ = validate-fit(fields.fit, "layout \"content\"")
   fields
 }
 
@@ -55,9 +56,17 @@
 /// The built-in content layout uses one body column. Automatic
 /// level-two headings supply its `header` and `body` cells.
 ///
+/// `fit` shrinks body content that would otherwise overflow its column instead
+/// of letting it spill: `"contain"` scales to the body height, `"auto"` scales
+/// and reflows at the smaller size, and `"width"` scales to the column width.
+/// It applies to the body columns only, since the header and footer sit in
+/// `auto` tracks sized to their own content. The default `none` leaves content
+/// at its natural size, where overflow observation reports it instead.
+///
 /// - variant (str): `body`, `header-body`, `body-footer`, or `header-body-footer`.
 /// - columns (int): Number of body columns and required body blocks.
 /// - tracks (auto | array): Native Typst tracks for the body columns.
+/// - fit (none | str): Body shrink-to-fit mode: `none`, `"width"`, `"contain"`, or `"auto"`.
 /// Pass the returned layout to `mosaic.slide`; content blocks fill `header`,
 /// `body` (or `body-1`, `body-2`, and so on), and `footer` in traversal order.
 /// A setup-level `content.footer` default may satisfy the footer so a positional
@@ -68,11 +77,13 @@
   variant: "header-body-footer",
   columns: 1,
   tracks: auto,
+  fit: none,
 ) = {
   let fields = validate-fields((
     variant: variant,
     columns: columns,
     tracks: tracks,
+    fit: fit,
   ))
   make-layout("content", fields)
 }
@@ -90,6 +101,7 @@
   settings,
   edge: false,
   content-sized: false,
+  fit: none,
 ) = styled-cell(
   id: id,
   style: (
@@ -99,7 +111,7 @@
     } else {
       settings.spacing.inset
     },
-  ),
+  ) + if fit == none { (:) } else { (fit: fit) },
 )
 
 #let shell(body, fields, settings) = {
@@ -122,9 +134,13 @@
 
 #let resolve-content-layout(command, settings) = {
   let fields = validate-fields(command.fields)
+  // `fit` applies to the body columns only. The header and footer sit in
+  // `auto` tracks sized to their own content, so there is no allocation for
+  // them to shrink into.
   let body-cells = range(fields.columns).map(index => region-cell(
     if fields.columns == 1 { "body" } else { "body-" + str(index + 1) },
     settings,
+    fit: fields.fit,
   ))
   let body = h(
     gutter: settings.spacing.gap,

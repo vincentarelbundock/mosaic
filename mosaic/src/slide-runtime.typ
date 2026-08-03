@@ -222,12 +222,7 @@
   if handout != auto {
     configure-handout(handout)
   }
-  if output not in ("slides", "speaker", "notes") {
-    fail("setup output must be \"slides\", \"speaker\", or \"notes\"")
-  }
-  if paper not in ("16-9", "4-3") {
-    fail("setup paper must be \"16-9\" or \"4-3\"")
-  }
+  // `output` and `paper` are validated by `setup`, the only caller.
   output-state.update(output)
   paper-state.update(paper)
 }
@@ -247,6 +242,22 @@
     command.layout,
     layouts-state.get(),
   )
+  // Internal field overlay (see `slide-command`). It refines the configured
+  // layout rather than replacing it, so a theme's section variant, accent, and
+  // image survive an automatic tagline.
+  let overlay = command.at("fields", default: (:))
+  if overlay.len() > 0 {
+    if not is-layout(requested-layout) {
+      fail(
+        "the configured " + layout-name + " layout is a raw grid, which "
+          + "cannot carry layout fields; supply the value on an explicit "
+          + "slide layout instead",
+      )
+    }
+    requested-layout = requested-layout + (
+      fields: requested-layout.fields + overlay,
+    )
+  }
   let resolved-grid = if is-layout(requested-layout) {
     resolve-layout(requested-layout, settings)
   } else {

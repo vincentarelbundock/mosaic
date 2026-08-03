@@ -47,7 +47,7 @@ First, import Mosaic and apply its setup rule:
 
 `m.setup` applies the page and theme defaults and turns headings and explicit `m.slide` commands into slides.
 
-After `#show: m.setup`, every `==` starts a *content slide*: the heading becomes the title and the text that follows becomes its content. A single `=` starts an unnumbered *section slide* with a larger, centered title.
+After `#show: m.setup`, every `==` starts a *content slide*: the heading becomes the title and the text that follows becomes its content. A single `=` starts an unnumbered *section slide* with a larger, centered title, and any text between it and the next `==` becomes that section's subtitle.
 
 The example below is a complete deck. It declares its title and subtitle once in `m.setup`, opens with the built-in `title` layout, groups the rest under two section slides, and fills every content slide with ordinary Typst content.
 

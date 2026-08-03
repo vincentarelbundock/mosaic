@@ -1,5 +1,5 @@
 // Rendering of validated grid trees for one incremental step.
-#import "shared.typ": array-max, tag
+#import "shared.typ": array-max, fail, tag
 #import "incremental-core.typ": range-last, status
 #import "grid-model.typ": body-cell-ids, resolved-tracks, fold-grid
 #import "incremental-analysis.typ": max-step
@@ -7,6 +7,14 @@
 #import "incremental-transform.typ": transform
 #import "fit.typ": fit-to-width, fit-to-height
 
+// Records one queryable warning per overflowing cell.
+//
+// This runs inside `layout`, before introspection has converged: the logical
+// slide counter still reads its pre-layout value here, and the recorded number
+// only becomes correct once Typst re-runs the pass. So this function never
+// fails the compile even in "error" mode, because the message it could build
+// would name the wrong slide. `overflow-report` raises the failure afterwards,
+// from a context where the numbers are final.
 #let observe-overflow(body, cell, slide, step) = layout(region => {
   let natural = measure(body, width: region.width)
   if natural.height > region.height {
@@ -23,6 +31,26 @@
   }
   body
 })
+
+// Fails the compile when any cell overflowed, naming every offender. Placed at
+// the end of the document by `setup`, so `query` sees converged introspection
+// and reports the slide numbers an author can actually navigate to.
+#let overflow-report() = context {
+  let records = query(<mosaic-overflow-warning>).map(it => it.value)
+  if records.len() == 0 {
+    return
+  }
+  let describe(record) = (
+    "cell " + repr(record.cell) + " on slide " + str(record.logical-slide)
+      + " frame " + str(record.frame) + " by "
+      + repr(record.measured-height - record.available-height)
+  )
+  fail(
+    "content overflows "
+      + records.map(describe).join("; ")
+      + " (set overflow: \"warn\" to report these without failing)",
+  )
+}
 
 #let fixed-content-has-heading(node) = fold-grid(
   node,
@@ -75,7 +103,7 @@
   vertical: false,
 ) = {
   if style == none {
-    if overflow == "warn" {
+    if overflow != "off" {
       return observe-overflow(content, key, slide, step)
     }
     return content
@@ -91,8 +119,6 @@
   let background = surface.remove("background", default: none)
   let content-sized = surface.remove("content-sized", default: false)
   let fit = surface.remove("fit", default: none)
-  let fit-reserve = surface.remove("_fit-reserve", default: none)
-  let fit-width = surface.remove("_fit-width", default: auto)
   // A cell in an `auto` row track sizes to its content, so its sibling `1fr`
   // tracks receive the remaining height and can align content on the horizon.
   // (`auto` on the horizontal axis is a column width and must not collapse the
@@ -101,12 +127,10 @@
   let region-height = if content-sized or auto-height { auto } else { 100% }
   let content = before + content + after
   let content = if fit == "width" {
-    fit-to-width(width: if fit-width == auto { 1fr } else { fit-width }, grow: false, content)
+    fit-to-width(width: 1fr, grow: false, content)
   } else if fit in ("auto", "contain") {
     fit-to-height(
       height: 1fr,
-      width: fit-width,
-      reserve: fit-reserve,
       grow: false,
       shrink: true,
       reflow: fit == "auto",
@@ -115,7 +139,12 @@
   } else {
     content
   }
-  if overflow == "warn" {
+  // A fitted cell is never observed. Its content is scaled into the allocation
+  // by construction, so there is nothing to report, and observation measures in
+  // a region where the fitters have no allocation to solve against (see
+  // `unsolvable`) and therefore hand back the unfitted body, which would read
+  // as an overflow that the rendered slide does not have.
+  if overflow != "off" and fit == none {
     content = observe-overflow(
       content,
       if id == none { key } else { id },

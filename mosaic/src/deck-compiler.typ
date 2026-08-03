@@ -69,11 +69,18 @@
         wrappers,
       )
     } else if mode == "section" {
+      // Content between `=` and the next `==` is the section's tagline. It
+      // reaches the configured section layout as its `subtitle` field, so an
+      // automatic section slide looks exactly like the explicit
+      // `m.layouts.section(subtitle: ...)` form and the heading keeps its
+      // outline entry.
+      let tagline = current.sum(default: none)
       wrap-content(
         render-slide(slide-command(
           (),
           layout: "section",
           content: (section: section),
+          fields: if tagline == none { (:) } else { (subtitle: tagline) },
         )),
         wrappers,
       )
@@ -131,7 +138,9 @@
       }
       slide-wrappers = entry.wrappers
     } else if is-heading-space(value) {
-      if mode == "slide" {
+      // In section mode, spacing separates tagline paragraphs but must not
+      // open the tagline with an empty block.
+      if mode == "slide" or (mode == "section" and current.len() > 0) {
         current.push(inner)
       }
     } else if (
@@ -140,13 +149,8 @@
         and value.func() in (metadata, typst-context)
     ) {
       output.push(shown)
-    } else if mode == "slide" {
+    } else if mode in ("slide", "section") {
       current.push(inner)
-    } else if mode == "section" {
-      fail(
-        "automatic section slides cannot contain "
-          + "content before the next level-2 heading",
-      )
     } else {
       fail(
         "content appears before the first level-1 or level-2 heading "

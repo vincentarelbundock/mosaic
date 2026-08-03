@@ -34,7 +34,7 @@
 
 == Can headings create slides?
 
-Yes. After `#show: m.setup`, `=` starts an unnumbered section slide and `==` starts a numbered content slide:
+Yes. After `#show: m.setup`, `=` starts an unnumbered section slide and `==` starts a numbered content slide. Text placed between a `=` and the next `==` becomes the section slide's subtitle:
 
 ```typ
 #import "@local/mosaic:0.0.1" as m
@@ -44,6 +44,8 @@ Yes. After `#show: m.setup`, `=` starts an unnumbered section slide and `==` sta
 )
 
 = Methods
+
+What the data can and cannot support.
 
 == Data
 
@@ -172,8 +174,10 @@ Mosaic emits non-fatal metadata when a rendered cell is taller than its allocati
   --in slides.typ
 ```
 
-Each record identifies the slide, frame, cell, and measured height. Disable observation with `setup(overflow: "off")`; see the
+Each record identifies the slide, frame, cell, and measured height. Set `setup(overflow: "error")` to fail the compile once the deck is laid out, naming every overflowing cell with the same slide and frame numbers the query reports, or `setup(overflow: "off")` to disable observation; see the
 #link("api/setup.html")[Setup API].
+
+To make the content fit instead of reporting it, give the cell a shrink-to-fit mode: `m.layouts.content(fit: "auto")` scales and reflows a body column into its allocation, and `m.grid.cell(id, fit: ...)` does the same for a hand-built cell. Fitted cells never emit overflow records.
 
 == How does Mosaic compare to Touying?
 

@@ -3,6 +3,7 @@
     "author.typ",
     "components.typ",
     "content-sized-radius.typ",
+    "fit-cells.typ",
     "frozen-state.typ",
     "handout-off.typ",
     "handout.typ",
@@ -11,6 +12,7 @@
     "headings-content-layout.typ",
     "headings-multi-cell.typ",
     "headings.typ",
+    "headings-section-tagline.typ",
     "image.typ",
     "incremental.typ",
     "mixed-authoring.typ",
@@ -64,6 +66,7 @@
     "layouts-label-style.typ",
     "layouts-progress.typ",
     "layouts-setup-settings.typ",
+    "layouts-stack-fill.typ",
     "layouts-structural.typ",
     "layouts-title-variants.typ",
     "layouts.typ"

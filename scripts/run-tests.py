@@ -387,6 +387,20 @@ def run_core(typst: str, sources: list[str]) -> None:
     for path in TMP.glob("mosaic-overflow-warning-*.svg"):
         require_contains(path, 'transform="scale(', absent=True)
 
+    # Fitted cells scale their content into the allocation and warn about
+    # nothing. The unfitted control cell carries the same body and does overflow,
+    # so the only warning must name it: that is what proves the fitters ran.
+    fit_values = command(
+        [typst, "eval", "--root", ".", "query(<mosaic-overflow-warning>).map(it => it.value.cell)", "--in", "tests/fit-cells.typ"],
+        capture=True,
+    ).stdout.strip()
+    if fit_values != '["body"]':
+        raise TestFailure(f"expected only the unfitted control cell to overflow, got {fit_values!r}")
+
+    # The automatic section tagline reaches the configured section layout.
+    tagline = pdf_text("headings-section-tagline")
+    require_contains(tagline, "SECTION TAGLINE")
+
     section = pdf_text("section-counter")
     require_contains(section, "1/2")
     require_contains(section, "2/2")
@@ -425,6 +439,17 @@ def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
         require_contains(TMP / "mosaic-layouts-label-style-1.svg", color)
     for color in ("#123456", "#abcdef"):
         require_contains(TMP / "mosaic-setup-settings-1.svg", color)
+
+    # One rule on the title or section cell recolors every tier composed inside
+    # it, so no muted default survives on the overridden pages.
+    typst_compile(typst, "layouts-stack-fill.typ", TMP / "mosaic-layouts-stack-fill-{p}.svg", "--format", "svg")
+    stack_default = TMP / "mosaic-layouts-stack-fill-1.svg"
+    for color in ("#1c1917", "#78716c"):
+        require_contains(stack_default, color)
+    for page, color in ((2, "#fedcba"), (3, "#abcdef")):
+        path = TMP / f"mosaic-layouts-stack-fill-{page}.svg"
+        require_contains(path, color)
+        require_contains(path, "#78716c", absent=True)
     for page, color in enumerate(("#d97706", "#ffffff", "#fedcba", "#123456"), 1):
         require_contains(TMP / f"mosaic-layouts-progress-{page}.svg", color)
 

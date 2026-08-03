@@ -2,7 +2,7 @@
 #import "shared.typ": tag, fail, reject-unknown-keys, valid-path
 
 #let layout-field-keys = (
-  content: ("columns", "tracks", "variant"),
+  content: ("columns", "fit", "tracks", "variant"),
   title: (
     "accent", "align", "authors", "date", "image", "rule", "subtitle", "title",
     "tracks", "variant",

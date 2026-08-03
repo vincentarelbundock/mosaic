@@ -31,6 +31,22 @@
   resolved
 }
 
+// Shrink-to-fit modes a cell may request. `none` leaves content at its
+// natural size and lets overflow observation report it; "width" scales to the
+// cell width; "contain" scales to the cell height; "auto" scales to the height
+// and reflows at the smaller size.
+#let fit-modes = (none, "auto", "width", "contain")
+
+#let validate-fit(value, name) = {
+  if value not in fit-modes {
+    fail(
+      name + " fit must be none, \"auto\", \"width\", or \"contain\", not "
+        + repr(value),
+    )
+  }
+  value
+}
+
 // Internal cell constructor used by layout resolvers and setup defaults.
 #let styled-cell(
   ..identifier,
@@ -57,6 +73,12 @@
 /// `<mosaic-cell-ID>`, so appearance is supplied with native Typst rules:
 /// `show label("mosaic-cell-" + id): set text(...)`.
 ///
+/// `fit` shrinks content that would otherwise overflow the cell rather than
+/// letting it spill: `"width"` scales to the cell width, `"contain"` scales to
+/// the cell height, and `"auto"` scales to the height and reflows at the
+/// smaller size. The default `none` leaves content at its natural size, where
+/// overflow observation reports it instead.
+///
 /// -> dictionary
 #let cell(
   /// Required stable name used to identify the cell, as the sole positional
@@ -74,15 +96,21 @@
   /// for the Mosaic default.
   /// -> auto | length | relative | dictionary
   inset: auto,
+  /// Shrink-to-fit mode: `none`, `"width"`, `"contain"`, or `"auto"`.
+  /// -> none | str
+  fit: none,
 ) = {
   if identifier.named().len() > 0 {
-    fail("cell accepts only a cell id, optional fixed content, and inset")
+    fail("cell accepts only a cell id, optional fixed content, inset, and fit")
   }
   let id = resolve-cell-id(identifier, id, "cell")
+  let _ = validate-fit(fit, "cell " + repr(id))
   styled-cell(
     id: id,
     content: content,
-    style: if inset == auto { (:) } else { (inset: inset) },
+    style: (
+      if inset == auto { (:) } else { (inset: inset) }
+    ) + if fit == none { (:) } else { (fit: fit) },
   )
 }
 
@@ -170,17 +198,12 @@
     and style.keys().all(
       key => key in (
         "after", "background", "before", "content-sized", "fill",
-        "fit", "inset", "radius", "stroke", "_fit-reserve", "_fit-width",
+        "fit", "inset", "radius", "stroke",
       ),
     )
     and type(style.at("before", default: [])) == content
     and type(style.at("after", default: [])) == content
-    and style.at("fit", default: none) in (none, "auto", "width", "contain")
-    and style.at("_fit-width", default: auto) in (auto, 50%)
-    and (
-      style.at("_fit-reserve", default: none) == none
-        or type(style._fit-reserve) == content
-    )
+    and style.at("fit", default: none) in fit-modes
     and (
       style.at("background", default: none) == none
         or type(style.background) == content
@@ -423,6 +446,13 @@
 // overrides those defaults; `none` explicitly suppresses one. Positional bodies
 // may either fill every cell (the backward-compatible full form) or only cells
 // not already satisfied by defaults.
+//
+// `none` means "suppress", so suppressing a cell this layout does not have is
+// already true and resolves to a no-op. That matches a setup-level default for
+// an absent cell, which is likewise ignored, and it lets one slide say
+// `footer: none` across layouts that do not all carry a footer. Any non-`none`
+// value for an unknown id is still an error: there the author is supplying
+// content that would silently vanish.
 #let resolve-content(node, named, bodies, defaults: (:)) = {
   let body-ids = body-cell-ids(node)
   let inherited = (:)
@@ -437,8 +467,12 @@
     let explicit = (:)
     for (id, value) in named {
       if id not in all-ids {
+        if value == none { continue }
         fail("slide content contains unknown cell id " + repr(id))
       }
+      // A fixed-content cell is a different case: the cell does exist, so
+      // `none` there reads as "blank it", which the layout cannot honor.
+      // Keeping the error surfaces that rather than silently ignoring it.
       if id not in body-ids {
         fail("slide content cannot supply fixed-content cell " + repr(id))
       }

@@ -1,7 +1,7 @@
 // Private engine that consumes passive theme definitions.
 #import "shared.typ": fail, reject-unknown-keys
 #import "settings.typ": resolve-colors
-#import "setup-core.typ": setup-core
+#import "setup-core.typ": setup-core, setup-defaults
 #import "layout-config.typ": standard-layouts, validate-layouts
 
 #let identity(body, colors: (:), options: (:)) = body
@@ -15,11 +15,9 @@
   layouts: standard-layouts,
   apply: identity,
 )
-#let generic-options = (
-  "paper", "title", "subtitle", "authors", "date", "colors", "content",
-  "spacing", "overflow", "layouts", "handout", "output",
-  "frozen-counters", "frozen-states",
-)
+// The theme-neutral option names are exactly what `setup` accepts, so they are
+// derived rather than restated: a new setup option cannot go missing here.
+#let generic-options = setup-defaults.keys()
 
 #let validate-theme(theme) = {
   if type(theme) != dictionary {

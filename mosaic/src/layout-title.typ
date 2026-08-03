@@ -8,6 +8,7 @@
   validate-visual-spec,
 )
 #import "layout-support.typ": (
+  adapt-fill,
   affix,
   as-content,
   fixed-cell,
@@ -174,6 +175,11 @@
 // Metadata tiers inside the composed title stack keep pt-anchored sizes so
 // they do not compound with the display scale supplied by the
 // <mosaic-cell-title> label rules.
+//
+// Their muted `fill` survives only while the cell carries the deck's ordinary
+// text color; see `adapt-fill`. That is what lets one rule on
+// <mosaic-cell-title> recolor the whole stack for a light-on-dark
+// composition, which is the case the image-* variants exist to serve.
 #let title-typography(settings) = {
   let base = settings.type.body.size
   (
@@ -319,11 +325,11 @@
     if fields.subtitle != none {
       block(
         above: 0.55 * settings.spacing.gap,
-        // No explicit fill: the subtitle inherits the cell's text fill so
-        // label-targeted color overrides reach the whole stack.
-        text(
+        // The muted fill yields to the cell's text fill once a rule sets one,
+        // so label-targeted color overrides reach the whole stack.
+        context text(
           ..(
-            title-typography(settings).subtitle
+            adapt-fill(title-typography(settings).subtitle, settings)
               + (weight: "regular")
           ),
           fields.subtitle,
@@ -341,9 +347,9 @@
         above: if show-rule { 0.8 } else { 1.3 } * settings.spacing.gap,
         {
           set par(leading: 0.55em)
-          text(
+          context text(
             ..(
-              title-typography(settings).metadata
+              adapt-fill(title-typography(settings).metadata, settings)
                 + (weight: "regular")
             ),
             details,

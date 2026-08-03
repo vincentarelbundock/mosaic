@@ -52,7 +52,7 @@ Write ordinary Typst content.
 - Second point
 ```
 
-- A level-one heading (`=`) creates an unnumbered *section slide* with a larger, centered title and advances the section counter.
+- A level-one heading (`=`) creates an unnumbered *section slide* with a larger, centered title and advances the section counter. Content written between `=` and the next `==` becomes that slide's subtitle, so a section tagline costs no explicit slide and the heading keeps its outline entry.
 - A level-two heading (`==`) creates a numbered *content slide*: the heading fills the `header` cell and the following content fills the `body` cell, until the next `=` or `==`.
 - Slide bodies are ordinary Typst: lists, math, figures, native `grid()`, packages, everything works.
 
@@ -106,7 +106,9 @@ Variants:
 - **Section**: `plain` and the same five image variants.
 - **Content**: `body`, `header-body`, `body-footer`, `header-body-footer`.
 
-`m.layouts.title()` inherits `title`, `subtitle`, `authors`, and `date` from setup, so `m.slide(layout: "title")` needs no body. An explicit layout argument wins; pass `none` (or `()` for `authors`) to suppress an inherited field on one slide. For image variants, `darken:` or `lighten:` on the image quiets the photograph; pair `image-background` with a scoped text-color rule on the `<mosaic-cell-title>` or `<mosaic-cell-section>` label for contrast.
+`m.layouts.title()` inherits `title`, `subtitle`, `authors`, and `date` from setup, so `m.slide(layout: "title")` needs no body. An explicit layout argument wins; pass `none` (or `()` for `authors`) to suppress an inherited field on one slide. For image variants, `darken:` or `lighten:` on the image quiets the photograph; pair `image-background` with a scoped text-color rule on the `<mosaic-cell-title>` or `<mosaic-cell-section>` label for contrast. One such rule recolors the whole stack: the subtitle and metadata are muted only while the cell carries the deck's ordinary text color, and follow any override, so light-on-dark titles need no hand-built grid.
+
+`m.layouts.content(fit: ...)` shrinks body content that would otherwise overflow its column: `"contain"` scales it to the body height, `"auto"` scales and reflows at the smaller size (the best default for prose), and `"width"` scales to the column width. It applies to body columns only; header and footer size to their own content. Prefer `fit:` over hand-tuning per-slide text sizes, which stops working as soon as the deck's global size changes.
 
 A direct `m.layouts.content/title/section(...)` value retains its semantic layout name. A raw custom grid uses ordinary content-slide semantics.
 
@@ -158,7 +160,7 @@ Key setup arguments:
 - `spacing:`: for example `(inset: 1.5em)` to set the default cell inset.
 - `handout: true`: emit only the final frame of each logical slide.
 - `output:`: `"slides"` (default), `"speaker"`, or `"notes"`.
-- `overflow: "off"`: disable overflow observation.
+- `overflow:`: `"warn"` (default) emits queryable `<mosaic-overflow-warning>` metadata for any cell whose content exceeds its allocation, `"error"` fails the compile at the end of the deck and names every offending cell with its slide and frame, and `"off"` disables observation. Fitted cells (see `fit:` below) are never observed: they cannot overflow.
 - `frozen-counters:` / `frozen-states:`: values that advance once per logical slide instead of once per frame.
 
 Do not introduce a separate footer, logo, background, or foreground feature API: recurring named-cell content and the reserved `content.background` / `content.foreground` planes own those jobs.
@@ -223,7 +225,7 @@ Build custom structure only when headings and layout factories are insufficient.
 
 - `m.grid.h(...)` places children side by side; `m.grid.v(...)` stacks them. Each string is a cell ID. Children may be nested grids. Both accept `gutter:` (a native track size between adjacent children, default `0pt`) and `rule:` (a stroke drawn along each interior boundary, centered in the gutter, default `none`).
 - Every direct child gets a `1fr` track by default. Wrap a child in `m.grid.t(size, child)` for another size; tracks accept `auto`, fixed lengths, percentages, and `fr` values.
-- `m.grid.cell(id, ...)` creates an explicitly configured cell: `inset:` (padding, affects layout measurement) and fixed `content:` (an image or logo owned by the grid, needing no body or `content:` entry).
+- `m.grid.cell(id, ...)` creates an explicitly configured cell: `inset:` (padding, affects layout measurement), fixed `content:` (an image or logo owned by the grid, needing no body or `content:` entry), and `fit:` (`"width"`, `"contain"`, or `"auto"`) to scale content that would otherwise overflow the cell.
 - Read a grid from the outside inward: largest split first, then replace children with nested splits. Keep descriptive IDs and indentation.
 
 Cell insets provide slide margins (`setup` uses a zero page margin). Adjacent cells each contribute their own inset; a grid `gutter` separates cell surfaces and defaults to `0pt`. Use a layout factory instead of rebuilding a standard title, section, header/body, or footer structure as a raw grid.
@@ -244,7 +246,7 @@ A slide accepts cell content in two distinct forms. Do not mix them in one slide
 #m.slide(layout: composition, content: (main: [...], notes: [...], source: [...]))
 ```
 
-The cell ID connects all three layers: `m.grid.cell("body")` defines the cell, `content: (body: [...])` fills it, and `label("mosaic-cell-body")` styles it. Every content-bearing cell must be supplied; unknown IDs are errors.
+The cell ID connects all three layers: `m.grid.cell("body")` defines the cell, `content: (body: [...])` fills it, and `label("mosaic-cell-body")` styles it. Every content-bearing cell must be supplied; unknown IDs are errors, except `id: none`, which means "suppress" and is a no-op when the layout has no such cell. That makes `content: (body: [...], footer: none)` safe to write across slides whose layouts do not all carry a footer.
 
 Useful content values:
 

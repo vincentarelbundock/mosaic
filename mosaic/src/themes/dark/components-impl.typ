@@ -2,10 +2,13 @@
 #import "../../shared.typ": fail as _fail
 #import "tokens.typ" as _tokens
 
+// `information` aliases `accent`, as in the light palette.
+#let _accent-role = (fill: rgb("#13233a"), accent: _tokens.accent, text: _tokens.text)
+
 #let _role-colors = (
   neutral: (fill: _tokens.surface, accent: _tokens.line, text: _tokens.text),
-  accent: (fill: rgb("#13233a"), accent: _tokens.accent, text: _tokens.text),
-  information: (fill: rgb("#13233a"), accent: _tokens.accent, text: _tokens.text),
+  accent: _accent-role,
+  information: _accent-role,
   success: (fill: rgb("#102a22"), accent: rgb("#56d364"), text: _tokens.text),
   warning: (fill: rgb("#2f2710"), accent: _tokens.attention, text: _tokens.text),
   danger: (fill: rgb("#321b1e"), accent: _tokens.error, text: _tokens.text),

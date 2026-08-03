@@ -45,7 +45,7 @@
   /// Insets and gaps used throughout the presentation.
   /// -> dictionary
   spacing: (:),
-  /// Cell overflow policy: `"warn"` or `"off"`.
+  /// Cell overflow policy: `"warn"`, `"error"`, or `"off"`.
   /// -> str
   overflow: "warn",
   /// Partial named-layout overrides. Accepted keys are `content`, `title`, and

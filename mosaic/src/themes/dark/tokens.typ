@@ -1,7 +1,6 @@
 // Private Dark theme design tokens.
 #let canvas = rgb("#0d1117")
 #let surface = rgb("#161b22")
-#let raised = rgb("#21262d")
 #let text = rgb("#e6edf3")
 #let muted = rgb("#8b949e")
 #let accent = rgb("#58a6ff")

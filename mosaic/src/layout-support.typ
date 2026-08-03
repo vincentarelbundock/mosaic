@@ -2,12 +2,35 @@
 #import "grid-model.typ": styled-cell, t
 #import "image.typ": image as mosaic-image
 #import "layout-core.typ": validate-visual-spec
-#import "color-defaults.typ": default-surface, default-line
 
-#let optional(body, styles, above: 0pt) = if body == none {
+// Subordinate tiers composed inside a single cell (title subtitle, title
+// metadata, section subtitle) pin a muted `fill` so they read as secondary on
+// the default surface. That fill must not survive a recolored cell: a
+// light-on-dark composition sets one rule on <mosaic-cell-title> and expects
+// the whole stack to follow.
+#let inherit-fill(styles) = if "fill" in styles {
+  let styles = styles
+  let _ = styles.remove("fill")
+  styles
+} else {
+  styles
+}
+
+// Keeps the muted tier muted while the cell still carries the deck's ordinary
+// text color, and hands the tier over to the inherited fill as soon as
+// anything overrides it. Call inside a `context` block: it reads `text.fill`.
+#let adapt-fill(styles, settings) = if text.fill == settings.colors.text {
+  styles
+} else {
+  inherit-fill(styles)
+}
+
+// Places one such tier below the cell's primary content, or nothing when the
+// field is absent.
+#let subordinate-block(body, styles, settings, above: 0pt) = if body == none {
   []
 } else {
-  block(above: above, text(..styles, body))
+  block(above: above, context text(..adapt-fill(styles, settings), body))
 }
 
 #let as-content(value) = if value == none {
@@ -75,16 +98,6 @@
     )
   }
 }
-
-#let framed-surface(settings, fill: auto, stroke: auto) = (
-  radius: settings.shape.radius,
-  fill: if fill == auto { default-surface } else { fill },
-  stroke: if stroke == auto {
-    settings.shape.stroke + default-line
-  } else {
-    stroke
-  },
-)
 
 // Structural fixed-content cell. Typography is not threaded here: the cell's
 // <mosaic-cell-ID> label carries it through native show rules.

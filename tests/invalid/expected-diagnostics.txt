@@ -16,7 +16,7 @@ bad-split-track-size|t size must be auto, a fixed or relative length, or a fract
 bad-state|before must be one of "visible", "hidden", "dimmed", "removed", received "ghosted"
 bare-track-wrapper|slide layout must be a Mosaic grid tree or layout
 cell-id-both|cell id must be passed positionally or through id:, not both
-cell-surface-ownership|cell accepts only a cell id, optional fixed content, and inset
+cell-surface-ownership|cell accepts only a cell id, optional fixed content, inset, and fit
 components-progress-count|progress count must be "slides" or "sections"
 duplicate-cell-id|duplicate cell id "same" in grid at root
 empty-split|h must contain at least one child
@@ -24,7 +24,6 @@ frozen-counters-type|frozen-counters must contain only counter values
 frozen-states-type|frozen-states must contain only state values
 handout-type|setup handout must be a boolean
 headings-preamble|content appears before the first level-1 or level-2 heading handled by setup
-headings-section-content|automatic section slides cannot contain content before the next level-2 heading
 image-adjustments-combined|image accepts either lighten or darken, not both
 image-lighten-range|image lighten must be a ratio from 0% to 100% or none
 layouts-content-columns|columns must be a positive integer
@@ -62,7 +61,8 @@ noncanonical-layout-record|slide layout must be a Mosaic grid tree or layout
 noncanonical-slide-command|invalid slide command record
 noncanonical-temporal-record|invalid temporal-on record
 notes-output-overflow|notes output notes overflow on frame 1
-overflow-policy|setup overflow must be "off" or "warn"
+overflow-error|content overflows cell "body" on slide 2 frame 1
+overflow-policy|setup overflow must be "off", "warn", or "error"
 pause-record|invalid pause record
 reserved-cell-id|cell id "background" is reserved for the background plane
 setup-authors-type|setup authors must be an array

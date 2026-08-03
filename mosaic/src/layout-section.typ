@@ -7,7 +7,7 @@
   validate-visual-spec,
 )
 
-#import "layout-support.typ": optional, affix
+#import "layout-support.typ": subordinate-block, affix
 #import "layout-image-support.typ": (
   directional-image-layout,
   image-background-cell,
@@ -91,9 +91,10 @@
   } else {
     []
   }
-  let after = optional(
+  let after = subordinate-block(
     fields.subtitle,
     settings.type.subtitle,
+    settings,
     above: settings.spacing.compact-gap,
   )
   // Structural only: the section cell's centered arrangement and title

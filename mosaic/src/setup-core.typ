@@ -1,6 +1,7 @@
 // Sane presentation defaults, applied as a document-wide show rule.
 #import "slide-runtime.typ": configure-deck
 #import "deck-compiler.typ": compile-deck
+#import "render.typ": overflow-report
 #import "settings.typ": make-settings, configure-settings, resolve-colors
 #import "shared.typ": fail, reject-unknown-keys
 #import "color-defaults.typ": default-colors
@@ -9,32 +10,34 @@
 #let text-element = text
 #let heading-element = heading
 
+// Every option `setup` accepts, with its default. This is the single list:
+// `theme-engine` derives the set of theme-neutral option names from these keys
+// rather than restating them.
+#let setup-defaults = (
+  paper: "16-9",
+  spacing: (:),
+  overflow: "warn",
+  layouts: standard-layouts,
+  handout: false,
+  output: "slides",
+  frozen-counters: (),
+  frozen-states: (),
+
+  title: none,
+  subtitle: none,
+  authors: (),
+  date: none,
+  colors: (:),
+  content: (:),
+)
+
 // Private setup engine. Public and themed facades supply an exact options
 // dictionary and private semantic colors; no color registry enters the API.
 #let setup-core(options, body, colors: default-colors) = {
   if type(options) != dictionary {
     fail("internal setup options must be a dictionary; got " + repr(type(options)))
   }
-  let defaults = (
-    paper: "16-9",
-    spacing: (:),
-    overflow: "warn",
-    layouts: standard-layouts,
-    handout: false,
-    output: "slides",
-    frozen-counters: (),
-    frozen-states: (),
-
-    title: none,
-    subtitle: none,
-    authors: (),
-    date: none,
-    colors: (:),
-    content: (:),
-  )
-  if type(defaults) != dictionary {
-    fail("internal setup defaults must be a dictionary; got " + repr(type(defaults)))
-  }
+  let defaults = setup-defaults
   reject-unknown-keys(options, defaults, "setup")
   let options = defaults + options
   let paper = options.paper
@@ -131,4 +134,9 @@
     paper: paper,
   )
   compile-deck(body)
+  // Runs after the deck, where introspection has converged, so the diagnostic
+  // can name the slide each clipped cell is on.
+  if overflow == "error" {
+    overflow-report()
+  }
 }

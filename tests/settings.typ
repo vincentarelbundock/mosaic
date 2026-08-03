@@ -2,7 +2,7 @@
 
 #let settings = make-settings()
 #assert(settings.keys().sorted() == (
-  "colors", "content", "deck", "overflow", "shape", "spacing", "type",
+  "colors", "content", "deck", "overflow", "spacing", "type",
 ))
 #assert(settings.content == (:))
 #let with-content = make-settings(content: (

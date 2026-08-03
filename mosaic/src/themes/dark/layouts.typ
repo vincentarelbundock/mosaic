@@ -6,10 +6,12 @@
   variant: "header-body-footer",
   columns: 1,
   tracks: auto,
+  fit: none,
 ) = _base.content(
   variant: variant,
   columns: columns,
   tracks: tracks,
+  fit: fit,
 )
 
 #let title(

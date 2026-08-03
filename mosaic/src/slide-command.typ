@@ -6,6 +6,7 @@
 #let slide-command-field-keys = (
   "bodies",
   "content",
+  "fields",
   "kind",
   "layout",
   "mosaic",
@@ -47,17 +48,24 @@
   validate-layout-value(value, "slide layout")
 }
 
+// `fields` is internal: it overlays layout fields onto whichever layout the
+// selection resolves to, so the deck compiler can pass a value (the automatic
+// section tagline) into the theme's *configured* layout without replacing it.
+// The public `slide` never sets it; authors set layout fields by constructing
+// the layout themselves.
 #let slide-command(
   bodies,
   layout: auto,
   numbered: auto,
   content: (:),
+  fields: (:),
 ) = (
   mosaic: tag,
   kind: "slide",
   layout: layout,
   numbered: numbered,
   content: content,
+  fields: fields,
   bodies: bodies,
 )
 
