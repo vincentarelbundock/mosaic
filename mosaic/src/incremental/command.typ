@@ -72,18 +72,51 @@
 
 /// Shows a grid node or content only over a step range.
 ///
+/// This is the explicit form of incremental control: the range says exactly
+/// which frames the body appears on, independent of source order.
+///
+/// ```typ
+/// #mosaic.slide[
+///   == Findings
+///   #mosaic.steps.on(1)[First, in isolation.]
+///   #mosaic.steps.on("2-")[Then, for the rest of the slide.]
+///   #mosaic.steps.on("2-3", after: "dimmed")[A passing remark.]
+/// ]
+/// ```
+///
+/// *Ranges*
+///
+/// - `2`: the single step 2.
+/// - `"2-"`: step 2 onward, to the end of the slide.
+/// - `"2-4"`: steps 2 through 4 inclusive.
+///
+/// *States*
+///
+/// `before` and `after` say what happens outside the range:
+///
+/// - `"hidden"`: the body reserves its space but is not drawn.
+/// - `"visible"`: the body is drawn normally.
+/// - `"dimmed"`: the body is drawn muted, which is how a point stays legible
+///   after the discussion has moved on.
+///
+/// The body may be content or a Mosaic grid node, so whole regions of a layout
+/// can appear and disappear, not just text.
+///
 /// -> content | dictionary
 #let on(
-  /// Step selector such as `2`, `"2-"`, or `"2-4"`.
+  /// Which steps show the body: an integer, `"N-"` for open-ended, or `"N-M"`
+  /// for a closed range.
   /// -> int | str
   range,
-  /// State before the selected range.
+  /// How the body renders before the range: `"hidden"`, `"visible"`, or
+  /// `"dimmed"`.
   /// -> str
   before: "hidden",
-  /// State after the selected range.
+  /// How the body renders after the range: `"hidden"`, `"visible"`, or
+  /// `"dimmed"`.
   /// -> str
   after: "hidden",
-  /// Content or grid node controlled by the range.
+  /// Content or Mosaic grid node controlled by the range.
   /// -> content | dictionary
   body,
 ) = {
@@ -167,18 +200,47 @@
 
 /// Reveals content or grid nodes one step at a time.
 ///
+/// Where `on` sets one range by hand, `reveal` assigns consecutive steps for
+/// you, which is what a bulleted build usually wants.
+///
+/// ```typ
+/// #mosaic.steps.reveal[
+///   - Collect the data
+///   - Fit the model
+///   - Report the interval
+/// ]
+/// ```
+///
+/// *What counts as an item*
+///
+/// - A single content block holding list items reveals one list item per step.
+///   Any non-item siblings inside that block ride along and stay visible
+///   throughout.
+/// - Otherwise each positional argument is one item, revealed whole.
+/// - Grid nodes may be revealed too, but content and nodes cannot be mixed in
+///   one call.
+///
+/// ```typ
+/// #mosaic.steps.reveal(start: 2, after: "dimmed",
+///   [First claim], [Second claim], [Third claim],
+/// )
+/// ```
+///
 /// -> content | array
 #let reveal(
-  /// First reveal step.
+  /// Step on which the first item appears. Later items follow one step apart.
   /// -> int
   start: 1,
-  /// State before each item's reveal step.
+  /// How an item renders before its own step: `"hidden"`, `"visible"`, or
+  /// `"dimmed"`.
   /// -> str
   before: "hidden",
-  /// State after each item's reveal step.
+  /// How an item renders after its own step: `"visible"` keeps it on screen,
+  /// `"dimmed"` mutes it as the build moves on, and `"hidden"` removes it.
   /// -> str
   after: "visible",
-  /// Content blocks or Mosaic grid nodes to reveal.
+  /// The items: content blocks or Mosaic grid nodes, but not both. At least one
+  /// is required.
   /// -> arguments
   ..items,
 ) = {
@@ -215,15 +277,32 @@
 
 /// Replaces one content block with the next on successive steps.
 ///
+/// Exactly one body is on screen at a time, and every body occupies the same
+/// space, so surrounding content does not shift as the slide advances. That
+/// makes it the tool for an equation that rewrites itself or a diagram that
+/// gains an annotation.
+///
+/// ```typ
+/// #mosaic.steps.replace(
+///   align: center + horizon,
+///   $ a^2 + b^2 $,
+///   $ a^2 + b^2 = c^2 $,
+/// )
+/// ```
+///
+/// This accepts content only. To swap structure, keep the grid stable and
+/// replace the content inside a cell.
+///
 /// -> content
 #let replace(
-  /// Step at which the first body appears.
+  /// Step on which the first body appears. Each later body replaces it one step
+  /// further on.
   /// -> int
   start: 1,
-  /// Alignment shared by replacement bodies.
+  /// Alignment applied to every body inside the shared area they occupy.
   /// -> alignment
   align: top + left,
-  /// Content blocks to replace in sequence.
+  /// The content blocks, shown one per step in order. At least one is required.
   /// -> arguments
   ..bodies,
 ) = {
@@ -246,20 +325,58 @@
   )
 }
 
-/// Defines custom rendering for visible, hidden, and dimmed incremental content.
+/// Teaches Mosaic to step through a drawing library's own command values.
+///
+/// `on` and `reveal` work on content, which a drawing package such as CETZ or
+/// Fletcher does not produce: its nodes and edges are opaque command values
+/// that only mean something to its own renderer. `reduce` bridges the two.
+/// Mosaic resolves the step ranges, drops what this frame does not show, passes
+/// what remains through `hide` or `dim`, and hands the surviving array to
+/// `render`.
+///
+/// The usual shape is to bind the three functions once, then call the result
+/// like the library's own renderer.
+///
+/// ```typ
+/// #import "@preview/fletcher:0.5.8" as fletcher
+///
+/// #let diagram = mosaic.steps.reduce.with(
+///   render: fletcher.diagram,
+///   hide: fletcher.hide,
+/// )
+///
+/// #diagram(
+///   spacing: 4em,
+///   fletcher.node((0, 0), `reading`),
+///   mosaic.steps.on("2-", (
+///     fletcher.edge(`read()`, "-|>"),
+///     fletcher.node((1, 0), `eof`),
+///   )),
+/// )
+/// ```
+///
+/// Positional arguments are the commands, each of which may be wrapped in `on`
+/// or `reveal`, alone or as an array. Named arguments are forwarded untouched to
+/// `render`, which is how `spacing:` above reaches `fletcher.diagram`.
 ///
 /// -> content
 #let reduce(
-  /// Function used to render visible content.
+  /// Draws the frame. Called as `render(..named, commands)` with the named
+  /// arguments given here and the array of commands this frame keeps. Usually
+  /// the library's own top-level renderer.
   /// -> function
   render: none,
-  /// Function used to render hidden content.
+  /// Turns one command into its invisible counterpart, so it still reserves
+  /// space and the drawing does not shift between frames. Usually the library's
+  /// own `hide`.
   /// -> function
   hide: none,
-  /// Optional function used to render dimmed content.
+  /// Turns one command into its muted counterpart. Required only if some step
+  /// range uses the `"dimmed"` state; omitting it makes that an error.
   /// -> function | none
   dim: none,
-  /// Named arguments forwarded to the reducer functions.
+  /// Positionally, the drawing commands, optionally wrapped in `on` or
+  /// `reveal`. By name, arguments forwarded unchanged to `render`.
   /// -> arguments
   ..args,
 ) = {

@@ -2,12 +2,12 @@
 #show: mosaic.setup
 #let bonsai = image("/docs/assets/images/bonsai.webp", alt: "Bonsai tree", width: 100%, height: 100%, fit: "cover")
 #let dog = image("/docs/assets/images/dog.webp", alt: "Dog", width: 100%, height: 100%, fit: "cover")
-#let institute-a = (id: "a", name: [Institute A])
-#let institute-b = (id: "b", name: [Institute B])
-#let institute-c = (id: "c", name: [Institute C])
+#let institute-a = [Institute A]
+#let institute-b = [Institute B]
+#let institute-c = [Institute C]
 
 #mosaic.slide(layout: mosaic.layouts.title(
-  [Academic title],
+  title: [Academic title],
   variant: "academic",
   subtitle: [A replication study],
   authors: (
@@ -19,12 +19,13 @@
 
   date: [July 2027],
 ))
-#mosaic.slide(layout: mosaic.layouts.title([Left-aligned title], variant: "left-aligned", subtitle: [Conference · Left subtitle]))
-#mosaic.slide(layout: mosaic.layouts.title([Centered-stack title], variant: "centered-stack", subtitle: [Centered subtitle]))
-#mosaic.slide(layout: mosaic.layouts.title([Accent-block title], variant: "accent-block", subtitle: [Workshop]))
-#mosaic.slide(layout: mosaic.layouts.title([Image-right title], variant: "image-right", image: path("/docs/assets/images/title-river.webp")))
-#mosaic.slide(layout: mosaic.layouts.title([Image-top title], variant: "image-top", image: (path: path("/docs/assets/images/title-river.webp"), alt: "Wetlands")))
-#mosaic.slide(layout: mosaic.layouts.title([Image-background title], variant: "image-background", image: path("/docs/assets/images/title-city.webp")))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Swiss title], variant: "swiss", subtitle: [Conference · Swiss subtitle]))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Centered title], variant: "centered", subtitle: [Centered subtitle]))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Plate title], variant: "plate", subtitle: [Workshop]))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Frame title], variant: "frame", subtitle: [Colloquium]))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Image-right title], variant: "image-right", image: path("/docs/assets/images/title-river.webp")))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Image-top title], variant: "image-top", image: (path: path("/docs/assets/images/title-river.webp"), alt: "Wetlands")))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Image-background title], variant: "image-background", image: path("/docs/assets/images/title-city.webp")))
 
 #mosaic.slide(layout: mosaic.layouts.section())[Plain section]
 #mosaic.slide(layout: mosaic.layouts.section(number: [01]))[Numbered section]

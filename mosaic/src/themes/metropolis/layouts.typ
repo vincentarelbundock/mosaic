@@ -1,34 +1,17 @@
-// Exact callable Metropolis layout namespace.
-#import "../../layout/api.typ" as _layouts
+// Callable Metropolis layout namespace: base layouts with Metropolis defaults.
+#import "../../layout/api.typ" as _base
 #import "../../author.typ": author
 
-#let content() = _layouts.content(variant: "header-body")
+#let content = _base.content.with(variant: "header-body")
 
-#let title(
-  title: auto,
-  subtitle: auto,
-  authors: auto,
-  date: auto,
-  ..legacy-title,
-) = {
-  let positional = legacy-title.pos()
-  if positional.len() == 1 and title == auto {
-    title = positional.first()
-  }
-  _layouts.title(
-    title: title,
-    variant: if type(authors) == array and authors.len() > 0 { "academic" } else { "left-aligned" },
-    subtitle: subtitle,
-    authors: authors,
-    date: date,
-    accent: auto,
-  )
-}
-
-#let section(subtitle: none) = _layouts.section(
+// Academic when the call site provides authors, swiss otherwise.
+#let title(title: auto, subtitle: auto, authors: auto, date: auto) = _base.title(
+  title: title,
   subtitle: subtitle,
-  accent: auto,
+  authors: authors,
+  date: date,
+  variant: if type(authors) == array and authors.len() > 0 { "academic" } else { "swiss" },
 )
 
-// Purely structural: the image layout carries no Metropolis-specific tokens.
-#let image = _layouts.image
+#let section = _base.section
+#let image = _base.image

@@ -8,11 +8,10 @@ PYTHON ?= uv run python
 PACKAGE_DIR := mosaic
 PACKAGE_NAME := mosaic
 PACKAGE_VERSION := 0.0.1
-TYPST_DATA_DIR ?= $(if $(XDG_DATA_HOME),$(XDG_DATA_HOME),$(HOME)/.local/share)
-TYPST_PACKAGE_PATH ?= $(shell $(TYPST) info 2>/dev/null | awk '/Package path/{print $$3; exit}')
-ifeq ($(strip $(TYPST_PACKAGE_PATH)),)
-TYPST_PACKAGE_PATH := $(TYPST_DATA_DIR)/typst/packages
-endif
+TYPST_DATA_DIR ?= $(or $(XDG_DATA_HOME),$(HOME)/.local/share)
+TYPST_PACKAGE_PATH ?= $(or \
+  $(strip $(shell $(TYPST) info 2>/dev/null | awk '/Package path/{print $$3; exit}')), \
+  $(TYPST_DATA_DIR)/typst/packages)
 LOCAL_PACKAGE_DIR := $(TYPST_PACKAGE_PATH)/local/$(PACKAGE_NAME)/$(PACKAGE_VERSION)
 DOCS_DIR := docs
 
@@ -38,6 +37,7 @@ BONSAI_SOURCE := $(WEB_IMAGE_DIR)/bonsai.png
 BONSAI_WEBP := $(WEB_IMAGE_DIR)/bonsai.webp
 DOG_SOURCE := $(WEB_IMAGE_DIR)/dog.jpg
 DOG_WEBP := $(WEB_IMAGE_DIR)/dog.webp
+WEB_IMAGES := $(BONSAI_WEBP) $(DOG_WEBP)
 API_MODULES_DIR := $(DOCS_DIR)/api/modules
 # Staged Tidy module name -> package source path, both without the .typ suffix.
 # The staged names stay flat because the docs pages reference them by name.
@@ -69,7 +69,14 @@ EMBEDDED_EXAMPLE_SOURCES := $(shell find $(EMBEDDED_EXAMPLES_DIR) -type f -name 
 # Multi-frame examples are shipped as one PDF plus a first-frame SVG cover.
 # Derive that set from the docs so adding an embedded slideshow needs no build manifest.
 EMBEDDED_SLIDESHOW_INDEXER := scripts/list-embedded-slideshows.py
-EMBEDDED_SLIDESHOW_SLUGS := $(shell $(PYTHON) $(EMBEDDED_SLIDESHOW_INDEXER) $(wildcard $(DOCS_DIR)/*.typ))
+# Recurse into the docs tree: authored pages live in subdirectories (start/,
+# slides/, ...), and a page missed here silently demotes its slideshow to a
+# per-frame image build. Mirror check-doc-assets.py's authored_pages().
+EMBEDDED_DOC_PAGES := $(shell find $(DOCS_DIR) -type f -name '*.typ' \
+  -not -path '*/_calepin/*' -not -path '*/.calepin/*' \
+  -not -path '$(DOCS_DIR)/examples/*' -not -path '$(DOCS_DIR)/api/modules/*' \
+  -not -path '$(DOCS_DIR)/api/sources/*' 2>/dev/null | sort)
+EMBEDDED_SLIDESHOW_SLUGS := $(shell $(PYTHON) $(EMBEDDED_SLIDESHOW_INDEXER) $(EMBEDDED_DOC_PAGES))
 EMBEDDED_SLIDESHOW_SOURCES := $(addprefix $(EMBEDDED_EXAMPLES_DIR)/,$(addsuffix .typ,$(EMBEDDED_SLIDESHOW_SLUGS)))
 EMBEDDED_IMAGE_SOURCES := $(filter-out $(EMBEDDED_SLIDESHOW_SOURCES),$(EMBEDDED_EXAMPLE_SOURCES))
 EMBEDDED_SLIDESHOW_STAMPS := $(patsubst $(EMBEDDED_EXAMPLES_DIR)/%.typ,$(EMBEDDED_STAMP_DIR)/%.stamp,$(EMBEDDED_SLIDESHOW_SOURCES))
@@ -100,10 +107,6 @@ doctor: ## Check mandatory, documentation, and optional build prerequisites
 # ==============================================================================
 
 install: ## Copy Mosaic into Typst's local package index
-	@test -n "$(TYPST_PACKAGE_PATH)" || { \
-		echo "Could not determine Typst's package path; set TYPST_PACKAGE_PATH."; \
-		exit 1; \
-	}
 	rm -rf "$(LOCAL_PACKAGE_DIR)"
 	mkdir -p "$(LOCAL_PACKAGE_DIR)"
 	cp -R "$(PACKAGE_DIR)/." "$(LOCAL_PACKAGE_DIR)/"
@@ -129,32 +132,31 @@ layout-tests: install web-images ## Run explicitly classified semantic layout te
 doc-integrity: embedded-examples examples ## Validate docs consumers, artifacts, frame counts, and deck metadata
 	$(PYTHON) scripts/check-doc-assets.py
 
-web-images: $(BONSAI_WEBP) $(DOG_WEBP) ## Generate compact WebP derivatives while retaining source images
+web-images: $(WEB_IMAGES) ## Generate compact WebP derivatives while retaining source images
 
+# Each derivative is bounded on its long edge, which differs per source aspect.
 $(BONSAI_WEBP): $(BONSAI_SOURCE)
-	mkdir -p $(WEB_IMAGE_DIR)
-	$(PYTHON) scripts/convert-web-image.py $< $@ --max-width 1600 --quality 80
-
+$(BONSAI_WEBP): WEB_IMAGE_BOUND := --max-width 1600
 $(DOG_WEBP): $(DOG_SOURCE)
+$(DOG_WEBP): WEB_IMAGE_BOUND := --max-height 1600
+
+$(WEB_IMAGES):
 	mkdir -p $(WEB_IMAGE_DIR)
-	$(PYTHON) scripts/convert-web-image.py $< $@ --max-height 1600 --quality 80
+	$(PYTHON) scripts/convert-web-image.py $< $@ $(WEB_IMAGE_BOUND) --quality 80
 
 embedded-examples: $(EMBEDDED_STAMPS) ## Render embedded examples to PDF slideshows or SVG gallery items
 
-$(EMBEDDED_SLIDESHOW_STAMPS): $(EMBEDDED_STAMP_DIR)/%.stamp: $(EMBEDDED_EXAMPLES_DIR)/%.typ $(PACKAGE_SOURCES) $(BONSAI_WEBP) $(DOG_WEBP) $(EMBEDDED_SLIDESHOW_INDEXER) scripts/embedded_examples.py Makefile | install
-	@mkdir -p "$(EMBEDDED_ASSETS_DIR)/$(@D:$(EMBEDDED_STAMP_DIR)/%=%)" "$(@D)"
-	@echo "typst compile $< $(EMBEDDED_ASSETS_DIR)/$*.pdf"
-	@find "$(EMBEDDED_ASSETS_DIR)/$(@D:$(EMBEDDED_STAMP_DIR)/%=%)" -maxdepth 1 -type f -name "$(@F:.stamp=)-*.svg" -delete
-	@$(TYPST) compile --root . "$<" "$(EMBEDDED_ASSETS_DIR)/$*.pdf"
-	@$(TYPST) compile --root . --pages 1 "$<" "$(EMBEDDED_ASSETS_DIR)/$*-cover.svg"
-	@touch "$@"
+# Both flavours emit the same PDF; they differ only in which SVGs accompany it.
+# A slideshow keeps a single first-frame cover, a gallery item one SVG per frame.
+$(EMBEDDED_SLIDESHOW_STAMPS): EMBEDDED_SVG = --pages 1 "$(EMBEDDED_ASSETS_DIR)/$*-cover.svg"
+$(EMBEDDED_IMAGE_STAMPS): EMBEDDED_SVG = "$(EMBEDDED_ASSETS_DIR)/$*-{0p}.svg"
 
-$(EMBEDDED_IMAGE_STAMPS): $(EMBEDDED_STAMP_DIR)/%.stamp: $(EMBEDDED_EXAMPLES_DIR)/%.typ $(PACKAGE_SOURCES) $(BONSAI_WEBP) $(DOG_WEBP) $(EMBEDDED_SLIDESHOW_INDEXER) scripts/embedded_examples.py Makefile | install
-	@mkdir -p "$(EMBEDDED_ASSETS_DIR)/$(@D:$(EMBEDDED_STAMP_DIR)/%=%)" "$(@D)"
-	@echo "typst compile $< $(EMBEDDED_ASSETS_DIR)/$*-{0p}.svg"
-	@find "$(EMBEDDED_ASSETS_DIR)/$(@D:$(EMBEDDED_STAMP_DIR)/%=%)" -maxdepth 1 -type f -name "$(@F:.stamp=)-*.svg" -delete
-	@$(TYPST) compile --root . "$<" "$(EMBEDDED_ASSETS_DIR)/$*-{0p}.svg" --format svg
+$(EMBEDDED_STAMPS): $(EMBEDDED_STAMP_DIR)/%.stamp: $(EMBEDDED_EXAMPLES_DIR)/%.typ $(PACKAGE_SOURCES) $(WEB_IMAGES) $(EMBEDDED_SLIDESHOW_INDEXER) scripts/embedded_examples.py Makefile | install
+	@mkdir -p "$(dir $(EMBEDDED_ASSETS_DIR)/$*)" "$(@D)"
+	@echo "typst compile $< $(EMBEDDED_ASSETS_DIR)/$*.pdf $(EMBEDDED_SVG)"
+	@find "$(dir $(EMBEDDED_ASSETS_DIR)/$*)" -maxdepth 1 -type f -name "$(notdir $*)-*.svg" -delete
 	@$(TYPST) compile --root . "$<" "$(EMBEDDED_ASSETS_DIR)/$*.pdf"
+	@$(TYPST) compile --root . --format svg "$<" $(EMBEDDED_SVG)
 	@touch "$@"
 
 showcase-video: $(SHOWCASE_VIDEO) ## Build the animated home-page showcase

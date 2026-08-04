@@ -16,22 +16,28 @@
 // fails the compile even in "error" mode, because the message it could build
 // would name the wrong slide. `overflow-report` raises the failure afterwards,
 // from a context where the numbers are final.
-#let observe-overflow(body, cell, slide, step) = layout(region => {
-  let natural = measure(body, width: region.width)
-  if natural.height > region.height {
-    [#metadata((
-      mosaic: tag,
-      kind: "overflow-warning",
-      logical-slide: slide,
-      frame: step,
-      cell: cell,
-      available-height: region.height,
-      measured-height: natural.height,
-      message: "mosaic: content overflows cell " + repr(cell),
-    ))<mosaic-overflow-warning>]
-  }
+// The measurement rides a zero-footprint `place` so observation never
+// participates in layout. Wrapping the body in the `layout` element instead
+// would collapse the region to the content's natural height, which pins
+// horizon- and bottom-aligned cell content to the top of the cell.
+#let observe-overflow(body, cell, slide, step) = {
+  place(top, layout(region => {
+    let natural = measure(body, width: region.width)
+    if natural.height > region.height {
+      [#metadata((
+        mosaic: tag,
+        kind: "overflow-warning",
+        logical-slide: slide,
+        frame: step,
+        cell: cell,
+        available-height: region.height,
+        measured-height: natural.height,
+        message: "mosaic: content overflows cell " + repr(cell),
+      ))<mosaic-overflow-warning>]
+    }
+  }))
   body
-})
+}
 
 // Fails the compile when any cell overflowed, naming every offender. Placed at
 // the end of the document by `setup`, so `query` sees converged introspection
@@ -120,12 +126,19 @@
   let background = surface.remove("background", default: none)
   let content-sized = surface.remove("content-sized", default: false)
   let fit = surface.remove("fit", default: none)
+  let map = surface.remove("map", default: none)
+  let anchor = surface.remove("align", default: none)
   // A cell in an `auto` row track sizes to its content, so its sibling `1fr`
   // tracks receive the remaining height and can align content on the horizon.
   // (`auto` on the horizontal axis is a column width and must not collapse the
   // cell height, so only the vertical axis opts in here.)
   let auto-height = vertical and track == auto
   let region-height = if content-sized or auto-height { auto } else { 100% }
+  // `map` is the layout's transform of the slide body alone: variants that
+  // recompose user-supplied content (small caps, recoloring, a title/number
+  // grid) apply it here, before the affixes join, so `before` and `after`
+  // keep their own typography.
+  let content = if map == none { content } else { map(content) }
   let content = before + content + after
   let content = if fit == "width" {
     fit-to-width(width: 1fr, grow: false, content)
@@ -140,6 +153,10 @@
   } else {
     content
   }
+  // A variant-owned anchor, applied as an explicit element inside the labeled
+  // block. Like the title layout's inline anchor, it is variant semantics
+  // rather than a styling default: pick another variant to change it.
+  let content = if anchor == none { content } else { align(anchor, content) }
   // A fitted cell is never observed. Its content is scaled into the allocation
   // by construction, so there is nothing to report, and observation measures in
   // a region where the fitters have no allocation to solve against (see

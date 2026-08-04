@@ -7,10 +7,7 @@
 #import "../shared.typ": fail
 #import "../grid/constructors.typ": styled-cell, v, t
 #import "core.typ": make-layout, validate-visual-spec
-#import "support.typ": (
-  edge-region-insets,
-  visual-content,
-)
+#import "support.typ": visual-content
 #import "image-support.typ": (
   directional-image-layout,
   image-background-cell,
@@ -57,64 +54,89 @@
 
 /// Creates an image-first grid recipe.
 ///
-/// The image is the layout's subject and is supplied here rather than as slide
-/// content; the surrounding `mosaic.slide` fills only the text cells.
+/// This is the image-first counterpart to `layouts.content`: the picture is the
+/// argument rather than slide content, and the text regions arrange around it.
+/// The surrounding `mosaic.slide` fills only the text cells.
 ///
-/// `figure` centers a contained image under a `header` cell, with an optional
-/// `caption` below it — the conventional academic figure slide. `left`,
-/// `right`, `top`, and `bottom` pair a full-bleed image with a text region of
-/// `header` and `body` cells, using the same private directional machinery as
-/// image-bearing title and section layouts. `full` places the image behind a
-/// single `body` cell, so text reads over the photograph; a background is a
-/// cell style rather than a split style, so this variant composes into one cell
-/// as image-background title and section layouts do. Put a heading inside the
-/// body to title it, or pass an empty block for a bare full-bleed slide.
+/// ```typ
+/// #mosaic.slide(
+///   layout: mosaic.layouts.image(
+///     path("chart.webp"),
+///     caption: [Revenue by quarter],
+///   ),
+///   [== Results],
+/// )
+/// ```
 ///
-/// `fit` defaults to `"contain"` for `figure`, which must never crop a chart,
-/// and to `"cover"` for every other variant, where the picture fills its
-/// region. Pass `"cover"`, `"contain"`, or `"stretch"` to override.
+/// *Variants*
 ///
-/// `tracks` sizes a directional split. One track size answers "how much room
-/// does the picture get" and is side-independent, so `left` and `right` stay
-/// mirror images without reordering anything; the companion region takes the
-/// remaining `1fr`. An array of two is visual order instead, and must be
-/// mirrored by hand when the variant flips.
+/// - `figure`: a contained picture centered under a `header` cell, with an
+///   optional `caption` below it. The conventional academic figure slide, and
+///   the default.
+/// - `left`, `right`, `top`, `bottom`: a full-bleed picture paired with a text
+///   region of `header` and `body` cells, sized by `tracks`.
+/// - `full`: the picture behind a single `body` cell, so text reads over the
+///   photograph. Put a heading inside the body to title it, or pass an empty
+///   block for a bare full-bleed slide.
+///
+/// *Captions*
 ///
 /// A `caption` composes a native Typst `figure` around the picture, so it takes
-/// the deck's own `show figure.caption` styling and figure numbering; switch the
-/// numbering off with an ordinary `set figure(numbering: none)`.
+/// the deck's own `show figure.caption` styling and figure numbering. Switch the
+/// numbering off with an ordinary `set figure(numbering: none)`. Captions are
+/// accepted by the `figure` variant only.
+///
+/// *Styling*
 ///
 /// The layout is purely structural. Resolved cells are labeled
 /// `<mosaic-cell-header>`, `<mosaic-cell-body>`, and `<mosaic-cell-image>`, so
-/// appearance is supplied with native Typst rules.
-/// `full` inherits the surrounding native text color, so quiet the photograph
-/// with the image spec's `scrim` key, as in
-/// `(path: "photo.webp", scrim: black.transparentize(55%))`, and override the
-/// cell's text fill for light-on-dark compositions.
+/// appearance comes from native Typst rules. The `full` variant inherits the
+/// surrounding native text color, so quiet the photograph with the image spec's
+/// `scrim` key and override the cell's text fill.
 ///
-/// - image (content | str | path | dictionary): The picture, as the sole positional argument.
-/// - variant (str): `figure`, `full`, `left`, `right`, `top`, or `bottom`.
-/// - caption (content | none): Caption below a `figure`; rejected by other variants.
-/// - fit (auto | str): Native fitting mode, or `auto` for the per-variant default.
-/// - tracks (auto | length | array): One track sizing the picture, or two in visual order.
+/// ```typ
+/// #show label("mosaic-cell-body"): set text(fill: white)
+/// #mosaic.slide(
+///   layout: mosaic.layouts.image(
+///     (path: "photo.webp", scrim: black.transparentize(55%)),
+///     variant: "full",
+///   ),
+///   [== Full bleed],
+/// )
+/// ```
 ///
 /// -> dictionary
 #let image(
-  /// The picture the slide is built around.
+  /// The picture the slide is built around, as the sole positional argument.
+  /// Give a path, ready-made content, or a dictionary spec whose `scrim` key
+  /// paints a layer over the picture and under any text composed on top of it.
   /// -> content | str | path | dictionary
   image,
-  /// Structural arrangement of picture and text.
+  /// Structural arrangement of picture and text: `figure`, `full`, `left`,
+  /// `right`, `top`, or `bottom`.
   /// -> str
   variant: "figure",
-  /// Optional caption rendered below a `figure` image.
+  /// Caption composed below a `figure` picture. Rejected by the other variants.
   /// -> content | none
   caption: none,
-  /// Native Typst fitting mode, or `auto` for the variant default.
+  /// How the picture fills its region.
+  ///
+  /// - `"contain"`: fit the whole picture inside the region. The `figure`
+  ///   default, since a chart must never be cropped.
+  /// - `"cover"`: fill the region, cropping the overhang. The default for every
+  ///   other variant.
+  /// - `"stretch"`: fill the region, distorting the aspect ratio.
+  ///
+  /// `auto` picks the per-variant default above.
   /// -> auto | str
   fit: auto,
-  /// One native Typst track sizing the picture, with the companion region
-  /// taking the remaining `1fr`, or an array of two in visual order.
-  /// -> auto | length | array
+  /// Sizes the split of a directional variant, and is rejected by `figure` and
+  /// `full`. One native Typst track size answers "how much room does the picture
+  /// get" and is side-independent, so `left` and `right` stay mirror images
+  /// without reordering anything; the text region takes the remaining `1fr`. An
+  /// array of two is in visual order instead, and must be mirrored by hand when
+  /// the variant flips.
+  /// -> auto | length | ratio | relative | fraction | array
   tracks: auto,
 ) = {
   let fields = validate-fields((
@@ -127,22 +149,18 @@
   make-layout("image", fields)
 }
 
-#let text-cell(id, settings, content-sized: false, edge: none) = styled-cell(
+#let text-cell(id, settings, content-sized: false) = styled-cell(
   id: id,
   style: (
     content-sized: content-sized,
-    inset: if edge != none {
-      edge-region-insets(settings, edge: edge)
-    } else {
-      settings.spacing.inset
-    },
+    inset: settings.spacing.inset,
   ),
 )
 
 // Header above, body filling the rest: the arrangement that sits beside a
 // directional image and over a full-bleed one.
 #let text-region(settings) = v(
-  t(auto, text-cell("header", settings, content-sized: true, edge: top)),
+  t(auto, text-cell("header", settings, content-sized: true)),
   t(1fr, text-cell("body", settings)),
 )
 
@@ -202,7 +220,7 @@
       })
     }
     let children = (
-      t(auto, text-cell("header", settings, content-sized: true, edge: top)),
+      t(auto, text-cell("header", settings, content-sized: true)),
       // The picture owns a fixed cell, so the slide supplies no block for it.
       t(1fr, styled-cell(
         id: "image",
@@ -215,12 +233,8 @@
     // A background is a cell style, not a split style, so the full-bleed
     // variant composes into a single cell exactly as image-background title
     // and section layouts do. Put a heading inside the body to title it.
-    //
-    // Edge insets, like a header cell: this cell usually opens with a heading,
-    // and the deck reads wrong if the same `== Heading` sits lower here than on
-    // an ordinary content slide.
     image-background-cell(
-      text-cell("body", settings, content-sized: false, edge: top),
+      text-cell("body", settings, content-sized: false),
       picture,
     )
   } else {

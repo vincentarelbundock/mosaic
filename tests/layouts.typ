@@ -7,7 +7,7 @@
 
 #let brand = mosaic.setup
 #let title-grid = mosaic.layouts.title(
-  [Mosaic],
+  title: [Mosaic],
   subtitle: [A compact semantic layout system],
   authors: (mosaic.layouts.author([Mosaic contributors]),),
   date: [2026],

@@ -5,69 +5,185 @@
 /// Applies Mosaic's presentation defaults and compiles headings and slide
 /// commands into pages.
 ///
-/// Use this as a document-wide show rule: `#show: mosaic.setup`.
-/// Deck title information is written to Typst's standard document metadata,
-/// stored in Mosaic's rendering settings, and emitted as one queryable
-/// `<mosaic-deck-metadata>` record. Setup never creates a title slide; use
-/// `mosaic.slide(layout: "title")` to inherit and render the configured values.
-/// `colors` is a partial semantic override layered over the active facade.
+/// Install it as a document-wide show rule. Everything after it is presentation
+/// source: level-two headings become slides, and `mosaic.slide` commands become
+/// slides.
+///
+/// ```typ
+/// #import "@local/mosaic:0.0.1" as mosaic
+/// #show: mosaic.setup.with(
+///   title: [Tree-based slide grids],
+///   authors: (mosaic.layouts.author("Ada Lovelace"),),
+///   date: [2026-08-03],
+/// )
+///
+/// #mosaic.slide(layout: "title")
+///
+/// == First slide
+/// Body content.
+/// ```
+///
+/// *Deck metadata*
+///
+/// `title`, `subtitle`, `authors`, and `date` are the deck's canonical
+/// identity. They are written to Typst's standard document metadata, stored in
+/// Mosaic's rendering settings, and emitted as one queryable
+/// `<mosaic-deck-metadata>` record. Setup never creates a title slide by
+/// itself; `mosaic.slide(layout: "title")` inherits these values wherever the
+/// title layout's own field is `auto`.
+///
+/// *Partial overrides*
+///
+/// `colors`, `content`, `spacing`, and `layouts` are all partial: keys you omit
+/// keep the active theme's value rather than reverting to a bare default. That
+/// is what lets a deck adjust one accent color or one layout without restating
+/// the theme.
+///
+/// *Themes*
+///
+/// This is the Light facade's setup. A themed facade such as
+/// `mosaic.themes.dark` exposes the same signature with different defaults, and
+/// may add its own options on top. See `theme.setup` for binding a custom
+/// theme definition.
 ///
 /// -> content
 #let setup(
   /// The document body captured by the show rule.
   /// -> content
   body,
-  /// Slide aspect ratio. Available values are `16-9` and `4-3`.
+  /// Slide aspect ratio.
+  ///
+  /// - `"16-9"`: widescreen, the default.
+  /// - `"4-3"`: traditional projector.
   /// -> str
   paper: "16-9",
-  /// Canonical deck title. Title layouts inherit it when their `title` is `auto`.
+  /// Canonical deck title. Title layouts inherit it when their `title` is
+  /// `auto`.
   /// -> content | str | none
   title: none,
-  /// Canonical deck subtitle. Title layouts inherit it when their `subtitle` is `auto`.
+  /// Canonical deck subtitle. Title layouts inherit it when their `subtitle` is
+  /// `auto`.
   /// -> content | str | none
   subtitle: none,
-  /// Canonical author records created with `layouts.author`.
+  /// Canonical author records, each created with `layouts.author`. Title
+  /// layouts inherit the array when their own `authors` is `auto`.
+  ///
+  /// ```typ
+  /// authors: (
+  ///   mosaic.layouts.author(
+  ///     "Ada Lovelace",
+  ///     affiliations: ("Analytical Society",),
+  ///     email: "ada@example.org",
+  ///     corresponding: true,
+  ///   ),
+  /// )
+  /// ```
   /// -> array
   authors: (),
-  /// Canonical display date. Title layouts inherit it when their `date` is `auto`.
+  /// Canonical display date. Title layouts inherit it when their `date` is
+  /// `auto`.
   /// -> content | str | none
   date: none,
-  /// Partial semantic color overrides. Accepted roles are `canvas`, `surface`,
-  /// `text`, `muted`, `line`, and `accent`; omitted roles retain theme defaults.
+  /// Partial semantic color overrides layered over the active theme. Omitted
+  /// roles keep the theme's value.
+  ///
+  /// - `canvas`: the slide page behind everything else.
+  /// - `surface`: raised panels, such as component frames and callouts.
+  /// - `text`: ordinary body text.
+  /// - `muted`: subtitles, captions, and other fine print.
+  /// - `line`: rules, borders, and other drawn separators.
+  /// - `accent`: the deck's one emphatic color.
+  ///
+  /// ```typ
+  /// colors: (accent: rgb("#0072B2"))
+  /// ```
   /// -> dictionary
   colors: (:),
-  /// Partial fallback content keyed by cell ID. The reserved `background` and
-  /// `foreground` IDs configure the inherited slide planes. A slide's explicit
-  /// content overrides these values; `none` suppresses a configured default.
-  /// Other defaults targeting cells absent from a resolved grid are ignored.
+  /// Partial fallback content keyed by cell ID, used whenever a slide leaves
+  /// that cell empty.
+  ///
+  /// - Ordinary keys name grid cells, for example `footer` or `body`.
+  /// - The reserved `background` and `foreground` keys configure the inherited
+  ///   full-slide planes.
+  ///
+  /// A slide's explicit content overrides these values, and `none` on the slide
+  /// suppresses a configured default. Defaults targeting cells absent from a
+  /// resolved grid are ignored, so one footer default is safe across layouts
+  /// that have no footer.
+  ///
+  /// ```typ
+  /// content: (
+  ///   footer: align(right, mosaic.components.progress()),
+  ///   background: mosaic.components.image(path("paper.webp")),
+  /// )
+  /// ```
   /// -> dictionary
   content: (:),
-  /// Insets and gaps used throughout the presentation.
+  /// Partial overrides for the grid geometry the layouts measure with.
+  /// Omitted keys keep the theme's value.
+  ///
+  /// - `inset`: padding inside a cell, default `1.25em`.
+  /// - `gap`: space between grid regions, default `0.7em`.
+  /// - `compact-gap`: the tighter space inside stacked metadata, default
+  ///   `0.35em`.
+  ///
+  /// Typographic rhythm is not here. Heading spacing and list spacing are
+  /// ordinary `show` and `set` rules owned by the theme, so change them with
+  /// native rules after `setup` or in your own theme's `apply`.
   /// -> dictionary
   spacing: (:),
-  /// Cell overflow policy: `"warn"`, `"error"`, or `"off"`.
+  /// What to do when a cell's content is taller than the cell.
+  ///
+  /// - `"warn"`: emit queryable `<mosaic-overflow-warning>` metadata and keep
+  ///   compiling. The default.
+  /// - `"error"`: emit the same metadata and fail the compile, so a build stops
+  ///   rather than shipping a clipped slide.
+  /// - `"off"`: observe nothing.
   /// -> str
   overflow: "warn",
-  /// Partial named-layout overrides. Accepted keys are `content`, `title`, and
-  /// `section`; omitted names retain the active theme's layouts. Each value may
-  /// be a deferred `mosaic.layouts.*` value or a low-level grid tree.
-  /// `content` is the ordinary slide layout, distinct from the `content:` option
-  /// above, which supplies inherited named-cell and plane content.
+  /// Partial named-layout overrides. Omitted names keep the active theme's
+  /// layout.
+  ///
+  /// - `content`: the ordinary slide layout, also used by automatic
+  ///   level-two-heading slides.
+  /// - `title`: used by `slide(layout: "title")`.
+  /// - `section`: used by `slide(layout: "section")` and by automatic level-one
+  ///   heading slides.
+  ///
+  /// Each value is either a deferred `mosaic.layouts.*` value or a low-level
+  /// `mosaic.grid.*` tree. Note that this option is distinct from the
+  /// `content:` option above, which supplies inherited cell content rather than
+  /// structure.
+  ///
+  /// ```typ
+  /// layouts: (
+  ///   content: mosaic.layouts.content(variant: "header-body", columns: 2),
+  /// )
+  /// ```
   /// -> dictionary
   layouts: (:),
-  /// Whether to emit only the final frame of each logical slide.
+  /// Whether to emit only the final frame of each logical slide, collapsing
+  /// every incremental reveal into one page for printing.
   /// -> bool
   handout: false,
-  /// Output document. `"slides"` renders the presentation, `"speaker"`
-  /// renders each frame above its applicable notes, and `"notes"` renders
-  /// notes without the slide image.
+  /// Which document to render.
+  ///
+  /// - `"slides"`: the presentation itself.
+  /// - `"speaker"`: each frame above the notes that apply to it.
+  /// - `"notes"`: the notes alone, without the slide image.
   /// -> str
   output: "slides",
   /// Counters restored to their pre-slide values before each continuation
-  /// frame, so repeated semantic content advances them once per logical slide.
+  /// frame, so content repeated across the frames of one logical slide advances
+  /// them once rather than once per frame.
+  ///
+  /// ```typ
+  /// frozen-counters: (counter(figure.where(kind: image)),)
+  /// ```
   /// -> array
   frozen-counters: (),
-  /// States restored to their pre-slide values before each continuation frame.
+  /// States restored to their pre-slide values before each continuation frame,
+  /// the `state` counterpart of `frozen-counters`.
   /// -> array
   frozen-states: (),
 ) = none

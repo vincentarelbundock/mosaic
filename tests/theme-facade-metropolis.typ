@@ -13,12 +13,12 @@
   "callout", "divider", "frame", "image", "label", "progress", "quote",
 ).all(name => name in m.components))
 #assert(type(m.layouts.content()) == dictionary)
-#assert(type(m.layouts.title([No-author title])) == dictionary)
+#assert(type(m.layouts.title(title: [No-author title])) == dictionary)
 #assert(type(m.layouts.section(subtitle: [Subtitle])) == dictionary)
 
 #show: m.setup
 
-#m.slide(layout: m.layouts.title([No-author title]), numbered: false)
+#m.slide(layout: m.layouts.title(title: [No-author title]), numbered: false)
 
 #m.slide(
   layout: m.layouts.content(),

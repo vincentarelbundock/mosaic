@@ -43,24 +43,14 @@
 
 #let affix(value) = if value == none { [] } else { as-content(value) }
 
-// Edge regions (headers, footers, captions) hug their own content vertically
-// while keeping the deck's horizontal inset, so they align with body text.
-// Shared by the content and image layouts.
-// Edge regions — headers, footers — sit against one slide edge and face the
-// body on the other side. The two sides want different space, so they get it:
-// the slide edge takes the deck's full inset, framing the region like every
-// other margin, while the inner side takes the compact gap so a title stays
-// visually attached to the content it introduces.
-//
-// Using the compact gap on both sides is what leaves a heading almost touching
-// the top of the slide while its left margin is several times larger, which
-// reads as a mistake rather than a choice.
-#let edge-region-insets(settings, edge: top) = (
-  top: if edge == top { settings.spacing.inset } else { settings.spacing.compact-gap },
-  right: settings.spacing.inset,
-  bottom: if edge == bottom { settings.spacing.inset } else { settings.spacing.compact-gap },
-  left: settings.spacing.inset,
-)
+// Edge regions — headers, footers, captions — hug their own content vertically
+// and otherwise take the deck's inset on all four sides, exactly like every
+// other cell. Equal padding is what lets a recolored header read as a balanced
+// band: a compact gap on the inner side pushes the text against one edge of the
+// fill, and a compact gap on both sides leaves a heading almost touching the
+// slide edge while its left margin is several times larger. Neither reads as a
+// choice. The region still sits close to the body it introduces because the
+// gutter between them is zero.
 
 #let track-children(nodes, tracks) = if tracks == auto {
   nodes

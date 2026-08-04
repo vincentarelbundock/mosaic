@@ -5,43 +5,75 @@
 
 /// Displays progress through logical slides or semantic sections in the deck.
 ///
-/// The `1/1` variant displays the current and final values, `1` displays only
-/// the current value, `circle` draws a compact progress ring, and `line` draws
-/// a full-width track.
-/// Set `count` to `sections` to use slides with `layout: "section"`.
-/// Explicit `current` and `total` values can be supplied together when the
-/// component should represent another sequence; they override `count`.
+/// It reads the deck's own counters, so it needs no arguments in the ordinary
+/// case. The usual home for it is a setup-level footer default, which puts one
+/// indicator on every slide that has a footer.
+///
+/// ```typ
+/// #show: mosaic.setup.with(
+///   content: (
+///     footer: align(right, mosaic.components.progress()),
+///   ),
+/// )
+/// ```
+///
+/// *Variants*
+///
+/// - `1/1`: the current and final values, as text. The default.
+/// - `1`: the current value alone.
+/// - `circle`: a compact ring filling clockwise, sized by `size` and
+///   `thickness`.
+/// - `line`: a horizontal track filling left to right, sized by `width` and
+///   `thickness`.
+///
+/// *What it counts*
+///
+/// `count` selects the automatic counter: `slides` counts logical slides, and
+/// `sections` counts slides with `layout: "section"`.
+///
+/// To represent something else entirely, give `current` and `total` explicitly.
+/// They override `count`, and must be supplied together.
+///
+/// ```typ
+/// #mosaic.components.progress(variant: "line", current: 3, total: 8)
+/// ```
 ///
 /// -> content
 #let progress(
-  /// Visual treatment: `1/1`, `1`, `circle`, or `line`.
+  /// Visual treatment: `"1/1"`, `"1"`, `"circle"`, or `"line"`.
   /// -> str
   variant: "1/1",
-  /// Automatic counter: `slides` or `sections`.
+  /// Which automatic counter to read: `"slides"` or `"sections"`. Ignored when
+  /// `current` and `total` are given.
   /// -> str
   count: "slides",
-  /// Current position, or `auto` to use the selected counter.
+  /// Current position, or `auto` to read the selected counter. Must be given
+  /// together with `total`.
   /// -> auto | int
   current: auto,
-  /// Final position, or `auto` to use the selected counter's final value.
+  /// Final position, or `auto` to read the selected counter's final value. Must
+  /// be given together with `current`.
   /// -> auto | int
   total: auto,
-  /// Semantic role used for the active color.
+  /// Semantic role supplying the default colors: `accent`, `neutral`,
+  /// `information`, `success`, `warning`, `danger`, or `takeaway`. The role's
+  /// accent paints the active part and its fill paints the track.
   /// -> str
   role: "accent",
-  /// Width of the line variant.
+  /// Width of the `line` variant.
   /// -> length | relative | fraction
   width: 100%,
-  /// Diameter of the circle variant.
+  /// Diameter of the `circle` variant.
   /// -> length
   size: 1em,
-  /// Thickness of the circle or line.
+  /// Stroke thickness of the `circle` and `line` variants.
   /// -> length
   thickness: 2pt,
-  /// Inactive track color; `auto` uses the role's background color.
+  /// Color of the inactive remainder. `auto` uses the role's fill.
   /// -> auto | color | gradient | tiling
   track: auto,
-  /// Active indicator color; `auto` uses the role's accent color.
+  /// Color of the completed portion, and of the text variants. `auto` uses the
+  /// role's accent.
   /// -> auto | color
   color: auto,
 ) = context {

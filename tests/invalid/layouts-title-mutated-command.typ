@@ -1,6 +1,6 @@
 #import "@local/mosaic:0.0.1" as mosaic
 
-#let command = mosaic.layouts.title([Title], variant: "left-aligned")
+#let command = mosaic.layouts.title(title: [Title], variant: "swiss")
 #command.fields.insert("variant", "image-right")
 
 #show: mosaic.setup

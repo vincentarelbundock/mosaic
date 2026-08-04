@@ -48,8 +48,26 @@
 
 /// Advances subsequent content to the next physical frame.
 ///
-/// A pause separates source-order content into persistent incremental segments.
-/// Empty leading, trailing, or consecutive pauses do not create blank frames.
+/// This is the least ceremonious way to build a slide: drop a marker where the
+/// pause belongs, and everything after it moves to the following frame.
+/// Everything before it stays on screen, so the slide accumulates.
+///
+/// ```typ
+/// #mosaic.slide[
+///   == Argument
+///   The premise.
+///   #mosaic.pause
+///   The consequence.
+///   #mosaic.pause
+///   The objection.
+/// ]
+/// ```
+///
+/// A pause is a value rather than a function, so it takes no arguments and no
+/// body. Compare `steps.on` and `steps.reveal`, which name their steps
+/// explicitly and can therefore reach frames out of source order.
+///
+/// Empty leading, trailing, or consecutive pauses produce no blank frames.
 ///
 /// -> content
 #let pause = metadata((

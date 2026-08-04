@@ -63,34 +63,55 @@
 
 /// Creates a structural leaf cell in a Mosaic grid tree.
 ///
-/// Cells are structural only. Every rendered cell is labeled
-/// `<mosaic-cell-ID>`, so appearance is supplied with native Typst rules:
-/// `show label("mosaic-cell-" + id): set text(...)`.
+/// A cell is where slide content lands. Its id must be a non-empty string,
+/// unique within the tree, and may not be one of the reserved plane ids
+/// `background` or `foreground`. Pass it positionally or through `id:`, but
+/// not both.
 ///
-/// `fit` shrinks content that would otherwise overflow the cell rather than
-/// letting it spill: `"width"` scales to the cell width, `"contain"` scales to
-/// the cell height, and `"auto"` scales to the height and reflows at the
-/// smaller size. The default `none` leaves content at its natural size, where
-/// overflow observation reports it instead.
+/// ```typ
+/// #mosaic.grid.v(
+///   mosaic.grid.t(auto, mosaic.grid.cell("header")),
+///   mosaic.grid.cell("body", fit: "auto"),
+/// )
+/// ```
+///
+/// *Styling*
+///
+/// Cells are structural only. Every rendered cell is labeled
+/// `<mosaic-cell-ID>`, so appearance comes from native Typst rules. Use a `set`
+/// rule for properties of the content and `mosaic.surface` for the cell's own
+/// block.
+///
+/// ```typ
+/// #show label("mosaic-cell-body"): set text(size: 0.9em)
+/// #show label("mosaic-cell-body"): mosaic.surface(fill: luma(240))
+/// ```
 ///
 /// -> dictionary
 #let cell(
-  /// Required stable name used to identify the cell, as the sole positional
-  /// argument or through `id:`.
-  /// -> str
+  /// The cell id, as the sole positional argument. Give it here or through
+  /// `id:`.
+  /// -> arguments
   ..identifier,
-  /// Optional fixed content rendered instead of a slide body.
+  /// Fixed content rendered in place of a slide body, so the surrounding slide
+  /// supplies no block for this cell.
   /// -> content | none
   content: none,
-  /// Required stable name used to identify the cell when it is not passed
-  /// positionally.
-  /// -> str
+  /// The cell id, when it is not passed positionally.
+  /// -> str | none
   id: none,
-  /// Native Typst inset applied inside the cell's labeled block, or `auto`
-  /// for the Mosaic default.
+  /// Native Typst inset applied inside the cell's labeled block. `auto` uses
+  /// the `spacing.inset` configured on `setup`.
   /// -> auto | length | relative | dictionary
   inset: auto,
-  /// Shrink-to-fit mode: `none`, `"width"`, `"contain"`, or `"auto"`.
+  /// Shrinks content that would otherwise overflow the cell rather than letting
+  /// it spill.
+  ///
+  /// - `none`: leave content at its natural size, so overflow observation
+  ///   reports it instead. The default.
+  /// - `"width"`: scale to the cell width.
+  /// - `"contain"`: scale to the cell height.
+  /// - `"auto"`: scale to the height and reflow at the smaller size.
   /// -> none | str
   fit: none,
 ) = {
@@ -110,15 +131,29 @@
 
 /// Associates an explicit native track size with one child of `h` or `v`.
 ///
-/// This wrapper is temporary: `h` or `v` removes it while constructing a
-/// split. Unwrapped children use `1fr`.
+/// Unwrapped children of a split take `1fr` and therefore share the space
+/// evenly. Wrap one in `t` to give it a size of its own.
+///
+/// ```typ
+/// #mosaic.grid.v(
+///   mosaic.grid.t(auto, "header"),   // as tall as its content
+///   "body",                          // 1fr, taking the rest
+///   mosaic.grid.t(2em, "footer"),    // a fixed strip
+/// )
+/// ```
+///
+/// The wrapper is temporary: `h` or `v` unwraps it while constructing the
+/// split, so a `t` value never appears in a resolved tree.
 ///
 /// -> dictionary
 #let t(
-  /// Native Typst grid track size.
+  /// Native Typst grid track size. `auto` sizes to the child's content, a
+  /// length or ratio fixes it, and a fraction such as `2fr` takes a share of
+  /// what remains.
   /// -> auto | length | ratio | relative | fraction
   size,
-  /// String cell ID or canonical Mosaic grid node.
+  /// The child to size: a string cell id, or a canonical Mosaic grid node built
+  /// with `cell`, `h`, or `v`.
   /// -> str | dictionary
   child,
 ) = {
@@ -209,40 +244,66 @@
   split(axis, tracks: tracks, gutter: gutter, rule: rule, ..nodes)
 }
 
-/// Arranges string cell IDs or Mosaic grid nodes horizontally.
+/// Splits the available width, arranging its children as columns.
 ///
-/// Each unwrapped child receives a `1fr` column. Wrap a child with `t` to use
-/// another native track size.
+/// Children may be given in three forms, freely mixed:
+///
+/// - A string, which is shorthand for `cell(id)`.
+/// - A node built with `cell`, `h`, or `v`, so splits nest to any depth.
+/// - Any of those wrapped in `t` to give it an explicit track size.
+///
+/// Each unwrapped child receives a `1fr` column, so an unadorned `h` divides
+/// the width evenly.
+///
+/// ```typ
+/// #mosaic.grid.h(
+///   gutter: 1em,
+///   rule: 0.5pt + gray,
+///   mosaic.grid.t(2fr, "left"),
+///   "right",
+/// )
+/// ```
 ///
 /// -> dictionary
 #let h(
   /// Native Typst track size used between adjacent columns.
   /// -> auto | length | ratio | relative | fraction
   gutter: 0pt,
-  /// Stroke drawn along each interior column boundary, centered in the
-  /// gutter, or `none`.
+  /// Stroke drawn along each interior column boundary, centered in the gutter.
+  /// A gutter of `0pt` leaves the rule sitting directly between the columns.
   /// -> none | stroke
   rule: none,
-  /// String cell IDs, grid nodes, or values wrapped with `t`.
+  /// The columns: string cell ids, Mosaic grid nodes, or values wrapped with
+  /// `t`. At least one is required.
   /// -> arguments
   ..children,
 ) = split-node("width", gutter, rule, children.pos())
 
-/// Arranges string cell IDs or Mosaic grid nodes vertically.
+/// Splits the available height, arranging its children as rows.
 ///
-/// Each unwrapped child receives a `1fr` row. Wrap a child with `t` to use
-/// another native track size.
+/// Children take the same three forms as in `h`: a string cell id, a Mosaic
+/// grid node, or either wrapped in `t`. Each unwrapped child receives a `1fr`
+/// row.
+///
+/// ```typ
+/// #mosaic.grid.v(
+///   gutter: 0.7em,
+///   mosaic.grid.t(auto, "header"),
+///   mosaic.grid.h(gutter: 1em, "left", "right"),
+///   mosaic.grid.t(auto, "footer"),
+/// )
+/// ```
 ///
 /// -> dictionary
 #let v(
   /// Native Typst track size used between adjacent rows.
   /// -> auto | length | ratio | relative | fraction
   gutter: 0pt,
-  /// Stroke drawn along each interior row boundary, centered in the gutter,
-  /// or `none`.
+  /// Stroke drawn along each interior row boundary, centered in the gutter.
   /// -> none | stroke
   rule: none,
-  /// String cell IDs, grid nodes, or values wrapped with `t`.
+  /// The rows: string cell ids, Mosaic grid nodes, or values wrapped with `t`.
+  /// At least one is required.
   /// -> arguments
   ..children,
 ) = split-node("height", gutter, rule, children.pos())

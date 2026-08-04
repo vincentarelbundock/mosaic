@@ -24,13 +24,27 @@
 
 /// Attaches non-rendering speaker notes to a logical slide.
 ///
-/// Multiple note blocks accumulate in source order. Wrap a note in
-/// `steps.on`, `steps.reveal`, or `steps.replace` to assign it to the same
-/// physical frames as nearby incremental content.
+/// Notes never appear in the slides themselves. They are collected and shown by
+/// the `"speaker"` and `"notes"` outputs of `setup`.
+///
+/// ```typ
+/// #show: mosaic.setup.with(output: "speaker")
+///
+/// #mosaic.slide[
+///   == Results
+///   #mosaic.note[Mention the confidence interval before the table.]
+///   The estimate holds under both specifications.
+/// ]
+/// ```
+///
+/// Multiple note blocks on one slide accumulate in source order. Wrap a note in
+/// `steps.on`, `steps.reveal`, or `steps.replace` to tie it to the same physical
+/// frames as the incremental content it belongs with, so the speaker view shows
+/// it beside the frame it describes.
 ///
 /// -> content
 #let note(
-  /// Note content.
+  /// The note text. Ordinary content, so lists and emphasis work as usual.
   /// -> content
   body,
 ) = {

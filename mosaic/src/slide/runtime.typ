@@ -4,6 +4,7 @@
 #import "../grid/content.typ": resolve-content
 #import "../incremental/analysis.typ": max-step
 #import "../incremental/transform.typ": transform
+#import "../incremental/heading.typ": strip-headings
 #import "../note/analysis.typ": notes-at, fixed-grid-notes-at
 #import "../note/command.typ": is-note
 #import "../grid/render.typ": max-node, render
@@ -313,6 +314,15 @@
   }
   if layout-name == "section" {
     logical-section.step()
+    // One queryable record per section slide, emitted right after the step so
+    // `logical-section.at(location)` gives this slide's section number. The
+    // stored title is heading-stripped: consumers (the toc section variant)
+    // re-render it without minting duplicate outline entries.
+    [#metadata((
+      mosaic: tag,
+      kind: "section-title",
+      title: strip-headings(contents.at("section", default: none)),
+    )) <mosaic-section-title>]
   }
   let slide = logical-slide-id.get().first()
   let freeze-location = here()
@@ -375,7 +385,16 @@
   }
 }
 
+// The deck's resolved body text size, read here rather than stored at setup.
+// Themes own every `set text` rule, so the engine cannot know the size in
+// advance; this context sits inside the theme's rules but outside the labeled
+// cells, so it observes the body size the deck actually renders at, before any
+// <mosaic-cell-*> display scale applies. Layouts anchor their composed tiers to
+// it, which is what keeps a title's subtitle proportional to its own theme.
 #let render-slide(command) = context {
   let settings = settings-state.get()
+  if settings != none {
+    settings.insert("base-size", text.size)
+  }
   render-slide-with-settings(command, settings)
 }

@@ -22,6 +22,12 @@
   underline, overline, strike, highlight, figure, grid.cell,
   list.item, enum.item, quote, footnote, math.equation,
 )
+// Fields that a body container accepts only as an optional leading positional
+// argument, never by name. Listed innermost-last; a container with several must
+// set them all or none, since a gap would shift the remaining arguments.
+#let optional-positional-fields = (
+  (enum.item, ("number",)),
+)
 // Containers whose body follows leading positional fields.
 #let special-body-containers = (
   (align, ("alignment",)),
@@ -212,17 +218,23 @@
         ) {
           let item-kind = kinds.first()
           let cells = ()
+          // Explicit item numbers (`3.`) restart the count, exactly as they do
+          // in a native enum; removed items still hold their number so the
+          // visible markers never shift between steps.
+          let number = 1
           for slot in timed {
+            number = slot.body.fields().at("number", default: number)
             let state = item-state(slot.index)
             if state != "removed" {
               let marker = if item-kind == list.item {
                 [#sym.bullet]
               } else {
-                [#(slot.index + 1).]
+                [#number.]
               }
               cells.push(apply-state(state, marker))
               cells.push(apply-state(state, visit(slot.body.body)))
             }
+            number += 1
           }
           // Honor the deck's list/enum spacing when one is set.
           return context {
@@ -321,7 +333,20 @@
         return body
       }
       let rebuilt = if body-container {
-        (body.func())(visit(fields.remove("body")), ..fields)
+        let entry = optional-positional-fields.find(pair => (
+          pair.first() == body.func()
+        ))
+        // Built with a loop for the same reason as `special-body-containers`.
+        let positional = ()
+        if entry != none {
+          for name in entry.last() {
+            let value = fields.remove(name, default: none)
+            if value != none {
+              positional.push(value)
+            }
+          }
+        }
+        (body.func())(..positional, visit(fields.remove("body")), ..fields)
       } else if body.func() in children-containers {
         let children = fields.remove("children")
         (body.func())(..children.map(visit), ..fields)

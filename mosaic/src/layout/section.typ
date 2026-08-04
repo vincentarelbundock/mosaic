@@ -1,13 +1,14 @@
 // Construction, validation, and resolution of the section layout.
 #import "../shared.typ": fail
 #import "../grid/constructors.typ": styled-cell
+#import "../deck-state.typ": logical-section
 #import "core.typ": (
   make-layout,
   validate-accent,
   validate-visual-spec,
 )
 
-#import "support.typ": subordinate-block, affix
+#import "support.typ": adapt-fill, as-content, subordinate-block, affix
 #import "image-support.typ": (
   directional-image-layout,
   image-background-cell,
@@ -20,7 +21,14 @@
   validate-semantic-image-use,
 )
 
-#let variants = ("plain",) + semantic-image-variants
+#let text-variants = (
+  "plain",
+  "rule",
+  "numeral",
+  "baseline",
+  "toc",
+)
+#let variants = text-variants + semantic-image-variants
 
 #let validate-fields(fields, allow-auto: false) = {
   validate-accent(fields, "section", allow-auto: allow-auto)
@@ -48,27 +56,85 @@
 
 /// Creates a section divider grid.
 ///
-/// `plain` provides one centered `section` cell. `image-left`, `image-right`,
-/// `image-top`, and `image-bottom` pair that cell with a full-bleed `image`
-/// cell using the same private directional machinery as image-bearing title
-/// layouts.
-/// `image-background` places the image behind the section cell; the text
-/// inherits the surrounding native text color, so quiet the photograph with
-/// the image spec's `scrim` key, as in
-/// `image: (path: "cover.webp", scrim: black.transparentize(55%))`, and
-/// override the `section` cell's text fill for light-on-dark compositions.
-/// Image variants require `image`.
-/// Directional `tracks` are one native Typst track size for the image, or two
-/// in visual order.
+/// The section cell's text is the slide's own content, so the surrounding
+/// `mosaic.slide` supplies one block. Automatic level-one headings resolve to
+/// this layout.
+///
+/// ```typ
+/// #mosaic.slide(
+///   layout: "section",
+///   number: [02],
+///   subtitle: [How the grid resolves],
+/// )[Structure]
+/// ```
+///
+/// *Variants*
+///
+/// - `plain`: one centered `section` cell. The default.
+/// - `rule`: a heavy full-width rule with the title hanging beneath it, flush
+///   left, the number above the rule.
+/// - `numeral`: the section number set enormous in the line color, bleeding
+///   off the top-right edge behind a lower-left title stack.
+/// - `baseline`: title flush left and number flush right sharing one
+///   baseline, tied together by a full-width hairline.
+/// - `toc`: every section in the deck listed, the current one alive with its
+///   number, the others ghosted.
+/// - `image-left`, `image-right`, `image-top`, `image-bottom`: that cell beside
+///   or above a full-bleed `image` cell, sized by `tracks`.
+/// - `image-background`: the section text directly over a full-slide picture.
+///
+/// Every image variant requires `image`. The designed text variants (every
+/// variant but `plain` and the image ones) treat an omitted `number` as the
+/// automatic section counter, so they need no argument in the ordinary case.
+///
+/// *Styling*
+///
+/// The layout is structural. The centered arrangement and title typography come
+/// from the `<mosaic-cell-section>` label rules `setup` emits, and the picture
+/// sits in `<mosaic-cell-image>`. Over a photograph the text inherits the
+/// surrounding native text color, so quiet the picture with the image spec's
+/// `scrim` key and override the cell's text fill.
+///
+/// ```typ
+/// #show label("mosaic-cell-section"): set text(fill: white)
+/// #mosaic.slide(
+///   layout: "section",
+///   variant: "image-background",
+///   image: (path: "cover.webp", scrim: black.transparentize(55%)),
+/// )[Structure]
+/// ```
+///
+/// -> dictionary
 #let section(
+  /// Optional subtitle set below the section title.
+  /// -> content | str | none
   subtitle: none,
+  /// Optional section number or label. `plain` and the image variants set it
+  /// above the title and omit it when `none`; the designed text variants build
+  /// their composition around it and read the automatic section counter when
+  /// it is `none`.
+  /// -> content | str | none
   number: none,
+  /// The picture used by the image variants, and rejected by the others. Give a
+  /// path, ready-made content, or a dictionary spec whose `scrim` key quiets the
+  /// photograph enough to read text over it.
+  /// -> none | content | str | path | dictionary
   image: none,
+  /// Structural arrangement: `plain`, `image-left`, `image-right`, `image-top`,
+  /// `image-bottom`, or `image-background`.
+  /// -> str
   variant: "plain",
   /// Color used by the optional section number. `auto` inherits the semantic
-  /// accent resolved by `setup`.
+  /// muted color resolved by `setup`, so numbers stay subordinate to the
+  /// title; pass a color to override.
   /// -> color | auto
   accent: auto,
+  /// Sizes the split of a directional image variant, and is rejected by the
+  /// others. One native Typst track size sizes the picture and is
+  /// side-independent, so `image-left` and `image-right` stay mirror images;
+  /// the section region takes the remaining `1fr`. An array of two is in visual
+  /// order instead.
+  /// -> auto | length | ratio | relative | fraction | array
   tracks: auto,
 ) = {
   let fields = validate-fields((
@@ -82,25 +148,214 @@
   make-layout("section", fields)
 }
 
+// The designed text variants build their composition around the section
+// number, so an omitted `number` means the automatic section counter rather
+// than nothing. `pad` zero-pads to two digits, the editorial spelling the
+// numeric variants use.
+#let auto-number(number, pad: true) = if number != none {
+  as-content(number)
+} else {
+  context {
+    let n = logical-section.get().first()
+    if pad and n < 10 [0#str(n)] else [#str(n)]
+  }
+}
+
+// One title treatment for the slide body whether or not it carries a heading.
+// A heading's own show-set typography (display size, weight, block spacing)
+// applies around anything a scoped rule produces, so it would override the
+// variant's treatment and make automatic `=` slides render differently from
+// explicit section slides. The scoped transform therefore replaces the
+// heading with its body wrapped in the same treatment at the *absolute* size
+// captured just outside the heading, which an em-based show-set cannot
+// compound. The heading stays realized exactly once, keeping its outline
+// entry, bookmark, and link target.
+#let title-text(body, styles, transform: none) = text(..styles, context {
+  let size = text.size
+  let rest = styles
+  let _ = rest.remove("size", default: none)
+  show heading: it => text(size: size, ..rest, it.body)
+  if transform == none { body } else { transform(body) }
+})
+
+// Subordinate subtitle line for the designed variants. Sizes are em against
+// the section cell's display type, so a theme that rescales the deck rescales
+// the composition with it. The muted fill yields to a recolored cell through
+// `adapt-fill`.
+#let subtitle-line(fields, settings, size: 0.44em, style: (:)) = if fields.subtitle == none {
+  []
+} else {
+  context text(
+    ..(adapt-fill((fill: settings.colors.muted, size: size), settings) + style),
+    fields.subtitle,
+  )
+}
+
+// A heavy full-width rule with the title mass hanging beneath it, everything
+// flush left. The rule carries the design; the number sits above it like a
+// running head.
+#let resolve-rule-section(fields, settings) = styled-cell(
+  id: "section",
+  style: (
+    align: left + horizon,
+    inset: settings.spacing.inset,
+    map: body => {
+      set par(spacing: 0.06em)
+      text(
+        size: 0.5em,
+        weight: "semibold",
+        fill: fields.accent,
+        auto-number(fields.number),
+      )
+      v(0.24em)
+      line(length: 100%, stroke: 0.16em + settings.colors.text)
+      v(0.28em)
+      title-text(body, (size: 1.15em, weight: "bold", tracking: -0.01em))
+      v(0.16em)
+      subtitle-line(fields, settings)
+    },
+  ),
+)
+
+// The section number set enormous in the line color, bleeding off the
+// top-right edge. It reads as texture rather than text and counterweights the
+// lower-left title stack.
+#let resolve-numeral-section(fields, settings) = styled-cell(
+  id: "section",
+  style: (
+    align: left,
+    inset: settings.spacing.inset,
+    background: place(
+      top + right,
+      dx: -0.75em,
+      dy: -1.15em,
+      text(
+        size: 6.8em,
+        weight: 200,
+        tracking: -0.03em,
+        fill: settings.colors.line,
+        auto-number(fields.number),
+      ),
+    ),
+    map: body => {
+      set par(spacing: 0.12em, leading: 0.8em)
+      v(1fr)
+      title-text(body, (size: 1.05em, weight: "bold", tracking: -0.01em))
+      v(0.2em)
+      subtitle-line(fields, settings)
+      v(0.5em)
+    },
+  ),
+)
+
+// Title and number share one baseline, tied together by a full-width
+// hairline: title flush left in bold, number flush right in a thin weight of
+// the same size. The subtitle hangs under the rule like a caption.
+#let resolve-baseline-section(fields, settings) = styled-cell(
+  id: "section",
+  style: (
+    align: left + horizon,
+    inset: settings.spacing.inset,
+    map: body => {
+      set par(spacing: 0.12em, leading: 0.8em)
+      grid(
+        columns: (1fr, auto),
+        align: (left + bottom, right + bottom),
+        column-gutter: 0.5em,
+        title-text(body, (size: 1.07em, weight: "bold", tracking: -0.01em)),
+        text(
+          size: 1.07em,
+          weight: 200,
+          fill: settings.colors.muted,
+          auto-number(fields.number),
+        ),
+      )
+      v(0.2em)
+      line(length: 100%, stroke: 0.025em + settings.colors.text)
+      v(0.2em)
+      subtitle-line(fields, settings, size: 0.41em)
+    },
+  ),
+)
+
+// The divider shows the whole deck: every section listed, past and future
+// ones ghosted in the line color, the current one alive with its accent
+// number. Reads the <mosaic-section-title> records the slide runtime emits.
+#let resolve-toc-section(fields, settings) = styled-cell(
+  id: "section",
+  style: (
+    align: left + horizon,
+    // A deck with many sections shrinks the list to fit rather than clipping.
+    fit: "contain",
+    inset: settings.spacing.inset,
+    map: body => context {
+      let mine = logical-section.get().first()
+      let entries = query(label("mosaic-section-title"))
+      stack(
+        spacing: 0.4em,
+        ..entries.map(entry => {
+          let n = logical-section.at(entry.location()).first()
+          if n == mine {
+            grid(
+              columns: (auto, 1fr),
+              column-gutter: 0.45em,
+              align: (left + bottom, left + bottom),
+              text(
+                size: 0.64em,
+                weight: "semibold",
+                fill: fields.accent,
+                auto-number(fields.number),
+              ),
+              title-text(body, (size: 0.64em, weight: "semibold")),
+            )
+          } else {
+            text(
+              size: 0.64em,
+              weight: "medium",
+              fill: settings.colors.line,
+              entry.value.title,
+            )
+          }
+        }),
+      )
+      if fields.subtitle != none {
+        v(0.35em)
+        subtitle-line(fields, settings, size: 0.41em)
+      }
+    },
+  ),
+)
+
 #let resolve-section(command, settings) = {
   let fields = validate-fields(command.fields + (
-    accent: if command.fields.accent == auto { settings.colors.accent } else { command.fields.accent },
+    // Numbers are subordinate furniture, never the deck's accent: `auto`
+    // resolves to the muted color, and an explicit accent stays an override.
+    accent: if command.fields.accent == auto { settings.colors.muted } else { command.fields.accent },
   ))
   let image = optional-fixed-image(fields.image, "layout \"section\" image")
+  if fields.variant == "rule" {
+    return resolve-rule-section(fields, settings)
+  } else if fields.variant == "numeral" {
+    return resolve-numeral-section(fields, settings)
+  } else if fields.variant == "baseline" {
+    return resolve-baseline-section(fields, settings)
+  } else if fields.variant == "toc" {
+    return resolve-toc-section(fields, settings)
+  }
   let before = if fields.number != none {
-    text(..settings.type.small, fill: fields.accent, fields.number)
+    text(size: 0.65em, fill: fields.accent, fields.number)
     parbreak()
   } else {
     []
   }
   let after = subordinate-block(
     fields.subtitle,
-    settings.type.subtitle,
+    (fill: settings.colors.muted, size: 1.05em),
     settings,
     above: settings.spacing.compact-gap,
   )
-  // Structural only: the section cell's centered arrangement and title
-  // typography come from the <mosaic-cell-section> label rules in `setup`.
+  // Structural only: the section cell's arrangement and title typography come
+  // from the <mosaic-cell-section> label rules the active theme emits.
   let section-cell = styled-cell(
     id: "section",
     style: (

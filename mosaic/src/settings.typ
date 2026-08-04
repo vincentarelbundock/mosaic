@@ -1,6 +1,6 @@
 // Private presentation settings and contextual configuration.
 #import "shared.typ": fail, require-dictionary, reject-unknown-keys
-#import "color-defaults.typ": default-text, default-muted, default-colors
+#import "color-defaults.typ": default-colors
 #import "author.typ": analyze-authors
 
 #let merge-record(base, override, name) = {
@@ -9,32 +9,15 @@
   base + override
 }
 
-#let default-type = (
-  body: (
-    font: (
-      "Inter",
-      "Source Sans 3",
-      "Liberation Sans",
-      "DejaVu Sans",
-      "Libertinus Serif",
-    ),
-    fallback: true,
-    size: 28pt,
-    fill: default-text,
-  ),
-  title: (size: 2em, weight: "semibold"),
-  subtitle: (size: 1.05em, fill: default-muted),
-  heading: (size: 1.4em, weight: "semibold"),
-  caption: (size: 0.72em, fill: default-muted),
-  small: (size: 0.55em, fill: default-muted),
-)
-
+// Geometry the layout modules measure with. Typography is not here: every
+// `set` and `show` rule belongs to a theme's `apply`, so the engine holds no
+// type scale of its own. Layouts that need the deck's resolved text size read
+// it from `settings.base-size`, which `render-slide` captures from the live
+// context rather than from any stored default.
 #let default-spacing = (
   inset: 1.25em,
   gap: 0.7em,
   compact-gap: 0.35em,
-  heading-below: 0.75em,
-  list-spacing: 0.8em,
 )
 
 // Overflow observation policy. "warn" emits queryable
@@ -138,12 +121,6 @@
     colors: colors,
     content: content,
     deck: deck,
-    type: default-type + (
-      body: default-type.body + (fill: colors.text,),
-      subtitle: default-type.subtitle + (fill: colors.muted,),
-      caption: default-type.caption + (fill: colors.muted,),
-      small: default-type.small + (fill: colors.muted,),
-    ),
     spacing: spacing,
     overflow: overflow,
   )
@@ -165,10 +142,7 @@
   }
   let _ = make-deck(..deck)
   if (
-    value.keys().sorted() != ("colors", "content", "deck", "overflow", "spacing", "type")
-      or type(value.type) != dictionary
-      or value.type.keys().sorted() != default-type.keys().sorted()
-      or not value.type.values().all(item => type(item) == dictionary)
+    value.keys().sorted() != ("colors", "content", "deck", "overflow", "spacing")
       or type(value.spacing) != dictionary
       or value.spacing.keys().sorted() != default-spacing.keys().sorted()
       or value.overflow not in overflow-modes

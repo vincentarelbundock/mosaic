@@ -3,7 +3,7 @@
 #show: mosaic.setup
 #mosaic.slide(
   layout: mosaic.layouts.title(
-  [Title],
+  title: [Title],
     variant: "academic",
     authors: (),
   ),

@@ -93,7 +93,7 @@ Use a layout factory (`m.layouts.*`) when building a layout from scratch rather 
   layout: m.layouts.title(
     title: [Reliable systems],
     subtitle: [One source of truth],
-    variant: "accent-block",
+    variant: "plate",
   ),
 )
 
@@ -113,8 +113,8 @@ Use a layout factory (`m.layouts.*`) when building a layout from scratch rather 
 
 Variants:
 
-- **Title**: `academic`, `left-aligned`, `centered-stack`, `accent-block`, `image-left`, `image-right`, `image-top`, `image-bottom`, `image-background`.
-- **Section**: `plain` and the same five image variants.
+- **Title**: `swiss` (the default: title mass on a full-width baseline rule, metadata in aligned columns beneath), `centered` (mass at slide center, metadata at the bottom edge), `plate` (whole slide in the deck's text color, type knocked out in canvas), `frame` (centered stack inside one thin border), `academic` (conference-poster arrangement with superscript affiliations), `image-left`, `image-right`, `image-top`, `image-bottom`, `image-background`. Every text variant composes 1..N authors: bylines join names with commas, and swiss gives authors/affiliations/date one column each. Structural marks (the swiss rule and frame border) default to the text color; an explicit `accent:` recolors them.
+- **Section**: `plain`, the designed text variants `rule` (heavy full-width rule over a flush-left title), `numeral` (giant ghost number bleeding off the top-right), `baseline` (title and number sharing one baseline over a full-width hairline), `toc` (all sections listed, the current one alive), and the same five image variants. The designed text variants read the automatic section counter when `number:` is omitted. Section numbers never take the accent color: the `accent:` field defaults to the muted color and an explicit color is an override. The themed facades restyle the section cell, so under cream, minimalist, or Metropolis these variants render at that theme's quieter scale.
 - **Content**: `body`, `header-body`, `body-footer`, `header-body-footer`.
 - **Image**: `figure` (the default), `full`, `left`, `right`, `top`, `bottom`.
 
@@ -152,7 +152,7 @@ Most decks are built from a handful of recurring shapes. Reach for the named for
 ]
 ```
 
-**Section divider.** A bare `= Section name` is enough. Text written between the `=` and the next heading becomes the section slide's subtitle, so a tagline costs no extra slide. Use `setup(layouts: (section: ...))` when every divider should carry the same photograph.
+**Section divider.** A bare `= Section name` is enough. Text written between the `=` and the next heading becomes the section slide's subtitle, so a tagline costs no extra slide. Use `setup(layouts: (section: ...))` when every divider should share one designed variant (for example `m.layouts.section(variant: "baseline")`) or carry the same photograph. A one-off design is a field overlay: `#m.slide(layout: "section", variant: "toc")[Methods]`.
 
 **Bulleted content slide.** A bare `== Slide title` followed by a list. Do not write `m.slide` for this.
 
@@ -229,7 +229,7 @@ Put deck identity, semantic colors, layout overrides, recurring cell defaults, a
 #let authors = (
   m.layouts.author(
     "Ada Lovelace",
-    affiliations: ((id: "lab", name: [Systems Lab]),),
+    affiliations: ([Systems Lab],),
   ),
 )
 
@@ -250,7 +250,7 @@ Put deck identity, semantic colors, layout overrides, recurring cell defaults, a
 
 Key setup arguments:
 
-- `title`, `subtitle`, `authors`, `date`: deck identity. An author record is built by `m.layouts.author(name, ...)` and accepts `affiliations` (records of `id` and `name`), `corresponding`, `email`, `kind`, and `orcid`; the `academic` title variant requires at least one author. Feeds title layouts, Typst document metadata, and the queryable `<mosaic-deck-metadata>` record. Setup does not insert a title slide automatically; each `m.slide(layout: "title")` chooses where one appears.
+- `title`, `subtitle`, `authors`, `date`: deck identity. An author record is built by `m.layouts.author(name, ...)` and accepts `affiliations` (an array of institutions, as content or strings, deduplicated by value so authors sharing one institution share its legend number), `corresponding`, `email`, `kind`, and `orcid`; the `academic` title variant requires at least one author. Feeds title layouts, Typst document metadata, and the queryable `<mosaic-deck-metadata>` record. Setup does not insert a title slide automatically; each `m.slide(layout: "title")` chooses where one appears.
 - `colors:`: partial overrides of the semantic palette. The roles are `canvas`, `surface`, `accent`, `text`, `muted`, and `line`. Unknown roles and non-color values are errors; omitted roles keep the active theme's defaults.
 - `layouts:`: a dictionary overriding only `content`, `title`, or `section`. Both explicit slides and automatic `==` slides use the configured `content` layout.
 - `content:`: recurring cell defaults (such as `footer`) plus the reserved `background` and `foreground` planes. Cell defaults apply only when the resolved layout contains that cell ID; explicit slide content or `none` overrides them.
@@ -276,7 +276,7 @@ Import one facade as `m` and keep the rest of the deck unchanged:
 
 Bundled facades are `light`, `dark`, `cream`, `metropolis`, and `minimalist`. The root package is exactly the bundled light facade.
 
-Every facade exports the same `slide`, `note`, `pause`, `surface`, `grid`, `steps`, `components`, and `theme`, so those parts of a deck are theme-portable. `m.layouts` is *not*: each theme exports its own callable layout namespace, and the themed versions are deliberately narrower than the base API. Metropolis's `title()` takes only `title`, `subtitle`, `authors`, and `date` (it picks the variant itself), its `content()` takes no arguments, and its `section()` takes only `subtitle`. So `m.layouts.section(variant: "plain")` compiles under the root facade and fails with `unexpected argument: variant` under Metropolis. When switching a deck to a theme, check that theme's `layouts.typ` for the arguments it accepts; when writing theme-portable code, pass layout arguments only through `m.setup`.
+Every facade exports the same `slide`, `note`, `pause`, `surface`, `grid`, `steps`, `components`, and `theme`, so those parts of a deck are theme-portable. Each facade also exports its own `definition`, the dictionary its `setup` is bound to. Each theme also exports `m.layouts`: the base layout constructors, rebound with that theme's defaults (for example, Cream's `content` defaults to `variant: "header-body"`). Every base argument remains available under every theme, with one exception: Metropolis's `title()` takes only `title`, `subtitle`, `authors`, and `date`, because it computes the variant from the authors itself.
 
 To develop a theme, start locally: define the complete semantic palette and bind the dictionary directly:
 
@@ -290,13 +290,17 @@ To develop a theme, start locally: define the complete semantic palette and bind
     line: rgb("#aeb9c8"),
     accent: rgb("#a23b72"),
   ),
-  text: (font: "Inter", size: 20pt),
+  apply: (body, colors: (:), options: (:)) => {
+    set text(font: "Inter", size: 20pt)
+    show: m.theme.normalize-lists
+    body
+  },
 )
 
 #show: m.theme.setup(theme)
 ```
 
-Only `colors` is required; `name`, `defaults`, `options`, `text`, `normalize-lists`, `layouts`, and `apply` are optional. A reusable packaged facade keeps three core files: `theme.typ` (binds and exports the public API), `definition.typ` (passive design decisions), and `layouts.typ` (the callable layout namespace), bound once with `mosaic.theme.setup(definition)`. Copy Light's files and change only design values. Theme definitions are passive data consumed by Mosaic's engine; never call setup internals from a theme or forward Mosaic's setup arguments.
+Only `colors` is required; `name`, `defaults`, `options`, `layouts`, and `apply` are optional. Mosaic's engine emits no `set` or `show` rules of its own, so `apply` states the theme's whole look: base typography, headings, captions, list rhythm, and the canonical `<mosaic-cell-*>` rules the layouts compose against. Copy `light/definition.typ` for the complete set in its plainest form. `m.theme.normalize-lists` is an optional show-rule helper that loosens tight lists for presentation distance. To start from an existing theme, merge its exported definition: `base.definition + (name: .., colors: base.definition.colors + (accent: ..))`. The merge replaces `apply` outright, so to extend inherited rules rather than drop them, run the base callback first with `show: (base.definition.apply).with(colors: colors, options: options)`. A reusable packaged facade keeps three core files: `theme.typ` (binds and exports the public API), `definition.typ` (passive design decisions), and `layouts.typ` (the callable layout namespace), bound once with `mosaic.theme.setup(definition)`. Copy Light's files and change only design values. Theme definitions are passive data consumed by Mosaic's engine; never call setup internals from a theme or forward Mosaic's setup arguments.
 
 ## 7. Custom grids
 
@@ -464,6 +468,17 @@ Both companion outputs write one page per emitted frame and fail with an explici
   typst eval 'query(<mosaic-overflow-warning>).map(it => it.value)' --in slides.typ
   ```
 
+  The reported `logical-slide` is not the page number once the deck uses `m.pause` or `m.steps`. Ask for both when hunting a specific slide down, then render just those pages to look at them:
+
+  ```sh
+  typst eval 'query(<mosaic-overflow-warning>).map(it => (it.value.logical-slide, it.location().page(), it.value.cell))' --in slides.typ
+  typst compile --root . slides.typ /tmp/p-{n}.png --pages 20,23 --ppi 55
+  ```
+
+  Overflow is nearly always a *body* cell holding more prose than its band. On a stacked image variant (`top`/`bottom`) the usual fix is a smaller `tracks:` so the text band grows; when the body is a full bullet list plus a picture, abandon the image layout and use an ordinary content slide with `m.components.image(.., fit: "contain", height: N%)`, which is predictable.
+
+- **Convert a whole deck set**: when porting many sibling decks, keep an identical `m.setup` block in each so they stay a series, and drive the build from one pattern rule. Watch for output collisions before running that rule: `quarto render` + `pagedown::chrome_print` print `<deck>.pdf` from the same basename a Typst deck compiles to, so a first `make` can overwrite an existing set of PDFs. Whether that is wanted (the Typst decks are replacing them) or not (both sets must survive, so Typst output belongs in its own directory) is the author's call — ask rather than assume, and check whether the directory is under version control before finding out the hard way.
+
 - **Inspect deck metadata**:
 
   ```sh
@@ -476,7 +491,9 @@ When compilation fails:
 
 1. Recompile the smallest affected deck and capture the exact diagnostic.
 2. Check for an unknown layout name, a missing named cell, mixed positional and named content, or an invalid layout variant.
-   - `unexpected argument: variant` (or another layout argument) means the active *themed* facade narrows that layout's signature. Read that theme's `layouts.typ` rather than the base layout API.
+   - `unexpected argument: variant` on `m.layouts.title(..)` under Metropolis means that theme's `title()` computes the variant itself and takes only `title`, `subtitle`, `authors`, and `date`.
+   - `unexpected argument: number` at `src/incremental/transform.typ` means an enum item carries an explicit `number` field, which Mosaic's incremental transform cannot rebuild. Two sources, and the second is easy to miss: literal `3.` / `4.` markers used to continue a numbered list (write `#enum(start: 3)[..][..]` instead), and any *wrapped prose line that happens to begin with a number and a period* — a line starting `1942.` is parsed by Typst as an enum item numbered 1942. Grep the deck with `grep -nE '^\s*[0-9]+\.'` and reword so no line begins that way.
+   - `failed to decode image (Format error decoding Jpeg ...)` or `unknown image format` means the file's extension lies about its bytes. Typst chooses its decoder from the extension, so a PNG or WebP named `.jpg` fails. Check with `file -b`, and prefer adding a correctly-named *copy* over renaming when other documents reference the original name. Typst has no AVIF decoder at all — convert those.
 3. Confirm that dictionary-held functions are called with parentheses when needed, for example `(theme.layouts.section)()`.
 4. Confirm that `layouts:` passed to setup is a dictionary and only overrides `content`, `title`, or `section`.
 5. Confirm that image variants receive an image and valid tracks.

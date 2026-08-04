@@ -14,13 +14,13 @@
   body
 }
 
-#let ccp = (id: "ccp", name: [Centre for Comparative Politics])
-#let eis = (id: "eis", name: [European Institute for Social Data])
-#let lpe = (id: "lpe", name: [Laboratory for Public Evidence])
-#let eamc = (id: "eamc", name: [East Asia Methods Centre])
+#let ccp = [Centre for Comparative Politics]
+#let eis = [European Institute for Social Data]
+#let lpe = [Laboratory for Public Evidence]
+#let eamc = [East Asia Methods Centre]
 
 #mosaic.slide(layout: mosaic.layouts.title(
-  [When measurement choices change substantive conclusions],
+  title: [When measurement choices change substantive conclusions],
   variant: "academic",
   subtitle: [Evidence from a coordinated replication],
   authors: (
@@ -37,7 +37,7 @@
 ))
 
 #mosaic.slide(layout: mosaic.layouts.title(
-  [Compact academic metadata],
+  title: [Compact academic metadata],
   variant: "academic",
   subtitle: [An explicit inline author layout],
   authors: (
@@ -48,30 +48,57 @@
 ))
 
 #mosaic.slide(layout: mosaic.layouts.title(
-  [When public data disappears],
-  variant: "left-aligned",
+  title: [When public data disappears],
+  variant: "swiss",
   subtitle: [Open Data Day 2027 · What disappearing archives teach us about reproducibility],
   authors: (mosaic.layouts.author([Vincent Arel-Bundock], affiliations: (ccp,)),),
   date: [March 2027],
 ))
 
+// Several authors across several affiliations must stay composed in the
+// swiss metadata columns.
 #mosaic.slide(layout: mosaic.layouts.title(
-  [Models, evidence, and public decisions],
-  variant: "centered-stack",
+  title: [When public data disappears],
+  variant: "swiss",
+  subtitle: [Open Data Day 2027],
+  authors: (
+    mosaic.layouts.author([Priya Nair], affiliations: (ccp,)),
+    mosaic.layouts.author([Elena García], affiliations: (eis,)),
+    mosaic.layouts.author([Noah Williams], affiliations: (ccp,)),
+    mosaic.layouts.author([Fatima El-Sayed], affiliations: (lpe,)),
+  ),
+  date: [March 2027],
+))
+
+#mosaic.slide(layout: mosaic.layouts.title(
+  title: [Models, evidence, and public decisions],
+  variant: "centered",
   subtitle: [Annual Research Lecture · A public conversation about uncertainty],
   authors: (mosaic.layouts.author([Maya Thompson], affiliations: (eis,)),),
   date: [2027],
 ))
 
 #mosaic.slide(layout: mosaic.layouts.title(
-  [From raw data to publication],
-  variant: "accent-block",
-  subtitle: [Hands-on session · Build and publish a reproducible report],
-  authors: (mosaic.layouts.author([Facilitator · Jordan Lee]),),
+  title: [Models, evidence, and public decisions],
+  variant: "plate",
+  subtitle: [Annual Research Lecture · A public conversation about uncertainty],
+  authors: (
+    mosaic.layouts.author([Maya Thompson], affiliations: (eis,)),
+    mosaic.layouts.author([Priya Nair], affiliations: (ccp,)),
+  ),
+  date: [2027],
 ))
 
 #mosaic.slide(layout: mosaic.layouts.title(
-  [Measuring environmental change],
+  title: [Models, evidence, and public decisions],
+  variant: "frame",
+  subtitle: [Annual Research Lecture],
+  authors: (mosaic.layouts.author([Maya Thompson], affiliations: (eis,)),),
+  date: [2027],
+))
+
+#mosaic.slide(layout: mosaic.layouts.title(
+  title: [Measuring environmental change],
   variant: "image-right",
   image: (path: path("/docs/assets/images/title-river.webp"), alt: "Autumn wetlands"),
   subtitle: [Field observations across twelve sites],
@@ -79,7 +106,7 @@
 ))
 
 #mosaic.slide(layout: mosaic.layouts.title(
-  [Measuring environmental change],
+  title: [Measuring environmental change],
   variant: "image-bottom",
   image: (path: path("/docs/assets/images/title-river.webp"), alt: "Autumn wetlands"),
   subtitle: [Field observations from the St. Lawrence wetlands],
@@ -92,7 +119,7 @@
   #show label("mosaic-cell-title"): set text(fill: white)
   #mosaic.slide(
     layout: mosaic.layouts.title(
-      [Cities after dark],
+      title: [Cities after dark],
       variant: "image-background",
       image: (
         path: path("/docs/assets/images/title-city.webp"),
@@ -108,7 +135,7 @@
 ]
 
 #mosaic.slide(layout: mosaic.layouts.title(
-  [Cities after dark, unadjusted],
+  title: [Cities after dark, unadjusted],
   variant: "image-background",
   image: (path: path("/docs/assets/images/title-city.webp"), alt: "Coastal city lights at night"),
   align: top + right,

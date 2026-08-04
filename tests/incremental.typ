@@ -30,6 +30,16 @@
   ]
 ]
 
+// Three pages: enum items numbered explicitly, which Typst also produces for a
+// line starting with a literal `1942.`, keep their number through the rebuild.
+#mosaic.slide[
+  #mosaic.steps.reveal[
+    3. Third
+    4. Fourth
+  ]
+  #mosaic.steps.on("3-")[1942. was a year.]
+]
+
 // Two pages: alternatives share one measured slot.
 #mosaic.slide[
   #mosaic.steps.replace([short], [a longer alternative])
@@ -79,5 +89,5 @@
   )
 ]
 
-// 3 + 2 + 3 + 2 + 3 + 2 + 3 physical pages.
-#context assert(counter(page).final().first() == 18)
+// 3 + 2 + 3 + 3 + 2 + 3 + 2 + 3 physical pages.
+#context assert(counter(page).final().first() == 21)

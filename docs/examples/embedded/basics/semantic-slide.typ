@@ -58,7 +58,7 @@
     main: [
       == Composition
 
-      - Name every region.
+      - Name every cell.
       - Keep structure independent of content.
     ],
     notes: [

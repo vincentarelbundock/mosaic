@@ -2,19 +2,30 @@
 
 /// Builds the transforming rule that paints a cell's or plane's own block.
 ///
-/// Properties of the content inside a cell (text, alignment, paragraphs)
-/// reach it through ordinary `set` rules on its label. The cell's own surface
-/// cannot, because it is a block constructed before those rules apply, so it
-/// is painted by wrapping the labeled block instead. `surface` returns that
-/// standard wrapper, `it => block(width: 100%, height: 100%, ..., it)`, ready
-/// to use as the body of a label rule:
+/// Properties of the content inside a cell, such as text, alignment, and
+/// paragraphs, reach it through ordinary `set` rules on its label. The cell's
+/// own surface cannot, because it is a block constructed before those rules
+/// apply, so it is painted by wrapping the labeled block instead. `surface`
+/// returns that standard wrapper, `it => block(width: 100%, height: 100%, ...,
+/// it)`, ready to use as the body of a label rule.
 ///
 /// ```typ
-/// #show label("mosaic-cell-body"): surface(fill: luma(240))
+/// #show label("mosaic-cell-body"): mosaic.surface(
+///   fill: luma(240),
+///   stroke: 0.5pt + gray,
+///   radius: 6pt,
+/// )
 /// ```
 ///
-/// The full-slide planes carry the labels `<mosaic-background>` and
-/// `<mosaic-foreground>`, so the same rule paints them.
+/// *What it applies to*
+///
+/// - Any grid cell, through its `<mosaic-cell-ID>` label.
+/// - The full-slide planes, which carry `<mosaic-background>` and
+///   `<mosaic-foreground>`.
+///
+/// Both kinds of rule may be combined with ordinary `set` rules on the same
+/// label; the `set` rule styles the content and this one paints the block
+/// around it.
 ///
 /// -> function
 #let surface(

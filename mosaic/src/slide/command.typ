@@ -100,39 +100,76 @@
 
 /// Creates one logical slide command.
 ///
-/// `layout: auto` selects the configured `content` layout. The strings
-/// `"content"`, `"title"`, and `"section"` select the corresponding entry in
-/// `setup(layouts:)` and determine numbering and section lifecycle. A direct
-/// `m.layouts.*` value carries its own semantic layout name; a raw `m.grid.*`
-/// tree is treated as a content layout.
+/// A logical slide is one unit of content, which may render as several physical
+/// frames once incremental steps are applied.
 ///
-/// Content may be supplied either as positional bodies or as one `content:`
-/// dictionary keyed by cell id. Do not mix the two forms. The reserved
-/// `background` and `foreground` keys control the full-slide planes: absent
-/// inherits setup content, `none` suppresses it, and content overrides it.
+/// ```typ
+/// #mosaic.slide[
+///   == Structure
+///   Every slide resolves to a grid tree.
+/// ]
+/// ```
 ///
-/// Any other named argument is a field of the selected layout, so
-/// `slide(layout: "title", variant: "academic")` refines the configured title
-/// layout instead of replacing it: fields the theme set survive. Layout fields
-/// require `layout: auto` or a layout name; with an explicit `m.layouts.*`
-/// value, pass them to that constructor instead.
+/// *Choosing a layout*
 ///
-/// The default `numbered: auto` numbers content layouts and leaves title and
-/// section layouts unnumbered. An explicit boolean always wins.
+/// - `auto`: the configured `content` layout. The default.
+/// - `"content"`, `"title"`, `"section"`: the matching entry in
+///   `setup(layouts:)`. The name also determines numbering and the section
+///   lifecycle.
+/// - A `mosaic.layouts.*` value: used directly, carrying its own semantic name.
+/// - A raw `mosaic.grid.*` tree: used directly and treated as a content layout.
+///
+/// *Supplying content*
+///
+/// Use one of the two forms, never both on the same slide:
+///
+/// - Positional bodies, filling cells in depth-first layout order.
+/// - A `content:` dictionary keyed by cell id, which is order-independent and
+///   lets a slide skip cells.
+///
+/// ```typ
+/// #mosaic.slide(content: (
+///   header: [== Named cells],
+///   body: [Order does not matter here.],
+/// ))
+/// ```
+///
+/// The reserved `background` and `foreground` keys of `content:` control the
+/// full-slide planes rather than a grid cell. Omitting a key inherits the setup
+/// default, `none` suppresses it, and content overrides it.
+///
+/// *Layout fields*
+///
+/// Any other named argument is a field of the selected layout, so the slide
+/// refines the configured layout rather than replacing it, and fields the theme
+/// set survive:
+///
+/// ```typ
+/// #mosaic.slide(layout: "title", variant: "academic")
+/// ```
+///
+/// This requires `layout: auto` or a layout name. With an explicit
+/// `mosaic.layouts.*` value the constructor is already at hand, so pass the
+/// fields to it instead.
 ///
 /// -> content
 #let slide(
-  /// Configured layout name, semantic layout, raw grid, or `auto` for content.
+  /// Which layout resolves this slide: `auto` for the configured content
+  /// layout, one of the names `"content"`, `"title"`, or `"section"`, a
+  /// `mosaic.layouts.*` value, or a raw `mosaic.grid.*` tree.
   /// -> auto | str | dictionary
   layout: auto,
-  /// Whether the slide contributes to logical slide numbering.
+  /// Whether the slide contributes to logical slide numbering. `auto` numbers
+  /// content layouts and leaves title and section layouts unnumbered; an
+  /// explicit boolean always wins.
   /// -> auto | bool
   numbered: auto,
-  /// Named cell and plane content.
+  /// Cell content keyed by cell id, plus the reserved `background` and
+  /// `foreground` plane keys. Mutually exclusive with positional bodies.
   /// -> dictionary
   content: (:),
-  /// Positional cell bodies in depth-first layout order, plus named fields
-  /// forwarded to the selected layout.
+  /// Positional cell bodies in depth-first layout order, plus any named
+  /// arguments forwarded as fields of the selected layout.
   /// -> arguments
   ..bodies
 ) = {

@@ -30,7 +30,7 @@ depth = 3
   label = "Examples"
 
   [[menus.main]]
-  target = "basics.typ"
+  target = "start/first-deck.typ"
   label = "Get started"
 
   [[menus.main]]
@@ -39,6 +39,7 @@ depth = 3
 
 [[footer.item]]
 label = "Mosaic 0.0.1 · Built with Typst and Calepin."
+
 
 [sidebar]
 fold = true
@@ -51,32 +52,88 @@ fold = true
   [[sidebar.section.item]]
   target = "examples.typ"
 
-  [[sidebar.section.item]]
-  target = "basics.typ"
+[[sidebar.section]]
+title = "Get started"
 
   [[sidebar.section.item]]
-  target = "structure.typ"
+  target = "start/first-deck.typ"
 
   [[sidebar.section.item]]
-  target = "content.typ"
+  target = "start/concepts.typ"
 
   [[sidebar.section.item]]
-  target = "appearance.typ"
+  target = "start/semantic-slide.typ"
+
+[[sidebar.section]]
+title = "Slide structure"
 
   [[sidebar.section.item]]
-  target = "incremental.typ"
+  target = "slides/grids.typ"
 
   [[sidebar.section.item]]
-  target = "furniture.typ"
+  target = "slides/layouts.typ"
 
   [[sidebar.section.item]]
-  target = "faq.typ"
+  target = "slides/cells.typ"
+
+[[sidebar.section]]
+title = "Content"
+
+  [[sidebar.section.item]]
+  target = "content/images.typ"
+
+  [[sidebar.section.item]]
+  target = "content/components.typ"
+
+  [[sidebar.section.item]]
+  target = "content/math.typ"
+
+[[sidebar.section]]
+title = "Appearance"
+
+  [[sidebar.section.item]]
+  target = "appearance/styling.typ"
+
+  [[sidebar.section.item]]
+  target = "appearance/typography.typ"
+
+  [[sidebar.section.item]]
+  target = "appearance/themes.typ"
+
+[[sidebar.section]]
+title = "Slide furniture"
+
+  [[sidebar.section.item]]
+  target = "furniture/planes.typ"
+
+  [[sidebar.section.item]]
+  target = "furniture/footer.typ"
+
+  [[sidebar.section.item]]
+  target = "furniture/navigation.typ"
+
+[[sidebar.section]]
+title = "Incremental reveals"
+
+  [[sidebar.section.item]]
+  target = "incremental/steps.typ"
+
+  [[sidebar.section.item]]
+  target = "incremental/reveals.typ"
+
+  [[sidebar.section.item]]
+  target = "incremental/notes.typ"
+
+[[sidebar.section]]
+
+  [[sidebar.section.item]]
+  target = "help/faq.typ"
 
   [[sidebar.section.item]]
   target = "acknowledgments.typ"
 
 [[sidebar.section]]
-title = "API"
+title = "API reference"
 
   [[sidebar.section.item]]
   target = "api/setup.typ"

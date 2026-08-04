@@ -20,6 +20,6 @@
   #probe("default body")
 ]
 
-#mosaic.slide(layout: mosaic.layouts.title([#probe("title body")]))
+#mosaic.slide(layout: mosaic.layouts.title(title: [#probe("title body")]))
 
 #mosaic.slide(layout: mosaic.layouts.section())[#probe("section body")]

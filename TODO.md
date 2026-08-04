@@ -7,6 +7,10 @@ preserve Mosaic's small, Typst-native grid model.
 
 Sections below the feature inventory record findings from real deck-authoring
 sessions rather than the framework comparison; each notes how it was observed.
+Several come from one corpus in particular: twenty POL1025 lecture decks,
+6,938 lines of Typst and 423 `m.slide` calls, converted from Quarto/reveal.js.
+That is one author and one conversion event, so the counts quoted below are
+evidence to check, not weight on their own.
 
 The comparison does not repeat features Mosaic already has: heading-driven
 and explicit slides, automatic section slides, logical slide/section and step progress,
@@ -17,8 +21,6 @@ grid and visual-plane configuration.
 
 ## Incremental content
 
-- [ ] Add concise sequential and parallel advancement primitives comparable
-  to `pause`, `meanwhile`, `jump`, or independent reveal strands.
 - [ ] Add progressive raw-code display with optional line numbers,
   configurable reveal and highlight ranges, and styling for past, current,
   and future lines.
@@ -56,6 +58,21 @@ grid and visual-plane configuration.
 
 ## Defects
 
+- [ ] Many slides in the cream example deck (`docs/examples/decks/cream`) render
+  their text white, which is wrong against the theme's pale ground. The example
+  is the theme's shop window, so whatever resolves the text fill there is either
+  picking the wrong semantic color or is being overridden by the deck itself;
+  both the theme's fill resolution and `main.typ`/`preamble.typ` need checking
+  before deciding which side is at fault.
+
+- [ ] `fit: "auto"` scales its content from the top-left, so a figure sized with
+  `height: 100%` loses its centring the moment fitting engages. That makes the
+  fitter unusable in figure-heavy decks: across the corpus above it appears once
+  in 6,938 lines, and the author recorded the reason at `00_intro.typ:9`. The
+  fallback is 28 hand-written `#set text(size: ..)` calls between 0.8em and
+  0.92em. If alignment survives fitting, `fit: "auto"` may become adoptable
+  as-is and the hand-shrinking disappears without any new API.
+
 - [x] `setup(overflow: "error")` always names slide 0 in its diagnostic, so the
   mode cannot tell an author where the clip is. The `"warn"` path resolves the
   same counter correctly, which suggests the error path reads the logical-slide
@@ -74,10 +91,9 @@ grid and visual-plane configuration.
 ## Layout and styling
 
 - [ ] Let the title stack scale as a unit, for example a `scale:` argument on
-  `m.layouts.title`. `title-typography` (`layout/title.typ`) anchors the
-  subtitle and metadata tiers to `settings.type.body.size` in pt so they do not
-  compound with the display scale supplied by the `<mosaic-cell-title>` label
-  rules. That correctly resists compounding, but it also means a label rule that
+  `m.layouts.title`. The composed title stack (`layout/title.typ`) anchors the
+  subtitle and metadata tiers to `settings.base-size` so they do not compound
+  with the display scale supplied by the `<mosaic-cell-title>` label rules. That correctly resists compounding, but it also means a label rule that
   resizes the title moves only the title: at `show label("mosaic-cell-title"):
   set text(size: 0.3em)` the subtitle renders *larger* than the title, which no
   author wants. There is currently no supported way to ask for a proportionally
@@ -106,9 +122,35 @@ grid and visual-plane configuration.
   helper and calls it about forty times. This is the most repeated helper in an
   image-heavy academic deck.
 
+  The same gap shows up one step further in: a figure placed inside an ordinary
+  content cell, rather than in a stacked image layout, has to be wrapped in
+  `align(center, ..)` and given a hand-found height. The corpus uses twelve
+  distinct values (30% through 88%), and the author documents at
+  `04_politique_fiscale.typ:130` why the stacked layouts do not cover the case:
+  four bullets plus a photograph is more than their body band holds. Worth
+  deciding whether the component centres by default, whether `height: auto`
+  should mean "fill the remaining cell", and whether a prose-plus-figure layout
+  variant belongs beside the stacked ones.
+
+## Tooling and diagnostics
+
+- [ ] Make `overflow: "warn"` visible without shell plumbing. The warner emits
+  queryable `<mosaic-overflow-warning>` metadata and nothing else, so the corpus
+  above drives it from a Makefile loop over
+  `typst eval 'query(<mosaic-overflow-warning>).map(it => it.value.logical-slide)'`.
+  The queryable design is deliberate and should stay, but it is also the
+  feedback loop the author runs against when tuning `tracks:` percentages, body
+  text sizes, and figure heights, so tightening it reduces friction in three
+  places at once. This is the least invasive item in the file and probably the
+  highest leverage.
+
 ## Documentation
 
 - [ ] Document citation workflows using native Typst footnotes and
   bibliographies.
 - [ ] Document compatible presentation workflows without adding
   viewer-specific integrations to Mosaic.
+- [ ] Show named cells (`content: (header:, body:)`) on a three-column slide.
+  The positional form is shorter for the common cases and is what authors reach
+  for, but at four consecutive unlabeled brackets it stops being readable, and
+  nothing currently points that out at the moment it matters.

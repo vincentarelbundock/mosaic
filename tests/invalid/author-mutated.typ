@@ -1,6 +1,6 @@
 #import "@local/mosaic:0.0.1" as mosaic
 
-#let lab = (id: "lab", name: [Lab])
+#let lab = [Lab]
 #let ada = mosaic.layouts.author(
   [Ada],
   affiliations: (lab,),
@@ -10,7 +10,7 @@
 
 #show: mosaic.setup
 #mosaic.slide(layout: mosaic.layouts.title(
-  [Title],
+  title: [Title],
   variant: "academic",
   authors: (ada,),
 ))[Title]

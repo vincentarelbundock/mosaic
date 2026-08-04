@@ -93,10 +93,9 @@
     #metadata((title: page-title)) <website-metadata>
     #title()
 
-    This reference is generated from the public `///` doc comments in
-    #raw(source-label). The overview links to each definition. Function definitions
-    show signatures with parameter and return types; variables show their
-    declared types. Descriptions and defaults follow.
+    The overview below links to each definition. Function definitions show
+    signatures with parameter and return types; variables show their declared
+    types. Descriptions and defaults follow.
 
     #tidy.show-module(
       module,

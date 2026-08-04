@@ -1,3 +1,3 @@
 #import "@local/mosaic:0.0.1" as mosaic
 
-#mosaic.layouts.title([Title], variant: "unknown")
+#mosaic.layouts.title(title: [Title], variant: "unknown")

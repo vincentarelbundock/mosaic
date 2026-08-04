@@ -1,3 +1,3 @@
 #import "@local/mosaic:0.0.1" as mosaic
 #show: mosaic.setup
-#mosaic.slide(layout: mosaic.layouts.title([Academic title], variant: "academic", authors: [One author]))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Academic title], variant: "academic", authors: [One author]))

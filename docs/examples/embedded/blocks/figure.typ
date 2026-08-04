@@ -18,5 +18,5 @@
 ][
   == Figures remain native
 
-  Use `figure(m.components.image(...), caption: ...)` when semantics matter.
+  Use `figure(m.components.image(...), caption: ...)` for captions, numbering, and references.
 ]

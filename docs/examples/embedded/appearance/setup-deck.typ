@@ -2,7 +2,7 @@
 
 #let authors = (m.layouts.author(
   "Ada Lovelace",
-  affiliations: ((id: "systems", name: [Systems Research]),),
+  affiliations: ([Systems Research],),
 ),)
 
 #let number = [

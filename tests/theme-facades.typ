@@ -17,6 +17,6 @@
     "callout", "divider", "frame", "image", "label", "progress", "quote",
   ).all(name => name in theme.components))
   assert(type(theme.layouts.content()) == dictionary)
-  assert(type(theme.layouts.title([No-author title])) == dictionary)
+  assert(type(theme.layouts.title(title: [No-author title])) == dictionary)
   assert(type(theme.layouts.section()) == dictionary)
 }

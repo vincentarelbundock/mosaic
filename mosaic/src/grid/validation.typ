@@ -17,13 +17,15 @@
     and "inset" in style
     and style.keys().all(
       key => key in (
-        "after", "background", "before", "content-sized", "fill",
-        "fit", "inset", "radius", "stroke",
+        "after", "align", "background", "before", "content-sized", "fill",
+        "fit", "inset", "map", "radius", "stroke",
       ),
     )
     and type(style.at("before", default: [])) == content
     and type(style.at("after", default: [])) == content
     and style.at("fit", default: none) in fit-modes
+    and type(style.at("align", default: left)) == alignment
+    and type(style.at("map", default: (body) => body)) == function
     and (
       style.at("background", default: none) == none
         or type(style.background) == content

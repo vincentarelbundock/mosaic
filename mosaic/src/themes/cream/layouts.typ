@@ -1,10 +1,9 @@
-// Exact callable Cream layout namespace.
-#import "../layouts-common.typ" as _common
-#import "tokens.typ" as _tokens
+// Callable Cream layout namespace: base layouts with Cream defaults.
+#import "../../layout/api.typ" as _base
 #import "../../author.typ": author
+#import "tokens.typ" as _tokens
 
-#let content = _common.content
-#let title(..args) = _common.title(auto, ..args)
-#let section(subtitle: none) = _common.section(_tokens.white, subtitle: subtitle)
-
-#let image = _common.image
+#let content = _base.content.with(variant: "header-body")
+#let title = _base.title
+#let section = _base.section.with(accent: _tokens.white)
+#let image = _base.image

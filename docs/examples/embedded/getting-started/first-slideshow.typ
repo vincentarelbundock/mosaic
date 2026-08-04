@@ -1,28 +1,24 @@
-// Import Mosaic, then install its document-wide slide behavior. Deck identity
-// declared here feeds the built-in title layout.
+// Import Mosaic, then configure the deck once: its identity, the layout every
+// content slide will use, and a progress line on the foreground plane.
 #import "@local/mosaic:0.0.1" as m
 
 #show: m.setup.with(
   title: [Getting started],
   subtitle: [A first Mosaic deck],
+  authors: (m.layouts.author("Ada Lovelace"),),
+  layouts: (content: m.layouts.content(variant: "header-body")),
+  content: (foreground: align(bottom, m.components.progress(variant: "line"))),
 )
 
-// The built-in title layout reads that metadata, so this slide needs no body.
-// Its `image-background` variant paints the picture behind the text, and
-// `align` moves the text clear of the tree.
-#m.slide(
-  layout: m.layouts.title(
-    variant: "image-background",
-    image: (
-      path: path("/docs/assets/images/bonsai.webp"),
-      alt: "A pine bonsai",
-    ),
-    align: right + top,
-  ),
-)
+// The built-in title layout reads the identity declared in setup, so this
+// slide needs no body.
+#m.slide(layout: "title")
 
-// A level-one heading starts a section slide.
-= Content
+// A level-one heading starts a section slide; the text after it becomes the
+// section's subtitle.
+= Slides from headings
+
+No `slide` call required
 
 // A level-two heading starts a regular content slide. The following content
 // fills that slide until the next level-one or level-two heading.
@@ -32,24 +28,24 @@
 - Sections start with `=`.
 - Everything is static by default.
 
-= Composition
+= Pictures and columns
 
-== A rounded grid
+Explicit slides when a heading is not enough
 
-// Slide bodies are ordinary Typst: define a reusable card, then arrange four
-// instances with Typst's native grid function.
-#let card(fill) = block(
-  width: 100%,
-  inset: 0.65em,
-  radius: 0.35em,
-  fill: fill,
-)[#lorem(8)]
+// The image layout pairs a full-bleed picture with a header and body. The
+// first positional block is the header, the second is the body.
+#m.slide(
+  layout: "image",
+  variant: "right",
+  image: path("/docs/assets/images/dog.webp"),
+)[== A picture beside text][
+  - The picture fills the right band.
+  - The text keeps the left.
+]
 
-#grid(
-  columns: (1fr, 1fr),
-  gutter: 0.6em,
-  card(rgb("#e8f1fb")),
-  card(rgb("#f8e8ee")),
-  card(rgb("#e8f5ec")),
-  card(rgb("#f7f0dd")),
-)
+// Two columns on the configured content layout: header, left, right.
+#m.slide(layout: "content", columns: 2)[== Two columns][
+  First column
+][
+  Second column
+]

@@ -11,6 +11,29 @@
 #let myslide = m.slide.with(layout: m.layouts.section(number: [01]))
 #myslide[Numbered section]
 
+// The designed text variants read the automatic section counter when no
+// number is given.
+#let myslide = m.slide.with(
+  layout: m.layouts.section(variant: "rule", subtitle: [A heavy Vignelli rule]),
+)
+#myslide[Rule section]
+
+#let myslide = m.slide.with(
+  layout: m.layouts.section(variant: "numeral", subtitle: [A ghost numeral]),
+)
+#myslide[Numeral section]
+
+#let myslide = m.slide.with(
+  layout: m.layouts.section(
+    variant: "baseline",
+    subtitle: [Title and number on one baseline],
+  ),
+)
+#myslide[Baseline section]
+
+#let myslide = m.slide.with(layout: m.layouts.section(variant: "toc"))
+#myslide[Toc section]
+
 #let myslide = m.slide.with(
   layout: m.layouts.section(variant: "image-left", image: picture),
 )

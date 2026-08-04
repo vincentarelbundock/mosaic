@@ -1,5 +1,5 @@
 // Validated author records shared by all title layouts.
-#import "shared.typ": fail, reject-unknown-keys
+#import "shared.typ": fail
 
 #let author-keys = (
   "affiliations",
@@ -9,25 +9,14 @@
   "name",
   "orcid",
 )
-#let affiliation-keys = ("id", "name")
-
 #let valid-name(value) = value != none and (
   type(value) == content
     or (type(value) == str and value != "")
 )
 
-#let validate-affiliation(record, subject) = {
-  if type(record) != dictionary {
-    fail(subject + " must be a dictionary with id and name")
-  }
-  reject-unknown-keys(record, affiliation-keys, subject)
-  let id = record.at("id", default: none)
-  let name = record.at("name", default: none)
-  if type(id) != str or id == "" {
-    fail(subject + " id must be a non-empty string")
-  }
-  if not valid-name(name) {
-    fail(subject + " name must be content or a non-empty string")
+#let validate-affiliation(value, subject) = {
+  if not valid-name(value) {
+    fail(subject + " must be content or a non-empty string")
   }
 }
 
@@ -88,6 +77,13 @@
 }
 
 // Canonical relationship analysis shared by validation and title renderers.
+//
+// Affiliations are deduplicated by the affiliation itself, so two authors share
+// a legend number exactly when they name the same institution. A `#let` binding
+// reused across authors therefore lands on one number without any separate
+// identifier to declare. The key is the `repr` of the affiliation as content,
+// because content is not hashable and because a string and the same text as
+// content are one institution, not two.
 #let analyze-authors(values, subject: "layout \"title\" author") = {
   let known = (:)
   let affiliations = ()
@@ -99,19 +95,14 @@
     )
     let numbers = ()
     for affiliation in author.affiliations {
-      let id = affiliation.id
-      if id in known {
-        let existing = known.at(id)
-        if repr(existing.name) != repr(affiliation.name) {
-          fail(
-            "layout \"title\" affiliation id " + repr(id)
-              + " has conflicting names",
-          )
-        }
-        numbers.push(existing.index + 1)
+      let key = repr(if type(affiliation) == str { [#affiliation] } else {
+        affiliation
+      })
+      if key in known {
+        numbers.push(known.at(key) + 1)
       } else {
         let index = affiliations.len()
-        known.insert(id, (index: index, name: affiliation.name))
+        known.insert(key, index)
         affiliations.push(affiliation)
         numbers.push(index + 1)
       }
@@ -121,16 +112,62 @@
   (authors: authors, affiliations: affiliations)
 }
 
-/// Creates a validated author for `layouts.title(authors: ...)`.
+/// Creates a validated author record for `setup(authors:)` and
+/// `layouts.title(authors:)`.
 ///
-/// `email` and `orcid` are independent optional fields. `affiliations` is an
-/// array of `(id: ..., name: ...)` dictionaries. A corresponding author must
-/// provide at least one of `email` or `orcid`.
+/// ```typ
+/// #let ada = mosaic.layouts.author(
+///   "Ada Lovelace",
+///   affiliations: ("Analytical Society", "University of London"),
+///   email: "ada@example.org",
+///   orcid: "0000-0002-1825-0097",
+///   corresponding: true,
+/// )
+/// ```
+///
+/// *Affiliations*
+///
+/// An affiliation is the institution itself: content or a non-empty string.
+/// Two authors share one legend number exactly when they give the same
+/// affiliation, so bind a shared institution once and reuse the binding:
+///
+/// ```typ
+/// #let lon = [University of London]
+/// #let ada = mosaic.layouts.author("Ada Lovelace", affiliations: (lon,))
+/// #let bab = mosaic.layouts.author("Charles Babbage", affiliations: (lon,))
+/// ```
+///
+/// The `academic` title variant renders these as superscript numbers over a
+/// numbered legend. Compact variants list them without numbering.
+///
+/// *Validation*
+///
+/// Values are checked at construction rather than at render time:
+///
+/// - `email` must look like an address.
+/// - `orcid` must be a well-formed iD, including its check digit.
+/// - `corresponding` requires at least one of `email` or `orcid`.
+///
+/// -> dictionary
 #let author(
+  /// The author's name, as the sole positional argument.
+  /// -> content | str
   name,
+  /// Array of institutions, as content or non-empty strings, in the order they
+  /// should be listed for this author.
+  /// -> array
   affiliations: (),
+  /// Contact address, shown on the `academic` title variant and linked as a
+  /// `mailto:`. Independent of `orcid`.
+  /// -> str | none
   email: none,
+  /// ORCID iD in `0000-0000-0000-0000` form, rendered as a linked ORCID icon
+  /// beside the name on every title variant. Independent of `email`.
+  /// -> str | none
   orcid: none,
+  /// Whether to mark this author as the corresponding one, with an asterisk
+  /// beside the name and on the contact line. Requires `email` or `orcid`.
+  /// -> bool
   corresponding: false,
 ) = validate-author((
   kind: "mosaic-author",

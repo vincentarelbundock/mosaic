@@ -1,13 +1,11 @@
 #import "@local/mosaic:0.0.1" as m
-#import "../../../_includes/title-fixtures.typ": dashboard, mark
 #show: m.setup
 
-#let ccp = (id: "ccp", name: [Centre for Comparative Politics])
-#let eis = (id: "eis", name: [European Institute for Social Data])
-#let lpe = (id: "lpe", name: [Laboratory for Public Evidence])
-#let eamc = (id: "eamc", name: [East Asia Methods Centre])
-#let udem = (id: "udem", name: [Université de Montréal])
-#let civic = (id: "civic", name: [Institute for Civic Statistics])
+#let ccp = [Centre for Comparative Politics]
+#let eis = [European Institute for Social Data]
+#let lpe = [Laboratory for Public Evidence]
+#let eamc = [East Asia Methods Centre]
+#let civic = [Institute for Civic Statistics]
 
 #m.slide(layout: m.layouts.title(
   title: [Compact academic metadata],
@@ -26,39 +24,34 @@
   date: [Toronto · July 2027],
 ))
 
-#m.slide(
-  layout: m.layouts.title(
-    title: [When public data disappears],
-    variant: "left-aligned",
-    subtitle: [What twelve disappearing archives teach us about reproducibility],
-    authors: (m.layouts.author([Vincent Arel-Bundock], affiliations: (udem,)),),
-    date: [March 2027],
-  ),
-  content: (foreground: [
-    #place(top + left)[#mark([OPEN DATA DAY], rgb("#2563eb"))]
-    #place(top + right)[#mark([MOSAIC LAB], rgb("#0f766e"))]
-  ]),
-)
-
 #m.slide(layout: m.layouts.title(
   title: [Models, evidence, and public decisions],
-  variant: "centered-stack",
+  variant: "centered",
   subtitle: [Annual Research Lecture · A public conversation about uncertainty],
   authors: (m.layouts.author([Maya Thompson], affiliations: (civic,)),),
   date: [2027],
 ))
 
 #m.slide(layout: m.layouts.title(
-  title: [Solid accent block],
-  variant: "accent-block",
-  subtitle: [A solid color spine; no image],
-  authors: (m.layouts.author([Variant · accent-block]),),
+  title: [Models, evidence, and public decisions],
+  variant: "plate",
+  subtitle: [Annual Research Lecture · A public conversation about uncertainty],
+  authors: (m.layouts.author([Maya Thompson], affiliations: (civic,)),),
+  date: [2027],
+))
+
+#m.slide(layout: m.layouts.title(
+  title: [Models, evidence, and public decisions],
+  variant: "frame",
+  subtitle: [Annual Research Lecture],
+  authors: (m.layouts.author([Maya Thompson], affiliations: (civic,)),),
+  date: [2027],
 ))
 
 #m.slide(layout: m.layouts.title(
   title: [Image on the right],
   variant: "image-right",
-  image: dashboard,
+  image: (path: path("/docs/assets/images/dog.webp"), alt: "Dog"),
   subtitle: [Text leads; the visual follows],
   authors: (m.layouts.author([Variant · image-right]),),
 ))
@@ -66,7 +59,7 @@
 #m.slide(layout: m.layouts.title(
   title: [Image on the left],
   variant: "image-left",
-  image: dashboard,
+  image: (path: path("/docs/assets/images/dog.webp"), alt: "Dog"),
   subtitle: [The visual leads; text follows],
   authors: (m.layouts.author([Variant · image-left]),),
 ))

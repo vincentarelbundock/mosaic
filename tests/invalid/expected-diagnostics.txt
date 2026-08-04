@@ -1,6 +1,5 @@
 anonymous-cell|cell id must be a non-empty string
-author-affiliation|author affiliation 1 id must be a non-empty string
-author-affiliation-conflict|affiliation id "lab" has conflicting names
+author-affiliation|author affiliation 1 must be content or a non-empty string
 author-affiliations|author affiliations must be an array
 author-corresponding|author corresponding requires email or orcid
 author-email|author email must be a valid email address
@@ -47,7 +46,7 @@ layouts-title-image-path|image path must be a non-empty string
 layouts-title-image-required|variant "image-background" requires image
 layouts-title-image-size|image does not accept "width"
 layouts-title-image-type|image must be content, a non-empty path string, a native path, or a path dictionary
-layouts-title-image-unused|variant "left-aligned" does not use image
+layouts-title-image-unused|variant "swiss" does not use image
 layouts-title-mutated-command|variant "image-right" requires image
 layouts-title-ordinary-authors|author 1 must be created with author()
 layouts-title-rule|rule must be auto, true, or false

@@ -12,9 +12,9 @@
     #html.elem("section", attrs: (class: "mosaic-hero"))[
       #html.elem("div")[
         #html.elem("h1")[
-          Create beautiful
+          Create slide
           #html.elem("br")
-          slides with
+          decks with
           #html.elem("span", attrs: (
             class: "mosaic-hero__typst-box",
           ))[
@@ -43,7 +43,7 @@
     ))[
       #html.elem("a", attrs: (
         class: "mosaic-button mosaic-button--secondary",
-        href: "basics.html",
+        href: "start/first-deck.html",
       ))[Get started]
       #html.elem("a", attrs: (
         class: "mosaic-button mosaic-button--secondary",
@@ -59,15 +59,15 @@
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
           #html.elem("h2")[Layouts]
           #html.elem("p")[
-            Default, title, and section layouts, with matching typography and
-            explicit accent controls.
+            Ready-made content, title, section, and image layouts, each with
+            several variants.
           ]
         ]
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
           #html.elem("h2")[Grids]
           #html.elem("p")[
-            Every slide is a layout: a tree of cells split horizontally or
-            vertically, nested as deeply as needed.
+            Every slide is a grid: cells split horizontally or vertically,
+            nested as deeply as needed.
           ]
         ]
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[

@@ -5,36 +5,70 @@
 
 /// Creates a slide-sized native Typst image with an optional scrim.
 ///
-/// Width and height default to `100%`, while `fit` defaults to `"cover"`.
-/// All additional arguments are forwarded unchanged to Typst's native
-/// `image`, including `alt`, `format`, `page`, and `scaling`.
-/// When Mosaic is imported as a package, use a native `path` value for an
-/// image in the calling project, for example `path("photo.webp")`.
+/// This is Typst's own `image` with presentation defaults: it fills its
+/// container instead of hugging its natural size, and it can carry a scrim.
+/// Everything else is forwarded unchanged, so `alt`, `format`, `page`, and
+/// `scaling` all work as usual.
 ///
-/// `scrim` paints a layer over the picture and under whatever text is composed
-/// on top of it, which is how a photograph is quieted enough to read against.
-/// It takes an ordinary Typst paint, so it accepts exactly what a `fill`
-/// accepts: `black.transparentize(55%)` darkens the whole frame evenly, and a
-/// gradient darkens only the band the text occupies. Without a scrim, this
-/// function returns the native image element directly.
+/// ```typ
+/// #mosaic.slide(content: (
+///   background: mosaic.components.image(path("cover.webp")),
+///   body: [Text over the photograph],
+/// ))
+/// ```
+///
+/// When Mosaic is imported as a package, wrap an asset of the calling project
+/// in a native `path` value, as above. A bare string would resolve relative to
+/// the package instead.
+///
+/// *Scrims*
+///
+/// A `scrim` paints a layer over the picture and under whatever text is
+/// composed on top of it, which is how a photograph is quieted enough to read
+/// against. It takes an ordinary Typst paint, so it accepts exactly what a
+/// `fill` accepts.
+///
+/// ```typ
+/// // Darken the whole frame evenly.
+/// #mosaic.components.image(
+///   path("cover.webp"),
+///   scrim: black.transparentize(55%),
+/// )
+///
+/// // Darken only the band the text occupies.
+/// #mosaic.components.image(
+///   path("cover.webp"),
+///   scrim: gradient.linear(
+///     black.transparentize(20%), black.transparentize(100%),
+///     angle: 90deg,
+///   ),
+/// )
+/// ```
+///
+/// Without a scrim this returns the native image element directly, unwrapped.
 ///
 /// -> content
 #let image(
-  /// Native image source. Use `path(...)` for assets in the calling project.
+  /// Native image source. Use `path(...)` for an asset in the calling project.
+  /// -> str | path | bytes
   source,
-  /// Width of the image area.
+  /// Width of the image area. Defaults to filling the container.
   /// -> auto | length | relative
   width: 100%,
-  /// Height of the image area.
+  /// Height of the image area. Defaults to filling the container.
   /// -> auto | length | relative | fraction
   height: 100%,
-  /// Native Typst image fitting mode.
+  /// Native Typst fitting mode: `"cover"` fills and crops, `"contain"` fits the
+  /// whole picture inside, and `"stretch"` distorts it to fill.
   /// -> str
   fit: "cover",
-  /// Paint layered over the picture, or `none`.
+  /// Paint layered over the picture and under any text composed on top of it.
+  /// Accepts whatever a native `fill` accepts.
   /// -> none | color | gradient | tiling
   scrim: none,
-  /// Additional arguments forwarded to native Typst `image`.
+  /// Further arguments forwarded unchanged to native Typst `image`, such as
+  /// `alt`, `format`, `page`, and `scaling`.
+  /// -> arguments
   ..native,
 ) = {
   let scrim = validate-scrim(scrim, "image")

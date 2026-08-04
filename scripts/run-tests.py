@@ -167,7 +167,9 @@ def run_core(typst: str, sources: list[str]) -> None:
         require_contains(page, "#e6edf3")
         for light_color in ("#fafaf9", "#1c1917", "#2563eb", "#78716c", "#e7e5e4"):
             require_contains(page, light_color, absent=True)
-    require_contains(dark_pages[0], "#58a6ff")
+    # The swiss title rule takes the text color, so the accent's page-1 carrier
+    # is gone; the accent-role progress line on later pages proves the flow.
+    require_contains(dark_pages[1], "#58a6ff")
     for dark_color in ("#13233a", "#161b22", "#30363d", "#d2a8ff", "#ff7b72", "#ffa657"):
         require_contains(dark_pages[1], dark_color)
 
@@ -283,13 +285,18 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(empty_markers, "pause", absent=True)
     require_contains(pdf_info("pause-empty-markers"), "Pages:           1")
 
-    pause_handout = pdf_text("pause-handout")
+    # Whitespace-normalized: the phrases are one wrapped paragraph, so a line
+    # break may fall inside any of them depending on the theme's metrics.
+    pause_handout_text = " ".join(
+        pdf_text("pause-handout").read_text(encoding="utf-8", errors="replace").split()
+    )
     for expected in (
         "PAUSE HANDOUT FIRST",
         "PAUSE HANDOUT SECOND",
         "PAUSE HANDOUT FINAL",
     ):
-        require_contains(pause_handout, expected)
+        if expected not in pause_handout_text:
+            raise TestFailure(f"pause-handout text does not contain {expected!r}")
     require_contains(pdf_info("pause-handout"), "Pages:           1")
 
     themed_text = pdf_text("speaker-notes-theme")

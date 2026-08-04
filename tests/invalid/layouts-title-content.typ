@@ -1,3 +1,3 @@
 #import "@local/mosaic:0.0.1" as mosaic
 
-#mosaic.layouts.title(42)
+#mosaic.layouts.title(title: 42)

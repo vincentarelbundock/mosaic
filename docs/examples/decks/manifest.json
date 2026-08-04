@@ -4,35 +4,43 @@
       "slug": "cream",
       "title": "Cream, Green, and Black",
       "frames": 18,
-      "alt": "Cream, Green, and Black deck, first slide",
-      "showcase_pages": [1, 2, 11, 17]
+      "alt": "Cream, Green, and Black deck, first slide"
     },
     {
       "slug": "metropolis",
       "title": "Metropolis",
       "frames": 25,
-      "alt": "Metropolis deck, first slide",
-      "showcase_pages": [1, 5, 6, 7, 8, 18, 19, 20, 21]
+      "alt": "Metropolis deck, first slide"
     },
     {
       "slug": "minimalist",
       "title": "Minimalist White",
       "frames": 19,
-      "alt": "Minimalist White deck, first slide",
-      "showcase_pages": [1, 5, 8, 16]
+      "alt": "Minimalist White deck, first slide"
     },
     {
       "slug": "portfolio",
       "title": "Greyscale",
       "frames": 14,
-      "alt": "Greyscale theme deck, first slide",
-      "showcase_pages": []
+      "alt": "Greyscale theme deck, first slide"
     }
   ],
-  "showcase_intro": [
+  "showcase": [
     {
-      "source": "docs/assets/examples/getting-started/first-slideshow.pdf",
-      "pages": [1, 4]
+      "source": "docs/examples/decks/metropolis/metropolis.pdf",
+      "pages": [1, [5, 6, 7, 8], 11, [14, 15, 16]]
+    },
+    {
+      "source": "docs/examples/decks/cream/cream.pdf",
+      "pages": [1, 11, 17]
+    },
+    {
+      "source": "docs/examples/decks/portfolio/portfolio.pdf",
+      "pages": [1, 9, 11]
+    },
+    {
+      "source": "docs/examples/decks/minimalist/minimalist.pdf",
+      "pages": [1, 8, 16]
     }
   ]
 }

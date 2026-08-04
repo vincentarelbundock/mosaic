@@ -1,4 +1,5 @@
 #import "pdf-slideshow.typ": pdf-slideshow
+#import "site.typ": asset-url
 
 #let padded-page(page, total) = {
   let width = str(total).len()
@@ -65,8 +66,8 @@
   let width = if max-width != none { max-width } else { 42em }
   if sys.inputs.at("calepin-target", default: "paged") == "html" {
     return pdf-slideshow(
-      "assets/examples/" + slug + ".pdf",
-      "assets/examples/" + slug + "-cover.svg",
+      asset-url("assets/examples/" + slug + ".pdf"),
+      asset-url("assets/examples/" + slug + "-cover.svg"),
       "pdf-slideshow-" + slug.replace("/", "-"),
       title,
       frames,

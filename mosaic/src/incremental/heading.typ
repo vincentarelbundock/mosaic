@@ -65,6 +65,19 @@
   false
 }
 
+// Replaces every heading in the value with its bare body, so a section title
+// can be re-rendered elsewhere (the toc section variant, queryable section
+// metadata) without minting duplicate outline entries or bookmarks.
+#let strip-headings(value) = if type(value) != content {
+  value
+} else if value.func() == heading {
+  value.body
+} else if value.func() == [].func() {
+  value.children.map(strip-headings).join()
+} else {
+  value
+}
+
 #let apply-state(state, body) = if state == "visible" {
   body
 } else if state == "hidden" {

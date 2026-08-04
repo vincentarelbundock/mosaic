@@ -14,9 +14,9 @@ IMPORT = re.compile(
 )
 LET = re.compile(r"(?m)^#let\s+([A-Za-z_][A-Za-z0-9_-]*)\b")
 
-NEUTRAL_API = {"setup", "slide", "note", "pause", "surface", "grid", "layouts", "steps", "components", "theme", "themes"}
+NEUTRAL_API = {"setup", "definition", "slide", "note", "pause", "surface", "grid", "layouts", "steps", "components", "theme", "themes"}
 SHARED_API = {"slide", "note", "pause", "surface", "grid", "layouts", "steps", "components", "theme"}
-THEMED_API = {"setup", "slide", "note", "pause", "surface", "grid", "layouts", "steps", "components", "theme"}
+THEMED_API = {"setup", "definition", "slide", "note", "pause", "surface", "grid", "layouts", "steps", "components", "theme"}
 THEMED_LAYOUTS = {"content", "title", "section", "image", "author"}
 THEMED_COMPONENTS = {"frame", "callout", "label", "quote", "divider", "progress", "image"}
 
@@ -28,7 +28,7 @@ EXPECTED = {
     "mosaic/src/layout/api.typ": {"content", "title", "section", "image", "author"},
     "mosaic/src/incremental/api.typ": {"on", "reveal", "replace", "reduce"},
     "mosaic/src/component/api.typ": THEMED_COMPONENTS,
-    "mosaic/src/themes/extension.typ": {"setup"},
+    "mosaic/src/themes/extension.typ": {"setup", "normalize-lists"},
     "mosaic/src/themes/api.typ": {"metropolis", "cream", "minimalist", "light", "dark"},
     "mosaic/src/themes/light.typ": THEMED_API,
     "mosaic/src/themes/light/layouts.typ": THEMED_LAYOUTS,

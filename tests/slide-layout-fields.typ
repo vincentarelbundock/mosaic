@@ -7,11 +7,11 @@
 #show: mosaic.setup.with(
   title: [Field overlay],
   subtitle: [Configured subtitle],
-  authors: (mosaic.layouts.author([Ada], affiliations: ((id: "a", name: [Institute A]),)),),
+  authors: (mosaic.layouts.author([Ada], affiliations: ([Institute A],)),),
   date: [July 2027],
   layouts: (
     content: mosaic.layouts.content(variant: "header-body"),
-    title: mosaic.layouts.title(variant: "accent-block", accent: configured-accent),
+    title: mosaic.layouts.title(variant: "centered", accent: configured-accent),
     section: mosaic.layouts.section(accent: configured-accent),
   ),
 )

@@ -9,7 +9,7 @@
 
 #m.slide[INHERITED PLANES]
 
-#m.slide(layout: m.layouts.title([TITLE WITH DEFAULT PLANES]), numbered: false)
+#m.slide(layout: m.layouts.title(title: [TITLE WITH DEFAULT PLANES]), numbered: false)
 
 #m.slide(
   content: (

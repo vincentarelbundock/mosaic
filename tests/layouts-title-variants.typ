@@ -3,10 +3,13 @@
 #import "../mosaic/src/layout/resolver.typ": resolve-layout
 #import "../mosaic/src/settings.typ": make-settings
 
-#let settings = make-settings()
+// `base-size` is an observation, not a stored setting: `render-slide` reads it
+// from the live context so composed title tiers track the active theme. A
+// fixture that resolves layouts directly supplies it the same way.
+#let settings = make-settings() + (base-size: 28pt)
 #let image-path = path("/docs/assets/images/title-river.webp")
-#let udem = (id: "udem", name: [Universite de Montreal])
-#let cirano = (id: "cirano", name: [CIRANO])
+#let udem = [Universite de Montreal]
+#let cirano = [CIRANO]
 #let academic-authors = (
   mosaic.layouts.author([Ada Lovelace], affiliations: (udem, cirano)),
   mosaic.layouts.author([Grace Hopper], affiliations: (cirano,)),
@@ -14,7 +17,7 @@
 )
 
 #let academic-command = mosaic.layouts.title(
-  [A long academic title],
+  title: [A long academic title],
   variant: "academic",
   subtitle: [A multilevel analysis],
   authors: academic-authors,
@@ -33,7 +36,7 @@
 #assert(grid-test.info(academic, "authors").cell.content != none)
 
 #let structured-academic = resolve-layout(mosaic.layouts.title(
-  [Structured authors],
+  title: [Structured authors],
   variant: "academic",
   authors: (
     mosaic.layouts.author(
@@ -55,7 +58,7 @@
 }
 
 #let orcid-only = resolve-layout(mosaic.layouts.title(
-  [ORCID only],
+  title: [ORCID only],
   variant: "academic",
   authors: (
     mosaic.layouts.author([Grace Hopper], orcid: "0000-0001-2345-6789"),
@@ -66,42 +69,58 @@
   assert(grid-test.info(orcid-only, id).cell.id == id)
 }
 
-#let left-grid = resolve-layout(mosaic.layouts.title(
-  [When public data disappears],
-  variant: "left-aligned",
+#let swiss = resolve-layout(mosaic.layouts.title(
+  title: [When public data disappears],
+  variant: "swiss",
   subtitle: [Evidence from twelve public archives],
   authors: (mosaic.layouts.author([Vincent Arel-Bundock], affiliations: (udem,)),),
   date: [March 2027],
 ), settings)
-#assert(left-grid.kind == "cell")
-#assert(grid-test.count(left-grid) == 1)
-#assert(grid-test.info(left-grid, "title").cell.content != none)
+#assert(swiss.kind == "split")
+#assert(swiss.axis == "height")
+#assert(swiss.tracks == (1fr, auto))
+#assert(grid-test.count(swiss) == 2)
+#assert(grid-test.info(swiss, "title").cell.content != none)
+#assert(grid-test.info(swiss, "details").cell.content != none)
+
+// Without metadata and with the baseline rule suppressed, swiss collapses to
+// the plain title mass.
+#let bare-swiss = resolve-layout(mosaic.layouts.title(
+  title: [Bare title],
+  authors: (),
+  rule: false,
+), settings)
+#assert(bare-swiss.kind == "cell")
+#assert(grid-test.count(bare-swiss) == 1)
 
 #let centered = resolve-layout(mosaic.layouts.title(
-  [Models and evidence],
-  variant: "centered-stack",
+  title: [Models and evidence],
+  variant: "centered",
   subtitle: [Annual research lecture],
   authors: (mosaic.layouts.author([Vincent Arel-Bundock]),),
 ), settings)
 #assert(centered.kind == "cell")
 #assert(grid-test.count(centered) == 1)
 
-#let accent-color = rgb("#765432")
-#let accent = resolve-layout(mosaic.layouts.title(
-  [From raw data to publication],
-  variant: "accent-block",
-  subtitle: [Build a reproducible report],
+#let plate = resolve-layout(mosaic.layouts.title(
+  title: [Models and evidence],
+  variant: "plate",
+  subtitle: [Annual research lecture],
   authors: (mosaic.layouts.author([Vincent Arel-Bundock]),),
-  accent: accent-color,
 ), settings)
-#assert(accent.kind == "split")
-#assert(accent.axis == "width")
-#assert(accent.tracks == (4%, 1fr))
-#assert(grid-test.count(accent) == 2)
-#assert(grid-test.info(accent, "accent").cell.style.fill == accent-color)
+#assert(plate.kind == "cell")
+#assert(plate.style.fill == settings.colors.text)
+
+#let frame = resolve-layout(mosaic.layouts.title(
+  title: [Models and evidence],
+  variant: "frame",
+  authors: (mosaic.layouts.author([Vincent Arel-Bundock]),),
+), settings)
+#assert(frame.kind == "cell")
+#assert(grid-test.count(frame) == 1)
 
 #let split-right = resolve-layout(mosaic.layouts.title(
-  [Measuring environmental change],
+  title: [Measuring environmental change],
   variant: "image-right",
   image: image-path,
 ), settings)
@@ -113,7 +132,7 @@
 #assert(grid-test.count(split-right) == 2)
 
 #let split-left = resolve-layout(mosaic.layouts.title(
-  [Measuring environmental change],
+  title: [Measuring environmental change],
   variant: "image-left",
   image: image-path,
   tracks: (3fr, 2fr),
@@ -123,7 +142,7 @@
 #assert(split-left.children.at(1).kind == "cell")
 
 #let band = resolve-layout(mosaic.layouts.title(
-  [Measuring environmental change],
+  title: [Measuring environmental change],
   variant: "image-top",
   image: image-path,
 ), settings)
@@ -135,7 +154,7 @@
 #assert(grid-test.count(band) == 2)
 
 #let background = resolve-layout(mosaic.layouts.title(
-  [Cities after dark],
+  title: [Cities after dark],
   variant: "image-background",
   image: path("/docs/assets/images/title-city.webp"),
   align: top + left,
@@ -151,7 +170,7 @@
 #assert("align" not in background.style)
 
 #let centered-background = resolve-layout(mosaic.layouts.title(
-  [Cities after dark],
+  title: [Cities after dark],
   variant: "image-background",
   image: image-path,
   align: center,
@@ -159,7 +178,7 @@
 #assert(centered-background.style.inset.left == centered-background.style.inset.right)
 
 #let right-background = resolve-layout(mosaic.layouts.title(
-  [Cities after dark],
+  title: [Cities after dark],
   variant: "image-background",
   image: image-path,
   align: right,

@@ -1,9 +1,8 @@
-// Exact callable Minimalist layout namespace.
-#import "../layouts-common.typ" as _common
+// Callable Minimalist layout namespace: base layouts with Minimalist defaults.
+#import "../../layout/api.typ" as _base
 #import "../../author.typ": author
 
-#let content = _common.content
-#let title(..args) = _common.title(auto, ..args)
-#let section(subtitle: none) = _common.section(auto, subtitle: subtitle)
-
-#let image = _common.image
+#let content = _base.content.with(variant: "header-body")
+#let title = _base.title
+#let section = _base.section
+#let image = _base.image

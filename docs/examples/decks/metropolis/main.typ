@@ -13,8 +13,8 @@
 #import "/preamble.typ": *
 #show: m.setup
 
-#let ccp = (id: "ccp", name: [Centre for Comparative Politics])
-#let eis = (id: "eis", name: [European Institute for Social Data])
+#let ccp = [Centre for Comparative Politics]
+#let eis = [European Institute for Social Data]
 
 #m.slide(layout: m.layouts.title(
   title: [

@@ -14,7 +14,7 @@ from urllib.parse import unquote, urlsplit
 
 from PIL import Image
 
-from deck_metadata import load_manifest  # type: ignore[import-not-found]
+from deck_metadata import flatten_pages, load_manifest  # type: ignore[import-not-found]
 from embedded_examples import ExampleCall, parse_calls
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -135,13 +135,14 @@ def check_sources() -> tuple[list[ExampleCall], set[Path]]:
 
     manifest = load_manifest()
     check_greyscale_theme(manifest, errors)
-    for item in manifest["showcase_intro"]:
+    for item in manifest["showcase"]:
         source = ROOT / item["source"]
+        selected = max(flatten_pages(item["pages"]))
         if not source.is_file():
-            errors.append(f"showcase intro source is missing: {item['source']}")
-        elif (pages := pdf_pages(source)) < max(item["pages"]):
+            errors.append(f"showcase source is missing: {item['source']}")
+        elif (pages := pdf_pages(source)) < selected:
             errors.append(
-                f"showcase intro selects page {max(item['pages'])} from "
+                f"showcase selects page {selected} from "
                 f"a {pages}-page PDF: {item['source']}"
             )
     for entry in manifest["decks"]:

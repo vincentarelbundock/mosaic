@@ -225,14 +225,16 @@ The root package is the light theme. To use another bundled theme, import its fa
 
 The bundled themes are `light`, `dark`, `cream`, `metropolis`, and `minimalist`. Each exposes the same `setup`, `slide`, `grid`, `layouts`, `steps`, and `components` API.
 
-See [`docs/appearance.typ`](docs/appearance.typ) for theme customization and the copyable external-theme examples.
+See [`docs/appearance/themes.typ`](docs/appearance/themes.typ) for theme customization and the copyable external-theme examples.
 
 ## Documentation and examples
 
-- [Basics](docs/basics.typ): deck anatomy, the first slideshow, and a complete named-cell walkthrough
-- [Structure](docs/structure.typ): layouts, grids, tracks, and content assignment
-- [Appearance](docs/appearance.typ): native styling, semantic colors, planes, and themes
-- [Incremental content](docs/incremental.typ): pauses, ranges, reveals, and replacement
+- [Get started](docs/start/): the first deck, the vocabulary, and a complete named-cell walkthrough
+- [Slide structure](docs/slides/): grids, tracks, built-in layouts, and content assignment
+- [Content](docs/content/): images and scrims, the components library, and math
+- [Appearance](docs/appearance/): native styling, typography, semantic colors, and themes
+- [Slide furniture](docs/furniture/): background and foreground planes, footers, progress, and navigation
+- [Incremental reveals](docs/incremental/): pauses, ranges, reveals, replacement, notes, and handouts
 - [Slides and notes API](docs/api/slides.typ): explicit slides, speaker notes, and companion outputs
 - [Examples](docs/examples.typ): complete decks and focused examples
 - [API sources](docs/api/): public functions grouped by topic

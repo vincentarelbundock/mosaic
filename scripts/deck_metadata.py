@@ -13,14 +13,14 @@ MANIFEST = ROOT / "docs/examples/decks/manifest.json"
 
 def load_manifest() -> dict:
     data = json.loads(MANIFEST.read_text(encoding="utf-8"))
-    if set(data) != {"decks", "showcase_intro"}:
-        raise ValueError("deck manifest requires exactly decks and showcase_intro")
+    if set(data) != {"decks", "showcase"}:
+        raise ValueError("deck manifest requires exactly decks and showcase")
     decks = data.get("decks")
     if not isinstance(decks, list) or not decks:
         raise ValueError("deck manifest requires a non-empty decks array")
     seen: set[str] = set()
     for entry in decks:
-        required = {"slug", "title", "frames", "alt", "showcase_pages"}
+        required = {"slug", "title", "frames", "alt"}
         if set(entry) != required:
             raise ValueError(f"deck entry keys must be {sorted(required)}: {entry!r}")
         slug = entry["slug"]
@@ -31,16 +31,8 @@ def load_manifest() -> dict:
             raise ValueError(f"deck {slug} requires a title")
         if not isinstance(entry["alt"], str) or not entry["alt"]:
             raise ValueError(f"deck {slug} requires alt text")
-        frames = entry["frames"]
-        pages = entry["showcase_pages"]
-        if type(frames) is not int or frames < 1:
+        if type(entry["frames"]) is not int or entry["frames"] < 1:
             raise ValueError(f"deck {slug} frames must be a positive integer")
-        if not isinstance(pages, list) or any(
-            type(page) is not int or page < 1 or page > frames for page in pages
-        ):
-            raise ValueError(f"deck {slug} showcase pages must be within 1..{frames}")
-        if len(pages) != len(set(pages)):
-            raise ValueError(f"deck {slug} showcase pages must be unique")
         if not (ROOT / f"docs/examples/decks/{slug}/Makefile").is_file():
             raise ValueError(f"deck {slug} has no Makefile")
     directories = {
@@ -51,21 +43,34 @@ def load_manifest() -> dict:
         raise ValueError(
             f"deck manifest/directories differ: manifest={sorted(seen)}, directories={sorted(directories)}"
         )
-    intro = data["showcase_intro"]
-    if not isinstance(intro, list):
-        raise ValueError("showcase_intro must be an array")
-    for item in intro:
+    showcase = data["showcase"]
+    if not isinstance(showcase, list) or not showcase:
+        raise ValueError("showcase must be a non-empty array")
+    for item in showcase:
         if not isinstance(item, dict) or set(item) != {"source", "pages"}:
-            raise ValueError("showcase intro entries require exactly source and pages")
+            raise ValueError("showcase entries require exactly source and pages")
         source = item["source"]
         pages = item["pages"]
         if not isinstance(source, str) or not source.endswith(".pdf"):
-            raise ValueError("showcase intro source must be a PDF path")
-        if not isinstance(pages, list) or not pages or any(type(page) is not int or page < 1 for page in pages):
-            raise ValueError(f"showcase intro pages must be positive integers: {source}")
-        if len(pages) != len(set(pages)):
-            raise ValueError(f"showcase intro pages must be unique: {source}")
+            raise ValueError("showcase source must be a PDF path")
+        if not isinstance(pages, list) or not pages:
+            raise ValueError(f"showcase entry needs at least one page: {source}")
+        for page in pages:
+            # A nested array is one incremental build: its steps play fast and
+            # only the completed final step is held.
+            run = page if isinstance(page, list) else [page]
+            if isinstance(page, list) and len(run) < 2:
+                raise ValueError(f"showcase build needs at least two steps: {source}")
+            if any(type(step) is not int or step < 1 for step in run):
+                raise ValueError(f"showcase pages must be positive integers: {source}")
+        flat = flatten_pages(pages)
+        if len(flat) != len(set(flat)):
+            raise ValueError(f"showcase pages must be unique: {source}")
     return data
+
+
+def flatten_pages(pages: list) -> list[int]:
+    return [step for page in pages for step in (page if isinstance(page, list) else [page])]
 
 
 def main() -> int:
@@ -76,13 +81,14 @@ def main() -> int:
     if args.command == "slugs":
         print(" ".join(entry["slug"] for entry in data["decks"]))
     elif args.command == "showcase":
-        for item in data.get("showcase_intro", []):
+        # Each line is source|page|kind. A "step" is one frame of an
+        # incremental build; a "beat" is a slide the reel rests on.
+        for item in data["showcase"]:
             for page in item["pages"]:
-                print(f'{item["source"]}|{page}')
-        for entry in data["decks"]:
-            source = f'docs/examples/decks/{entry["slug"]}/{entry["slug"]}.pdf'
-            for page in entry["showcase_pages"]:
-                print(f"{source}|{page}")
+                run = page if isinstance(page, list) else [page]
+                for step in run[:-1]:
+                    print(f'{item["source"]}|{step}|step')
+                print(f'{item["source"]}|{run[-1]}|beat')
     else:
         print(f'Deck manifest: PASS ({len(data["decks"])} decks)')
     return 0

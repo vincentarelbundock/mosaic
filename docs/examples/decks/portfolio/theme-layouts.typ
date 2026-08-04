@@ -1,24 +1,13 @@
-// Exact callable Greyscale layout namespace.
+// Callable Greyscale layout namespace: base layouts with Greyscale defaults,
+// plus a fully custom section grid.
 #import "@local/mosaic:0.0.1" as _mosaic
-#import "@local/mosaic:0.0.1": layouts as _base-layouts
+#import "@local/mosaic:0.0.1": layouts as _base
 #import "theme-tokens.typ" as _tokens
-#let author = _base-layouts.author
 
-#let content() = _mosaic.layouts.content(variant: "header-body")
-
-#let title(
-  title: auto,
-  subtitle: auto,
-  authors: auto,
-  date: auto,
-) = _mosaic.layouts.title(
-  title,
-  variant: "left-aligned",
-  subtitle: subtitle,
-  authors: authors,
-  date: date,
-  accent: _tokens.gray,
-)
+#let author = _base.author
+#let content = _base.content.with(variant: "header-body")
+#let title = _base.title.with(accent: _tokens.gray)
+#let image = _base.image
 
 #let section(subtitle: none) = {
   let band = if subtitle == none {

@@ -10,7 +10,7 @@
 
 #let authors = (m.layouts.author(
   "Ada Lovelace",
-  affiliations: ((id: "platform", name: [Platform Engineering]),),
+  affiliations: ([Platform Engineering],),
 ),)
 
 #show: m.setup.with(

@@ -2,13 +2,10 @@
 #import "slide/runtime.typ": configure-deck
 #import "deck-compiler.typ": compile-deck
 #import "grid/render.typ": overflow-report
-#import "settings.typ": make-settings, configure-settings, resolve-colors
+#import "settings.typ": make-settings, configure-settings
 #import "shared.typ": fail, reject-unknown-keys
 #import "color-defaults.typ": default-colors
 #import "layout/config.typ": standard-layouts, validate-layouts
-
-#let text-element = text
-#let heading-element = heading
 
 // Every option `setup` accepts, with its default. This is the single list:
 // `theme-engine` derives the set of theme-neutral option names from these keys
@@ -27,12 +24,11 @@
   subtitle: none,
   authors: (),
   date: none,
-  colors: (:),
   content: (:),
 )
 
-// Private setup engine. Public and themed facades supply an exact options
-// dictionary and private semantic colors; no color registry enters the API.
+// Private setup engine. The theme engine supplies an exact options dictionary
+// and fully resolved semantic colors; no color registry enters the API.
 #let setup-core(options, body, colors: default-colors) = {
   if type(options) != dictionary {
     fail("internal setup options must be a dictionary; got " + repr(type(options)))
@@ -49,7 +45,6 @@
   let frozen-counters = options.frozen-counters
   let frozen-states = options.frozen-states
 
-  let colors = resolve-colors(colors, options.colors)
   if type(options.content) != dictionary {
     fail("setup content must be a dictionary")
   }
@@ -85,10 +80,12 @@
       fill: colors.canvas,
     )
   } else {
+    // No explicit fill: an `auto` page still prints white, and the slide
+    // thumbnails read `page.fill == auto` as their cue to paint the deck's
+    // canvas color inside the frame.
     (
       paper: "a4",
       margin: 15mm,
-      fill: white,
     )
   }
   set page(..page-options)
@@ -98,31 +95,10 @@
     ()
   }
   set document(title: settings.deck.title, author: document-authors)
-  set text-element(..settings.type.body)
-  show heading-element.where(depth: 1): set text-element(..settings.type.title)
-  show heading-element.where(depth: 2): set text-element(..settings.type.heading)
-  show figure.caption: set text-element(..settings.type.caption)
-  show heading-element: set block(below: settings.spacing.heading-below)
-  set list(spacing: settings.spacing.list-spacing)
-  set enum(spacing: settings.spacing.list-spacing)
-  set terms(spacing: settings.spacing.list-spacing)
-  // Canonical cell typography and arrangement. Every rendered cell is one
-  // block labeled <mosaic-cell-ID>, so defaults for the canonical cell
-  // vocabulary are ordinary label-targeted rules. Rules defined later (in a
-  // themed setup, rules after `#show: setup`, or rules scoped around one
-  // slide command) sit inside these and therefore win.
-  show label("mosaic-cell-section"): set align(center + horizon)
-  show label("mosaic-cell-section"): set text-element(..settings.type.title)
-  show label("mosaic-cell-footer"): set text-element(..settings.type.small)
-  show label("mosaic-cell-title"): set text-element(
-    ..(settings.type.title + (size: 2em, tracking: -0.015em)),
-  )
-  show label("mosaic-cell-title"): set par(leading: 0.42em)
-  show label("mosaic-cell-authors"): set text-element(
-    size: 0.8em,
-    weight: "medium",
-  )
-  show label("mosaic-cell-details"): set text-element(..settings.type.small)
+  // No typography here by design. Every `set` and `show` rule a deck renders
+  // with comes from the active theme's `apply`, including the rules that style
+  // the canonical <mosaic-cell-*> vocabulary. This engine owns structure only:
+  // page geometry, document metadata, deck configuration, and compilation.
   configure-settings(settings)
   [#metadata(settings.deck) <mosaic-deck-metadata>]
   configure-deck(

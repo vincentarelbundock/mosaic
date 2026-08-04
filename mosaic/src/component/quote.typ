@@ -3,24 +3,46 @@
 
 /// Creates a quotation treatment with optional portrait and attribution.
 ///
+/// The quotation sits in a lightly tinted `frame`. A portrait, when given,
+/// takes a column to the left of the text; attribution and source share one
+/// right-aligned line beneath it, joined by a comma when both are present.
+///
+/// ```typ
+/// #mosaic.components.quote(
+///   attribution: [Ada Lovelace],
+///   source: [Notes on the Analytical Engine, 1843],
+///   portrait: mosaic.components.image(
+///     path("ada.webp"),
+///     width: 4em, height: 4em,
+///   ),
+/// )[
+///   The Analytical Engine weaves algebraic patterns.
+/// ]
+/// ```
+///
+/// See `frame` for the list of roles and the accepted `style` keys.
+///
 /// -> content
 #let quote(
-  /// Quotation content.
+  /// The quoted text.
   /// -> content
   body,
-  /// Optional author or speaker.
+  /// Who is being quoted, set on the fine-print line below the quotation.
   /// -> content | none
   attribution: none,
-  /// Optional content placed beside the quotation.
+  /// Content placed in a column beside the quotation, typically a portrait
+  /// image sized to a few `em`.
   /// -> content | none
   portrait: none,
-  /// Optional source appended to the attribution.
+  /// Where the quotation comes from, appended after the attribution.
   /// -> content | none
   source: none,
-  /// Semantic role name.
+  /// Semantic role name: `neutral`, `accent`, `information`, `success`,
+  /// `warning`, `danger`, or `takeaway`.
   /// -> str
   role: "neutral",
-  /// Component-style overrides.
+  /// Partial style overrides passed through to `frame`, with the keys `fill`,
+  /// `stroke`, `radius`, `inset`, `align`, and `text`.
   /// -> dictionary
   style: (:),
 ) = frame(
@@ -36,12 +58,15 @@
     ..if portrait == none { (body,) } else { (portrait, body) },
   )
   #if attribution != none or source != none {
-    [#linebreak() #align(right)[
+    // `block(above:)` rather than a `linebreak()` followed by block-level
+    // content: that stacked an empty line on top of the paragraph break before
+    // the block, leaving the attribution floating far below the quotation.
+    block(above: 0.45em, width: 100%, align(right)[
       #text(size: 0.72em)[
         #if attribution != none { attribution }
         #if attribution != none and source != none { [, ] }
         #if source != none { source }
       ]
-    ]]
+    ])
   }
 ]

@@ -10,14 +10,13 @@
   colors: none,
   defaults: (:),
   options: (:),
-  text: (:),
-  normalize-lists: true,
   layouts: standard-layouts,
   apply: identity,
 )
-// The theme-neutral option names are exactly what `setup` accepts, so they are
-// derived rather than restated: a new setup option cannot go missing here.
-#let generic-options = setup-defaults.keys()
+// The theme-neutral option names are exactly what themed setup accepts:
+// setup-core's own options plus `colors`, which the engine resolves against
+// the theme palette before setup-core runs.
+#let generic-options = setup-defaults.keys() + ("colors",)
 
 #let validate-theme(theme) = {
   if type(theme) != dictionary {
@@ -38,6 +37,9 @@
   if "layouts" in theme.defaults {
     fail("theme defaults must configure layouts through theme layouts")
   }
+  if "colors" in theme.defaults {
+    fail("theme defaults must configure colors through theme colors")
+  }
   if type(theme.options) != dictionary {
     fail("theme options must be a dictionary")
   }
@@ -48,12 +50,6 @@
     if key in generic-options {
       fail("theme option " + repr(key) + " conflicts with setup")
     }
-  }
-  if type(theme.text) not in (dictionary, function) {
-    fail("theme text must be a dictionary or function")
-  }
-  if type(theme.normalize-lists) != bool {
-    fail("theme normalize-lists must be a boolean")
   }
   if type(theme.layouts) not in (dictionary, function) {
     fail("theme layouts must be a dictionary or function")
@@ -76,34 +72,10 @@
   validate-layouts(layouts, subject: "theme layouts")
 }
 
-#let normalize-lists(body) = {
-  show list.where(tight: true): it => list(tight: false, ..it.children)
-  show enum.where(tight: true): it => enum(tight: false, ..it.children)
-  set list(spacing: 0.9em)
-  set enum(spacing: 0.9em)
-  body
-}
-
-#let apply-theme(body, theme: (:), colors: (:), options: (:)) = {
-  if theme.normalize-lists {
-    show: normalize-lists
-  }
-  let text-style = if type(theme.text) == function {
-    (theme.text)(options)
-  } else {
-    theme.text
-  }
-  if type(text-style) != dictionary {
-    fail("theme text must return a dictionary")
-  }
-  set page(fill: colors.canvas)
-  set text(..(text-style + (fill: colors.text)))
-  show: (theme.apply).with(colors: colors, options: options)
-  body
-}
-
+// Receives a definition already normalized by `validate-theme`; the public
+// extension validates at bind time so a malformed theme fails where it is
+// bound, not where the deck applies it.
 #let theme-setup(body, theme: none, ..options) = {
-  let theme = validate-theme(theme)
   if options.pos().len() > 0 {
     fail(theme.name + " setup accepts only its document body positionally")
   }
@@ -111,31 +83,22 @@
   let theme-options = theme.options
   for key in theme.options.keys() {
     if key in named {
-      theme-options.insert(key, named.at(key))
-      let _ = named.remove(key)
+      theme-options.insert(key, named.remove(key))
     }
   }
-  let layout-overrides = named.at("layouts", default: (:))
+  let layout-overrides = (:)
   if "layouts" in named {
-    let _ = named.remove("layouts")
+    layout-overrides = validate-layouts(named.remove("layouts"), partial: true)
   }
-  let _ = validate-layouts(layout-overrides, partial: true)
   let layouts = validate-layouts(
     resolve-theme-layouts(theme, theme-options) + layout-overrides,
   )
-  let configured = theme.defaults + named + (layouts: layouts)
-  let colors = resolve-colors(
-    theme.colors,
-    configured.at("colors", default: (:)),
-  )
-  if "colors" in configured {
-    let _ = configured.remove("colors")
+  let color-overrides = (:)
+  if "colors" in named {
+    color-overrides = named.remove("colors")
   }
-  show: setup-core.with(configured, colors: colors)
-  show: apply-theme.with(
-    theme: theme,
-    colors: colors,
-    options: theme-options,
-  )
+  let colors = resolve-colors(theme.colors, color-overrides)
+  show: setup-core.with(theme.defaults + named + (layouts: layouts), colors: colors)
+  show: (theme.apply).with(colors: colors, options: theme-options)
   body
 }

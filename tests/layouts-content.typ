@@ -34,20 +34,16 @@
 #assert(grid-test.count(resolved-structured) == 4)
 #assert(grid-test.info(resolved-structured, "header").cell.content == none)
 #assert(grid-test.info(resolved-structured, "header").cell.style.content-sized)
-// Edge regions frame the slide edge with the full inset and face the body with
-// the compact gap, so a header is not pinned against the top of the slide.
-#assert(grid-test.info(resolved-structured, "header").cell.style.inset == (
-  top: settings.spacing.inset,
-  right: settings.spacing.inset,
-  bottom: settings.spacing.compact-gap,
-  left: settings.spacing.inset,
-))
-#assert(grid-test.info(resolved-structured, "footer").cell.style.inset == (
-  top: settings.spacing.compact-gap,
-  right: settings.spacing.inset,
-  bottom: settings.spacing.inset,
-  left: settings.spacing.inset,
-))
+// Edge regions take the deck inset on all four sides, so a recolored header
+// reads as a balanced band rather than text pinned against one edge of a fill.
+#assert(
+  grid-test.info(resolved-structured, "header").cell.style.inset
+    == settings.spacing.inset,
+)
+#assert(
+  grid-test.info(resolved-structured, "footer").cell.style.inset
+    == settings.spacing.inset,
+)
 #assert(grid-test.info(resolved-structured, "body-1").cell.content == none)
 #assert(grid-test.info(resolved-structured, "body-2").cell.content == none)
 #assert(grid-test.info(resolved-structured, "footer").cell.content == none)

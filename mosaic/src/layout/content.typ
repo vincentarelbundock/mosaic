@@ -3,7 +3,7 @@
 #import "../grid/constructors.typ": styled-cell, h, v, t, validate-fit
 #import "../grid/model.typ": valid-track-size
 #import "core.typ": make-layout
-#import "support.typ": edge-region-insets, track-children
+#import "support.typ": track-children
 
 #let variants = (
   "body",
@@ -41,43 +41,83 @@
 
 /// Creates a conventional header, body, and footer grid recipe.
 ///
-/// The `variant` selects `body`, `header-body`, `body-footer`, or the default
-/// `header-body-footer` structure. The surrounding `mosaic.slide` supplies
-/// content in that cell order, with one body block per requested column.
-/// The layout resolves to a vertical Mosaic split whose body child is a
-/// horizontal split of ordinary cells.
+/// This is the ordinary slide layout, and the one automatic level-two headings
+/// resolve to. It builds a vertical Mosaic split whose body child is a
+/// horizontal split of plain cells.
 ///
-/// The layout is purely structural. Each resolved cell is labeled
+/// ```typ
+/// #mosaic.slide(
+///   layout: mosaic.layouts.content(variant: "header-body", columns: 2),
+///   [== Two columns],
+///   [Left body],
+///   [Right body],
+/// )
+/// ```
+///
+/// *Cells*
+///
+/// The surrounding `mosaic.slide` fills cells in traversal order:
+///
+/// - `header`, when the variant includes one.
+/// - `body`, or `body-1`, `body-2`, and so on when `columns` is above one.
+/// - `footer`, when the variant includes one.
+///
+/// A setup-level `content: (footer: ...)` default can satisfy the footer, so a
+/// positional slide may omit that final block.
+///
+/// *Variants*
+///
+/// - `body`: one region, edge to edge.
+/// - `header-body`: a content-sized header above the body.
+/// - `body-footer`: the body above a content-sized footer.
+/// - `header-body-footer`: both. The default.
+///
+/// *Styling*
+///
+/// The layout is purely structural. Resolved cells are labeled
 /// `<mosaic-cell-header>`, `<mosaic-cell-body>` (or `<mosaic-cell-body-1>`,
-/// `<mosaic-cell-body-2>`, ...), and `<mosaic-cell-footer>`, so appearance is
-/// supplied with native Typst rules, for example
-/// `show label("mosaic-cell-header"): it => block(fill: ..., it)`.
-/// The header cell has no special typography; put a native level-two heading
-/// in its content to style it as a heading and register it with outlines.
-/// The built-in content layout uses one body column. Automatic
-/// level-two headings supply its `header` and `body` cells.
+/// `<mosaic-cell-body-2>`, and so on), and `<mosaic-cell-footer>`, so
+/// appearance comes from native Typst rules.
 ///
-/// `fit` shrinks body content that would otherwise overflow its column instead
-/// of letting it spill: `"contain"` scales to the body height, `"auto"` scales
-/// and reflows at the smaller size, and `"width"` scales to the column width.
-/// It applies to the body columns only, since the header and footer sit in
-/// `auto` tracks sized to their own content. The default `none` leaves content
-/// at its natural size, where overflow observation reports it instead.
+/// ```typ
+/// #show label("mosaic-cell-header"): mosaic.surface(fill: luma(240))
+/// ```
 ///
-/// - variant (str): `body`, `header-body`, `body-footer`, or `header-body-footer`.
-/// - columns (int): Number of body columns and required body blocks.
-/// - tracks (auto | array): Native Typst tracks for the body columns.
-/// - fit (none | str): Body shrink-to-fit mode: `none`, `"width"`, `"contain"`, or `"auto"`.
-/// Pass the returned layout to `mosaic.slide`; content blocks fill `header`,
-/// `body` (or `body-1`, `body-2`, and so on), and `footer` in traversal order.
-/// A setup-level `content.footer` default may satisfy the footer so a positional
-/// slide can omit that final body.
+/// The header cell carries no special typography of its own. Put a native
+/// level-two heading in its content to style it as a heading and register it
+/// with outlines.
 ///
 /// -> dictionary
 #let content(
+  /// Structural arrangement: `body`, `header-body`, `body-footer`, or
+  /// `header-body-footer`.
+  /// -> str
   variant: "header-body-footer",
+  /// Number of body columns, and therefore the number of body blocks the slide
+  /// must supply. Must be a positive integer.
+  /// -> int
   columns: 1,
+  /// Native Typst track sizes for the body columns, one per column. `auto`
+  /// splits the body evenly.
+  ///
+  /// ```typ
+  /// mosaic.layouts.content(columns: 2, tracks: (2fr, 1fr))
+  /// ```
+  /// -> auto | array
   tracks: auto,
+  /// Shrinks body content that would otherwise overflow its column instead of
+  /// letting it spill.
+  ///
+  /// - `none`: leave content at its natural size, so overflow observation
+  ///   reports it instead. The default.
+  /// - `"width"`: scale to the column width.
+  /// - `"contain"`: scale to the body height.
+  /// - `"auto"`: scale to the height and reflow at the smaller size.
+  ///
+  /// This applies to the body columns only. The header and footer sit in `auto`
+  /// tracks sized to their own content, so there is no allocation for them to
+  /// shrink into.
+  /// -> none | str
   fit: none,
 ) = {
   let fields = validate-fields((
@@ -92,18 +132,13 @@
 #let region-cell(
   id,
   settings,
-  edge: none,
   content-sized: false,
   fit: none,
 ) = styled-cell(
   id: id,
   style: (
     content-sized: content-sized,
-    inset: if edge != none {
-      edge-region-insets(settings, edge: edge)
-    } else {
-      settings.spacing.inset
-    },
+    inset: settings.spacing.inset,
   ) + if fit == none { (:) } else { (fit: fit) },
 )
 
@@ -112,14 +147,14 @@
   if fields.variant in ("header-body", "header-body-footer") {
     children.push(t(
       auto,
-      region-cell("header", settings, edge: top, content-sized: true),
+      region-cell("header", settings, content-sized: true),
     ))
   }
   children.push(t(1fr, body))
   if fields.variant in ("body-footer", "header-body-footer") {
     children.push(t(
       auto,
-      region-cell("footer", settings, edge: bottom, content-sized: true),
+      region-cell("footer", settings, content-sized: true),
     ))
   }
   v(..children)

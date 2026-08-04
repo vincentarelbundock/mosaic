@@ -488,3 +488,65 @@ body:has(.mosaic-hero) .calepin-website-toc {
     padding: 1rem;
   }
 }
+
+/* Anatomy diagrams (docs/diagrams/*.typ).
+   Typst bakes fixed colors into the inline SVG, so the palette is restated
+   here as CSS custom properties and reapplied through attribute selectors
+   that match the literals the diagrams draw with. Labels and leader arrows
+   inherit the page text color; the surfaces get dark-mode counterparts. */
+.mosaic-diagram {
+  --mosaic-diagram-line: #176b87;
+  --mosaic-diagram-surface: #ffffff;
+  --mosaic-diagram-tint-blue: #e8f1fb;
+  --mosaic-diagram-tint-gold: #fff4cf;
+  --mosaic-diagram-tint-green: #e5f5ee;
+  --mosaic-diagram-tint-blue-soft: rgba(232, 241, 251, 0.7);
+}
+
+html[data-theme="dark"] .mosaic-diagram {
+  --mosaic-diagram-line: #7fb8cd;
+  --mosaic-diagram-surface: #223043;
+  --mosaic-diagram-tint-blue: #2c4157;
+  --mosaic-diagram-tint-gold: #4a4029;
+  --mosaic-diagram-tint-green: #24463c;
+  --mosaic-diagram-tint-blue-soft: rgba(44, 65, 87, 0.7);
+}
+
+/* Ink: label glyphs and the leader lines and arrowheads that point at cells. */
+.mosaic-diagram [fill="#1f2933"] {
+  fill: currentColor;
+}
+
+.mosaic-diagram [stroke="#1f2933"] {
+  stroke: currentColor;
+}
+
+/* Structural strokes and the abstract content marks inside the slide. */
+.mosaic-diagram [stroke="#176b87"] {
+  stroke: var(--mosaic-diagram-line);
+}
+
+.mosaic-diagram [fill="#176b87"] {
+  fill: var(--mosaic-diagram-line);
+}
+
+/* Surfaces. */
+.mosaic-diagram [fill="#ffffff"] {
+  fill: var(--mosaic-diagram-surface);
+}
+
+.mosaic-diagram [fill="#e8f1fb"] {
+  fill: var(--mosaic-diagram-tint-blue);
+}
+
+.mosaic-diagram [fill="#e8f1fbb2"] {
+  fill: var(--mosaic-diagram-tint-blue-soft);
+}
+
+.mosaic-diagram [fill="#fff4cf"] {
+  fill: var(--mosaic-diagram-tint-gold);
+}
+
+.mosaic-diagram [fill="#e5f5ee"] {
+  fill: var(--mosaic-diagram-tint-green);
+}

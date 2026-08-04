@@ -7,6 +7,7 @@
 )
 
 #let apply(body, colors: (:), options: (:)) = {
+  set text(font: "DejaVu Sans", size: 24pt)
   show label("mosaic-cell-header"): set text(fill: colors.canvas, weight: "bold")
   show label("mosaic-cell-header"): it => block(width: 100%, fill: colors.accent, it)
   show label("mosaic-cell-footer"): set text(fill: colors.muted)
@@ -27,7 +28,6 @@
     spacing: (inset: 32pt),
     content: (footer: [ENGINE CONSUMED THEME]),
   ),
-  text: (font: "DejaVu Sans", size: 24pt),
   layouts: layouts,
   apply: apply,
 )
