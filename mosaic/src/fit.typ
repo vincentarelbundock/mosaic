@@ -6,29 +6,6 @@
 // and ntjess. Adaptation from Touying 0.7.4, commit a8abe0d.
 // Used under the MIT License; see THIRD_PARTY_LICENSES.md.
 
-#let contains-text(it) = {
-  if type(it) != content {
-    return false
-  }
-  if it.func() in (text, math.equation) {
-    return true
-  }
-  if it.has("body") {
-    return contains-text(it.body)
-  }
-  if it.has("child") {
-    return contains-text(it.child)
-  }
-  if it.has("children") {
-    for child in it.children {
-      if contains-text(child) {
-        return true
-      }
-    }
-  }
-  false
-}
-
 #let reflow-scale(ratio, body) = scale(
   ratio,
   body,
@@ -36,10 +13,19 @@
   reflow: true,
 )
 
-#let reflowed-size(ratio, body) = measure(reflow-scale(ratio, body))
+// Content already at its allocation measures as exactly `natural-ratio`, so
+// that is the boundary between growing and shrinking rather than a tunable.
+#let natural-ratio = 100%
+
+// Measurement is not exact: a cell whose content fits to within a rounding
+// error reports a ratio a hair off `natural-ratio`, and rescaling on that would
+// resize content that was already correct. The tolerance is a numerical guard,
+// not a design knob, which is why it is not configurable.
+#let fit-tolerance = 0.05%
 
 #let should-scale(ratio, grow, shrink) = (
-  (shrink and ratio < 100%) or (grow and ratio > 100%)
+  (shrink and ratio < natural-ratio - fit-tolerance)
+    or (grow and ratio > natural-ratio + fit-tolerance)
 )
 
 // A fitter only has a problem to solve inside a real allocation. Under
@@ -52,11 +38,23 @@
   float.is-infinite(length.pt()) or float.is-nan(length.pt()) or length <= 0pt
 )
 
+// Typst offers no numeric accessor for a `fraction`, so the only way to read
+// one is to render it and parse the result: `repr(3fr)` is the string "3fr".
+// Scaling by this factor first keeps the fractional digits that a bare `repr`
+// would round away, and dividing it back out restores the value. The two uses
+// below must stay the same number, which is why it is named once.
+#let fraction-precision = 1000000
+
+// Drops the trailing "fr" that `repr` appends.
+#let _fraction-unit-length = 2
+
 #let size-to-pt(size, container-dimension) = {
   let resolved = size
   if type(size) == fraction {
-    let fraction-text = repr(size * 1000000)
-    resolved = float(fraction-text.slice(0, fraction-text.len() - 2)) / 1000000
+    let fraction-text = repr(size * fraction-precision)
+    resolved = float(
+      fraction-text.slice(0, fraction-text.len() - _fraction-unit-length),
+    ) / fraction-precision
   }
   if type(resolved) in (int, float, ratio) {
     container-dimension * resolved
@@ -103,14 +101,12 @@
   }
 })
 
-/// Fits content to a finite height and width. Text may be reflowed while its
-/// scale is refined; other content is scaled geometrically.
+/// Fits content to a finite height and width, scaling it geometrically.
 #let fit-to-height(
   height: 1fr,
   width: auto,
   grow: true,
   shrink: true,
-  reflow: true,
   body,
 ) = context {
   let layout-content(
@@ -148,55 +144,6 @@
     }
     let width-ratio = available-width / size.width
     let ratio = calc.min(height-ratio, width-ratio) * 100%
-
-    if width == auto and reflow and contains-text(body) {
-      let adjust-width(ratio, boxed-content, target-size) = {
-        let used-width-ratio = (
-          reflowed-size(ratio, boxed-content).width / target-size.width
-        )
-        let adjusted = block(
-          width: target-size.width / calc.sqrt(used-width-ratio),
-          body,
-        )
-        (calc.sqrt(used-width-ratio) * 100%, adjusted)
-      }
-
-      let adjust-height(ratio, boxed-content, target-size) = {
-        let used-height-ratio = (
-          reflowed-size(ratio, boxed-content).height / target-size.height
-        )
-        let adjusted = block(
-          width: target-size.width / float(ratio) * calc.sqrt(used-height-ratio),
-          body,
-        )
-        ratio *= calc.sqrt(1 / used-height-ratio)
-        used-height-ratio = (
-          reflowed-size(ratio, adjusted).height / target-size.height
-        )
-        ratio /= used-height-ratio
-        (ratio, adjusted)
-      }
-
-      for _ in range(2) {
-        (ratio, boxed-content) = adjust-width(
-          ratio,
-          boxed-content,
-          (width: available-width, height: available-height),
-        )
-        (ratio, boxed-content) = adjust-height(
-          ratio,
-          boxed-content,
-          (width: available-width, height: available-height),
-        )
-      }
-
-      let scaled-width = reflowed-size(ratio, boxed-content).width
-      let current-width = measure(boxed-content).width
-      boxed-content = box(
-        width: current-width * (available-width / scaled-width),
-        body,
-      )
-    }
 
     if should-scale(ratio, grow, shrink) {
       reflow-scale(ratio, boxed-content)

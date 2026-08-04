@@ -1,20 +1,27 @@
 // Sane presentation defaults, applied as a document-wide show rule.
 #import "slide/runtime.typ": configure-deck
-#import "deck-compiler.typ": compile-deck
+#import "deck-compiler.typ": (
+  compile-deck, default-heading-policy, validate-heading-policy,
+)
 #import "grid/render.typ": overflow-report
 #import "settings.typ": make-settings, configure-settings
 #import "shared.typ": fail, reject-unknown-keys
 #import "color-defaults.typ": default-colors
 #import "layout/config.typ": standard-layouts, validate-layouts
+#import "paper.typ": default-paper, resolve-paper
 
 // Every option `setup` accepts, with its default. This is the single list:
 // `theme-engine` derives the set of theme-neutral option names from these keys
 // rather than restating them.
 #let setup-defaults = (
-  paper: "16-9",
+  paper: default-paper,
+  margin: 0pt,
   spacing: (:),
+  notes: (:),
+  roles: auto,
   overflow: "warn",
   layouts: standard-layouts,
+  headings: default-heading-policy,
   handout: false,
   output: "slides",
   frozen-counters: (),
@@ -38,8 +45,11 @@
   let options = defaults + options
   let paper = options.paper
   let spacing = options.spacing
+  let notes = options.notes
+  let roles = options.roles
   let overflow = options.overflow
   let layouts = validate-layouts(options.layouts)
+  let headings = validate-heading-policy(options.headings)
   let handout = options.handout
   let output = options.output
   let frozen-counters = options.frozen-counters
@@ -55,13 +65,7 @@
     authors: options.authors,
     date: options.date,
   )
-  let paper-presets = (
-    "16-9": "presentation-16-9",
-    "4-3": "presentation-4-3",
-  )
-  if type(paper) != str or paper not in paper-presets {
-    fail("setup paper must be \"16-9\" or \"4-3\"")
-  }
+  let paper-size = resolve-paper(paper)
 
   if output not in ("slides", "speaker", "notes") {
     fail("setup output must be \"slides\", \"speaker\", or \"notes\"")
@@ -71,12 +75,18 @@
     content: content,
     deck: deck,
     spacing: spacing,
+    notes: notes,
+    roles: roles,
     overflow: overflow,
   )
   let page-options = if output == "slides" {
+    // A presentation canvas is edge to edge, so the margin defaults to zero and
+    // the deck's inset does the spacing. A custom canvas can reclaim a real
+    // page margin through `margin:`.
     (
-      paper: paper-presets.at(paper),
-      margin: 0pt,
+      width: paper-size.width,
+      height: paper-size.height,
+      margin: options.margin,
       fill: colors.canvas,
     )
   } else {
@@ -85,7 +95,7 @@
     // canvas color inside the frame.
     (
       paper: "a4",
-      margin: 15mm,
+      margin: settings.notes.margin,
     )
   }
   set page(..page-options)
@@ -107,9 +117,9 @@
     frozen-states: frozen-states,
     handout: handout,
     output: output,
-    paper: paper,
+    paper: paper-size,
   )
-  compile-deck(body)
+  compile-deck(body, headings: headings)
   // Runs after the deck, where introspection has converged, so the diagnostic
   // can name the slide each clipped cell is on.
   if overflow == "error" {

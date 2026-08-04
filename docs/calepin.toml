@@ -88,6 +88,9 @@ title = "Content"
   [[sidebar.section.item]]
   target = "content/math.typ"
 
+  [[sidebar.section.item]]
+  target = "content/citations.typ"
+
 [[sidebar.section]]
 title = "Appearance"
 

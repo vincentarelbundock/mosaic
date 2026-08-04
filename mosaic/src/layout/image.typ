@@ -7,7 +7,7 @@
 #import "../shared.typ": fail
 #import "../grid/constructors.typ": styled-cell, v, t
 #import "core.typ": make-layout, validate-visual-spec
-#import "support.typ": visual-content
+#import "support.typ": visual-content, header-inset
 #import "image-support.typ": (
   directional-image-layout,
   image-background-cell,
@@ -153,7 +153,13 @@
   id: id,
   style: (
     content-sized: content-sized,
-    inset: settings.spacing.inset,
+    // A header is one line tall, so it takes the shallower edge padding; the
+    // body keeps the deck inset on all four sides.
+    inset: if id == "header" {
+      header-inset(settings)
+    } else {
+      settings.spacing.inset
+    },
   ),
 )
 

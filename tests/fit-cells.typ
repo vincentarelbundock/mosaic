@@ -1,32 +1,29 @@
 #import "@local/mosaic:0.0.1" as mosaic
 
-// The shrink-to-fit engine is reachable from both public producers: the `fit:`
-// field on the content layout and `fit:` on a hand-built cell. The same body
-// that overflows an ordinary cell must stay inside a fitted one, so overflow
-// observation reports the control cell and nothing else.
-#show: mosaic.setup.with(overflow: "warn")
+// Fitting is internal, and the section layouts are its only consumers: the
+// `toc` variant shrinks a section list whose length the deck decides, and the
+// section title cell shrinks a name too wide for its width. Neither can be
+// sized in advance by the author, so neither may overflow or clip. The control
+// slide carries a body that genuinely overflows, so the single warning proves
+// the fitters ran rather than that the content fit anyway.
+#show: mosaic.setup.with(overflow: "warn", title: [Fitting])
 
-#mosaic.slide(layout: mosaic.layouts.content(variant: "body", fit: "auto"))[
-  #lorem(180)
+= Alpha
+= Beta
+= Gamma
+= Delta
+= Epsilon
+= Zeta
+= Eta
+= Theta
+
+#mosaic.slide(layout: "section", variant: "toc")[Theta]
+
+#mosaic.slide(layout: "section")[
+  MOSAIC-FIT-SECTION-TITLE-THAT-IS-FAR-TOO-WIDE-FOR-ANY-SLIDE-TO-HOLD
 ]
 
-#mosaic.slide(layout: mosaic.layouts.content(variant: "body", fit: "contain"))[
-  #lorem(180)
-]
-
-#mosaic.slide(layout: mosaic.grid.v(
-  mosaic.grid.cell("wide", fit: "width"),
-  mosaic.grid.cell("tall", fit: "auto"),
-))[
-  MOSAIC-FIT-SINGLE-LINE-THAT-IS-FAR-TOO-WIDE-FOR-THIS-CELL-TO-HOLD
-][
-  #lorem(180)
-]
-
-// Control: the same body without `fit` genuinely overflows, so the pages above
-// prove the fitters ran rather than that the content fit anyway.
+// Control: an ordinary body cell has no fitter, so this one overflows.
 #mosaic.slide(layout: mosaic.layouts.content(variant: "body"))[
   #lorem(180)
 ]
-
-#context assert(counter(page).final().first() == 4)

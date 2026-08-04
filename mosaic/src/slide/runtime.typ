@@ -1,5 +1,6 @@
 // Logical-slide runtime: frame policy, state, resolution, and page rendering.
-#import "../shared.typ": fail, tag
+#import "../shared.typ": fail, key, tag
+#import "../paper.typ": default-paper, paper-aliases
 #import "../grid/validation.typ": validate
 #import "../grid/content.typ": resolve-content
 #import "../incremental/analysis.typ": max-step
@@ -9,7 +10,6 @@
 #import "../note/command.typ": is-note
 #import "../grid/render.typ": max-node, render
 #import "../settings.typ": settings-state
-#import "../color-defaults.typ": default-line
 #import "../layout/resolver.typ": resolve-layout
 #import "../layout/core.typ": is-layout
 #import "../layout/config.typ": unconfigured-layouts, validate-layouts
@@ -21,11 +21,13 @@
 )
 #import "command.typ": validate-plane
 
-#let frozen-counters-state = state("mosaic:0.0.1:frozen-counters", ())
-#let frozen-states-state = state("mosaic:0.0.1:frozen-states", ())
-#let handout-state = state("mosaic:0.0.1:handout", false)
-#let output-state = state("mosaic:0.0.1:output", "slides")
-#let paper-state = state("mosaic:0.0.1:paper", "16-9")
+#let frozen-counters-state = state(key("frozen-counters"), ())
+#let frozen-states-state = state(key("frozen-states"), ())
+#let handout-state = state(key("handout"), false)
+#let output-state = state(key("output"), "slides")
+// The slide size as resolved dimensions, never as a preset name: the printed
+// outputs scale a thumbnail of this size onto a page of a different one.
+#let paper-state = state(key("paper"), paper-aliases.at(default-paper))
 
 #let configure-handout(value) = {
   if type(value) != bool {
@@ -77,12 +79,6 @@
   block(width: 100%, height: 100%, body),
 )
 
-#let source-slide-size(paper) = if paper == "4-3" {
-  (width: 10in, height: 7.5in)
-} else {
-  (width: 13.333333in, height: 7.5in)
-}
-
 #let slide-frame(
   body,
   width: 100%,
@@ -100,27 +96,27 @@
   body,
 )
 
-#let note-list(notes) = {
-  set text(size: 10pt, fill: black)
+#let note-list(notes, style) = {
+  set text(size: style.text-size, fill: style.text-fill)
   if notes.len() == 0 {
     emph[No speaker notes for this frame.]
   } else {
     let result = []
     for note in notes {
-      result += block(above: 0pt, below: 3mm, note)
+      result += block(above: 0pt, below: style.note-gap, note)
     }
     result
   }
 }
 
-#let note-heading(slide, step, steps) = text(
-  size: 12pt,
-  weight: "bold",
-  fill: black,
+#let note-heading(slide, step, steps, style) = text(
+  size: style.heading-size,
+  weight: style.heading-weight,
+  fill: style.heading-fill,
 )[Slide #slide · Frame #step of #steps]
 
-#let bounded-note-list(notes, width, height, output, step) = {
-  let body = note-list(notes)
+#let bounded-note-list(notes, width, height, output, step, style) = {
+  let body = note-list(notes, style)
   let natural = measure(body, width: width)
   if natural.height > height {
     fail(output + " output notes overflow on frame " + str(step))
@@ -134,20 +130,28 @@
   )
 }
 
-#let speaker-page(frame, notes, slide, step, steps, paper, fill) = layout(region => {
-  let source-size = source-slide-size(paper)
+#let speaker-page(frame, notes, slide, step, steps, source-size, fill, style) = layout(region => {
   let source = slide-frame(
     frame,
     width: source-size.width,
     height: source-size.height,
     fill: fill,
-    stroke: 0.6pt + default-line,
+    stroke: style.thumbnail-stroke,
   )
   let factor = region.width / source-size.width * 100%
   let thumbnail-height = source-size.height * (region.width / source-size.width)
-  let heading = note-heading(slide, step, steps)
+  let heading = note-heading(slide, step, steps, style)
   let heading-height = measure(heading, width: region.width).height
-  let notes-height = region.height - thumbnail-height - 13mm - heading-height
+  // The vertical budget, stated as the sum of what the page actually places
+  // rather than as one combined allowance.
+  let notes-height = (
+    region.height
+      - thumbnail-height
+      - style.thumbnail-gap
+      - heading-height
+      - style.heading-gap
+      - style.padding
+  )
   [
     #scale(
       x: factor,
@@ -156,39 +160,40 @@
       origin: top + left,
       source,
     )
-    #v(7mm)
+    #v(style.thumbnail-gap)
     #heading
-    #v(4mm)
+    #v(style.heading-gap)
     #bounded-note-list(
       notes,
       region.width,
       notes-height,
       "speaker",
       step,
+      style,
     )
   ]
 })
 
-#let notes-page(frame, notes, slide, step, steps, paper, fill) = layout(region => {
+#let notes-page(frame, notes, slide, step, steps, source-size, fill, style) = layout(region => {
   // Lay out the semantic slide invisibly so native counters and state updates
   // retain the same frame semantics as the slide and speaker outputs.
-  let source-size = source-slide-size(paper)
   place(hide(slide-frame(
     frame,
     width: source-size.width,
     height: source-size.height,
     fill: fill,
   )))
-  let heading = note-heading(slide, step, steps)
+  let heading = note-heading(slide, step, steps, style)
   let heading-height = measure(heading, width: region.width).height
   heading
-  v(4mm)
+  v(style.heading-gap)
   bounded-note-list(
     notes,
     region.width,
-    region.height - heading-height - 6mm,
+    region.height - heading-height - style.heading-gap - style.padding,
     "notes",
     step,
+    style,
   )
 })
 
@@ -217,7 +222,7 @@
   frozen-states: (),
   handout: auto,
   output: "slides",
-  paper: "16-9",
+  paper: paper-aliases.at(default-paper),
 ) = {
   layouts-state.update(validate-layouts(layouts))
   configure-freezing(counters: frozen-counters, states: frozen-states)
@@ -378,9 +383,13 @@
     if output == "slides" {
       slide-frame(frame)
     } else if output == "speaker" {
-      speaker-page(frame, notes, slide, step, steps, paper, slide-fill)
+      speaker-page(
+        frame, notes, slide, step, steps, paper, slide-fill, settings.notes,
+      )
     } else {
-      notes-page(frame, notes, slide, step, steps, paper, slide-fill)
+      notes-page(
+        frame, notes, slide, step, steps, paper, slide-fill, settings.notes,
+      )
     }
   }
 }

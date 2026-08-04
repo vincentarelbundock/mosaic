@@ -1,5 +1,5 @@
 // Framed callout with a semantic side stripe.
-#import "style.typ": role as component-role
+#import "style.typ": role as component-role, structure
 #import "frame.typ": frame
 
 /// Creates a framed callout with a semantic side stripe.
@@ -52,7 +52,7 @@
     ],
     role: kind,
     style: (
-      stroke: (left: 4pt + colors.accent, rest: none),
+      stroke: (left: structure.callout-rail + colors.accent, rest: none),
     ) + style,
   )
 }

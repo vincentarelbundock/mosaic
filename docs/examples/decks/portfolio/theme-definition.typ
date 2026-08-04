@@ -17,7 +17,7 @@
     #it
     #line(length: 100%, stroke: 0.6pt + colors.line)
   ]
-  show label("mosaic-cell-title"): set text(
+  show label("mosaic-title-display"): set text(
     size: 2em, weight: "semibold", tracking: -0.015em,
   )
   show label("mosaic-cell-title"): set par(leading: 0.42em)

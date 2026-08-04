@@ -90,6 +90,10 @@ $(foreach source,$(EMBEDDED_EXAMPLE_SOURCES),$(eval \
 PACKAGE_SOURCES := $(shell find $(PACKAGE_DIR) -type f 2>/dev/null | sort)
 SHOWCASE_VIDEO := $(WEB_IMAGE_DIR)/showcase.webm
 SHOWCASE_POSTER := $(WEB_IMAGE_DIR)/showcase-poster.webp
+# Content hash of the frames the committed reel was encoded from. A slide PDF
+# rebuilt with identical content still has new bytes and a new mtime, so this is
+# what decides whether the reel is actually stale.
+SHOWCASE_FINGERPRINT := $(WEB_IMAGE_DIR)/showcase.fingerprint
 # The reel's opening frame. No page embeds it, so it is not an embedded example.
 SHOWCASE_OPENING_SOURCE := $(DOCS_DIR)/examples/showcase/opening.typ
 SHOWCASE_OPENING := $(DOCS_DIR)/examples/showcase/opening.pdf
@@ -171,6 +175,8 @@ $(SHOWCASE_OPENING): $(SHOWCASE_OPENING_SOURCE) $(PACKAGE_SOURCES) | install
 	$(TYPST) compile --root . "$<" "$@"
 
 # One run writes both the reel and its poster, which is the reel's first frame.
+# A newer prerequisite only makes the script re-render and re-hash the frames;
+# unless a slide really changed it leaves both files untouched.
 $(SHOWCASE_VIDEO) $(SHOWCASE_POSTER) &: scripts/build-docs-showcase-video.sh $(DECK_MANIFEST) $(SHOWCASE_STAMPS)
 	./scripts/build-docs-showcase-video.sh $(PYTHON)
 
@@ -219,7 +225,7 @@ clean: ## Remove ephemeral staging files and build stamps
 clean-generated: clean ## Remove reproducible media and rendered example outputs
 	find $(EMBEDDED_ASSETS_DIR) -type f \( -name '*.pdf' -o -name '*.svg' \) -delete
 	for slug in $(DECK_SLUGS); do rm -f "$(DECK_EXAMPLES_DIR)/$$slug/$$slug.pdf" "$(DECK_EXAMPLES_DIR)/$$slug/cover.jpg"; done
-	rm -f $(BONSAI_WEBP) $(DOG_WEBP) $(SHOWCASE_VIDEO) $(SHOWCASE_POSTER) $(SHOWCASE_OPENING)
+	rm -f $(BONSAI_WEBP) $(DOG_WEBP) $(SHOWCASE_VIDEO) $(SHOWCASE_POSTER) $(SHOWCASE_FINGERPRINT) $(SHOWCASE_OPENING)
 
 distclean: clean-generated ## Also remove published HTML and Calepin's generated cache
 	find $(DOCS_DIR) -type f -name '*.html' -delete

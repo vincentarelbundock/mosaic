@@ -28,7 +28,14 @@ EXPECTED = {
     "mosaic/src/layout/api.typ": {"content", "title", "section", "image", "author"},
     "mosaic/src/incremental/api.typ": {"on", "reveal", "replace", "reduce"},
     "mosaic/src/component/api.typ": THEMED_COMPONENTS,
-    "mosaic/src/themes/extension.typ": {"setup", "normalize-lists"},
+    # light-palette and light-roles are the built-in colors and semantic role
+    # table, exported so a custom theme extends them instead of copying them.
+    "mosaic/src/themes/extension.typ": {
+        "setup",
+        "normalize-lists",
+        "light-palette",
+        "light-roles",
+    },
     "mosaic/src/themes/api.typ": {"metropolis", "cream", "minimalist", "light", "dark"},
     "mosaic/src/themes/light.typ": THEMED_API,
     "mosaic/src/themes/light/layouts.typ": THEMED_LAYOUTS,

@@ -168,8 +168,9 @@
 /// The layout is structural. Cells are labeled `<mosaic-cell-title>`,
 /// `<mosaic-cell-authors>`, `<mosaic-cell-details>`, `<mosaic-cell-accent>`,
 /// and `<mosaic-cell-image>`, so appearance comes from native Typst rules.
-/// A rule on `<mosaic-cell-title>` recolors the whole stack, which is what
-/// light-on-dark compositions over a photograph need.
+/// A rule on `<mosaic-cell-title>` reaches the whole composed stack: title,
+/// subtitle, and metadata alike. Recoloring it is what light-on-dark
+/// compositions over a photograph need.
 ///
 /// ```typ
 /// #show label("mosaic-cell-title"): set text(fill: white)
@@ -178,6 +179,23 @@
 ///   variant: "image-background",
 ///   image: (path: "cover.webp", scrim: black.transparentize(55%)),
 /// )
+/// ```
+///
+/// Sizing it works the same way, because the display line carries its own
+/// `<mosaic-title-display>` label and the theme's display size lands there
+/// rather than on the cell. The tiers below are ordinary ems of the cell, so
+/// one rule scales the stack as a unit and the proportions hold. That is how
+/// to ask for quiet type in the corner of a photograph.
+///
+/// ```typ
+/// #show label("mosaic-cell-title"): set text(size: 0.45em)
+/// ```
+///
+/// A theme states the display size on the inner label instead, which leaves
+/// the outer one free for the deck to scale:
+///
+/// ```typ
+/// #show label("mosaic-title-display"): set text(size: 2em, weight: "semibold")
 /// ```
 ///
 /// -> dictionary
@@ -233,6 +251,13 @@
   /// accent for the image variants' short rule.
   /// -> color | auto
   accent: auto,
+  /// Partial overrides of the layout's visual recipe: its type scales, the
+  /// accent rule's length and thickness, the spacers between tiers, and each
+  /// variant's offsets and insets. Merges over the defaults, so state only what
+  /// changes. Typography can also be restyled natively through the
+  /// `<mosaic-cell-title>` and `<mosaic-title-display>` labels.
+  /// -> dictionary
+  style: (:),
 ) = {
   let fields = validate-fields((
     title: title,
@@ -245,34 +270,100 @@
     align: align,
     rule: rule,
     accent: accent,
+    style: style,
   ), allow-auto: true)
   make-layout("title", fields)
 }
 
-// Metadata tiers inside the composed title stack are anchored to the deck's
-// body size rather than to the cell's own em, because the theme's
-// <mosaic-cell-title> rule scales that cell for display; an em-relative
-// subtitle would compound with it and overflow. `settings.base-size` is the
-// size the deck actually renders at, captured per slide, so these tiers stay
-// proportional to whatever the active theme set.
+// The title layout's visual recipe, in one place.
 //
-// The cost is that a native `set text(size: ..)` on that label moves only the
-// display line, since that rule *is* the display size. Scaling the stack as a
-// unit would mean applying the display size to the title line rather than to
-// the cell, which is a change to every title composition rather than a local
-// fix.
+// Like the section variants, a title is a composition: it interleaves type
+// tiers with explicit spacers, rules, and offsets that no show rule can reach.
+// The measurements therefore live here as named fields rather than as literals
+// spread through the variants, and `title(style: ..)` merges over them.
+//
+// The `-scale` fields multiply the title cell's own em, and the `-gap` fields
+// multiply `settings.spacing.gap`, which is em-typed too. Both therefore
+// resolve against the cell, which the theme holds at the deck's body size: the
+// display size lives on the <mosaic-title-display> label inside the cell, so
+// nothing here compounds with it and one `set text(size: ..)` on
+// <mosaic-cell-title> resizes the stack as a unit. See title-display.
+#let title-metrics = (
+  // Tiers of the title stack.
+  subtitle-scale: 1.05,
+  metadata-scale: 0.72,
+  byline-scale: 0.6,
+  fine-print-scale: 0.55,
+  // One leading for every metadata tier, in each variant that sets one.
+  metadata-leading: 0.55em,
+  // The accent rule that separates the title mass from the metadata mass.
+  accent-rule-length: 1.6,
+  accent-rule-thickness: 0.12,
+  // The hairline the band and card variants rule themselves with.
+  accent-stroke-thickness: 0.04,
+  // Vertical rhythm of the title stack, in multiples of the deck gap. The
+  // stack separates display type, so its gaps are wider than a body gap: they
+  // are stated here as their own numbers rather than inherited from the size
+  // of whatever display scale a theme happens to set.
+  subtitle-gap: 1.1,
+  rule-gap: 2.6,
+  details-gap-with-rule: 1.6,
+  details-gap-without-rule: 2.6,
+  // Variant-specific offsets, in multiples of the base size.
+  band-metadata-offset: 0.65,
+  plate-metadata-offset: 1.4,
+  // Author furniture.
+  orcid-size: 0.9em,
+  orcid-gap: 0.22em,
+  affiliation-marker-gap: 0.2em,
+  // Display scales for the variants that set their title mass smaller.
+  card-title-scale: 0.9em,
+  academic-scale: 0.8em,
+  image-title-scale: 0.85em,
+  // The card's ground and its inner cell.
+  card-inset: 1.2,
+  card-outer-inset: 0.6,
+  // How far the image-background wash lightens toward the canvas color.
+  overlay-opacity: 30%,
+  // The image/text split of a directional image title, in visual order for a
+  // left- or top-positioned picture; mirrored for the other side.
+  image-tracks: (2fr, 3fr),
+  // Responsive placement of a centered title over a background image: the
+  // share of the width held clear at the side, and the margin when centered.
+  side-reserve: 35%,
+  centered-margin: 18%,
+)
+
+#let title-style(overrides) = title-metrics + overrides
+
+// The display line of the title stack carries its own <mosaic-title-display>
+// label, and the theme's display size lands there rather than on the cell.
+// The cell therefore stays at the deck's body size, which is what lets every
+// subordinate tier below be an ordinary em multiple: nothing compounds with
+// the display size, and one native `set text(size: ..)` on
+// <mosaic-cell-title> scales title, subtitle, and metadata alike instead of
+// moving the display line past its own subtitle.
+#let title-display(body) = {
+  let display = block(width: 100%, above: 0pt, below: 0pt, body)
+  [#display#label("mosaic-title-display")]
+}
+
+// Subordinate tiers of the composed title stack, as em multiples of the cell.
 //
 // Their muted `fill` survives only while the cell carries the deck's ordinary
 // text color; see `adapt-fill`. That is what lets one rule on
 // <mosaic-cell-title> recolor the whole stack for a light-on-dark
 // composition, which is the case the image-* variants exist to serve.
-#let title-typography(settings) = {
-  let base = settings.base-size
-  (
-    subtitle: (fill: settings.colors.muted, size: 1.05 * base),
-    metadata: (fill: settings.colors.muted, size: 0.72 * base),
-  )
-}
+#let title-typography(settings) = (
+  subtitle: (
+    fill: settings.colors.muted,
+    size: settings.title-metrics.subtitle-scale * 1em,
+  ),
+  metadata: (
+    fill: settings.colors.muted,
+    size: settings.title-metrics.metadata-scale * 1em,
+  ),
+)
 
 #let title-inset(settings, top: 0pt, bottom: 0pt) = (
   top: top,
@@ -281,12 +372,12 @@
   left: settings.spacing.inset,
 )
 
-// The title cell's display typography comes from the <mosaic-cell-title>
-// label rules that `setup` emits. Variants that want a smaller display scale
-// apply a relative `scale` factor inline, so a user or theme rule that
-// resizes the title scales every variant proportionally. The `anchor` is
-// variant semantics and is applied inline; pick another variant (or the
-// image-background `align:` field) to change it.
+// The cell carries the deck's body size and the stack's shared typography
+// through its <mosaic-cell-title> rules; the display size lives on the
+// <mosaic-title-display> label inside it. A variant that wants a quieter
+// composition therefore reduces the cell's em and every tier follows. The
+// `anchor` is variant semantics and is applied inline; pick another variant
+// (or the image-background `align:` field) to change it.
 #let title-body-cell(
   settings,
   scale: 1em,
@@ -323,8 +414,9 @@
 
 // Code blocks, not markup blocks: markup newlines become spaces, which would
 // leak into joined lists as stray gaps before separators.
-#let orcid-link(author, size: 0.9em) = if author.orcid != none {
-  box(width: 0.22em)
+#let orcid-link(author, settings, size: auto) = if author.orcid != none {
+  let size = if size == auto { settings.title-metrics.orcid-size } else { size }
+  box(width: settings.title-metrics.orcid-gap)
   box(
     link(
       "https://orcid.org/" + author.orcid,
@@ -337,9 +429,9 @@
   )
 }
 
-#let author-name(author, corresponding: false) = {
+#let author-name(author, settings, corresponding: false) = {
   as-content(author.name)
-  orcid-link(author)
+  orcid-link(author, settings)
   if corresponding and author.corresponding { super[\*] }
 }
 
@@ -352,9 +444,9 @@
   }
 }
 
-#let ordinary-title-details(fields) = {
+#let ordinary-title-details(fields, settings) = {
   let analyzed = analyze-authors(fields.authors)
-  let author-names = analyzed.authors.map(author => author-name(author))
+  let author-names = analyzed.authors.map(author => author-name(author, settings))
   let affiliations = analyzed.affiliations.map(as-content)
   // Two tiers at most: a byline, then one fine-print line joining
   // affiliations and date. More rows would dilute the grouping.
@@ -376,29 +468,27 @@
 }
 
 // Short accent-colored rule: the one non-text gesture shared by every title
-// variant. Sized from the deck's body size so it is stable across display
-// scales and proportional to the active theme's typography.
-#let accent-rule(accent, settings, above: 0pt) = {
-  let base = settings.base-size
-  block(
-    above: above,
-    line(
-      length: 1.6 * base,
-      stroke: (
-        paint: accent,
-        thickness: 0.12 * base,
-        cap: "round",
-      ),
+// variant. Sized in the stack's own em, which the cell holds at the deck's
+// body size, so the rule keeps its proportion when a rule on
+// <mosaic-cell-title> resizes the whole stack.
+#let accent-rule(accent, settings, above: 0pt) = block(
+  above: above,
+  line(
+    length: settings.title-metrics.accent-rule-length * 1em,
+    stroke: (
+      paint: accent,
+      thickness: settings.title-metrics.accent-rule-thickness * 1em,
+      cap: "round",
     ),
-  )
-}
+  ),
+)
 
 #let compact-title-after(
   fields,
   settings,
   include-details: true,
 ) = {
-  let details = if include-details { ordinary-title-details(fields) } else { none }
+  let details = if include-details { ordinary-title-details(fields, settings) } else { none }
   // The auto default gives the looks variety: the accent rule anchors the
   // text variants, while image variants stay purely photographic.
   let show-rule = if fields.rule == auto {
@@ -411,14 +501,11 @@
     // heavy mass of the page.
     if fields.subtitle != none {
       block(
-        above: 0.55 * settings.spacing.gap,
+        above: settings.title-metrics.subtitle-gap * settings.spacing.gap,
         // The muted fill yields to the cell's text fill once a rule sets one,
         // so label-targeted color overrides reach the whole stack.
         context text(
-          ..(
-            adapt-fill(title-typography(settings).subtitle, settings)
-              + (weight: "regular")
-          ),
+          ..adapt-fill(title-typography(settings).subtitle, settings),
           fields.subtitle,
         ),
       )
@@ -427,18 +514,23 @@
     // mass from the metadata mass. Without the rule, extra space marks the
     // same break.
     if show-rule {
-      accent-rule(fields.accent, settings, above: 1.3 * settings.spacing.gap)
+      accent-rule(
+        fields.accent,
+        settings,
+        above: settings.title-metrics.rule-gap * settings.spacing.gap,
+      )
     }
     if details != none {
       block(
-        above: if show-rule { 0.8 } else { 1.3 } * settings.spacing.gap,
+        above: if show-rule {
+          settings.title-metrics.details-gap-with-rule
+        } else {
+          settings.title-metrics.details-gap-without-rule
+        } * settings.spacing.gap,
         {
-          set par(leading: 0.55em)
+          set par(leading: settings.title-metrics.metadata-leading)
           context text(
-            ..(
-              adapt-fill(title-typography(settings).metadata, settings)
-                + (weight: "regular")
-            ),
+            ..adapt-fill(title-typography(settings).metadata, settings),
             details,
           )
         },
@@ -455,7 +547,7 @@
   settings,
   include-details: true,
 ) = {
-  as-content(fields.title)
+  title-display(as-content(fields.title))
   compact-title-after(
     fields,
     settings,
@@ -484,14 +576,13 @@
 // Title and subtitle only: the heavy mass of the page, without the metadata
 // or the accent rule of the compact stack.
 #let title-mass(fields, settings, subtitle-fill: auto) = {
-  as-content(fields.title)
+  title-display(as-content(fields.title))
   if fields.subtitle != none {
     block(
-      above: 0.55 * settings.spacing.gap,
-      // Contextual so the size resolves against the live base size, which
-      // only exists once the slide renders; see title-typography.
+      above: settings.title-metrics.subtitle-gap * settings.spacing.gap,
+      // Contextual because `adapt-fill` reads the live text fill.
       context {
-        let styles = title-typography(settings).subtitle + (weight: "regular")
+        let styles = title-typography(settings).subtitle
         if subtitle-fill == auto {
           text(..adapt-fill(styles, settings), fields.subtitle)
         } else {
@@ -504,10 +595,10 @@
 
 // The metadata pieces every composed variant arranges: author names (with
 // ORCID links), the deduplicated affiliations, and the display date.
-#let metadata-parts(fields) = {
+#let metadata-parts(fields, settings) = {
   let analyzed = analyze-authors(fields.authors)
   (
-    names: analyzed.authors.map(author => author-name(author)),
+    names: analyzed.authors.map(author => author-name(author, settings)),
     affiliations: analyzed.affiliations.map(as-content),
     date: if fields.date == none { none } else { as-content(fields.date) },
   )
@@ -517,25 +608,33 @@
   parts.names.len() > 0 or parts.affiliations.len() > 0 or parts.date != none
 )
 
-// Byline and fine-print typography, pt-anchored for the same reason as
-// title-typography: the <mosaic-cell-title> label carries a 2em display size
-// that these tiers must not compound with.
+// Byline and fine-print typography for the band, which is its own
+// <mosaic-cell-details> cell rather than a tier of the title stack. Its sizes
+// stay anchored to the deck's body size, so the band answers to a rule on its
+// own cell and not to the title's scale.
 #let metadata-typography(settings) = {
   let base = settings.base-size
   (
-    byline: (size: 0.6 * base, weight: "medium"),
-    fine: (size: 0.55 * base),
+    byline: (size: settings.title-metrics.byline-scale * base, weight: "medium"),
+    fine: (size: settings.title-metrics.fine-print-scale * base),
   )
 }
 
+// The same two tiers composed inside the title cell, in that cell's em so they
+// scale with the rest of the stack. See title-display.
+#let stack-metadata-typography(settings) = (
+  byline: (size: settings.title-metrics.byline-scale * 1em, weight: "medium"),
+  fine: (size: settings.title-metrics.fine-print-scale * 1em),
+)
+
 // A two-tier centered or left-aligned metadata stack: the byline in the ink
 // color, one fine-print line joining affiliations and date below it.
-// Contextual because the tier sizes anchor to the live base size. Adaptive
+// Contextual because `adapt-fill` reads the live text fill. Adaptive
 // tiers yield their fills to a recolored cell (see adapt-fill), which keeps
 // the one-rule light-on-dark contract for single-cell variants; plate passes
 // explicit fills for its self-colored ground instead.
 #let metadata-stack(parts, settings, ink: auto, pale: auto, adaptive: true) = context {
-  let type-scale = metadata-typography(settings)
+  let type-scale = stack-metadata-typography(settings)
   let ink-style = type-scale.byline + (
     fill: if ink == auto { settings.colors.text } else { ink },
   )
@@ -548,7 +647,7 @@
   }
   let fine = parts.affiliations
   if parts.date != none { fine.push(parts.date) }
-  set par(leading: 0.55em)
+  set par(leading: settings.title-metrics.metadata-leading)
   if parts.names.len() > 0 {
     text(..ink-style, join-content(parts.names))
   }
@@ -571,7 +670,7 @@
 // swiss: the title mass rests on a full-width baseline rule; author,
 // affiliation, and date hang below it in three aligned columns.
 #let resolve-swiss-title(fields, settings) = {
-  let parts = metadata-parts(fields)
+  let parts = metadata-parts(fields, settings)
   if not has-metadata(parts) and not show-mark(fields) {
     return title-stack(fields, settings)
   }
@@ -582,24 +681,27 @@
     if show-mark(fields) {
       block(line(
         length: 100%,
-        stroke: (paint: mark-paint(fields, settings), thickness: 0.04 * base),
+        stroke: (
+          paint: mark-paint(fields, settings),
+          thickness: settings.title-metrics.accent-stroke-thickness * base,
+        ),
       ))
     }
     if has-metadata(parts) {
       block(
-        above: 0.65 * base,
+        above: settings.title-metrics.band-metadata-offset * base,
         grid(
           columns: (1fr, 1fr, auto),
           column-gutter: base,
           if parts.names.len() > 0 {
-            set par(leading: 0.55em)
+            set par(leading: settings.title-metrics.metadata-leading)
             text(
               ..(type-scale.byline + (fill: settings.colors.text)),
               join-content(parts.names),
             )
           },
           if parts.affiliations.len() > 0 {
-            set par(leading: 0.55em)
+            set par(leading: settings.title-metrics.metadata-leading)
             text(
               ..(type-scale.fine + (fill: settings.colors.muted)),
               join-content(parts.affiliations, separator: [ · ]),
@@ -633,7 +735,7 @@
 // centered: the title mass at the slide's center, the metadata anchored to
 // the bottom edge so the composition never reads as top-heavy.
 #let resolve-centered-title(fields, settings) = {
-  let parts = metadata-parts(fields)
+  let parts = metadata-parts(fields, settings)
   styled-cell(
     id: "title",
     content: {
@@ -655,18 +757,17 @@
 // plate: the whole slide takes the deck's text color and the type is knocked
 // out in the canvas color. Typography alone; no marks.
 #let resolve-plate-title(fields, settings) = {
-  let pale = settings.colors.canvas.transparentize(30%)
-  let parts = metadata-parts(fields)
+  let pale = settings.colors.canvas.transparentize(settings.title-metrics.overlay-opacity)
+  let parts = metadata-parts(fields, settings)
   styled-cell(
     id: "title",
-    content: context {
-      let base = settings.base-size
+    content: {
       set text(fill: settings.colors.canvas)
       align(left + bottom, {
         title-mass(fields, settings, subtitle-fill: pale)
         if has-metadata(parts) {
           block(
-            above: 1.4 * base,
+            above: settings.title-metrics.plate-metadata-offset * 1em,
             metadata-stack(parts, settings, ink: settings.colors.canvas, pale: pale, adaptive: false),
           )
         }
@@ -682,22 +783,25 @@
 // frame: a single thin rule border inset from the slide edge closes the
 // composition; the stack is centered inside it.
 #let resolve-frame-title(fields, settings) = {
-  let parts = metadata-parts(fields)
+  let parts = metadata-parts(fields, settings)
   styled-cell(
     id: "title",
     content: context block(
       width: 100%,
       height: 100%,
       stroke: if show-mark(fields) {
-        (paint: mark-paint(fields, settings), thickness: 0.04 * settings.base-size)
+        (
+          paint: mark-paint(fields, settings),
+          thickness: settings.title-metrics.accent-stroke-thickness * settings.base-size,
+        )
       } else {
         none
       },
-      inset: 1.2 * settings.spacing.inset,
+      inset: settings.title-metrics.card-inset * settings.spacing.inset,
       {
         align(center + horizon, {
           set align(center)
-          text(size: 0.9em, title-mass(fields, settings))
+          text(size: settings.title-metrics.card-title-scale, title-mass(fields, settings))
         })
         if has-metadata(parts) {
           place(
@@ -707,21 +811,21 @@
         }
       },
     ),
-    style: (inset: 0.6 * settings.spacing.inset),
+    style: (inset: settings.title-metrics.card-outer-inset * settings.spacing.inset),
   )
 }
 
-#let academic-author(author, show-numbers: true) = {
-  author-name(author)
+#let academic-author(author, settings, show-numbers: true) = {
+  author-name(author, settings)
   if show-numbers and author.numbers.len() > 0 {
     super(join-content(author.numbers.map(str), separator: [,]))
   }
   if author.corresponding { super[\*] }
 }
 
-#let academic-affiliation(item) = {
+#let academic-affiliation(item, settings) = {
   super(str(item.at(0) + 1))
-  box(width: 0.2em)
+  box(width: settings.title-metrics.affiliation-marker-gap)
   as-content(item.at(1))
 }
 
@@ -737,10 +841,10 @@
 // The byline already names each author (with an asterisk for the
 // corresponding author), so the contact line shows only the marker and the
 // address.
-#let academic-contact(author) = {
+#let academic-contact(author, settings) = {
   if author.corresponding {
     [\*]
-    box(width: 0.2em)
+    box(width: settings.title-metrics.affiliation-marker-gap)
   }
   join-content(contact-items(author), separator: [ · ])
 }
@@ -750,10 +854,11 @@
   // Metadata compresses to three tiers: a byline, one fine-print line for
   // the affiliation legend, and one fine-print line joining contacts and
   // date. More rows than that would scatter the composition.
-  let affiliation-items = academic.affiliations.enumerate().map(academic-affiliation)
+  let affiliation-items = academic.affiliations.enumerate()
+    .map(item => academic-affiliation(item, settings))
   let contact-line = academic.authors
     .filter(author => author.email != none)
-    .map(academic-contact)
+    .map(author => academic-contact(author, settings))
   if fields.date != none {
     contact-line.push(as-content(fields.date))
   }
@@ -763,7 +868,7 @@
   // the whole composition anchors to the lower edge of the slide.
   children.push(t(1fr, title-body-cell(
     settings,
-    scale: 0.8em,
+    scale: settings.title-metrics.academic-scale,
     content: title-stack-content(
       fields,
       settings,
@@ -772,7 +877,7 @@
     bottom-inset: settings.spacing.gap,
   )))
   if academic.authors.len() > 0 {
-    let author-content = join-content(academic.authors.map(academic-author))
+    let author-content = join-content(academic.authors.map(author => academic-author(author, settings)))
     children.push(t(
       auto,
       fixed-cell(
@@ -820,11 +925,15 @@
   let text-region = title-stack(
     fields,
     settings,
-    scale: 0.85em,
+    scale: settings.title-metrics.image-title-scale,
   )
   let position = semantic-image-position(fields.variant)
   let tracks = if fields.tracks == auto {
-    if position in ("left", "top") { (2fr, 3fr) } else { (3fr, 2fr) }
+    if position in ("left", "top") {
+      settings.title-metrics.image-tracks
+    } else {
+      settings.title-metrics.image-tracks.rev()
+    }
   } else {
     fields.tracks
   }
@@ -837,8 +946,8 @@
 }
 
 #let background-stack-inset(alignment, settings) = {
-  let side-reserve = 35%
-  let centered-margin = 18%
+  let side-reserve = settings.title-metrics.side-reserve
+  let centered-margin = settings.title-metrics.centered-margin
   if alignment in (right, right + top, right + horizon, right + bottom) {
     (
       top: settings.spacing.inset,
@@ -895,6 +1004,12 @@
     mark-accent: if inherited.accent == auto { none } else { inherited.accent },
   )
   let image = optional-fixed-image(fields.image, "layout \"title\" image")
+  // The resolved recipe rides on `settings`, which every helper below already
+  // receives, so a `style:` override reaches the whole composition without
+  // threading an extra argument through seven variants.
+  let settings = settings + (
+    title-metrics: title-style(fields.at("style", default: (:))),
+  )
   if fields.variant == "academic" {
     resolve-academic-title(fields, settings)
   } else if fields.variant == "swiss" {

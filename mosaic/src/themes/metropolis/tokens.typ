@@ -1,4 +1,7 @@
 // Metropolis design tokens.
+// `colors` is this theme's stable palette export and carries exactly the six
+// canonical roles. The named constants above it are private mixing values:
+// a derived theme should extend `colors`, never reach for them by name.
 #let ink = rgb("#23373b")
 #let orange = rgb("#f28e2b")
 #let paper = rgb("#fafafa")

@@ -44,13 +44,17 @@
 #let affix(value) = if value == none { [] } else { as-content(value) }
 
 // Edge regions — headers, footers, captions — hug their own content vertically
-// and otherwise take the deck's inset on all four sides, exactly like every
-// other cell. Equal padding is what lets a recolored header read as a balanced
-// band: a compact gap on the inner side pushes the text against one edge of the
-// fill, and a compact gap on both sides leaves a heading almost touching the
-// slide edge while its left margin is several times larger. Neither reads as a
-// choice. The region still sits close to the body it introduces because the
-// gutter between them is zero.
+// and take the deck's inset horizontally, exactly like every other cell. The
+// vertical padding stays equal above and below, so a recolored header still
+// reads as a balanced band, but it is a fraction of the horizontal inset: a
+// heading is one line tall, and full inset on both sides makes the band deeper
+// than the text it carries. A single asymmetric gap is what would look
+// unconsidered, not a shallower symmetric one. The region also sits close to
+// the body it introduces because the gutter between them is zero.
+#let header-inset(settings) = (
+  x: settings.spacing.inset,
+  y: 0.55 * settings.spacing.inset,
+)
 
 #let track-children(nodes, tracks) = if tracks == auto {
   nodes

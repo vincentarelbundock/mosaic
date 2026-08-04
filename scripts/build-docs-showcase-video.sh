@@ -5,6 +5,10 @@ set -euo pipefail
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 output="$repo_dir/docs/assets/images/showcase.webm"
 poster="$repo_dir/docs/assets/images/showcase-poster.webp"
+# Records what the committed reel was encoded from. Slide PDFs are rebuilt with
+# fresh metadata on every docs build, so their bytes cannot answer "did the
+# slides change?"; the rendered frames can, and they are what the reel shows.
+fingerprint_file="$repo_dir/docs/assets/images/showcase.fingerprint"
 work_dir="$(mktemp -d)"
 trap 'rm -rf "$work_dir"' EXIT
 
@@ -15,6 +19,7 @@ step_seconds=0.5
 width=1280
 height=720
 fps=20
+crf=40
 
 if [[ "$#" -gt 0 ]]; then
   python_cmd=("$@")
@@ -69,6 +74,26 @@ for index in "${!slides[@]}"; do
   frames+=("$frame")
 done
 
+# Everything that can change a pixel of the encoded reel: the frames themselves,
+# how long each is held, and the encoder settings.
+fingerprint="$(
+  {
+    printf 'v1 %s %s %s %s\n' "$width" "$height" "$fps" "$crf"
+    for index in "${!frames[@]}"; do
+      printf '%s %s\n' "${dwells[$index]}" "$(sha256sum <"${frames[$index]}" | cut -d' ' -f1)"
+    done
+  } | sha256sum | cut -d' ' -f1
+)"
+
+if [[ -f "$fingerprint_file" && -f "$output" && -f "$poster" ]] &&
+  [[ "$(cat "$fingerprint_file")" == "$fingerprint" ]]; then
+  # Bump the mtimes so Make stops asking, but leave the bytes alone: an
+  # identical re-encode would still differ byte for byte and dirty the tree.
+  touch "$output" "$poster" "$fingerprint_file"
+  echo "showcase: slides unchanged, kept ${output#"$repo_dir/"}"
+  exit 0
+fi
+
 # Slides cut straight from one to the next: no fades, no motion, just a hold
 # per frame. The concat demuxer needs the final frame repeated to honor its
 # duration.
@@ -88,7 +113,7 @@ ffmpeg -hide_banner -loglevel error -y \
   -vf "fps=$fps,format=yuv420p" \
   -an \
   -c:v libvpx-vp9 \
-  -crf 40 \
+  -crf "$crf" \
   -b:v 0 \
   -pix_fmt yuv420p \
   -row-mt 1 \
@@ -103,6 +128,8 @@ ffmpeg -hide_banner -loglevel error -y \
   -frames:v 1 \
   -quality 82 \
   "$poster"
+
+printf '%s\n' "$fingerprint" >"$fingerprint_file"
 
 echo "showcase: wrote ${output#"$repo_dir/"} ($(awk "BEGIN { printf \"%.1f\", $length }")s, ${#frames[@]} frames)"
 echo "showcase: wrote ${poster#"$repo_dir/"}"

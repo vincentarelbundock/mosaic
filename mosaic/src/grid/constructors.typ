@@ -1,7 +1,7 @@
 // Public and internal constructors for canonical grid nodes.
 #import "../shared.typ": tag, fail
 #import "model.typ": (
-  plane-ids, fit-modes, is-node, is-track, split-name,
+  plane-ids, is-node, is-track, split-name,
   valid-rule, valid-track-size,
 )
 #import "validation.typ": validate
@@ -31,16 +31,6 @@
   resolved
 }
 
-#let validate-fit(value, name) = {
-  if value not in fit-modes {
-    fail(
-      name + " fit must be none, \"auto\", \"width\", or \"contain\", not "
-        + repr(value),
-    )
-  }
-  value
-}
-
 // Internal cell constructor used by layout resolvers and setup defaults.
 #let styled-cell(
   ..identifier,
@@ -52,11 +42,16 @@
   if type(style) != dictionary {
     fail("styled-cell style must be a dictionary")
   }
+  // `auto` defers the inset to render time, where `settings.spacing.inset` is
+  // readable. Injecting a literal here would silently outrank the configured
+  // token, since a cell that leaves `inset` at `auto` contributes no key of its
+  // own. The key is always present so an otherwise-bare cell still carries a
+  // style and reaches `render-cell`.
   (
     mosaic: tag,
     kind: "cell",
     content: content,
-    style: (inset: 1.25em) + style,
+    style: (inset: auto) + style,
     id: id,
   )
 }
@@ -71,7 +66,7 @@
 /// ```typ
 /// #mosaic.grid.v(
 ///   mosaic.grid.t(auto, mosaic.grid.cell("header")),
-///   mosaic.grid.cell("body", fit: "auto"),
+///   mosaic.grid.cell("body"),
 /// )
 /// ```
 ///
@@ -104,28 +99,15 @@
   /// the `spacing.inset` configured on `setup`.
   /// -> auto | length | relative | dictionary
   inset: auto,
-  /// Shrinks content that would otherwise overflow the cell rather than letting
-  /// it spill.
-  ///
-  /// - `none`: leave content at its natural size, so overflow observation
-  ///   reports it instead. The default.
-  /// - `"width"`: scale to the cell width.
-  /// - `"contain"`: scale to the cell height.
-  /// - `"auto"`: scale to the height and reflow at the smaller size.
-  /// -> none | str
-  fit: none,
 ) = {
   if identifier.named().len() > 0 {
-    fail("cell accepts only a cell id, optional fixed content, inset, and fit")
+    fail("cell accepts only a cell id, optional fixed content, and inset")
   }
   let id = resolve-cell-id(identifier, id, "cell")
-  let _ = validate-fit(fit, "cell " + repr(id))
   styled-cell(
     id: id,
     content: content,
-    style: (
-      if inset == auto { (:) } else { (inset: inset) }
-    ) + if fit == none { (:) } else { (fit: fit) },
+    style: if inset == auto { (:) } else { (inset: inset) },
   )
 }
 

@@ -4,13 +4,15 @@
 )
 
 #let layout-field-keys = (
-  content: ("columns", "fit", "tracks", "variant"),
+  content: ("columns", "tracks", "variant"),
   image: ("caption", "fit", "image", "tracks", "variant"),
   title: (
-    "accent", "align", "authors", "date", "image", "rule", "subtitle", "title",
-    "tracks", "variant",
+    "accent", "align", "authors", "date", "image", "rule", "style", "subtitle",
+    "title", "tracks", "variant",
   ),
-  section: ("accent", "image", "number", "subtitle", "tracks", "variant"),
+  section: (
+    "accent", "image", "number", "style", "subtitle", "tracks", "variant",
+  ),
 )
 
 #let make-layout(name, fields) = (

@@ -4,6 +4,42 @@
 #import "slide/runtime.typ": render-slide
 
 #let typst-context = (context []).func()
+
+// Which heading depths open an automatic slide, and what each one opens.
+//
+// The default reads a deck the way its outline does: `=` starts a section,
+// `==` starts a content slide, and anything deeper is ordinary content inside
+// the current slide. A document with a different hierarchy (chapters at `=`,
+// sections at `==`, slides at `===`) passes its own map instead, so the
+// compiler is not the thing that decides what a heading level means.
+// Keyed by the depth written as a string, because Typst dictionary keys are
+// strings; `heading-role` below does the conversion in one place.
+#let default-heading-policy = ("1": "section", "2": "slide")
+
+#let validate-heading-policy(value, name: "setup headings") = {
+  if type(value) != dictionary {
+    fail(
+      name + " must be a dictionary mapping heading level to \"section\" or "
+        + "\"slide\"",
+    )
+  }
+  for (level, role) in value {
+    let depth = int(level)
+    if depth < 1 {
+      fail(name + " levels must be positive integers")
+    }
+    if role not in ("section", "slide") {
+      fail(name + " " + repr(level) + " must be \"section\" or \"slide\"")
+    }
+  }
+  value
+}
+
+#let heading-role(policy, level) = if level == none {
+  none
+} else {
+  policy.at(str(level), default: none)
+}
 #let is-heading-space(value) = (
   value == []
     or (
@@ -42,7 +78,7 @@
   ),)
 }
 // Automatic and explicit pages use the same layout-based slide command.
-#let compile-deck(body) = {
+#let compile-deck(body, headings: default-heading-policy) = {
   let output = ()
   let mode = none
   let section = none
@@ -121,18 +157,12 @@
         render-slide(value.value),
         entry.wrappers,
       ))
-    } else if level in (1, 2) {
+    } else if heading-role(headings, level) != none {
       (flushed, mode, section, current) = flush-current(mode, section, current, slide-wrappers)
       if flushed != none { output.push(flushed) }
-      if level == 1 {
-        mode = "section"
-        section = value
-        current = ()
-      } else {
-        mode = "slide"
-        section = value
-        current = ()
-      }
+      mode = heading-role(headings, level)
+      section = value
+      current = ()
       slide-wrappers = entry.wrappers
     } else if is-heading-space(value) {
       // In section mode, spacing separates tagline paragraphs but must not
@@ -149,9 +179,13 @@
     } else if mode in ("slide", "section") {
       current.push(inner)
     } else {
+      // Name the levels the deck actually compiles on, which the heading
+      // policy may have moved.
       fail(
-        "content appears before the first level-1 or level-2 heading "
-          + "handled by setup",
+        "content appears before the first heading handled by setup; expected "
+          + "one of heading levels "
+          + headings.keys().map(level => int(level)).sorted()
+            .map(str).join(", "),
       )
     }
   }

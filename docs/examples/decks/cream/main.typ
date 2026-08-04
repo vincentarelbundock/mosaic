@@ -347,7 +347,10 @@
     m.grid.t(0.42fr, c("research-list")),
   ), content: (foreground: [#frame]))[
     #photo("image30.png")
+    // This cell is covered by a pale photo rather than by its sage fill, so
+    // the overlaid copy stays in ink.
     #place(top + left, dx: 35pt, dy: 85pt)[
+      #set text(fill: ink)
       = MARKET\ RESEARCH
       Elaborate on your topic here.
     ]

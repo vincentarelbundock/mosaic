@@ -1,21 +1,46 @@
-// Shared semantic roles and style normalization for components.
+// Shared semantic roles, structural defaults, and style normalization for
+// components.
 #import "../shared.typ": fail, require-dictionary, reject-unknown-keys
 #import "../settings.typ": settings-state
+#import "../role-defaults.typ": default-roles
 
-// `information` is a spelling of `accent`, not a role of its own: same
-// treatment, clearer intent at the call site. Binding them to one value keeps
-// them from drifting apart.
-#let _accent-role = (fill: rgb("#e8f1fb"), accent: rgb("#0072B2"), text: black)
+#let roles = default-roles
 
-#let roles = (
-  neutral: (fill: luma(96%), accent: luma(35%), text: black),
-  accent: _accent-role,
-  information: _accent-role,
-  success: (fill: rgb("#e5f5ee"), accent: rgb("#009E73"), text: black),
-  warning: (fill: rgb("#fff8d8"), accent: rgb("#E69F00"), text: black),
-  danger: (fill: rgb("#fbe9e5"), accent: rgb("#D55E00"), text: black),
-  takeaway: (fill: rgb("#f5eafa"), accent: rgb("#CC79A7"), text: black),
+// Geometry every component shares, kept apart from the role palette so a theme
+// states its colors without restating its shapes. Before the split, a themed
+// component module had to repeat the stroke thickness, radius, and inset just to
+// change a fill, and the two copies drifted.
+#let structure = (
+  stroke-thickness: 0.8pt,
+  radius: 6pt,
+  inset: 0.65em,
+  // The rail a callout hangs its accent on, replacing the full border.
+  callout-rail: 4pt,
+  divider-gutter: 0.45em,
+  label-radius: 3pt,
+  label-inset: (x: 0.7em, y: 0.3em),
+  label-compact-inset: (x: 0.55em, y: 0.18em),
+  // Any radius at least half the box height rounds the ends completely, so this
+  // is a "larger than any label" value rather than a measured one. Named so the
+  // magic number is not repeated at every pill call site.
+  pill-radius: 999pt,
+  progress-size: 1em,
+  progress-thickness: 2pt,
+  // A conic gradient starts due east; a progress ring reads from the top.
+  progress-start-angle: -90deg,
+  quote-gutter: 0.6em,
+  quote-attribution-gap: 0.45em,
+  quote-attribution-size: 0.72em,
+  // How far the quotation's wash is lightened toward the canvas it sits on.
+  quote-wash: 94%,
 )
+
+// The deck's own colors, for component defaults that should follow the theme
+// rather than a fixed value. Components call this inside `context`.
+#let deck-colors() = {
+  let settings = settings-state.get()
+  if settings == none { none } else { settings.colors }
+}
 
 #let role(name, contextual: false) = {
   if type(name) != str or name not in roles {
@@ -26,24 +51,33 @@
   }
   let fallback = roles.at(name)
   if not contextual {
+    return fallback
+  }
+  let settings = settings-state.get()
+  if settings == none {
+    return fallback
+  }
+  // A deck (or theme) that states a complete palette is authoritative: its
+  // entry is used verbatim, including roles the derivation below never touches.
+  if settings.roles != auto {
+    return settings.roles.at(name)
+  }
+  // Otherwise the two roles that mean "the deck's own surface" follow the deck
+  // colors, and the semantic roles keep their fixed palette.
+  if name not in ("neutral", "accent") {
     fallback
+  } else if name == "neutral" {
+    (
+      fill: settings.colors.surface,
+      accent: settings.colors.line,
+      text: settings.colors.text,
+    )
   } else {
-    let settings = settings-state.get()
-    if settings == none or name not in ("neutral", "accent") {
-      fallback
-    } else if name == "neutral" {
-      (
-        fill: settings.colors.surface,
-        accent: settings.colors.line,
-        text: settings.colors.text,
-      )
-    } else {
-      (
-        fill: settings.colors.surface,
-        accent: settings.colors.accent,
-        text: settings.colors.text,
-      )
-    }
+    (
+      fill: settings.colors.surface,
+      accent: settings.colors.accent,
+      text: settings.colors.text,
+    )
   }
 }
 
@@ -62,9 +96,9 @@
   let colors = role(role-name, contextual: contextual)
   (
     fill: colors.fill,
-    stroke: 0.8pt + colors.accent,
-    radius: 6pt,
-    inset: 0.65em,
+    stroke: structure.stroke-thickness + colors.accent,
+    radius: structure.radius,
+    inset: structure.inset,
     align: left,
     text: (fill: colors.text),
   ) + defaults + style

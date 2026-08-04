@@ -40,9 +40,10 @@
           loop: "loop",
           muted: "muted",
           playsinline: "playsinline",
+          controls: "controls",
           preload: "metadata",
           poster: "assets/images/showcase-poster.webp",
-          "aria-label": "Slides made with Mosaic: a plain starter deck, three themed decks including a technical talk that builds an equation and a diagram step by step, a nested grid diagram, and title and section variants",
+          "aria-label": "Slides made with Mosaic: a plain starter deck, three themed decks including a technical talk with a bulleted list, a two-column comparison, and an equation and a diagram built step by step, a nested grid diagram, and title and section variants",
         ))[
           #html.elem("source", attrs: (
             src: "assets/images/showcase.webm",

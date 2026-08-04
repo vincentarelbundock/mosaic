@@ -14,6 +14,10 @@
   (fill: sage, inset: 0pt, align: top + left) + overrides.named()
 )
 
+// Ink on the pale cream panels, paper on the darker sage ones, so every cell
+// carries the readable pairing of its own fill.
+#let text-on(fill) = if fill == cream { ink } else { white }
+
 // Apply a map of cell id -> surface() as native rules around a slide:
 //   #styled((id: surface(...)), m.slide(layout: ...)[...])
 #let styled(styles, body) = {
@@ -21,6 +25,7 @@
   for (id, s) in styles {
     let name = label("mosaic-cell-" + id)
     out = {
+      show name: set text(fill: text-on(s.fill))
       show name: set align(s.align)
       show name: it => block(
         width: 100%,

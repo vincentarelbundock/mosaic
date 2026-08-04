@@ -1,9 +1,9 @@
 // Construction, validation, and resolution of the content layout.
 #import "../shared.typ": fail
-#import "../grid/constructors.typ": styled-cell, h, v, t, validate-fit
+#import "../grid/constructors.typ": styled-cell, h, v, t
 #import "../grid/model.typ": valid-track-size
 #import "core.typ": make-layout
-#import "support.typ": track-children
+#import "support.typ": track-children, header-inset
 
 #let variants = (
   "body",
@@ -35,7 +35,6 @@
         + str(columns) + " native Typst track sizes",
     )
   }
-  let _ = validate-fit(fields.fit, "layout \"content\"")
   fields
 }
 
@@ -105,26 +104,11 @@
   /// ```
   /// -> auto | array
   tracks: auto,
-  /// Shrinks body content that would otherwise overflow its column instead of
-  /// letting it spill.
-  ///
-  /// - `none`: leave content at its natural size, so overflow observation
-  ///   reports it instead. The default.
-  /// - `"width"`: scale to the column width.
-  /// - `"contain"`: scale to the body height.
-  /// - `"auto"`: scale to the height and reflow at the smaller size.
-  ///
-  /// This applies to the body columns only. The header and footer sit in `auto`
-  /// tracks sized to their own content, so there is no allocation for them to
-  /// shrink into.
-  /// -> none | str
-  fit: none,
 ) = {
   let fields = validate-fields((
     variant: variant,
     columns: columns,
     tracks: tracks,
-    fit: fit,
   ))
   make-layout("content", fields)
 }
@@ -133,13 +117,13 @@
   id,
   settings,
   content-sized: false,
-  fit: none,
+  inset: auto,
 ) = styled-cell(
   id: id,
   style: (
     content-sized: content-sized,
-    inset: settings.spacing.inset,
-  ) + if fit == none { (:) } else { (fit: fit) },
+    inset: if inset == auto { settings.spacing.inset } else { inset },
+  ),
 )
 
 #let shell(body, fields, settings) = {
@@ -147,7 +131,12 @@
   if fields.variant in ("header-body", "header-body-footer") {
     children.push(t(
       auto,
-      region-cell("header", settings, content-sized: true),
+      region-cell(
+        "header",
+        settings,
+        content-sized: true,
+        inset: header-inset(settings),
+      ),
     ))
   }
   children.push(t(1fr, body))
@@ -162,13 +151,9 @@
 
 #let resolve-content-layout(command, settings) = {
   let fields = validate-fields(command.fields)
-  // `fit` applies to the body columns only. The header and footer sit in
-  // `auto` tracks sized to their own content, so there is no allocation for
-  // them to shrink into.
   let body-cells = range(fields.columns).map(index => region-cell(
     if fields.columns == 1 { "body" } else { "body-" + str(index + 1) },
     settings,
-    fit: fields.fit,
   ))
   let body = h(
     gutter: settings.spacing.gap,

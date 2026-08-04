@@ -15,8 +15,8 @@
   width: 180pt,
   height: 90pt,
   stroke: 0.5pt,
-  fit-to-height(height: 1fr, width: auto, grow: false, reflow: true)[
-    A longer text block can reflow while scaling to remain within a finite
-    width and height.
+  fit-to-height(height: 1fr, width: auto, grow: false)[
+    A longer text block scales geometrically to remain within a finite width
+    and height.
   ],
 )

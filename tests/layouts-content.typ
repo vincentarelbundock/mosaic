@@ -2,6 +2,7 @@
 #import "support/grid.typ" as grid-test
 #import "../mosaic/src/layout/resolver.typ": resolve-layout
 #import "../mosaic/src/settings.typ": make-settings
+#import "../mosaic/src/layout/support.typ": header-inset
 
 #let settings = make-settings()
 
@@ -34,11 +35,20 @@
 #assert(grid-test.count(resolved-structured) == 4)
 #assert(grid-test.info(resolved-structured, "header").cell.content == none)
 #assert(grid-test.info(resolved-structured, "header").cell.style.content-sized)
-// Edge regions take the deck inset on all four sides, so a recolored header
-// reads as a balanced band rather than text pinned against one edge of a fill.
+// A header keeps the deck inset horizontally and equal, shallower padding
+// above and below, so a recolored header reads as a balanced band that is no
+// deeper than the single line it carries.
 #assert(
   grid-test.info(resolved-structured, "header").cell.style.inset
+    == header-inset(settings),
+)
+#assert(
+  grid-test.info(resolved-structured, "header").cell.style.inset.x
     == settings.spacing.inset,
+)
+#assert(
+  grid-test.info(resolved-structured, "header").cell.style.inset.y
+    < settings.spacing.inset,
 )
 #assert(
   grid-test.info(resolved-structured, "footer").cell.style.inset

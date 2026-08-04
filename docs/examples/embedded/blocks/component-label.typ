@@ -13,7 +13,7 @@
   #h(1em)
   #m.components.label(
     role: "information",
-    radius: 999pt,
+    radius: "pill",
     text-style: (size: 1.35em, weight: "bold"),
   )[Rounded corners]
 ]

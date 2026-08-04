@@ -7,7 +7,12 @@
 #let default-text = rgb("#1c1917")
 #let default-muted = rgb("#78716c")
 #let default-line = rgb("#e7e5e4")
-#let default-colors = (
+// The built-in light palette, exported as one value so a custom theme can
+// extend or replace it as a unit rather than copying six constants:
+//
+//   colors: mosaic.theme.light-palette + (accent: rgb("#b91c1c"))
+//
+#let light-palette = (
   canvas: default-canvas,
   surface: default-surface,
   accent: default-accent,
@@ -15,3 +20,5 @@
   muted: default-muted,
   line: default-line,
 )
+
+#let default-colors = light-palette

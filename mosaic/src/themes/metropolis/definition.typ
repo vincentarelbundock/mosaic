@@ -17,6 +17,8 @@
     fallback: true,
   )
   show: normalize-lists
+  set list(spacing: 0.9em)
+  set enum(spacing: 0.9em)
   set terms(spacing: 0.9em)
   show heading.where(depth: 1): set text(size: 2em, weight: "semibold")
   show heading.where(depth: 2): set text(size: 0.75em, weight: "regular")
@@ -30,8 +32,9 @@
     text(fill: colors.canvas, weight: "medium", it),
   )
   show label("mosaic-cell-body"): set align(horizon)
-  show label("mosaic-cell-title"): set text(
-    size: 2em, weight: "semibold", tracking: -0.015em, fill: colors.text,
+  show label("mosaic-cell-title"): set text(fill: colors.text)
+  show label("mosaic-title-display"): set text(
+    size: 2em, weight: "semibold", tracking: -0.015em,
   )
   show label("mosaic-cell-title"): set par(leading: 0.42em)
   show label("mosaic-cell-section"): set align(left + horizon)
@@ -39,6 +42,10 @@
   show label("mosaic-cell-section"): it => block(width: 100%)[
     #it
     #v(0.4em)
+    // The 3.01pt thickness is unexplained: it is visually indistinguishable
+    // from 3pt and reads as a leftover from tuning rather than a workaround
+    // for anything reproducible. Left as-is because changing it changes this
+    // theme's rendered output, which is a design call rather than a cleanup.
     #components.progress(
       variant: "line", count: "sections", width: 100%, thickness: 3.01pt,
       track: colors.line, color: colors.accent,

@@ -7,6 +7,7 @@
 #import "../incremental/heading.typ": contains-heading, apply-state
 #import "../incremental/transform.typ": transform
 #import "../fit.typ": fit-to-width, fit-to-height
+#import "../settings.typ": settings-state, default-spacing
 
 // Records one queryable warning per overflowing cell.
 //
@@ -89,6 +90,19 @@
   value
 }
 
+// The context a render starts from when no deck supplies one: slide zero
+// (nothing numbered yet) and the first incremental step. Named once so the
+// entry points cannot drift from each other.
+#let initial-context = (slide: 0, step: 1)
+
+// A cell that states no inset of its own takes the deck's configured token.
+// Read inside the render context, where the settings state is live; a component
+// rendered outside `setup` falls back to the library default.
+#let configured-inset() = {
+  let settings = settings-state.get()
+  if settings == none { default-spacing.inset } else { settings.spacing.inset }
+}
+
 #let resolve-inset(inset, base) = if type(inset) == dictionary {
   let resolved = (:)
   for (side, value) in inset {
@@ -104,8 +118,8 @@
   style,
   overflow: "off",
   key: "grid",
-  slide: 0,
-  step: 1,
+  slide: initial-context.slide,
+  step: initial-context.step,
   track: none,
   vertical: false,
 ) = {
@@ -142,14 +156,8 @@
   let content = before + content + after
   let content = if fit == "width" {
     fit-to-width(width: 1fr, grow: false, content)
-  } else if fit in ("auto", "contain") {
-    fit-to-height(
-      height: 1fr,
-      grow: false,
-      shrink: true,
-      reflow: fit == "auto",
-      content,
-    )
+  } else if fit == "contain" {
+    fit-to-height(height: 1fr, grow: false, shrink: true, content)
   } else {
     content
   }
@@ -180,6 +188,7 @@
   // so cell typography rules do not scale cell geometry.
   grid.cell(inset: 0pt, context {
     let base = text.size
+    let inset = if inset == auto { configured-inset() } else { inset }
     let body = block(
       width: 100%,
       height: region-height,
@@ -233,7 +242,7 @@
   step,
   key: "grid",
   overflow: "off",
-  slide: 0,
+  slide: initial-context.slide,
 ) = {
   if node.kind == "on" {
     let supplied = body-cell-ids(node.child).map(id => contents.at(id))
@@ -337,7 +346,7 @@
   }
 }
 
-#let render(node, contents, step, overflow: "off", slide: 0) = {
+#let render(node, contents, step, overflow: "off", slide: initial-context.slide) = {
   let (body, removed, style) = render-node(
     node,
     contents,

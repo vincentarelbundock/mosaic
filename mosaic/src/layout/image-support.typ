@@ -38,10 +38,16 @@
 // picture get", which is side-independent: the companion region takes the
 // remaining `1fr`, so `image-left` and `image-right` stay mirror images of each
 // other without the caller reordering anything.
+// A directional image layout is a two-region composition by definition: an
+// image band and a text band, swapped by position. The pair is the API's shape,
+// not a limit that a more general track list would lift, so the count is named
+// rather than parameterized. A layout wanting more regions is a grid.
+#let directional-regions = 2
+
 #let validate-directional-tracks(tracks, subject) = {
   if tracks != auto and not valid-track-size(tracks) and (
     type(tracks) != array
-      or tracks.len() != 2
+      or tracks.len() != directional-regions
       or not tracks.all(valid-track-size)
   ) {
     fail(

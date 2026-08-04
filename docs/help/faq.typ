@@ -1,6 +1,8 @@
 #import "/.calepin/calepin.typ" as calepin
 #import "/_includes/embedded-examples.typ": (
+  embedded-example,
   example-source,
+  thumbnail-gallery,
   thumbnail-gallery-items,
 )
 
@@ -70,6 +72,22 @@ The content layout gives this `==` slide the inverted header bar and progress in
 
 Any layout with `header` and `body` cells works. A theme supplies all of the named layouts, and `setup(layouts:)` may replace only the ones that differ; see #link("../appearance/themes.html")[Themes] and the
 #link("../api/setup.html")[Setup API].
+
+= How do I invert a slide's colors?
+
+Pair each ground with the text color that reads against it, and apply both halves in the same rule. `m.surface` fills the cell's own block and a neighboring `set text` colors the content inside it, so a helper that takes a `(fill, text)` pair can repaint any set of cells:
+
+#embedded-example(
+  calepin.elements.gallery,
+  "faq/color-inversion",
+  frames: 2,
+  title: "One layout rendered on a light ground and on a dark one",
+  renderer: thumbnail-gallery,
+)
+
+The same helper inverts a single slide, a run of slides, or a whole deck, depending on where you place the `#show:` rule. Scope it inside a block for one slide, or write it once after `m.setup` to change the baseline. To invert the full bleed rather than the cells, add `#set page(fill: ..)`; the background and foreground planes take the same rules through the `<mosaic-background>` and `<mosaic-foreground>` labels.
+
+Mosaic does not derive the text color from the fill. Two reasons, both practical. Mid-tone grounds sit where an automatic flip is least reliable: a muted sage such as `rgb("#aebdb3")` reads as "light" to a luminance rule, but white on it measures 1.8:1, well under the 4.5:1 that body text wants. And a cell's declared fill is often not what the viewer sees behind the text, because an image, scrim, or background plane covers it. Naming the pair keeps that judgment with the author, where a real slide can be looked at.
 
 = How can I reuse slides and states?
 
@@ -193,7 +211,18 @@ Mosaic records a warning when a cell's content is taller than the cell. Query th
 Each record identifies the slide, frame, cell, and measured height. Set `setup(overflow: "error")` to fail the compile instead, naming every overflowing cell with the same slide and frame numbers the query reports, or `setup(overflow: "off")` to turn the check off; see the
 #link("../api/setup.html")[Setup API].
 
-To make the content fit instead of reporting it, give the cell a `fit:` mode: `m.layouts.content(fit: "auto")` scales and reflows a body column into the available space, and `m.grid.cell(id, fit: ...)` does the same for a hand-built cell. Fitted cells never trigger the warning.
+A warning means the slide holds more than it can show. The remedy is editorial: cut a bullet, split the slide in two, or move to a layout with more room. Mosaic deliberately offers no shrink-to-fit switch for body content, because a deck whose type size is decided slide by slide loses the scale that holds it together.
+
+When a single indivisible block is the problem, a wide table or a chart, scale that one block with native Typst and leave the deck's typography alone:
+
+```typ
+#m.slide[
+  == Regression results
+  #align(center + horizon, scale(70%, reflow: true, my-table))
+]
+```
+
+`reflow: true` makes the surrounding layout account for the scaled size, so the block still aligns and no longer overflows.
 
 = How does Mosaic compare to Touying?
 

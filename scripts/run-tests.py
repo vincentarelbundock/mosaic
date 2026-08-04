@@ -396,9 +396,10 @@ def run_core(typst: str, sources: list[str]) -> None:
     for path in TMP.glob("mosaic-overflow-warning-*.svg"):
         require_contains(path, 'transform="scale(', absent=True)
 
-    # Fitted cells scale their content into the allocation and warn about
-    # nothing. The unfitted control cell carries the same body and does overflow,
-    # so the only warning must name it: that is what proves the fitters ran.
+    # The section layouts fit content they generate themselves, so they scale
+    # into their allocation and warn about nothing. The control slide is an
+    # ordinary body cell, which has no fitter and does overflow, so the only
+    # warning must name it: that is what proves the fitters ran.
     fit_values = command(
         [typst, "eval", "--root", ".", "query(<mosaic-overflow-warning>).map(it => it.value.cell)", "--in", "tests/fit-cells.typ"],
         capture=True,

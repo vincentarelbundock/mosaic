@@ -1,6 +1,7 @@
 // Private engine that consumes passive theme definitions.
 #import "../shared.typ": fail, reject-unknown-keys
 #import "../settings.typ": resolve-colors
+#import "../role-defaults.typ": validate-roles
 #import "../setup-core.typ": setup-core, setup-defaults
 #import "../layout/config.typ": standard-layouts, validate-layouts
 
@@ -8,6 +9,7 @@
 #let definition-defaults = (
   name: "Custom",
   colors: none,
+  roles: auto,
   defaults: (:),
   options: (:),
   layouts: standard-layouts,
@@ -40,6 +42,10 @@
   if "colors" in theme.defaults {
     fail("theme defaults must configure colors through theme colors")
   }
+  if "roles" in theme.defaults {
+    fail("theme defaults must configure roles through theme roles")
+  }
+  let _ = validate-roles(theme.roles, name: "theme roles")
   if type(theme.options) != dictionary {
     fail("theme options must be a dictionary")
   }
@@ -98,7 +104,12 @@
     color-overrides = named.remove("colors")
   }
   let colors = resolve-colors(theme.colors, color-overrides)
-  show: setup-core.with(theme.defaults + named + (layouts: layouts), colors: colors)
+  // The theme's semantic palette sits where a `defaults` entry would, so a deck
+  // can still replace it with `roles:` on setup.
+  show: setup-core.with(
+    (roles: theme.roles) + theme.defaults + named + (layouts: layouts),
+    colors: colors,
+  )
   show: (theme.apply).with(colors: colors, options: theme-options)
   body
 }

@@ -118,9 +118,9 @@ Variants:
 - **Content**: `body`, `header-body`, `body-footer`, `header-body-footer`.
 - **Image**: `figure` (the default), `full`, `left`, `right`, `top`, `bottom`.
 
-`m.layouts.title()` inherits `title`, `subtitle`, `authors`, and `date` from setup, so `m.slide(layout: "title")` needs no body. An explicit layout argument wins; pass `none` (or `()` for `authors`) to suppress an inherited field on one slide. For image variants, `scrim:` on the image spec quiets the photograph, as in `image: (path: "cover.webp", scrim: black.transparentize(55%))`; pair `image-background` with a scoped text-color rule on the `<mosaic-cell-title>` or `<mosaic-cell-section>` label for contrast. One such rule recolors the whole stack: the subtitle and metadata are muted only while the cell carries the deck's ordinary text color, and follow any override, so light-on-dark titles need no hand-built grid.
+`m.layouts.title()` inherits `title`, `subtitle`, `authors`, and `date` from setup, so `m.slide(layout: "title")` needs no body. An explicit layout argument wins; pass `none` (or `()` for `authors`) to suppress an inherited field on one slide. For image variants, `scrim:` on the image spec quiets the photograph, as in `image: (path: "cover.webp", scrim: black.transparentize(55%))`; pair `image-background` with a scoped text-color rule on the `<mosaic-cell-title>` or `<mosaic-cell-section>` label for contrast. One such rule recolors the whole stack: the subtitle and metadata are muted only while the cell carries the deck's ordinary text color, and follow any override, so light-on-dark titles need no hand-built grid. A size rule on the same label works the same way, scaling the stack as a unit (`show label("mosaic-cell-title"): set text(size: 0.45em)` for quiet type in a corner), because the display line carries its own `<mosaic-title-display>` label where the theme states the display size. There is no `scale:` argument, and a hand-built grid is never the way to resize a title.
 
-`m.layouts.content(fit: ...)` shrinks body content that would otherwise overflow its column: `"contain"` scales it to the body height, `"auto"` scales and reflows at the smaller size (the best default for prose), and `"width"` scales to the column width. It applies to body columns only; header and footer size to their own content. Prefer `fit:` over hand-tuning per-slide text sizes, which stops working as soon as the deck's global size changes.
+Mosaic has no shrink-to-fit switch for body content, by design: a deck whose type size is decided slide by slide loses the typographic scale that holds it together. An overflow warning means cut a bullet, split the slide, or pick a layout with more room. When one indivisible block is oversized (a wide table, a chart), scale that block alone with native `scale(70%, reflow: true, ..)`.
 
 A direct `m.layouts.content/title/section(...)` value retains its semantic layout name. A raw custom grid uses ordinary content-slide semantics.
 
@@ -216,10 +216,9 @@ Pass `[]` as the second block when the picture needs a title but no body. `track
 
 **Continuation slide.** Repeating a title verbatim collides in the outline and in link targets. Repeat the heading and give it a distinct label: `== Appeals #metadata(none) <appeals-2>`.
 
-Two recurring choices worth making once per deck:
+One recurring choice worth making once per deck:
 
 - **`path()`, not a bare string.** Image paths inside layout and component arguments cross the package boundary, so a bare `"fig/x.png"` is searched for inside the installed Mosaic package and fails with `file not found (searched at .../packages/local/mosaic/...)`. Wrap every asset path in Typst's `path()`.
-- **`fit:` on the content layout is for prose.** `layouts: (content: m.layouts.content(variant: "header-body", fit: "auto"))` is the right default for a text-heavy deck. Leave it off for an image-heavy deck: the fitter scales from the top-left, so fitting a figure sized with `height: 100%` drops its centering.
 
 ## 5. Configure the deck once
 
@@ -258,7 +257,7 @@ Key setup arguments:
 - `spacing:`: for example `(inset: 1.5em)` to set the default cell inset.
 - `handout: true`: emit only the final frame of each logical slide.
 - `output:`: `"slides"` (default), `"speaker"`, or `"notes"`.
-- `overflow:`: `"warn"` (default) emits queryable `<mosaic-overflow-warning>` metadata for any cell whose content exceeds its allocation, `"error"` fails the compile at the end of the deck and names every offending cell with its slide and frame, and `"off"` disables observation. Fitted cells (see `fit:` below) are never observed: they cannot overflow.
+- `overflow:`: `"warn"` (default) emits queryable `<mosaic-overflow-warning>` metadata for any cell whose content exceeds its allocation, `"error"` fails the compile at the end of the deck and names every offending cell with its slide and frame, and `"off"` disables observation.
 - `frozen-counters:` / `frozen-states:`: values that advance once per logical slide instead of once per frame.
 
 Do not introduce a separate footer, logo, background, or foreground feature API: recurring named-cell content and the reserved `content.background` / `content.foreground` planes own those jobs.
@@ -327,7 +326,7 @@ Build custom structure only when headings and layout factories are insufficient.
 
 - `m.grid.h(...)` places children side by side; `m.grid.v(...)` stacks them. Each string is a cell ID. Children may be nested grids. Both accept `gutter:` (a native track size between adjacent children, default `0pt`) and `rule:` (a stroke drawn along each interior boundary, centered in the gutter, default `none`).
 - Every direct child gets a `1fr` track by default. Wrap a child in `m.grid.t(size, child)` for another size; tracks accept `auto`, fixed lengths, percentages, and `fr` values.
-- `m.grid.cell(id, ...)` creates an explicitly configured cell: `inset:` (padding, affects layout measurement), fixed `content:` (an image or logo owned by the grid, needing no body or `content:` entry), and `fit:` (`"width"`, `"contain"`, or `"auto"`) to scale content that would otherwise overflow the cell.
+- `m.grid.cell(id, ...)` creates an explicitly configured cell: `inset:` (padding, affects layout measurement), fixed `content:` (an image or logo owned by the grid, needing no body or `content:` entry). Cells do not fit or scale their content: they are structural only.
 - Read a grid from the outside inward: largest split first, then replace children with nested splits. Keep descriptive IDs and indentation.
 
 Cell insets provide slide margins (`setup` uses a zero page margin). Adjacent cells each contribute their own inset; a grid `gutter` separates cell surfaces and defaults to `0pt`. Use a layout factory instead of rebuilding a standard title, section, header/body, or footer structure as a raw grid.

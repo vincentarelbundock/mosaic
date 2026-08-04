@@ -1,6 +1,12 @@
 // Values and helpers shared by all internal Mosaic modules.
 #let tag = "mosaic:0.0.1"
 
+// Every internal state, counter, and metadata key is built from `tag`, so the
+// namespace and its version bump in one place. Spelling a key literally would
+// let a partial bump leave two versions addressing the same deck, which reads
+// as silently empty state rather than as an error.
+#let key(name) = tag + ":" + name
+
 #let fail(message) = assert(false, message: "mosaic: " + message)
 
 // Typst's structural element functions have no public constructors.

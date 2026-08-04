@@ -3,7 +3,10 @@
 
 #let plane-ids = ("background", "foreground")
 
-#let fit-modes = (none, "auto", "width", "contain")
+// Fitting is internal: the section layouts scale content they generate
+// themselves, whose size no author can predict. Authors scale an oversized
+// block of their own with native `scale(.., reflow: true)`.
+#let fit-modes = (none, "width", "contain")
 
 #let valid-track-size(size) = (
   size == auto

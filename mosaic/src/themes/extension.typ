@@ -1,5 +1,7 @@
 // Stable extension surface for engine-consumed theme definitions.
 #import "engine.typ": theme-setup as _theme-setup, validate-theme as _validate-theme
+#import "../color-defaults.typ": light-palette
+#import "../role-defaults.typ": default-roles as light-roles
 
 /// Loosens tight lists and spaces their items, so markup written as a compact
 /// bullet list reads at presentation distance.
@@ -19,12 +21,21 @@
   /// The content to transform.
   /// -> content
   body,
+  /// Spacing between loosened items. `auto` keeps whatever `list` and `enum`
+  /// spacing the caller already set, so a theme that states its own list rhythm
+  /// is not overridden by merely asking for loose lists.
+  /// -> auto | length | relative
+  spacing: auto,
 ) = {
   show list.where(tight: true): it => list(tight: false, ..it.children)
   show enum.where(tight: true): it => enum(tight: false, ..it.children)
-  set list(spacing: 0.9em)
-  set enum(spacing: 0.9em)
-  body
+  if spacing != auto {
+    set list(spacing: spacing)
+    set enum(spacing: spacing)
+    body
+  } else {
+    body
+  }
 }
 
 /// Binds a passive theme definition to Mosaic's setup engine.

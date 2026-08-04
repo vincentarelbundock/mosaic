@@ -1,5 +1,5 @@
 // Incremental command reduction and content reconstruction for one step.
-#import "../shared.typ": fail, array-max, typst-sequence, typst-styled
+#import "../shared.typ": fail, array-max, key, typst-sequence, typst-styled
 #import "core.typ": status
 #import "command.typ": (
   is-command-on,
@@ -16,6 +16,12 @@
 #import "../note/command.typ": is-note
 #import "pause.typ": has-pause, is-pause, pause-schedule
 #import "analysis.typ": max-step
+
+// Row spacing for a reconstructed list whose `list`/`enum` style leaves
+// `spacing` at `auto`. Typst resolves `auto` internally and offers no way to
+// read the value back, so this stands in for it; a deck that sets its own list
+// spacing never reaches this.
+#let default-item-spacing = 0.65em
 
 #let body-containers = (
   block, box, pad, hide, strong, emph, smallcaps, sub, super,
@@ -168,10 +174,7 @@
         fail("heading bodies cannot contain nested headings")
       }
       let style-state = state(
-        "mosaic:0.0.1:heading-style:"
-          + heading-key
-          + ":"
-          + repr(body),
+        key("heading-style:" + heading-key + ":" + repr(body)),
         none,
       )
       return if heading-mode == "canonical" {
@@ -236,17 +239,27 @@
             }
             number += 1
           }
-          // Honor the deck's list/enum spacing when one is set.
+          // A reconstructed list should measure like the native one it
+          // replaces, so every metric comes from the active `list`/`enum`
+          // style rather than from a guess: an `auto` marker column sizes to
+          // the widest marker actually drawn, and the gutter is the element's
+          // own body indent. Only the row gutter needs a fallback, because
+          // `spacing: auto` means "whatever a native block would use", which
+          // is not a value this grid can read back.
           return context {
-            let spacing = if item-kind == list.item {
-              list.spacing
+            let (spacing, body-indent) = if item-kind == list.item {
+              (list.spacing, list.body-indent)
             } else {
-              enum.spacing
+              (enum.spacing, enum.body-indent)
             }
             grid(
-              columns: (1em, 1fr),
-              column-gutter: 0.4em,
-              row-gutter: if spacing == auto { 0.65em } else { spacing },
+              columns: (auto, 1fr),
+              column-gutter: body-indent,
+              row-gutter: if spacing == auto {
+                default-item-spacing
+              } else {
+                spacing
+              },
               align: (right, left),
               ..cells,
             )

@@ -16,6 +16,8 @@
     fallback: true,
   )
   show: normalize-lists
+  set list(spacing: 0.9em)
+  set enum(spacing: 0.9em)
   set terms(spacing: 0.9em)
   show heading.where(depth: 1): set text(size: 2em, weight: "semibold")
   show heading.where(depth: 2): set text(size: 1.4em, weight: "semibold")
@@ -37,8 +39,9 @@
     #v(0.18em)
     #line(length: 100%, stroke: 0.8pt + colors.line)
   ]
-  show label("mosaic-cell-title"): set text(
-    size: 2em, weight: "semibold", tracking: -0.015em, fill: colors.text,
+  show label("mosaic-cell-title"): set text(fill: colors.text)
+  show label("mosaic-title-display"): set text(
+    size: 2em, weight: "semibold", tracking: -0.015em,
   )
   show label("mosaic-cell-title"): set par(leading: 0.42em)
   show label("mosaic-cell-title"): set align(left + horizon)
@@ -58,6 +61,7 @@
 #let definition = (
   name: "Dark",
   colors: tokens.colors,
+  roles: tokens.roles,
   options: (
     font: ("Inter", "Source Sans 3", "Liberation Sans", "DejaVu Sans"),
     font-mono: "DejaVu Sans Mono",

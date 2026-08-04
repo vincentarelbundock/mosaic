@@ -1,14 +1,25 @@
 // Compact inline label.
 #import "../shared.typ": require-dictionary
-#import "style.typ": normalize-style, styled-body
+#import "style.typ": normalize-style, styled-body, structure
+
+// `"pill"` names the intent that a very large radius used to spell. Numeric and
+// dictionary radii pass through untouched.
+#let resolve-radius(radius) = if radius == "pill" {
+  structure.pill-radius
+} else {
+  radius
+}
 
 // Shared pill treatment: a boxed body with a large default corner radius.
-#let _compact(body, role, style, radius: 999pt) = context {
+#let _compact(body, role, style, radius: "pill") = context {
   let it = normalize-style(
     style: style,
     role-name: role,
     contextual: true,
-    defaults: (radius: radius, inset: (x: 0.55em, y: 0.18em)),
+    defaults: (
+      radius: resolve-radius(radius),
+      inset: structure.label-compact-inset,
+    ),
   )
   box(
     fill: it.fill,
@@ -28,12 +39,12 @@
 /// == Estimator #mosaic.components.label(role: "success")[stable]
 /// ```
 ///
-/// Raise `radius` for a fully rounded pill.
+/// Pass `radius: "pill"` for fully rounded ends.
 ///
 /// ```typ
 /// #mosaic.components.label(
 ///   role: "warning",
-///   radius: 999pt,
+///   radius: "pill",
 ///   text-style: (weight: "bold", size: 0.7em),
 /// )[draft]
 /// ```
@@ -50,9 +61,9 @@
   /// `warning`, `danger`, or `takeaway`.
   /// -> str
   role: "neutral",
-  /// Corner radius. A large value such as `999pt` gives a fully rounded pill.
-  /// -> length | dictionary
-  radius: 3pt,
+  /// Corner radius, or `"pill"` for fully rounded ends.
+  /// -> str | length | dictionary
+  radius: structure.label-radius,
   /// Native `text` arguments applied to the body, such as `size` and `weight`.
   /// Merged over any `text` key in `style`.
   /// -> dictionary
@@ -67,9 +78,9 @@
   _compact(
     body,
     role,
-    (inset: (x: 0.7em, y: 0.3em))
+    (inset: structure.label-inset)
       + style
-      + (radius: radius, text: text-style),
+      + (radius: resolve-radius(radius), text: text-style),
     radius: radius,
   )
 }

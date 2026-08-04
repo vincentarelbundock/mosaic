@@ -1,7 +1,7 @@
 // Position indicator driven by the deck's logical slide and section counters.
 #import "../shared.typ": fail
 #import "../deck-state.typ": logical-slide, logical-section
-#import "style.typ": role as component-role
+#import "style.typ": role as component-role, structure
 
 /// Displays progress through logical slides or semantic sections in the deck.
 ///
@@ -40,8 +40,23 @@
 ///
 /// -> content
 #let progress(
-  /// Visual treatment: `"1/1"`, `"1"`, `"circle"`, or `"line"`.
-  /// -> str
+  /// Visual treatment: `"1/1"`, `"1"`, `"circle"`, `"line"`, or a function
+  /// drawing one. A renderer is called with a dictionary holding `current`,
+  /// `total`, `amount`, `active`, `track`, `width`, `size`, and `thickness`,
+  /// and returns the content to place.
+  ///
+  /// ```typ
+  /// #mosaic.components.progress(
+  ///   variant: state => grid(
+  ///     columns: state.total,
+  ///     ..range(state.total).map(i => rect(
+  ///       height: state.thickness,
+  ///       fill: if i < state.current { state.active } else { state.track },
+  ///     )),
+  ///   ),
+  /// )
+  /// ```
+  /// -> str | function
   variant: "1/1",
   /// Which automatic counter to read: `"slides"` or `"sections"`. Ignored when
   /// `current` and `total` are given.
@@ -65,10 +80,10 @@
   width: 100%,
   /// Diameter of the `circle` variant.
   /// -> length
-  size: 1em,
+  size: structure.progress-size,
   /// Stroke thickness of the `circle` and `line` variants.
   /// -> length
-  thickness: 2pt,
+  thickness: structure.progress-thickness,
   /// Color of the inactive remainder. `auto` uses the role's fill.
   /// -> auto | color | gradient | tiling
   track: auto,
@@ -77,8 +92,13 @@
   /// -> auto | color
   color: auto,
 ) = context {
-  if type(variant) != str or variant not in ("1/1", "1", "circle", "line") {
-    fail("progress variant must be \"1/1\", \"1\", \"circle\", or \"line\"")
+  if type(variant) != function and (
+    type(variant) != str or variant not in ("1/1", "1", "circle", "line")
+  ) {
+    fail(
+      "progress variant must be \"1/1\", \"1\", \"circle\", \"line\", or a "
+        + "renderer function",
+    )
   }
   if type(count) != str or count not in ("slides", "sections") {
     fail("progress count must be \"slides\" or \"sections\"")
@@ -115,6 +135,20 @@
   let active = if color == auto { colors.accent } else { color }
   let amount = 100% * current / total
 
+  // A renderer receives everything the built-in treatments draw from, so an
+  // extension theme can add a treatment without forking this component.
+  if type(variant) == function {
+    return variant((
+      current: current,
+      total: total,
+      amount: amount,
+      active: active,
+      track: track,
+      width: width,
+      size: size,
+      thickness: thickness,
+    ))
+  }
   if variant == "1/1" {
     text(fill: active)[#current/#total]
   } else if variant == "1" {
@@ -129,7 +163,7 @@
         (active, amount),
         (track, amount),
         (track, 100%),
-        angle: -90deg,
+        angle: structure.progress-start-angle,
         space: rgb,
       ),
     ))

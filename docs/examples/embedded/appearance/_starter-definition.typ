@@ -16,7 +16,7 @@
   show heading.where(depth: 2): set text(size: 1.4em, weight: "semibold")
   show heading: set block(below: 0.75em)
   show figure.caption: set text(size: 0.72em, fill: colors.muted)
-  show label("mosaic-cell-title"): set text(
+  show label("mosaic-title-display"): set text(
     size: 2em, weight: "semibold", tracking: -0.015em,
   )
   show label("mosaic-cell-title"): set par(leading: 0.42em)

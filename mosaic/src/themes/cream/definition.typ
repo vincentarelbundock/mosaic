@@ -16,12 +16,14 @@
     fallback: true,
   )
   show: normalize-lists
+  set list(spacing: 0.9em)
+  set enum(spacing: 0.9em)
   set terms(spacing: 0.9em)
   show heading.where(level: 1): set text(size: base-size * 1.9, weight: "bold")
   show heading.where(level: 2): set text(size: base-size * 1.25, weight: "bold")
   show heading: set block(below: 0.5em)
   show figure.caption: set text(size: 0.72em, fill: colors.muted)
-  show label("mosaic-cell-title"): set text(
+  show label("mosaic-title-display"): set text(
     size: 2em, weight: "semibold", tracking: -0.015em,
   )
   show label("mosaic-cell-title"): set par(leading: 0.42em)

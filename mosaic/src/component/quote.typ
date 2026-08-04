@@ -1,5 +1,6 @@
 // Quotation treatment with optional portrait and attribution.
 #import "frame.typ": frame
+#import "style.typ": structure, deck-colors
 
 /// Creates a quotation treatment with optional portrait and attribution.
 ///
@@ -45,28 +46,36 @@
   /// `stroke`, `radius`, `inset`, `align`, and `text`.
   /// -> dictionary
   style: (:),
-) = frame(
-  role: role,
-  style: (
-    fill: black.transparentize(94%),
-    stroke: none,
-  ) + style,
-)[
-  #grid(
-    columns: if portrait == none { (1fr,) } else { (auto, 1fr) },
-    gutter: 0.6em,
-    ..if portrait == none { (body,) } else { (portrait, body) },
-  )
-  #if attribution != none or source != none {
-    // `block(above:)` rather than a `linebreak()` followed by block-level
-    // content: that stacked an empty line on top of the paragraph break before
-    // the block, leaving the attribution floating far below the quotation.
-    block(above: 0.45em, width: 100%, align(right)[
-      #text(size: 0.72em)[
-        #if attribution != none { attribution }
-        #if attribution != none and source != none { [, ] }
-        #if source != none { source }
-      ]
-    ])
-  }
-]
+) = context {
+  // The wash is the deck's own text color laid over the canvas, not a fixed
+  // black: on a dark deck a black wash is invisible, while a wash of the text
+  // color reads as the same faint lift in either direction. Pass `fill` in
+  // `style` to replace it outright.
+  let colors = deck-colors()
+  let wash = if colors == none { black } else { colors.text }
+  frame(
+    role: role,
+    style: (
+      fill: wash.transparentize(structure.quote-wash),
+      stroke: none,
+    ) + style,
+  )[
+    #grid(
+      columns: if portrait == none { (1fr,) } else { (auto, 1fr) },
+      gutter: structure.quote-gutter,
+      ..if portrait == none { (body,) } else { (portrait, body) },
+    )
+    #if attribution != none or source != none {
+      // `block(above:)` rather than a `linebreak()` followed by block-level
+      // content: that stacked an empty line on top of the paragraph break before
+      // the block, leaving the attribution floating far below the quotation.
+      block(above: structure.quote-attribution-gap, width: 100%, align(right)[
+        #text(size: structure.quote-attribution-size)[
+          #if attribution != none { attribution }
+          #if attribution != none and source != none { [, ] }
+          #if source != none { source }
+        ]
+      ])
+    }
+  ]
+}

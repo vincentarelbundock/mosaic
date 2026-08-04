@@ -1,4 +1,5 @@
 // Horizontal divider, optionally split around a label.
+#import "style.typ": structure, deck-colors
 
 /// Creates a horizontal divider, optionally split around a label.
 ///
@@ -21,20 +22,31 @@
   /// rule instead.
   /// -> content | none
   label: none,
-  /// Native Typst stroke used for both line segments.
-  /// -> stroke
-  stroke: 0.8pt + gray,
-) = grid(
-  columns: if label == none { (1fr,) } else { (1fr, auto, 1fr) },
-  gutter: 0.45em,
-  align: horizon,
-  ..if label == none {
-    (line(length: 100%, stroke: stroke),)
+  /// Native Typst stroke used for both line segments. `auto` draws the deck's
+  /// line color at the shared component thickness.
+  /// -> auto | stroke
+  stroke: auto,
+) = context {
+  let colors = deck-colors()
+  let stroke = if stroke != auto {
+    stroke
+  } else if colors == none {
+    structure.stroke-thickness + gray
   } else {
-    (
-      line(length: 100%, stroke: stroke),
-      label,
-      line(length: 100%, stroke: stroke),
-    )
-  },
-)
+    structure.stroke-thickness + colors.line
+  }
+  grid(
+    columns: if label == none { (1fr,) } else { (1fr, auto, 1fr) },
+    gutter: structure.divider-gutter,
+    align: horizon,
+    ..if label == none {
+      (line(length: 100%, stroke: stroke),)
+    } else {
+      (
+        line(length: 100%, stroke: stroke),
+        label,
+        line(length: 100%, stroke: stroke),
+      )
+    },
+  )
+}
