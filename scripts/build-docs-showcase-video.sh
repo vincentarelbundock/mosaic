@@ -10,12 +10,11 @@ trap 'rm -rf "$work_dir"' EXIT
 
 # On-screen dwell per frame, in seconds. Steps of an incremental build play
 # fast so the reveal reads as one animation; beats rest long enough to read.
-beat_seconds=1.7
+beat_seconds=1.4
 step_seconds=0.5
-fade_seconds=0.35
 width=1280
 height=720
-fps=25
+fps=20
 
 if [[ "$#" -gt 0 ]]; then
   python_cmd=("$@")
@@ -70,48 +69,31 @@ for index in "${!slides[@]}"; do
   frames+=("$frame")
 done
 
-# The reel is a crossfade chain. Every clip is held for its dwell plus one
-# fade, so the fades overlap the neighbouring holds instead of eating them.
-# A final clip repeating frame 0 for exactly one fade makes the loop seamless.
-inputs=()
-chain=""
+# Slides cut straight from one to the next: no fades, no motion, just a hold
+# per frame. The concat demuxer needs the final frame repeated to honor its
+# duration.
+manifest="$work_dir/frames.txt"
+length=0
 for index in "${!frames[@]}"; do
-  clip=$(awk "BEGIN { print ${dwells[$index]} + $fade_seconds }")
-  inputs+=(-loop 1 -framerate "$fps" -t "$clip" -i "${frames[$index]}")
-  chain+="[$index:v]fps=$fps,format=yuv420p,setsar=1,settb=AVTB[v$index];"
+  printf "file '%s'\nduration %s\n" "${frames[$index]}" "${dwells[$index]}" >>"$manifest"
+  length=$(awk "BEGIN { print $length + ${dwells[$index]} }")
 done
-loop_index="${#frames[@]}"
-inputs+=(-loop 1 -framerate "$fps" -t "$fade_seconds" -i "${frames[0]}")
-chain+="[$loop_index:v]fps=$fps,format=yuv420p,setsar=1,settb=AVTB[v$loop_index];"
-
-# Track the running length so each crossfade starts one fade before the end.
-length="${dwells[0]}"
-length=$(awk "BEGIN { print $length + $fade_seconds }")
-previous="[v0]"
-for ((index = 1; index <= loop_index; index += 1)); do
-  offset=$(awk "BEGIN { printf \"%.3f\", $length - $fade_seconds }")
-  label="[x$index]"
-  chain+="${previous}[v$index]xfade=transition=fade:duration=$fade_seconds:offset=$offset$label;"
-  previous="$label"
-  clip="$fade_seconds"
-  if ((index < loop_index)); then
-    clip=$(awk "BEGIN { print ${dwells[$index]} + $fade_seconds }")
-  fi
-  length=$(awk "BEGIN { print $length + $clip - $fade_seconds }")
-done
-chain+="${previous}format=yuv420p[out]"
+printf "file '%s'\n" "${frames[-1]}" >>"$manifest"
 
 mkdir -p "$(dirname "$output")"
 ffmpeg -hide_banner -loglevel error -y \
-  "${inputs[@]}" \
-  -filter_complex "$chain" \
-  -map "[out]" \
+  -f concat \
+  -safe 0 \
+  -i "$manifest" \
+  -vf "fps=$fps,format=yuv420p" \
   -an \
   -c:v libvpx-vp9 \
-  -crf 34 \
+  -crf 40 \
   -b:v 0 \
   -pix_fmt yuv420p \
   -row-mt 1 \
+  -auto-alt-ref 1 \
+  -lag-in-frames 20 \
   "$output"
 
 # The poster is the first frame itself, so the still shown before playback and

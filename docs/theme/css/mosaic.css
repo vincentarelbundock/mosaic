@@ -62,7 +62,7 @@ body:has(.mosaic-hero) .calepin-website-toc {
 
 .mosaic-hero {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
   gap: clamp(2rem, 6vw, 5rem);
   align-items: center;
   padding: clamp(2rem, 6vw, 5rem) 0;
@@ -112,16 +112,12 @@ body:has(.mosaic-hero) .calepin-website-toc {
 }
 
 .mosaic-feature-showcase {
-  display: grid;
-  grid-template-columns: minmax(15rem, 0.7fr) minmax(0, 1.3fr);
-  gap: clamp(1.5rem, 4vw, 3rem);
-  align-items: stretch;
   margin-bottom: clamp(2rem, 6vw, 5rem);
 }
 
 .mosaic-feature-cards {
   display: grid;
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
 }
 
@@ -142,6 +138,14 @@ body:has(.mosaic-hero) .calepin-website-toc {
 .mosaic-feature-card p {
   margin: 0;
   color: var(--calepin-color-muted);
+}
+
+/* The mark card carries no copy, so centre the artwork in whatever height the
+   text cards settle on. */
+.mosaic-feature-card--mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .mosaic-showcase-frame {
@@ -193,12 +197,9 @@ body:has(.mosaic-hero) .calepin-website-toc {
 .mosaic-slide-demo {
   display: block;
   width: 100%;
-  height: auto;
+  max-height: 100%;
   aspect-ratio: 16 / 9;
-  padding: clamp(0.65rem, 1.5vw, 0.9rem);
-  border-radius: 1.3rem;
-  background: var(--calepin-surface);
-  box-shadow: var(--calepin-shadow-card);
+  object-fit: contain;
 }
 
 .calepin-elements-gallery__item {
@@ -452,17 +453,8 @@ body:has(.mosaic-hero) .calepin-website-toc {
     gap: 2rem;
   }
 
-  .mosaic-feature-showcase {
-    grid-template-columns: 1fr;
-  }
-
   .mosaic-feature-cards {
-    grid-template-rows: none;
     grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-  }
-
-  .mosaic-showcase-frame {
-    order: 2;
   }
 }
 

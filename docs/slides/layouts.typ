@@ -114,7 +114,7 @@ The text variants each borrow a classic minimalist tradition: `swiss` (the defau
 
 = `section()`
 
-Use `layout: "section"` for a section divider. Its configured `section()` layout may include a subtitle, number, or image. The frames below grow the same divider one argument at a time: plain, numbered, then the designed text variants, then each image placement. The last frame repeats the pattern from the title layout, pairing an `image-background` carrying a #link("../content/images.html#scrims")[scrim] with white text through the `<mosaic-cell-section>` label, scoped to that slide alone.
+Use `layout: "section"` for a section divider. Its configured `section()` layout may include a subtitle, number, or image. The frames below grow the same divider one argument at a time: plain, numbered, then the designed text variants, then each image placement. The last frame pairs an `image-background` carrying a #link("../content/images.html#scrims")[scrim] with white text through the `<mosaic-cell-section>` label, scoped to that slide alone.
 
 The designed text variants each borrow a classic minimalist tradition: `rule` hangs the title beneath a heavy full-width rule, `numeral` bleeds an enormous ghost number off the top-right edge, `baseline` ties title and number to one baseline with a hairline, and `toc` lists every section with the current one alive. They build their composition around the section number, so an omitted `number:` reads the automatic section counter.
 

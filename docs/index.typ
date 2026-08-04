@@ -12,9 +12,9 @@
     #html.elem("section", attrs: (class: "mosaic-hero"))[
       #html.elem("div")[
         #html.elem("h1")[
-          Create slide
+          Create beautiful
           #html.elem("br")
-          decks with
+          slides with
           #html.elem("span", attrs: (
             class: "mosaic-hero__typst-box",
           ))[
@@ -31,11 +31,32 @@
           cells; you style them with native Typst show and set rules.
         ]
       ]
-      #html.elem("img", attrs: (
-        class: "mosaic-slide-demo",
-        src: "assets/mosaic-slide.svg",
-        alt: "Mosaic slide with a slim orange title band above asymmetric blue and green columns",
-      ))
+      #html.elem("div", attrs: (class: "mosaic-showcase-frame"))[
+        #html.elem("video", attrs: (
+          class: "mosaic-showcase mosaic-showcase--video",
+          width: "1280",
+          height: "720",
+          autoplay: "autoplay",
+          loop: "loop",
+          muted: "muted",
+          playsinline: "playsinline",
+          preload: "metadata",
+          poster: "assets/images/showcase-poster.webp",
+          "aria-label": "Slides made with Mosaic: a plain starter deck, three themed decks including a technical talk that builds an equation and a diagram step by step, a nested grid diagram, and title and section variants",
+        ))[
+          #html.elem("source", attrs: (
+            src: "assets/images/showcase.webm",
+            type: "video/webm",
+          ))
+        ]
+        #html.elem("img", attrs: (
+          class: "mosaic-showcase mosaic-showcase--poster",
+          width: "1280",
+          height: "720",
+          src: "assets/images/showcase-poster.webp",
+          alt: "Title slide of a first Mosaic deck",
+        ))
+      ]
     ]
     #html.elem("nav", attrs: (
       class: "mosaic-actions mosaic-home-links",
@@ -56,6 +77,15 @@
     ]
     #html.elem("section", attrs: (class: "mosaic-feature-showcase"))[
       #html.elem("div", attrs: (class: "mosaic-feature-cards"))[
+        #html.elem("article", attrs: (
+          class: "mosaic-feature-card mosaic-feature-card--mark",
+        ))[
+          #html.elem("img", attrs: (
+            class: "mosaic-slide-demo",
+            src: "assets/mosaic-slide.svg",
+            alt: "Mosaic slide with a slim orange title band above asymmetric blue and green columns",
+          ))
+        ]
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
           #html.elem("h2")[Layouts]
           #html.elem("p")[
@@ -78,27 +108,6 @@
             set rules, not a separate API.
           ]
         ]
-      ]
-      #html.elem("div", attrs: (class: "mosaic-showcase-frame"))[
-        #html.elem("video", attrs: (
-          class: "mosaic-showcase mosaic-showcase--video",
-          autoplay: "autoplay",
-          loop: "loop",
-          muted: "muted",
-          playsinline: "playsinline",
-          poster: "assets/examples/structure/title-layout-1.svg",
-          "aria-label": "Animated gallery of Mosaic title slides, native styling, and incremental diagrams",
-        ))[
-          #html.elem("source", attrs: (
-            src: "assets/images/showcase.webm",
-            type: "video/webm",
-          ))
-        ]
-        #html.elem("img", attrs: (
-          class: "mosaic-showcase mosaic-showcase--poster",
-          src: "assets/examples/structure/title-layout-1.svg",
-          alt: "Example of an academic title slide made with Mosaic",
-        ))
       ]
     ]
   ],

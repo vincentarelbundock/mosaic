@@ -6,7 +6,9 @@
   title: [Getting started],
   subtitle: [A first Mosaic deck],
   authors: (m.layouts.author("Ada Lovelace"),),
-  layouts: (content: m.layouts.content(variant: "header-body")),
+  layouts: (
+    content: m.layouts.content(variant: "header-body"),
+    section: m.layouts.section(variant: "baseline")),
   content: (foreground: align(bottom, m.components.progress(variant: "line"))),
 )
 

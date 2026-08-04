@@ -89,11 +89,17 @@ $(foreach source,$(EMBEDDED_EXAMPLE_SOURCES),$(eval \
   $(wildcard $(dir $(source))_*.typ)))
 PACKAGE_SOURCES := $(shell find $(PACKAGE_DIR) -type f 2>/dev/null | sort)
 SHOWCASE_VIDEO := $(WEB_IMAGE_DIR)/showcase.webm
-SHOWCASE_STAMPS := \
+SHOWCASE_POSTER := $(WEB_IMAGE_DIR)/showcase-poster.webp
+# The reel's opening frame. No page embeds it, so it is not an embedded example.
+SHOWCASE_OPENING_SOURCE := $(DOCS_DIR)/examples/showcase/opening.typ
+SHOWCASE_OPENING := $(DOCS_DIR)/examples/showcase/opening.pdf
+# The reel draws on every complete deck plus a few structural examples, so any
+# of them can make it stale.
+SHOWCASE_STAMPS := $(DECK_STAMPS) $(SHOWCASE_OPENING) \
 	$(EMBEDDED_STAMP_DIR)/getting-started/first-slideshow.stamp \
-	$(DECK_STAMP_DIR)/cream.stamp \
-	$(DECK_STAMP_DIR)/metropolis.stamp \
-	$(DECK_STAMP_DIR)/minimalist.stamp
+	$(EMBEDDED_STAMP_DIR)/structure/grid-dashboard.stamp \
+	$(EMBEDDED_STAMP_DIR)/structure/title-layout.stamp \
+	$(EMBEDDED_STAMP_DIR)/structure/section-layout.stamp
 
 help: ## Display this help screen
 	@echo -e "\033[1mAvailable commands:\033[0m\n"
@@ -148,8 +154,8 @@ embedded-examples: $(EMBEDDED_STAMPS) ## Render embedded examples to PDF slidesh
 
 # Both flavours emit the same PDF; they differ only in which SVGs accompany it.
 # A slideshow keeps a single first-frame cover, a gallery item one SVG per frame.
-$(EMBEDDED_SLIDESHOW_STAMPS): EMBEDDED_SVG = --pages 1 "$(EMBEDDED_ASSETS_DIR)/$*-cover.svg"
-$(EMBEDDED_IMAGE_STAMPS): EMBEDDED_SVG = "$(EMBEDDED_ASSETS_DIR)/$*-{0p}.svg"
+$(EMBEDDED_SLIDESHOW_STAMPS): EMBEDDED_SVG = --pages 1 $(EMBEDDED_ASSETS_DIR)/$*-cover.svg
+$(EMBEDDED_IMAGE_STAMPS): EMBEDDED_SVG = '$(EMBEDDED_ASSETS_DIR)/$*-{0p}.svg'
 
 $(EMBEDDED_STAMPS): $(EMBEDDED_STAMP_DIR)/%.stamp: $(EMBEDDED_EXAMPLES_DIR)/%.typ $(PACKAGE_SOURCES) $(WEB_IMAGES) $(EMBEDDED_SLIDESHOW_INDEXER) scripts/embedded_examples.py Makefile | install
 	@mkdir -p "$(dir $(EMBEDDED_ASSETS_DIR)/$*)" "$(@D)"
@@ -159,9 +165,13 @@ $(EMBEDDED_STAMPS): $(EMBEDDED_STAMP_DIR)/%.stamp: $(EMBEDDED_EXAMPLES_DIR)/%.ty
 	@$(TYPST) compile --root . --format svg "$<" $(EMBEDDED_SVG)
 	@touch "$@"
 
-showcase-video: $(SHOWCASE_VIDEO) ## Build the animated home-page showcase
+showcase-video: $(SHOWCASE_VIDEO) $(SHOWCASE_POSTER) ## Build the animated home-page showcase
 
-$(SHOWCASE_VIDEO): scripts/build-docs-showcase-video.sh $(SHOWCASE_STAMPS)
+$(SHOWCASE_OPENING): $(SHOWCASE_OPENING_SOURCE) $(PACKAGE_SOURCES) | install
+	$(TYPST) compile --root . "$<" "$@"
+
+# One run writes both the reel and its poster, which is the reel's first frame.
+$(SHOWCASE_VIDEO) $(SHOWCASE_POSTER) &: scripts/build-docs-showcase-video.sh $(DECK_MANIFEST) $(SHOWCASE_STAMPS)
 	./scripts/build-docs-showcase-video.sh $(PYTHON)
 
 components: install ## Compile the public facade and components test deck
@@ -209,7 +219,7 @@ clean: ## Remove ephemeral staging files and build stamps
 clean-generated: clean ## Remove reproducible media and rendered example outputs
 	find $(EMBEDDED_ASSETS_DIR) -type f \( -name '*.pdf' -o -name '*.svg' \) -delete
 	for slug in $(DECK_SLUGS); do rm -f "$(DECK_EXAMPLES_DIR)/$$slug/$$slug.pdf" "$(DECK_EXAMPLES_DIR)/$$slug/cover.jpg"; done
-	rm -f $(BONSAI_WEBP) $(DOG_WEBP) $(SHOWCASE_VIDEO)
+	rm -f $(BONSAI_WEBP) $(DOG_WEBP) $(SHOWCASE_VIDEO) $(SHOWCASE_POSTER) $(SHOWCASE_OPENING)
 
 distclean: clean-generated ## Also remove published HTML and Calepin's generated cache
 	find $(DOCS_DIR) -type f -name '*.html' -delete

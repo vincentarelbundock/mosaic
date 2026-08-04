@@ -86,9 +86,9 @@
   authors: (m.layouts.author([River Systems Group]),),
 ))
 
-// The image itself carries the contrast: darken it and switch the title
-// cell to light text through its <mosaic-cell-title> label, scoped to this
-// slide.
+// The photograph is already dark where the text sits, so no scrim is needed:
+// switching the title cell to light text through its <mosaic-cell-title>
+// label, scoped to this slide, is enough.
 #[
   #show label("mosaic-cell-title"): set text(fill: white)
   #m.slide(layout: m.layouts.title(
@@ -96,7 +96,6 @@
     variant: "image-background",
     image: (
       path: path("/docs/assets/images/title-city.webp"),
-      scrim: black.transparentize(55%),
       alt: "Coastal city lights at night with dark sky and water to the left",
     ),
     align: top + left,

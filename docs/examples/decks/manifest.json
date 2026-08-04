@@ -27,20 +27,36 @@
   ],
   "showcase": [
     {
-      "source": "docs/examples/decks/metropolis/metropolis.pdf",
-      "pages": [1, [5, 6, 7, 8], 11, [14, 15, 16]]
+      "source": "docs/examples/showcase/opening.pdf",
+      "pages": [1]
+    },
+    {
+      "source": "docs/assets/examples/getting-started/first-slideshow.pdf",
+      "pages": [1, 4]
     },
     {
       "source": "docs/examples/decks/cream/cream.pdf",
-      "pages": [1, 11, 17]
+      "pages": [1, 2, 11, 17]
     },
     {
-      "source": "docs/examples/decks/portfolio/portfolio.pdf",
-      "pages": [1, 9, 11]
+      "source": "docs/examples/decks/metropolis/metropolis.pdf",
+      "pages": [1, [5, 6, 7, 8], [18, 19, 20, 21]]
     },
     {
       "source": "docs/examples/decks/minimalist/minimalist.pdf",
-      "pages": [1, 8, 16]
+      "pages": [1, 5, 8, 16]
+    },
+    {
+      "source": "docs/assets/examples/structure/grid-dashboard.pdf",
+      "pages": [1]
+    },
+    {
+      "source": "docs/assets/examples/structure/title-layout.pdf",
+      "pages": [9]
+    },
+    {
+      "source": "docs/assets/examples/structure/section-layout.pdf",
+      "pages": [3, 4, 5]
     }
   ]
 }
