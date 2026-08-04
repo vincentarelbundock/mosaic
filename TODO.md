@@ -19,6 +19,11 @@ visibility, item-by-item reveals, space-preserving alternatives, math
 overlays, CeTZ/Fletcher reducers, composable grids, or per-slide inherited
 grid and visual-plane configuration.
 
+## Docs
+
++ Add bullet point and 2-column text from metropolis to the showcase video
++ lightbox of the showcase should be a proper video player with full screen and controls
+
 ## Incremental content
 
 - [ ] Add progressive raw-code display with optional line numbers,
