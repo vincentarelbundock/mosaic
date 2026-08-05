@@ -6,7 +6,7 @@
 // A hand-built cover: a full-slide photograph on the background plane, the
 // heading anchored to the top edge, and the byline to the bottom, which no
 // built-in variant draws. The deck's own metadata comes back through
-// m.deck(), so nothing is restated.
+// m.info(), so nothing is restated.
 #m.slide(
   numbered: false,
   background: m.components.image(
@@ -18,7 +18,7 @@
 )[
   #set text(fill: white)
   #context {
-    let deck = m.deck()
+    let deck = m.info()
     place(top + left, {
       text(size: 2.2em, weight: "bold", deck.title)
       block(

@@ -14,9 +14,9 @@ IMPORT = re.compile(
 )
 LET = re.compile(r"(?m)^#let\s+([A-Za-z_][A-Za-z0-9_-]*)\b")
 
-NEUTRAL_API = {"setup", "definition", "slide", "deck", "note", "fit", "surface", "grids", "layouts", "steps", "components", "themes", "palettes"}
-SHARED_API = {"slide", "deck", "note", "fit", "surface", "grids", "layouts", "steps", "components", "palettes"}
-THEMED_API = {"setup", "definition", "slide", "deck", "note", "fit", "surface", "grids", "layouts", "steps", "components", "palettes"}
+NEUTRAL_API = {"setup", "definition", "slide", "info", "note", "fit", "surface", "grids", "layouts", "steps", "components", "themes", "palettes"}
+SHARED_API = {"slide", "info", "note", "fit", "surface", "grids", "layouts", "steps", "components", "palettes"}
+THEMED_API = {"setup", "definition", "slide", "info", "note", "fit", "surface", "grids", "layouts", "steps", "components", "palettes"}
 PALETTES = {"light", "dark", "parchment", "sage", "stone", "espresso", "forest", "slate"}
 THEMED_LAYOUTS = {"content", "title", "section", "image", "author"}
 THEMED_COMPONENTS = {"card", "callout", "badge", "quote", "divider", "progress", "image", "figure"}
@@ -26,7 +26,7 @@ EXPECTED = {
     "mosaic/src/shared-api.typ": SHARED_API,
     "mosaic/src/grid/api.typ": {"cell", "columns", "rows", "track"},
     "mosaic/src/surface.typ": {"surface"},
-    "mosaic/src/deck.typ": {"deck"},
+    "mosaic/src/info.typ": {"info"},
     # fit.typ is not listed: it carries the vendored fitting internals beside
     # the one public entry point, and only `fit` is re-exported from the
     # facades, which the entries above already pin.

@@ -26,7 +26,14 @@
   set terms(spacing: 0.9em)
   set table(stroke: 0.8pt + colors.line)
   set raw(theme: dark-code-theme) if is-dark-canvas(colors)
-  show heading.where(depth: 1): set text(size: 2em, weight: "semibold")
+  // The section display size, stated once and used absolutely in both rules
+  // below. Absolute on purpose: Typst's native level-1 heading scale and the
+  // section cell's own scale are both em multipliers, so an em size here
+  // would compound with them and a `= Heading` section would render larger
+  // than a `cells: (section: ..)` one. An absolute size replaces the whole
+  // chain, so the two spellings render identically.
+  let section-size = base-size * 1.5
+  show heading.where(depth: 1): set text(size: section-size, weight: "semibold")
   show heading.where(depth: 2): set text(size: 1.15em, weight: "regular")
   show heading: set block(below: 0.75em)
   show figure.caption: set text(size: 0.72em, fill: colors.muted)
@@ -43,7 +50,7 @@
   )
   show label("mosaic-cell-title"): set par(leading: 0.42em)
   show label("mosaic-cell-section"): set align(left + bottom)
-  show label("mosaic-cell-section"): set text(size: 1.6em, weight: "regular")
+  show label("mosaic-cell-section"): set text(size: section-size, weight: "semibold")
   show label("mosaic-cell-section-progress"): set block(above: 0pt, below: 0pt)
   show label("mosaic-cell-footer"): set text(size: 0.55em, fill: colors.muted)
   show label("mosaic-cell-authors"): set text(size: 0.8em, weight: "medium")

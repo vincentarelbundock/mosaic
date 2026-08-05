@@ -24,11 +24,16 @@
 ///
 /// A role is the portable spelling, and it stays correct when the deck changes
 /// theme. When a callout needs a color the palette does not name, pass
-/// `accent` directly: it paints both the stripe and the title, and the panel
-/// fill follows unless `fill` is given too.
+/// `accent` directly: it paints the stripe and the title. The panel keeps the
+/// role's own fill, so a callout that should be tinted to match states `fill`
+/// as well.
 ///
 /// ```typ
-/// #mosaic.components.callout(accent: rgb("#7c3aed"), title: [Takeaway])[
+/// #mosaic.components.callout(
+///   accent: rgb("#7c3aed"),
+///   fill: rgb("#f1ebfd"),
+///   title: [Takeaway],
+/// )[
 ///   Bounded work beats unbounded intent.
 /// ]
 /// ```
@@ -67,6 +72,10 @@
   /// Native `text` arguments merged over the role's text color.
   /// -> dictionary
   text: (:),
+  /// Native block width. Full width by default, so a column of callouts rules
+  /// to one edge; `auto` hugs the content the way `card` does.
+  /// -> auto | length | relative | fraction
+  width: 100%,
 ) = context {
   let it = resolve-style(
     role: role,
@@ -101,5 +110,6 @@
     inset: it.inset,
     align: it.align,
     text: it.text,
+    width: width,
   )
 }

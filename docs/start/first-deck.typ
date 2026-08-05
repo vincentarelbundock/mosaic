@@ -28,4 +28,4 @@ The example below is a complete deck in that shape. It declares its title and au
   title: "A complete deck: title slide, heading slides, an image slide, and two columns",
 )
 
-The #link("../slides/content.html")[Slides] section takes each kind of slide in turn: ordinary #link("../slides/content.html")[content], the #link("../slides/title.html")[title] slide, #link("../slides/section.html")[section] dividers, #link("../slides/image.html")[image] slides, and #link("../slides/custom.html")[custom] compositions built from named cells. The #link("../reference/concepts.html")[Concepts] page defines the vocabulary this documentation uses.
+Read the #link("../reference/concepts.html")[Concepts] page next: it defines the vocabulary this documentation uses and the anatomy every slide shares. The #link("../slides/content.html")[Slides] section then takes each kind of slide in turn: ordinary #link("../slides/content.html")[content], the #link("../slides/title.html")[title] slide, #link("../slides/section.html")[section] dividers, #link("../slides/image.html")[image] slides, and #link("../slides/custom.html")[custom] compositions built from named cells.

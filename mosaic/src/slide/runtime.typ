@@ -38,6 +38,7 @@
   logical-slide-id,
   logical-section,
   slide-numbered,
+  section-title,
 )
 
 // The record a reader assumes when no deck wrote one: components and cells
@@ -360,15 +361,17 @@
   slide-numbered.update(_ => numbered)
   if layout-name == "section" {
     logical-section.step()
-    // One queryable record per section slide, emitted right after the step so
+    // Heading-stripped, so consumers re-render it without minting duplicate
+    // outline entries.
+    let title = strip-headings(contents.at("section", default: none))
+    // The section this and every following slide is in, until the next section
+    // slide overwrites it. This is what `info().section.title` reports.
+    section-title.update(_ => title)
+    // The same title as a queryable record, emitted right after the step so
     // `logical-section.at(location)` gives this slide's section number. The
-    // stored title is heading-stripped: consumers (the toc section variant)
-    // re-render it without minting duplicate outline entries.
-    [#metadata((
-      mosaic: tag,
-      kind: "section-title",
-      title: strip-headings(contents.at("section", default: none)),
-    )) <mosaic-section-title>]
+    // state answers "which section am I in"; the records answer "what are all
+    // the sections", which is what the toc section variant draws.
+    [#metadata((mosaic: tag, kind: "section-title", title: title)) <mosaic-section-title>]
   }
   // Heading stability is a property of the slide's structure, not of any one
   // frame, so both checks run here rather than inside the render and transform

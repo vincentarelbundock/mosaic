@@ -238,7 +238,8 @@ body:has(.mosaic-hero) .calepin-website-toc {
   width: 100%;
   height: auto;
   aspect-ratio: 16 / 9;
-  object-fit: cover;
+  background: var(--calepin-surface-muted);
+  object-fit: contain;
 }
 
 .pdf-slideshow-preview__caption {
@@ -422,7 +423,8 @@ body:has(.mosaic-hero) .calepin-website-toc {
 
 .pdf-slideshow .calepin-elements-gallery__image {
   aspect-ratio: 16 / 9;
-  object-fit: cover;
+  background: var(--calepin-surface-muted);
+  object-fit: contain;
 }
 
 .pdf-slideshow .calepin-elements-gallery__caption {

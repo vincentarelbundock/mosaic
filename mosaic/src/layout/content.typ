@@ -3,7 +3,7 @@
 #import "../grid/constructors.typ": columns, rows, track
 #import "../grid/model.typ": is-track-size
 #import "core.typ": make-layout, validate-variant
-#import "support.typ": track-children, header-inset, inset-cell
+#import "support.typ": track-children, edge-inset, inset-cell
 
 #let variants = (
   "body",
@@ -125,7 +125,7 @@
         "header",
         settings,
         content-sized: true,
-        inset: header-inset(settings),
+        inset: edge-inset(settings),
       ),
     ))
   }
@@ -133,7 +133,12 @@
   if fields.variant in ("body-footer", "header-body-footer") {
     children.push(track(
       auto,
-      inset-cell("footer", settings, content-sized: true),
+      inset-cell(
+        "footer",
+        settings,
+        content-sized: true,
+        inset: edge-inset(settings),
+      ),
     ))
   }
   rows(..children)

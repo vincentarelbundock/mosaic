@@ -6,7 +6,7 @@
 
 #title()
 
-`m.components` provides reusable Typst content to place inside cells, or inside any native Typst composition. None of these create slides or grids on their own; they are values you place in a cell, a background, a foreground, or any native Typst composition. Each function has an independent example and gallery. One member, `m.components.progress()`, is documented with the deck infrastructure on the #link("../furniture/footer.html")[Footer and progress] page; it is ordinary content all the same and can sit in any cell.
+`m.components` provides reusable Typst content to place inside cells, or inside any native Typst composition. None of these create slides or grids on their own; they are values you place in a cell, a background, a foreground, or any native Typst composition. Each function has an independent example and gallery. One member, `m.components.progress()`, is documented with the deck infrastructure on the #link("../presenting/footer.html")[Footer and progress] page; it is ordinary content all the same and can sit in any cell.
 
 = `card()`
 

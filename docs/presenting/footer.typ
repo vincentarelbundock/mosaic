@@ -94,3 +94,47 @@ The component can sit in a foreground, a cell, or another Typst container. This 
   frames: 3,
   title: "A reusable custom-grid slide function with foreground progress",
 )
+
+= What the deck knows about itself
+
+When a footline needs more than one indicator, read the deck directly. `m.info()` is a contextual reader returning everything the deck knows about itself: what the deck declared on setup, and where the slide being rendered sits. It is the same reading `m.components.progress()` does, so a hand-built bar and the component can never print different numbers.
+
+```typ
+#context {
+  let deck = m.info()
+  [#deck.section.title #h(1fr) #deck.slide.number/#deck.slide.total]
+}
+```
+
+The record has six fields. Four are the deck metadata, exactly as setup received it:
+
+#table(
+  columns: (auto, 1fr),
+  [`title`], [The deck title.],
+  [`subtitle`], [The deck subtitle.],
+  [`authors`], [Always an array of resolved author records, whether the deck wrote a bare name or a full `m.layouts.author` record. Each carries `name`, `affiliations`, `email`, `orcid`, and `corresponding`.],
+  [`date`], [The deck date.],
+)
+
+Two are the position of the slide being rendered, which is what makes the reader contextual:
+
+#table(
+  columns: (auto, 1fr),
+  [`slide.number`], [This slide's logical number. All frames of one incremental slide share it, and unnumbered slides report `0`.],
+  [`slide.total`], [The deck's final count of logical slides.],
+  [`slide.numbered`], [Whether this slide counts. Titles and sections are unnumbered by default, and `numbered:` on the slide decides it. This is the switch that keeps a folio or a counter off a cover.],
+  [`section.number`], [The number of the section this slide is in, counting slides that use the `section` layout. Before the first section slide it is `0`.],
+  [`section.total`], [The deck's final section count.],
+  [`section.title`], [That section's own text, with any heading stripped, or `none` before the first section slide. A section slide reports its own section, not the previous one.],
+)
+
+Because `slide.numbered` says whether the slide counts, a footline can hold its counter slot clear on a cover rather than printing a zero into it:
+
+```typ
+#context {
+  let deck = m.info()
+  if deck.slide.numbered [#deck.slide.number/#deck.slide.total]
+}
+```
+
+Reading the position rather than counting for yourself is what keeps a theme's chrome honest across handouts and incremental frames, which is why the #link("../examples.html")[AnnArbor] deck's headline and footline are both one `m.info()` call.

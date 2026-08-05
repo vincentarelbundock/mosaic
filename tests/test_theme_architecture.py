@@ -58,11 +58,23 @@ class ThemeArchitectureTests(unittest.TestCase):
         for name in ("slide", "note", "fit", "surface", "grids", "steps", "components"):
             self.assertIn(name, facade)
 
-    def test_portfolio_uses_the_same_reduced_structure(self) -> None:
-        self.assertFalse((PORTFOLIO / "theme-setup.typ").exists())
-        self.assertFalse((PORTFOLIO / "theme-layouts-impl.typ").exists())
-        facade = (PORTFOLIO / "theme.typ").read_text(encoding="utf-8")
-        self.assertIn("themes.setup(definition)", facade)
+    def test_portfolio_vendors_no_theme(self) -> None:
+        # The Greyscale deck is the custom-palette showcase: it runs the
+        # bundled default theme under a full greyscale `colors:` dictionary
+        # instead of vendoring a theme facade of its own.
+        for name in (
+            "theme.typ",
+            "theme-definition.typ",
+            "theme-layouts.typ",
+            "theme-tokens.typ",
+            "theme-setup.typ",
+            "theme-layouts-impl.typ",
+        ):
+            self.assertFalse((PORTFOLIO / name).exists())
+        preamble = (PORTFOLIO / "preamble.typ").read_text(encoding="utf-8")
+        self.assertIn('"@local/mosaic:0.0.1" as m', preamble)
+        main = (PORTFOLIO / "main.typ").read_text(encoding="utf-8")
+        self.assertIn("colors: greyscale", main)
 
 
 if __name__ == "__main__":

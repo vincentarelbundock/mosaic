@@ -42,7 +42,7 @@ label = "Mosaic 0.0.1 · Built with Typst and Calepin."
 
 
 [sidebar]
-fold = false
+fold = true
 
 [[sidebar.section]]
 
@@ -53,6 +53,9 @@ fold = false
   target = "start/first-deck.typ"
 
   [[sidebar.section.item]]
+  target = "reference/concepts.typ"
+
+  [[sidebar.section.item]]
   target = "examples.typ"
 
 [[sidebar.section]]
@@ -60,6 +63,9 @@ title = "Slides"
 
   [[sidebar.section.item]]
   target = "slides/content.typ"
+
+  [[sidebar.section.item]]
+  target = "slides/configuring.typ"
 
   [[sidebar.section.item]]
   target = "slides/title.typ"
@@ -73,20 +79,35 @@ title = "Slides"
   [[sidebar.section.item]]
   target = "slides/custom.typ"
 
+  [[sidebar.section.item]]
+  target = "slides/background.typ"
+
+  [[sidebar.section.item]]
+  target = "slides/foreground.typ"
+
 [[sidebar.section]]
-title = "Appearance"
+title = "Styles & Themes"
 
   [[sidebar.section.item]]
   target = "appearance/styling.typ"
 
   [[sidebar.section.item]]
-  target = "appearance/typography.typ"
+  target = "appearance/colors.typ"
 
   [[sidebar.section.item]]
   target = "appearance/themes.typ"
 
+[[sidebar.section]]
+title = "Incremental"
+
   [[sidebar.section.item]]
-  target = "appearance/colors.typ"
+  target = "incremental/steps.typ"
+
+  [[sidebar.section.item]]
+  target = "incremental/reveals.typ"
+
+  [[sidebar.section.item]]
+  target = "incremental/handouts.typ"
 
 [[sidebar.section]]
 title = "Content"
@@ -104,33 +125,19 @@ title = "Content"
   target = "content/citations.typ"
 
 [[sidebar.section]]
-title = "Slide furniture"
+title = "More"
 
   [[sidebar.section.item]]
-  target = "furniture/planes.typ"
+  target = "presenting/footer.typ"
 
   [[sidebar.section.item]]
-  target = "furniture/footer.typ"
+  target = "presenting/navigation.typ"
 
   [[sidebar.section.item]]
-  target = "furniture/navigation.typ"
-
-[[sidebar.section]]
-title = "Incremental reveals"
+  target = "presenting/notes.typ"
 
   [[sidebar.section.item]]
-  target = "incremental/steps.typ"
-
-  [[sidebar.section.item]]
-  target = "incremental/reveals.typ"
-
-  [[sidebar.section.item]]
-  target = "incremental/handouts.typ"
-
-[[sidebar.section]]
-
-  [[sidebar.section.item]]
-  target = "reference/concepts.typ"
+  target = "presenting/overflow.typ"
 
   [[sidebar.section.item]]
   target = "help/faq.typ"

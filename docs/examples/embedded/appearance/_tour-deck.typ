@@ -14,8 +14,8 @@
   m.slide(
     "title",
     numbered: false,
-    title: [Bootstrapping the Median],
-    subtitle: [Resampling without a closed form],
+    title: [The Optimal Number of Naps],
+    subtitle: [Findings from a subject who slept through the study],
     date: [March 2026],
     authors: (
       author(
@@ -34,45 +34,45 @@
   m.slide(layout: m.layouts.content(variant: "header-body"))[
     == The problem
   ][
-    The sample median has no convenient variance formula, so its standard error
-    is easier to resample than to derive.
+    Nobody agrees on how many naps a day is correct. We asked the only expert on
+    the subject and he fell asleep during the question.
 
-    - Draw ten thousand samples with replacement.
-    - Take the median of each.
-    - Read the interval off the resampled distribution.
+    - Recruit one dog.
+    - Watch him for a week.
+    - Write down every time he stops moving.
   ]
 
-  m.slide("section", cells: (section: [The estimator]))
+  m.slide("section", cells: (section: [The instrument]))
 
   m.slide(layout: m.layouts.content(variant: "header-body", columns: 2))[
-    == Two ways to read the draws
+    == Two ways to count a nap
   ][
-    *Percentile*
+    *Strict*
 
-    - Sort the resampled medians.
-    - Cut at 2.5% and 97.5%.
-    - Report the two endpoints.
+    - Eyes fully closed.
+    - Tail completely still.
+    - Survives one doorbell.
   ][
-    *Basic*
+    *Generous*
 
-    - Center the draws on the estimate.
-    - Reflect them through it.
-    - Report the reflected quantiles.
+    - Eyes mostly closed.
+    - Tail negotiable.
+    - He looks comfortable, so it counts.
   ]
 
   m.slide(layout: m.layouts.content(variant: "header-body"))[
-    == One pass of the bootstrap
+    == One pass of the counter
   ][
     #raw(
-      "def bootstrap(sample, draws):\n"
-        + "    return [median(resample(sample))\n"
-        + "            for _ in range(draws)]",
+      "def count_naps(dog, hours):\n"
+        + "    return [h for h in hours\n"
+        + "            if dog.is_horizontal(h)]",
       block: true,
       lang: "python",
     )
 
     #m.components.callout(role: "warning", title: [Caveat])[
-      Coverage degrades when the statistic is not pivotal.
+      Sitting upright with both eyes closed remains contested.
     ]
   ]
 
@@ -90,28 +90,28 @@
       variant: "right",
     ),
     cells: (
-      header: [== A well-behaved sample],
+      header: [== A well-behaved subject],
       body: [
-        Resampling assumes the draws are exchangeable. This one is not moving.
+        The method requires a subject who stays put. This one is world class.
       ],
     ),
   )
 
   m.slide(layout: m.layouts.content(variant: "header-body", columns: 2))[
-    == What it costs
+    == What it costs him
   ][
     #table(
       columns: (1fr, auto),
       stroke: (x, y) => if y == 0 { (bottom: 0.5pt) },
-      [Draws], [Time],
-      [1 000], [0.4 s],
-      [10 000], [3.9 s],
+      [Naps], [Hours],
+      [3], [4.1],
+      [11], [9.8],
     )
   ][
-    #m.components.badge(role: "accent")[stable]
+    #m.components.badge(role: "accent")[asleep]
 
-    #m.components.badge(role: "warning")[draft]
+    #m.components.badge(role: "warning")[stirring]
 
-    #m.components.badge(role: "error")[deprecated]
+    #m.components.badge(role: "error")[doorbell]
   ]
 }

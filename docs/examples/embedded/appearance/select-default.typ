@@ -2,8 +2,8 @@
 #import mosaic.themes.default as m
 
 #show: m.setup.with(
-  title: [Bootstrapping the Median],
-  subtitle: [Resampling without a closed form],
+  title: [The Optimal Number of Naps],
+  subtitle: [Findings from a subject who slept through the study],
   authors: [Ada Lovelace],
   date: [March 2026],
 )

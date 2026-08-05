@@ -40,3 +40,26 @@
 //
 //   context if slide-numbered.get() { .. }
 #let slide-numbered = state(key("slide-numbered"), true)
+
+// The current section's own text, written by the slide runtime on every
+// section slide. The counter above numbers the sections; this names the one
+// being presented, so chrome can print it without querying the document. The
+// toc section variant still queries: it draws every section, not this one.
+#let section-title = state(key("section-title"), none)
+
+// Where the rendering slide sits in the deck, in the two shapes `info()`
+// publishes and the progress component counts with. One definition each, so
+// the public answer and the built-in chrome cannot disagree. Both are
+// contextual, and both answer outside a deck as well as inside one: the
+// counters simply read zero.
+#let slide-position() = (
+  number: logical-slide.get().first(),
+  total: logical-slide.final().first(),
+  numbered: slide-numbered.get(),
+)
+
+#let section-position() = (
+  number: logical-section.get().first(),
+  total: logical-section.final().first(),
+  title: section-title.get(),
+)

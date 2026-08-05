@@ -1,9 +1,16 @@
 // Deck-specific preamble for the Editorial deck. The reusable look is the
-// bundled Editorial theme (m.themes.editorial); theme.typ re-exports it as `m`
-// together with this deck's visual constants; importing with `*` re-exports
-// everything to main.typ. The helpers below belong to this deck's content
-// rather than to the theme.
-#import "theme.typ": *
+// bundled Editorial theme, a complete Mosaic facade, re-exported here as `m`
+// together with this deck's visual constants; importing this file with `*`
+// re-exports everything to main.typ. The helpers below belong to this deck's
+// content rather than to the theme.
+#import "@local/mosaic:0.0.1" as mosaic
+#import mosaic.themes.editorial as m
+
+// ── Colors ─────────────────────────────────────────────────────────────────
+#let sage = rgb("#aebdb3")
+#let cream = rgb("#f2eee5")
+#let ink = rgb("#111111")
+#let white = rgb("#f9f8f3")
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 // Cells are structural. This deck paints them by hand, so every cell starts

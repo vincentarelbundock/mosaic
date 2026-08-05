@@ -75,6 +75,6 @@ Omit the body entirely for a bare picture slide with no text at all. The `full` 
   renderer: thumbnail-gallery,
 )
 
-Image paths inside layout arguments cross the package boundary, so wrap every asset path in Typst's `path()`; a bare string is searched for inside the installed Mosaic package.
+Image paths inside layout arguments cross the package boundary, so wrap every asset path in Typst's `path()`; see #link("configuring.html#asset-paths")[Asset paths].
 
-Named arguments on an image slide refine the configured layout rather than replacing it; see #link("content.html#layout-fields-on-a-slide")[Layout fields on a slide]. For image loading, fitting, scrims, and figures in ordinary cells, see #link("../content/images.html")[Images]; for a picture on a plane behind the whole grid, see #link("../furniture/planes.html")[Background and foreground].
+Named arguments on an image slide refine the configured layout rather than replacing it; see #link("configuring.html#layout-fields-on-a-slide")[Layout fields on a slide]. For image loading, fitting, scrims, and figures in ordinary cells, see #link("../content/images.html")[Images]; for a picture on a plane behind the whole grid, see #link("background.html")[Background].

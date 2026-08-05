@@ -22,7 +22,21 @@ Each theme supplies a complete color palette. Override only the deck-wide colors
 ))
 ```
 
-The palette holds eight entries: `canvas`, `surface`, `text`, `muted`, `line`, and `accent` for the deck itself, plus `warning` and `error` for the status colors components paint with. Unknown names and non-color values are errors. The canvas, typography, components, and layouts all use the resolved values, and #link("themes.html")[Themes] describes what each entry paints. Explicit component colors remain local overrides:
+The palette holds eight entries: six name the deck's own surfaces and text, two name the status colors that components paint with:
+
+#table(
+  columns: (auto, 1fr),
+  [`canvas`], [The page fill behind every slide.],
+  [`surface`], [Raised panels: the fill a neutral card or badge sits on.],
+  [`text`], [Body text.],
+  [`muted`], [Secondary text: captions, footers, fine print.],
+  [`line`], [Drawn rules, borders, and dividers.],
+  [`accent`], [The deck's emphasis color.],
+  [`warning`], [A remark that qualifies what is on the slide.],
+  [`error`], [A remark that contradicts it.],
+)
+
+Unknown names and non-color values are errors. The canvas, typography, components, and layouts all use the resolved values. Explicit component colors remain local overrides:
 
 ```typ
 #m.slide(

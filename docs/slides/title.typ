@@ -63,8 +63,8 @@ Written out in full, one of those decks is this:
 #let eis = [European Institute for Social Data]
 
 #show: m.setup.with(
-  title: [Bootstrapping the Median],
-  subtitle: [Resampling without a closed form],
+  title: [The Optimal Number of Naps],
+  subtitle: [Findings from a subject who slept through the study],
   authors: (
     m.layouts.author(
       [Priya Nair],
@@ -92,7 +92,7 @@ Written out in full, one of those decks is this:
 
 An affiliation is the institution itself rather than an identifier for it, so two authors land on one legend number exactly when they name the same institution. Binding `ccp` and `eis` once and reusing the bindings is what makes that happen.
 
-The remaining decks are that same file with a different variant on the last line, and the image decks also pass an `image:`. When you hand a layout an image path, wrap it in Typst's `path()`, as in `image: path("cover.webp")`: a bare string is looked up inside the Mosaic package rather than in your project, and the picture is not found.
+The remaining decks are that same file with a different variant on the last line, and the image decks also pass an `image:` wrapped in Typst's `path()`, as #link("configuring.html#asset-paths")[Asset paths] explains.
 
 In your own deck, write the title information directly in `setup`, as the listing above does. The decks on this page keep it in one shared #repo-file("docs/examples/embedded/structure/_title-info.typ")[file] only so the page has a single copy to edit.
 
@@ -123,12 +123,12 @@ There is no inverted variant, because inversion is not an arrangement. Pass `inv
 
 = Custom title page <custom-title-page>
 
-When no variant draws the page you want, build the slide yourself. `m.deck()` returns the `title`, `subtitle`, `authors`, and `date` you declared on `setup`, so the custom slide can use them without repeating them. Each author comes back as a dictionary with `name`, `affiliations`, `email`, `orcid`, and `corresponding` fields. Call `m.deck()` inside a `context` block, as the example below does.
+When no variant draws the page you want, build the slide yourself. `m.info()` returns the `title`, `subtitle`, `authors`, and `date` you declared on `setup`, so the custom slide can use them without repeating them. Each author comes back as a dictionary with `name`, `affiliations`, `email`, `orcid`, and `corresponding` fields. Call `m.info()` inside a `context` block, as the example below does. The same reader also reports where the slide sits in the deck, in its `slide` and `section` fields, which is what hand-built chrome is made of; the #link("../presenting/footer.html")[footer and progress] page covers that side of it.
 
 The deck below composes a full-slide photograph on the slide's `background:` plane, anchors the heading to the top edge, and pins the byline to the bottom, an arrangement no built-in variant draws:
 
 #example-source("structure/title-custom")
 
-#slideshow(calepin.elements.gallery, "structure/title-custom", 1, "A hand-built cover: full-slide photograph, heading at the top edge, byline at the bottom", caption: [A custom cover from `m.deck()`])
+#slideshow(calepin.elements.gallery, "structure/title-custom", 1, "A hand-built cover: full-slide photograph, heading at the top edge, byline at the bottom", caption: [A custom cover from `m.info()`])
 
 The `scrim:` on the background image quiets the photograph exactly as it does on the image variants, and `numbered: false` keeps the cover out of the slide count the way named title layouts stay out of it automatically.

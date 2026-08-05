@@ -1,6 +1,6 @@
 // Position indicator driven by the deck's logical slide and section counters.
 #import "../shared.typ": fail
-#import "../deck-state.typ": logical-slide, logical-section
+#import "../deck-state.typ": slide-position, section-position
 #import "style.typ": role-colors, component-tokens
 
 /// Displays progress through logical slides or semantic sections in the deck.
@@ -30,6 +30,11 @@
 ///
 /// `count` selects the automatic counter: `slides` counts logical slides, and
 /// `sections` counts slides with `layout: "section"`.
+///
+/// Both readings come from `info()`, which publishes the same position as
+/// `slide` and `section` records. Chrome that needs more than one indicator,
+/// or the section's title rather than its number, reads that instead of
+/// composing several of these.
 ///
 /// -> content
 #let progress(
@@ -85,15 +90,17 @@
   if type(count) != str or count not in ("slides", "sections") {
     fail("progress count must be \"slides\" or \"sections\"")
   }
-  let automatic-counter = if count == "slides" {
-    logical-slide
+  // The same position `info()` publishes, read from the same place, so the
+  // indicator and a hand-built footline can never print different numbers.
+  let position = if count == "slides" {
+    slide-position()
   } else {
-    logical-section
+    section-position()
   }
-  let current = automatic-counter.get().first()
-  // A deck's final section count can legitimately be zero before the first
-  // section slide exists; the ratio below guards against dividing by it.
-  let total = calc.max(automatic-counter.final().first(), 1)
+  let current = position.number
+  // A deck with no section slides legitimately totals zero; the ratio below
+  // guards against dividing by it.
+  let total = calc.max(position.total, 1)
   let colors = role-colors(role, contextual: true)
   let fill = if fill == auto { colors.fill } else { fill }
   let accent = if accent == auto { colors.accent } else { accent }

@@ -6,9 +6,33 @@
 
 #title()
 
-A slide is a stack of native Typst layers: a background plane, a grid of cells, and a foreground plane. The planes are content you supply directly; each cell is a single block labeled `<mosaic-cell-ID>`. You style all of it with ordinary `set` and `show` rules. Every rule a slide renders with comes from its theme: Mosaic's engine contributes page geometry, deck information, and colors, but no slide typography of its own. Rules you write after `m.setup` layer on top of the theme's. There is no separate styling system to learn.
+As the #link("../reference/concepts.html#anatomy-of-a-slide-deck")[anatomy page] shows, every part of a slide is a native Typst layer carrying a label, and you style all of it with ordinary `set` and `show` rules. Every rule a slide renders with comes from its theme: Mosaic's engine contributes page geometry, deck information, and colors, but no slide typography of its own. Rules you write after `m.setup` layer on top of the theme's. There is no separate styling system to learn.
 
 Behind that, the engine keeps exactly one record of its own: the deck record, written once by `m.setup` and never changed afterward. It holds what you declare there, structure and geometry, plus the semantic colors and roles. Those colors are the one deliberate exception to "everything is a rule": components are functions, and no native rule can carry a surface fill or an accent color into a function call the way `set text` carries typography into text. Declaring six colors and a role palette at setup is the whole extent of it.
+
+= Deck typography
+
+Place native Typst text and heading rules after `m.setup` so they apply across the deck:
+
+```typ
+#show: m.setup
+#set text(font: "EB Garamond", size: 26pt)
+#show heading.where(depth: 1): set text(font: "Inter", weight: "black")
+#show heading.where(depth: 2): set text(size: 1.4em)
+```
+
+A semantic heading feeds outlines, bookmarks, and content slides. Use `text` directly for display type that should not appear in navigation, or exclude the heading:
+
+```typ
+#text(size: 60pt, weight: "black")[BOLD]
+#heading(outlined: false, bookmarked: false)[Aside]
+```
+
+Leading, lists, and captions remain native `par`, `list`, `enum`, `terms`, and `figure.caption` styling.
+
+A heading cannot be placed inside an incremental grid node (`m.grids.on`, `m.steps.reveal`, and related step commands); keep it structurally stable across a slide's frames.
+
+Everything about the deck's palette, overriding entries, the bundled palette collection, and inverting a slide, lives on the #link("colors.html")[Colors] page.
 
 = Styling cells
 
@@ -159,3 +183,19 @@ Bundle repeated cell rules in a function and apply it once with `#show:`:
 )
 
 A #link("themes.html")[theme] packages this pattern for a whole deck, and writing one is how a look becomes reusable across decks.
+
+= Inverting cells by hand
+
+`slide(invert: true)`, described under #link("colors.html#inverting-one-slide")[Inverting one slide], swaps a whole slide's ground and ink within the palette. When you want finer control, invert selected cells with the same label rules as above. Pair each ground with the text color that reads against it, and apply both halves in the same rule: `m.surface` fills the cell's own block and a neighboring `set text` colors the content inside it, so a helper that takes a `(fill, text)` pair can repaint any set of cells:
+
+#embedded-example(
+  calepin.elements.gallery,
+  "faq/color-inversion",
+  frames: 2,
+  title: "One layout rendered on a light ground and on a dark one",
+  renderer: thumbnail-gallery,
+)
+
+The same helper inverts a single slide, a run of slides, or a whole deck, depending on where you place the `#show:` rule. Scope it inside a block for one slide, or write it once after `m.setup` to change the baseline. To invert the full bleed rather than the cells, add `#set page(fill: ..)`; the background and foreground planes take the same rules through the `<mosaic-background>` and `<mosaic-foreground>` labels.
+
+Mosaic does not derive the text color from the fill. Two reasons, both practical. Mid-tone grounds sit where an automatic flip is least reliable: a muted sage such as `rgb("#aebdb3")` reads as "light" to a luminance rule, but white on it measures 1.8:1, well under the 4.5:1 that body text wants. And a cell's declared fill is often not what the viewer sees behind the text, because an image, scrim, or background plane covers it. Naming the pair keeps that judgment with the author, where a real slide can be looked at.

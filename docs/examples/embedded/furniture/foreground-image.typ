@@ -3,11 +3,12 @@
 #show: m.setup.with(
   foreground: [
     #place(
-      right + horizon,
+      bottom + right,
       dx: -1.35em,
+      dy: -1.35em,
       m.components.image(
         path("/docs/assets/images/mosaic-logo.svg"),
-        width: 8em,
+        width: 2.5em,
         height: auto,
         alt: "The Mosaic logo",
       ),
@@ -16,9 +17,27 @@
 )
 
 #m.slide[
-  #block(width: 52%)[
-    == Logos
+  == One logo, every slide
 
-    Choose a `place()` alignment and refine the position with `dx` and `dy`.
-  ]
+  A `foreground` passed to `setup` is painted over every slide in the deck.
+]
+
+#m.slide[
+  == It does not move
+
+  The `place()` alignment resolves against the slide rather than the content,
+  so the logo lands in the same spot however full the slide is.
+]
+
+#m.slide[
+  == Refining the position
+
+  `dx` and `dy` nudge it away from the edge. Em units keep that inset
+  proportional to the deck's type size.
+]
+
+#m.slide(foreground: none)[
+  == Hiding it
+
+  One slide opts out with `foreground: none`.
 ]

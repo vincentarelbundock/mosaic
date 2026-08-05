@@ -7,8 +7,8 @@
 #let eis = [European Institute for Social Data]
 
 #let info = (
-  title: [Bootstrapping the Median],
-  subtitle: [Resampling without a closed form],
+  title: [The Optimal Number of Naps],
+  subtitle: [Findings from a subject who slept through the study],
   authors: (
     m.layouts.author(
       [Priya Nair],

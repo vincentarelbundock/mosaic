@@ -4,7 +4,7 @@
   "Slides",
   (
     "/api/modules/slide-command.typ",
-    "/api/modules/deck.typ",
+    "/api/modules/info.typ",
     "/api/modules/note-command.typ",
     "/api/modules/surface.typ",
     "/api/modules/fit.typ",

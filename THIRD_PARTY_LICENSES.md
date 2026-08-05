@@ -37,20 +37,20 @@ Touying copyright notice and license:
 
 ## SlidesCarnival presentation templates
 
-The example decks in `docs/examples/decks/` are adapted from free presentation
-templates published by SlidesCarnival:
+Some example decks in `docs/examples/decks/` are adapted from free
+presentation templates published by SlidesCarnival:
 
-- `docs/examples/decks/cream/`: adapted from the *Cream, Green,
+- `docs/examples/decks/editorial/`: adapted from the *Cream, Green,
   and Black Geometric Blocks Clean Minimal Presentation* template.
-- `docs/examples/decks/minimalist/`: adapted from the *Minimalist White
+- `docs/examples/decks/manifesto/`: adapted from the *Minimalist White
   Slides* template.
 - `docs/examples/decks/portfolio/`: adapted from the *Photojournalist
   Portfolio* template.
 
-Each deck is a Mosaic/Typst re-creation of the corresponding template's layout;
-the original PowerPoint files are not distributed here. The photographs bundled
-in each deck's `assets/` directory come from Pexels and Pixabay, as credited on
-the source templates.
+Each deck is a Mosaic/Typst re-creation of the corresponding template's layout,
+built on a bundled Mosaic theme; the original PowerPoint files are not
+distributed here. The photographs bundled in each deck's `assets/` directory
+come from Pexels and Pixabay, as credited on the source templates.
 
 - <https://www.slidescarnival.com/>
 
@@ -61,18 +61,116 @@ SlidesCarnival with a link to its website, and the material has been adapted.
 
 ## Metropolis Beamer theme
 
-The `docs/examples/decks/metropolis/` deck is a Mosaic/Typst adaptation of the
-demonstration slides for the **Metropolis** Beamer theme by Matthias
-Vogelgesang, reconstructed from the theme's upstream `demo/demo.tex`:
+Mosaic's bundled `metropolis` theme, and the `docs/examples/decks/metropolis/`
+deck built on it, adapt the visual design of the **Metropolis** Beamer theme
+by Matthias Vogelgesang:
 
 - <https://github.com/matze/mtheme>
 
 The Metropolis theme is licensed under the Creative Commons
 Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0):
-<https://creativecommons.org/licenses/by-sa/4.0/>. The deck adapts the theme's
-visual design; attribution is given to Matthias Vogelgesang and the adaptation
-is offered under the same CC BY-SA 4.0 license. The original theme sources are
-not redistributed here.
+<https://creativecommons.org/licenses/by-sa/4.0/>. Attribution is given to
+Matthias Vogelgesang and the adaptation is offered under the same CC BY-SA 4.0
+license. The original theme sources are not redistributed here.
+
+## Calmly Touying theme
+
+The `docs/examples/decks/calmly/` deck re-creates the visual design of the
+**Calmly** presentation theme for Touying by Yichen Han:
+
+- <https://github.com/YHan228/calmly-touying>
+
+Calmly is licensed under the MIT License. The deck is a Mosaic/Typst
+re-creation of its appearance; the original theme sources are not
+redistributed here.
+
+> MIT License
+>
+> Copyright (c) 2024 Yichen Han
+>
+> Permission is hereby granted, free of charge, to any person obtaining a copy
+> of this software and associated documentation files (the "Software"), to deal
+> in the Software without restriction, including without limitation the rights
+> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+> copies of the Software, and to permit persons to whom the Software is
+> furnished to do so, subject to the following conditions:
+>
+> The above copyright notice and this permission notice shall be included in
+> all copies or substantial portions of the Software.
+>
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> SOFTWARE.
+
+## Simpres Touying template
+
+The `docs/examples/decks/simpres/` deck re-creates the visual design of the
+**Simpres** presentation template for Touying by thy0s:
+
+- <https://github.com/thy0s/touying-simpres>
+
+Simpres is licensed under the MIT License. The deck is a Mosaic/Typst
+re-creation of its appearance; the original template sources are not
+redistributed here.
+
+> MIT License
+>
+> Copyright (c) 2025 Theodor
+>
+> Permission is hereby granted, free of charge, to any person obtaining a copy
+> of this software and associated documentation files (the "Software"), to deal
+> in the Software without restriction, including without limitation the rights
+> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+> copies of the Software, and to permit persons to whom the Software is
+> furnished to do so, subject to the following conditions:
+>
+> The above copyright notice and this permission notice shall be included in
+> all copies or substantial portions of the Software.
+>
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> SOFTWARE.
+
+## Clean Touying and Quarto theme
+
+The `docs/examples/decks/quarto-clean/` deck re-creates the visual design of
+the **Clean** theme for Touying and Quarto by Kazuharu Yanagimoto:
+
+- <https://github.com/kazuyanagimoto/quarto-clean-typst>
+
+Clean is licensed under the MIT License. The deck is a Mosaic/Typst
+re-creation of its appearance; the original theme sources are not
+redistributed here.
+
+> MIT License
+>
+> Copyright (c) 2024 Kazuharu Yanagimoto
+>
+> Permission is hereby granted, free of charge, to any person obtaining a copy
+> of this software and associated documentation files (the "Software"), to deal
+> in the Software without restriction, including without limitation the rights
+> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+> copies of the Software, and to permit persons to whom the Software is
+> furnished to do so, subject to the following conditions:
+>
+> The above copyright notice and this permission notice shall be included in
+> all copies or substantial portions of the Software.
+>
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> SOFTWARE.
 
 ## Okabe-Ito palette
 

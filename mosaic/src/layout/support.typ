@@ -51,7 +51,7 @@
 // than the text it carries. A single asymmetric gap is what would look
 // unconsidered, not a shallower symmetric one. The cell also sits close to
 // the body it introduces because the gutter between them is zero.
-#let header-inset(settings) = (
+#let edge-inset(settings) = (
   x: settings.spacing.inset,
   y: 0.55 * settings.spacing.inset,
 )

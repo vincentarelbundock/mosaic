@@ -22,7 +22,7 @@ What the data can and cannot support.
 This is one slide.
 ```
 
-That is the whole mechanism for most decks. Sections declared this way also feed Typst's native `outline`, the `toc` variant described below, and the breadcrumbs on the #link("../furniture/navigation.html")[Navigation] page, because the headings stay native throughout.
+That is the whole mechanism for most decks. Sections declared this way also feed Typst's native `outline`, the `toc` variant described below, and the breadcrumbs on the #link("../presenting/navigation.html")[Navigation] page, because the headings stay native throughout.
 
 = Explicit section slides
 
@@ -38,7 +38,7 @@ Write the slide with `m.slide` when it needs arguments a heading cannot carry. T
 )[Structure]
 ```
 
-An explicit `number:` overrides the automatic counter for that slide. Omit it and the designed variants read the counter themselves, which is what you want in the ordinary case. Named arguments here refine the configured section layout rather than replacing it; see #link("content.html#layout-fields-on-a-slide")[Layout fields on a slide].
+An explicit `number:` overrides the automatic counter for that slide. Omit it and the designed variants read the counter themselves, which is what you want in the ordinary case. Named arguments here refine the configured section layout rather than replacing it; see #link("configuring.html#layout-fields-on-a-slide")[Layout fields on a slide].
 
 = Variants
 
@@ -52,7 +52,7 @@ Each variant borrows a classic minimalist tradition:
 
 The designed variants build their composition around the section number, so an omitted `number:` reads the automatic counter.
 
-The image variants place the section text beside a full-bleed picture (`image-left`, `image-right`, `image-top`, `image-bottom`, sized by `tracks:`) or directly over one (`image-background`). Every image variant requires `image:`, and as on title slides, wrap the path in Typst's `path()` so the picture is found in your project.
+The image variants place the section text beside a full-bleed picture (`image-left`, `image-right`, `image-top`, `image-bottom`, sized by `tracks:`) or directly over one (`image-background`). Every image variant requires `image:`, wrapped in Typst's `path()` so the picture is found in your project rather than in the package; see #link("configuring.html#asset-paths")[Asset paths].
 
 Written out in full, one of those slides is:
 

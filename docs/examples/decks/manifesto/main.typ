@@ -1,5 +1,5 @@
-// theme.typ imports the bundled Manifesto facade as `m` and defines
-// deck-local colors. preamble.typ re-exports them with the helpers used below.
+// preamble.typ imports the bundled Manifesto facade as `m` and defines the
+// deck-local colors and the helpers used below.
 //
 // Cells are structural, so each slide's fills, insets, and alignment are
 // applied natively through `styled(...)`, which turns a map of cell id ->

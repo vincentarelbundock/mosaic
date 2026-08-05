@@ -2,7 +2,7 @@
 #import "support/grid.typ" as grid-test
 #import "../mosaic/src/layout/resolver.typ": resolve-layout
 #import "../mosaic/src/settings.typ": make-settings
-#import "../mosaic/src/layout/support.typ": header-inset
+#import "../mosaic/src/layout/support.typ": edge-inset
 
 #let settings = make-settings()
 
@@ -35,12 +35,12 @@
 #assert(grid-test.count(resolved-structured) == 4)
 #assert(grid-test.info(resolved-structured, "header").cell.content == none)
 #assert(grid-test.info(resolved-structured, "header").cell.style.content-sized)
-// A header keeps the deck inset horizontally and equal, shallower padding
-// above and below, so a recolored header reads as a balanced band that is no
-// deeper than the single line it carries.
+// An edge cell keeps the deck inset horizontally and equal, shallower padding
+// above and below, so a recolored header or footer reads as a balanced band
+// that is no deeper than the single line it carries.
 #assert(
   grid-test.info(resolved-structured, "header").cell.style.inset
-    == header-inset(settings),
+    == edge-inset(settings),
 )
 #assert(
   grid-test.info(resolved-structured, "header").cell.style.inset.x
@@ -52,7 +52,15 @@
 )
 #assert(
   grid-test.info(resolved-structured, "footer").cell.style.inset
+    == edge-inset(settings),
+)
+#assert(
+  grid-test.info(resolved-structured, "footer").cell.style.inset.x
     == settings.spacing.inset,
+)
+#assert(
+  grid-test.info(resolved-structured, "footer").cell.style.inset.y
+    < settings.spacing.inset,
 )
 #assert(grid-test.info(resolved-structured, "body-1").cell.content == none)
 #assert(grid-test.info(resolved-structured, "body-2").cell.content == none)

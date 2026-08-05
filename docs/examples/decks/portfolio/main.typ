@@ -1,5 +1,6 @@
-// theme.typ exposes the vendored Greyscale facade as `m`; preamble.typ
-// re-exports it with the deck-specific helpers used below. This deck builds
+// The bundled default theme is the active Mosaic facade; preamble.typ
+// re-exports it with the deck-specific helpers used below, and one
+// `colors:` dictionary turns the whole deck greyscale. This deck builds
 // every slide by hand, including the cover.
 //
 // Cells are structural, so each slide's fills, insets, and alignment are
@@ -10,7 +11,7 @@
   "setup", "slide", "note", "surface",
   "grids", "layouts", "steps", "components",
 ).all(name => name in m))
-#show: m.setup
+#show: m.setup.with(title: [Greyscale], colors: greyscale)
 
 // 01. Greyscale cover
 #styled((cover: surface()), m.slide(

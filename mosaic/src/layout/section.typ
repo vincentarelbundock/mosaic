@@ -481,12 +481,14 @@
   )
   if fields.variant in semantic-directional-variants {
     let position = semantic-image-position(fields.variant)
+    // No gutter, as in the title and image layouts: the picture is its own
+    // edge, and the section cell already keeps the deck inset, so a recolored
+    // cell reaches the picture rather than stopping short of it.
     directional-image-layout(
       position,
       image-cell(image),
       section-cell,
       tracks: fields.tracks,
-      gutter: settings.spacing.gap,
     )
   } else if fields.variant == "image-background" {
     image-background-cell(section-cell, image)

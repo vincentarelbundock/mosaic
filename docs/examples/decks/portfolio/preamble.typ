@@ -1,10 +1,25 @@
-// Deck-specific preamble. The vendored Greyscale theme is the active Mosaic
-// facade, imported as `m`; the helpers below belong only to this deck.
-#import "theme.typ" as m
-#import "theme-tokens.typ" as _tokens
-#let ink = _tokens.ink
-#let paper = _tokens.paper
-#let gray = _tokens.gray
+// Deck-specific preamble. The look is the bundled default theme under a
+// custom greyscale palette, passed to `m.setup(colors: ..)` in main.typ; the
+// helpers below belong only to this deck.
+#import "@local/mosaic:0.0.1" as m
+
+#let ink = rgb("#111111")
+#let paper = rgb("#f7f7f5")
+#let gray = rgb("#d9d9d9")
+
+// The custom palette: a full eight-entry dictionary, monochrome from paper
+// to ink, so every rule, bullet, and component the theme draws stays part of
+// the greyscale.
+#let greyscale = (
+  canvas: paper,
+  surface: white,
+  text: ink,
+  muted: rgb("#6b6b6b"),
+  line: gray,
+  accent: ink,
+  warning: rgb("#6b6b6b"),
+  error: ink,
+)
 
 #let black-panel(body, inset: 20pt) = block(
   width: 100%,

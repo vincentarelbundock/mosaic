@@ -155,7 +155,7 @@
 ///
 /// A full-slide photographic title is not a variant: give the slide a
 /// `background:` plane and compose the type yourself, reading the deck's own
-/// metadata back through `deck()`.
+/// metadata back through `info()`.
 ///
 /// To invert any of these, with the slide ground in the deck's text color and
 /// the type knocked out, pass `invert: true` on the slide rather than picking

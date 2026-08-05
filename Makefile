@@ -50,7 +50,7 @@ API_MODULE_MAP := \
   component-divider:component/divider \
   component-progress:component/progress \
   slide-command:slide/command \
-  deck:deck \
+  info:info \
   note-command:note/command \
   pause-command:incremental/pause \
   surface:surface \
@@ -93,6 +93,8 @@ $(foreach source,$(EMBEDDED_EXAMPLE_SOURCES),$(eval \
 PACKAGE_SOURCES := $(shell find $(PACKAGE_DIR) -type f 2>/dev/null | sort)
 SHOWCASE_VIDEO := $(WEB_IMAGE_DIR)/showcase.webm
 SHOWCASE_POSTER := $(WEB_IMAGE_DIR)/showcase-poster.webp
+# One still of every slide the reel visits, three across.
+SHOWCASE_SHEET := $(WEB_IMAGE_DIR)/showcase-contact-sheet.webp
 # Content hash of the frames the committed reel was encoded from. A slide PDF
 # rebuilt with identical content still has new bytes and a new mtime, so this is
 # what decides whether the reel is actually stale.
@@ -172,15 +174,16 @@ $(EMBEDDED_STAMPS): $(EMBEDDED_STAMP_DIR)/%.stamp: $(EMBEDDED_EXAMPLES_DIR)/%.ty
 	@$(TYPST) compile --root . --format svg "$<" $(EMBEDDED_SVG)
 	@touch "$@"
 
-showcase-video: $(SHOWCASE_VIDEO) $(SHOWCASE_POSTER) ## Build the animated home-page showcase
+showcase-video: $(SHOWCASE_VIDEO) $(SHOWCASE_POSTER) $(SHOWCASE_SHEET) ## Build the animated home-page showcase and its contact sheet
 
 $(SHOWCASE_OPENING): $(SHOWCASE_OPENING_SOURCE) $(PACKAGE_SOURCES) | install
 	$(TYPST) compile --root . "$<" "$@"
 
-# One run writes both the reel and its poster, which is the reel's first frame.
-# A newer prerequisite only makes the script re-render and re-hash the frames;
-# unless a slide really changed it leaves both files untouched.
-$(SHOWCASE_VIDEO) $(SHOWCASE_POSTER) &: scripts/build-docs-showcase-video.sh $(DECK_MANIFEST) $(SHOWCASE_STAMPS)
+# One run writes the reel, its poster (the reel's first frame), and the contact
+# sheet of every slide it visits. A newer prerequisite only makes the script
+# re-render and re-hash the frames; unless a slide really changed it leaves all
+# three files untouched.
+$(SHOWCASE_VIDEO) $(SHOWCASE_POSTER) $(SHOWCASE_SHEET) &: scripts/build-docs-showcase-video.sh $(DECK_MANIFEST) $(SHOWCASE_STAMPS)
 	./scripts/build-docs-showcase-video.sh $(PYTHON)
 
 components: install ## Compile the public facade and components test deck

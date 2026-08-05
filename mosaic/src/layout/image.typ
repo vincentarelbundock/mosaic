@@ -8,7 +8,7 @@
 #import "../caption-fit.typ": captioned-image
 #import "../grid/constructors.typ": styled-cell, rows, track
 #import "core.typ": image-fit-modes, make-layout, validate-image, validate-variant
-#import "support.typ": image-content, header-inset, inset-cell
+#import "support.typ": image-content, edge-inset, inset-cell
 #import "image-support.typ": (
   directional-image-layout,
   image-background-cell,
@@ -162,7 +162,7 @@
     "header",
     settings,
     content-sized: true,
-    inset: header-inset(settings),
+    inset: edge-inset(settings),
   )),
   track(1fr, inset-cell("body", settings)),
 )
@@ -202,7 +202,7 @@
         "header",
         settings,
         content-sized: true,
-        inset: header-inset(settings),
+        inset: edge-inset(settings),
       )),
       // The picture owns a fixed cell, so the slide supplies no block for it.
       track(1fr, styled-cell(
@@ -220,12 +220,15 @@
       picture,
     )
   } else {
+    // No gutter: a full-bleed picture is its own edge, and the text region
+    // already keeps the deck inset on all four sides, so a gap here would be
+    // padding on top of padding. It also lets a recolored header band reach
+    // the picture instead of stopping short of it across a stripe of canvas.
     directional-image-layout(
       fields.variant,
       image-cell(picture),
       text-column(settings),
       tracks: fields.tracks,
-      gutter: settings.spacing.gap,
     )
   }
 }

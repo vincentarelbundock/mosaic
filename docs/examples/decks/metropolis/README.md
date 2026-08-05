@@ -8,8 +8,10 @@ inspired this example.
 The deck demonstrates the material common to a technical talk: substantive
 bullet points, incrementally annotated mathematics, Fletcher and CeTZ diagrams,
 executable R code, a generated ggplot2 figure, computed model results, inline
-citations, a bibliography, and backup slides. Its workhorse `frame` helper is
-derived from `m.layouts.content`.
+citations, and a bibliography. It is deliberately bare Mosaic: the bundled
+`metropolis` theme is imported unchanged, almost every slide is a `=` or `==`
+heading, and the few explicit `m.slide` calls use the theme's own layouts
+(`columns: 2`, `invert: true`, a named title slide).
 
 The Metropolis theme is licensed under
 [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/).

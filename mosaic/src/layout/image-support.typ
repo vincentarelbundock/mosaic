@@ -114,12 +114,14 @@
   ),
 )
 
+// A full-bleed picture is its own edge, so the two regions meet with no gutter:
+// the companion region already carries the deck inset, and a gap would leave a
+// stripe of canvas that a recolored cell or header band cannot cross.
 #let directional-image-layout(
   variant,
   image,
   body,
   tracks: auto,
-  gutter: 0pt,
 ) = {
   // `variant` is always the output of `semantic-image-position`, so it is one
   // of left/right/top/bottom by construction.
@@ -131,10 +133,7 @@
     (body, image)
   }
   let split = if variant in ("left", "right") { columns } else { rows }
-  split(
-    gutter: gutter,
-    ..track-children(children, directional-tracks(tracks, image-first)),
-  )
+  split(..track-children(children, directional-tracks(tracks, image-first)))
 }
 
 // Any tonal adjustment belongs to the picture itself (see the image dictionary's

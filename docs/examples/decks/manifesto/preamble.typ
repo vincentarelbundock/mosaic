@@ -1,9 +1,14 @@
-// Deck-specific preamble for the Manifesto deck. The reusable look is
-// the bundled Manifesto theme (m.themes.manifesto); theme.typ
-// re-exports it as `m` together with this deck's visual constants; importing
-// that with `*` re-exports everything to main.typ. The helpers below belong
-// to this deck's content rather than to the theme.
-#import "theme.typ": *
+// Deck-specific preamble for the Manifesto deck. The reusable look is the
+// bundled Manifesto theme, a complete Mosaic facade, re-exported here as `m`
+// together with this deck's visual constants; importing this file with `*`
+// re-exports everything to main.typ. The helpers below belong to this deck's
+// content rather than to the theme.
+#import "@local/mosaic:0.0.1" as mosaic
+#import mosaic.themes.manifesto as m
+
+// ── Colors ─────────────────────────────────────────────────────────────────
+#let cream = rgb("#fffcf9")
+#let red = rgb("#c83224")
 
 // ── Copy ───────────────────────────────────────────────────────────────────
 #let copy = [Presentations turn ideas into clear stories for an audience.

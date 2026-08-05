@@ -1,11 +1,33 @@
-// theme.typ imports the bundled Editorial facade as `m` and defines deck-local
-// colors. preamble.typ re-exports them with the helpers used below.
+// preamble.typ imports the bundled Editorial facade as `m` and defines the
+// deck-local colors and the helpers used below.
 //
 // Cells are structural, so each slide's fills, insets, and alignment are
 // applied natively through `styled(...)`, which turns a map of cell id ->
 // surface() into `show label("mosaic-cell-ID")` rules.
 #import "preamble.typ": *
-#show: m.setup
+// The deck stays sans throughout: the theme's serif display font is replaced
+// by its body font through the theme's own `font-display` option. The
+// `foreground: none` override clears the theme's default folio, so no slide
+// carries a page number.
+#show: m.setup.with(font-display: "Inter", foreground: none)
+
+// Drop the theme's kicker rule: level-2 headings render as plain bold type
+// with no accent stroke beneath. Replacing the heading element also keeps the
+// theme's serif heading rules from reattaching.
+#show heading.where(level: 2): it => block(
+  below: 0.6em,
+  text(size: 1.35em, weight: "bold", it.body),
+)
+
+// The grid slides (Topics, Projects, Statistics) set their repeated headers
+// a step smaller than the deck's other level-2 headings.
+#let small-headers(body) = {
+  show heading.where(level: 2): it => block(
+    below: 0.5em,
+    text(size: 1em, weight: "bold", it.body),
+  )
+  body
+}
 
 // 01. Cover
 #styled(
@@ -122,6 +144,7 @@
 )
 
 // 06. Four topics
+#small-headers[
 #styled(
   (four-topics: surface(inset: 34pt)),
   slide(layout: c("four-topics"), foreground: [#frame])[
@@ -139,6 +162,7 @@
     )
   ],
 )
+]
 
 // 07. About us
 #styled(
@@ -156,7 +180,7 @@
     #align(center)[
       #circle(radius: 188pt, stroke: 1pt + ink, inset: 45pt)[
         #align(center + horizon)[
-          = ABOUT US
+          = ABOUT~US
           Elaborate on your topic here.
         ]
       ]
@@ -165,6 +189,7 @@
 )
 
 // 08. Topics on cream
+#small-headers[
 #styled(
   (
     cream-topics: surface(fill: cream, inset: 35pt),
@@ -190,37 +215,7 @@
     )
   ],
 )
-
-// 09. Topic one
-#styled(
-  (
-    topic-one-title: surface(fill: cream, inset: 38pt, align: center + horizon),
-    topic-one-left-copy: surface(fill: cream, inset: 28pt),
-    topic-one-copy: surface(fill: cream, inset: 28pt),
-    topic-one-photo: surface(fill: cream),
-  ),
-  slide(
-    layout: m.grids.columns(
-      m.grids.track(0.53fr, m.grids.rows(
-        c("topic-one-title"),
-        c("topic-one-left-copy"),
-      )),
-      m.grids.track(0.47fr, m.grids.rows(
-        c("topic-one-copy"),
-        c("topic-one-photo", content: photo("image14.png")),
-      )),
-    ),
-  )[
-    #set text(fill: ink)
-    = TOPIC 1
-  ][
-    #set text(fill: ink)
-    #lorem
-  ][
-    #set text(fill: ink)
-    #lorem
-  ],
-)
+]
 
 // 10. Topic two
 #styled(
@@ -240,7 +235,7 @@
 
 // 12. Team
 #styled(
-  (team: surface(fill: cream, inset: 18pt)),
+  (team: surface(fill: cream, inset: 18pt, align: center + horizon)),
   slide(layout: c("team"))[
     #set text(fill: ink)
     #align(center)[
@@ -259,9 +254,11 @@
         #pad(x: 10pt, top: 9pt)[
           #align(center)[
             == #person.at(1)
-            #person.at(2)
-            #v(10pt)
-            Elaborate on their expertise here.
+            #text(size: 0.72em)[
+              #person.at(2)
+              #v(6pt)
+              Elaborate on their expertise here.
+            ]
           ]
         ]
       ]),
@@ -313,6 +310,7 @@
 )
 
 // 15. Projects list
+#small-headers[
 #styled(
   (
     projects-list: surface(inset: 35pt),
@@ -335,8 +333,10 @@
     )
   ],
 )
+]
 
 // 16. Market research
+#small-headers[
 #styled(
   (
     research-photo: surface(),
@@ -349,7 +349,7 @@
     #photo("image30.png")
     // This cell is covered by a pale photo rather than by its sage fill, so
     // the overlaid copy stays in ink.
-    #place(top + left, dx: 35pt, dy: 85pt)[
+    #place(bottom + left, dx: 35pt, dy: -35pt)[
       #set text(fill: ink)
       = MARKET\ RESEARCH
       Elaborate on your topic here.
@@ -365,6 +365,7 @@
     )
   ],
 )
+]
 
 // 17. Donut statistics
 #styled(

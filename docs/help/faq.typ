@@ -1,8 +1,6 @@
 #import "/.calepin/calepin.typ" as calepin
 #import "/_includes/embedded-examples.typ": (
-  embedded-example,
   example-source,
-  thumbnail-gallery,
   thumbnail-gallery-items,
 )
 
@@ -82,25 +80,6 @@ What happens after you appeal.
 
 The labeled `metadata` produces no output; it only makes the heading unique. The same pattern works in the header block of an explicit slide: `[== Elasticity #metadata(none) <elasticity-3>]`.
 
-= Color inversion
-
-How do I invert a slide's colors?
-
-Pair each ground with the text color that reads against it, and apply both halves in the same rule. `m.surface` fills the cell's own block and a neighboring `set text` colors the content inside it, so a helper that takes a `(fill, text)` pair can repaint any set of cells:
-
-#embedded-example(
-  calepin.elements.gallery,
-  "faq/color-inversion",
-  frames: 2,
-  title: "One layout rendered on a light ground and on a dark one",
-  renderer: thumbnail-gallery,
-)
-
-The same helper inverts a single slide, a run of slides, or a whole deck, depending on where you place the `#show:` rule. Scope it inside a block for one slide, or write it once after `m.setup` to change the baseline. To invert the full bleed rather than the cells, add `#set page(fill: ..)`; the background and foreground planes take the same rules through the `<mosaic-background>` and `<mosaic-foreground>` labels.
-
-Mosaic does not derive the text color from the fill. Two reasons, both practical. Mid-tone grounds sit where an automatic flip is least reliable: a muted sage such as `rgb("#aebdb3")` reads as "light" to a luminance rule, but white on it measures 1.8:1, well under the 4.5:1 that body text wants. And a cell's declared fill is often not what the viewer sees behind the text, because an image, scrim, or background plane covers it. Naming the pair keeps that judgment with the author, where a real slide can be looked at.
-
-
 = Margins
 
 Where do slide margins go?
@@ -153,81 +132,6 @@ Choose one with the `paper` argument.
   ),
 )
 
-= Overflow
-
-How do I inspect overflowing cells?
-
-Overflow observation is off by default, because measuring every cell on every frame roughly doubles the layout work a deck does. It is a checking pass, not something to leave on while you write. The usual way to run it is to set `overflow: "error"` on `setup` and compile once before presenting: Mosaic renders the whole deck, then fails naming every overflowing cell with its slide and frame.
-
-For tooling that would rather read the records than stop the build, `setup(overflow: "record")` emits them and keeps compiling:
-
-```sh typst eval \
-  'query(<mosaic-overflow-warning>).map(it => it.value)' \
-  --in slides.typ
-```
-
-Each record identifies the slide, frame, cell, and measured height. Typst gives a package no warning channel, so `"record"` prints nothing on its own; see the
-#link("../api/setup.html")[Setup API].
-
-An overflow means the slide holds more than it can show. The remedy is editorial: cut a bullet, split the slide in two, or move to a layout with more room. Mosaic deliberately offers no automatic shrink-to-fit for body content, because a deck whose type size is decided slide by slide loses the scale that holds it together.
-
-When a single indivisible block is the problem, a wide table or a chart, scale that one block with `m.fit` and leave the deck's typography alone:
-
-```typ
-#m.slide[
-  == Regression results
-  #m.fit(my-table)
-]
-```
-
-`m.fit` measures the block against the space it was given and scales it geometrically, so the surrounding layout accounts for the new size. It shrinks only unless `grow: true` is passed, and it takes no hand-picked factor, so the block stays within the cell when the table gains a row. See the #link("../api/slides.html")[Slides API].
-
-A fitted block cannot overflow, so it no longer appears in the overflow records.
-
-= Speaker notes
-
-How do I write speaker notes, and where do they end up?
-
-Attach them with `m.note[...]`. Notes never appear in the presentation and never add a frame:
-
-```typ
-#m.slide[
-  #m.note[Introduce the result.]
-
-  #m.steps.reveal(
-    [
-      The estimate is positive.
-      #m.note[Explain the sign and magnitude.]
-    ],
-    [
-      The interval excludes zero.
-      #m.note[Discuss uncertainty.]
-    ],
-  )
-]
-```
-
-A note outside a timing command applies to every frame. A note inside `m.steps.on`, `m.steps.reveal`, or `m.steps.replace` appears with that content.
-
-Notes also hold material that supports a slide without belonging on it: the source URL of a figure, a reminder of what to say, or the link behind an image slide.
-
-To print a companion document, choose an output in `m.setup`:
-
-```typ
-// Slide thumbnail followed by its notes.
-#show: m.setup.with(output: "speaker")
-
-// Notes without a slide thumbnail.
-#show: m.setup.with(output: "notes")
-```
-
-On those printed pages, the frame heading renders under the `<mosaic-note-heading>` label and the note text under `<mosaic-note-body>`. Both default to plain black type that reads against paper whatever the theme does. Restyle them with ordinary rules after `m.setup`:
-
-```typ
-#show label("mosaic-note-body"): set text(size: 11pt)
-#show label("mosaic-note-heading"): set text(fill: rgb("#0072B2"))
-```
-
 = Repeated counters
 
 A counter advances several times on one slide. Why?
@@ -248,7 +152,7 @@ Counters and states left off that list keep their normal Typst behavior.
 
 = Touying
 
-How does Mosaic compare to Touying?
+How does Mosaic differ from Touying?
 
 #link("https://github.com/touying-typ/touying")[Touying] is the most established Typst presentation framework. It is mature and well documented, it has powerful animation support, and the largest collection of themes, including many contributed by its community.
 

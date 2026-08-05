@@ -59,16 +59,16 @@ That deck lives in one #repo-file("docs/examples/embedded/appearance/_tour-deck.
 ```typ
 // _tour-deck.typ
 #let deck(m) = {
-  m.slide("title", numbered: false, title: [Bootstrapping the Median], ..)
+  m.slide("title", numbered: false, title: [The Optimal Number of Naps], ..)
 
   m.slide(layout: m.layouts.content(variant: "header-body"))[
     == The problem
   ][
-    The sample median has no convenient variance formula, so its standard
-    error is easier to resample than to derive.
+    Nobody agrees on how many naps a day is correct. We asked the only expert
+    on the subject and he fell asleep during the question.
   ]
 
-  m.slide("section", cells: (section: [The estimator]))
+  m.slide("section", cells: (section: [The instrument]))
 
   // four more slides
 }
@@ -89,7 +89,7 @@ Everything that differs between those five decks is what a theme owns. It is exa
 - a choice of *layouts*, the arrangements a title, section, or content slide is built from;
 - optional *furniture*, ordinary `setup` defaults such as a `foreground` progress line or a `background` ghost number, which a deck can override like any other option.
 
-The sections below take the first three in turn. Each shows how to change one of them on a bundled theme. That is as far as most decks need to go. Open any deck to page through it:
+The Customizing section below takes the first three in turn, each on a bundled theme. Open any deck to page through it:
 
 #slideshow-grid[
   #slideshow(calepin.elements.gallery, "appearance/tour-default", 8, "The bundled default theme", caption: [Default])
@@ -99,23 +99,13 @@ The sections below take the first three in turn. Each shows how to change one of
   #slideshow(calepin.elements.gallery, "appearance/tour-mono", 8, "The bundled mono theme", caption: [Mono])
 ]
 
-= Colors
+= Customizing
 
-A theme's palette is one flat dictionary of colors. Six name the deck's own surfaces and text. Two name the status colors that components paint with:
+A deck reaches every part of its theme through `setup`, without writing a theme of its own: `colors:` for the palette, ordinary `set` and `show` rules for the type, and `layouts:` for the arrangements. That is as far as most decks need to go.
 
-#table(
-  columns: (auto, 1fr),
-  [`canvas`], [The page fill behind every slide.],
-  [`surface`], [Raised panels: the fill a neutral card or badge sits on.],
-  [`text`], [Body text.],
-  [`muted`], [Secondary text: captions, footers, fine print.],
-  [`line`], [Drawn rules, borders, and dividers.],
-  [`accent`], [The deck's emphasis color.],
-  [`warning`], [A remark that qualifies what is on the slide.],
-  [`error`], [A remark that contradicts it.],
-)
+== Colors
 
-Pass `colors:` to `setup` to repaint any of them. The override is partial. Naming one color keeps the rest of the theme's palette:
+A theme's palette is one flat dictionary of eight colors; the #link("colors.html")[Colors] page describes what each entry paints. Pass `colors:` to `setup` to repaint any of them. The override is partial. Naming one color keeps the rest of the theme's palette:
 
 #example-source("appearance/palette-warm")
 
@@ -126,13 +116,11 @@ Both decks below run the default theme. Only the one on the right passes a dicti
   #slideshow(calepin.elements.gallery, "appearance/palette-warm", 8, "The default theme on a warm palette", caption: [Custom palette])
 ]
 
-== Dark decks
+=== Dark decks
 
-Polarity is a palette, not a theme. The package bundles one dark palette, and passing it to `colors:` flips any theme to a dark deck:
+Polarity is a palette, not a theme. The package bundles one dark palette, and passing it to `colors:` flips any theme to a dark deck; everything adapts on its own, as the #link("colors.html#bundled-palettes")[Colors] page explains:
 
 #example-source("appearance/tour-dark")
-
-Everything adapts on its own. Component panels tint their role colors into the dark canvas instead of the light one, image scrims darken instead of lighten, and the theme swaps in a dark syntax highlighting theme once it sees a dark canvas. `mosaic.palettes.dark` is an ordinary palette dictionary, so extending it with your own accent works exactly like the partial override above:
 
 The two decks below are the default theme's tour deck once more, identical except for that one `colors:` line:
 
@@ -141,10 +129,10 @@ The two decks below are the default theme's tour deck once more, identical excep
   #slideshow(calepin.elements.gallery, "appearance/tour-dark", 8, "The default theme on the bundled dark palette", caption: [Dark palette])
 ]
 
-Beyond the polarity pair, every facade exports `palettes`, a curated collection of complete color schemes that composes with every theme the same way. The #link("colors.html")[Colors] page lists the collection and renders the default theme under each of its palettes.
+Beyond the polarity pair, the bundled `palettes` collection composes with every theme the same way; the #link("colors.html#bundled-palettes")[Colors] page lists it and renders the default theme under each of its palettes.
 
 
-= Typography
+== Typography
 
 A theme's typography is ordinary `set` and `show` rules. Rules you write after `#show: m.setup` layer on top of the theme's. There is no separate typography system:
 
@@ -161,7 +149,7 @@ Rules written that way stay in the deck that holds them. A theme's `apply` is th
   #slideshow(calepin.elements.gallery, "appearance/type-apply", 8, "The default theme under four added type rules", caption: [Custom type])
 ]
 
-= Layouts
+== Layouts
 
 Every theme supplies three configurable slide layouts: `content`, `title`, and `section`. To customize them, pass a `layouts:` dictionary to `setup`. A replacement is either another built-in layout or a grid of your own:
 
@@ -176,7 +164,7 @@ The deck on the right borrows a built-in title variant that the default theme do
   #slideshow(calepin.elements.gallery, "appearance/layout-override", 8, "The default theme on a borrowed title layout and a custom section layout", caption: [Custom layouts])
 ]
 
-= Writing themes
+= Writing
 
 Everything above lives in the deck that uses it. Move on when you start copying the same three changes between decks. A theme is the dictionary that names them.
 

@@ -4,7 +4,7 @@
 #set document(title: [Examples])
 #metadata((
   title: "Examples",
-  description: "Complete slide decks built with Mosaic, adapted from real-world presentation templates.",
+  description: "Complete slide decks built with Mosaic's bundled themes and layouts.",
 )) <website-metadata>
 
 #let decks = json("/examples/decks/manifest.json").decks
@@ -34,7 +34,11 @@
 
 #title()
 
-This page hosts four complete slide decks built with Mosaic. Click a thumbnail to page through its slides. The #link(repo)[GitHub repository] contains every deck's full Typst source, assets, Makefile, and compiled PDF.
+This page hosts eight complete slide decks: four are built on one of Mosaic's bundled themes, some leaning on the themes' own layouts and others hand-crafting every slide from named cells and custom palettes, and the last four define a theme of their own to re-create an outside design. Click a thumbnail to page through its slides. The #link(repo)[GitHub repository] contains every deck's full Typst source, assets, Makefile, and compiled PDF.
+
+#calepin.elements.callout(kind: "warning", title: [Start with the tutorials])[
+  These are complete, fairly intricate decks: they combine custom palettes, hand-built grids, and theme extensions, so their source is not the gentlest introduction to Mosaic. If you are new to the package, read #link("start/first-deck.html")[Get started] first, then the guides on #link("slides/content.html")[writing slides] and #link("appearance/themes.html")[themes and colors]. The code below reads much more easily afterwards.
+]
 
 #if sys.inputs.at("calepin-target", default: "paged") == "html" {
   html.elem("style", "

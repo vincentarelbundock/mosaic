@@ -32,7 +32,7 @@ On this website, we will refer to the different components of a slide deck in th
 #html.elem("div", attrs: (class: "mosaic-diagram"), html.frame(grid-anatomy))\
 #v(1em)
 
-The grid is sandwiched between two full-slide planes. The *background* plane is painted behind the cells. It typically holds a full-slide image, a color wash, or a watermark. The *foreground* plane is painted over the cells. It typically holds a slide number, a logo, or a progress indicator. Neither plane takes space away from the grid.
+The grid is sandwiched between two full-slide planes. The *background* plane is painted behind the cells. It typically holds a full-slide image, a color wash, or a watermark. The *foreground* plane is painted over the cells. It typically holds a slide number, a logo, or a progress indicator. Neither plane takes space away from the grid. The #link("../slides/background.html")[Background] and #link("../slides/foreground.html")[Foreground] pages show how to use them.
 
 #v(1em)\
 #html.elem("div", attrs: (class: "mosaic-diagram"), html.frame(slide-planes))

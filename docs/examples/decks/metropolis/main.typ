@@ -1,28 +1,22 @@
 // ═══════════════════════════════════════════════════════════════════════════
 //  Content
 //
-//  theme.typ imports the bundled Metropolis facade as `m` and defines
-//  deck-local colors; preamble.typ re-exports it with Fletcher, CeTZ, Calepin,
-//  and the helpers used below. From here down, each slide is a `== Heading`
-//  routed through the theme's content layout or one call to a theme layout
-//  recipe (`m.layouts.title`, `m.layouts.section`, or `m.layouts.content`).
+//  This deck is deliberately bare: it imports the bundled Metropolis theme
+//  and writes almost every slide as a `=` or `==` heading. The theme supplies
+//  the ruled title page, the section progress bars, the bottom progress line,
+//  and all typography. preamble.typ adds Fletcher, CeTZ, Calepin, and the
+//  equation-annotation helpers used below.
 // ═══════════════════════════════════════════════════════════════════════════
 // Root-absolute import: Calepin compiles main.typ from a generated wrapper
 // directory, so a relative "preamble.typ" would not resolve. The Calepin root
 // is this example directory (cf. the "/references.bib" bibliography below).
 #import "/preamble.typ": *
-#show: m.setup
 
 #let ccp = [Centre for Comparative Politics]
 #let eis = [European Institute for Social Data]
 
-#m.slide(layout: m.layouts.title(
-  title: [
-    // `calepin.setup` runs once inside the title content to enable the R
-    // chunks used later in the deck.
-    #calepin.setup(echo: true, eval: true, results: "render")
-    Technical talk
-  ],
+#show: m.setup.with(
+  title: [Technical talk],
   subtitle: [Math, Diagrams, and Executable Code],
   authors: (
     m.layouts.author(
@@ -36,9 +30,16 @@
     m.layouts.author([Noah Williams], affiliations: (ccp,)),
   ),
   date: [July 30, 2026],
-), numbered: false)
+)
+
+#m.slide(layout: "title")
 
 == Roadmap
+
+// `calepin.setup` runs once, inside the first slide's content, to enable the
+// R chunks used later in the deck. (Emitted before the first slide it would
+// count as stray content ahead of the deck's first heading.)
+#calepin.setup(echo: true, eval: true, results: "render")
 
 #set enum(numbering: "1.", spacing: 1.15em)
 #enum(
@@ -48,10 +49,7 @@
   [Connect results to evidence],
 )
 
-#m.slide(
-  "section",
-  cells: (section: [Model]),
-)
+= Model
 
 == Sequential decisions under uncertainty
 
@@ -62,7 +60,7 @@ and receives a reward.
 - *Action:* $a in cal(A)$ changes both reward and the next-state distribution.
 - *Objective:* maximize expected discounted return over an indefinite horizon.
 #v(18pt)
-#finding([Modeling assumption])[
+#m.components.callout(title: [Modeling assumption])[
   The current state is sufficient: conditional on $s_t$ and $a_t$, the
   future is independent of the earlier history.
 ]
@@ -106,10 +104,7 @@ $
 The recursion separates immediate utility from the expected value of all
 subsequent decisions #cite(<bellman1957>).
 
-#m.slide(
-  "section",
-  cells: (section: [Computation]),
-)
+= Computation
 
 // `calepin.chunk` runs R at compile time. The first chunk evaluates the code
 // and saves the plot under label "fig-efficiency" (retrieved on the next
@@ -145,50 +140,44 @@ ggplot(mtcars, aes(hp, mpg, color = factor(am))) +
   theme(legend.position = "top", panel.grid.minor = element_blank())
 ```
 
-== Horsepower predicts lower efficiency
-
-#grid(
-  columns: (1.65fr, 1fr),
-  gutter: 25pt,
-  align: top,
-  [#calepin.results("fig-efficiency")],
-  [
-    #set text(size: 0.79em)
-    - Fuel efficiency declines as horsepower increases.
-    - Transmission groups occupy different regions of the sample.
-    - The fitted lines summarize association, not causation.
-    #v(14pt)
-    #text(size: 0.6em, fill: rgb("#657377"))[
-      Data: `mtcars`, 32 model-year 1973 to 1974 automobiles.
-    ]
-  ],
-)
+// A two-column content slide: the theme's own layout, an uneven split.
+#m.slide(variant: "header-body", columns: 2, tracks: (1.65fr, 1fr))[
+  == Horsepower predicts lower efficiency
+][
+  #calepin.results("fig-efficiency")
+][
+  #set text(size: 0.79em)
+  - Fuel efficiency declines as horsepower increases.
+  - Transmission groups occupy different regions of the sample.
+  - The fitted lines summarize association, not causation.
+  #v(14pt)
+  #text(size: 0.75em, style: "italic")[
+    Data: `mtcars`, 32 model-year 1973 to 1974 automobiles.
+  ]
+]
 
 == Computed model summary
 
 The same R session retains `fit`, so numerical claims can be generated rather
 than copied into the deck.
 #v(18pt)
-#calepin.chunk("r", echo: false, results: "typst")[
-    ```r
-    b <- coef(summary(fit))
-    r2 <- summary(fit)$r.squared
-    cat(sprintf(
-      "#block(width: 100%%, fill: rgb(\"#eeeeee\"), inset: 10pt)[
-      #strong[Estimated association] \
-      Holding transmission fixed, an additional 10 horsepower is associated
-      with *%.2f fewer mpg*. The model explains *%.1f%%* of the observed
-      variation in fuel efficiency.
-      ]",
-      -10 * b["hp", "Estimate"], 100 * r2
-    ))
-    ```
+#m.components.card[
+  #calepin.chunk("r", echo: false, results: "typst")[
+      ```r
+      b <- coef(summary(fit))
+      r2 <- summary(fit)$r.squared
+      cat(sprintf(
+        "#strong[Estimated association] \
+        Holding transmission fixed, an additional 10 horsepower is associated
+        with *%.2f fewer mpg*. The model explains *%.1f%%* of the observed
+        variation in fuel efficiency.",
+        -10 * b["hp", "Estimate"], 100 * r2
+      ))
+      ```
+  ]
 ]
 
-#m.slide(
-  "section",
-  cells: (section: [Structure]),
-)
+= Structure
 
 == File-reader state machine
 
@@ -199,7 +188,7 @@ than copied into the deck.
 #set align(center)
 #state-diagram(
     node-stroke: 0.1em,
-    node-fill: orange.lighten(75%),
+    node-fill: rgb("#f28e2b").lighten(75%),
     spacing: 4em,
     fletcher.edge((-1, 0), "r", "-|>", `open(path)`,
       label-pos: 0, label-side: center),
@@ -217,10 +206,7 @@ than copied into the deck.
 )
 ]
 
-#m.slide(
-  "section",
-  cells: (section: [Geometry]),
-)
+= Geometry
 
 == A qubit as a Bloch vector
 
@@ -277,47 +263,30 @@ than copied into the deck.
 })
 ]
 
-#m.slide(
-  "section",
-  cells: (section: [Evidence]),
-)
+= Evidence
 
-== What makes a technical slide?
+#m.slide(variant: "header-body", columns: 2)[
+  == What makes a technical slide?
+][
+  *Include*
+  - a question or claim
+  - units and definitions
+  - reproducible computation
+  - a stated interpretation
+][
+  *Avoid*
+  - unlabelled decorative plots
+  - numbers copied by hand
+  - animation without exposition
+  - citations disconnected from claims
+]
 
-#grid(
-  columns: (1fr, 1fr),
-  gutter: 35pt,
-  align: top + left,
-  [
-    *Include*
-    - a question or claim
-    - units and definitions
-    - reproducible computation
-    - a stated interpretation
-  ],
-  [
-    *Avoid*
-    - unlabelled decorative plots
-    - numbers copied by hand
-    - animation without exposition
-    - citations disconnected from claims
-  ],
-)
-
-// One-off closing slide: a full ink-filled cell with centered white text.
-// Cells are structural, so the fill and centering are native rules on the
-// cell's <mosaic-cell-questions> label, scoped to this slide.
+// One-off closing slide: the theme's inverted ground, one large phrase.
 #[
-  #show label("mosaic-cell-questions"): set align(center + horizon)
-  #show label("mosaic-cell-questions"): it => block(
-    width: 100%,
-    height: 100%,
-    fill: ink,
-    it,
-  )
-  #m.slide(layout: m.grids.cell("questions"))[
-    #text(size: 1.6em, weight: "medium", fill: white)[Questions?]
-  ]
+  #show label("mosaic-cell-body"): set align(center + horizon)
+  #m.slide(invert: true, cells: (
+    body: text(size: 1.6em, weight: "medium")[Questions?],
+  ))
 ]
 
 // A real `==` heading in the header block keeps the same heading show rules
