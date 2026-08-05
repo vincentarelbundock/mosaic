@@ -50,13 +50,10 @@ fold = true
   target = "index.typ"
 
   [[sidebar.section.item]]
-  target = "examples.typ"
-
-[[sidebar.section]]
-title = "Get started"
+  target = "start/first-deck.typ"
 
   [[sidebar.section.item]]
-  target = "start/first-deck.typ"
+  target = "examples.typ"
 
 [[sidebar.section]]
 title = "Slides"
@@ -103,9 +100,6 @@ title = "Appearance"
   [[sidebar.section.item]]
   target = "appearance/themes.typ"
 
-  [[sidebar.section.item]]
-  target = "appearance/theme-authoring.typ"
-
 [[sidebar.section]]
 title = "Slide furniture"
 
@@ -128,15 +122,12 @@ title = "Incremental reveals"
   target = "incremental/reveals.typ"
 
   [[sidebar.section.item]]
-  target = "incremental/notes.typ"
+  target = "incremental/handouts.typ"
 
 [[sidebar.section]]
 
   [[sidebar.section.item]]
   target = "reference/concepts.typ"
-
-  [[sidebar.section.item]]
-  target = "reference/labels.typ"
 
   [[sidebar.section.item]]
   target = "help/faq.typ"
@@ -170,3 +161,6 @@ title = "API reference"
 
   [[sidebar.section.item]]
   target = "api/components.typ"
+
+  [[sidebar.section.item]]
+  target = "api/labels.typ"

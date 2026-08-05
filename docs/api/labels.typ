@@ -1,5 +1,5 @@
-#set document(title: [Label reference])
-#metadata((title: "Label reference")) <website-metadata>
+#set document(title: [Labels])
+#metadata((title: "Labels")) <website-metadata>
 
 #title()
 

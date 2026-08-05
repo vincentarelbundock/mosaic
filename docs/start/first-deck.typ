@@ -1,8 +1,8 @@
 #import "/.calepin/calepin.typ" as calepin
 #import "/_includes/embedded-examples.typ": embedded-example
 
-#set document(title: [First deck])
-#metadata((title: "First deck")) <website-metadata>
+#set document(title: [Get started])
+#metadata((title: "Get started")) <website-metadata>
 
 #title()
 

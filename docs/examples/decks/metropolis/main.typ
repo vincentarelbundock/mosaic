@@ -49,7 +49,7 @@
 )
 
 #m.slide(
-  layout: m.layouts.section(),
+  "section",
   cells: (section: [Model]),
 )
 
@@ -107,7 +107,7 @@ The recursion separates immediate utility from the expected value of all
 subsequent decisions #cite(<bellman1957>).
 
 #m.slide(
-  layout: m.layouts.section(),
+  "section",
   cells: (section: [Computation]),
 )
 
@@ -186,7 +186,7 @@ than copied into the deck.
 ]
 
 #m.slide(
-  layout: m.layouts.section(),
+  "section",
   cells: (section: [Structure]),
 )
 
@@ -218,7 +218,7 @@ than copied into the deck.
 ]
 
 #m.slide(
-  layout: m.layouts.section(),
+  "section",
   cells: (section: [Geometry]),
 )
 
@@ -278,7 +278,7 @@ than copied into the deck.
 ]
 
 #m.slide(
-  layout: m.layouts.section(),
+  "section",
   cells: (section: [Evidence]),
 )
 
@@ -323,7 +323,7 @@ than copied into the deck.
 // A real `==` heading in the header block keeps the same heading show rules
 // (and therefore the same size) as the automatic slide headers.
 #m.slide(
-  layout: m.layouts.content(),
+  "content",
   numbered: false,
   cells: (
     header: [== References],

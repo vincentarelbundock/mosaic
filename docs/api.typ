@@ -91,3 +91,5 @@ descriptions.
   #link(page.href)[*#page.title*]
   #list(..page-entries(page))
 ]))
+
+#link("api/labels.html")[*Labels*] lists every label a rendered slide emits, which is the surface a deck or a theme writes `show` rules against.

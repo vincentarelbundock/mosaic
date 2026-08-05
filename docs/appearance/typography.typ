@@ -36,7 +36,7 @@ Each theme supplies a complete color palette. Override only the deck-wide colors
 ))
 ```
 
-The accepted roles are `canvas`, `surface`, `text`, `muted`, `line`, and `accent`. Unknown roles and non-color values are errors. The canvas, typography, components, and layouts all use the resolved values. Explicit component colors remain local overrides:
+The palette holds eight entries: `canvas`, `surface`, `text`, `muted`, `line`, and `accent` for the deck itself, plus `warning` and `error` for the status colors components paint with. Unknown names and non-color values are errors. The canvas, typography, components, and layouts all use the resolved values, and #link("themes.html")[Themes] describes what each entry paints. Explicit component colors remain local overrides:
 
 ```typ
 #m.slide(
@@ -64,6 +64,6 @@ Native rules after `m.setup` are still the right tool for typography or a specia
 ]
 ```
 
-Color collections remain ordinary Typst arrays. Define them near the chart or diagram that uses them, or import a color package. Component `role:` values remain local to components such as `card`, `badge`, and `quote`.
+Color collections remain ordinary Typst arrays. Define them near the chart or diagram that uses them, or import a color package. A component's `role:` names one palette entry, so recoloring the palette recolors every `card`, `badge`, and `quote` that uses it.
 
 To recolor an entire slide at once, use the `<mosaic-slide>` label described under #link("styling.html#styling-a-whole-slide")[Styling a whole slide].

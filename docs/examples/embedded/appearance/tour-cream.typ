@@ -1,7 +1,7 @@
 #import "@local/mosaic:0.0.1" as mosaic
 #import mosaic.themes.cream as m
-#import "_tour-deck.typ": deck, info
+#import "_tour-deck.typ": deck
 
-#show: m.setup.with(..info)
+#show: m.setup
 
 #deck(m)

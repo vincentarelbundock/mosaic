@@ -14,80 +14,9 @@
 
 #title()
 
-= Can headings create slides?
+= Reuse
 
-Yes. After `#show: m.setup`, `=` starts an unnumbered section slide and `==` starts a numbered content slide. Text placed between a `=` and the next `==` becomes the section slide's subtitle:
-
-```typ
-#import "@local/mosaic:0.0.1" as m
-
-#show: m.setup.with(
-  spacing: (inset: 1.5em),
-)
-
-= Methods
-
-What the data can and cannot support.
-
-== Data
-
-This is one slide.
-
-== Model
-
-#m.steps.reveal[
-  - Specify the model.
-  - Estimate its parameters.
-  - Examine the diagnostics.
-]
-```
-
-See #link("../start/first-deck.html")[First deck] for a complete example.
-
-= How do I customize content slides?
-
-Set the `content` layout in `m.setup`. Explicit content slides and slides created with `==` will then use the same layout and recurring foreground content.
-
-```typ
-#show: m.setup.with(
-  layouts: (
-    content: m.layouts.content(variant: "header-body"),
-  ),
-  foreground: [
-    #place(bottom + right, dx: -1.25em, dy: -0.35em)[
-      #m.components.progress(variant: "1")
-    ]
-  ],
-)
-
-// Invert the header bar for every content-layout slide.
-#show label("mosaic-cell-header"): set text(fill: white)
-#show label("mosaic-cell-header"): it => block(width: 100%, fill: black, it)
-
-== Results
-
-The content layout gives this `==` slide the inverted header bar and progress indicator without a single `#slide` call. ```
-
-Any layout with `header` and `body` cells works. A theme supplies all of the named layouts, and `setup(layouts:)` may replace only the ones that differ; see #link("../appearance/themes.html")[Themes] and the
-#link("../api/setup.html")[Setup API].
-
-= How do I invert a slide's colors?
-
-Pair each ground with the text color that reads against it, and apply both halves in the same rule. `m.surface` fills the cell's own block and a neighboring `set text` colors the content inside it, so a helper that takes a `(fill, text)` pair can repaint any set of cells:
-
-#embedded-example(
-  calepin.elements.gallery,
-  "faq/color-inversion",
-  frames: 2,
-  title: "One layout rendered on a light ground and on a dark one",
-  renderer: thumbnail-gallery,
-)
-
-The same helper inverts a single slide, a run of slides, or a whole deck, depending on where you place the `#show:` rule. Scope it inside a block for one slide, or write it once after `m.setup` to change the baseline. To invert the full bleed rather than the cells, add `#set page(fill: ..)`; the background and foreground planes take the same rules through the `<mosaic-background>` and `<mosaic-foreground>` labels.
-
-Mosaic does not derive the text color from the fill. Two reasons, both practical. Mid-tone grounds sit where an automatic flip is least reliable: a muted sage such as `rgb("#aebdb3")` reads as "light" to a luminance rule, but white on it measures 1.8:1, well under the 4.5:1 that body text wants. And a cell's declared fill is often not what the viewer sees behind the text, because an image, scrim, or background plane covers it. Naming the pair keeps that judgment with the author, where a real slide can be looked at.
-
-= How can I reuse slides and states?
+How can I reuse slides and states?
 
 Define a slide as an ordinary Typst function and call it wherever it should appear:
 
@@ -111,23 +40,9 @@ Define a slide as an ordinary Typst function and call it wherever it should appe
 
 Each call creates another slide with the same incremental sequence. To show only one state, parameterize the function or write a summary slide.
 
-= Can two slides share a title?
+= Links
 
-Yes. A sequence of slides that walks through one argument, one figure per slide, often repeats the same title so that the sequence reads as a single animation. Repeated headings collide in the outline and in link targets, so give each repeat its own label:
-
-```typ
-== Grade appeals
-
-The valid and invalid reasons to appeal.
-
-== Grade appeals #metadata(none) <appeals-2>
-
-What happens after you appeal.
-```
-
-The labeled `metadata` produces no output; it only makes the heading unique. The same pattern works in the header block of an explicit slide: `[== Elasticity #metadata(none) <elasticity-3>]`.
-
-= How do I link to a slide?
+How do I link to a slide?
 
 Use native Typst labels and links. A label on a content slide becomes the link target directly:
 
@@ -149,7 +64,46 @@ For an explicit slide, put labeled, zero-output metadata at the beginning of its
 
 Typst writes these as internal PDF destinations, so Mosaic does not need a separate slide-ID or deep-link API. Use your own unique labels for navigation; the repeated `<mosaic-cell-ID>` labels identify cells for styling and are not slide IDs.
 
-= Where do slide margins go?
+= Repeated titles
+
+Can two slides share a title?
+
+Yes. A sequence of slides that walks through one argument, one figure per slide, often repeats the same title so that the sequence reads as a single animation. Repeated headings collide in the outline and in link targets, so give each repeat its own label:
+
+```typ
+== Grade appeals
+
+The valid and invalid reasons to appeal.
+
+== Grade appeals #metadata(none) <appeals-2>
+
+What happens after you appeal.
+```
+
+The labeled `metadata` produces no output; it only makes the heading unique. The same pattern works in the header block of an explicit slide: `[== Elasticity #metadata(none) <elasticity-3>]`.
+
+= Color inversion
+
+How do I invert a slide's colors?
+
+Pair each ground with the text color that reads against it, and apply both halves in the same rule. `m.surface` fills the cell's own block and a neighboring `set text` colors the content inside it, so a helper that takes a `(fill, text)` pair can repaint any set of cells:
+
+#embedded-example(
+  calepin.elements.gallery,
+  "faq/color-inversion",
+  frames: 2,
+  title: "One layout rendered on a light ground and on a dark one",
+  renderer: thumbnail-gallery,
+)
+
+The same helper inverts a single slide, a run of slides, or a whole deck, depending on where you place the `#show:` rule. Scope it inside a block for one slide, or write it once after `m.setup` to change the baseline. To invert the full bleed rather than the cells, add `#set page(fill: ..)`; the background and foreground planes take the same rules through the `<mosaic-background>` and `<mosaic-foreground>` labels.
+
+Mosaic does not derive the text color from the fill. Two reasons, both practical. Mid-tone grounds sit where an automatic flip is least reliable: a muted sage such as `rgb("#aebdb3")` reads as "light" to a luminance rule, but white on it measures 1.8:1, well under the 4.5:1 that body text wants. And a cell's declared fill is often not what the viewer sees behind the text, because an image, scrim, or background plane covers it. Naming the pair keeps that judgment with the author, where a real slide can be looked at.
+
+
+= Margins
+
+Where do slide margins go?
 
 `setup` uses a zero page margin. Put content spacing on the cells with each cell's `inset`:
 
@@ -169,7 +123,9 @@ Typst writes these as internal PDF destinations, so Mosaic does not need a separ
 
 `inset` separates content from a cell's edges; adjacent cells each contribute their own inset. A grid `gutter` instead separates the cell surfaces and defaults to `0pt`.
 
-= How do I change the slide aspect ratio?
+= Aspect ratio
+
+How do I change the slide aspect ratio?
 
 Mosaic supports the two presentation aspect ratios built into Typst:
 
@@ -197,7 +153,9 @@ Choose one with the `paper` argument.
   ),
 )
 
-= How do I inspect overflowing cells?
+= Overflow
+
+How do I inspect overflowing cells?
 
 Overflow observation is off by default, because measuring every cell on every frame roughly doubles the layout work a deck does. It is a checking pass, not something to leave on while you write. The usual way to run it is to set `overflow: "error"` on `setup` and compile once before presenting: Mosaic renders the whole deck, then fails naming every overflowing cell with its slide and frame.
 
@@ -226,7 +184,71 @@ When a single indivisible block is the problem, a wide table or a chart, scale t
 
 A fitted block cannot overflow, so it no longer appears in the overflow records.
 
-= How does Mosaic compare to Touying?
+= Speaker notes
+
+How do I write speaker notes, and where do they end up?
+
+Attach them with `m.note[...]`. Notes never appear in the presentation and never add a frame:
+
+```typ
+#m.slide[
+  #m.note[Introduce the result.]
+
+  #m.steps.reveal(
+    [
+      The estimate is positive.
+      #m.note[Explain the sign and magnitude.]
+    ],
+    [
+      The interval excludes zero.
+      #m.note[Discuss uncertainty.]
+    ],
+  )
+]
+```
+
+A note outside a timing command applies to every frame. A note inside `m.steps.on`, `m.steps.reveal`, or `m.steps.replace` appears with that content.
+
+Notes also hold material that supports a slide without belonging on it: the source URL of a figure, a reminder of what to say, or the link behind an image slide.
+
+To print a companion document, choose an output in `m.setup`:
+
+```typ
+// Slide thumbnail followed by its notes.
+#show: m.setup.with(output: "speaker")
+
+// Notes without a slide thumbnail.
+#show: m.setup.with(output: "notes")
+```
+
+On those printed pages, the frame heading renders under the `<mosaic-note-heading>` label and the note text under `<mosaic-note-body>`. Both default to plain black type that reads against paper whatever the theme does. Restyle them with ordinary rules after `m.setup`:
+
+```typ
+#show label("mosaic-note-body"): set text(size: 11pt)
+#show label("mosaic-note-heading"): set text(fill: rgb("#0072B2"))
+```
+
+= Repeated counters
+
+A counter advances several times on one slide. Why?
+
+Content repeated across frames advances a Typst counter or state once per frame. List the counters and states that should advance only once per slide:
+
+```typ
+#let theorem-counter = counter("theorems")
+#let theorem-state = state("theorem-state", 0)
+
+#show: m.setup.with(
+  frozen-counters: (theorem-counter,),
+  frozen-states: (theorem-state,),
+)
+```
+
+Counters and states left off that list keep their normal Typst behavior.
+
+= Touying
+
+How does Mosaic compare to Touying?
 
 #link("https://github.com/touying-typ/touying")[Touying] is the most established Typst presentation framework. It is mature and well documented, it has powerful animation support, and the largest collection of themes, including many contributed by its community.
 

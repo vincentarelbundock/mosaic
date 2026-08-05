@@ -306,7 +306,7 @@ When a grid owns fixed content such as an image or logo, put it directly on the 
 
 = Fitting a block to its cell
 
-A cell does not resize its content. A body larger than its cell is drawn past the edge; a checking compile #link("../help/faq.html#how-do-i-inspect-overflowing-cells")[reports it as an overflow]. `m.fit` scales one block into the space its cell gives it:
+A cell does not resize its content. A body larger than its cell is drawn past the edge; a checking compile #link("../help/faq.html#overflow")[reports it as an overflow]. `m.fit` scales one block into the space its cell gives it:
 
 ```typ
 #m.fit(generated-list)

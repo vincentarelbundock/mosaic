@@ -86,10 +86,10 @@
           ))
         ]
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
-          #html.elem("h2")[Layouts]
+          #html.elem("h2")[Layouts and themes]
           #html.elem("p")[
             Ready-made content, title, section, and image layouts, each with
-            several variants.
+            several variants. Beautiful, modern, and easy-to-customize themes.
           ]
         ]
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[

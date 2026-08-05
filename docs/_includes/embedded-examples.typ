@@ -62,6 +62,7 @@
   title,
   start: 1,
   max-width: none,
+  caption: none,
 ) = {
   let width = if max-width != none { max-width } else { 42em }
   if sys.inputs.at("calepin-target", default: "paged") == "html" {
@@ -73,14 +74,15 @@
       frames,
       title + ", first frame of " + str(frames),
       max-width: width,
+      caption: caption,
     )
   }
 
   // Paged (non-HTML) targets render the frames as a plain gallery.
   let items = gallery-items(slug, frames, title, start: start)
-  items.at(0).at(2) = [
-    Open slideshow · #frames #if frames == 1 { [frame] } else { [frames] }
-  ]
+  items.at(0).at(2) = if caption != none { caption } else {
+    [Open slideshow · #frames #if frames == 1 { [frame] } else { [frames] }]
+  }
   gallery(
     items,
     columns: 1,
@@ -88,6 +90,16 @@
     max-width: width,
     show-captions: true,
   )
+}
+
+// Lay several `slideshow` previews out side by side. Each keeps its own dialog,
+// so a reader pages through one deck without leaving the row.
+#let slideshow-grid(body) = {
+  if sys.inputs.at("calepin-target", default: "paged") == "html" {
+    html.elem("div", attrs: (class: "mosaic-slideshow-grid"), body)
+  } else {
+    body
+  }
 }
 
 // Render one canonical slug as both source and visual output. `renderer` can

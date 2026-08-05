@@ -12,7 +12,7 @@ Behind that, the engine keeps exactly one record of its own: the deck record, wr
 
 = Styling cells
 
-Target a cell by its label. Font, size, color, and alignment are `set text`, `set par`, and `set align`; the cell's own fill, stroke, and corner radius go through `m.surface`. The #link("../reference/labels.html")[label reference] lists every label a slide emits:
+Target a cell by its label. Font, size, color, and alignment are `set text`, `set par`, and `set align`; the cell's own fill, stroke, and corner radius go through `m.surface`. The #link("../api/labels.html")[label reference] lists every label a slide emits:
 
 ```typ
 #show label("mosaic-cell-copy"): set align(left + horizon)
@@ -158,4 +158,4 @@ Bundle repeated cell rules in a function and apply it once with `#show:`:
   renderer: thumbnail-gallery,
 )
 
-A #link("themes.html")[theme] packages this pattern for a whole deck, and #link("theme-authoring.html")[writing one] is how a look becomes reusable across decks.
+A #link("themes.html")[theme] packages this pattern for a whole deck, and writing one is how a look becomes reusable across decks.

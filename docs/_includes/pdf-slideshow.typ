@@ -8,10 +8,14 @@
   alt,
   max-width: 42em,
   unit: "frames",
+  caption: none,
 ) = {
   let label-id = id + "-label"
   let singular = if unit == "frames" { "frame" } else { "slide" }
   let count-label = if pages == 1 { singular } else { unit }
+  let caption = if caption != none { caption } else {
+    [Open slideshow · #pages #count-label]
+  }
   html.elem("div", attrs: (
     class: "pdf-slideshow",
     "data-frames": str(pages),
@@ -35,9 +39,7 @@
       ))
       #html.elem("span", attrs: (
         class: "pdf-slideshow-preview__caption",
-      ))[
-        Open slideshow · #pages #count-label
-      ]
+      ))[#caption]
     ]
     #html.elem("dialog", attrs: (
       id: id,

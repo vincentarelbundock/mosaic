@@ -5,7 +5,7 @@
   path("/docs/assets/images/dog.webp"),
   alt: "Dog",
 )
-#let myslide = m.slide.with(layout: m.layouts.section())
+#let myslide = m.slide.with("section")
 #myslide[Plain section]
 
 #let myslide = m.slide.with(layout: m.layouts.section(number: [01]))

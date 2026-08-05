@@ -447,6 +447,24 @@ body:has(.mosaic-hero) .calepin-website-toc {
   display: none !important;
 }
 
+/* Several slideshow previews side by side, each opening its own dialog. */
+.mosaic-slideshow-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 1rem;
+  margin-block: 1.5rem;
+}
+
+.mosaic-slideshow-grid > .pdf-slideshow {
+  min-width: 0;
+  margin: 0;
+}
+
+.mosaic-slideshow-grid .pdf-slideshow-preview {
+  width: 100%;
+  max-width: none !important;
+}
+
 .mosaic-side-by-side {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
