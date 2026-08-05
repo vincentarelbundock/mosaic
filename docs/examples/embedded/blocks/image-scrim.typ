@@ -20,12 +20,13 @@
       (path: path(river), alt: describe),
       variant: "full",
     ),
-    content: (body: [
+    cells: (body: [
       == Without a scrim
 
       The picture is unmodified, so light text survives over the dark reeds
       and vanishes against the sky.
-    ]),
+    ],
+    ),
   )
 ]
 
@@ -41,12 +42,13 @@
       ),
       variant: "full",
     ),
-    content: (body: [
+    cells: (body: [
       == A flat scrim
 
       `scrim: black.transparentize(45%)` covers the picture with black at 55%
       opacity. The text is now readable anywhere on the slide.
-    ]),
+    ],
+    ),
   )
 ]
 
@@ -66,14 +68,15 @@
       ),
       variant: "full",
     ),
-    content: (body: [
+    cells: (body: [
       #v(1fr)
 
       == A gradient scrim
 
       A scrim accepts any Typst paint, so `gradient.linear(..)` protects the
       text along the bottom edge and leaves the horizon at full strength.
-    ]),
+    ],
+    ),
   )
 ]
 
@@ -88,10 +91,11 @@
     ),
     variant: "full",
   ),
-  content: (body: [
+  cells: (body: [
     == A light scrim
 
     `scrim: white.transparentize(25%)` washes the picture out instead, which
     keeps the deck's ordinary dark text readable and needs no color rule.
-  ]),
+  ],
+  ),
 )

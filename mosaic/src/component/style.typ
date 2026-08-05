@@ -18,8 +18,8 @@
   // The rail a callout hangs its accent on, replacing the full border.
   callout-rail: 4pt,
   divider-gap: 0.45em,
-  tag-radius: 3pt,
-  tag-inset: (x: 0.7em, y: 0.3em),
+  badge-radius: 3pt,
+  badge-inset: (x: 0.7em, y: 0.3em),
   progress-size: 1em,
   progress-thickness: 2pt,
   // A conic gradient starts due east; a progress ring reads from the top.

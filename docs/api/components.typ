@@ -3,9 +3,9 @@
 #api-module(
   "Components and furniture",
   (
-    "/api/modules/component-frame.typ",
+    "/api/modules/component-card.typ",
     "/api/modules/component-callout.typ",
-    "/api/modules/component-tag.typ",
+    "/api/modules/component-badge.typ",
     "/api/modules/component-quote.typ",
     "/api/modules/component-divider.typ",
     "/api/modules/component-progress.typ",

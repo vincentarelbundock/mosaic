@@ -2,9 +2,9 @@
 #import "support/grid.typ" as grid-test
 
 #set page(width: 160pt, height: 90pt, margin: 5pt)
-#let numbered-grid = mosaic.grids.v(
+#let numbered-grid = mosaic.grids.rows(
   "left",
-  mosaic.grids.t(
+  mosaic.grids.track(
     auto,
     mosaic.grids.cell(id: "right", content: align(right)[Fixed furniture]),
   ),
@@ -20,10 +20,8 @@
 #show: mosaic.setup.with(
   spacing: (inset: 5pt),
   layouts: (content: numbered-grid),
-  content: (
-    background: [Inherited background],
-    foreground: [Inherited foreground #slide-number],
-  ),
+  background: [Inherited background],
+  foreground: [Inherited foreground #slide-number],
 )
 #set text(size: 7pt)
 
@@ -38,7 +36,8 @@
 // the number; background none disables the inherited background plane.
 #mosaic.slide(
   layout: mosaic.grids.cell(id: "body"),
-  content: (background: none, foreground: none),
+  background: none,
+  foreground: none,
   numbered: false,
 )[Unnumbered]
 
@@ -46,7 +45,7 @@
 // foreground. This is logical slide 2.
 #mosaic.slide(
   layout: mosaic.grids.cell(id: "body"),
-  content: (foreground: [Local foreground #slide-number]),
+  foreground: [Local foreground #slide-number],
 )[
   #mosaic.steps.replace[Before][After]
 ]
@@ -54,10 +53,8 @@
 // Temporal foreground content contributes frames even when the body is static.
 #mosaic.slide(
   layout: mosaic.grids.cell(id: "body"),
-  content: (
-    background: none,
-    foreground: [#mosaic.steps.on("2-")[Foreground step] #slide-number],
-  ),
+  background: none,
+  foreground: [#mosaic.steps.on("2-")[Foreground step] #slide-number],
 )[Static body]
 
 #context assert(counter(page).final().first() == 7)

@@ -1,9 +1,9 @@
 #import "@local/mosaic:0.0.1" as m
 
 // A body cell over an auto-height strip that holds the notes for this slide.
-#let cited = m.grids.v(
+#let cited = m.grids.rows(
   m.grids.cell("body", inset: (x: 1.5em, top: 1.5em, bottom: 0.5em)),
-  m.grids.t(auto, m.grids.cell("sources", inset: (x: 1.5em, bottom: 1em))),
+  m.grids.track(auto, m.grids.cell("sources", inset: (x: 1.5em, bottom: 1em))),
 )
 
 #show: m.setup

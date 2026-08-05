@@ -1,11 +1,11 @@
-// Named cell content: `content:` assigns content by cell ID, independent of
+// Named cell content: `cells:` assigns content by cell ID, independent of
 // grid traversal order. Positional content remains the terse shorthand; both
 // normalize to one ordered body array, so equivalent slides render identically.
 #import "@local/mosaic:0.0.1" as mosaic
 #import "../mosaic/src/grid/content.typ": body-cell-ids, resolve-content
 
-#let comparison = mosaic.grids.h(
-  mosaic.grids.v(
+#let comparison = mosaic.grids.columns(
+  mosaic.grids.rows(
     mosaic.grids.cell("heading"),
     mosaic.grids.cell("left"),
   ),
@@ -27,16 +27,16 @@
 #assert(named == positional)
 
 // The slide command carries the content dictionary.
-#let command = mosaic.slide(layout: comparison, content: (
+#let command = mosaic.slide(layout: comparison, cells: (
   heading: [H],
   left: [L],
   right: [R],
 )).value
-#assert(command.content.keys().sorted() == ("heading", "left", "right"))
+#assert(command.cells.keys().sorted() == ("heading", "left", "right"))
 #assert(command.bodies == ())
 
 // A fixed-content cell is owned by the grid and is not a named destination.
-#let with-fixed = mosaic.grids.h(
+#let with-fixed = mosaic.grids.columns(
   mosaic.grids.cell("logo", content: [LOGO]),
   mosaic.grids.cell("body"),
 )
@@ -59,7 +59,7 @@
 )
 
 // Incremental destinations are counted by ID too.
-#let temporal = mosaic.grids.v(
+#let temporal = mosaic.grids.rows(
   mosaic.grids.cell("top"),
   mosaic.steps.on("2-", mosaic.grids.cell("bottom")),
 )
@@ -69,7 +69,7 @@
 #show: mosaic.setup
 
 // Named and equivalent positional slides render identically.
-#mosaic.slide(layout: comparison, content: (
+#mosaic.slide(layout: comparison, cells: (
   right: [Right],
   heading: [Heading],
   left: [Left],
@@ -77,7 +77,7 @@
 #mosaic.slide(layout: comparison)[Heading][Left][Right]
 
 // Named content into a fixed-cell grid supplies only the open cell.
-#mosaic.slide(layout: with-fixed, content: (body: [Body]))
+#mosaic.slide(layout: with-fixed, cells: (body: [Body]))
 
 // Named content flows through incremental cells.
-#mosaic.slide(layout: temporal, content: (top: [Top], bottom: [Bottom]))
+#mosaic.slide(layout: temporal, cells: (top: [Top], bottom: [Bottom]))

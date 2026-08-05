@@ -24,7 +24,7 @@
 
 #mosaic.slide(
   layout: mosaic.layouts.content(variant: "header-body"),
-  content: (foreground: progress("1/1", rgb("#d97706"))),
+  foreground: progress("1/1", rgb("#d97706")),
 )[
   == Foreground number
 ][
@@ -33,7 +33,7 @@
 
 #mosaic.slide(
   layout: mosaic.layouts.content(),
-  content: (foreground: progress("circle", rgb("#ffffff"))),
+  foreground: progress("circle", rgb("#ffffff")),
 )[
   == White circle
 ][
@@ -42,7 +42,7 @@
 
 #mosaic.slide(
   layout: mosaic.layouts.content(),
-  content: (foreground: progress("circle", rgb("#fedcba"))),
+  foreground: progress("circle", rgb("#fedcba")),
 )[
   == Styled circle
 ][
@@ -51,7 +51,7 @@
 
 #mosaic.slide(
   layout: mosaic.layouts.content(variant: "header-body"),
-  content: (foreground: progress("line", rgb("#123456"))),
+  foreground: progress("line", rgb("#123456")),
 )[
   == Foreground line
 ][
@@ -60,7 +60,7 @@
 
 #mosaic.slide(
   layout: mosaic.layouts.content(variant: "header-body"),
-  content: (foreground: none),
+  foreground: none,
 )[
   == No progress
 ][

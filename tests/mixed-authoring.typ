@@ -10,7 +10,7 @@
 
 The first slide comes from a heading.
 
-#mosaic.slide(layout: mosaic.grids.h("a", "b"))[Explicit left][Explicit right]
+#mosaic.slide(layout: mosaic.grids.columns("a", "b"))[Explicit left][Explicit right]
 
 == Automatic two
 

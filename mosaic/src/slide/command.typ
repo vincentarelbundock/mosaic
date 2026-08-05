@@ -12,14 +12,18 @@
   bodies,
   layout: auto,
   numbered: auto,
-  content: (:),
+  cells: (:),
+  background: auto,
+  foreground: auto,
   fields: (:),
 ) = (
   mosaic: tag,
   kind: "slide",
   layout: layout,
   numbered: numbered,
-  content: content,
+  cells: cells,
+  background: background,
+  foreground: foreground,
   fields: fields,
   bodies: bodies,
 )
@@ -32,9 +36,13 @@
   is-record(value, "slide", slide-command-field-keys, "slide command")
 )
 
+// The planes are slide parameters of their own, not entries in `cells:`: a
+// plane is not a grid leaf, takes no space from the grid, and carries its own
+// <mosaic-background> / <mosaic-foreground> label. `auto` inherits the deck
+// plane declared on `setup`, `none` suppresses it for this slide.
 #let validate-plane(value, name) = {
-  if value != none and type(value) != content {
-    fail(name + " must be content or none")
+  if value != auto and value != none and type(value) != content {
+    fail("slide " + name + " must be content, none, or auto")
   }
   value
 }
@@ -111,19 +119,29 @@
 /// Use one of the two forms, never both on the same slide:
 ///
 /// - Positional bodies, filling cells in depth-first layout order.
-/// - A `content:` dictionary keyed by cell id, which is order-independent and
+/// - A `cells:` dictionary keyed by cell id, which is order-independent and
 ///   lets a slide skip cells.
 ///
 /// ```typ
-/// #mosaic.slide(content: (
+/// #mosaic.slide(cells: (
 ///   header: [== Named cells],
 ///   body: [Order does not matter here.],
 /// ))
 /// ```
 ///
-/// The reserved `background` and `foreground` keys of `content:` control the
-/// full-slide planes rather than a grid cell. Omitting a key inherits the setup
-/// default, `none` suppresses it, and content overrides it.
+/// *Planes*
+///
+/// `background:` and `foreground:` are full-slide layers rather than grid
+/// cells, so they have parameters of their own. `auto` inherits the plane
+/// declared on `setup`, `none` suppresses it for this slide, and content
+/// overrides it.
+///
+/// ```typ
+/// #mosaic.slide(
+///   cells: (body: [Over a photograph.]),
+///   background: mosaic.components.image("cover.webp"),
+/// )
+/// ```
 ///
 /// *Layout fields*
 ///
@@ -152,10 +170,17 @@
   /// explicit boolean always wins.
   /// -> auto | bool
   numbered: auto,
-  /// Cell content keyed by cell id, plus the reserved `background` and
-  /// `foreground` plane keys. Mutually exclusive with positional bodies.
+  /// Cell bodies keyed by cell id. Mutually exclusive with positional bodies.
   /// -> dictionary
-  content: (:),
+  cells: (:),
+  /// Full-slide layer drawn behind the grid. `auto` inherits the deck
+  /// background from `setup`, `none` suppresses it.
+  /// -> auto | content | none
+  background: auto,
+  /// Full-slide layer drawn over the grid. `auto` inherits the deck foreground
+  /// from `setup`, `none` suppresses it.
+  /// -> auto | content | none
+  foreground: auto,
   /// Positional cell bodies in depth-first layout order, plus any named
   /// arguments forwarded as fields of the selected layout.
   /// -> arguments
@@ -179,23 +204,28 @@
   if numbered != auto and type(numbered) != bool {
     fail("slide numbered must be auto or a boolean")
   }
-  if type(content) != dictionary {
-    fail("slide content must be a dictionary")
+  if type(cells) != dictionary {
+    fail("slide cells must be a dictionary")
   }
+  // A plane is not a cell, so it is never a key here. Naming the parameter is
+  // more useful than the "unknown cell id" the router would otherwise report.
   for name in plane-ids {
-    if name in content {
-      _ = validate-plane(content.at(name), name)
+    if name in cells {
+      fail("slide " + name + " is a plane, not a cell; pass it as " + name + ":")
     }
   }
-  let cell-ids = content.keys().filter(key => key not in plane-ids)
-  if bodies.len() > 0 and cell-ids.len() > 0 {
+  _ = validate-plane(background, "background")
+  _ = validate-plane(foreground, "foreground")
+  if bodies.len() > 0 and cells.len() > 0 {
     fail("slide cannot combine named and positional cell content")
   }
   metadata(slide-command(
     bodies,
     layout: layout,
     numbered: numbered,
-    content: content,
+    cells: cells,
+    background: background,
+    foreground: foreground,
     fields: fields,
   ))
 }

@@ -1,6 +1,6 @@
 // Construction, validation, and resolution of the content layout.
 #import "../shared.typ": fail
-#import "../grid/constructors.typ": h, v, t
+#import "../grid/constructors.typ": columns, rows, track
 #import "../grid/model.typ": is-track-size
 #import "core.typ": make-layout, validate-variant
 #import "support.typ": track-children, header-inset, inset-cell
@@ -14,19 +14,19 @@
 
 #let validate-fields(fields) = {
   _ = validate-variant(fields.variant, variants, "layout \"content\"")
-  let columns = fields.columns
-  if type(columns) != int or columns < 1 {
+  let count = fields.columns
+  if type(count) != int or count < 1 {
     fail("layout \"content\" columns must be a positive integer")
   }
   let tracks = fields.tracks
   if tracks != auto and (
     type(tracks) != array
-      or tracks.len() != columns
+      or tracks.len() != count
       or not tracks.all(is-track-size)
   ) {
     fail(
       "layout \"content\" tracks must be auto or an array of "
-        + str(columns) + " native Typst track sizes",
+        + str(count) + " native Typst track sizes",
     )
   }
   fields
@@ -119,7 +119,7 @@
 #let content-tree(body, fields, settings) = {
   let children = ()
   if fields.variant in ("header-body", "header-body-footer") {
-    children.push(t(
+    children.push(track(
       auto,
       inset-cell(
         "header",
@@ -129,14 +129,14 @@
       ),
     ))
   }
-  children.push(t(1fr, body))
+  children.push(track(1fr, body))
   if fields.variant in ("body-footer", "header-body-footer") {
-    children.push(t(
+    children.push(track(
       auto,
       inset-cell("footer", settings, content-sized: true),
     ))
   }
-  v(..children)
+  rows(..children)
 }
 
 #let resolve-content-layout(command, settings) = {
@@ -145,7 +145,7 @@
     if fields.columns == 1 { "body" } else { "body-" + str(index + 1) },
     settings,
   ))
-  let body = h(
+  let body = columns(
     gutter: settings.spacing.gap,
     ..track-children(body-cells, fields.tracks),
   )

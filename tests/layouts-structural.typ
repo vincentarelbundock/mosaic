@@ -22,7 +22,7 @@
 #mosaic.slide(layout: mosaic.layouts.title(title: [Swiss title], variant: "swiss", subtitle: [Conference · Swiss subtitle]))
 #mosaic.slide(layout: mosaic.layouts.title(title: [Centered title], variant: "centered", subtitle: [Centered subtitle]))
 #mosaic.slide(layout: mosaic.layouts.title(title: [Plate title], variant: "plate", subtitle: [Workshop]))
-#mosaic.slide(layout: mosaic.layouts.title(title: [Frame title], variant: "frame", subtitle: [Colloquium]))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Bordered title], variant: "bordered", subtitle: [Colloquium]))
 #mosaic.slide(layout: mosaic.layouts.title(title: [Image-right title], variant: "image-right", image: path("/docs/assets/images/title-river.webp")))
 #mosaic.slide(layout: mosaic.layouts.title(title: [Image-top title], variant: "image-top", image: (path: path("/docs/assets/images/title-river.webp"), alt: "Wetlands")))
 #mosaic.slide(layout: mosaic.layouts.title(title: [Image-background title], variant: "image-background", image: path("/docs/assets/images/title-city.webp")))

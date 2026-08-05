@@ -6,7 +6,7 @@
 
 #title()
 
-Cells occupy the main slide body. The background plane sits behind them and the foreground plane sits above them. Both cover the slide without changing the grid. Put recurring plane content in `m.setup(content:)`, or set it for one slide with `m.slide(content:)`. Use `none` on a slide to hide inherited content. Footer text belongs in a grid cell because it takes part in the layout; see #link("footer.html")[Footer and progress].
+Cells occupy the main slide body. The background plane sits behind them and the foreground plane sits above them. Both cover the slide without changing the grid. Put recurring plane content in `m.setup(background:)` or `m.setup(foreground:)`, and set it for one slide with the same arguments on `m.slide`. A plane is not a cell, so it never appears in `cells:`. Use `none` on a slide to hide inherited content. Footer text belongs in a grid cell because it takes part in the layout; see #link("footer.html")[Footer and progress].
 
 = Background
 
@@ -45,7 +45,7 @@ Foreground content is painted over the slide body. Use native `place` calls to p
   title: "Arbitrary foreground objects",
 )
 
-Put a recurring logo in `m.setup(content: (foreground: ...))`. Any slide can replace it or hide it with `content: (foreground: none)`.
+Put a recurring logo in `m.setup(foreground: ...)`. Any slide can replace it or hide it with `foreground: none`.
 
 #embedded-example(
   calepin.elements.gallery,

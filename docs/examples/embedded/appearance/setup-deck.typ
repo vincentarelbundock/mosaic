@@ -25,20 +25,20 @@
     canvas: rgb("#f4f8f7"),
     accent: rgb("#007f73"),
   ),
-  content: (
+  cells: (
     footer: [Mosaic · Systems Research],
-    foreground: number,
   ),
+  foreground: number,
 )
 
 #m.slide(
   layout: "title",
-  content: (foreground: none),
+  foreground: none,
 )
 
 #m.slide(
   layout: m.layouts.content(variant: "header-body-footer"),
-  content: (
+  cells: (
     header: [SEMANTIC COLOR ROLES],
     body: [
       `canvas` and `accent` were overridden once in `m.setup`.
@@ -47,6 +47,6 @@
       layout inherits them without repeating those values. The footer is likewise
       supplied by the setup-level cell-content defaults.
     ],
-    foreground: [#number #line],
   ),
+  foreground: [#number #line],
 )

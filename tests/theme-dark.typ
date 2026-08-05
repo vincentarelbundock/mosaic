@@ -18,14 +18,14 @@
   subtitle: [A practical engineering talk],
   authors: authors,
   date: [2026],
-  content: (foreground: [
+  foreground: [
     #place(bottom + left)[
       #m.components.progress(variant: "line", width: 100%, thickness: 3pt)
     ]
-  ]),
+  ],
 )
 
-#m.slide(layout: m.layouts.title(), content: (foreground: none))
+#m.slide(layout: m.layouts.title(), foreground: none)
 
 #m.slide(layout: m.layouts.content(variant: "header-body"))[
   REQUEST PIPELINE

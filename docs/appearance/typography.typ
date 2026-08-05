@@ -23,7 +23,7 @@ A semantic heading feeds outlines, bookmarks, and content slides. Use `text` dir
 
 Leading, lists, and captions remain native `par`, `list`, `enum`, `terms`, and `figure.caption` styling.
 
-A heading cannot be placed inside an incremental grid node (`m.grids.on`, `m.steps.reveal`, and related reducers); keep it structurally stable across a slide's frames.
+A heading cannot be placed inside an incremental grid node (`m.grids.on`, `m.steps.reveal`, and related step commands); keep it structurally stable across a slide's frames.
 
 = Color
 
@@ -41,7 +41,7 @@ The accepted roles are `canvas`, `surface`, `text`, `muted`, `line`, and `accent
 ```typ
 #m.slide(
   layout: m.layouts.content(variant: "header-body"),
-  content: (foreground: [
+  foreground: [
     #place(bottom + left)[
       #m.components.progress(
         variant: "line",
@@ -49,7 +49,7 @@ The accepted roles are `canvas`, `surface`, `text`, `muted`, `line`, and `accent
         accent: rgb("#e69f00"),
       )
     ]
-  ]),
+  ],
 )[Title][Body]
 ```
 
@@ -59,11 +59,11 @@ Native rules after `m.setup` are still the right tool for typography or a specia
 #[
   #show label("mosaic-cell-body"): set text(fill: white)
   #m.slide(
-    content: (background: block(width: 100%, height: 100%, fill: rgb("#111827"))),
+    background: block(width: 100%, height: 100%, fill: rgb("#111827")),
   )[Dark for this slide only]
 ]
 ```
 
-Color collections remain ordinary Typst arrays. Define them near the chart or diagram that uses them, or import a color package. Component `role:` values remain local to components such as `frame`, `tag`, and `quote`.
+Color collections remain ordinary Typst arrays. Define them near the chart or diagram that uses them, or import a color package. Component `role:` values remain local to components such as `card`, `badge`, and `quote`.
 
 To recolor an entire slide at once, use the `<mosaic-slide>` label described under #link("styling.html#styling-a-whole-slide")[Styling a whole slide].

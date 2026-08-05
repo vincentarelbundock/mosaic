@@ -5,5 +5,5 @@
   variant: "left",
   image: path("/docs/assets/images/dog.webp"),
   tracks: ("wide",),
-  content: (header: [== T], body: [b]),
+  cells: (header: [== T], body: [b]),
 )

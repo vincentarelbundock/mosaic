@@ -102,7 +102,7 @@ Use `layout: "title"` for an opening slide. Declare the deck's title information
 
 To change one field for one slide, name it on `slide`: `m.slide(layout: "title", variant: "academic")`. Pass `m.layouts.title(...)` directly when the slide needs a title layout built from scratch rather than a refinement of the configured one.
 
-The text variants each borrow a classic minimalist tradition: `swiss` (the default) rests the title mass on a full-width baseline rule with author, affiliation, and date in aligned columns beneath it; `centered` holds the mass at the slide's center with the metadata at the bottom edge; `plate` fills the slide with the deck's text color and knocks the type out in the canvas color; and `frame` closes a centered stack inside one thin border. `academic` is the conference-poster arrangement with superscript affiliations and a contact line. The gallery then moves to layouts that place an image beside, above, below, or behind the title.
+The text variants each borrow a classic minimalist tradition: `swiss` (the default) rests the title mass on a full-width baseline rule with author, affiliation, and date in aligned columns beneath it; `centered` holds the mass at the slide's center with the metadata at the bottom edge; `plate` fills the slide with the deck's text color and knocks the type out in the canvas color; and `bordered` closes a centered stack inside one thin border. `academic` is the conference-poster arrangement with superscript affiliations and a contact line. The gallery then moves to layouts that place an image beside, above, below, or behind the title.
 
 Every variant composes its title, subtitle, and metadata inside one `<mosaic-cell-title>` cell, and a native rule on that label reaches all three. Color it and the whole stack follows, which is what a light-on-dark title over a photograph needs; size it and the whole stack scales as a unit, which is how to ask for quiet type in a corner:
 
@@ -218,7 +218,7 @@ To reuse a layout for selected slides, bind it with `m.slide.with`:
   ),
 )
 
-#myslide(content: (header: [== Slide title], body: [Slide content]))
+#myslide(cells: (header: [== Slide title], body: [Slide content]))
 ```
 
 See the #link("../api/layouts.html")[Layouts API] for all variants, cell IDs, and arguments.

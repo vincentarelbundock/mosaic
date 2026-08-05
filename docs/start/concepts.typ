@@ -13,15 +13,18 @@ On this website, we will refer to the different components of a slide deck in th
 - *Slide*: one unit of a presentation.
 - *Deck*: a sequence of slides.
 - *Cell*: a named area that holds content.
-- *Grid*: named cells arranged with horizontal and vertical splits.
-- *Split*: a horizontal or vertical division between cells.
+- *Grid*: the arrangement of cells you build yourself, with horizontal and vertical splits.
+- *Split*: a horizontal or vertical division between cells, built with `columns` or `rows`.
 - *Track*: the width or height assigned to one child of a split.
 - *Inset*: space between a cell's edge and its content.
-- *Background*: content drawn behind the content grid across the full slide.
-- *Foreground*: content drawn over the content grid across the full slide.
-- *Layout*: a ready-made slide arrangement with a grid and, when needed, built-in content or decoration.
+- *Plane*: a full-slide layer drawn outside the grid. Every slide has two.
+- *Background*: the plane drawn behind the grid.
+- *Foreground*: the plane drawn over the grid.
+- *Layout*: a grid Mosaic already built for a familiar slide kind, supplying fixed content or decoration when that kind needs it.
 - *Variant*: a named alternative arrangement offered by a layout.
+- *Component*: a reusable piece of slide content such as a callout, quote, or badge.
 - *Theme*: a coordinated set of colors, text styles, and layouts.
+- *Step*: one stage of a slide's timed build. Each step renders as its own frame.
 - *Frame*: one page of the compiled document; a slide with timed content spans several frames.
 
 = Anatomy of a slide deck
@@ -35,6 +38,6 @@ The grid is sandwiched between two full-slide planes. The *background* plane is 
 #html.elem("div", attrs: (class: "mosaic-diagram"), html.frame(slide-planes))
 #v(1em)\
 
-A *layout* is a ready-made slide design for a familiar slide kind such as a title or section. A layout provides a structural grid and may supply fixed content or limited structural decoration for that design. Each layout offers several named *variants*.
+Where a grid is the structure you build, a *layout* is one Mosaic has already built for a familiar slide kind. Mosaic ships layouts for titles, sections, ordinary content, and images; each offers several named *variants* of its arrangement.
 
 Every cell, the background, and the foreground is a native Typst layer, and each one carries a *label*: `<mosaic-cell-ID>`, `<mosaic-background>`, and `<mosaic-foreground>`. Ordinary Typst `show` and `set` rules can therefore style every part of a slide. See #link("../appearance/styling.html")[Styling cells] for a detailed tutorial.

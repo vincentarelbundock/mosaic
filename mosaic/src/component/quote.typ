@@ -1,10 +1,10 @@
 // Quotation treatment with optional attribution.
-#import "frame.typ": frame
+#import "card.typ": card
 #import "style.typ": component-tokens, deck-colors
 
 /// Creates a quotation treatment with optional attribution.
 ///
-/// The quotation sits in a lightly tinted `frame`; attribution and source share
+/// The quotation sits in a lightly tinted `card`; attribution and source share
 /// one right-aligned line beneath it, joined by a comma when both are present.
 ///
 /// ```typ
@@ -27,7 +27,7 @@
 /// )
 /// ```
 ///
-/// See `frame` for the list of roles and the accepted `style` keys.
+/// See `card` for the list of roles and the accepted `style` keys.
 ///
 /// -> content
 #let quote(
@@ -44,7 +44,7 @@
   /// `warning`, `danger`, or `takeaway`.
   /// -> str
   role: "neutral",
-  /// Partial style overrides passed through to `frame`, with the keys `fill`,
+  /// Partial style overrides passed through to `card`, with the keys `fill`,
   /// `stroke`, `radius`, `inset`, `align`, and `text`.
   /// -> dictionary
   style: (:),
@@ -54,7 +54,7 @@
   // color reads as the same faint lift in either direction. Pass `fill` in
   // `style` to replace it outright.
   let tint = deck-colors().text
-  frame(
+  card(
     role: role,
     style: (
       fill: tint.transparentize(component-tokens.quote-tint),

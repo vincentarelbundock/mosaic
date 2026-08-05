@@ -39,7 +39,7 @@
 
 The #link("first-deck.html")[first deck] used `==` headings to separate content into standard slides. For a custom composition, write a slide with `m.slide` and name its cells by purpose, such as `header`, `body`, `footer`, `aside`, or `notes`. This is *semantic* structure: content and styling refer to what each cell means instead of where it appears.
 
-Build a semantic slide in three separate layers: define its named grid, assign content to those names with `content:`, and style the labeled cells with native Typst rules. The same slide grows through each step below.
+Build a semantic slide in three separate layers: define its named grid, assign content to those names with `cells:`, and style the labeled cells with native Typst rules. The same slide grows through each step below.
 
 = One named cell
 
@@ -50,7 +50,7 @@ Start with one named cell and pass it to `slide` as the layout.
 
 #m.slide(
   layout: single,
-  content: (main: [A semantic slide starts with one named cell.]),
+  cells: (main: [A semantic slide starts with one named cell.]),
 )
 ```
 
@@ -58,14 +58,14 @@ Start with one named cell and pass it to `slide` as the layout.
 
 = Split the grid
 
-`m.grids.h` places cells side by side. Each key in `content:` matches one cell ID.
+`m.grids.columns` places cells side by side. Each key in `cells:` matches one cell ID.
 
 ```typ
-#let columns = m.grids.h("main", "aside")
+#let split = m.grids.columns("main", "aside")
 
 #m.slide(
-  layout: columns,
-  content: (
+  layout: split,
+  cells: (
     main: [The main argument],
     aside: [Supporting evidence],
   ),
@@ -76,20 +76,20 @@ Start with one named cell and pass it to `slide` as the layout.
 
 = Nest splits and size tracks
 
-Splits nest directly: `v` stacks the sidebar cells, `t` assigns their proportions, and `h` combines the sidebar with the main cell.
+Splits nest directly: `rows` stacks the sidebar cells, `track` assigns their proportions, and `columns` combines the sidebar with the main cell.
 
 ```typ
-#let composition = m.grids.h(
-  m.grids.t(2fr, "main"),
-  m.grids.t(1fr, m.grids.v(
-    m.grids.t(2fr, "notes"),
-    m.grids.t(1fr, "source"),
+#let composition = m.grids.columns(
+  m.grids.track(2fr, "main"),
+  m.grids.track(1fr, m.grids.rows(
+    m.grids.track(2fr, "notes"),
+    m.grids.track(1fr, "source"),
   )),
 )
 
 #m.slide(
   layout: composition,
-  content: (
+  cells: (
     main: [The main argument],
     notes: [Two parts notes],
     source: [One part source],
@@ -101,12 +101,12 @@ Splits nest directly: `v` stacks the sidebar cells, `t` assigns their proportion
 
 = Add content
 
-The grid remains unchanged while the `content:` dictionary receives ordinary Typst markup: headings, lists, emphasis, figures, equations, or any custom content.
+The grid remains unchanged while the `cells:` dictionary receives ordinary Typst markup: headings, lists, emphasis, figures, equations, or any custom content.
 
 ```typ
 #m.slide(
   layout: composition,
-  content: (
+  cells: (
     main: [
       == Composition
 

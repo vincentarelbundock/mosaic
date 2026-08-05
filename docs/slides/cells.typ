@@ -6,14 +6,14 @@
 
 #title()
 
-A slide accepts cell content in two distinct forms. Use positional content blocks (`[...][...]`) for a short grid whose traversal order is obvious, or use the named `content:` dictionary to assign content by cell ID. Do not mix the two forms in one slide.
+A slide accepts cell content in two distinct forms. Use positional content blocks (`[...][...]`) for a short grid whose traversal order is obvious, or use the named `cells:` dictionary to assign content by cell ID. Do not mix the two forms in one slide.
 
 = Positional content with `[][]`
 
-Place content blocks directly after the `m.slide(...)` call. Each pair of brackets is one positional body: `[a][b][c]` supplies three bodies. Mosaic matches them to cell IDs in source order, left to right within `m.grids.h`, top to bottom within `m.grids.v`, and recursively through nested grids.
+Place content blocks directly after the `m.slide(...)` call. Each pair of brackets is one positional body: `[a][b][c]` supplies three bodies. Mosaic matches them to cell IDs in source order, left to right within `m.grids.columns`, top to bottom within `m.grids.rows`, and recursively through nested grids.
 
 ```typ
-#m.slide(layout: m.grids.h("a", "b", "c"))[a][b][c]
+#m.slide(layout: m.grids.columns("a", "b", "c"))[a][b][c]
 ```
 
 #embedded-example(
@@ -25,9 +25,9 @@ Place content blocks directly after the `m.slide(...)` call. Each pair of bracke
 
 This compact form is especially useful for a one-cell slide. In a larger or reusable grid, positional meaning can become hard to see after the grid changes.
 
-= Named content with `content:`
+= Named content with `cells:`
 
-Pass a dictionary to the named `content:` argument to associate each body with an explicit cell ID. Assignment then remains independent of the grid's traversal order. In the example below the same IDs also anchor the styling: one `show` rule per cell label tints each cell, which is why the grid structure stays visible in the rendered slide.
+Pass a dictionary to the named `cells:` argument to associate each body with an explicit cell ID. Assignment then remains independent of the grid's traversal order. In the example below the same IDs also anchor the styling: one `show` rule per cell label tints each cell, which is why the grid structure stays visible in the rendered slide.
 
 #embedded-example(
   calepin.elements.gallery,
@@ -36,11 +36,11 @@ Pass a dictionary to the named `content:` argument to associate each body with a
   title: "Three bodies assigned explicitly by cell ID",
 )
 
-The cell ID connects all three layers: `m.grids.cell("body")` defines the cell, `content: (body: [...])` fills it, and `label("mosaic-cell-body")` styles it. Content-bearing cells are optional and resolve to empty content when omitted; unknown IDs are errors.
+The cell ID connects all three layers: `m.grids.cell("body")` defines the cell, `cells: (body: [...])` fills it, and `label("mosaic-cell-body")` styles it. Content-bearing cells are optional and resolve to empty content when omitted; unknown IDs are errors.
 
 = Fixed cell content
 
-When a grid owns fixed content such as an image or logo, put it directly on the cell. Fixed cell content needs no positional body or `content:` entry:
+When a grid owns fixed content such as an image or logo, put it directly on the cell. Fixed cell content needs no positional body or `cells:` entry:
 
 ```typ
 #m.grids.cell("logo", content: image("logo.svg"))

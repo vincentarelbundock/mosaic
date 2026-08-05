@@ -91,7 +91,7 @@
 
 #mosaic.slide(layout: mosaic.layouts.title(
   title: [Models, evidence, and public decisions],
-  variant: "frame",
+  variant: "bordered",
   subtitle: [Annual Research Lecture],
   authors: (mosaic.layouts.author([Maya Thompson], affiliations: (eis,)),),
   date: [2027],

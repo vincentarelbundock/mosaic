@@ -19,16 +19,16 @@
 
 // Slide 1
 
-#m.slide(layout: m.grids.h("a", "b", "c"))[a][b][c]
+#m.slide(layout: m.grids.columns("a", "b", "c"))[a][b][c]
 
 // Slide 2
 
-#m.slide(layout: m.grids.v("a", "b"))[a][b]
+#m.slide(layout: m.grids.rows("a", "b"))[a][b]
 
 // Slide 3
 
-#m.slide(layout: m.grids.v(
+#m.slide(layout: m.grids.rows(
   "a",
-  m.grids.h("b", "c"),
+  m.grids.columns("b", "c"),
   "d",
 ))[a][b][c][d]

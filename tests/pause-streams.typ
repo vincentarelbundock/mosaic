@@ -11,18 +11,16 @@
       FIXED STREAM SECOND #m.note[FIXED SECOND NOTE]
     ],
   ),
-  content: (
-    background: [
-      BACKGROUND STREAM FIRST
-      #m.steps.pause
-      BACKGROUND STREAM SECOND
-    ],
-    foreground: [
-      FOREGROUND STREAM FIRST
-      #m.steps.pause
-      FOREGROUND STREAM SECOND
-    ],
-  ),
+  background: [
+    BACKGROUND STREAM FIRST
+    #m.steps.pause
+    BACKGROUND STREAM SECOND
+  ],
+  foreground: [
+    FOREGROUND STREAM FIRST
+    #m.steps.pause
+    FOREGROUND STREAM SECOND
+  ],
 )
 
 #context {

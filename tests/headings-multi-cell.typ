@@ -1,7 +1,7 @@
 #import "@local/mosaic:0.0.1" as mosaic
 
 #show: mosaic.setup.with(
-  layouts: (content: mosaic.grids.h("header", "body")),
+  layouts: (content: mosaic.grids.columns("header", "body")),
 )
 
 == Automatic content layout

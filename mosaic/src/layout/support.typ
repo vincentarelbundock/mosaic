@@ -1,5 +1,5 @@
 // Shared content and surface primitives for layout resolvers.
-#import "../grid/constructors.typ": styled-cell, t
+#import "../grid/constructors.typ": styled-cell, track
 #import "../component/image.typ": image as mosaic-image
 #import "core.typ": validate-image
 
@@ -59,7 +59,7 @@
 #let track-children(nodes, tracks) = if tracks == auto {
   nodes
 } else {
-  nodes.zip(tracks).map(((node, size)) => t(size, node))
+  nodes.zip(tracks).map(((node, size)) => track(size, node))
 }
 
 #let image-path(value) = if type(value) != str {

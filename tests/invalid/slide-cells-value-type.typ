@@ -3,5 +3,5 @@
 #show: mosaic.setup
 #mosaic.slide(
   layout: mosaic.grids.cell("body"),
-  content: (body: [Body], sidebar: [Nope]),
+  cells: (body: 5),
 )

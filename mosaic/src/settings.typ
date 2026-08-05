@@ -63,7 +63,7 @@
 // fails the compile, so a build stops instead of shipping a clipped slide.
 #let overflow-modes = ("off", "warn", "error")
 
-#let default-content = (:)
+#let default-cells = (:)
 
 #let default-deck = (
   title: none,
@@ -120,18 +120,18 @@
   base + overrides
 }
 
-#let validate-content(value) = {
+#let validate-cells(value) = {
   if type(value) != dictionary {
-    fail("setup content must be a dictionary")
+    fail("setup cells must be a dictionary")
   }
   let result = (:)
   for (id, item) in value {
     if id == "" {
-      fail("setup content cell id must be non-empty")
+      fail("setup cells cell id must be non-empty")
     }
     if item != none and type(item) not in (content, str) {
       fail(
-        "setup content for " + repr(id)
+        "setup cells for " + repr(id)
           + " must be content, a string, or none",
       )
     }
@@ -140,9 +140,20 @@
   result
 }
 
+// A deck plane is the fallback every slide inherits unless it declares its own.
+// Validated here so the runtime can read it without re-proving anything.
+#let validate-plane-default(value, name) = {
+  if value != none and type(value) not in (content, str) {
+    fail("setup " + name + " must be content, a string, or none")
+  }
+  if type(value) == str { [#value] } else { value }
+}
+
 #let make-settings(
   colors: default-colors,
-  content: default-content,
+  cells: default-cells,
+  background: none,
+  foreground: none,
   deck: default-deck,
   spacing: (:),
   notes: (:),
@@ -153,14 +164,18 @@
   let roles = validate-roles(roles)
   // Every slide layout can consult the header default, so it is injected
   // here, where the other field defaults already live.
-  let content = (header: none) + validate-content(content)
+  let cells = (header: none) + validate-cells(cells)
+  let background = validate-plane-default(background, "background")
+  let foreground = validate-plane-default(foreground, "foreground")
   let deck = make-deck(..deck)
   let spacing = merge-record(default-spacing, spacing, "spacing")
   let notes = merge-record(default-notes, notes, "notes")
   _ = validate-choice(overflow, overflow-modes, "setup overflow")
   (
     colors: colors,
-    content: content,
+    cells: cells,
+    background: background,
+    foreground: foreground,
     deck: deck,
     spacing: spacing,
     notes: notes,
@@ -179,7 +194,8 @@
   if (
     type(value) != dictionary
       or value.keys().sorted() != (
-        "colors", "content", "deck", "notes", "overflow", "roles", "spacing",
+        "background", "cells", "colors", "deck", "foreground", "notes",
+        "overflow", "roles", "spacing",
       )
   ) {
     fail("invalid internal presentation settings")

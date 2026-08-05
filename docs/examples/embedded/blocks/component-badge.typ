@@ -2,16 +2,16 @@
 
 #show: m.setup
 
-== `components.tag()`
+== `components.badge()`
 
 #align(center + horizon)[
-  #m.components.tag(
+  #m.components.badge(
     role: "information",
     radius: 0pt,
     style: (text: (size: 1.35em, weight: "bold")),
   )[Square corners]
   #h(1em)
-  #m.components.tag(
+  #m.components.badge(
     role: "information",
     radius: 999pt,
     style: (text: (size: 1.35em, weight: "bold")),

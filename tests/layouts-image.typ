@@ -8,26 +8,26 @@
 // the header cell.
 #mosaic.slide(
   layout: mosaic.layouts.image(photo),
-  content: (header: [== Figure, no caption]),
+  cells: (header: [== Figure, no caption]),
 )
 
 #mosaic.slide(
   layout: mosaic.layouts.image(photo, caption: [A captioned figure]),
-  content: (header: [== Figure with caption]),
+  cells: (header: [== Figure with caption]),
 )
 
 // Every directional variant pairs a full-bleed picture with header and body.
 #for side in ("left", "right", "top", "bottom") {
   mosaic.slide(
     layout: mosaic.layouts.image(photo, variant: side),
-    content: (header: [== Image #side], body: [Body beside the picture.]),
+    cells: (header: [== Image #side], body: [Body beside the picture.]),
   )
 }
 
 // Directional tracks are two native sizes in visual order.
 #mosaic.slide(
   layout: mosaic.layouts.image(photo, variant: "left", tracks: (2fr, 1fr)),
-  content: (header: [== Weighted tracks], body: [Narrow text column.]),
+  cells: (header: [== Weighted tracks], body: [Narrow text column.]),
 )
 
 // `full` composes into a single body cell with the picture behind it.
@@ -39,7 +39,7 @@
     ),
     variant: "full",
   ),
-  content: (body: [== Over the picture]),
+  cells: (body: [== Over the picture]),
 )
 
 // An omitted body gives a bare full-bleed slide.
@@ -50,7 +50,7 @@
 // `fit` overrides the per-variant default.
 #mosaic.slide(
   layout: mosaic.layouts.image(photo, variant: "left", fit: "contain"),
-  content: (header: [== Contained], body: [Uncropped picture.]),
+  cells: (header: [== Contained], body: [Uncropped picture.]),
 )
 
 // The layout is explicit-only: it is not part of the configurable set that
@@ -66,14 +66,14 @@
   layout: "image",
   image: photo,
   caption: [Selected by name],
-  content: (header: [== Named selection]),
+  cells: (header: [== Named selection]),
 )
 
 #mosaic.slide(
   layout: "image",
   variant: "full",
   image: photo,
-  content: (body: [== Named selection, full bleed]),
+  cells: (body: [== Named selection, full bleed]),
 )
 
 // A scalar track sizes the picture and is side-independent: the same value
@@ -84,6 +84,6 @@
     variant: side,
     image: photo,
     tracks: 2fr,
-    content: (header: [== Scalar track #side], body: [Companion takes 1fr.]),
+    cells: (header: [== Scalar track #side], body: [Companion takes 1fr.]),
   )
 }

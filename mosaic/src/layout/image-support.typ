@@ -1,6 +1,6 @@
 // Private image composition shared by title and section layouts.
 #import "../shared.typ": fail
-#import "../grid/constructors.typ": styled-cell, h, v
+#import "../grid/constructors.typ": styled-cell, columns, rows
 #import "../grid/model.typ": is-track-size
 #import "core.typ": validate-image
 #import "support.typ": track-children, image-content
@@ -130,7 +130,7 @@
   } else {
     (body, image)
   }
-  let split = if variant in ("left", "right") { h } else { v }
+  let split = if variant in ("left", "right") { columns } else { rows }
   split(
     gutter: gutter,
     ..track-children(children, directional-tracks(tracks, image-first)),

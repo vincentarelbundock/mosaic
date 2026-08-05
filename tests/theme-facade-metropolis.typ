@@ -6,12 +6,12 @@
 )
 
 #assert(expected.all(name => name in m))
-#assert(("cell", "h", "t", "v").all(name => name in m.grids))
+#assert(("cell", "columns", "rows", "track").all(name => name in m.grids))
 #assert(("author", "content", "section", "title").all(name => name in m.layouts))
-#assert(("on", "reduce", "replace", "reveal").all(name => name in m.steps))
+#assert(("drawing", "on", "replace", "reveal").all(name => name in m.steps))
 #assert((
-  "callout", "divider", "figure", "frame", "image", "progress",
-  "quote", "tag",
+  "badge", "callout", "card", "divider", "figure", "image",
+  "progress", "quote",
 ).all(name => name in m.components))
 #assert(type(m.layouts.content()) == dictionary)
 #assert(type(m.layouts.title(title: [No-author title])) == dictionary)
@@ -23,7 +23,7 @@
 
 #m.slide(
   layout: m.layouts.content(),
-  content: (header: [Explicit header], body: [Explicit body]),
+  cells: (header: [Explicit header], body: [Explicit body]),
 )
 
 = Automatic section

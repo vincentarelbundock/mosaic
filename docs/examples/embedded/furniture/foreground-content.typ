@@ -10,7 +10,7 @@
 )
 
 #m.slide(
-  content: (foreground: [
+  foreground: [
     #place(
       top + right,
       dx: -1.35em,
@@ -28,7 +28,7 @@
       dy: -2em,
       text(size: 1.25em, weight: "bold")[Any content],
     )
-  ]),
+  ],
 )[
   #block(width: 52%)[
     == Place arbitrary objects

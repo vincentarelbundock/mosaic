@@ -9,7 +9,7 @@
   layouts: (
     content: m.layouts.content(variant: "header-body"),
     section: m.layouts.section(variant: "baseline")),
-  content: (foreground: align(bottom, m.components.progress(variant: "line"))),
+  foreground: align(bottom, m.components.progress(variant: "line")),
 )
 
 // The built-in title layout reads the identity declared in setup, so this

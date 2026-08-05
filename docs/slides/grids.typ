@@ -10,9 +10,9 @@ Every `m.slide()` uses a layout. You can select a #link("layouts.html")[built-in
 
 Each example below outlines its cells so the structure is visible. Those outlines are nothing but ordinary label rules, described in #link("../appearance/styling.html")[Styling cells]: they open every listing and are no part of the grid, which is the `#m.grids` tree alone.
 
-= Grids with `h()` and `v()`
+= Grids with `columns()` and `rows()`
 
-Describe a custom grid by splitting the available space. `m.grids.h` places cells side by side; `m.grids.v` stacks them. Each string is a cell ID. Import Mosaic under a short alias so native Typst `h()` and `v()` remain available:
+Describe a custom grid by splitting the available space. `m.grids.columns` places cells side by side; `m.grids.rows` stacks them. Each string is a cell ID. Import Mosaic under a short alias so the grid constructors stay namespaced and native Typst `columns()` remains available:
 
 ```typ
 #import "@local/mosaic:0.0.1" as m
@@ -29,7 +29,7 @@ Assign the grid to a binding, then pass it to `m.slide` through `layout:`. The s
   show-captions: false,
 )
 
-Use `m.grids.v` for equal-height rows instead:
+Use `m.grids.rows` for equal-height rows instead:
 
 #embedded-example(
   calepin.elements.gallery,
@@ -42,7 +42,7 @@ Use `m.grids.v` for equal-height rows instead:
 
 = Nesting
 
-Any child of a split can be another grid, so a region can carry its own division. Here the outer `h` gives `a` the left half and stacks `b` and `c` on the right:
+Any child of a split can be another grid, so a region can carry its own division. Here the outer `columns` gives `a` the left half and stacks `b` and `c` on the right:
 
 #embedded-example(
   calepin.elements.gallery,
@@ -53,7 +53,7 @@ Any child of a split can be another grid, so a region can carry its own division
   show-captions: false,
 )
 
-Two stacked `h` splits make a 2 x 2 arrangement:
+Two stacked `columns` splits make a 2 x 2 arrangement:
 
 #embedded-example(
   calepin.elements.gallery,
@@ -64,7 +64,7 @@ Two stacked `h` splits make a 2 x 2 arrangement:
   show-captions: false,
 )
 
-Splits nest to any depth. Read a grid from the outside inward: choose the largest split first, then replace any child that needs another division with a nested `h` or `v`. Keep descriptive IDs and indentation so the tree stays visible in source:
+Splits nest to any depth. Read a grid from the outside inward: choose the largest split first, then replace any child that needs another division with a nested `columns` or `rows`. Keep descriptive IDs and indentation so the tree stays visible in source:
 
 #embedded-example(
   calepin.elements.gallery,
@@ -77,7 +77,7 @@ Splits nest to any depth. Read a grid from the outside inward: choose the larges
 
 = Grid sizes (tracks)
 
-By default, every direct child of `m.grids.h` or `m.grids.v` receives a `1fr` track. Wrap a child with `m.grids.t` when it needs another size:
+By default, every direct child of `m.grids.columns` or `m.grids.rows` receives a `1fr` track. Wrap a child with `m.grids.track` when it needs another size:
 
 #embedded-example(
   calepin.elements.gallery,

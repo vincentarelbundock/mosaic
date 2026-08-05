@@ -2,25 +2,28 @@
 
 #let settings = make-settings()
 #assert(settings.keys().sorted() == (
-  "colors", "content", "deck", "notes", "overflow", "roles", "spacing",
+  "background", "cells", "colors", "deck", "foreground", "notes", "overflow",
+  "roles", "spacing",
 ))
 // `auto` means the semantic roles follow the deck's own colors. A theme with a
 // component look of its own supplies a complete palette instead.
 #assert(settings.roles == auto)
 // The header default rides in the settings record itself, so every reader of
-// `settings.content` sees the same optional-header contract.
-#assert(settings.content == (header: none))
-#let with-content = make-settings(content: (
-  footer: "Footer",
+// `settings.cells` sees the same optional-header contract.
+#assert(settings.cells == (header: none))
+#let with-cells = make-settings(
+  cells: (footer: "Footer", empty: none),
   background: "Background",
   foreground: [Foreground],
-  empty: none,
-))
-#assert(type(with-content.content.footer) == content)
-#assert(with-content.content.footer == [Footer])
-#assert(with-content.content.background == [Background])
-#assert(with-content.content.foreground == [Foreground])
-#assert(with-content.content.empty == none)
+)
+#assert(type(with-cells.cells.footer) == content)
+#assert(with-cells.cells.footer == [Footer])
+#assert(with-cells.cells.empty == none)
+// The planes are their own settings fields, not entries in the cell map.
+#assert(with-cells.background == [Background])
+#assert(with-cells.foreground == [Foreground])
+#assert(settings.background == none)
+#assert(settings.foreground == none)
 #assert(settings.deck == (title: none, subtitle: none, authors: (), date: none))
 #assert(settings.colors.keys().sorted() == (
   "accent", "canvas", "line", "muted", "surface", "text",

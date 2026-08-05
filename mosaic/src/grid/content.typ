@@ -40,16 +40,16 @@
     for (id, value) in named {
       if id not in all-ids {
         if value == none { continue }
-        fail("slide content contains unknown cell id " + repr(id))
+        fail("slide cells contains unknown cell id " + repr(id))
       }
       // A fixed-content cell is a different case: the cell does exist, so
       // `none` there reads as "blank it", which the layout cannot honor.
       // Keeping the error surfaces that rather than silently ignoring it.
       if id not in body-ids {
-        fail("slide content cannot supply fixed-content cell " + repr(id))
+        fail("slide cells cannot supply fixed-content cell " + repr(id))
       }
       if value != none and type(value) != content {
-        fail("slide content for " + repr(id) + " must be content or none")
+        fail("slide cells for " + repr(id) + " must be content or none")
       }
       explicit.insert(id, if value == none { [] } else { value })
     }

@@ -10,14 +10,14 @@
 #show label("mosaic-cell-left"): set align(center + horizon)
 #show label("mosaic-cell-right"): set align(center + horizon)
 
-#let comparison = m.grids.h(
-  m.grids.v("heading", "left"),
+#let comparison = m.grids.columns(
+  m.grids.rows("heading", "left"),
   "right",
 )
 
 #m.slide(
   layout: comparison,
-  content: (
+  cells: (
     heading: [Heading],
     left: [Left argument],
     right: [Right argument],

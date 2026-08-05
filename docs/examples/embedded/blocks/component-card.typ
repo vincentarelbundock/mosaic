@@ -2,10 +2,10 @@
 
 #show: m.setup
 
-== `components.frame()`
+== `components.card()`
 
 #align(center + horizon)[
-  #m.components.frame(
+  #m.components.card(
     role: "information",
     width: 75%,
     style: (radius: 10pt, inset: 1.2em),
@@ -16,8 +16,8 @@
   ]
 ]
 
-#m.slide(layout: m.grids.h("a", "b"))[
-  #m.components.frame(
+#m.slide(layout: m.grids.columns("a", "b"))[
+  #m.components.card(
     width: 100%,
     height: 100%,
     style: (radius: 12pt, inset: 1em),
@@ -25,7 +25,7 @@
     #lorem(24)
   ]
 ][
-  #m.components.frame(
+  #m.components.card(
     width: 100%,
     height: 100%,
     style: (radius: 12pt, inset: 1em),

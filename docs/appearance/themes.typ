@@ -24,7 +24,7 @@ Five themes ship inside the package under `m.themes`: `light`, `dark`, `metropol
 == First slide
 #m.slide(
   layout: m.layouts.section(),
-  content: (section: [A new chapter]),
+  cells: (section: [A new chapter]),
 )
 ```
 

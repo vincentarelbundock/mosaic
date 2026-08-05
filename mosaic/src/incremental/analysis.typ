@@ -30,7 +30,7 @@
   }
   if is-temporal(value) {
     let timed = value.value
-    if timed.kind == "temporal-reducer" {
+    if timed.kind == "temporal-drawing" {
       return max-step(timed.args)
     }
     let nested = if timed.kind == "temporal-on" {

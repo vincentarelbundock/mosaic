@@ -53,13 +53,11 @@ Set the `content` layout in `m.setup`. Explicit content slides and slides create
   layouts: (
     content: m.layouts.content(variant: "header-body"),
   ),
-  content: (
-    foreground: [
-      #place(bottom + right, dx: -1.25em, dy: -0.35em)[
-        #m.components.progress(variant: "1")
-      ]
-    ],
-  ),
+  foreground: [
+    #place(bottom + right, dx: -1.25em, dy: -0.35em)[
+      #m.components.progress(variant: "1")
+    ]
+  ],
 )
 
 // Invert the header bar for every content-layout slide.
@@ -158,9 +156,9 @@ Typst writes these as internal PDF destinations, so Mosaic does not need a separ
 ```typ
 #show: m.setup
 
-#let grid = m.grids.v(
+#let grid = m.grids.rows(
   m.grids.cell("a", inset: 1.5em),
-  m.grids.h(
+  m.grids.columns(
     m.grids.cell("b", inset: 1.5em),
     m.grids.cell("c", inset: 1.5em),
   ),
@@ -228,86 +226,49 @@ A fitted block cannot overflow, so it no longer appears in the overflow records.
 
 = How does Mosaic compare to Touying?
 
-#link("https://github.com/touying-typ/touying")[Touying] and Mosaic both create
-presentations in Typst. Touying centers its workflow on themes and their
-configuration options. Mosaic centers its workflow on named grid cells and
-native Typst `set` and `show` rules.
+#link("https://github.com/touying-typ/touying")[Touying] is the most established Typst presentation framework. It is mature and well documented, it has powerful animation support, and the largest collection of themes, including many contributed by its community.
+
+In that context, it is natural to ask how it differs from Mosaic. The table below summarizes some of the core philosophical differences between the two packages, and the rest of this section explains where they come from.
 
 #table(
   columns: (auto, 1fr, 1fr),
   inset: 0.5em,
   table.header([Concern], [Mosaic], [Touying]),
-  [Layout], [Composable grid trees], [Theme-defined structures],
-  [Styling], [Native Typst rules], [Framework configuration],
-  [Custom slides], [Ordinary functions and grids], [Theme methods receiving framework state],
-  [Page control], [Native `set page`], [`config-page`; direct `set page` reserved],
+  [Layout], [Built-in layouts or custom grid], [The shape specified by the theme],
+  [Slide cells], [Named and ordered], [Ordered],
+  [Styling], [The same `set` and `show` rules of any Typst document], [Framework-specific arguments passed to Touying functions],
+  [Custom slides], [An ordinary function], [Theme code that plugs into the framework],
+  [Settings], [Fixed once, when the deck starts], [Carried along, and any slide can change them],
+  [Themes], [Interchangeable; all offer the same commands], [Each brings its own commands],
+  [Size], [Around 30 commands and 19 setup options], [Around 150 commands and 110 options],
+  [Reveals], [Five commands], [A large animation system],
 )
 
-Touying is the most established Typst presentation framework. It works like
-LaTeX Beamer: you pick a theme, the theme decides what slides look like, and
-you adjust the result through the framework's configuration system. Colors,
-title and author information, and page settings each have their own
-configuration function, and the theme reads those values back when it draws
-headers, footers, and title slides:
+For an ordinary slide deck Touying and Mosaic are very similar. In both cases, you import the package, pick a theme, write headings, and get slides. The theme supplies the typography, the colors, the title slide, and the section dividers. Like Touying, Mosaic ships layouts for the slides most decks need: a title, a section divider, a page of content, a full-bleed image, etc. The two packages start to diverge when a deck needs something that available themes do not provide.
+
+Touying is a framework, and the work goes through it. It exports roughly 150 commands and accepts about 110 configuration options.
+
+Changing something therefore starts with finding the option that controls it. The page background is an example: `set page` has no effect, because the framework overrides it, and the change goes through `config-page`. Within a slide, the `composer` argument determines how the body is divided, and it takes either a list of column widths or a function that arranges the pieces. The header, the footer, and the page belong to the theme, so changing them for one slide means overriding the theme, and a different layout means writing a slide function that receives the framework's settings, draws the header and footer, and passes the rest along. Touying's tutorial says the package "opts for functionality over simplicity" and recommends copying a built-in theme file and editing it.
+
+The settings are carried through the document, and any slide can modify them. The option functions accept names they do not recognize, so a misspelled option has no effect and reports no error. A theme is code and provides its own slide commands, so a deck that calls one theme's `focus-slide` does not compile under a theme without it.
+
+Mosaic, in contrast, is a thin layer on Typst. It has about thirty commands in eight groups, and `m.setup` takes nineteen options, read once when the deck starts and unchanged afterward. A slide is a grid of cells, each cell has a name, and those names are the only concept the package adds. Everything else is done with the `set` rules, `show` rules, and functions of the language itself:
 
 ```typ
-#show: metropolis-theme.with(
-  aspect-ratio: "16-9",
-  config-colors(primary: rgb("#1a6b8a")),
-  config-info(title: [My talk], author: [Author Name]),
-)
-```
+#import "@local/mosaic:0.0.1" as m
 
-This works well when a theme's options cover what you want. Enter your title
-and author once and every theme knows where to display them, so switching
-themes is often a one-line change. The cost is that each adjustment has its
-own framework mechanism to discover: a different page background means
-learning that `set page` is off limits (the framework resets it) and that
-page changes go through `config-page`, while changing colors partway through
-a deck means learning `touying-set-config`. The load grows most when you want
-a slide the theme did not anticipate. Small tweaks fit through configuration,
-but a genuinely different layout means writing a theme method that receives
-the framework's internal state (called `self`), builds the header and footer
-from it, and merges page settings before handing off. This is condensed from
-Touying's own theme tutorial:
-
-```typ
-#let slide(title: auto, ..args) = touying-slide-wrapper(self => {
-  let header(self) = {
-    show: components.cell.with(fill: self.colors.primary, inset: 1em)
-    utils.call-or-display(self, self.store.title)
-  }
-  self = utils.merge-dicts(self, config-page(header: header))
-  touying-slide(self: self, ..args)
-})
-```
-
-Writing this requires several Touying concepts at once: the `self` state,
-wrapper functions, configuration merging, and the utility helpers. The
-tutorial is upfront about it, saying Touying "opts for functionality over
-simplicity," and suggests that most users instead copy a built-in theme file
-and edit it.
-
-Mosaic also ships layouts and themes, and you can get beautiful, full-featured slides with little effort. But Mosaic's core is different than Touying's: any slide can be assembled from a grid of named cells and styled with the same `set` and `show` rules you would use in any Typst document. There is less to learn because Mosaic adds almost nothing of its own. After `m.setup`, styling is ordinary Typst; the one new idea is that every cell carries a label you can target with a rule:
-
-```typ
 #show: m.setup
 #set page(fill: rgb("#111827"))
 #set text(fill: white)
 #show label("mosaic-cell-header"): set text(size: 1.4em)
 ```
 
-If you know how `set` and `show` rules work in Typst, you already know how to
-style a Mosaic deck, including scoping a rule to a single slide. A one-off
-slide is just a slide with a different grid, and a reusable design is an
-ordinary function with no internal state to receive and nothing to register.
-The cell IDs are arbitrary names you choose; each one becomes a
-`mosaic-cell-ID` label that ordinary rules can target:
+Where you place a rule determines what it covers, as in any Typst document. When no built-in layout fits, you write the grid: rows split into columns, columns split into rows, for as long as the slide needs. A layout you want to reuse is a function:
 
 ```typ
 #let framed(title, body) = m.slide(
-  layout: m.grids.v("banner", "copy"),
-  content: (banner: title, copy: body),
+  layout: m.grids.rows("banner", "copy"),
+  cells: (banner: title, copy: body),
 )
 
 #show label("mosaic-cell-banner"): set text(size: 1.4em, weight: "bold")
@@ -316,14 +277,10 @@ The cell IDs are arbitrary names you choose; each one becomes a
 #framed([Results])[The body.]
 ```
 
-The same grid can become the configured `content` layout, which also drives
-every `==` heading slide. A Mosaic theme is a passive definition plus an exact
-facade and callable layout namespace; the bundled themes are copyable starting
-points (see #link("../appearance/themes.html")[Themes]).
+A Mosaic theme is a description of colors and layouts, and all themes provide the same commands, so changing a theme changes the appearance only. Both packages ship usable themes, and Mosaic's are meant to be copied and edited (see #link("../appearance/themes.html")[Themes]).
 
-Touying is a good fit when an existing theme already matches the presentation.
-Mosaic is a good fit when you want to compose and style slides directly.
-Mosaic's incremental commands were heavily influenced by Touying, and parts of
-its counter freezing and cell fitting are adapted from it. The
-#link("../acknowledgments.html")[Acknowledgments] page records those debts in
-full.
+Touying's reveals are more capable than Mosaic's. Besides `pause` and `meanwhile`, it can jump between marked points in a slide, repeat a slide with a counter the slide can read, animate equations, and reveal a CeTZ or Fletcher drawing one piece at a time. Mosaic has five commands for step-by-step content and no equivalent for animated drawings.
+
+Touying is a reasonable choice when an existing theme matches the presentation, or when the deck depends on its animations. Mosaic is a reasonable choice for building and styling slides directly in Typst.
+
+Mosaic's incremental commands were heavily influenced by Touying, and parts of its counter freezing and cell fitting are adapted from it. The #link("../acknowledgments.html")[Acknowledgments] page records those debts in full.

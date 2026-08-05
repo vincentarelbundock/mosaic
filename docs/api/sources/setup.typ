@@ -34,7 +34,7 @@
 ///
 /// *Partial overrides*
 ///
-/// `colors`, `content`, `spacing`, and `layouts` are all partial: keys you omit
+/// `colors`, `cells`, `spacing`, and `layouts` are all partial: keys you omit
 /// keep the active theme's value rather than reverting to a bare default. That
 /// is what lets a deck adjust one accent color or one layout without restating
 /// the theme.
@@ -100,11 +100,8 @@
   /// -> dictionary
   colors: (:),
   /// Partial fallback content keyed by cell ID, used whenever a slide leaves
-  /// that cell empty.
-  ///
-  /// - Ordinary keys name grid cells, for example `footer` or `body`.
-  /// - The reserved `background` and `foreground` keys configure the inherited
-  ///   full-slide planes.
+  /// that cell empty. Every key names a grid cell, for example `footer` or
+  /// `body`; the full-slide planes have their own options below.
   ///
   /// A slide's explicit content overrides these values, and `none` on the slide
   /// suppresses a configured default. Defaults targeting cells absent from a
@@ -112,13 +109,27 @@
   /// that have no footer.
   ///
   /// ```typ
-  /// content: (
-  ///   footer: align(right, mosaic.components.progress()),
-  ///   background: mosaic.components.image(path("paper.webp")),
-  /// )
+  /// cells: (footer: align(right, mosaic.components.progress()))
   /// ```
   /// -> dictionary
-  content: (:),
+  cells: (:),
+  /// The deck's background plane, drawn behind the grid on every slide. A slide
+  /// inherits it unless it passes its own `background:`, or `none` to suppress
+  /// it. The plane takes no space away from the grid.
+  ///
+  /// ```typ
+  /// background: mosaic.components.image(path("paper.webp"))
+  /// ```
+  /// -> content | str | none
+  background: none,
+  /// The deck's foreground plane, drawn over the grid on every slide. Ordinary
+  /// home for a logo, a slide number, or a progress indicator.
+  ///
+  /// ```typ
+  /// foreground: place(bottom + right, mosaic.components.progress())
+  /// ```
+  /// -> content | str | none
+  foreground: none,
   /// Partial overrides for the grid geometry the layouts measure with.
   /// Omitted keys keep the theme's value.
   ///
@@ -152,7 +163,7 @@
   ///
   /// Each value is either a deferred `mosaic.layouts.*` value or a low-level
   /// `mosaic.grids.*` tree. Note that this option is distinct from the
-  /// `content:` option above, which supplies inherited cell content rather than
+  /// `cells:` option above, which supplies inherited cell content rather than
   /// structure.
   ///
   /// ```typ

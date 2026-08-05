@@ -6,15 +6,13 @@
     title: m.layouts.title(title: [DEFAULT TITLE]),
     section: m.layouts.section(),
   ),
-  content: (
-    background: place(bottom + left)[SETUP BACKGROUND],
-    foreground: place(bottom + right)[SETUP FOREGROUND],
-  ),
+  background: place(bottom + left)[SETUP BACKGROUND],
+  foreground: place(bottom + right)[SETUP FOREGROUND],
 )
 
 #m.slide(layout: "title")
 
-#m.slide(content: (
+#m.slide(cells: (
   header: [EXPLICIT HEADER],
   body: [EXPLICIT BODY],
 ))

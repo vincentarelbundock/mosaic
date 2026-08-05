@@ -15,8 +15,7 @@
 
 #let record-field-keys = (
   "command-on": ("after", "before", "body", "kind", "mosaic", "range"),
-  "temporal-on": ("after", "before", "body", "kind", "mosaic", "range"),
-  "temporal-reducer": (
+  "temporal-drawing": (
     "args",
     "dim",
     "hide",
@@ -25,6 +24,7 @@
     "mosaic",
     "render",
   ),
+  "temporal-on": ("after", "before", "body", "kind", "mosaic", "range"),
   "temporal-replace": ("align", "bodies", "kind", "mosaic", "start"),
   "temporal-reveal": (
     "after",
@@ -41,7 +41,7 @@
   "temporal-on",
   "temporal-reveal",
   "temporal-replace",
-  "temporal-reducer",
+  "temporal-drawing",
 )
 
 // Returns the kind of a raw incremental record, or none when the value is not
@@ -353,7 +353,7 @@
 ///
 /// `on` and `reveal` work on content, which a drawing package such as CETZ or
 /// Fletcher does not produce: its nodes and edges are opaque command values
-/// that only mean something to its own renderer. `reduce` bridges the two.
+/// that only mean something to its own renderer. `drawing` bridges the two.
 /// Mosaic resolves the step ranges, drops what this frame does not show, passes
 /// what remains through `hide` or `dim`, and hands the surviving array to
 /// `render`.
@@ -364,7 +364,7 @@
 /// ```typ
 /// #import "@preview/fletcher:0.5.8" as fletcher
 ///
-/// #let diagram = mosaic.steps.reduce.with(
+/// #let diagram = mosaic.steps.drawing.with(
 ///   render: fletcher.diagram,
 ///   hide: fletcher.hide,
 /// )
@@ -384,7 +384,7 @@
 /// `render`, which is how `spacing:` above reaches `fletcher.diagram`.
 ///
 /// -> content
-#let reduce(
+#let drawing(
   /// Draws the frame. Called as `render(..named, commands)` with the named
   /// arguments given here and the array of commands this frame keeps. Usually
   /// the library's own top-level renderer.
@@ -405,16 +405,16 @@
   ..args,
 ) = {
   if type(render) != function {
-    fail("reduce render must be a function")
+    fail("drawing render must be a function")
   }
   if type(hide) != function {
-    fail("reduce hide must be a function")
+    fail("drawing hide must be a function")
   }
   if dim != none and type(dim) != function {
-    fail("reduce dim must be none or a function")
+    fail("drawing dim must be none or a function")
   }
   wrapper(
-    "temporal-reducer",
+    "temporal-drawing",
     render: render,
     hide: hide,
     dim: dim,

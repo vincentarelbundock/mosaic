@@ -1,8 +1,8 @@
 // Curated public presentation-component namespace.
 // Each component lives in its own module in this directory.
-#import "frame.typ": frame
+#import "card.typ": card
 #import "callout.typ": callout
-#import "tag.typ": tag
+#import "badge.typ": badge
 #import "quote.typ": quote
 #import "divider.typ": divider
 #import "progress.typ": progress

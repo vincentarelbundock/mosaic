@@ -26,13 +26,13 @@ HEADING SLIDE BODY
 NOTE-FREE SLIDE BODY
 
 #m.slide(
-  layout: m.grids.h("left", "right"),
-  content: (
+  layout: m.grids.columns("left", "right"),
+  cells: (
     left: [#m.note[FIRST CELL NOTE] FIRST CELL],
     right: [#m.note[SECOND CELL NOTE] SECOND CELL],
-    background: m.note[BACKGROUND NOTE],
-    foreground: m.note[FOREGROUND NOTE],
   ),
+  background: m.note[BACKGROUND NOTE],
+  foreground: m.note[FOREGROUND NOTE],
 )
 
 #context {

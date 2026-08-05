@@ -30,8 +30,8 @@ follow them.
   a theme's `apply` callback is the public face of the family
   (`apply-state`).
 - `make-x` is for internal constructors only; public constructors are bare
-  nouns (`cell`, `frame`, `divider`) or the short track forms (`t`, `h`, `v`,
-  `on`).
+  nouns (`cell`, `card`, `divider`, `columns`, `rows`, `track`) or short
+  command words (`on`).
 - `default-x` names a default value. Never `x-defaults`.
 
 ## Vocabulary
@@ -52,7 +52,11 @@ exists.
   a validator boundary is a `value`.
 - Content: `body` is content the caller writes, `content` the cell field or
   native type, `value` an unvalidated argument at a validator boundary,
-  `child`/`children` tree structure, `item` a list element.
+  `child`/`children` tree structure, `item` a list element. A map of bodies
+  keyed by cell id is `cells`, never `content`: the public `slide(cells:)` and
+  `setup(cells:)` arguments say what their keys are. The two planes are
+  parameters of their own (`background:`, `foreground:`) and never entries in
+  `cells`, because a plane is not a grid leaf.
 - Identity: `id` is a user-chosen instance identifier (cells, planes), `key` a
   dictionary or state key, `name` the name of a kind of thing (layout, role,
   variant), `kind` the internal node discriminant, `variant` a preset look,
@@ -93,4 +97,5 @@ exists.
   parameters, the rest forwarded through a `..native` sink.
 - Public exports must not shadow a native function with something that is not
   one. That is why the grid namespace is `grids` and the pill component is
-  `tag`.
+  `badge`. The namespace is what lets `grids.columns` and `grids.rows` carry
+  the native words without taking them at the top level.

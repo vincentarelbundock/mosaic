@@ -16,7 +16,7 @@ Most decks repeat the same source, event name, or organization in every ordinary
 
 ```typ
 #show: m.setup.with(
-  content: (
+  cells: (
     footer: [Mosaic · Engineering],
   ),
 )
@@ -35,7 +35,7 @@ Named content can likewise omit `footer`. An explicit value overrides the deck d
 ```typ
 #m.slide(
   layout: m.layouts.content(variant: "header-body-footer"),
-  content: (
+  cells: (
     header: [APPENDIX],
     body: [Supporting details],
     footer: none,
@@ -61,9 +61,7 @@ A recurring progress line along the bottom edge is one foreground entry in setup
 
 ```typ
 #show: m.setup.with(
-  content: (
-    foreground: align(bottom, m.components.progress(variant: "line")),
-  ),
+  foreground: align(bottom, m.components.progress(variant: "line")),
 )
 ```
 

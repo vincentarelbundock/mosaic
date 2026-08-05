@@ -7,7 +7,7 @@
   rgb("#E69F00"), rgb("#56B4E9"), rgb("#009E73"), rgb("#F0E442"),
   rgb("#0072B2"), rgb("#D55E00"), rgb("#CC79A7"),
 )
-#let diagram = m.steps.reduce.with(
+#let diagram = m.steps.drawing.with(
   render: fletcher.diagram,
   hide: fletcher.hide,
 )

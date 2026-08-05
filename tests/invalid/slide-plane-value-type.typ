@@ -2,5 +2,5 @@
 
 #show: mosaic.setup
 #mosaic.slide(
-  content: (background: 5),
+  background: 5,
 )[Body]

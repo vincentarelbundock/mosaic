@@ -111,13 +111,13 @@
 #assert(plate.kind == "cell")
 #assert(plate.style.fill == settings.colors.text)
 
-#let frame = resolve-layout(mosaic.layouts.title(
+#let bordered = resolve-layout(mosaic.layouts.title(
   title: [Models and evidence],
-  variant: "frame",
+  variant: "bordered",
   authors: (mosaic.layouts.author([Vincent Arel-Bundock]),),
 ), settings)
-#assert(frame.kind == "cell")
-#assert(grid-test.count(frame) == 1)
+#assert(bordered.kind == "cell")
+#assert(grid-test.count(bordered) == 1)
 
 #let split-right = resolve-layout(mosaic.layouts.title(
   title: [Measuring environmental change],

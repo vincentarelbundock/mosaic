@@ -5,10 +5,10 @@
 )
 
 #assert(expected.all(name => name in m))
-#assert(("cell", "h", "t", "v").all(name => name in m.grids))
+#assert(("cell", "columns", "rows", "track").all(name => name in m.grids))
 #assert(("author", "content", "section", "title").all(name => name in m.layouts))
-#assert(("on", "reduce", "replace", "reveal").all(name => name in m.steps))
+#assert(("drawing", "on", "replace", "reveal").all(name => name in m.steps))
 #assert((
-  "callout", "divider", "frame", "image", "progress", "quote", "tag",
+  "badge", "callout", "card", "divider", "image", "progress", "quote",
 ).all(name => name in m.components))
 #assert(("cream", "metropolis", "minimalist").all(name => name in m.themes))

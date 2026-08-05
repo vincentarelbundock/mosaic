@@ -17,7 +17,7 @@ Choose the smallest command for the timing you need:
 - `m.steps.on(range)[content]` shows content over an exact step range.
 - `m.steps.reveal[...]` accumulates a list or sequence one item at a time.
 - `m.steps.replace[first][second]` swaps alternatives in one stable slot.
-- `m.steps.reduce` connects the same timing model to custom structures.
+- `m.steps.drawing` connects the same timing model to custom structures.
 
 The #link("reveals.html")[Reveal and replace] page shows each of these on real slides.
 

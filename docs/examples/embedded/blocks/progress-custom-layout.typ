@@ -2,7 +2,7 @@
 
 #show: m.setup
 
-#let slide-grid = m.grids.h(
+#let slide-grid = m.grids.columns(
   m.grids.cell("left"),
   m.grids.cell("right"),
 )
@@ -22,17 +22,17 @@
 
 #let slide-progress(left-body, right-body) = m.slide(
   layout: slide-grid,
-  content: (foreground: place(
-    bottom + left,
-    block(width: 100%)[
-      #m.components.progress(
-        variant: "line",
-        accent: black,
-        fill: white,
-        thickness: 8pt,
-      )
-    ],
-  )),
+  foreground: place(
+  bottom + left,
+  block(width: 100%)[
+    #m.components.progress(
+      variant: "line",
+      accent: black,
+      fill: white,
+      thickness: 8pt,
+    )
+  ],
+),
   ..(left-body, right-body),
 )
 

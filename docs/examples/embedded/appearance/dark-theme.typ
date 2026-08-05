@@ -20,13 +20,13 @@
   subtitle: [A dark theme for technical talks],
   authors: authors,
   base-size: 24pt,
-  content: (foreground: furniture),
+  foreground: furniture,
 )
 
 #m.slide(
   layout: m.layouts.title(),
   numbered: false,
-  content: (foreground: none),
+  foreground: none,
 )
 
 #m.slide(layout: m.layouts.content(

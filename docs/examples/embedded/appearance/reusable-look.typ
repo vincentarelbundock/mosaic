@@ -7,7 +7,7 @@
 ).map(color => color.lighten(85%))
 
 // One grid, reused by both slides.
-#let two-columns = m.grids.h(
+#let two-columns = m.grids.columns(
   m.grids.cell("a"),
   m.grids.cell("b"),
 )

@@ -15,7 +15,7 @@
 ]
 
 // Two pages: the active cell changes and removed tracks reflow.
-#let changing-columns = mosaic.grids.h(
+#let changing-columns = mosaic.grids.columns(
   mosaic.steps.on(1, after: "removed", mosaic.grids.cell(id: "first")),
   mosaic.steps.on("2-", before: "removed", mosaic.grids.cell(id: "second")),
 )
@@ -58,10 +58,10 @@
   $
 ]
 
-// Two pages: command reducers interpret on() without depending on CeTZ.
+// Two pages: drawing commands interpret on() without depending on CeTZ.
 #let render-commands(commands) = commands.join(", ")
 #let preserve-commands(commands) = commands
-#let command-canvas = mosaic.steps.reduce.with(
+#let command-canvas = mosaic.steps.drawing.with(
   render: render-commands,
   hide: preserve-commands,
 )
@@ -72,9 +72,9 @@
   ))
 ]
 
-// Three pages: reducers also recognize timed content commands such as
+// Three pages: drawing commands also recognize timed content commands such as
 // Fletcher's node and edge metadata.
-#let fletcher-diagram = mosaic.steps.reduce.with(
+#let fletcher-diagram = mosaic.steps.drawing.with(
   render: fletcher.diagram,
   hide: fletcher.hide,
 )

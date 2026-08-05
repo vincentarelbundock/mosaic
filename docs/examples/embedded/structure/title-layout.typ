@@ -42,7 +42,7 @@
 
 #m.slide(layout: m.layouts.title(
   title: [Models, evidence, and public decisions],
-  variant: "frame",
+  variant: "bordered",
   subtitle: [Annual Research Lecture],
   authors: (m.layouts.author([Maya Thompson], affiliations: (civic,)),),
   date: [2027],

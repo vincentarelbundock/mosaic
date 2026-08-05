@@ -8,15 +8,15 @@
 
 `m.components` provides reusable Typst content to place inside cells, or inside any native Typst composition. None of these create slides or grids on their own; they are values you place in a cell, a background, a foreground, or any native Typst composition. Each function has an independent example and gallery. One member, `m.components.progress()`, is documented with the deck infrastructure on the #link("../furniture/footer.html")[Footer and progress] page; it is ordinary content all the same and can sit in any cell.
 
-= `frame()`
+= `card()`
 
-Wrap content in a clipped, bordered frame.
+Wrap content in a clipped, bordered panel.
 
 #embedded-example(
   calepin.elements.gallery,
-  "blocks/component-frame",
+  "blocks/component-card",
   frames: 2,
-  title: "components.frame()",
+  title: "components.card()",
 )
 
 = `callout()`
@@ -30,15 +30,15 @@ Emphasize content with a colored side stripe and an optional title.
   title: "components.callout()",
 )
 
-= `label()`
+= `badge()`
 
-Create a compact inline label with configurable corners and text styling.
+Create a compact inline badge with configurable corners and text styling.
 
 #embedded-example(
   calepin.elements.gallery,
-  "blocks/component-tag",
+  "blocks/component-badge",
   frames: 1,
-  title: "components.tag()",
+  title: "components.badge()",
 )
 
 = `quote()`

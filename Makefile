@@ -43,9 +43,9 @@ API_MODULES_DIR := $(DOCS_DIR)/api/modules
 # The staged names stay flat because the docs pages reference them by name.
 API_MODULE_MAP := \
   author:author \
-  component-frame:component/frame \
+  component-card:component/card \
   component-callout:component/callout \
-  component-tag:component/tag \
+  component-badge:component/badge \
   component-quote:component/quote \
   component-divider:component/divider \
   component-progress:component/progress \

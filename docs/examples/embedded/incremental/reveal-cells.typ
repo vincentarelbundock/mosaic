@@ -1,6 +1,6 @@
 #import "@local/mosaic:0.0.1" as m
 
-#let grid = m.grids.h(
+#let grid = m.grids.columns(
   ..m.steps.reveal(
     before: "removed",
     after: "visible",

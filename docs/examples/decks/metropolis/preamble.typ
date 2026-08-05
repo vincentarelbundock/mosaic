@@ -37,15 +37,15 @@
   box(height: measure(text(fill: color, $#term$)).height, braced)
 }
 
-// `m.steps.reduce` wraps a drawing package so that elements guarded by `m.steps.on("2-",
+// `m.steps.drawing` wraps a drawing package so that elements guarded by `m.steps.on("2-",
 // ...)` appear across successive reveals. `hide` keeps hidden elements in the
 // layout (reserving their space) so nothing shifts as the diagram is built up.
-#let state-diagram = m.steps.reduce.with(
+#let state-diagram = m.steps.drawing.with(
   render: fletcher.diagram,
   hide: fletcher.hide,
 )
 
-#let canvas = m.steps.reduce.with(
+#let canvas = m.steps.drawing.with(
   render: cetz.canvas,
   hide: cetz.draw.hide.with(bounds: true),
 )

@@ -12,9 +12,9 @@
 )
 #set text(size: 9pt)
 
-#mosaic.slide(layout: mosaic.grids.h("a", "b"))[
-  #mosaic.components.frame(role: "information")[
-    #mosaic.components.tag(
+#mosaic.slide(layout: mosaic.grids.columns("a", "b"))[
+  #mosaic.components.card(role: "information")[
+    #mosaic.components.badge(
       radius: 999pt,
       style: (text: (weight: "bold")),
     )[Category]
@@ -31,9 +31,9 @@
 ]
 
 #mosaic.slide(
-  layout: mosaic.grids.h("first", "second", "third"),
+  layout: mosaic.grids.columns("first", "second", "third"),
 )[
-  #mosaic.components.frame(role: "information")[Panel body]
+  #mosaic.components.card(role: "information")[Panel body]
 ][
   #mosaic.components.callout(
     [Callout body],
@@ -41,11 +41,11 @@
     title: [Result],
   )
 ][
-  #mosaic.components.frame(role: "warning")[Banner body]
+  #mosaic.components.card(role: "warning")[Banner body]
 ]
 
 #mosaic.slide(
-  layout: mosaic.grids.h("numbers", "circle", "line"),
+  layout: mosaic.grids.columns("numbers", "circle", "line"),
 )[
   #mosaic.components.progress(variant: "1/1")
 ][

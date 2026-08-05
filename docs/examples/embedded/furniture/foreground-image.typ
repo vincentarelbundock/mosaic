@@ -1,7 +1,7 @@
 #import "@local/mosaic:0.0.1" as m
 
 #show: m.setup.with(
-  content: (foreground: [
+  foreground: [
     #place(
       right + horizon,
       dx: -1.35em,
@@ -12,7 +12,7 @@
         alt: "The Mosaic logo",
       ),
     )
-  ]),
+  ],
 )
 
 #m.slide[

@@ -29,7 +29,7 @@
 /// `fill` accepts.
 ///
 /// ```typ
-/// // Darken the whole frame evenly.
+/// // Darken the whole picture evenly.
 /// #mosaic.components.image(
 ///   path("cover.webp"),
 ///   scrim: black.transparentize(55%),

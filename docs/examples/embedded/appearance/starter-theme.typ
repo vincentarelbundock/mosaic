@@ -20,5 +20,5 @@
 
 #m.slide(
   layout: m.layouts.section(),
-  content: (section: [That is all there is]),
+  cells: (section: [That is all there is]),
 )

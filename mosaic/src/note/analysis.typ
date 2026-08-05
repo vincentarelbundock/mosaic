@@ -62,7 +62,7 @@
         }
         return visit(timed.bodies.at(index))
       }
-      if timed.kind == "temporal-reducer" {
+      if timed.kind == "temporal-drawing" {
         return visit(timed.args)
       }
     }

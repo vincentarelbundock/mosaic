@@ -8,14 +8,12 @@
   ]
 ]
 #show: mosaic.setup.with(
-  content: (
-    footer: [Mosaic furniture test],
-    foreground: furniture,
-  ),
+  cells: (footer: [Mosaic furniture test]),
+  foreground: furniture,
 )
 #mosaic.slide(layout: mosaic.layouts.content(variant: "body-footer"))[First]
 #mosaic.slide(layout: mosaic.layouts.content(variant: "body-footer"))[Second]
 #mosaic.slide(
   layout: mosaic.layouts.content(variant: "body-footer"),
-  content: (foreground: none),
+  foreground: none,
 )[No furniture]

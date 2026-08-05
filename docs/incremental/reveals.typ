@@ -54,7 +54,7 @@ Use `m.steps.replace` to revise a word or larger fragment without moving surroun
 
 = CeTZ drawings
 
-Draw a figure progressively when you want to explain its geometry in the order it is constructed. Connect `m.steps.reduce` to a CeTZ canvas and preserve hidden bounds so later additions do not shift the drawing.
+Draw a figure progressively when you want to explain its geometry in the order it is constructed. Connect `m.steps.drawing` to a CeTZ canvas and preserve hidden bounds so later additions do not shift the drawing.
 
 This example adapts the #link(
   "https://diagrams.janosh.dev/bloch-sphere",
@@ -69,7 +69,7 @@ This example adapts the #link(
 
 = Fletcher diagrams
 
-Reveal a diagram path gradually when you want the audience to follow one relationship at a time. Connect `m.steps.reduce` to Fletcher, then use ordinary Mosaic timing functions around nodes and edges.
+Reveal a diagram path gradually when you want the audience to follow one relationship at a time. Connect `m.steps.drawing` to Fletcher, then use ordinary Mosaic timing functions around nodes and edges.
 
 #embedded-example(
   calepin.elements.gallery,

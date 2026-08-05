@@ -34,7 +34,9 @@
   subtitle: none,
   authors: (),
   date: none,
-  content: (:),
+  cells: (:),
+  background: none,
+  foreground: none,
 )
 
 // Private setup engine. The theme engine supplies an exact options dictionary
@@ -59,7 +61,7 @@
   let frozen-counters = options.frozen-counters
   let frozen-states = options.frozen-states
 
-  let content = options.content
+  let cells = options.cells
   let deck = (
     title: options.title,
     subtitle: options.subtitle,
@@ -71,7 +73,9 @@
   _ = validate-choice(output, output-modes, "setup output")
   let settings = make-settings(
     colors: colors,
-    content: content,
+    cells: cells,
+    background: options.background,
+    foreground: options.foreground,
     deck: deck,
     spacing: spacing,
     notes: notes,

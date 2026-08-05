@@ -50,7 +50,7 @@
 
 #m.slide(
   layout: m.layouts.section(),
-  content: (section: [Model]),
+  cells: (section: [Model]),
 )
 
 == Sequential decisions under uncertainty
@@ -108,7 +108,7 @@ subsequent decisions #cite(<bellman1957>).
 
 #m.slide(
   layout: m.layouts.section(),
-  content: (section: [Computation]),
+  cells: (section: [Computation]),
 )
 
 // `calepin.chunk` runs R at compile time. The first chunk evaluates the code
@@ -187,7 +187,7 @@ than copied into the deck.
 
 #m.slide(
   layout: m.layouts.section(),
-  content: (section: [Structure]),
+  cells: (section: [Structure]),
 )
 
 == File-reader state machine
@@ -219,7 +219,7 @@ than copied into the deck.
 
 #m.slide(
   layout: m.layouts.section(),
-  content: (section: [Geometry]),
+  cells: (section: [Geometry]),
 )
 
 == A qubit as a Bloch vector
@@ -279,7 +279,7 @@ than copied into the deck.
 
 #m.slide(
   layout: m.layouts.section(),
-  content: (section: [Evidence]),
+  cells: (section: [Evidence]),
 )
 
 == What makes a technical slide?
@@ -325,7 +325,7 @@ than copied into the deck.
 #m.slide(
   layout: m.layouts.content(),
   numbered: false,
-  content: (
+  cells: (
     header: [== References],
     body: [
       #set text(size: 0.63em)

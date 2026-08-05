@@ -21,14 +21,14 @@
   out
 }
 
-#let split = m.grids.h(
-  m.grids.t(0.44fr, m.grids.cell("headline", inset: 1.5em)),
-  m.grids.t(0.56fr, m.grids.cell("copy", inset: 1.5em)),
+#let split = m.grids.columns(
+  m.grids.track(0.44fr, m.grids.cell("headline", inset: 1.5em)),
+  m.grids.track(0.56fr, m.grids.cell("copy", inset: 1.5em)),
 )
 
 #let panel(pair, ground) = [
   #show: painted(pair, "headline", "copy")
-  #m.slide(layout: split, content: (
+  #m.slide(layout: split, cells: (
     headline: [
       #set align(left + horizon)
       #text(size: 1.6em, weight: "bold")[On #ground]

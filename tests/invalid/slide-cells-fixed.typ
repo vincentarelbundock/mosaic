@@ -2,9 +2,9 @@
 
 #show: mosaic.setup
 #mosaic.slide(
-  layout: mosaic.grids.h(
+  layout: mosaic.grids.columns(
     mosaic.grids.cell("logo", content: [LOGO]),
     mosaic.grids.cell("body"),
   ),
-  content: (logo: [Nope], body: [Body]),
+  cells: (logo: [Nope], body: [Body]),
 )

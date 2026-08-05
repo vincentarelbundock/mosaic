@@ -8,7 +8,7 @@
 /// out.
 ///
 /// ```typ
-/// #mosaic.components.frame(role: "takeaway")[
+/// #mosaic.components.card(role: "takeaway")[
 ///   The interval covers zero.
 /// ]
 /// ```
@@ -34,14 +34,14 @@
 /// dictionary of native `text` arguments.
 ///
 /// ```typ
-/// #mosaic.components.frame(
+/// #mosaic.components.card(
 ///   style: (radius: 0pt, stroke: none, text: (size: 0.8em)),
 /// )[Quiet panel]
 /// ```
 ///
 /// -> content
-#let frame(
-  /// Content inside the frame.
+#let card(
+  /// Content inside the card.
   /// -> content
   body,
   /// Semantic role name: `neutral`, `accent`, `information`, `success`,

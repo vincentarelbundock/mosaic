@@ -93,7 +93,7 @@
     command-array(hide(body))
   } else if state == "dimmed" {
     if dim == none {
-      fail("dimmed command content requires a dim function in reduce")
+      fail("dimmed command content requires a dim function in drawing")
     }
     command-array(dim(body))
   } else {
@@ -179,7 +179,7 @@
     if is-temporal(body) {
       if contains-heading(body) {
         fail(
-          "headings cannot be wrapped in on, reveal, replace, or reduce; "
+          "headings cannot be wrapped in on, reveal, replace, or drawing; "
             + "keep semantic headings structurally stable across frames",
         )
       }
@@ -276,7 +276,7 @@
           )
         }
       }
-      if value.kind == "temporal-reducer" {
+      if value.kind == "temporal-drawing" {
         let commands = render-commands(
           value.args,
           step,

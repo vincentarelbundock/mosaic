@@ -97,7 +97,7 @@
         render-slide(slide-command(
           (),
           layout: "content",
-          content: (header: section, body: body),
+          cells: (header: section, body: body),
         )),
         wrappers,
       )
@@ -112,7 +112,7 @@
         render-slide(slide-command(
           (),
           layout: "section",
-          content: (section: section),
+          cells: (section: section),
           fields: if tagline == none { (:) } else { (subtitle: tagline) },
         )),
         wrappers,

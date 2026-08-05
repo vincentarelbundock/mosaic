@@ -4,11 +4,11 @@
 
 #let slide-progress = m.slide.with(
   layout: m.layouts.content(variant: "header-body"),
-  content: (foreground: [
+  foreground: [
     #place(bottom + right, dx: -1.25em, dy: -0.35em)[
       #m.components.progress(variant: "1/1")
     ]
-  ]),
+  ],
 )
 
 #slide-progress[

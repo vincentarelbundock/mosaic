@@ -19,8 +19,8 @@ Target a cell by its label. Font, size, color, and alignment are `set text`, `se
 #show label("mosaic-cell-copy"): set text(fill: black, size: 1.1em)
 #show label("mosaic-cell-copy"): m.surface(fill: white)
 
-#let columns = m.grids.h("copy", "image")
-#m.slide(layout: columns, content: (
+#let columns = m.grids.columns("copy", "image")
+#m.slide(layout: columns, cells: (
   copy: [Copy],
   image: [Image],
 ))
@@ -69,7 +69,7 @@ The same scoped block builds one-off slides. To show one large number or phrase 
 ```typ
 #[
   #show label("mosaic-cell-body"): set align(center + horizon)
-  #m.slide(content: (body: text(size: 6em, weight: "bold")[15 000 000]))
+  #m.slide(cells: (body: text(size: 6em, weight: "bold")[15 000 000]))
 ]
 ```
 
@@ -79,10 +79,10 @@ For a slide that shows a picture on a black background, paint the background pla
 #[
   #show label("mosaic-background"): m.surface(fill: black)
   #m.slide(
-    content: (
-      background: align(center + horizon, image("fig/logo.png", height: 100%, fit: "contain")),
+    cells: (
       body: [],
     ),
+    background: align(center + horizon, image("fig/logo.png", height: 100%, fit: "contain")),
   )
 ]
 ```
@@ -140,7 +140,7 @@ Bundle repeated cell rules in a function and apply it once with `#show:`:
 }
 
 #show: styled
-#m.slide(layout: m.grids.h("a", "b"))[Left][Right]
+#m.slide(layout: m.grids.columns("a", "b"))[Left][Right]
 ```
 
 #embedded-example(

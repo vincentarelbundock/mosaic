@@ -26,7 +26,6 @@
   logical-slide-id,
   logical-section,
 )
-#import "command.typ": validate-plane
 
 // The record a reader assumes when no deck wrote one: components and cells
 // rendered outside `setup` see these library defaults. `paper` holds resolved
@@ -289,26 +288,22 @@
     requested-layout
   }
   validate(resolved-grid)
-  // The reserved plane ids live in the same content map as the cells. Absent
-  // means inherit the deck plane, content overrides it for this slide, and
-  // none omits it.
-  let content-map = command.content
+  // Planes arrive as their own command fields, already validated on the slide
+  // and on `setup`: `auto` inherits the deck plane, anything else is this
+  // slide's own, and `none` omits it.
   let planes = (:)
   for id in plane-ids {
-    let override = content-map.remove(id, default: auto)
-    planes.insert(id, validate-plane(
-      if override == auto { settings.content.at(id, default: none) } else { override },
-      id,
-    ))
+    let override = command.at(id)
+    planes.insert(id, if override == auto { settings.at(id) } else { override })
   }
   // Named and positional content collapse to one id -> content map before
   // rendering, so the renderer, overflow, and incremental paths look content up
   // by cell id with no positional cursor.
   let contents = resolve-content(
     resolved-grid,
-    content-map,
+    command.cells,
     command.bodies,
-    defaults: settings.content,
+    defaults: settings.cells,
   )
   let steps = calc.max(
     max-node(resolved-grid),

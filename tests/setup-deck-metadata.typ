@@ -19,9 +19,7 @@
   // The swiss title rule takes the text color, so the configured accent's
   // path to the rendered page is verified through a component that resolves
   // the accent role.
-  content: (
-    foreground: place(bottom + right, dx: -12pt, dy: -12pt, m.components.tag(role: "accent")[deck]),
-  ),
+  foreground: place(bottom + right, dx: -12pt, dy: -12pt, m.components.badge(role: "accent")[deck]),
 )
 
 #context {

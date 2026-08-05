@@ -6,5 +6,5 @@
 #show label("mosaic-background"): set text(fill: rgb("#77aa11"))
 #mosaic.slide(
   layout: mosaic.layouts.content(variant: "body"),
-  content: (background: place(bottom + left)[Styled plane]),
+  background: place(bottom + left)[Styled plane],
 )[Styled layout]

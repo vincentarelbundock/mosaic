@@ -11,6 +11,6 @@
 
 // t() sizes one child: "a" takes two thirds of the width, "b" keeps the
 // default 1fr and receives the rest.
-#let two-thirds = m.grids.h(m.grids.t(2fr, "a"), "b")
+#let two-thirds = m.grids.columns(m.grids.track(2fr, "a"), "b")
 
 #m.slide(layout: two-thirds)[a][b]

@@ -6,7 +6,7 @@
 // title and section layouts already use.
 #import "../shared.typ": fail
 #import "../caption-fit.typ": captioned-image
-#import "../grid/constructors.typ": styled-cell, v, t
+#import "../grid/constructors.typ": styled-cell, rows, track
 #import "core.typ": image-fit-modes, make-layout, validate-image, validate-variant
 #import "support.typ": image-content, header-inset, inset-cell
 #import "image-support.typ": (
@@ -157,14 +157,14 @@
 // directional image and over a full-bleed one. The header is one line tall,
 // so it takes the shallower edge padding; the body keeps the deck inset on
 // all four sides.
-#let text-column(settings) = v(
-  t(auto, inset-cell(
+#let text-column(settings) = rows(
+  track(auto, inset-cell(
     "header",
     settings,
     content-sized: true,
     inset: header-inset(settings),
   )),
-  t(1fr, inset-cell("body", settings)),
+  track(1fr, inset-cell("body", settings)),
 )
 
 #let resolve-image-layout(command, settings) = {
@@ -197,15 +197,15 @@
     } else {
       captioned-image(resize, fields.caption)
     }
-    v(
-      t(auto, inset-cell(
+    rows(
+      track(auto, inset-cell(
         "header",
         settings,
         content-sized: true,
         inset: header-inset(settings),
       )),
       // The picture owns a fixed cell, so the slide supplies no block for it.
-      t(1fr, styled-cell(
+      track(1fr, styled-cell(
         id: "image",
         content: content,
         style: (content-sized: false, inset: settings.spacing.inset),

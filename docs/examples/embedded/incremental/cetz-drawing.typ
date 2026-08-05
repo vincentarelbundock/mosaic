@@ -3,13 +3,13 @@
 
 #show: m.setup
 
-#let canvas = m.steps.reduce.with(
+#let canvas = m.steps.drawing.with(
   render: cetz.canvas,
   hide: cetz.draw.hide.with(bounds: true),
 )
 
-#let grid = m.grids.v(
-  m.grids.t(auto, m.grids.cell(
+#let grid = m.grids.rows(
+  m.grids.track(auto, m.grids.cell(
     "title",
     inset: (top: 0.8em, right: 1.5em, bottom: 0.2em, left: 1.5em),
   )),

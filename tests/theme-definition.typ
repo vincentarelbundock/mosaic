@@ -26,7 +26,7 @@
   ),
   defaults: (
     spacing: (inset: 32pt),
-    content: (footer: [ENGINE CONSUMED THEME]),
+    cells: (footer: [ENGINE CONSUMED THEME]),
   ),
   layouts: layouts,
   apply: apply,

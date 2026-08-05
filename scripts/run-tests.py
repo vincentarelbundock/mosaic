@@ -132,27 +132,27 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(inherited_title, "#f5f7fb")
     require_contains(inherited_title, "#7c3aed")
 
-    content_defaults = pdf_text("setup-content-defaults")
+    content_defaults = pdf_text("setup-cells-defaults")
     require_contains(content_defaults, "SETUP FOOTER", count=2)
     for expected in ("FULL FOOTER", "NAMED FOOTER", "BODY ONLY"):
         require_contains(content_defaults, expected)
     for page in (1, 3):
-        require_contains(pdf_page_text("setup-content-defaults", page), "SETUP FOOTER")
-    require_contains(pdf_page_text("setup-content-defaults", 2), "FULL FOOTER")
-    require_contains(pdf_page_text("setup-content-defaults", 2), "SETUP FOOTER", absent=True)
-    require_contains(pdf_page_text("setup-content-defaults", 4), "NAMED FOOTER")
+        require_contains(pdf_page_text("setup-cells-defaults", page), "SETUP FOOTER")
+    require_contains(pdf_page_text("setup-cells-defaults", 2), "FULL FOOTER")
+    require_contains(pdf_page_text("setup-cells-defaults", 2), "SETUP FOOTER", absent=True)
+    require_contains(pdf_page_text("setup-cells-defaults", 4), "NAMED FOOTER")
     for page in (5, 6):
-        page_text = pdf_page_text("setup-content-defaults", page)
+        page_text = pdf_page_text("setup-cells-defaults", page)
         for footer in ("SETUP FOOTER", "FULL FOOTER", "NAMED FOOTER"):
             require_contains(page_text, footer, absent=True)
 
-    plane_defaults = pdf_text("setup-plane-content-defaults")
+    plane_defaults = pdf_text("setup-plane-defaults")
     for expected in ("SETUP BACKGROUND", "SETUP LOGO"):
         require_contains(plane_defaults, expected, count=2)
     for expected in ("LOCAL BACKGROUND", "LOCAL FOREGROUND"):
         require_contains(plane_defaults, expected, count=1)
     require_contains(
-        pdf_page_text("setup-plane-content-defaults", 2),
+        pdf_page_text("setup-plane-defaults", 2),
         "SETUP LOGO",
     )
 
@@ -259,11 +259,11 @@ def run_core(typst: str, sources: list[str]) -> None:
     for expected in ("FIRST VISUAL", "SECOND VISUAL"):
         require_contains(speaker_slides, expected)
 
-    reducer_text = pdf_text("speaker-notes-reducer")
-    require_contains(reducer_text, "VISIBLE REDUCER FRAME")
-    require_contains(reducer_text, "REDUCER SLOT", absent=True)
-    require_contains(reducer_text, "REDUCER SECRET NOTE", absent=True)
-    require_contains(reducer_text, "NESTED REDUCER SECRET NOTE", absent=True)
+    drawing_text = pdf_text("speaker-notes-drawing")
+    require_contains(drawing_text, "VISIBLE DRAWING FRAME")
+    require_contains(drawing_text, "DRAWING SLOT", absent=True)
+    require_contains(drawing_text, "DRAWING SECRET NOTE", absent=True)
+    require_contains(drawing_text, "NESTED DRAWING SECRET NOTE", absent=True)
     metadata_show_text = pdf_text("speaker-notes-metadata-show")
     require_contains(metadata_show_text, "VISIBLE CONTENT")
     require_contains(metadata_show_text, "NESTED SECRET NOTE", absent=True)

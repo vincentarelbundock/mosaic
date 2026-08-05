@@ -10,11 +10,11 @@
 #m.slide(
   "content",
   variant: "body",
-  content: (background: m.components.image(
-    path("/docs/assets/images/bonsai.webp"),
-    scrim: white.transparentize(65%),
-    alt: "A pine bonsai",
-  )),
+  background: m.components.image(
+  path("/docs/assets/images/bonsai.webp"),
+  scrim: white.transparentize(65%),
+  alt: "A pine bonsai",
+),
 )[
   #block(width: 38%)[
     == A background image

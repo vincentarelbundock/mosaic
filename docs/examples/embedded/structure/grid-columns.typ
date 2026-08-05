@@ -11,6 +11,6 @@
 #show label("mosaic-cell-c"): outline
 
 // Three strings produce three equal-width columns.
-#let three-columns = m.grids.h("a", "b", "c")
+#let three-columns = m.grids.columns("a", "b", "c")
 
 #m.slide(layout: three-columns)[a][b][c]

@@ -12,9 +12,9 @@
 #show label("mosaic-cell-d"): outline
 
 // Two stacked h() splits make a 2 x 2 arrangement.
-#let quadrants = m.grids.v(
-  m.grids.h("a", "b"),
-  m.grids.h("c", "d"),
+#let quadrants = m.grids.rows(
+  m.grids.columns("a", "b"),
+  m.grids.columns("c", "d"),
 )
 
 #m.slide(layout: quadrants)[a][b][c][d]

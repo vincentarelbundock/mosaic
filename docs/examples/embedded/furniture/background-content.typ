@@ -6,11 +6,11 @@
 #m.slide(
   "content",
   variant: "body",
-  content: (background: [
+  background: [
     #place(center)[
       #circle(width: 410pt, fill: blue.lighten(88%), stroke: none)
     ]
-  ]),
+  ],
 )[
   == Full-slide backgrounds
 

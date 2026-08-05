@@ -18,18 +18,18 @@ NEUTRAL_API = {"setup", "definition", "slide", "note", "fit", "surface", "grids"
 SHARED_API = {"slide", "note", "fit", "surface", "grids", "layouts", "steps", "components"}
 THEMED_API = {"setup", "definition", "slide", "note", "fit", "surface", "grids", "layouts", "steps", "components"}
 THEMED_LAYOUTS = {"content", "title", "section", "image", "author"}
-THEMED_COMPONENTS = {"frame", "callout", "tag", "quote", "divider", "progress", "image", "figure"}
+THEMED_COMPONENTS = {"card", "callout", "badge", "quote", "divider", "progress", "image", "figure"}
 
 EXPECTED = {
     "mosaic/lib.typ": NEUTRAL_API,
     "mosaic/src/shared-api.typ": SHARED_API,
-    "mosaic/src/grid/api.typ": {"cell", "h", "v", "t"},
+    "mosaic/src/grid/api.typ": {"cell", "columns", "rows", "track"},
     "mosaic/src/surface.typ": {"surface"},
     # fit.typ is not listed: it carries the vendored fitting internals beside
     # the one public entry point, and only `fit` is re-exported from the
     # facades, which the entries above already pin.
     "mosaic/src/layout/api.typ": {"content", "title", "section", "image", "author"},
-    "mosaic/src/incremental/api.typ": {"on", "reveal", "replace", "reduce", "pause"},
+    "mosaic/src/incremental/api.typ": {"on", "reveal", "replace", "drawing", "pause"},
     "mosaic/src/component/api.typ": THEMED_COMPONENTS,
     # light-palette and light-roles are the built-in colors and semantic role
     # table, exported so a custom theme extends them instead of copying them.

@@ -31,7 +31,7 @@
     and value.kind == "track"
 )
 
-#let axis-name(axis) = if axis == "width" { "h" } else { "v" }
+#let axis-name(axis) = if axis == "width" { "columns" } else { "rows" }
 
 #let is-stroke(value) = (
   value == none

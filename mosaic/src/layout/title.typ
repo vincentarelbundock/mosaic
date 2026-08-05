@@ -1,7 +1,7 @@
 // Construction, validation, and resolution of the title layout.
 #import "../shared.typ": fail
 #import "../author.typ": analyze-authors
-#import "../grid/constructors.typ": styled-cell, h, v, t
+#import "../grid/constructors.typ": styled-cell, columns, rows, track
 #import "core.typ": (
   make-layout,
   validate-accent,
@@ -30,7 +30,7 @@
   "swiss",
   "centered",
   "plate",
-  "frame",
+  "bordered",
 ) + semantic-image-variants
 
 #let validate-fields(fields, allow-auto: false) = {
@@ -107,8 +107,8 @@
 ///   the bottom edge.
 /// - `plate`: the whole slide takes the deck's text color and the type is
 ///   knocked out in the canvas color.
-/// - `frame`: a thin rule border inset from the slide edge with the centered
-///   stack inside it.
+/// - `bordered`: a thin rule border inset from the slide edge with the
+///   centered stack inside it.
 /// - `academic`: the conference-poster arrangement. Author names carry
 ///   superscript affiliation numbers over a numbered affiliation legend and a
 ///   contact line. Requires at least one author.
@@ -196,7 +196,7 @@
   /// `(path: "cover.webp", scrim: black.transparentize(55%))`.
   /// -> none | content | str | path | dictionary
   image: none,
-  /// Structural arrangement: `swiss`, `centered`, `plate`, `frame`,
+  /// Structural arrangement: `swiss`, `centered`, `plate`, `bordered`,
   /// `academic`, `image-left`, `image-right`, `image-top`, `image-bottom`, or
   /// `image-background`.
   /// -> str
@@ -219,14 +219,14 @@
   /// -> alignment
   align: left + bottom,
   /// Whether to draw the variant's structural mark: the `swiss` baseline
-  /// rule or the `frame` border. On image variants
+  /// rule or the `bordered` border. On image variants
   /// it draws the short accent rule of the compact stack instead. `auto`
   /// draws the structural marks and omits the accent rule on image variants,
   /// where the photograph already does that work.
   /// -> auto | bool
   rule: auto,
   /// Color of the variant's structural mark. `auto` uses the deck's text
-  /// color for the marked text variants (`swiss`, `frame`) and the semantic
+  /// color for the marked text variants (`swiss`, `bordered`) and the semantic
   /// accent for the image variants' short rule.
   /// -> color | auto
   accent: auto,
@@ -600,7 +600,7 @@
   }
 }
 
-// The details stack anchored to the bottom edge, as the centered and frame
+// The details stack anchored to the bottom edge, as the centered and bordered
 // variants place it inside their cells.
 #let anchored-details(parts, settings) = if has-details(parts) {
   place(
@@ -669,13 +669,13 @@
       )
     }
   }
-  v(
-    t(1fr, title-body-cell(
+  rows(
+    track(1fr, title-body-cell(
       settings,
       content: heading-stack(fields, settings),
       bottom-inset: settings.spacing.gap,
     )),
-    t(auto, fixed-cell(
+    track(auto, fixed-cell(
       band,
       "details",
       settings,
@@ -727,9 +727,9 @@
   )
 }
 
-// frame: a single thin rule border inset from the slide edge closes the
+// bordered: a single thin rule border inset from the slide edge closes the
 // composition; the stack is centered inside it.
-#let resolve-frame-title(fields, settings) = {
+#let resolve-bordered-title(fields, settings) = {
   let parts = details-parts(fields, settings)
   styled-cell(
     id: "title",
@@ -799,7 +799,7 @@
   let children = ()
   // The heading stack takes the flexible track and aligns to its bottom, so
   // the whole composition anchors to the lower edge of the slide.
-  children.push(t(1fr, title-body-cell(
+  children.push(track(1fr, title-body-cell(
     settings,
     scale: settings.title-tokens.academic-scale,
     content: title-stack-content(
@@ -813,7 +813,7 @@
     let author-content = academic.authors
       .map(author => academic-author(author, settings))
       .join([, ])
-    children.push(t(
+    children.push(track(
       auto,
       fixed-cell(
         author-content,
@@ -843,7 +843,7 @@
         contact-line.join([ · ])
       }
     }
-    children.push(t(
+    children.push(track(
       auto,
       academic-small-cell(
         details-content,
@@ -853,7 +853,7 @@
       ),
     ))
   }
-  v(..children)
+  rows(..children)
 }
 
 #let resolve-directional-image-title(fields, image, settings) = {
@@ -951,8 +951,8 @@
     resolve-centered-title(fields, settings)
   } else if fields.variant == "plate" {
     resolve-plate-title(fields, settings)
-  } else if fields.variant == "frame" {
-    resolve-frame-title(fields, settings)
+  } else if fields.variant == "bordered" {
+    resolve-bordered-title(fields, settings)
   } else if fields.variant in semantic-directional-variants {
     resolve-directional-image-title(fields, image, settings)
   } else {

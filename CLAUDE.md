@@ -24,6 +24,8 @@ Two project-specific rules worth restating:
 - Hard-coded visual constants belong in a theme's `apply` function as `set`/`show` rules, not as new token records.
 - Themes deliberately repeat structure; do not factor a shared base `apply` across themes.
 
+Documentation prose is never hard-wrapped. Write each paragraph as one long line and let the editor soft-wrap it; do not insert artificial line breaks at a column limit. This applies to prose in `docs/`, `skills/`, and Markdown files. Code blocks and code comments wrap normally.
+
 ## Architecture
 
 **Facades.** `mosaic/lib.typ` is the root import and is the light theme facade (`src/themes/light.typ`), re-exporting `src/shared-api.typ` (`slide`, `note`, `fit`, `surface`, `grids`, `layouts`, `steps`, `components`) plus `themes` as a namespace holding the built-in facades and the theme-extension API (`themes.setup`, `themes.light-palette`, `themes.light-roles`). `pause` lives in `steps`. Every theme (`light`, `dark`, `cream`, `metropolis`, `minimalist`) is a thin facade file next to a directory, all exposing the identical API. `scripts/check-api-exports.py` and the tests in `tests/test_check_api_exports.py` pin these exports exactly.
@@ -38,7 +40,7 @@ Two project-specific rules worth restating:
 - `grid/` — the named-cell layout tree: `model` (node/cell/track dicts), `constructors` (`h`, `v`, `cell`, `t`), `validation`, `traversal`, `render`.
 - `layout/` — the named layouts (`title`, `section`, `content`, `image`) plus `config`/`resolver` for per-deck layout configuration.
 - `incremental/` — pauses and reveal steps (`pause`, `analysis`, `transform`).
-- `component/` — user-facing components (frame, callout, tag, quote, divider, progress, figure, image).
+- `component/` — user-facing components (card, callout, badge, quote, divider, progress, figure, image).
 - `note/` — speaker notes; `shared.typ` — `fail()` (prefixes `mosaic: `, which negative tests rely on) and `key()` for state keys.
 
 **Docs.** `docs/` is a Calepin website. Embedded examples live in `docs/examples/embedded/` and full decks in `docs/examples/decks/<slug>/` (each with its own Makefile); the top-level Makefile renders them into `docs/assets/examples/` and `scripts/check-doc-assets.py` validates that pages, artifacts, and frame counts stay in sync. API reference pages stage package sources into `docs/api/modules/` via the `API_MODULE_MAP` in the Makefile; adding a public module means adding a mapping there.
