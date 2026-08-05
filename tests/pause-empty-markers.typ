@@ -3,11 +3,11 @@
 #show: m.setup
 
 #m.slide[
-  #m.pause
-  #m.pause
+  #m.steps.pause
+  #m.steps.pause
   EMPTY MARKER VISUAL
-  #m.pause
-  #m.pause
+  #m.steps.pause
+  #m.steps.pause
 ]
 
 #context assert(counter(page).final().first() == 1)

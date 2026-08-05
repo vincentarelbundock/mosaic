@@ -79,7 +79,8 @@
     "layouts-title-scale.typ",
     "layouts-title-variants.typ",
     "layouts.typ",
-    "slide-layout-fields.typ"
+    "slide-layout-fields.typ",
+    "slide-layout-positional.typ"
   ],
   "responsive": [
     "layouts-title-responsive.typ"

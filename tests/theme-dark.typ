@@ -2,7 +2,7 @@
 #import mosaic.themes.dark as m
 
 #let expected = (
-  "setup", "slide", "note", "pause", "surface",
+  "setup", "slide", "note", "surface",
   "grids", "layouts", "steps", "components",
 )
 #assert(expected.all(name => name in m))

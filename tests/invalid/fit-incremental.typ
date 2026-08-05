@@ -3,4 +3,4 @@
 #show: m.setup
 // Fitting hides its body from the runtime's incremental walk, so a reveal
 // inside one would silently collapse into a single frame.
-#m.slide[#m.fit[A #m.pause B]]
+#m.slide[#m.fit[A #m.steps.pause B]]

@@ -98,6 +98,7 @@ slide-layout-fields-raw-grid|the configured content layout is a raw grid, which 
 slide-layout-fields-scope|slide layout "title" has no field "columns"
 slide-layout-invalid|slide layout must be a Mosaic grid tree or layout
 slide-layout-name-unknown|slide layout name must be one of ("content", "title", "section", "image")
+slide-layout-positional-conflict|slide layout given both positionally and as layout:
 slide-named-argument|slide layout "content" has no field "bogus"; expected one of ("columns", "tracks", "variant")
 slide-plane-value-type|background must be content or none
 slide-role-removed|slide layout "content" has no field "role"; expected one of ("columns", "tracks", "variant")

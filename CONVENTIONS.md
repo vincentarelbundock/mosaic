@@ -19,15 +19,19 @@ follow them.
 ## Verb families
 
 - `is-x` and `has-x` are boolean predicates. There is no `valid-x` family.
-- `validate-x` asserts via `fail()` and always returns the validated or
-  normalized value. Callers capture it (`let fields = validate-fields(...)`)
-  or discard it explicitly with `_ = ...`. Never `let _ =`.
-- `require-x` and `reject-x` are the void asserting forms. They return nothing
-  by design.
+- `validate-x` is the only verb at the input boundary. It asserts via
+  `fail()`, normalizes shorthand where the concept allows it, and always
+  returns the validated or normalized value. Callers capture it
+  (`let fields = validate-fields(...)`) or discard it explicitly with
+  `_ = ...`. Never `let _ =`. There are no `require-`, `reject-`,
+  `normalize-`, or `parse-` families.
 - `resolve-x` computes a final form from validated inputs. `render-x` produces
-  content. `normalize-x` and `parse-x` transform raw input. `make-x` is for
-  internal constructors only; public constructors are bare nouns (`cell`,
-  `frame`, `divider`) or the short track forms (`t`, `h`, `v`, `on`).
+  content. `apply-x` wraps content in styling or reveal state and returns it;
+  a theme's `apply` callback is the public face of the family
+  (`apply-state`).
+- `make-x` is for internal constructors only; public constructors are bare
+  nouns (`cell`, `frame`, `divider`) or the short track forms (`t`, `h`, `v`,
+  `on`).
 - `default-x` names a default value. Never `x-defaults`.
 
 ## Vocabulary
@@ -39,11 +43,13 @@ exists.
   wrapper, `grid` is the whole tree, `plane` is a full-slide layer
   (`background`, `foreground`), `slot` is a revealable unit in an incremental
   command. `region` is reserved for the native `layout()` callback.
-- Bundles: `fields` are a layout's validated user arguments, `options` the raw
-  setup arguments, `settings` the deck-wide resolved record, `record` the
-  write-once deck state, `definition` a passive theme dict, `tokens` a theme's
-  private palette, `spec` an image specification, `metrics` a bundle of
-  geometry constants (`title-metrics`, `component-metrics`).
+- Bundles: `fields` are a layout's validated user arguments, `options` a bag
+  of raw user-tunable arguments before resolution (`setup` arguments, a theme
+  definition's `options` key), `settings` the deck-wide resolved record,
+  `record` the write-once deck state, `definition` a passive theme dict,
+  `tokens` any private constant bundle, color and geometry alike
+  (`title-tokens`, `component-tokens`). There is no `spec`; a raw argument at
+  a validator boundary is a `value`.
 - Content: `body` is content the caller writes, `content` the cell field or
   native type, `value` an unvalidated argument at a validator boundary,
   `child`/`children` tree structure, `item` a list element.

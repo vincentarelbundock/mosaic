@@ -71,12 +71,21 @@
 /// - `body-footer`: the body above a content-sized footer.
 /// - `header-body-footer`: both. The default.
 ///
+/// *Labels*
+///
+/// Every resolved cell carries a label, so appearance comes from native Typst
+/// rules:
+///
+/// - `mosaic-cell-header`: the header, in the variants that include one.
+/// - `mosaic-cell-body`: the body, when `columns` is one.
+/// - `mosaic-cell-body-1`, `mosaic-cell-body-2`, and so on: the body columns,
+///   when `columns` is above one.
+/// - `mosaic-cell-footer`: the footer, in the variants that include one.
+///
 /// *Styling*
 ///
-/// The layout is purely structural. Resolved cells are labeled
-/// `<mosaic-cell-header>`, `<mosaic-cell-body>` (or `<mosaic-cell-body-1>`,
-/// `<mosaic-cell-body-2>`, and so on), and `<mosaic-cell-footer>`, so
-/// appearance comes from native Typst rules.
+/// The layout is purely structural, so its looks come from rules on those
+/// labels.
 ///
 /// ```typ
 /// #show label("mosaic-cell-header"): mosaic.surface(fill: luma(240))

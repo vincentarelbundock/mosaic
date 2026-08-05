@@ -23,7 +23,7 @@ class ThemeArchitectureTests(unittest.TestCase):
         self.assertTrue((light / "definition.typ").is_file())
         self.assertFalse((light / "setup.typ").exists())
         facade = (SRC / "themes" / "light.typ").read_text(encoding="utf-8")
-        self.assertIn("theme.setup(definition)", facade)
+        self.assertIn("_extension.setup(definition)", facade)
         self.assertNotIn('"../setup.typ": setup', facade)
 
     def test_builtin_definitions_do_not_import_setup_machinery(self) -> None:
@@ -36,7 +36,7 @@ class ThemeArchitectureTests(unittest.TestCase):
         for name in BUILTINS:
             self.assertFalse((SRC / "themes" / name / "setup.typ").exists())
             source = (SRC / "themes" / f"{name}.typ").read_text(encoding="utf-8")
-            self.assertIn("theme.setup(definition)", source)
+            self.assertIn("_extension.setup(definition)", source)
             for retired in RETIRED_HELPERS:
                 self.assertNotIn(retired, source, f"{name} facade retains retired helper {retired}")
 
@@ -54,15 +54,15 @@ class ThemeArchitectureTests(unittest.TestCase):
         self.assertFalse((STARTER / "_starter-setup.typ").exists())
         self.assertFalse((STARTER / "_starter-layouts-impl.typ").exists())
         self.assertFalse((STARTER / "_starter-tokens.typ").exists())
-        self.assertIn("theme.setup(definition)", facade)
-        for name in ("slide", "note", "pause", "fit", "surface", "grids", "steps", "components", "theme"):
+        self.assertIn("themes.setup(definition)", facade)
+        for name in ("slide", "note", "fit", "surface", "grids", "steps", "components"):
             self.assertIn(name, facade)
 
     def test_portfolio_uses_the_same_reduced_structure(self) -> None:
         self.assertFalse((PORTFOLIO / "theme-setup.typ").exists())
         self.assertFalse((PORTFOLIO / "theme-layouts-impl.typ").exists())
         facade = (PORTFOLIO / "theme.typ").read_text(encoding="utf-8")
-        self.assertIn("theme.setup(definition)", facade)
+        self.assertIn("themes.setup(definition)", facade)
 
 
 if __name__ == "__main__":

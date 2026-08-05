@@ -5,3 +5,4 @@
 #import "minimalist.typ"
 #import "light.typ"
 #import "dark.typ"
+#import "extension.typ": setup, light-palette, light-roles

@@ -1,6 +1,6 @@
 // Shared semantic roles, structural defaults, and style normalization for
 // components.
-#import "../shared.typ": fail, require-dictionary, reject-unknown-keys
+#import "../shared.typ": fail, validate-dictionary, validate-keys
 #import "../deck-state.typ": deck-state
 #import "../role-defaults.typ": default-roles
 
@@ -10,7 +10,7 @@
 // states its colors without restating its shapes. Before the split, a themed
 // component module had to repeat the stroke thickness, radius, and inset just to
 // change a fill, and the two copies drifted.
-#let component-metrics = (
+#let component-tokens = (
   stroke-thickness: 0.8pt,
   radius: 6pt,
   inset: 0.65em,
@@ -76,24 +76,24 @@
   }
 }
 
-#let normalize-style(
+#let validate-style(
   style: (:),
   role-name: "neutral",
   defaults: (:),
   contextual: false,
 ) = {
-  require-dictionary(style, "component style")
+  _ = validate-dictionary(style, "component style")
   let allowed = (
     "fill", "stroke", "radius", "inset", "align", "text",
   )
-  reject-unknown-keys(style, allowed, "component style")
-  require-dictionary(style.at("text", default: (:)), "component style text")
+  _ = validate-keys(style, allowed, "component style")
+  _ = validate-dictionary(style.at("text", default: (:)), "component style text")
   let colors = role(role-name, contextual: contextual)
   (
     fill: colors.fill,
-    stroke: component-metrics.stroke-thickness + colors.accent,
-    radius: component-metrics.radius,
-    inset: component-metrics.inset,
+    stroke: component-tokens.stroke-thickness + colors.accent,
+    radius: component-tokens.radius,
+    inset: component-tokens.inset,
     align: left,
     text: (fill: colors.text),
   ) + defaults + style

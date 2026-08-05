@@ -1,7 +1,7 @@
 // Public and internal constructors for canonical grid nodes.
 #import "../shared.typ": tag, fail
 #import "model.typ": (
-  plane-ids, is-node, is-track, split-name,
+  plane-ids, is-node, is-track, axis-name,
   is-stroke, is-track-size,
 )
 #import "validation.typ": validate
@@ -161,7 +161,7 @@
   stroke: none,
   ..children,
 ) = {
-  let name = split-name(axis)
+  let name = axis-name(axis)
   let children = children.pos()
   if axis not in ("width", "height") {
     fail("split axis must be \"width\" or \"height\"")
@@ -200,7 +200,7 @@
   result
 }
 
-#let normalize-split-child(value) = {
+#let validate-split-child(value) = {
   let size = 1fr
   let child = value
   if is-track(value) {
@@ -215,12 +215,12 @@
   (size, child)
 }
 
-#let split-node(axis, gutter, stroke, children) = {
-  let name = split-name(axis)
+#let make-split(axis, gutter, stroke, children) = {
+  let name = axis-name(axis)
   if children.len() == 0 {
     fail(name + " must contain at least one child")
   }
-  let parts = children.map(normalize-split-child)
+  let parts = children.map(validate-split-child)
   let tracks = parts.map(part => part.at(0))
   let nodes = parts.map(part => part.at(1))
   split(axis, tracks: tracks, gutter: gutter, stroke: stroke, ..nodes)
@@ -259,7 +259,7 @@
   /// `t`. At least one is required.
   /// -> arguments
   ..children,
-) = split-node("width", gutter, stroke, children.pos())
+) = make-split("width", gutter, stroke, children.pos())
 
 /// Splits the available height, arranging its children as rows.
 ///
@@ -288,6 +288,6 @@
   /// At least one is required.
   /// -> arguments
   ..children,
-) = split-node("height", gutter, stroke, children.pos())
+) = make-split("height", gutter, stroke, children.pos())
 
 

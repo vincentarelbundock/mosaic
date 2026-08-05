@@ -113,6 +113,10 @@
 ///
 /// *Choosing a layout*
 ///
+/// The selection is the one positional subject, so
+/// `slide("content", variant: "body")[...]` and
+/// `slide(layout: "content", variant: "body")[...]` are the same slide.
+///
 /// - `auto`: the configured `content` layout. The default.
 /// - `"content"`, `"title"`, `"section"`: the matching entry in
 ///   `setup(layouts:)`. The name also determines numbering and the section
@@ -156,8 +160,9 @@
 /// -> content
 #let slide(
   /// Which layout resolves this slide: `auto` for the configured content
-  /// layout, one of the names `"content"`, `"title"`, or `"section"`, a
-  /// `mosaic.layouts.*` value, or a raw `mosaic.grids.*` tree.
+  /// layout, one of the names `"content"`, `"title"`, `"section"`, or
+  /// `"image"`, a `mosaic.layouts.*` value, or a raw `mosaic.grids.*` tree.
+  /// Also accepted as the leading positional argument.
   /// -> auto | str | dictionary
   layout: auto,
   /// Whether the slide contributes to logical slide numbering. `auto` numbers
@@ -176,6 +181,15 @@
 ) = {
   let named = bodies.named()
   let bodies = bodies.pos()
+  // A leading string or layout/grid dictionary is the positional layout
+  // selection; cell bodies are always content, so the forms cannot collide.
+  if bodies.len() > 0 and type(bodies.first()) in (str, dictionary) {
+    if layout != auto {
+      fail("slide layout given both positionally and as layout:")
+    }
+    layout = bodies.first()
+    bodies = bodies.slice(1)
+  }
   // The selection is validated first so an unknown layout name reports itself
   // rather than failing the field lookup that follows.
   let layout = validate-layout-selection(layout)

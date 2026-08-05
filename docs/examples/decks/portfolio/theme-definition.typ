@@ -2,13 +2,13 @@
 //
 // Mosaic's engine emits no typography, so this states the whole look,
 // including the canonical <mosaic-cell-*> vocabulary.
-#import "@local/mosaic:0.0.1": theme
 #import "theme-layouts.typ" as layouts
 #import "theme-tokens.typ" as tokens
 
 #let apply(body, colors: (:), options: (:)) = {
   set text(font: "Inter", size: 13pt, fill: colors.text)
-  show: theme.normalize-lists
+  show list.where(tight: true): it => list(tight: false, ..it.children)
+  show enum.where(tight: true): it => enum(tight: false, ..it.children)
   show heading.where(depth: 1): set text(size: 2em, weight: "bold")
   show heading.where(depth: 2): set text(size: 1.4em, weight: "bold")
   show heading: set block(below: 0.75em)

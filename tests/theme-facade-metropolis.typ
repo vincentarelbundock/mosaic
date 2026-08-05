@@ -2,7 +2,7 @@
 #import mosaic.themes.metropolis as m
 
 #let expected = (
-  "setup", "slide", "pause", "grids", "layouts", "steps", "components",
+  "setup", "slide", "grids", "layouts", "steps", "components",
 )
 
 #assert(expected.all(name => name in m))

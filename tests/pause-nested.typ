@@ -6,7 +6,7 @@
   NESTED OUTSIDE
   #block[
     NESTED FIRST
-    #m.pause
+    #m.steps.pause
     NESTED SECOND
   ]
 ]

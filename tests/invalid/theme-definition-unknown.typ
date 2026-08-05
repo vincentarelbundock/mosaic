@@ -10,5 +10,5 @@
   ),
   mystery: true,
 )
-#show: m.theme.setup(theme)
+#show: m.themes.setup(theme)
 == INVALID

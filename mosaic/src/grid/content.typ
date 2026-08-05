@@ -1,6 +1,6 @@
 // Slide-content routing for canonical grid trees.
 #import "../shared.typ": fail
-#import "traversal.typ": collect-cell-ids, fold-grid
+#import "traversal.typ": resolve-cell-ids, fold-grid
 
 // The IDs of every content-bearing cell (content == none), in the same
 // depth-first declaration order that positional bodies fill. This is the
@@ -35,7 +35,7 @@
     }
   }
   if named.len() > 0 {
-    let all-ids = collect-cell-ids(node)
+    let all-ids = resolve-cell-ids(node)
     let explicit = (:)
     for (id, value) in named {
       if id not in all-ids {

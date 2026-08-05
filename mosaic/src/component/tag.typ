@@ -1,5 +1,5 @@
 // Compact inline tag.
-#import "style.typ": normalize-style, styled-body, component-metrics
+#import "style.typ": validate-style, styled-body, component-tokens
 
 /// Creates a compact inline tag.
 ///
@@ -36,15 +36,15 @@
   role: "neutral",
   /// Corner radius. Oversize it (`999pt`) for fully rounded pill ends.
   /// -> length | dictionary
-  radius: component-metrics.tag-radius,
+  radius: component-tokens.tag-radius,
   /// Partial style overrides, with the keys `fill`, `stroke`, `radius`,
   /// `inset`, `align`, and `text`, where `text` is a dictionary of native
   /// `text` arguments such as `size` and `weight`.
   /// -> dictionary
   style: (:),
 ) = context {
-  let it = normalize-style(
-    style: (inset: component-metrics.tag-inset) + style + (radius: radius),
+  let it = validate-style(
+    style: (inset: component-tokens.tag-inset) + style + (radius: radius),
     role-name: role,
     contextual: true,
   )

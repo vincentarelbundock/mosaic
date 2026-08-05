@@ -304,7 +304,7 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(pdf_info("pause-empty-markers"), "Pages:           1")
 
     # Whitespace-normalized: the phrases are one wrapped paragraph, so a line
-    # break may fall inside any of them depending on the theme's metrics.
+    # break may fall inside any of them depending on the theme's tokens.
     pause_handout_text = " ".join(
         pdf_text("pause-handout").read_text(encoding="utf-8", errors="replace").split()
     )

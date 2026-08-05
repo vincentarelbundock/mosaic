@@ -6,7 +6,7 @@
   #m.note[ALWAYS NOTE]
   COMPOSE FIRST
 
-  #m.pause
+  #m.steps.pause
 
   #m.steps.reveal(
     [COMPOSE SECOND #m.note[SECOND NOTE]],

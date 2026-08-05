@@ -10,5 +10,5 @@
   ),
   layouts: (content: mosaic.layouts.content()),
 )
-#show: mosaic.theme.setup(custom)
+#show: mosaic.themes.setup(custom)
 Body

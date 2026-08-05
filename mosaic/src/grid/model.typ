@@ -39,7 +39,7 @@
     and value.kind == "track"
 )
 
-#let split-name(axis) = if axis == "width" { "h" } else { "v" }
+#let axis-name(axis) = if axis == "width" { "h" } else { "v" }
 
 #let is-stroke(value) = (
   value == none

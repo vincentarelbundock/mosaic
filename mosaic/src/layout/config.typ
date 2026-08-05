@@ -1,5 +1,5 @@
 // Validation shared by setup, themes, slides, and the deck compiler.
-#import "../shared.typ": fail, reject-unknown-keys
+#import "../shared.typ": fail, validate-keys
 #import "../grid/model.typ": is-node
 #import "core.typ": is-layout, make-layout
 #import "api.typ" as base-layouts
@@ -42,7 +42,7 @@
   if type(value) != dictionary {
     fail(name + " must be a dictionary")
   }
-  reject-unknown-keys(value, layout-names, name)
+  _ = validate-keys(value, layout-names, name)
   if not partial {
     for layout-name in layout-names {
       if layout-name not in value {

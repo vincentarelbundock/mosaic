@@ -14,9 +14,9 @@ IMPORT = re.compile(
 )
 LET = re.compile(r"(?m)^#let\s+([A-Za-z_][A-Za-z0-9_-]*)\b")
 
-NEUTRAL_API = {"setup", "definition", "slide", "note", "pause", "fit", "surface", "grids", "layouts", "steps", "components", "theme", "themes"}
-SHARED_API = {"slide", "note", "pause", "fit", "surface", "grids", "layouts", "steps", "components", "theme"}
-THEMED_API = {"setup", "definition", "slide", "note", "pause", "fit", "surface", "grids", "layouts", "steps", "components", "theme"}
+NEUTRAL_API = {"setup", "definition", "slide", "note", "fit", "surface", "grids", "layouts", "steps", "components", "themes"}
+SHARED_API = {"slide", "note", "fit", "surface", "grids", "layouts", "steps", "components"}
+THEMED_API = {"setup", "definition", "slide", "note", "fit", "surface", "grids", "layouts", "steps", "components"}
 THEMED_LAYOUTS = {"content", "title", "section", "image", "author"}
 THEMED_COMPONENTS = {"frame", "callout", "tag", "quote", "divider", "progress", "image", "figure"}
 
@@ -29,17 +29,16 @@ EXPECTED = {
     # the one public entry point, and only `fit` is re-exported from the
     # facades, which the entries above already pin.
     "mosaic/src/layout/api.typ": {"content", "title", "section", "image", "author"},
-    "mosaic/src/incremental/api.typ": {"on", "reveal", "replace", "reduce"},
+    "mosaic/src/incremental/api.typ": {"on", "reveal", "replace", "reduce", "pause"},
     "mosaic/src/component/api.typ": THEMED_COMPONENTS,
     # light-palette and light-roles are the built-in colors and semantic role
     # table, exported so a custom theme extends them instead of copying them.
     "mosaic/src/themes/extension.typ": {
         "setup",
-        "normalize-lists",
         "light-palette",
         "light-roles",
     },
-    "mosaic/src/themes/api.typ": {"metropolis", "cream", "minimalist", "light", "dark"},
+    "mosaic/src/themes/api.typ": {"metropolis", "cream", "minimalist", "light", "dark", "setup", "light-palette", "light-roles"},
     "mosaic/src/themes/light.typ": THEMED_API,
     "mosaic/src/themes/light/layouts.typ": THEMED_LAYOUTS,
     "mosaic/src/themes/dark.typ": THEMED_API,

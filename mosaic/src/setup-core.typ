@@ -5,7 +5,7 @@
 )
 #import "grid/render.typ": overflow-report
 #import "settings.typ": make-settings
-#import "shared.typ": fail, reject-unknown-keys
+#import "shared.typ": fail, validate-keys
 #import "color-defaults.typ": default-colors
 #import "layout/config.typ": standard-layouts, validate-layouts
 #import "paper.typ": default-paper, resolve-paper
@@ -41,7 +41,7 @@
     fail("internal setup options must be a dictionary; got " + repr(type(options)))
   }
   let defaults = default-setup
-  reject-unknown-keys(options, defaults, "setup")
+  _ = validate-keys(options, defaults, "setup")
   let options = defaults + options
   let paper = options.paper
   let spacing = options.spacing

@@ -13,14 +13,14 @@
 // containment. Everything typographic stays out of this module by design:
 // every `set` and `show` rule a slide renders with belongs to the active
 // theme's `apply`.
-#import "shared.typ": fail, require-dictionary, reject-unknown-keys
+#import "shared.typ": fail, validate-dictionary, validate-keys
 #import "color-defaults.typ": default-colors, default-line
 #import "role-defaults.typ": validate-roles
 #import "author.typ": analyze-authors
 
 #let merge-record(base, override, name) = {
-  require-dictionary(override, name)
-  reject-unknown-keys(override, base, name)
+  _ = validate-dictionary(override, name)
+  _ = validate-keys(override, base, name)
   base + override
 }
 
@@ -111,7 +111,7 @@
   if type(overrides) != dictionary {
     fail("setup colors must be a dictionary")
   }
-  reject-unknown-keys(overrides, base, "setup colors")
+  _ = validate-keys(overrides, base, "setup colors")
   for (name, value) in overrides {
     if type(value) != color {
       fail("setup colors " + name + " must be a color")
@@ -120,7 +120,7 @@
   base + overrides
 }
 
-#let normalize-content(value) = {
+#let validate-content(value) = {
   if type(value) != dictionary {
     fail("setup content must be a dictionary")
   }
@@ -151,7 +151,7 @@
 ) = {
   let colors = validate-colors(colors)
   let roles = validate-roles(roles)
-  let content = normalize-content(content)
+  let content = validate-content(content)
   let deck = make-deck(..deck)
   let spacing = merge-record(default-spacing, spacing, "spacing")
   let notes = merge-record(default-notes, notes, "notes")

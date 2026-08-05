@@ -3,30 +3,6 @@
 #import "../color-defaults.typ": light-palette
 #import "../role-defaults.typ": default-roles as light-roles
 
-/// Loosens tight lists and spaces their items, so markup written as a compact
-/// bullet list reads at presentation distance.
-///
-/// This is an ordinary show-rule transform for a theme's `apply` callback (or
-/// any deck preamble):
-///
-/// ```typ
-/// apply: (body, colors: (:), options: (:)) => {
-///   show: mosaic.theme.normalize-lists
-///   body
-/// }
-/// ```
-///
-/// -> content
-#let normalize-lists(
-  /// The content to transform.
-  /// -> content
-  body,
-) = {
-  show list.where(tight: true): it => list(tight: false, ..it.children)
-  show enum.where(tight: true): it => enum(tight: false, ..it.children)
-  body
-}
-
 /// Binds a passive theme definition to Mosaic's setup engine.
 ///
 /// A theme is data, not code: you describe colors, defaults, and rules in a
@@ -54,7 +30,7 @@
 ///   },
 /// )
 ///
-/// #show: mosaic.theme.setup(starlight).with(density: "dense")
+/// #show: mosaic.themes.setup(starlight).with(density: "dense")
 /// ```
 ///
 /// *Definition keys*
@@ -75,9 +51,9 @@
 ///   layouts.
 /// - `apply`: `(body, colors: , options: ) => body`, holding every native show
 ///   and set rule the theme owns: base typography (`set text(font: ..)`),
-///   heading and cell-label rules, and helpers such as `normalize-lists`. The
-///   engine has already filled the canvas and set the text fill from the
-///   resolved colors, so `apply` states only what the theme changes.
+///   heading, list, and cell-label rules. The engine has already filled the
+///   canvas and set the text fill from the resolved colors, so `apply` states
+///   only what the theme changes.
 ///
 /// *Theme options*
 ///

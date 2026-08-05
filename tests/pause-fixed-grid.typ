@@ -7,7 +7,7 @@
     id: "fixed",
     content: [
       FIXED PAUSE FIRST
-      #m.pause
+      #m.steps.pause
       FIXED PAUSE SECOND
     ],
   ),

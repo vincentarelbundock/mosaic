@@ -5,7 +5,7 @@
 #import "core.typ": (
   make-layout,
   validate-accent,
-  validate-image-spec,
+  validate-image,
 )
 #import "support.typ": (
   adapt-fill,
@@ -80,7 +80,7 @@
   }
   let fields = validate-semantic-image-use(fields, "layout \"title\"")
   if fields.image != none {
-    _ = validate-image-spec(
+    _ = validate-image(
       fields.image,
       "layout \"title\" image",
       allow-size: false,
@@ -163,14 +163,29 @@
 /// details; the compact variants show names, affiliations, and linked ORCID
 /// icons while omitting contact details.
 ///
+/// *Labels*
+///
+/// Every resolved cell carries a label, so appearance comes from native Typst
+/// rules:
+///
+/// - `mosaic-cell-title`: the title stack, in every variant. Most variants
+///   compose the subtitle and the details inside it too.
+/// - `mosaic-cell-details`: the affiliation and date band, in the `swiss` and
+///   `academic` variants, which set those tiers outside the title cell.
+/// - `mosaic-cell-authors`: the byline, in the `academic` variant.
+/// - `mosaic-cell-image`: the picture, in the directional image variants. The
+///   `image-background` variant paints the picture as the title cell's
+///   background instead, so it has no image cell of its own.
+///
+/// One further label is not a cell: the display line of the title stack carries
+/// `mosaic-title-display`, which is where a theme states the title's display
+/// size.
+///
 /// *Styling*
 ///
-/// The layout is structural. Cells are labeled `<mosaic-cell-title>`,
-/// `<mosaic-cell-authors>`, `<mosaic-cell-details>`, `<mosaic-cell-accent>`,
-/// and `<mosaic-cell-image>`, so appearance comes from native Typst rules.
-/// A rule on `<mosaic-cell-title>` reaches the whole composed stack: title,
-/// subtitle, and details alike. Recoloring it is what light-on-dark
-/// compositions over a photograph need.
+/// The layout is structural. A rule on `<mosaic-cell-title>` reaches the whole
+/// composed stack: title, subtitle, and details alike. Recoloring it is what
+/// light-on-dark compositions over a photograph need.
 ///
 /// ```typ
 /// #show label("mosaic-cell-title"): set text(fill: white)
@@ -212,7 +227,7 @@
   /// -> auto | content | str | none
   date: auto,
   /// The picture used by the image variants, and rejected by the others. Give a
-  /// path, ready-made content, or a dictionary spec whose `scrim` key quiets the
+  /// path, ready-made content, or a dictionary whose `scrim` key quiets the
   /// photograph enough to read text over it, as in
   /// `(path: "cover.webp", scrim: black.transparentize(55%))`.
   /// -> none | content | str | path | dictionary
@@ -281,7 +296,7 @@
 // display size lives on the <mosaic-title-display> label inside the cell, so
 // nothing here compounds with it and one `set text(size: ..)` on
 // <mosaic-cell-title> resizes the stack as a unit. See title-display.
-#let title-metrics = (
+#let title-tokens = (
   // Tiers of the title stack.
   subtitle-scale: 1.05,
   details-scale: 0.72,
@@ -348,11 +363,11 @@
 #let title-styles(settings) = (
   subtitle: (
     fill: settings.colors.muted,
-    size: settings.title-metrics.subtitle-scale * 1em,
+    size: settings.title-tokens.subtitle-scale * 1em,
   ),
   details: (
     fill: settings.colors.muted,
-    size: settings.title-metrics.details-scale * 1em,
+    size: settings.title-tokens.details-scale * 1em,
   ),
 )
 
@@ -406,8 +421,8 @@
 // Code blocks, not markup blocks: markup newlines become spaces, which would
 // leak into joined lists as stray gaps before separators.
 #let orcid-link(author, settings) = if author.orcid != none {
-  let size = settings.title-metrics.orcid-size
-  box(width: settings.title-metrics.orcid-gap)
+  let size = settings.title-tokens.orcid-size
+  box(width: settings.title-tokens.orcid-gap)
   box(
     link(
       "https://orcid.org/" + author.orcid,
@@ -465,10 +480,10 @@
 #let accent-rule(accent, settings, above: 0pt) = block(
   above: above,
   line(
-    length: settings.title-metrics.accent-rule-length * 1em,
+    length: settings.title-tokens.accent-rule-length * 1em,
     stroke: (
       paint: accent,
-      thickness: settings.title-metrics.accent-rule-thickness * 1em,
+      thickness: settings.title-tokens.accent-rule-thickness * 1em,
       cap: "round",
     ),
   ),
@@ -492,7 +507,7 @@
     // heavy block of the page.
     if fields.subtitle != none {
       block(
-        above: settings.title-metrics.subtitle-gap * settings.spacing.gap,
+        above: settings.title-tokens.subtitle-gap * settings.spacing.gap,
         // The muted fill yields to the cell's text fill once a rule sets one,
         // so label-targeted color overrides reach the whole stack.
         context text(
@@ -508,18 +523,18 @@
       accent-rule(
         fields.accent,
         settings,
-        above: settings.title-metrics.rule-gap * settings.spacing.gap,
+        above: settings.title-tokens.rule-gap * settings.spacing.gap,
       )
     }
     if details != none {
       block(
         above: if show-rule {
-          settings.title-metrics.details-gap-with-rule
+          settings.title-tokens.details-gap-with-rule
         } else {
-          settings.title-metrics.details-gap-without-rule
+          settings.title-tokens.details-gap-without-rule
         } * settings.spacing.gap,
         {
-          set par(leading: settings.title-metrics.details-leading)
+          set par(leading: settings.title-tokens.details-leading)
           context text(
             ..adapt-fill(title-styles(settings).details, settings),
             details,
@@ -570,7 +585,7 @@
   title-display(as-content(fields.title))
   if fields.subtitle != none {
     block(
-      above: settings.title-metrics.subtitle-gap * settings.spacing.gap,
+      above: settings.title-tokens.subtitle-gap * settings.spacing.gap,
       // Contextual because `adapt-fill` reads the live text fill.
       context {
         let styles = title-styles(settings).subtitle
@@ -608,8 +623,8 @@
 // stays anchored to the body type, answering to a rule on its own cell and not
 // to the title's scale.
 #let details-styles(settings, unit: 1em) = (
-  byline: (size: settings.title-metrics.byline-scale * unit, weight: "medium"),
-  fine: (size: settings.title-metrics.fine-print-scale * unit),
+  byline: (size: settings.title-tokens.byline-scale * unit, weight: "medium"),
+  fine: (size: settings.title-tokens.fine-print-scale * unit),
 )
 
 // A two-tier centered or left-aligned details stack: the byline in the ink
@@ -632,7 +647,7 @@
   }
   let fine = parts.affiliations
   if parts.date != none { fine.push(parts.date) }
-  set par(leading: settings.title-metrics.details-leading)
+  set par(leading: settings.title-tokens.details-leading)
   if parts.names.len() > 0 {
     text(..ink-style, join-content(parts.names))
   }
@@ -668,25 +683,25 @@
         length: 100%,
         stroke: (
           paint: rule-paint(fields, settings),
-          thickness: settings.title-metrics.accent-stroke-thickness * base,
+          thickness: settings.title-tokens.accent-stroke-thickness * base,
         ),
       ))
     }
     if has-details(parts) {
       block(
-        above: settings.title-metrics.band-details-offset * base,
+        above: settings.title-tokens.band-details-offset * base,
         grid(
           columns: (1fr, 1fr, auto),
           column-gutter: base,
           if parts.names.len() > 0 {
-            set par(leading: settings.title-metrics.details-leading)
+            set par(leading: settings.title-tokens.details-leading)
             text(
               ..(type-scale.byline + (fill: settings.colors.text)),
               join-content(parts.names),
             )
           },
           if parts.affiliations.len() > 0 {
-            set par(leading: settings.title-metrics.details-leading)
+            set par(leading: settings.title-tokens.details-leading)
             text(
               ..(type-scale.fine + (fill: settings.colors.muted)),
               join-content(parts.affiliations, separator: [ · ]),
@@ -742,7 +757,7 @@
 // plate: the whole slide takes the deck's text color and the type is knocked
 // out in the canvas color. Typography alone; no marks.
 #let resolve-plate-title(fields, settings) = {
-  let pale = settings.colors.canvas.transparentize(settings.title-metrics.scrim-opacity)
+  let pale = settings.colors.canvas.transparentize(settings.title-tokens.scrim-opacity)
   let parts = details-parts(fields, settings)
   styled-cell(
     id: "title",
@@ -752,7 +767,7 @@
         heading-stack(fields, settings, subtitle-fill: pale)
         if has-details(parts) {
           block(
-            above: settings.title-metrics.plate-details-offset * 1em,
+            above: settings.title-tokens.plate-details-offset * 1em,
             details-stack(parts, settings, ink: settings.colors.canvas, pale: pale, adaptive: false),
           )
         }
@@ -777,16 +792,16 @@
       stroke: if has-rule(fields) {
         (
           paint: rule-paint(fields, settings),
-          thickness: settings.title-metrics.accent-stroke-thickness * settings.base-size,
+          thickness: settings.title-tokens.accent-stroke-thickness * settings.base-size,
         )
       } else {
         none
       },
-      inset: settings.title-metrics.card-inset * settings.spacing.inset,
+      inset: settings.title-tokens.card-inset * settings.spacing.inset,
       {
         align(center + horizon, {
           set align(center)
-          text(size: settings.title-metrics.card-title-scale, heading-stack(fields, settings))
+          text(size: settings.title-tokens.card-title-scale, heading-stack(fields, settings))
         })
         if has-details(parts) {
           place(
@@ -796,7 +811,7 @@
         }
       },
     ),
-    style: (inset: settings.title-metrics.card-outer-inset * settings.spacing.inset),
+    style: (inset: settings.title-tokens.card-outer-inset * settings.spacing.inset),
   )
 }
 
@@ -810,7 +825,7 @@
 
 #let academic-affiliation(item, settings) = {
   super(str(item.at(0) + 1))
-  box(width: settings.title-metrics.affiliation-marker-gap)
+  box(width: settings.title-tokens.affiliation-marker-gap)
   as-content(item.at(1))
 }
 
@@ -829,7 +844,7 @@
 #let academic-contact(author, settings) = {
   if author.corresponding {
     [\*]
-    box(width: settings.title-metrics.affiliation-marker-gap)
+    box(width: settings.title-tokens.affiliation-marker-gap)
   }
   join-content(contact-items(author), separator: [ · ])
 }
@@ -853,7 +868,7 @@
   // the whole composition anchors to the lower edge of the slide.
   children.push(t(1fr, title-body-cell(
     settings,
-    scale: settings.title-metrics.academic-scale,
+    scale: settings.title-tokens.academic-scale,
     content: title-stack-content(
       fields,
       settings,
@@ -910,14 +925,14 @@
   let text-column = title-stack(
     fields,
     settings,
-    scale: settings.title-metrics.image-title-scale,
+    scale: settings.title-tokens.image-title-scale,
   )
   let position = semantic-image-position(fields.variant)
   let tracks = if fields.tracks == auto {
     if position in ("left", "top") {
-      settings.title-metrics.image-tracks
+      settings.title-tokens.image-tracks
     } else {
-      settings.title-metrics.image-tracks.rev()
+      settings.title-tokens.image-tracks.rev()
     }
   } else {
     fields.tracks
@@ -931,8 +946,8 @@
 }
 
 #let background-stack-inset(alignment, settings) = {
-  let side-reserve = settings.title-metrics.side-reserve
-  let centered-inset = settings.title-metrics.centered-inset
+  let side-reserve = settings.title-tokens.side-reserve
+  let centered-inset = settings.title-tokens.centered-inset
   if alignment in (right, right + top, right + horizon, right + bottom) {
     (
       top: settings.spacing.inset,
@@ -992,7 +1007,7 @@
   // The recipe rides on `settings`, which every helper below already receives,
   // so the measurements reach the whole composition without threading an extra
   // argument through seven variants.
-  let settings = settings + (title-metrics: title-metrics)
+  let settings = settings + (title-tokens: title-tokens)
   if fields.variant == "academic" {
     resolve-academic-title(fields, settings)
   } else if fields.variant == "swiss" {

@@ -1,5 +1,6 @@
 // Exact public Minimalist facade: shared Mosaic API plus themed setup/layouts.
-#import "../shared-api.typ": slide, note, pause, fit, surface, grids, steps, components, theme
+#import "../shared-api.typ": slide, note, fit, surface, grids, steps, components
+#import "extension.typ" as _extension
 #import "minimalist/definition.typ": definition
 #import "minimalist/layouts.typ" as layouts
-#let setup = theme.setup(definition)
+#let setup = _extension.setup(definition)

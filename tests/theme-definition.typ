@@ -32,7 +32,7 @@
   apply: apply,
 )
 
-#show: mosaic.theme.setup(theme).with(
+#show: mosaic.themes.setup(theme).with(
   title: [Passive theme definition],
 )
 

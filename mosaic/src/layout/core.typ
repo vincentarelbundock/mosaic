@@ -1,6 +1,6 @@
 // Shared record shape and validation primitives for semantic layouts.
 #import "../shared.typ": (
-  tag, fail, reject-unknown-keys, is-path, validate-scrim,
+  tag, fail, validate-keys, is-path, validate-scrim,
 )
 
 #let layout-field-keys = (
@@ -46,12 +46,12 @@
 
 
 // The fitting vocabulary Mosaic validates, shared by every place a picture
-// spec is checked so the spelling cannot drift. Native `image` also accepts
+// dictionary is checked so the spelling cannot drift. Native `image` also accepts
 // `"stretch"`; a design that truly wants distortion passes ready-made content
 // built on the native element instead.
 #let image-fit-modes = ("cover", "contain")
 
-#let validate-image-spec(
+#let validate-image(
   value,
   name,
   allow-size: true,
@@ -59,7 +59,7 @@
   if type(value) == content {
     return value
   }
-  let spec = if is-path(value) {
+  let value = if is-path(value) {
     (path: value)
   } else if type(value) == dictionary {
     value
@@ -74,18 +74,18 @@
   } else {
     ("path", "alt", "fit", "scrim")
   }
-  reject-unknown-keys(spec, allowed, name)
-  if "path" not in spec or not is-path(spec.path) {
+  _ = validate-keys(value, allowed, name)
+  if "path" not in value or not is-path(value.path) {
     fail(name + " path must be a non-empty string or native path")
   }
-  let alt = spec.at("alt", default: none)
+  let alt = value.at("alt", default: none)
   if alt != none and type(alt) != str {
     fail(name + " alt must be a string or none")
   }
-  let fit = spec.at("fit", default: "cover")
+  let fit = value.at("fit", default: "cover")
   if type(fit) != str or fit not in image-fit-modes {
     fail(name + " fit must be \"cover\" or \"contain\"")
   }
-  _ = validate-scrim(spec.at("scrim", default: none), name)
-  spec
+  _ = validate-scrim(value.at("scrim", default: none), name)
+  value
 }

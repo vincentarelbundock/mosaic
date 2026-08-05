@@ -1,5 +1,5 @@
 // Private engine that consumes passive theme definitions.
-#import "../shared.typ": fail, reject-unknown-keys
+#import "../shared.typ": fail, validate-keys
 #import "../settings.typ": resolve-colors
 #import "../role-defaults.typ": validate-roles
 #import "../setup-core.typ": setup-core, default-setup
@@ -24,7 +24,7 @@
   if type(theme) != dictionary {
     fail("theme must be a dictionary")
   }
-  reject-unknown-keys(theme, default-definition, "theme")
+  _ = validate-keys(theme, default-definition, "theme")
   let theme = default-definition + theme
   if type(theme.name) != str or theme.name.trim() == "" {
     fail("theme name must be a non-empty string")

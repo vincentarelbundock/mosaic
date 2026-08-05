@@ -7,7 +7,7 @@
 #import "../shared.typ": fail
 #import "../caption-fit.typ": captioned-image
 #import "../grid/constructors.typ": styled-cell, v, t
-#import "core.typ": image-fit-modes, make-layout, validate-image-spec
+#import "core.typ": image-fit-modes, make-layout, validate-image
 #import "support.typ": image-content, header-inset
 #import "image-support.typ": (
   directional-image-layout,
@@ -30,7 +30,7 @@
   if fields.image == none {
     fail("layout \"image\" requires an image")
   }
-  _ = validate-image-spec(
+  _ = validate-image(
     fields.image,
     "layout \"image\" image",
     allow-size: false,
@@ -85,12 +85,24 @@
 /// numbering off with an ordinary `set figure(numbering: none)`. Captions are
 /// accepted by the `figure` variant only.
 ///
+/// *Labels*
+///
+/// Every resolved cell carries a label, so appearance comes from native Typst
+/// rules:
+///
+/// - `mosaic-cell-header`: the header, in the `figure` and directional
+///   variants.
+/// - `mosaic-cell-body`: the text region, in the directional and `full`
+///   variants.
+/// - `mosaic-cell-image`: the picture, in the `figure` and directional
+///   variants. The `full` variant paints the picture as the body cell's
+///   background instead, so it has no image cell of its own.
+///
 /// *Styling*
 ///
-/// The layout is purely structural. Resolved cells are labeled
-/// `<mosaic-cell-header>`, `<mosaic-cell-body>`, and `<mosaic-cell-image>`, so
-/// appearance comes from native Typst rules. The `full` variant inherits the
-/// surrounding native text color, so quiet the photograph with the image spec's
+/// The layout is purely structural, so its looks come from rules on those
+/// labels. The `full` variant inherits the
+/// surrounding native text color, so quiet the photograph with the image dictionary's
 /// `scrim` key and override the cell's text fill.
 ///
 /// ```typ
@@ -107,7 +119,7 @@
 /// -> dictionary
 #let image(
   /// The picture the slide is built around, as the sole positional argument.
-  /// Give a path, ready-made content, or a dictionary spec whose `scrim` key
+  /// Give a path, ready-made content, or a dictionary whose `scrim` key
   /// paints a layer over the picture and under any text composed on top of it.
   /// -> content | str | path | dictionary
   image,

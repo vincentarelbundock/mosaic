@@ -1,7 +1,7 @@
 // Position indicator driven by the deck's logical slide and section counters.
 #import "../shared.typ": fail
 #import "../deck-state.typ": logical-slide, logical-section
-#import "style.typ": role as component-role, component-metrics
+#import "style.typ": role as component-role, component-tokens
 
 /// Displays progress through logical slides or semantic sections in the deck.
 ///
@@ -65,7 +65,7 @@
   width: auto,
   /// Stroke thickness of the `circle` and `line` variants.
   /// -> length
-  thickness: component-metrics.progress-thickness,
+  thickness: component-tokens.progress-thickness,
   /// Paint of the inactive remainder. `auto` uses the role's fill.
   /// -> auto | color | gradient | tiling
   fill: auto,
@@ -98,7 +98,7 @@
   let fill = if fill == auto { colors.fill } else { fill }
   let accent = if accent == auto { colors.accent } else { accent }
   let width = if width == auto {
-    if variant == "circle" { component-metrics.progress-size } else { 100% }
+    if variant == "circle" { component-tokens.progress-size } else { 100% }
   } else {
     width
   }
@@ -131,7 +131,7 @@
         (accent, amount),
         (fill, amount),
         (fill, 100%),
-        angle: component-metrics.progress-start-angle,
+        angle: component-tokens.progress-start-angle,
         space: rgb,
       ),
     ))

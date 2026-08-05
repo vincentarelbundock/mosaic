@@ -1,5 +1,5 @@
 // Clipped, semantically styled block used as the base of other components.
-#import "style.typ": normalize-style, styled-body
+#import "style.typ": validate-style, styled-body
 
 /// Wraps content in a clipped, semantically styled block.
 ///
@@ -59,7 +59,7 @@
   /// -> auto | length | relative | fraction
   height: auto,
 ) = context {
-  let it = normalize-style(style: style, role-name: role, contextual: true)
+  let it = validate-style(style: style, role-name: role, contextual: true)
   block(
     width: width,
     height: height,

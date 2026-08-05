@@ -1,5 +1,5 @@
 // Horizontal divider, optionally split around a title.
-#import "style.typ": component-metrics, deck-colors
+#import "style.typ": component-tokens, deck-colors
 
 /// Creates a horizontal divider, optionally split around a title.
 ///
@@ -31,13 +31,13 @@
   let stroke = if stroke != auto {
     stroke
   } else if colors == none {
-    component-metrics.stroke-thickness + gray
+    component-tokens.stroke-thickness + gray
   } else {
-    component-metrics.stroke-thickness + colors.line
+    component-tokens.stroke-thickness + colors.line
   }
   grid(
     columns: if title == none { (1fr,) } else { (1fr, auto, 1fr) },
-    gutter: component-metrics.divider-gap,
+    gutter: component-tokens.divider-gap,
     align: horizon,
     ..if title == none {
       (line(length: 100%, stroke: stroke),)

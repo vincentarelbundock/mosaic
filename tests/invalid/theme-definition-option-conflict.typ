@@ -10,5 +10,5 @@
   ),
   options: (paper: "16-9"),
 )
-#show: m.theme.setup(theme)
+#show: m.themes.setup(theme)
 == INVALID

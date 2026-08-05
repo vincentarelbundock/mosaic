@@ -72,6 +72,8 @@ Vocabulary used throughout: *slide* (one unit), *deck* (sequence of slides), *ce
 #m.slide(layout: "image", image: path("fig/chart.png"))
 ```
 
+The layout selection is also accepted as the leading positional argument, so `#m.slide("content", variant: "body")[...]` is the same slide as `#m.slide(layout: "content", variant: "body")[...]`.
+
 The selectable names are `content`, `title`, `section`, and `image`. The first three are also *configurable*: they have defaults, headings create them automatically, and `setup(layouts:)` or a theme can replace them. `image` is selectable but not configurable, since nothing creates an image slide automatically; supply its fields at the call site. Note that `layout: "content"` resolves to the *configured* content layout, whose stock value is `m.layouts.content(variant: "header-body")`, whereas the `m.layouts.content()` factory defaults to `variant: "header-body-footer"`. The two spellings are not interchangeable; a theme or a setup `layouts:` override changes the former only.
 
 Content slides are numbered by default; title and section slides are not. Section slides advance the section counter. `numbered:` explicitly overrides the numbering default.
@@ -120,7 +122,7 @@ Variants:
 
 `m.layouts.title()` inherits `title`, `subtitle`, `authors`, and `date` from setup, so `m.slide(layout: "title")` needs no body. An explicit layout argument wins; pass `none` (or `()` for `authors`) to suppress an inherited field on one slide. For image variants, `scrim:` on the image spec quiets the photograph, as in `image: (path: "cover.webp", scrim: black.transparentize(55%))`; pair `image-background` with a scoped text-color rule on the `<mosaic-cell-title>` or `<mosaic-cell-section>` label for contrast. One such rule recolors the whole stack: the subtitle and details are muted only while the cell carries the deck's ordinary text color, and follow any override, so light-on-dark titles need no hand-built grid. A size rule on the same label works the same way, scaling the stack as a unit (`show label("mosaic-cell-title"): set text(size: 0.45em)` for quiet type in a corner), because the display line carries its own `<mosaic-title-display>` label where the theme states the display size. There is no `scale:` argument, and a hand-built grid is never the way to resize a title.
 
-Mosaic has no automatic shrink-to-fit for body content, by design: a deck whose type size is decided slide by slide loses the typographic scale that holds it together. An overflow warning means cut a bullet, split the slide, or pick a layout with more room. When one indivisible block is oversized (a wide table, a chart, a generated list), scale that block alone with `m.fit(my-table)`, which measures it against its region and scales geometrically. `m.fit(grow: true)[42%]` goes the other way, filling a cell with display type. A fitted block never overflows and so stops appearing in the overflow records, which is why it is for indivisible blocks rather than crowded slides. It also cannot contain `m.pause`, `m.steps`, or `m.note`: measuring hides the body from the runtime's walk, so those would be lost. `m.fit` raises an error rather than dropping them; keep them outside the fitted block.
+Mosaic has no automatic shrink-to-fit for body content, by design: a deck whose type size is decided slide by slide loses the typographic scale that holds it together. An overflow warning means cut a bullet, split the slide, or pick a layout with more room. When one indivisible block is oversized (a wide table, a chart, a generated list), scale that block alone with `m.fit(my-table)`, which measures it against its region and scales geometrically. `m.fit(grow: true)[42%]` goes the other way, filling a cell with display type. A fitted block never overflows and so stops appearing in the overflow records, which is why it is for indivisible blocks rather than crowded slides. It also cannot contain `m.steps.pause`, `m.steps`, or `m.note`: measuring hides the body from the runtime's walk, so those would be lost. `m.fit` raises an error rather than dropping them; keep them outside the fitted block.
 
 A direct `m.layouts.content/title/section(...)` value retains its semantic layout name. A raw custom grid uses ordinary content-slide semantics.
 
@@ -291,15 +293,15 @@ To develop a theme, start locally: define the complete semantic palette and bind
   ),
   apply: (body, colors: (:), options: (:)) => {
     set text(font: "Inter", size: 20pt)
-    show: m.theme.normalize-lists
+    show list.where(tight: true): it => list(tight: false, ..it.children)
     body
   },
 )
 
-#show: m.theme.setup(theme)
+#show: m.themes.setup(theme)
 ```
 
-Only `colors` is required; `name`, `defaults`, `options`, `layouts`, and `apply` are optional. Mosaic's engine emits no `set` or `show` rules of its own, so `apply` states the theme's whole look: base typography, headings, captions, list rhythm, and the canonical `<mosaic-cell-*>` rules the layouts compose against. Copy `light/definition.typ` for the complete set in its plainest form. `m.theme.normalize-lists` is an optional show-rule helper that loosens tight lists for presentation distance. To start from an existing theme, merge its exported definition: `base.definition + (name: .., colors: base.definition.colors + (accent: ..))`. The merge replaces `apply` outright, so to extend inherited rules rather than drop them, run the base callback first with `show: (base.definition.apply).with(colors: colors, options: options)`. A reusable packaged facade keeps three core files: `theme.typ` (binds and exports the public API), `definition.typ` (passive design decisions), and `layouts.typ` (the callable layout namespace), bound once with `mosaic.theme.setup(definition)`. Copy Light's files and change only design values. Theme definitions are passive data consumed by Mosaic's engine; never call setup internals from a theme or forward Mosaic's setup arguments.
+Only `colors` is required; `name`, `defaults`, `options`, `layouts`, and `apply` are optional. Mosaic's engine emits no `set` or `show` rules of its own, so `apply` states the theme's whole look: base typography, headings, captions, list rhythm, and the canonical `<mosaic-cell-*>` rules the layouts compose against. Copy `light/definition.typ` for the complete set in its plainest form. Themes that want compact markup lists to read at presentation distance loosen them with a plain show rule (`show list.where(tight: true): it => list(tight: false, ..it.children)`, and the same for `enum`). To start from an existing theme, merge its exported definition: `base.definition + (name: .., colors: base.definition.colors + (accent: ..))`. The merge replaces `apply` outright, so to extend inherited rules rather than drop them, run the base callback first with `show: (base.definition.apply).with(colors: colors, options: options)`. A reusable packaged facade keeps three core files: `theme.typ` (binds and exports the public API), `definition.typ` (passive design decisions), and `layouts.typ` (the callable layout namespace), bound once with `mosaic.themes.setup(definition)`. Copy Light's files and change only design values. Theme definitions are passive data consumed by Mosaic's engine; never call setup internals from a theme or forward Mosaic's setup arguments.
 
 ## 7. Custom grids
 
@@ -425,7 +427,7 @@ Navigation stays native because headings stay native:
 
 Write one logical slide; Mosaic adds frames until the last timed command has run and discovers the frame count. Hidden content keeps its space by default so the slide stays still; use `before: "removed"` when surrounding content should expand into that space. Choose the smallest command:
 
-- `m.pause`: advances subsequent source-order content to the next frame. Scoped to its containing content stream, so it also works inside blocks, fixed cells, and planes. Empty leading, trailing, or consecutive pauses never create blank frames.
+- `m.steps.pause`: advances subsequent source-order content to the next frame. Scoped to its containing content stream, so it also works inside blocks, fixed cells, and planes. Empty leading, trailing, or consecutive pauses never create blank frames.
 - `m.steps.on(range)[content]`: shows content over an exact step range. Ranges are integers, open (`"3-"`), or closed (`"2-4"`). `before:` and `after:` control the surrounding steps and each take `"visible"`, `"hidden"` (the default, keeps the space), `"dimmed"`, or `"removed"` (releases the space).
 - `m.steps.reveal[...]`: accumulates a list or sequence one item at a time.
 - `m.steps.replace[first][second]`: swaps alternatives in one stable slot sized by the largest alternative.
@@ -435,7 +437,7 @@ Write one logical slide; Mosaic adds frames until the last timed command has run
 #m.slide[
   == Findings
   - The estimate is positive.
-  #m.pause
+  #m.steps.pause
   - The interval excludes zero.
 ]
 ```
@@ -449,7 +451,7 @@ Constraints and options:
 
 ## 12. Speaker notes and outputs
 
-Attach notes with `m.note[...]`. Notes never render in the default `output: "slides"` and never add frames. A note outside timing commands applies to every frame; a note after `m.pause` or inside a steps command follows that command's frame assignment. Multiple applicable notes accumulate in source order.
+Attach notes with `m.note[...]`. Notes never render in the default `output: "slides"` and never add frames. A note outside timing commands applies to every frame; a note after `m.steps.pause` or inside a steps command follows that command's frame assignment. Multiple applicable notes accumulate in source order.
 
 ```typ
 #show: m.setup.with(output: "speaker")  // A4: frame thumbnail + notes
@@ -469,7 +471,7 @@ Both companion outputs write one page per emitted frame and fail with an explici
   typst eval 'query(<mosaic-overflow-warning>).map(it => it.value)' --in slides.typ
   ```
 
-  The reported `logical-slide` is not the page number once the deck uses `m.pause` or `m.steps`. Ask for both when hunting a specific slide down, then render just those pages to look at them:
+  The reported `logical-slide` is not the page number once the deck uses `m.steps.pause` or `m.steps`. Ask for both when hunting a specific slide down, then render just those pages to look at them:
 
   ```sh
   typst eval 'query(<mosaic-overflow-warning>).map(it => (it.value.logical-slide, it.location().page(), it.value.cell))' --in slides.typ

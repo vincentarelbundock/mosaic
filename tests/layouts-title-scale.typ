@@ -1,5 +1,5 @@
 #import "@local/mosaic:0.0.1" as mosaic
-#import "../mosaic/src/layout/title.typ": title-metrics, title-stack-content
+#import "../mosaic/src/layout/title.typ": title-tokens, title-stack-content
 #import "../mosaic/src/settings.typ": make-settings
 
 // The composed title stack scales as a unit. The display line carries its own
@@ -10,7 +10,7 @@
 // subtitle.
 #show: mosaic.setup
 
-#let settings = make-settings() + (base-size: 28pt, title-metrics: title-metrics)
+#let settings = make-settings() + (base-size: 28pt, title-tokens: title-tokens)
 #let fields = (
   title: [A title that wraps onto a second line],
   subtitle: [A subtitle tier],

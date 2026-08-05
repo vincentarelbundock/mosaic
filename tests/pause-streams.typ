@@ -7,19 +7,19 @@
     id: "fixed",
     content: [
       FIXED STREAM FIRST #m.note[FIXED FIRST NOTE]
-      #m.pause
+      #m.steps.pause
       FIXED STREAM SECOND #m.note[FIXED SECOND NOTE]
     ],
   ),
   content: (
     background: [
       BACKGROUND STREAM FIRST
-      #m.pause
+      #m.steps.pause
       BACKGROUND STREAM SECOND
     ],
     foreground: [
       FOREGROUND STREAM FIRST
-      #m.pause
+      #m.steps.pause
       FOREGROUND STREAM SECOND
     ],
   ),

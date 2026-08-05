@@ -1,5 +1,5 @@
 #import "@local/mosaic:0.0.1" as m
-#import "@local/mosaic:0.0.1": pause
+#import m.steps: pause
 
 #show: m.setup
 

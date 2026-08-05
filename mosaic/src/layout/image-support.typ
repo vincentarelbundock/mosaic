@@ -120,7 +120,7 @@
   )
 }
 
-// Any tonal adjustment belongs to the picture itself (see the image spec's
+// Any tonal adjustment belongs to the picture itself (see the image dictionary's
 // `scrim` key), so the background is the resolved image and nothing more.
 #let image-background-cell(body, image) = body + (
   style: body.style + (background: image),

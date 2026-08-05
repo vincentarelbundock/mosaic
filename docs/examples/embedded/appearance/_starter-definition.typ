@@ -3,7 +3,6 @@
 // Mosaic's engine emits no typography, so a theme states its whole look here,
 // including the canonical <mosaic-cell-*> vocabulary the layouts compose
 // against.
-#import "@local/mosaic:0.0.1": theme
 #import "_starter-layouts.typ" as layouts
 
 #let _navy = rgb("#1f2a44")
@@ -11,7 +10,8 @@
 
 #let apply(body, colors: (:), options: (:)) = {
   set text(font: options.font, size: options.base-size, fill: colors.text)
-  show: theme.normalize-lists
+  show list.where(tight: true): it => list(tight: false, ..it.children)
+  show enum.where(tight: true): it => enum(tight: false, ..it.children)
   show heading.where(depth: 1): set text(size: 2em, weight: "semibold")
   show heading.where(depth: 2): set text(size: 1.4em, weight: "semibold")
   show heading: set block(below: 0.75em)

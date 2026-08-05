@@ -31,19 +31,19 @@
   value
 }
 
-#let require-dictionary(value, name) = {
+#let validate-dictionary(value, name) = {
   if type(value) != dictionary {
     fail(name + " must be a dictionary")
   }
-  none
+  value
 }
 
-#let reject-unknown-keys(value, allowed, name) = {
+#let validate-keys(value, allowed, name) = {
   let unknown = value.keys().filter(key => key not in allowed)
   if unknown.len() > 0 {
     fail(name + " does not accept " + repr(unknown.first()))
   }
-  none
+  value
 }
 
 #let array-max(values, default: 1) = if values.len() == 0 {

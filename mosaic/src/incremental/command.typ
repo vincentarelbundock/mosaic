@@ -1,8 +1,8 @@
 // Public incremental constructors and canonical deferred records.
 #import "../shared.typ": tag, fail, typst-sequence
 #import "core.typ": (
-  parse-positive-int,
-  parse-range,
+  validate-positive-int,
+  validate-range,
   validate-states,
 )
 #import "../grid/model.typ": is-node
@@ -120,7 +120,7 @@
   /// -> content | dictionary
   body,
 ) = {
-  _ = parse-range(range)
+  _ = validate-range(range)
   _ = validate-states(before, after)
   if is-node(body) {
     (
@@ -244,7 +244,7 @@
   /// -> arguments
   ..items,
 ) = {
-  start = parse-positive-int(start)
+  start = validate-positive-int(start)
   _ = validate-states(before, after)
   let items = items.pos()
   if items.len() == 0 {
@@ -306,7 +306,7 @@
   /// -> arguments
   ..bodies,
 ) = {
-  start = parse-positive-int(start)
+  start = validate-positive-int(start)
   let bodies = bodies.pos()
   if bodies.len() == 0 {
     fail("replace expects at least one content block")

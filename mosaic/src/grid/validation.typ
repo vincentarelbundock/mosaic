@@ -1,15 +1,16 @@
 // Validation of canonical grid trees.
 #import "../shared.typ": fail, tag
-#import "../incremental/core.typ": parse-range, validate-states
-#import "model.typ": fit-modes, split-name, is-track-size
-#import "traversal.typ": collect-cell-ids
+#import "../incremental/core.typ": validate-range, validate-states
+#import "model.typ": fit-modes, axis-name, is-track-size
+#import "traversal.typ": resolve-cell-ids
 
-#let require-unique-cell-ids(node, path: "root") = {
-  let ids = collect-cell-ids(node)
+#let validate-unique-cell-ids(node, path: "root") = {
+  let ids = resolve-cell-ids(node)
   if ids.dedup().len() != ids.len() {
     let duplicate = ids.find(id => ids.filter(other => other == id).len() > 1)
     fail("duplicate cell id " + repr(duplicate) + " in grid at " + path)
   }
+  node
 }
 
 #let is-cell-style(style) = (
@@ -75,13 +76,13 @@
     fail("invalid grid node at " + path)
   }
   if node.kind == "on" {
-    _ = parse-range(node.range)
+    _ = validate-range(node.range)
     _ = validate-states(node.before, node.after)
     validate-shape(node.child, path: path + ".child")
   } else if node.kind != "cell" {
     if node.children.len() == 0 {
       fail(
-        split-name(node.axis) + " at " + path
+        axis-name(node.axis) + " at " + path
           + " must contain at least one child",
       )
     }
@@ -91,7 +92,7 @@
         or not node.tracks.all(is-track-size)
     ) {
       fail(
-        split-name(node.axis) + " at " + path
+        axis-name(node.axis) + " at " + path
           + " must contain one native Typst track size per child",
       )
     }
@@ -103,7 +104,7 @@
 
 #let validate(node, path: "root") = {
   validate-shape(node, path: path)
-  require-unique-cell-ids(node, path: path)
+  _ = validate-unique-cell-ids(node, path: path)
 }
 
 

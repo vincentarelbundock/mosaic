@@ -4,7 +4,6 @@
 // headings, captions, list rhythm, and the canonical <mosaic-cell-*>
 // vocabulary, plus Metropolis's inverted header bar and progress-ruled section.
 #import "../../component/api.typ" as components
-#import "../extension.typ": normalize-lists
 #import "layouts.typ" as layouts
 #import "tokens.typ" as tokens
 
@@ -16,7 +15,8 @@
     fill: colors.text,
     fallback: true,
   )
-  show: normalize-lists
+  show list.where(tight: true): it => list(tight: false, ..it.children)
+  show enum.where(tight: true): it => enum(tight: false, ..it.children)
   set list(spacing: 0.9em)
   set enum(spacing: 0.9em)
   set terms(spacing: 0.9em)

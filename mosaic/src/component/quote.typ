@@ -1,6 +1,6 @@
 // Quotation treatment with optional attribution.
 #import "frame.typ": frame
-#import "style.typ": component-metrics, deck-colors
+#import "style.typ": component-tokens, deck-colors
 
 /// Creates a quotation treatment with optional attribution.
 ///
@@ -58,7 +58,7 @@
   frame(
     role: role,
     style: (
-      fill: tint.transparentize(component-metrics.quote-tint),
+      fill: tint.transparentize(component-tokens.quote-tint),
       stroke: none,
     ) + style,
   )[
@@ -67,8 +67,8 @@
       // `block(above:)` rather than a `linebreak()` followed by block-level
       // content: that stacked an empty line on top of the paragraph break before
       // the block, leaving the attribution floating far below the quotation.
-      block(above: component-metrics.quote-attribution-gap, width: 100%, align(right)[
-        #text(size: component-metrics.quote-attribution-size)[
+      block(above: component-tokens.quote-attribution-gap, width: 100%, align(right)[
+        #text(size: component-tokens.quote-attribution-size)[
           #if attribution != none { attribution }
           #if attribution != none and source != none { [, ] }
           #if source != none { source }

@@ -1,12 +1,12 @@
 // Grid-tree traversal and structural queries.
 
-#let collect-cell-ids(node) = {
+#let resolve-cell-ids(node) = {
   if node.kind == "cell" {
     (node.id,)
   } else if node.kind == "on" {
-    collect-cell-ids(node.child)
+    resolve-cell-ids(node.child)
   } else {
-    node.children.map(collect-cell-ids).flatten()
+    node.children.map(resolve-cell-ids).flatten()
   }
 }
 

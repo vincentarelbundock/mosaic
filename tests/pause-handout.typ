@@ -4,9 +4,9 @@
 
 #m.slide[
   PAUSE HANDOUT FIRST
-  #m.pause
+  #m.steps.pause
   PAUSE HANDOUT SECOND
-  #m.pause
+  #m.steps.pause
   PAUSE HANDOUT FINAL
 ]
 

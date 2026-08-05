@@ -1,7 +1,7 @@
 // Shared content and surface primitives for layout resolvers.
 #import "../grid/constructors.typ": styled-cell, t
 #import "../component/image.typ": image as mosaic-image
-#import "core.typ": validate-image-spec
+#import "core.typ": validate-image
 
 // Subordinate tiers composed inside a single cell (title subtitle, title
 // metadata, section subtitle) pin a muted `fill` so they read as secondary on
@@ -78,18 +78,18 @@
   fit: "cover",
   allow-size: true,
 ) = {
-  let spec = validate-image-spec(value, name, allow-size: allow-size)
-  let alt = spec.at("alt", default: none)
-  let image-fit = spec.at("fit", default: fit)
+  let image = validate-image(value, name, allow-size: allow-size)
+  let alt = image.at("alt", default: none)
+  let image-fit = image.at("fit", default: fit)
   // The scrim rides the picture rather than the cell, so it hugs an inset
   // figure exactly as it covers a full-bleed background.
   mosaic-image(
-    image-path(spec.path),
+    image-path(image.path),
     alt: alt,
-    width: if allow-size { spec.at("width", default: width) } else { width },
-    height: if allow-size { spec.at("height", default: height) } else { height },
+    width: if allow-size { image.at("width", default: width) } else { width },
+    height: if allow-size { image.at("height", default: height) } else { height },
     fit: image-fit,
-    scrim: spec.at("scrim", default: none),
+    scrim: image.at("scrim", default: none),
   )
 }
 
