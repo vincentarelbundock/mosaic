@@ -24,21 +24,13 @@
   regex("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"),
 ) != none
 
-#let valid-orcid(value) = {
-  if type(value) != str or value.match(
-    regex("^\\d{4}-\\d{4}-\\d{4}-\\d{3}[\\dX]$"),
-  ) == none {
-    return false
-  }
-  let compact = value.replace("-", "")
-  let total = 0
-  for digit in compact.slice(0, 15) {
-    total = (total + int(digit)) * 2
-  }
-  let result = calc.rem(12 - calc.rem(total, 11), 11)
-  let expected = if result == 10 { "X" } else { str(result) }
-  compact.last() == expected
-}
+// Format only: four hyphen-separated groups, with `X` allowed as the final
+// character. The iD also carries a mod-11 check digit, but verifying it here
+// bought little (it catches only rare transcription slips a format check
+// misses) at the cost of the most intricate arithmetic in the file.
+#let valid-orcid(value) = type(value) == str and value.match(
+  regex("^\\d{4}-\\d{4}-\\d{4}-\\d{3}[\\dX]$"),
+) != none
 
 #let validate-author(value, subject: "author") = {
   if (
@@ -145,7 +137,7 @@
 /// Values are checked at construction rather than at render time:
 ///
 /// - `email` must look like an address.
-/// - `orcid` must be a well-formed iD, including its check digit.
+/// - `orcid` must be a well-formed iD.
 /// - `corresponding` requires at least one of `email` or `orcid`.
 ///
 /// -> dictionary

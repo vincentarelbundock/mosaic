@@ -86,7 +86,7 @@
 
 // Image cells are full-bleed: the photograph owns its region edge to edge and
 // any framing is the image's own business.
-#let image-region(image-content, settings) = styled-cell(
+#let image-region(image-content) = styled-cell(
   content: image-content,
   id: "image",
   style: (

@@ -34,7 +34,7 @@
     m.components.frame[
       #m.components.label(role: "accent")[API]
       #h(8pt)
-      #m.components.progress(current: 3, total: 5)
+      #m.components.progress()
     ],
   )
 

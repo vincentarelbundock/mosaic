@@ -15,8 +15,8 @@
 #mosaic.slide(layout: mosaic.grid.h("a", "b"))[
   #mosaic.components.frame(role: "information")[
     #mosaic.components.label(
-      radius: "pill",
-      text-style: (weight: "bold"),
+      radius: 999pt,
+      style: (text: (weight: "bold")),
     )[Category]
     #parbreak()
     #text(size: 2em, weight: "bold")[77%]
@@ -55,31 +55,17 @@
 ]
 
 #mosaic.slide()[
-  #mosaic.components.progress(
-    variant: "1/1",
-    current: 2,
-    total: 5,
-  )
+  #mosaic.components.progress(variant: "1/1")
   #h(1em)
-  #mosaic.components.progress(
-    variant: "circle",
-    current: 2,
-    total: 5,
-  )
+  #mosaic.components.progress(variant: "circle")
   #v(0.5em)
-  #mosaic.components.progress(
-    variant: "line",
-    current: 2,
-    total: 5,
-  )
+  #mosaic.components.progress(variant: "line")
 ]
 
 // A renderer function stands in for the closed variant set, so an extension
 // theme can add a treatment without forking the component.
 #mosaic.slide()[
   #mosaic.components.progress(
-    current: 2,
-    total: 5,
     variant: state => grid(
       columns: (state.thickness,) * state.total,
       column-gutter: 2pt,

@@ -3,7 +3,6 @@
 #import "core.typ": status
 #import "command.typ": (
   is-command-on,
-  is-list-item,
   is-temporal,
   reveal-slots,
 )

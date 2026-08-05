@@ -1,24 +1,30 @@
-// Quotation treatment with optional portrait and attribution.
+// Quotation treatment with optional attribution.
 #import "frame.typ": frame
 #import "style.typ": structure, deck-colors
 
-/// Creates a quotation treatment with optional portrait and attribution.
+/// Creates a quotation treatment with optional attribution.
 ///
-/// The quotation sits in a lightly tinted `frame`. A portrait, when given,
-/// takes a column to the left of the text; attribution and source share one
-/// right-aligned line beneath it, joined by a comma when both are present.
+/// The quotation sits in a lightly tinted `frame`; attribution and source share
+/// one right-aligned line beneath it, joined by a comma when both are present.
 ///
 /// ```typ
 /// #mosaic.components.quote(
 ///   attribution: [Ada Lovelace],
 ///   source: [Notes on the Analytical Engine, 1843],
-///   portrait: mosaic.components.image(
-///     path("ada.webp"),
-///     width: 4em, height: 4em,
-///   ),
 /// )[
 ///   The Analytical Engine weaves algebraic patterns.
 /// ]
+/// ```
+///
+/// To set a portrait beside the quotation, compose one natively:
+///
+/// ```typ
+/// #grid(
+///   columns: (auto, 1fr),
+///   gutter: 0.6em,
+///   mosaic.components.image(path("ada.webp"), width: 4em, height: 4em),
+///   mosaic.components.quote(attribution: [Ada Lovelace])[...],
+/// )
 /// ```
 ///
 /// See `frame` for the list of roles and the accepted `style` keys.
@@ -31,10 +37,6 @@
   /// Who is being quoted, set on the fine-print line below the quotation.
   /// -> content | none
   attribution: none,
-  /// Content placed in a column beside the quotation, typically a portrait
-  /// image sized to a few `em`.
-  /// -> content | none
-  portrait: none,
   /// Where the quotation comes from, appended after the attribution.
   /// -> content | none
   source: none,
@@ -60,11 +62,7 @@
       stroke: none,
     ) + style,
   )[
-    #grid(
-      columns: if portrait == none { (1fr,) } else { (auto, 1fr) },
-      gutter: structure.quote-gutter,
-      ..if portrait == none { (body,) } else { (portrait, body) },
-    )
+    #body
     #if attribution != none or source != none {
       // `block(above:)` rather than a `linebreak()` followed by block-level
       // content: that stacked an empty line on top of the paragraph break before

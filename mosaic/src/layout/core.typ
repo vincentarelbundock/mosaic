@@ -7,11 +7,11 @@
   content: ("columns", "tracks", "variant"),
   image: ("caption", "fit", "image", "tracks", "variant"),
   title: (
-    "accent", "align", "authors", "date", "image", "rule", "style", "subtitle",
+    "accent", "align", "authors", "date", "image", "rule", "subtitle",
     "title", "tracks", "variant",
   ),
   section: (
-    "accent", "image", "number", "style", "subtitle", "tracks", "variant",
+    "accent", "image", "number", "subtitle", "tracks", "variant",
   ),
 )
 
@@ -43,6 +43,12 @@
   value.fields.keys().sorted() == layout-field-keys.at(value.name)
 }
 
+
+// The fitting vocabulary Mosaic validates, shared by every place a picture
+// spec is checked so the spelling cannot drift. Native `image` also accepts
+// `"stretch"`; a design that truly wants distortion passes ready-made content
+// built on the native element instead.
+#let image-fit-modes = ("cover", "contain")
 
 #let validate-visual-spec(
   value,
@@ -76,8 +82,8 @@
     fail(subject + " alt must be a string or none")
   }
   let fit = spec.at("fit", default: "cover")
-  if type(fit) != str or fit not in ("cover", "contain", "stretch") {
-    fail(subject + " fit must be \"cover\", \"contain\", or \"stretch\"")
+  if type(fit) != str or fit not in image-fit-modes {
+    fail(subject + " fit must be \"cover\" or \"contain\"")
   }
   let _ = validate-scrim(spec.at("scrim", default: none), subject)
   spec

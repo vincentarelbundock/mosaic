@@ -251,13 +251,6 @@
   /// accent for the image variants' short rule.
   /// -> color | auto
   accent: auto,
-  /// Partial overrides of the layout's visual recipe: its type scales, the
-  /// accent rule's length and thickness, the spacers between tiers, and each
-  /// variant's offsets and insets. Merges over the defaults, so state only what
-  /// changes. Typography can also be restyled natively through the
-  /// `<mosaic-cell-title>` and `<mosaic-title-display>` labels.
-  /// -> dictionary
-  style: (:),
 ) = {
   let fields = validate-fields((
     title: title,
@@ -270,7 +263,6 @@
     align: align,
     rule: rule,
     accent: accent,
-    style: style,
   ), allow-auto: true)
   make-layout("title", fields)
 }
@@ -279,8 +271,9 @@
 //
 // Like the section variants, a title is a composition: it interleaves type
 // tiers with explicit spacers, rules, and offsets that no show rule can reach.
-// The measurements therefore live here as named fields rather than as literals
-// spread through the variants, and `title(style: ..)` merges over them.
+// The measurements live here as named internal constants rather than as
+// literals spread through the variants. They are design decisions, not API:
+// a deck that wants different geometry draws its own layout.
 //
 // The `-scale` fields multiply the title cell's own em, and the `-gap` fields
 // multiply `settings.spacing.gap`, which is em-typed too. Both therefore
@@ -333,8 +326,6 @@
   side-reserve: 35%,
   centered-margin: 18%,
 )
-
-#let title-style(overrides) = title-metrics + overrides
 
 // The display line of the title stack carries its own <mosaic-title-display>
 // label, and the theme's display size lands there rather than on the cell.
@@ -414,8 +405,8 @@
 
 // Code blocks, not markup blocks: markup newlines become spaces, which would
 // leak into joined lists as stray gaps before separators.
-#let orcid-link(author, settings, size: auto) = if author.orcid != none {
-  let size = if size == auto { settings.title-metrics.orcid-size } else { size }
+#let orcid-link(author, settings) = if author.orcid != none {
+  let size = settings.title-metrics.orcid-size
   box(width: settings.title-metrics.orcid-gap)
   box(
     link(
@@ -608,23 +599,17 @@
   parts.names.len() > 0 or parts.affiliations.len() > 0 or parts.date != none
 )
 
-// Byline and fine-print typography for the band, which is its own
-// <mosaic-cell-details> cell rather than a tier of the title stack. Its sizes
-// stay anchored to the deck's body size, so the band answers to a rule on its
-// own cell and not to the title's scale.
-#let metadata-typography(settings) = {
-  let base = settings.base-size
-  (
-    byline: (size: settings.title-metrics.byline-scale * base, weight: "medium"),
-    fine: (size: settings.title-metrics.fine-print-scale * base),
-  )
-}
-
-// The same two tiers composed inside the title cell, in that cell's em so they
-// scale with the rest of the stack. See title-display.
-#let stack-metadata-typography(settings) = (
-  byline: (size: settings.title-metrics.byline-scale * 1em, weight: "medium"),
-  fine: (size: settings.title-metrics.fine-print-scale * 1em),
+// Byline and fine-print typography for the metadata tiers. The scales are one
+// table; `unit` is what they multiply, and it is the whole difference between
+// the two places metadata renders. Composed inside the title cell, the tiers
+// take the cell's own em (the default), so they follow the rest of the stack
+// when a rule rescales it; see title-display. The swiss band is its own
+// <mosaic-cell-details> cell instead, so it passes the deck's base size and
+// stays anchored to the body type, answering to a rule on its own cell and not
+// to the title's scale.
+#let metadata-typography(settings, unit: 1em) = (
+  byline: (size: settings.title-metrics.byline-scale * unit, weight: "medium"),
+  fine: (size: settings.title-metrics.fine-print-scale * unit),
 )
 
 // A two-tier centered or left-aligned metadata stack: the byline in the ink
@@ -634,7 +619,7 @@
 // the one-rule light-on-dark contract for single-cell variants; plate passes
 // explicit fills for its self-colored ground instead.
 #let metadata-stack(parts, settings, ink: auto, pale: auto, adaptive: true) = context {
-  let type-scale = stack-metadata-typography(settings)
+  let type-scale = metadata-typography(settings)
   let ink-style = type-scale.byline + (
     fill: if ink == auto { settings.colors.text } else { ink },
   )
@@ -677,7 +662,7 @@
   // Contextual so the band's sizes anchor to the live base size.
   let band = context {
     let base = settings.base-size
-    let type-scale = metadata-typography(settings)
+    let type-scale = metadata-typography(settings, unit: base)
     if show-mark(fields) {
       block(line(
         length: 100%,
@@ -939,7 +924,7 @@
   }
   directional-image-layout(
     position,
-    image-region(image, settings),
+    image-region(image),
     text-region,
     tracks: tracks,
   )
@@ -1004,12 +989,10 @@
     mark-accent: if inherited.accent == auto { none } else { inherited.accent },
   )
   let image = optional-fixed-image(fields.image, "layout \"title\" image")
-  // The resolved recipe rides on `settings`, which every helper below already
-  // receives, so a `style:` override reaches the whole composition without
-  // threading an extra argument through seven variants.
-  let settings = settings + (
-    title-metrics: title-style(fields.at("style", default: (:))),
-  )
+  // The recipe rides on `settings`, which every helper below already receives,
+  // so the measurements reach the whole composition without threading an extra
+  // argument through seven variants.
+  let settings = settings + (title-metrics: title-metrics)
   if fields.variant == "academic" {
     resolve-academic-title(fields, settings)
   } else if fields.variant == "swiss" {

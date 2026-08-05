@@ -168,31 +168,18 @@
   )
 }
 
+// A shape check, not a re-proof: `make-settings` is the only constructor of a
+// settings record and validates every field as it builds one, and the record is
+// written into the deck state exactly once and never mutated. Re-validating
+// field contents here would repeat work that just happened in the same call
+// stack (including the author and ORCID checks inside `make-deck`), so this
+// confirms only that the value is that record.
 #let validate-settings(value) = {
-  if type(value) != dictionary {
-    fail("invalid internal presentation settings")
-  }
-  let _ = validate-colors(value.at("colors", default: none))
-  let content = value.at("content", default: none)
-  if type(content) != dictionary {
-    fail("invalid internal presentation settings")
-  }
-  let _ = make-content-defaults(content)
-  let deck = value.at("deck", default: none)
-  if type(deck) != dictionary or deck.keys().sorted() != default-deck.keys().sorted() {
-    fail("invalid internal presentation settings")
-  }
-  let _ = make-deck(..deck)
   if (
-    value.keys().sorted() != (
-      "colors", "content", "deck", "notes", "overflow", "roles", "spacing",
-    )
-      or type(value.spacing) != dictionary
-      or value.spacing.keys().sorted() != default-spacing.keys().sorted()
-      or type(value.notes) != dictionary
-      or value.notes.keys().sorted() != default-notes.keys().sorted()
-      or validate-roles(value.roles) != value.roles
-      or value.overflow not in overflow-modes
+    type(value) != dictionary
+      or value.keys().sorted() != (
+        "colors", "content", "deck", "notes", "overflow", "roles", "spacing",
+      )
   ) {
     fail("invalid internal presentation settings")
   }

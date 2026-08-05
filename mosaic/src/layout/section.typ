@@ -34,8 +34,9 @@
 //
 // A variant is a composition, not just typography: it interleaves text tiers
 // with explicit spacers and rules, and a `v(0.24em)` is not something a show
-// rule can reach. So the measurements live here as named fields rather than as
-// literals buried in the rendering, and `section(style: ..)` merges over them.
+// rule can reach. So the measurements live here as named internal constants
+// rather than as literals buried in the rendering. They are design decisions,
+// not API: a deck that wants different geometry draws its own layout.
 //
 // Typography is still reachable natively. Every text tier a variant emits is
 // labeled (`<mosaic-section-number>`, `<mosaic-section-subtitle>`), so a theme
@@ -46,7 +47,7 @@
 //
 // Sizes are em against the section cell's display type, so a theme that
 // rescales the deck rescales the whole composition with it.
-#let section-styles = (
+#let section-metrics = (
   plain: (
     number-size: 0.65em,
     subtitle-size: 1.05em,
@@ -106,8 +107,8 @@
 
 // Image variants compose their text exactly as `plain` does, so they share its
 // entry rather than repeating it.
-#let variant-style(variant, overrides) = (
-  section-styles.at(variant, default: section-styles.plain) + overrides
+#let variant-metrics(variant) = (
+  section-metrics.at(variant, default: section-metrics.plain)
 )
 
 #let validate-fields(fields, allow-auto: false) = {
@@ -216,12 +217,6 @@
   /// order instead.
   /// -> auto | length | ratio | relative | fraction | array
   tracks: auto,
-  /// Partial overrides of the variant's visual recipe: its type sizes, weights,
-  /// spacers, and rule thickness. Merges over the variant's defaults, so state
-  /// only what changes. Typography can also be restyled natively through the
-  /// `<mosaic-section-number>` and `<mosaic-section-subtitle>` labels.
-  /// -> dictionary
-  style: (:),
 ) = {
   let fields = validate-fields((
     subtitle: subtitle,
@@ -230,7 +225,6 @@
     variant: variant,
     accent: accent,
     tracks: tracks,
-    style: style,
   ), allow-auto: true)
   make-layout("section", fields)
 }
@@ -269,11 +263,11 @@
 // the section cell's display type, so a theme that rescales the deck rescales
 // the composition with it. The muted fill yields to a recolored cell through
 // `adapt-fill`.
-#let subtitle-line(fields, settings, size: 0.44em, style: (:)) = if fields.subtitle == none {
+#let subtitle-line(fields, settings, size: 0.44em) = if fields.subtitle == none {
   []
 } else {
   [#context text(
-    ..(adapt-fill((fill: settings.colors.muted, size: size), settings) + style),
+    ..adapt-fill((fill: settings.colors.muted, size: size), settings),
     fields.subtitle,
   )<mosaic-section-subtitle>]
 }
@@ -285,31 +279,31 @@
 // A heavy full-width rule with the title mass hanging beneath it, everything
 // flush left. The rule carries the design; the number sits above it like a
 // running head.
-#let resolve-rule-section(fields, settings, style) = styled-cell(
+#let resolve-rule-section(fields, settings, metrics) = styled-cell(
   id: "section",
   style: (
     align: left + horizon,
     inset: settings.spacing.inset,
     map: body => {
-      set par(spacing: style.paragraph-spacing)
+      set par(spacing: metrics.paragraph-spacing)
       number-text(
         (
-          size: style.number-size,
-          weight: style.number-weight,
+          size: metrics.number-size,
+          weight: metrics.number-weight,
           fill: fields.accent,
         ),
         auto-number(fields.number),
       )
-      v(style.gap-below-number)
-      line(length: 100%, stroke: style.rule-thickness + settings.colors.text)
-      v(style.gap-below-rule)
+      v(metrics.gap-below-number)
+      line(length: 100%, stroke: metrics.rule-thickness + settings.colors.text)
+      v(metrics.gap-below-rule)
       title-text(body, (
-        size: style.title-size,
-        weight: style.title-weight,
-        tracking: style.title-tracking,
+        size: metrics.title-size,
+        weight: metrics.title-weight,
+        tracking: metrics.title-tracking,
       ))
-      v(style.gap-below-title)
-      subtitle-line(fields, settings, size: style.subtitle-size)
+      v(metrics.gap-below-title)
+      subtitle-line(fields, settings, size: metrics.subtitle-size)
     },
   ),
 )
@@ -317,20 +311,20 @@
 // The section number set enormous in the line color, bleeding off the
 // top-right edge. It reads as texture rather than text and counterweights the
 // lower-left title stack.
-#let resolve-numeral-section(fields, settings, style) = styled-cell(
+#let resolve-numeral-section(fields, settings, metrics) = styled-cell(
   id: "section",
   style: (
     align: left,
     inset: settings.spacing.inset,
     background: place(
       top + right,
-      dx: style.number-dx,
-      dy: style.number-dy,
+      dx: metrics.number-dx,
+      dy: metrics.number-dy,
       number-text(
         (
-          size: style.number-size,
-          weight: style.number-weight,
-          tracking: style.number-tracking,
+          size: metrics.number-size,
+          weight: metrics.number-weight,
+          tracking: metrics.number-tracking,
           fill: settings.colors.line,
         ),
         auto-number(fields.number),
@@ -338,18 +332,18 @@
     ),
     map: body => {
       set par(
-        spacing: style.paragraph-spacing,
-        leading: style.paragraph-leading,
+        spacing: metrics.paragraph-spacing,
+        leading: metrics.paragraph-leading,
       )
       v(1fr)
       title-text(body, (
-        size: style.title-size,
-        weight: style.title-weight,
-        tracking: style.title-tracking,
+        size: metrics.title-size,
+        weight: metrics.title-weight,
+        tracking: metrics.title-tracking,
       ))
-      v(style.gap-below-title)
-      subtitle-line(fields, settings, size: style.subtitle-size)
-      v(style.gap-below-subtitle)
+      v(metrics.gap-below-title)
+      subtitle-line(fields, settings, size: metrics.subtitle-size)
+      v(metrics.gap-below-subtitle)
     },
   ),
 )
@@ -357,38 +351,38 @@
 // Title and number share one baseline, tied together by a full-width
 // hairline: title flush left in bold, number flush right in a thin weight of
 // the same size. The subtitle hangs under the rule like a caption.
-#let resolve-baseline-section(fields, settings, style) = styled-cell(
+#let resolve-baseline-section(fields, settings, metrics) = styled-cell(
   id: "section",
   style: (
     align: left + horizon,
     inset: settings.spacing.inset,
     map: body => {
       set par(
-        spacing: style.paragraph-spacing,
-        leading: style.paragraph-leading,
+        spacing: metrics.paragraph-spacing,
+        leading: metrics.paragraph-leading,
       )
       grid(
         columns: (1fr, auto),
         align: (left + bottom, right + bottom),
-        column-gutter: style.gutter,
+        column-gutter: metrics.gutter,
         title-text(body, (
-          size: style.title-size,
-          weight: style.title-weight,
-          tracking: style.title-tracking,
+          size: metrics.title-size,
+          weight: metrics.title-weight,
+          tracking: metrics.title-tracking,
         )),
         number-text(
           (
-            size: style.number-size,
-            weight: style.number-weight,
+            size: metrics.number-size,
+            weight: metrics.number-weight,
             fill: settings.colors.muted,
           ),
           auto-number(fields.number),
         ),
       )
-      v(style.gap-above-rule)
-      line(length: 100%, stroke: style.rule-thickness + settings.colors.text)
-      v(style.gap-below-rule)
-      subtitle-line(fields, settings, size: style.subtitle-size)
+      v(metrics.gap-above-rule)
+      line(length: 100%, stroke: metrics.rule-thickness + settings.colors.text)
+      v(metrics.gap-below-rule)
+      subtitle-line(fields, settings, size: metrics.subtitle-size)
     },
   ),
 )
@@ -396,7 +390,7 @@
 // The divider shows the whole deck: every section listed, past and future
 // ones ghosted in the line color, the current one alive with its accent
 // number. Reads the <mosaic-section-title> records the slide runtime emits.
-#let resolve-toc-section(fields, settings, style) = styled-cell(
+#let resolve-toc-section(fields, settings, metrics) = styled-cell(
   id: "section",
   style: (
     align: left + horizon,
@@ -407,31 +401,31 @@
       let mine = logical-section.get().first()
       let entries = query(label("mosaic-section-title"))
       stack(
-        spacing: style.item-spacing,
+        spacing: metrics.item-spacing,
         ..entries.map(entry => {
           let n = logical-section.at(entry.location()).first()
           if n == mine {
             grid(
               columns: (auto, 1fr),
-              column-gutter: style.gutter,
+              column-gutter: metrics.gutter,
               align: (left + bottom, left + bottom),
               number-text(
                 (
-                  size: style.item-size,
-                  weight: style.current-weight,
+                  size: metrics.item-size,
+                  weight: metrics.current-weight,
                   fill: fields.accent,
                 ),
                 auto-number(fields.number),
               ),
               title-text(body, (
-                size: style.item-size,
-                weight: style.current-weight,
+                size: metrics.item-size,
+                weight: metrics.current-weight,
               )),
             )
           } else {
             text(
-              size: style.item-size,
-              weight: style.other-weight,
+              size: metrics.item-size,
+              weight: metrics.other-weight,
               fill: settings.colors.line,
               entry.value.title,
             )
@@ -439,8 +433,8 @@
         }),
       )
       if fields.subtitle != none {
-        v(style.gap-above-subtitle)
-        subtitle-line(fields, settings, size: style.subtitle-size)
+        v(metrics.gap-above-subtitle)
+        subtitle-line(fields, settings, size: metrics.subtitle-size)
       }
     },
   ),
@@ -453,19 +447,19 @@
     accent: if command.fields.accent == auto { settings.colors.muted } else { command.fields.accent },
   ))
   let image = optional-fixed-image(fields.image, "layout \"section\" image")
-  let style = variant-style(fields.variant, fields.at("style", default: (:)))
+  let metrics = variant-metrics(fields.variant)
   if fields.variant == "rule" {
-    return resolve-rule-section(fields, settings, style)
+    return resolve-rule-section(fields, settings, metrics)
   } else if fields.variant == "numeral" {
-    return resolve-numeral-section(fields, settings, style)
+    return resolve-numeral-section(fields, settings, metrics)
   } else if fields.variant == "baseline" {
-    return resolve-baseline-section(fields, settings, style)
+    return resolve-baseline-section(fields, settings, metrics)
   } else if fields.variant == "toc" {
-    return resolve-toc-section(fields, settings, style)
+    return resolve-toc-section(fields, settings, metrics)
   }
   let before = if fields.number != none {
     number-text(
-      (size: style.number-size, fill: fields.accent),
+      (size: metrics.number-size, fill: fields.accent),
       fields.number,
     )
     parbreak()
@@ -474,7 +468,7 @@
   }
   let after = subordinate-block(
     fields.subtitle,
-    (fill: settings.colors.muted, size: style.subtitle-size),
+    (fill: settings.colors.muted, size: metrics.subtitle-size),
     settings,
     above: settings.spacing.compact-gap,
   )
@@ -494,7 +488,7 @@
     let position = semantic-image-position(fields.variant)
     directional-image-layout(
       position,
-      image-region(image, settings),
+      image-region(image),
       section-cell,
       tracks: fields.tracks,
       gutter: settings.spacing.gap,

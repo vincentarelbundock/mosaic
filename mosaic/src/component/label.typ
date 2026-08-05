@@ -1,34 +1,5 @@
 // Compact inline label.
-#import "../shared.typ": require-dictionary
 #import "style.typ": normalize-style, styled-body, structure
-
-// `"pill"` names the intent that a very large radius used to spell. Numeric and
-// dictionary radii pass through untouched.
-#let resolve-radius(radius) = if radius == "pill" {
-  structure.pill-radius
-} else {
-  radius
-}
-
-// Shared pill treatment: a boxed body with a large default corner radius.
-#let _compact(body, role, style, radius: "pill") = context {
-  let it = normalize-style(
-    style: style,
-    role-name: role,
-    contextual: true,
-    defaults: (
-      radius: resolve-radius(radius),
-      inset: structure.label-compact-inset,
-    ),
-  )
-  box(
-    fill: it.fill,
-    stroke: it.stroke,
-    radius: it.radius,
-    inset: it.inset,
-    styled-body(it, body),
-  )
-}
 
 /// Creates a compact inline label.
 ///
@@ -39,13 +10,15 @@
 /// == Estimator #mosaic.components.label(role: "success")[stable]
 /// ```
 ///
-/// Pass `radius: "pill"` for fully rounded ends.
+/// Any radius at least half the label's height rounds its ends completely, so
+/// an oversized value such as `999pt` gives fully rounded pill ends. Restyle
+/// the body through the `text` key of `style`.
 ///
 /// ```typ
 /// #mosaic.components.label(
 ///   role: "warning",
-///   radius: "pill",
-///   text-style: (weight: "bold", size: 0.7em),
+///   radius: 999pt,
+///   style: (text: (weight: "bold", size: 0.7em)),
 /// )[draft]
 /// ```
 ///
@@ -61,26 +34,25 @@
   /// `warning`, `danger`, or `takeaway`.
   /// -> str
   role: "neutral",
-  /// Corner radius, or `"pill"` for fully rounded ends.
-  /// -> str | length | dictionary
+  /// Corner radius. Oversize it (`999pt`) for fully rounded pill ends.
+  /// -> length | dictionary
   radius: structure.label-radius,
-  /// Native `text` arguments applied to the body, such as `size` and `weight`.
-  /// Merged over any `text` key in `style`.
-  /// -> dictionary
-  text-style: (:),
   /// Partial style overrides, with the keys `fill`, `stroke`, `radius`,
-  /// `inset`, `align`, and `text`.
+  /// `inset`, `align`, and `text`, where `text` is a dictionary of native
+  /// `text` arguments such as `size` and `weight`.
   /// -> dictionary
   style: (:),
-) = {
-  require-dictionary(text-style, "label text-style")
-  let text-style = style.at("text", default: (:)) + text-style
-  _compact(
-    body,
-    role,
-    (inset: structure.label-inset)
-      + style
-      + (radius: resolve-radius(radius), text: text-style),
-    radius: radius,
+) = context {
+  let it = normalize-style(
+    style: (inset: structure.label-inset) + style + (radius: radius),
+    role-name: role,
+    contextual: true,
+  )
+  box(
+    fill: it.fill,
+    stroke: it.stroke,
+    radius: it.radius,
+    inset: it.inset,
+    styled-body(it, body),
   )
 }

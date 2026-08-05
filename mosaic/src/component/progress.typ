@@ -31,13 +31,6 @@
 /// `count` selects the automatic counter: `slides` counts logical slides, and
 /// `sections` counts slides with `layout: "section"`.
 ///
-/// To represent something else entirely, give `current` and `total` explicitly.
-/// They override `count`, and must be supplied together.
-///
-/// ```typ
-/// #mosaic.components.progress(variant: "line", current: 3, total: 8)
-/// ```
-///
 /// -> content
 #let progress(
   /// Visual treatment: `"1/1"`, `"1"`, `"circle"`, `"line"`, or a function
@@ -58,18 +51,9 @@
   /// ```
   /// -> str | function
   variant: "1/1",
-  /// Which automatic counter to read: `"slides"` or `"sections"`. Ignored when
-  /// `current` and `total` are given.
+  /// Which automatic counter to read: `"slides"` or `"sections"`.
   /// -> str
   count: "slides",
-  /// Current position, or `auto` to read the selected counter. Must be given
-  /// together with `total`.
-  /// -> auto | int
-  current: auto,
-  /// Final position, or `auto` to read the selected counter's final value. Must
-  /// be given together with `current`.
-  /// -> auto | int
-  total: auto,
   /// Semantic role supplying the default colors: `accent`, `neutral`,
   /// `information`, `success`, `warning`, `danger`, or `takeaway`. The role's
   /// accent paints the active part and its fill paints the track.
@@ -103,33 +87,15 @@
   if type(count) != str or count not in ("slides", "sections") {
     fail("progress count must be \"slides\" or \"sections\"")
   }
-  if (current == auto) != (total == auto) {
-    fail("progress current and total must either both be auto or both be set")
-  }
   let automatic-counter = if count == "slides" {
     logical-slide
   } else {
     logical-section
   }
-  let current = if current == auto {
-    automatic-counter.get().first()
-  } else {
-    current
-  }
-  let total = if total == auto {
-    automatic-counter.final().first()
-  } else {
-    total
-  }
-  if (
-    type(current) != int
-      or type(total) != int
-      or total < 1
-      or current < 0
-      or current > total
-  ) {
-    fail("progress requires integers satisfying 0 <= current <= total and total >= 1")
-  }
+  let current = automatic-counter.get().first()
+  // A deck's final section count can legitimately be zero before the first
+  // section slide exists; the ratio below guards against dividing by it.
+  let total = calc.max(automatic-counter.final().first(), 1)
   let colors = component-role(role, contextual: true)
   let track = if track == auto { colors.fill } else { track }
   let active = if color == auto { colors.accent } else { color }

@@ -7,7 +7,7 @@
 #import "../shared.typ": fail
 #import "../caption-fit.typ": captioned-picture
 #import "../grid/constructors.typ": styled-cell, v, t
-#import "core.typ": make-layout, validate-visual-spec
+#import "core.typ": image-fit-modes, make-layout, validate-visual-spec
 #import "support.typ": visual-content, header-inset
 #import "image-support.typ": (
   directional-image-layout,
@@ -18,8 +18,6 @@
 
 #let directional-variants = ("left", "right", "top", "bottom")
 #let variants = ("figure", "full") + directional-variants
-
-#let fit-modes = ("cover", "contain", "stretch")
 
 #let validate-fields(fields) = {
   let variant = fields.variant
@@ -38,9 +36,9 @@
     allow-size: false,
   )
   if fields.fit != auto and (
-    type(fields.fit) != str or fields.fit not in fit-modes
+    type(fields.fit) != str or fields.fit not in image-fit-modes
   ) {
-    fail("layout \"image\" fit must be auto, " + repr(fit-modes).slice(1))
+    fail("layout \"image\" fit must be auto, \"cover\", or \"contain\"")
   }
   if fields.caption != none and variant != "figure" {
     fail("layout \"image\" caption applies only to the \"figure\" variant")
@@ -126,7 +124,6 @@
   ///   default, since a chart must never be cropped.
   /// - `"cover"`: fill the region, cropping the overhang. The default for every
   ///   other variant.
-  /// - `"stretch"`: fill the region, distorting the aspect ratio.
   ///
   /// `auto` picks the per-variant default above.
   /// -> auto | str
@@ -222,7 +219,7 @@
   } else {
     directional-image-layout(
       fields.variant,
-      image-region(picture, settings),
+      image-region(picture),
       text-region(settings),
       tracks: fields.tracks,
       gutter: settings.spacing.gap,

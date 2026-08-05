@@ -58,8 +58,8 @@
   /// Height of the image area. Defaults to filling the container.
   /// -> auto | length | relative | fraction
   height: 100%,
-  /// Native Typst fitting mode: `"cover"` fills and crops, `"contain"` fits the
-  /// whole picture inside, and `"stretch"` distorts it to fill.
+  /// Native Typst fitting mode: `"cover"` fills and crops, `"contain"` fits
+  /// the whole picture inside.
   /// -> str
   fit: "cover",
   /// Paint layered over the picture and under any text composed on top of it.

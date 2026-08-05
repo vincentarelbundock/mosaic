@@ -97,8 +97,8 @@
   caption: none,
   /// How a picture fills its area. `"contain"` fits the whole picture inside it,
   /// which is what a chart or a screenshot needs; `"cover"` fills the area and
-  /// crops the overhang; `"stretch"` distorts it to fill. Rejected for a content
-  /// body, which is scaled rather than fitted.
+  /// crops the overhang. Rejected for a content body, which is scaled rather
+  /// than fitted.
   /// -> str
   fit: "contain",
   /// Width of the figure's body.

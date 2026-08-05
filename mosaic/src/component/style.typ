@@ -19,16 +19,10 @@
   divider-gutter: 0.45em,
   label-radius: 3pt,
   label-inset: (x: 0.7em, y: 0.3em),
-  label-compact-inset: (x: 0.55em, y: 0.18em),
-  // Any radius at least half the box height rounds the ends completely, so this
-  // is a "larger than any label" value rather than a measured one. Named so the
-  // magic number is not repeated at every pill call site.
-  pill-radius: 999pt,
   progress-size: 1em,
   progress-thickness: 2pt,
   // A conic gradient starts due east; a progress ring reads from the top.
   progress-start-angle: -90deg,
-  quote-gutter: 0.6em,
   quote-attribution-gap: 0.45em,
   quote-attribution-size: 0.72em,
   // How far the quotation's wash is lightened toward the canvas it sits on.

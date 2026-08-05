@@ -21,21 +21,10 @@
   /// The content to transform.
   /// -> content
   body,
-  /// Spacing between loosened items. `auto` keeps whatever `list` and `enum`
-  /// spacing the caller already set, so a theme that states its own list rhythm
-  /// is not overridden by merely asking for loose lists.
-  /// -> auto | length | relative
-  spacing: auto,
 ) = {
   show list.where(tight: true): it => list(tight: false, ..it.children)
   show enum.where(tight: true): it => enum(tight: false, ..it.children)
-  if spacing != auto {
-    set list(spacing: spacing)
-    set enum(spacing: spacing)
-    body
-  } else {
-    body
-  }
+  body
 }
 
 /// Binds a passive theme definition to Mosaic's setup engine.
