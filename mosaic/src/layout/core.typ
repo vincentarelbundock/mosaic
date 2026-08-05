@@ -29,6 +29,16 @@
   fields
 }
 
+#let validate-variant(value, allowed, name) = {
+  if type(value) != str or value not in allowed {
+    fail(
+      name + " has unsupported variant " + repr(value)
+        + "; expected one of " + repr(allowed),
+    )
+  }
+  value
+}
+
 #let is-layout(value) = if (
   type(value) != dictionary
     or value.keys().sorted()

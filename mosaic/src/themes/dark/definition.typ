@@ -68,7 +68,7 @@
     base-size: 28pt,
   ),
   layouts: (
-    content: layouts.content(),
+    content: layouts.content(variant: "header-body-footer"),
     title: layouts.title(),
     section: layouts.section(),
   ),

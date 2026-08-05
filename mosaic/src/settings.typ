@@ -13,7 +13,7 @@
 // containment. Everything typographic stays out of this module by design:
 // every `set` and `show` rule a slide renders with belongs to the active
 // theme's `apply`.
-#import "shared.typ": fail, validate-dictionary, validate-keys
+#import "shared.typ": fail, validate-choice, validate-dictionary, validate-keys
 #import "color-defaults.typ": default-colors, default-line
 #import "role-defaults.typ": validate-roles
 #import "author.typ": analyze-authors
@@ -151,13 +151,13 @@
 ) = {
   let colors = validate-colors(colors)
   let roles = validate-roles(roles)
-  let content = validate-content(content)
+  // Every slide layout can consult the header default, so it is injected
+  // here, where the other field defaults already live.
+  let content = (header: none) + validate-content(content)
   let deck = make-deck(..deck)
   let spacing = merge-record(default-spacing, spacing, "spacing")
   let notes = merge-record(default-notes, notes, "notes")
-  if overflow not in overflow-modes {
-    fail("setup overflow must be \"off\", \"warn\", or \"error\"")
-  }
+  _ = validate-choice(overflow, overflow-modes, "setup overflow")
   (
     colors: colors,
     content: content,

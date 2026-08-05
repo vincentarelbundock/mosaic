@@ -152,54 +152,6 @@
   )
 }
 
-// Canonical branch constructor. Public callers use mosaic.grids.h() and
-// mosaic.grids.v().
-#let split(
-  axis,
-  tracks: auto,
-  gutter: 0pt,
-  stroke: none,
-  ..children,
-) = {
-  let name = axis-name(axis)
-  let children = children.pos()
-  if axis not in ("width", "height") {
-    fail("split axis must be \"width\" or \"height\"")
-  }
-  if children.len() == 0 {
-    fail(name + " must contain at least one child")
-  }
-  if not children.all(is-node) {
-    fail(name + " children must be Mosaic grid nodes")
-  }
-  if not is-track-size(gutter) {
-    fail(name + " gutter must be a native Typst track size")
-  }
-  if not is-stroke(stroke) {
-    fail(name + " stroke must be none or a native Typst stroke")
-  }
-  if tracks != auto and (
-    type(tracks) != array
-      or tracks.len() != children.len()
-      or not tracks.all(is-track-size)
-  ) {
-    fail(
-      name + " tracks must contain one native Typst track size per child",
-    )
-  }
-  let result = (
-    mosaic: tag,
-    kind: "split",
-    axis: axis,
-    tracks: tracks,
-    gutter: gutter,
-    stroke: stroke,
-    children: children,
-  )
-  validate(result)
-  result
-}
-
 #let validate-split-child(value) = {
   let size = 1fr
   let child = value
@@ -215,15 +167,33 @@
   (size, child)
 }
 
+// Canonical branch constructor. Public callers use mosaic.grids.h() and
+// mosaic.grids.v(), which pass a literal axis. Child normalization guarantees
+// node children and a per-child track, so the trailing `validate` owns the
+// structural checks; only the gutter and stroke values are validated here.
 #let make-split(axis, gutter, stroke, children) = {
   let name = axis-name(axis)
   if children.len() == 0 {
     fail(name + " must contain at least one child")
   }
+  if not is-track-size(gutter) {
+    fail(name + " gutter must be a native Typst track size")
+  }
+  if not is-stroke(stroke) {
+    fail(name + " stroke must be none or a native Typst stroke")
+  }
   let parts = children.map(validate-split-child)
-  let tracks = parts.map(part => part.at(0))
-  let nodes = parts.map(part => part.at(1))
-  split(axis, tracks: tracks, gutter: gutter, stroke: stroke, ..nodes)
+  let result = (
+    mosaic: tag,
+    kind: "split",
+    axis: axis,
+    tracks: parts.map(part => part.at(0)),
+    gutter: gutter,
+    stroke: stroke,
+    children: parts.map(part => part.at(1)),
+  )
+  validate(result)
+  result
 }
 
 /// Splits the available width, arranging its children as columns.

@@ -132,3 +132,18 @@
     inset: if inset == none { settings.spacing.compact-gap } else { inset },
   ) + surface,
 )
+
+// Structural slide-filled cell: the slide supplies its content, and `auto`
+// takes the deck's own inset.
+#let inset-cell(
+  id,
+  settings,
+  content-sized: false,
+  inset: auto,
+) = styled-cell(
+  id: id,
+  style: (
+    content-sized: content-sized,
+    inset: if inset == auto { settings.spacing.inset } else { inset },
+  ),
+)

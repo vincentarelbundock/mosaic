@@ -14,7 +14,7 @@
     or (type(value) == str and value != "")
 )
 
-#let validate-affiliation(value, name) = {
+#let validate-name(value, name) = {
   if not is-name(value) {
     fail(name + " must be content or a non-empty string")
   }
@@ -41,15 +41,13 @@
   ) {
     fail(name + " must be created with author()")
   }
-  if not is-name(value.name) {
-    fail(name + " name must be content or a non-empty string")
-  }
+  _ = validate-name(value.name, name + " name")
   let affiliations = value.affiliations
   if type(affiliations) != array {
     fail(name + " affiliations must be an array")
   }
   for (index, affiliation) in affiliations.enumerate() {
-    _ = validate-affiliation(affiliation, name + " affiliation " + str(index + 1))
+    _ = validate-name(affiliation, name + " affiliation " + str(index + 1))
   }
   let email = value.email
   if email != none and not is-email(email) {

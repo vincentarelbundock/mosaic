@@ -14,6 +14,14 @@
 
 #let deck-state = state(key("deck"), none)
 
+// The settings half of the record, or `none` outside a deck. The canonical
+// accessor for readers that treat "no deck" as a fallback case; call inside
+// `context`.
+#let deck-settings() = {
+  let record = deck-state.get()
+  if record == none { none } else { record.settings }
+}
+
 #let write-deck-record(record) = deck-state.update(current => {
   if current != none {
     fail("setup already configured this deck; apply setup exactly once")

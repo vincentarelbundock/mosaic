@@ -27,13 +27,10 @@
   /// -> auto | stroke
   stroke: auto,
 ) = context {
-  let colors = deck-colors()
   let stroke = if stroke != auto {
     stroke
-  } else if colors == none {
-    component-tokens.stroke-thickness + gray
   } else {
-    component-tokens.stroke-thickness + colors.line
+    component-tokens.stroke-thickness + deck-colors().line
   }
   grid(
     columns: if title == none { (1fr,) } else { (1fr, auto, 1fr) },

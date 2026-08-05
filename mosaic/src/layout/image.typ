@@ -7,8 +7,8 @@
 #import "../shared.typ": fail
 #import "../caption-fit.typ": captioned-image
 #import "../grid/constructors.typ": styled-cell, v, t
-#import "core.typ": image-fit-modes, make-layout, validate-image
-#import "support.typ": image-content, header-inset
+#import "core.typ": image-fit-modes, make-layout, validate-image, validate-variant
+#import "support.typ": image-content, header-inset, inset-cell
 #import "image-support.typ": (
   directional-image-layout,
   image-background-cell,
@@ -20,13 +20,7 @@
 #let variants = ("figure", "full") + directional-variants
 
 #let validate-fields(fields) = {
-  let variant = fields.variant
-  if type(variant) != str or variant not in variants {
-    fail(
-      "layout \"image\" has unsupported variant " + repr(variant)
-        + "; expected one of " + repr(variants),
-    )
-  }
+  let variant = validate-variant(fields.variant, variants, "layout \"image\"")
   if fields.image == none {
     fail("layout \"image\" requires an image")
   }
@@ -159,25 +153,18 @@
   make-layout("image", fields)
 }
 
-#let text-cell(id, settings, content-sized: false) = styled-cell(
-  id: id,
-  style: (
-    content-sized: content-sized,
-    // A header is one line tall, so it takes the shallower edge padding; the
-    // body keeps the deck inset on all four sides.
-    inset: if id == "header" {
-      header-inset(settings)
-    } else {
-      settings.spacing.inset
-    },
-  ),
-)
-
 // Header above, body filling the rest: the arrangement that sits beside a
-// directional image and over a full-bleed one.
+// directional image and over a full-bleed one. The header is one line tall,
+// so it takes the shallower edge padding; the body keeps the deck inset on
+// all four sides.
 #let text-column(settings) = v(
-  t(auto, text-cell("header", settings, content-sized: true)),
-  t(1fr, text-cell("body", settings)),
+  t(auto, inset-cell(
+    "header",
+    settings,
+    content-sized: true,
+    inset: header-inset(settings),
+  )),
+  t(1fr, inset-cell("body", settings)),
 )
 
 #let resolve-image-layout(command, settings) = {
@@ -210,8 +197,13 @@
     } else {
       captioned-image(resize, fields.caption)
     }
-    let children = (
-      t(auto, text-cell("header", settings, content-sized: true)),
+    v(
+      t(auto, inset-cell(
+        "header",
+        settings,
+        content-sized: true,
+        inset: header-inset(settings),
+      )),
       // The picture owns a fixed cell, so the slide supplies no block for it.
       t(1fr, styled-cell(
         id: "image",
@@ -219,13 +211,12 @@
         style: (content-sized: false, inset: settings.spacing.inset),
       )),
     )
-    v(..children)
   } else if fields.variant == "full" {
     // A background is a cell style, not a split style, so the full-bleed
     // variant composes into a single cell exactly as image-background title
     // and section layouts do. Put a heading inside the body to title it.
     image-background-cell(
-      text-cell("body", settings, content-sized: false),
+      inset-cell("body", settings),
       picture,
     )
   } else {

@@ -7,7 +7,9 @@
 // `auto` means the semantic roles follow the deck's own colors. A theme with a
 // component look of its own supplies a complete palette instead.
 #assert(settings.roles == auto)
-#assert(settings.content == (:))
+// The header default rides in the settings record itself, so every reader of
+// `settings.content` sees the same optional-header contract.
+#assert(settings.content == (header: none))
 #let with-content = make-settings(content: (
   footer: "Footer",
   background: "Background",

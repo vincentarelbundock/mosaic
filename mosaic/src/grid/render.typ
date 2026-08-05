@@ -10,7 +10,7 @@
 // this module, and the helper must not shadow it.
 #import "../fit.typ": fit as fit-helper
 #import "../settings.typ": default-spacing
-#import "../deck-state.typ": deck-state
+#import "../deck-state.typ": deck-settings
 
 // Records one queryable warning per overflowing cell.
 //
@@ -93,20 +93,20 @@
   value
 }
 
-// The context a render starts from when no deck supplies one: slide zero
-// (nothing numbered yet) and the first incremental step. Named once so the
-// entry points cannot drift from each other.
-#let initial-context = (slide: 0, step: 1)
+// The slide a render starts from when no deck supplies one: slide zero,
+// nothing numbered yet. Named once so the entry points cannot drift from
+// each other.
+#let initial-slide = 0
 
 // A cell that states no inset of its own takes the deck's configured token.
 // Read inside the render context, where the deck record is live; a component
 // rendered outside `setup` falls back to the library default.
 #let configured-inset() = {
-  let record = deck-state.get()
-  if record == none {
+  let settings = deck-settings()
+  if settings == none {
     default-spacing.inset
   } else {
-    record.settings.spacing.inset
+    settings.spacing.inset
   }
 }
 
@@ -126,7 +126,7 @@
   step,
   path: "grid",
   overflow: "off",
-  slide: initial-context.slide,
+  slide: initial-slide,
   track: none,
   vertical: false,
 ) = {
@@ -252,15 +252,14 @@
   step,
   path: "grid",
   overflow: "off",
-  slide: initial-context.slide,
+  slide: initial-slide,
 ) = {
   if node.kind == "on" {
     let supplied = body-cell-ids(node.child).map(id => contents.at(id))
     if supplied.any(contains-heading) or fixed-content-has-heading(node.child) {
-      assert(
-        false,
-        message: "mosaic: headings cannot be placed in incremental grid "
-          + "nodes; keep semantic headings structurally stable across frames",
+      fail(
+        "headings cannot be placed in incremental grid nodes; "
+          + "keep semantic headings structurally stable across frames",
       )
     }
     let state = status(
@@ -356,7 +355,7 @@
   }
 }
 
-#let render(node, contents, step, overflow: "off", slide: initial-context.slide) = {
+#let render(node, contents, step, overflow: "off", slide: initial-slide) = {
   let (body, removed, style) = render-node(
     node,
     contents,

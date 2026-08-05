@@ -54,10 +54,12 @@
   }
   if value.func() == typst-sequence {
     if has-pause(value.children) {
-      return pause-schedule(value.children, max-step).fold(
-        0,
-        (last, segment) => segment.start + segment.duration - 1,
-      )
+      let schedule = pause-schedule(value.children, max-step)
+      if schedule.len() == 0 {
+        return 0
+      }
+      let last = schedule.last()
+      return last.start + last.duration - 1
     }
     return max-step(value.children)
   }

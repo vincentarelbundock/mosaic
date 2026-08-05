@@ -86,6 +86,14 @@
   }
 }
 
+// A width or height option resolved against the region that hosts it. `none`
+// and `auto` both mean "use the whole region".
+#let resolve-extent(value, container-dimension) = if value in (none, auto) {
+  container-dimension
+} else {
+  size-to-pt(value, container-dimension)
+}
+
 #let limit-content-width(body, container-size) = box(
   width: calc.min(container-size.width, measure(body).width),
   body,
@@ -111,13 +119,7 @@
     width: available-width,
   )
   if content-width != 0pt and should-scale(ratio, grow, shrink) {
-    scale(
-      box(body, width: content-width),
-      origin: top + left,
-      x: ratio,
-      y: ratio,
-      reflow: true,
-    )
+    reflow-scale(ratio, box(body, width: content-width))
   } else {
     body
   }
@@ -130,17 +132,14 @@
   grow: true,
   shrink: true,
   body,
-) = context {
-  let layout-content(
-    width: auto,
-    grow: true,
-    shrink: true,
-    height,
-    body,
-  ) = layout(container-size => {
+) = {
+  let fitted = layout(container-size => {
     if unsolvable(container-size.width) or unsolvable(container-size.height) {
       return body
     }
+    // A fractional height means "the space this block is given", which is the
+    // whole region here; the enclosing `block(height: height)` below makes the
+    // allocation real.
     let available-height = if type(height) == fraction {
       container-size.height
     } else {
@@ -155,11 +154,7 @@
       return body
     }
 
-    let available-width = if width in (none, auto) {
-      container-size.width
-    } else {
-      size-to-pt(width, container-size.width)
-    }
+    let available-width = resolve-extent(width, container-size.width)
     if unsolvable(available-width) {
       return body
     }
@@ -171,14 +166,6 @@
       body
     }
   })
-
-  let fitted = layout-content(
-    width: width,
-    grow: grow,
-    shrink: shrink,
-    height,
-    body,
-  )
   if type(height) == fraction {
     block(height: height, fitted)
   } else {
@@ -194,16 +181,8 @@
   if unsolvable(region.width) or unsolvable(region.height) {
     return body
   }
-  let available-width = if width == auto {
-    region.width
-  } else {
-    size-to-pt(width, region.width)
-  }
-  let available-height = if height == auto {
-    region.height
-  } else {
-    size-to-pt(height, region.height)
-  }
+  let available-width = resolve-extent(width, region.width)
+  let available-height = resolve-extent(height, region.height)
   if unsolvable(available-width) or unsolvable(available-height) {
     return body
   }

@@ -3,7 +3,9 @@
 #import "../incremental/command.typ": (
   is-command-on,
   is-temporal,
+  replace-index,
   reveal-slots,
+  slot-status,
 )
 #import "command.typ": is-note
 #import "../grid/traversal.typ": fold-grid
@@ -27,10 +29,10 @@
       return ()
     }
     if type(value) == array {
-      return value.fold((), (notes, item) => notes + visit(item))
+      return value.map(visit).sum(default: ())
     }
     if type(value) == dictionary {
-      return value.values().fold((), (notes, item) => notes + visit(item))
+      return value.values().map(visit).sum(default: ())
     }
     if type(value) != content {
       return ()
@@ -47,27 +49,17 @@
       if timed.kind == "temporal-reveal" {
         let result = ()
         for slot in reveal-slots(timed.items).slots {
-          let state = if slot.index == none {
-            "visible"
-          } else {
-            status(
-              timed.start + slot.index,
-              timed.before,
-              timed.after,
-              step,
-            )
-          }
-          if state == "visible" {
+          if slot-status(timed, slot, step) == "visible" {
             result += visit(slot.body)
           }
         }
         return result
       }
       if timed.kind == "temporal-replace" {
-        if step < timed.start {
+        let index = replace-index(timed, step)
+        if index == none {
           return ()
         }
-        let index = calc.min(step - timed.start, timed.bodies.len() - 1)
         return visit(timed.bodies.at(index))
       }
       if timed.kind == "temporal-reducer" {
@@ -89,10 +81,7 @@
     if value.func() == metadata {
       return ()
     }
-    value.fields().values().fold(
-      (),
-      (notes, field) => notes + visit(field),
-    )
+    value.fields().values().map(visit).sum(default: ())
   }
   visit(value)
 }
@@ -103,5 +92,5 @@
   (node, child) => if (
     status(node.range, node.before, node.after, step) == "visible"
   ) { child } else { () },
-  (node, children) => children.fold((), (notes, child) => notes + child),
+  (node, children) => children.sum(default: ()),
 )

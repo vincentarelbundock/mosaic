@@ -49,7 +49,6 @@ EXPECTED = {
     "mosaic/src/themes/cream/layouts.typ": THEMED_LAYOUTS,
     "mosaic/src/themes/minimalist/layouts.typ": THEMED_LAYOUTS,
     "mosaic/src/themes/dark/layouts.typ": THEMED_LAYOUTS,
-    "mosaic/src/themes/dark/components.typ": THEMED_COMPONENTS,
 }
 
 

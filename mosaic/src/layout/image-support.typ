@@ -2,6 +2,7 @@
 #import "../shared.typ": fail
 #import "../grid/constructors.typ": styled-cell, h, v
 #import "../grid/model.typ": is-track-size
+#import "core.typ": validate-image
 #import "support.typ": track-children, image-content
 
 
@@ -58,6 +59,22 @@
     )
   }
   tracks
+}
+
+// The image and tracks checks every semantic image variant shares: the
+// picture is required exactly when the variant uses one, sized by the region
+// rather than the caller, and `tracks` reaches only the directional variants.
+#let validate-semantic-image-fields(fields, name) = {
+  let fields = validate-semantic-image-use(fields, name)
+  if fields.image != none {
+    _ = validate-image(fields.image, name + " image", allow-size: false)
+  }
+  if fields.variant in semantic-directional-variants {
+    _ = validate-directional-tracks(fields.tracks, name + " tracks")
+  } else if fields.tracks != auto {
+    fail(name + " tracks apply only to directional image variants")
+  }
+  fields
 }
 
 // Resolves either spelling to the visual-order pair the grid expects.

@@ -4,7 +4,9 @@
 #import "command.typ": (
   is-command-on,
   is-temporal,
+  replace-index,
   reveal-slots,
+  slot-status,
 )
 #import "heading.typ": (
   apply-state,
@@ -117,16 +119,7 @@
       let temporal = value.value
       for slot in reveal-slots(temporal.items).slots {
         let body = render-commands(slot.body, step, hide, dim)
-        if slot.index == none {
-          result += body
-          continue
-        }
-        let state = status(
-          temporal.start + slot.index,
-          temporal.before,
-          temporal.after,
-          step,
-        )
+        let state = slot-status(temporal, slot, step)
         result += render-command-state(state, body, hide, dim)
       }
     } else if type(value) == array {
@@ -149,14 +142,12 @@
   } else {
     headings
   }
-  assert(
-    heading-mode in ("canonical", "visual"),
-    message: "mosaic: internal heading mode must be canonical or visual",
-  )
-  assert(
-    type(heading-scope) == str,
-    message: "mosaic: internal heading scope must be a string",
-  )
+  if heading-mode not in ("canonical", "visual") {
+    fail("internal heading mode must be canonical or visual")
+  }
+  if type(heading-scope) != str {
+    fail("internal heading scope must be a string")
+  }
 
   let visit(body) = {
     if type(body) != content {
@@ -203,12 +194,6 @@
         return apply-state(state, visit(value.body))
       }
       if value.kind == "temporal-reveal" {
-        let item-state(index) = status(
-          value.start + index,
-          value.before,
-          value.after,
-          step,
-        )
         let (list: list-mode, slots) = reveal-slots(value.items)
         let indexed = slots.filter(slot => slot.index != none)
         let kinds = indexed.map(slot => slot.body.func()).dedup()
@@ -226,7 +211,7 @@
           let number = 1
           for slot in indexed {
             number = slot.body.fields().at("number", default: number)
-            let state = item-state(slot.index)
+            let state = slot-status(value, slot, step)
             if state != "removed" {
               let marker = if item-kind == list.item {
                 [#sym.bullet]
@@ -267,7 +252,7 @@
         return slots.map(slot => if slot.index == none {
           visit(slot.body)
         } else {
-          apply-state(item-state(slot.index), visit(slot.body))
+          apply-state(slot-status(value, slot, step), visit(slot.body))
         }).sum(default: [])
       }
       if value.kind == "temporal-replace" {
@@ -276,11 +261,8 @@
           let sizes = transformed.map(measure)
           let width = array-max(sizes.map(size => size.width))
           let height = array-max(sizes.map(size => size.height))
-          let index = calc.min(
-            calc.max(step - value.start, 0),
-            transformed.len() - 1,
-          )
-          let active = if step < value.start {
+          let index = replace-index(value, step)
+          let active = if index == none {
             none
           } else {
             transformed.at(index)

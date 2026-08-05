@@ -1,6 +1,7 @@
 // Public incremental constructors and canonical deferred records.
 #import "../shared.typ": tag, fail, typst-sequence
 #import "core.typ": (
+  status,
   validate-positive-int,
   validate-range,
   validate-states,
@@ -197,6 +198,29 @@
 #let reveal-item-count(items) = (
   reveal-slots(items).slots.filter(slot => slot.index != none).len()
 )
+
+// Resolves one reveal slot's state at a step. An untimed slot rides along with
+// the revealed items and is always visible.
+#let slot-status(temporal, slot, step) = {
+  if slot.index == none {
+    return "visible"
+  }
+  status(
+    temporal.start + slot.index,
+    temporal.before,
+    temporal.after,
+    step,
+  )
+}
+
+// Index of the replace body shown at a step, or none before the first one.
+// Steps past the last body keep showing it.
+#let replace-index(temporal, step) = {
+  if step < temporal.start {
+    return none
+  }
+  calc.min(step - temporal.start, temporal.bodies.len() - 1)
+}
 
 /// Reveals content or grid nodes one step at a time.
 ///

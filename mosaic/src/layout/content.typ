@@ -1,9 +1,9 @@
 // Construction, validation, and resolution of the content layout.
 #import "../shared.typ": fail
-#import "../grid/constructors.typ": styled-cell, h, v, t
+#import "../grid/constructors.typ": h, v, t
 #import "../grid/model.typ": is-track-size
-#import "core.typ": make-layout
-#import "support.typ": track-children, header-inset
+#import "core.typ": make-layout, validate-variant
+#import "support.typ": track-children, header-inset, inset-cell
 
 #let variants = (
   "body",
@@ -13,13 +13,7 @@
 )
 
 #let validate-fields(fields) = {
-  let variant = fields.variant
-  if type(variant) != str or variant not in variants {
-    fail(
-      "layout \"content\" has unsupported variant " + repr(variant)
-        + "; expected one of " + repr(variants),
-    )
-  }
+  _ = validate-variant(fields.variant, variants, "layout \"content\"")
   let columns = fields.columns
   if type(columns) != int or columns < 1 {
     fail("layout \"content\" columns must be a positive integer")
@@ -121,19 +115,6 @@
   ))
   make-layout("content", fields)
 }
-
-#let inset-cell(
-  id,
-  settings,
-  content-sized: false,
-  inset: auto,
-) = styled-cell(
-  id: id,
-  style: (
-    content-sized: content-sized,
-    inset: if inset == auto { settings.spacing.inset } else { inset },
-  ),
-)
 
 #let content-tree(body, fields, settings) = {
   let children = ()

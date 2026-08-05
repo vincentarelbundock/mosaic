@@ -5,10 +5,13 @@
 )
 #import "grid/render.typ": overflow-report
 #import "settings.typ": make-settings
-#import "shared.typ": fail, validate-keys
+#import "shared.typ": fail, validate-choice, validate-keys
 #import "color-defaults.typ": default-colors
-#import "layout/config.typ": standard-layouts, validate-layouts
+#import "layout/config.typ": standard-layouts
 #import "paper.typ": default-paper, resolve-paper
+
+// Rendering targets `setup` can compile the deck for.
+#let output-modes = ("slides", "speaker", "notes")
 
 // Every option `setup` accepts, with its default. This is the single list:
 // `theme-engine` derives the set of theme-neutral option names from these keys
@@ -48,17 +51,15 @@
   let notes = options.notes
   let roles = options.roles
   let overflow = options.overflow
-  let layouts = validate-layouts(options.layouts)
+  // Validated where it enters the deck record, by `configure-deck`.
+  let layouts = options.layouts
   let headings = validate-heading-policy(options.headings)
   let handout = options.handout
   let output = options.output
   let frozen-counters = options.frozen-counters
   let frozen-states = options.frozen-states
 
-  if type(options.content) != dictionary {
-    fail("setup content must be a dictionary")
-  }
-  let content = (header: none) + options.content
+  let content = options.content
   let deck = (
     title: options.title,
     subtitle: options.subtitle,
@@ -67,9 +68,7 @@
   )
   let paper-size = resolve-paper(paper)
 
-  if output not in ("slides", "speaker", "notes") {
-    fail("setup output must be \"slides\", \"speaker\", or \"notes\"")
-  }
+  _ = validate-choice(output, output-modes, "setup output")
   let settings = make-settings(
     colors: colors,
     content: content,

@@ -1,23 +1,9 @@
 // Construction and validation of source-order incremental pause markers.
-#import "../shared.typ": tag, fail
+#import "../shared.typ": tag, is-record
 
 #let pause-field-keys = ("kind", "mosaic")
 
-#let is-pause(value) = {
-  if (
-    type(value) != content
-      or value.func() != metadata
-      or type(value.value) != dictionary
-      or value.value.at("mosaic", default: none) != tag
-      or value.value.at("kind", default: none) != "pause"
-  ) {
-    return false
-  }
-  if value.value.keys().sorted() != pause-field-keys {
-    fail("invalid pause record")
-  }
-  true
-}
+#let is-pause(value) = is-record(value, "pause", pause-field-keys, "pause")
 
 #let pause-segments(children) = {
   let segments = ((),)

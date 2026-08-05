@@ -1,15 +1,5 @@
 // Grid-tree traversal and structural queries.
 
-#let resolve-cell-ids(node) = {
-  if node.kind == "cell" {
-    (node.id,)
-  } else if node.kind == "on" {
-    resolve-cell-ids(node.child)
-  } else {
-    node.children.map(resolve-cell-ids).flatten()
-  }
-}
-
 #let fold-grid(node, visit-cell, visit-on, visit-branch) = {
   if node.kind == "cell" {
     visit-cell(node)
@@ -30,6 +20,13 @@
     )
   }
 }
+
+#let resolve-cell-ids(node) = fold-grid(
+  node,
+  cell => (cell.id,),
+  (node, child) => child,
+  (node, children) => children.flatten(),
+)
 
 #let resolved-tracks(node) = if node.tracks == auto {
   (1fr,) * node.children.len()

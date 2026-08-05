@@ -1,34 +1,36 @@
 // Construction and validation of deferred slide commands.
-#import "../shared.typ": tag, fail
+#import "../shared.typ": tag, fail, is-record
 #import "../grid/model.typ": plane-ids
 #import "../layout/config.typ": selectable-layout-names, validate-layout-value
 #import "../layout/core.typ": layout-field-keys
 
-#let slide-command-field-keys = (
-  "bodies",
-  "content",
-  "fields",
-  "kind",
-  "layout",
-  "mosaic",
-  "numbered",
+// `fields` overlays layout fields onto whichever layout the selection
+// resolves to, refining the configured layout rather than replacing it. The
+// deck compiler uses it for the automatic section tagline; the public `slide`
+// fills it from named arguments when the layout is chosen by name.
+#let slide-command(
+  bodies,
+  layout: auto,
+  numbered: auto,
+  content: (:),
+  fields: (:),
+) = (
+  mosaic: tag,
+  kind: "slide",
+  layout: layout,
+  numbered: numbered,
+  content: content,
+  fields: fields,
+  bodies: bodies,
 )
 
-#let is-slide-command(value) = {
-  if (
-    type(value) != content
-      or value.func() != metadata
-      or type(value.value) != dictionary
-      or value.value.at("mosaic", default: none) != tag
-      or value.value.at("kind", default: none) != "slide"
-  ) {
-    return false
-  }
-  if value.value.keys().sorted() != slide-command-field-keys {
-    fail("invalid slide command record")
-  }
-  true
-}
+// Derived from the constructor so the canonical key set cannot drift from
+// the record it describes.
+#let slide-command-field-keys = slide-command(()).keys().sorted()
+
+#let is-slide-command(value) = (
+  is-record(value, "slide", slide-command-field-keys, "slide command")
+)
 
 #let validate-plane(value, name) = {
   if value != none and type(value) != content {
@@ -78,26 +80,6 @@
   }
   fields
 }
-
-// `fields` overlays layout fields onto whichever layout the selection
-// resolves to, refining the configured layout rather than replacing it. The
-// deck compiler uses it for the automatic section tagline; the public `slide`
-// fills it from named arguments when the layout is chosen by name.
-#let slide-command(
-  bodies,
-  layout: auto,
-  numbered: auto,
-  content: (:),
-  fields: (:),
-) = (
-  mosaic: tag,
-  kind: "slide",
-  layout: layout,
-  numbered: numbered,
-  content: content,
-  fields: fields,
-  bodies: bodies,
-)
 
 /// Creates one logical slide command.
 ///

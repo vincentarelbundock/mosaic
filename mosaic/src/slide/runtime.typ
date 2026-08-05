@@ -1,6 +1,7 @@
 // Logical-slide runtime: frame policy, state, resolution, and page rendering.
-#import "../shared.typ": fail, key, tag
+#import "../shared.typ": fail, tag
 #import "../paper.typ": default-paper, paper-aliases
+#import "../grid/model.typ": plane-ids
 #import "../grid/validation.typ": validate
 #import "../grid/content.typ": resolve-content
 #import "../incremental/analysis.typ": max-step
@@ -103,11 +104,7 @@
   if notes.len() == 0 {
     emph[No speaker notes for this frame.]
   } else {
-    let result = []
-    for note in notes {
-      result += block(above: 0pt, below: style.note-gap, note)
-    }
-    result
+    notes.map(note => block(above: 0pt, below: style.note-gap, note)).join()
   }
 }
 
@@ -130,74 +127,71 @@
   body
 }
 
-#let speaker-page(frame, notes, slide, step, steps, source-size, fill, style) = layout(region => {
-  let source = slide-frame(
-    frame,
-    width: source-size.width,
-    height: source-size.height,
-    fill: fill,
-    stroke: style.thumbnail-stroke,
-  )
-  // The thumbnail is a whole slide scaled into the notes column, which is the
-  // same width problem the fitters solve, so the factor comes from their shared
-  // geometry rather than from a second copy of the arithmetic here.
-  let factor = fit-ratio(source-size, width: region.width)
-  let thumbnail-height = source-size.height * factor
+#let render-printed-page(frame, notes, slide, step, steps, source-size, fill, style, output) = layout(region => {
   let heading = note-heading(slide, step, steps)
   let heading-height = measure(heading, width: region.width).height
   // The vertical budget, stated as the sum of what the page actually places
-  // rather than as one combined allowance.
+  // rather than as one combined allowance. The speaker path subtracts its
+  // thumbnail from this shared budget below.
   let notes-height = (
     region.height
-      - thumbnail-height
-      - style.thumbnail-gap
       - heading-height
       - style.heading-gap
       - style.bottom-gap
   )
-  [
-    #scale(
-      x: factor,
-      y: factor,
-      reflow: true,
-      origin: top + left,
-      source,
+  if output == "speaker" {
+    let source = slide-frame(
+      frame,
+      width: source-size.width,
+      height: source-size.height,
+      fill: fill,
+      stroke: style.thumbnail-stroke,
     )
-    #v(style.thumbnail-gap)
-    #heading
-    #v(style.heading-gap)
-    #bounded-note-list(
+    // The thumbnail is a whole slide scaled into the notes column, which is the
+    // same width problem the fitters solve, so the factor comes from their shared
+    // geometry rather than from a second copy of the arithmetic here.
+    let factor = fit-ratio(source-size, width: region.width)
+    let thumbnail-height = source-size.height * factor
+    [
+      #scale(
+        x: factor,
+        y: factor,
+        reflow: true,
+        origin: top + left,
+        source,
+      )
+      #v(style.thumbnail-gap)
+      #heading
+      #v(style.heading-gap)
+      #bounded-note-list(
+        notes,
+        region.width,
+        notes-height - thumbnail-height - style.thumbnail-gap,
+        "speaker",
+        step,
+        style,
+      )
+    ]
+  } else {
+    // Lay out the semantic slide invisibly so native counters and state updates
+    // retain the same frame semantics as the slide and speaker outputs.
+    place(hide(slide-frame(
+      frame,
+      width: source-size.width,
+      height: source-size.height,
+      fill: fill,
+    )))
+    heading
+    v(style.heading-gap)
+    bounded-note-list(
       notes,
       region.width,
       notes-height,
-      "speaker",
+      "notes",
       step,
       style,
     )
-  ]
-})
-
-#let notes-page(frame, notes, slide, step, steps, source-size, fill, style) = layout(region => {
-  // Lay out the semantic slide invisibly so native counters and state updates
-  // retain the same frame semantics as the slide and speaker outputs.
-  place(hide(slide-frame(
-    frame,
-    width: source-size.width,
-    height: source-size.height,
-    fill: fill,
-  )))
-  let heading = note-heading(slide, step, steps)
-  let heading-height = measure(heading, width: region.width).height
-  heading
-  v(style.heading-gap)
-  bounded-note-list(
-    notes,
-    region.width,
-    region.height - heading-height - style.heading-gap - style.bottom-gap,
-    "notes",
-    step,
-    style,
-  )
+  }
 })
 
 // A plane renders as one full-slide block labeled <mosaic-ID> (ID is
@@ -223,14 +217,17 @@
 // place a value can enter the record; `write-deck-record` rejects a second
 // write, which is what makes the record immutable declared configuration
 // rather than mutable state.
+// The named defaults are unreachable in practice: `setup`, the sole caller,
+// passes every argument. They mirror `default-deck-record`, except `layouts`,
+// whose record value of `(:)` deliberately means "outside a deck".
 #let configure-deck(
-  settings: none,
+  settings: default-deck-record.settings,
   layouts: standard-layouts,
-  frozen-counters: (),
-  frozen-states: (),
-  handout: false,
-  output: "slides",
-  paper: paper-aliases.at(default-paper),
+  frozen-counters: default-deck-record.frozen-counters,
+  frozen-states: default-deck-record.frozen-states,
+  handout: default-deck-record.handout,
+  output: default-deck-record.output,
+  paper: default-deck-record.paper,
 ) = {
   if type(handout) != bool {
     fail("setup handout must be a boolean")
@@ -296,20 +293,14 @@
   // means inherit the deck plane, content overrides it for this slide, and
   // none omits it.
   let content-map = command.content
-  let background-override = content-map.remove("background", default: auto)
-  let foreground-override = content-map.remove("foreground", default: auto)
-  let resolved-background = if background-override == auto {
-    settings.content.at("background", default: none)
-  } else {
-    background-override
+  let planes = (:)
+  for id in plane-ids {
+    let override = content-map.remove(id, default: auto)
+    planes.insert(id, validate-plane(
+      if override == auto { settings.content.at(id, default: none) } else { override },
+      id,
+    ))
   }
-  let resolved-foreground = if foreground-override == auto {
-    settings.content.at("foreground", default: none)
-  } else {
-    foreground-override
-  }
-  let resolved-background = validate-plane(resolved-background, "background")
-  let resolved-foreground = validate-plane(resolved-foreground, "foreground")
   // Named and positional content collapse to one id -> content map before
   // rendering, so the renderer, overflow, and incremental paths look content up
   // by cell id with no positional cursor.
@@ -322,8 +313,8 @@
   let steps = calc.max(
     max-node(resolved-grid),
     max-step(contents.values()),
-    max-step(resolved-background),
-    max-step(resolved-foreground),
+    max-step(planes.background),
+    max-step(planes.foreground),
   )
   logical-slide-id.step()
   let numbered = if command.numbered == auto {
@@ -374,13 +365,13 @@
     ]
     pagebreak(weak: true)
     prepare-frame(step, freeze-location, handout: handout)
-    let background-content = render-plane(resolved-background, step, "background")
-    let foreground-content = render-plane(resolved-foreground, step, "foreground")
+    let background-content = render-plane(planes.background, step, "background")
+    let foreground-content = render-plane(planes.foreground, step, "foreground")
     let notes = (
       fixed-grid-notes-at(resolved-grid, step)
         + notes-at(contents.values(), step)
-        + notes-at(resolved-background, step)
-        + notes-at(resolved-foreground, step)
+        + notes-at(planes.background, step)
+        + notes-at(planes.foreground, step)
     )
     let frame = [
         #show metadata: it => if is-note(it) { [] } else { it }
@@ -399,13 +390,9 @@
     ]))
     if output == "slides" {
       slide-frame(frame)
-    } else if output == "speaker" {
-      speaker-page(
-        frame, notes, slide, step, steps, paper, slide-fill, settings.notes,
-      )
     } else {
-      notes-page(
-        frame, notes, slide, step, steps, paper, slide-fill, settings.notes,
+      render-printed-page(
+        frame, notes, slide, step, steps, paper, slide-fill, settings.notes, output,
       )
     }
   }

@@ -53,8 +53,7 @@
   // black: on a dark deck a black tint is invisible, while a tint of the text
   // color reads as the same faint lift in either direction. Pass `fill` in
   // `style` to replace it outright.
-  let colors = deck-colors()
-  let tint = if colors == none { black } else { colors.text }
+  let tint = deck-colors().text
   frame(
     role: role,
     style: (

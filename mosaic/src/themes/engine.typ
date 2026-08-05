@@ -36,14 +36,13 @@
   if type(theme.defaults) != dictionary {
     fail("theme defaults must be a dictionary")
   }
-  if "layouts" in theme.defaults {
-    fail("theme defaults must configure layouts through theme layouts")
-  }
-  if "colors" in theme.defaults {
-    fail("theme defaults must configure colors through theme colors")
-  }
-  if "roles" in theme.defaults {
-    fail("theme defaults must configure roles through theme roles")
+  for reserved in ("layouts", "colors", "roles") {
+    if reserved in theme.defaults {
+      fail(
+        "theme defaults must configure " + reserved + " through theme "
+          + reserved,
+      )
+    }
   }
   _ = validate-roles(theme.roles, name: "theme roles")
   if type(theme.options) != dictionary {
@@ -96,9 +95,11 @@
   if "layouts" in named {
     layout-overrides = validate-layouts(named.remove("layouts"), partial: true)
   }
-  let layouts = validate-layouts(
-    resolve-theme-layouts(theme, theme-options) + layout-overrides,
-  )
+  // The theme side is validated complete by `resolve-theme-layouts` and the
+  // overrides partially just above, so the merge needs no third pass here;
+  // `configure-deck` validates the final dictionary once, where it enters the
+  // deck record.
+  let layouts = resolve-theme-layouts(theme, theme-options) + layout-overrides
   let color-overrides = (:)
   if "colors" in named {
     color-overrides = named.remove("colors")

@@ -149,6 +149,7 @@
     } else {
       none
     }
+    let role = heading-role(headings, level)
 
     if is-slide-command(value) {
       (flushed, mode, section, current) = flush-current(mode, section, current, slide-wrappers)
@@ -157,10 +158,10 @@
         render-slide(value.value),
         entry.wrappers,
       ))
-    } else if heading-role(headings, level) != none {
+    } else if role != none {
       (flushed, mode, section, current) = flush-current(mode, section, current, slide-wrappers)
       if flushed != none { output.push(flushed) }
-      mode = heading-role(headings, level)
+      mode = role
       section = value
       current = ()
       slide-wrappers = entry.wrappers

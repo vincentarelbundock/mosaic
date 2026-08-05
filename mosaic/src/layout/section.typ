@@ -1,14 +1,13 @@
 // Construction, validation, and resolution of the section layout.
-#import "../shared.typ": fail
 #import "../grid/constructors.typ": styled-cell
 #import "../deck-state.typ": logical-section
 #import "core.typ": (
   make-layout,
   validate-accent,
-  validate-image,
+  validate-variant,
 )
 
-#import "support.typ": adapt-fill, as-content, subordinate-block, content-or-empty
+#import "support.typ": adapt-fill, as-content, subordinate-block
 #import "image-support.typ": (
   directional-image-layout,
   image-background-cell,
@@ -17,8 +16,7 @@
   semantic-directional-variants,
   semantic-image-position,
   semantic-image-variants,
-  validate-directional-tracks,
-  validate-semantic-image-use,
+  validate-semantic-image-fields,
 )
 
 #let text-variants = (
@@ -113,26 +111,8 @@
 
 #let validate-fields(fields, allow-auto: false) = {
   let fields = validate-accent(fields, "section", allow-auto: allow-auto)
-  let variant = fields.variant
-  if type(variant) != str or variant not in variants {
-    fail(
-      "layout \"section\" has unsupported variant " + repr(variant)
-        + "; expected one of " + repr(variants),
-    )
-  }
-  let fields = validate-semantic-image-use(fields, "layout \"section\"")
-  if fields.image != none {
-    _ = validate-image(
-      fields.image,
-      "layout \"section\" image",
-    )
-  }
-  if variant in semantic-directional-variants {
-    _ = validate-directional-tracks(fields.tracks, "layout \"section\" tracks")
-  } else if fields.tracks != auto {
-    fail("layout \"section\" tracks apply only to directional image variants")
-  }
-  fields
+  _ = validate-variant(fields.variant, variants, "layout \"section\"")
+  validate-semantic-image-fields(fields, "layout \"section\"")
 }
 
 /// Creates a section divider grid.
@@ -242,14 +222,14 @@
 
 // The designed text variants build their composition around the section
 // number, so an omitted `number` means the automatic section counter rather
-// than nothing. `pad` zero-pads to two digits, the editorial spelling the
-// numeric variants use.
-#let auto-number(number, pad: true) = if number != none {
+// than nothing. The counter zero-pads to two digits, the editorial spelling
+// the numeric variants use.
+#let auto-number(number) = if number != none {
   as-content(number)
 } else {
   context {
     let n = logical-section.get().first()
-    if pad and n < 10 [0#str(n)] else [#str(n)]
+    if n < 10 [0#str(n)] else [#str(n)]
   }
 }
 
@@ -269,6 +249,14 @@
   show heading: it => text(size: size, ..rest, it.body)
   if transform == none { body } else { transform(body) }
 })
+
+// The title treatment every designed variant states from its own tokens. The
+// toc variant styles its entries differently and calls title-text itself.
+#let variant-title(body, tokens) = title-text(body, (
+  size: tokens.title-size,
+  weight: tokens.title-weight,
+  tracking: tokens.title-tracking,
+))
 
 // Subordinate subtitle line for the designed variants. Sizes are em against
 // the section cell's display type, so a theme that rescales the deck rescales
@@ -308,11 +296,7 @@
       v(tokens.gap-below-number)
       line(length: 100%, stroke: tokens.rule-thickness + settings.colors.text)
       v(tokens.gap-below-rule)
-      title-text(body, (
-        size: tokens.title-size,
-        weight: tokens.title-weight,
-        tracking: tokens.title-tracking,
-      ))
+      variant-title(body, tokens)
       v(tokens.gap-below-title)
       subtitle-line(fields, settings, size: tokens.subtitle-size)
     },
@@ -347,11 +331,7 @@
         leading: tokens.paragraph-leading,
       )
       v(1fr)
-      title-text(body, (
-        size: tokens.title-size,
-        weight: tokens.title-weight,
-        tracking: tokens.title-tracking,
-      ))
+      variant-title(body, tokens)
       v(tokens.gap-below-title)
       subtitle-line(fields, settings, size: tokens.subtitle-size)
       v(tokens.gap-below-subtitle)
@@ -376,11 +356,7 @@
         columns: (1fr, auto),
         align: (left + bottom, right + bottom),
         column-gutter: tokens.gutter,
-        title-text(body, (
-          size: tokens.title-size,
-          weight: tokens.title-weight,
-          tracking: tokens.title-tracking,
-        )),
+        variant-title(body, tokens),
         number-text(
           auto-number(fields.number),
           (
@@ -451,6 +427,15 @@
   ),
 )
 
+// The designed text variants, dispatched by name; the plain and image
+// variants below share one composition instead.
+#let designed-section-resolvers = (
+  rule: resolve-rule-section,
+  numeral: resolve-numeral-section,
+  baseline: resolve-baseline-section,
+  toc: resolve-toc-section,
+)
+
 #let resolve-section(command, settings) = {
   let fields = validate-fields(command.fields + (
     // Numbers are subordinate furniture, never the deck's accent: `auto`
@@ -459,14 +444,8 @@
   ))
   let image = optional-fixed-image(fields.image, "layout \"section\" image")
   let tokens = variant-tokens(fields.variant)
-  if fields.variant == "rule" {
-    return resolve-rule-section(fields, settings, tokens)
-  } else if fields.variant == "numeral" {
-    return resolve-numeral-section(fields, settings, tokens)
-  } else if fields.variant == "baseline" {
-    return resolve-baseline-section(fields, settings, tokens)
-  } else if fields.variant == "toc" {
-    return resolve-toc-section(fields, settings, tokens)
+  if fields.variant in designed-section-resolvers {
+    return designed-section-resolvers.at(fields.variant)(fields, settings, tokens)
   }
   let before = if fields.number != none {
     number-text(
@@ -488,8 +467,8 @@
   let section-cell = styled-cell(
     id: "section",
     style: (
-      before: content-or-empty(before),
-      after: content-or-empty(after),
+      before: before,
+      after: after,
       content-sized: fields.variant in semantic-directional-variants,
       fit: "width",
       inset: settings.spacing.inset,

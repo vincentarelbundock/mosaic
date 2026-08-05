@@ -50,7 +50,7 @@
   defaults: (spacing: (inset: 42pt)),
   options: (font: "Inter", base-size: 18pt),
   layouts: (
-    content: layouts.content(),
+    content: layouts.content(variant: "header-body-footer"),
     title: layouts.title(),
     section: layouts.section(),
   ),

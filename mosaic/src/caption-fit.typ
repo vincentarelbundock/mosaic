@@ -44,7 +44,10 @@
     // Measurement passes hand out an unbounded region. Reporting a natural
     // height there would make the overflow observer flag every captioned
     // figure, so fall back to the relative height the region would otherwise
-    // carry and let the bounded pass do the real fitting.
+    // carry and let the bounded pass do the real fitting. Unlike `unsolvable`
+    // in fit.typ, which detects the infinite and non-positive regions its
+    // fitters meet, this test also catches a huge-but-finite height, so a
+    // threshold far above any paper size stands in for "unbounded".
     let bounded = region.height < 1e5pt
     let remaining = calc.max(region.height - chrome, 0pt)
     let picture-height = if not bounded {

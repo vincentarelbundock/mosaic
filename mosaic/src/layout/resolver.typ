@@ -6,19 +6,17 @@
 #import "section.typ": resolve-section
 #import "../shared.typ": fail
 
+// The is-layout guard already pins command.name to this table's keys.
+#let layout-resolvers = (
+  content: resolve-content-layout,
+  image: resolve-image-layout,
+  title: resolve-title,
+  section: resolve-section,
+)
+
 #let resolve-layout(command, settings) = {
   if not is-layout(command) {
     fail("invalid layout record")
   }
-  if command.name == "content" {
-    resolve-content-layout(command, settings)
-  } else if command.name == "image" {
-    resolve-image-layout(command, settings)
-  } else if command.name == "title" {
-    resolve-title(command, settings)
-  } else if command.name == "section" {
-    resolve-section(command, settings)
-  } else {
-    fail("unsupported layout " + repr(command.name))
-  }
+  layout-resolvers.at(command.name)(command, settings)
 }

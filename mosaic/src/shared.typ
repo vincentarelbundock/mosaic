@@ -18,6 +18,33 @@
   type(value) == str and value != ""
 )
 
+// A canonical Mosaic record is a metadata element whose value is a dictionary
+// tagged with `mosaic` and a `kind` and carrying exactly the declared keys.
+// A foreign or differently-kinded value is merely not a record; a tagged
+// record with the wrong key set is corrupt and fails.
+#let is-record(value, kind, keys, name) = {
+  if (
+    type(value) != content
+      or value.func() != metadata
+      or type(value.value) != dictionary
+      or value.value.at("mosaic", default: none) != tag
+      or value.value.at("kind", default: none) != kind
+  ) {
+    return false
+  }
+  if value.value.keys().sorted() != keys {
+    fail("invalid " + name + " record")
+  }
+  true
+}
+
+#let validate-choice(value, allowed, name) = {
+  if value not in allowed {
+    fail(name + " must be " + allowed.map(repr).join(", ", last: ", or "))
+  }
+  value
+}
+
 // A scrim is an ordinary Typst paint, so it accepts exactly what a `fill`
 // accepts and needs no Mosaic-specific vocabulary of its own. One validator
 // serves both the component and every layout that carries an image, so the

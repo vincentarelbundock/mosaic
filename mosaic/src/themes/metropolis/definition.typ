@@ -61,7 +61,7 @@
   colors: tokens.colors,
   options: (font: "Fira Sans", font-mono: "Fira Mono", base-size: 21.5pt),
   layouts: (
-    content: layouts.content(),
+    content: layouts.content(variant: "header-body-footer"),
     title: layouts.title(),
     section: layouts.section(),
   ),

@@ -1,20 +1,11 @@
 // Construction and validation of non-rendering speaker-note records.
-#import "../shared.typ": tag, fail
+#import "../shared.typ": tag, fail, is-record
 
 #let note-field-keys = ("body", "kind", "mosaic")
 
 #let is-note(value) = {
-  if (
-    type(value) != content
-      or value.func() != metadata
-      or type(value.value) != dictionary
-      or value.value.at("mosaic", default: none) != tag
-      or value.value.at("kind", default: none) != "note"
-  ) {
+  if not is-record(value, "note", note-field-keys, "speaker note") {
     return false
-  }
-  if value.value.keys().sorted() != note-field-keys {
-    fail("invalid speaker note record")
   }
   if type(value.value.body) != content {
     fail("speaker note body must be content")

@@ -41,7 +41,7 @@
   defaults: (spacing: (inset: 45pt)),
   options: (font: "Source Serif 4", base-size: 14pt),
   layouts: (
-    content: layouts.content(),
+    content: layouts.content(variant: "header-body-footer"),
     title: layouts.title(),
     section: layouts.section(),
   ),

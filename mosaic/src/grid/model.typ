@@ -18,19 +18,11 @@
     )
 )
 
-#let is-core-node(node) = (
+#let is-node(node) = (
   type(node) == dictionary
     and node.at("mosaic", default: none) == tag
-    and node.at("kind", default: none) in ("cell", "split")
+    and node.at("kind", default: none) in ("cell", "split", "on")
 )
-
-#let is-on-node(node) = (
-  type(node) == dictionary
-    and node.at("mosaic", default: none) == tag
-    and node.at("kind", default: none) == "on"
-)
-
-#let is-node(node) = is-core-node(node) or is-on-node(node)
 
 #let is-track(value) = (
   type(value) == dictionary

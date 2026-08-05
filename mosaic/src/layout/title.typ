@@ -5,7 +5,7 @@
 #import "core.typ": (
   make-layout,
   validate-accent,
-  validate-image,
+  validate-variant,
 )
 #import "support.typ": (
   adapt-fill,
@@ -22,8 +22,7 @@
   semantic-directional-variants,
   semantic-image-position,
   semantic-image-variants,
-  validate-directional-tracks,
-  validate-semantic-image-use,
+  validate-semantic-image-fields,
 )
 
 #let variants = (
@@ -34,32 +33,9 @@
   "frame",
 ) + semantic-image-variants
 
-
-
-#let stack-alignments = (
-  left,
-  center,
-  right,
-  left + top,
-  left + horizon,
-  left + bottom,
-  center + top,
-  center + horizon,
-  center + bottom,
-  right + top,
-  right + horizon,
-  right + bottom,
-)
-
 #let validate-fields(fields, allow-auto: false) = {
   let fields = validate-accent(fields, "title", allow-auto: allow-auto)
-  let variant = fields.variant
-  if type(variant) != str or variant not in variants {
-    fail(
-      "layout \"title\" has unsupported variant " + repr(variant)
-        + "; expected one of " + repr(variants),
-    )
-  }
+  let variant = validate-variant(fields.variant, variants, "layout \"title\"")
   if type(fields.title) not in (content, str) and not (allow-auto and fields.title == auto) {
     fail("layout \"title\" requires title content through title:")
   }
@@ -78,26 +54,14 @@
   if type(fields.authors) == array {
     _ = analyze-authors(fields.authors)
   }
-  let fields = validate-semantic-image-use(fields, "layout \"title\"")
-  if fields.image != none {
-    _ = validate-image(
-      fields.image,
-      "layout \"title\" image",
-      allow-size: false,
-    )
-  }
+  let fields = validate-semantic-image-fields(fields, "layout \"title\"")
   if variant == "academic" {
     if type(fields.authors) == array and fields.authors.len() == 0 {
       fail("layout \"title\" variant " + repr(variant) + " requires at least one author")
     }
   }
-  if variant in semantic-directional-variants {
-    _ = validate-directional-tracks(fields.tracks, "layout \"title\" tracks")
-  } else if fields.tracks != auto {
-    fail("layout \"title\" tracks apply only to directional image variants")
-  }
   if variant == "image-background" {
-    if fields.align not in stack-alignments {
+    if type(fields.align) != alignment or fields.align.x not in (left, center, right) {
       fail(
         "layout \"title\" align must use left, center, or right, optionally combined with top, horizon, or bottom",
       )
@@ -441,34 +405,38 @@
   if corresponding and author.corresponding { super[\*] }
 }
 
-// Code mode: a markup block would preserve its edge newlines as spaces,
-// leaking stray gaps around the joined run (for example before separators).
-#let join-content(items, separator: [, ]) = {
-  for (index, item) in items.enumerate() {
-    if index > 0 { separator }
-    item
-  }
+// The details pieces every composed variant arranges: author names (with
+// ORCID links), the deduplicated affiliations, and the display date.
+#let details-parts(fields, settings) = {
+  let analyzed = analyze-authors(fields.authors)
+  (
+    names: analyzed.authors.map(author => author-name(author, settings)),
+    affiliations: analyzed.affiliations.map(as-content),
+    date: if fields.date == none { none } else { as-content(fields.date) },
+  )
 }
 
+#let has-details(parts) = (
+  parts.names.len() > 0 or parts.affiliations.len() > 0 or parts.date != none
+)
+
 #let ordinary-title-details(fields, settings) = {
-  let analyzed = analyze-authors(fields.authors)
-  let author-names = analyzed.authors.map(author => author-name(author, settings))
-  let affiliations = analyzed.affiliations.map(as-content)
+  let parts = details-parts(fields, settings)
   // Two tiers at most: a byline, then one fine-print line joining
   // affiliations and date. More rows would dilute the grouping.
-  let fine-print = affiliations
-  if fields.date != none {
-    fine-print.push(as-content(fields.date))
+  let fine-print = parts.affiliations
+  if parts.date != none {
+    fine-print.push(parts.date)
   }
-  if author-names.len() == 0 and fine-print.len() == 0 {
+  if not has-details(parts) {
     none
   } else {
-    if author-names.len() > 0 {
-      join-content(author-names)
+    if parts.names.len() > 0 {
+      parts.names.join([, ])
     }
     if fine-print.len() > 0 {
-      if author-names.len() > 0 { linebreak() }
-      join-content(fine-print, separator: [ · ])
+      if parts.names.len() > 0 { linebreak() }
+      fine-print.join([ · ])
     }
   }
 }
@@ -489,7 +457,28 @@
   ),
 )
 
-#let compact-title-after(
+// Title and subtitle only: the heavy block of the page, without the details
+// or the accent rule of the compact stack.
+#let heading-stack(fields, settings, subtitle-fill: auto) = {
+  title-display(as-content(fields.title))
+  if fields.subtitle != none {
+    block(
+      above: settings.title-tokens.subtitle-gap * settings.spacing.gap,
+      // Contextual because `adapt-fill` reads the live text fill.
+      context {
+        let styles = title-styles(settings).subtitle
+        if subtitle-fill == auto {
+          text(..adapt-fill(styles, settings), fields.subtitle)
+        } else {
+          text(..(inherit-fill(styles) + (fill: subtitle-fill)), fields.subtitle)
+        }
+      },
+    )
+  }
+}
+
+// The rule and details below the heading stack of the compact composition.
+#let title-stack-tail(
   fields,
   settings,
   include-details: true,
@@ -503,19 +492,6 @@
     fields.rule
   }
   let after = {
-    // The subtitle sits tight below the title: together they form the
-    // heavy block of the page.
-    if fields.subtitle != none {
-      block(
-        above: settings.title-tokens.subtitle-gap * settings.spacing.gap,
-        // The muted fill yields to the cell's text fill once a rule sets one,
-        // so label-targeted color overrides reach the whole stack.
-        context text(
-          ..adapt-fill(title-styles(settings).subtitle, settings),
-          fields.subtitle,
-        ),
-      )
-    }
     // A deliberate break, marked by the accent rule, separates the heading
     // stack from the details stack. Without the rule, extra space marks the
     // same break.
@@ -535,6 +511,8 @@
         } * settings.spacing.gap,
         {
           set par(leading: settings.title-tokens.details-leading)
+          // The muted fill yields to the cell's text fill once a rule sets
+          // one, so label-targeted color overrides reach the whole stack.
           context text(
             ..adapt-fill(title-styles(settings).details, settings),
             details,
@@ -546,15 +524,15 @@
   content-or-empty(after)
 }
 
-// The complete fixed content of the title cell: the title text followed by
-// the subtitle and details stack.
+// The complete fixed content of the title cell: the heading stack followed by
+// the rule and details tail.
 #let title-stack-content(
   fields,
   settings,
   include-details: true,
 ) = {
-  title-display(as-content(fields.title))
-  compact-title-after(
+  heading-stack(fields, settings)
+  title-stack-tail(
     fields,
     settings,
     include-details: include-details,
@@ -578,41 +556,6 @@
 // a details stack (byline, affiliations, date). The details builders take
 // explicit text and muted fills because every variant knows its own backdrop:
 // the canvas for swiss and centered, the deck text color for plate.
-
-// Title and subtitle only: the heavy block of the page, without the details
-// or the accent rule of the compact stack.
-#let heading-stack(fields, settings, subtitle-fill: auto) = {
-  title-display(as-content(fields.title))
-  if fields.subtitle != none {
-    block(
-      above: settings.title-tokens.subtitle-gap * settings.spacing.gap,
-      // Contextual because `adapt-fill` reads the live text fill.
-      context {
-        let styles = title-styles(settings).subtitle
-        if subtitle-fill == auto {
-          text(..adapt-fill(styles, settings), fields.subtitle)
-        } else {
-          text(..(inherit-fill(styles) + (fill: subtitle-fill)), fields.subtitle)
-        }
-      },
-    )
-  }
-}
-
-// The details pieces every composed variant arranges: author names (with
-// ORCID links), the deduplicated affiliations, and the display date.
-#let details-parts(fields, settings) = {
-  let analyzed = analyze-authors(fields.authors)
-  (
-    names: analyzed.authors.map(author => author-name(author, settings)),
-    affiliations: analyzed.affiliations.map(as-content),
-    date: if fields.date == none { none } else { as-content(fields.date) },
-  )
-}
-
-#let has-details(parts) = (
-  parts.names.len() > 0 or parts.affiliations.len() > 0 or parts.date != none
-)
 
 // Byline and fine-print typography for the details tiers. The scales are one
 // table; `unit` is what they multiply, and it is the whole difference between
@@ -649,12 +592,21 @@
   if parts.date != none { fine.push(parts.date) }
   set par(leading: settings.title-tokens.details-leading)
   if parts.names.len() > 0 {
-    text(..ink-style, join-content(parts.names))
+    text(..ink-style, parts.names.join([, ]))
   }
   if fine.len() > 0 {
     if parts.names.len() > 0 { linebreak() }
-    text(..muted-style, join-content(fine, separator: [ · ]))
+    text(..muted-style, fine.join([ · ]))
   }
+}
+
+// The details stack anchored to the bottom edge, as the centered and frame
+// variants place it inside their cells.
+#let anchored-details(parts, settings) = if has-details(parts) {
+  place(
+    bottom + center,
+    align(center, details-stack(parts, settings)),
+  )
 }
 
 // The paint of a variant's structural mark: the deck's text color unless the
@@ -697,14 +649,14 @@
             set par(leading: settings.title-tokens.details-leading)
             text(
               ..(type-scale.byline + (fill: settings.colors.text)),
-              join-content(parts.names),
+              parts.names.join([, ]),
             )
           },
           if parts.affiliations.len() > 0 {
             set par(leading: settings.title-tokens.details-leading)
             text(
               ..(type-scale.fine + (fill: settings.colors.muted)),
-              join-content(parts.affiliations, separator: [ · ]),
+              parts.affiliations.join([ · ]),
             )
           },
           if parts.date != none {
@@ -743,12 +695,7 @@
         set align(center)
         heading-stack(fields, settings)
       })
-      if has-details(parts) {
-        place(
-          bottom + center,
-          align(center, details-stack(parts, settings)),
-        )
-      }
+      anchored-details(parts, settings)
     },
     style: (inset: settings.spacing.inset),
   )
@@ -803,12 +750,7 @@
           set align(center)
           text(size: settings.title-tokens.card-title-scale, heading-stack(fields, settings))
         })
-        if has-details(parts) {
-          place(
-            bottom + center,
-            align(center, details-stack(parts, settings)),
-          )
-        }
+        anchored-details(parts, settings)
       },
     ),
     style: (inset: settings.title-tokens.card-outer-inset * settings.spacing.inset),
@@ -818,7 +760,7 @@
 #let academic-author(author, settings, show-numbers: true) = {
   author-name(author, settings)
   if show-numbers and author.numbers.len() > 0 {
-    super(join-content(author.numbers.map(str), separator: [,]))
+    super(author.numbers.map(str).join([,]))
   }
   if author.corresponding { super[\*] }
 }
@@ -829,24 +771,15 @@
   as-content(item.at(1))
 }
 
-#let contact-items(author) = {
-  let items = ()
-  let email = author.email
-  if email != none {
-    items.push(link("mailto:" + email, email))
-  }
-  items
-}
-
 // The byline already names each author (with an asterisk for the
 // corresponding author), so the contact line shows only the marker and the
-// address.
+// address. The caller filters on email, so it is always present here.
 #let academic-contact(author, settings) = {
   if author.corresponding {
     [\*]
     box(width: settings.title-tokens.affiliation-marker-gap)
   }
-  join-content(contact-items(author), separator: [ · ])
+  link("mailto:" + author.email, author.email)
 }
 
 #let resolve-academic-title(fields, settings) = {
@@ -877,7 +810,9 @@
     bottom-inset: settings.spacing.gap,
   )))
   if academic.authors.len() > 0 {
-    let author-content = join-content(academic.authors.map(author => academic-author(author, settings)))
+    let author-content = academic.authors
+      .map(author => academic-author(author, settings))
+      .join([, ])
     children.push(t(
       auto,
       fixed-cell(
@@ -899,13 +834,13 @@
   if details-count > 0 {
     let details-content = {
       if affiliation-items.len() > 0 {
-        join-content(affiliation-items, separator: [ · ])
+        affiliation-items.join([ · ])
       }
       if affiliation-items.len() > 0 and contact-line.len() > 0 {
         linebreak()
       }
       if contact-line.len() > 0 {
-        join-content(contact-line, separator: [ · ])
+        contact-line.join([ · ])
       }
     }
     children.push(t(
@@ -948,14 +883,14 @@
 #let background-stack-inset(alignment, settings) = {
   let side-reserve = settings.title-tokens.side-reserve
   let centered-inset = settings.title-tokens.centered-inset
-  if alignment in (right, right + top, right + horizon, right + bottom) {
+  if alignment.x == right {
     (
       top: settings.spacing.inset,
       right: settings.spacing.inset,
       bottom: settings.spacing.inset,
       left: side-reserve,
     )
-  } else if alignment in (center, center + top, center + horizon, center + bottom) {
+  } else if alignment.x == center {
     (
       top: settings.spacing.inset,
       right: centered-inset,
