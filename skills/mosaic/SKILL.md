@@ -122,7 +122,7 @@ Variants:
 
 `m.layouts.title()` inherits `title`, `subtitle`, `authors`, and `date` from setup, so `m.slide(layout: "title")` needs no body. An explicit layout argument wins; pass `none` (or `()` for `authors`) to suppress an inherited field on one slide. For image variants, `scrim:` on the image spec quiets the photograph, as in `image: (path: "cover.webp", scrim: black.transparentize(55%))`; pair `image-background` with a scoped text-color rule on the `<mosaic-cell-title>` or `<mosaic-cell-section>` label for contrast. One such rule recolors the whole stack: the subtitle and details are muted only while the cell carries the deck's ordinary text color, and follow any override, so light-on-dark titles need no hand-built grid. A size rule on the same label works the same way, scaling the stack as a unit (`show label("mosaic-cell-title"): set text(size: 0.45em)` for quiet type in a corner), because the display line carries its own `<mosaic-title-display>` label where the theme states the display size. There is no `scale:` argument, and a hand-built grid is never the way to resize a title.
 
-Mosaic has no automatic shrink-to-fit for body content, by design: a deck whose type size is decided slide by slide loses the typographic scale that holds it together. An overflow warning means cut a bullet, split the slide, or pick a layout with more room. When one indivisible block is oversized (a wide table, a chart, a generated list), scale that block alone with `m.fit(my-table)`, which measures it against its region and scales geometrically. `m.fit(grow: true)[42%]` goes the other way, filling a cell with display type. A fitted block never overflows and so stops appearing in the overflow records, which is why it is for indivisible blocks rather than crowded slides. It also cannot contain `m.steps.pause`, `m.steps`, or `m.note`: measuring hides the body from the runtime's walk, so those would be lost. `m.fit` raises an error rather than dropping them; keep them outside the fitted block.
+Mosaic has no automatic shrink-to-fit for body content, by design: a deck whose type size is decided slide by slide loses the typographic scale that holds it together. An overflow means cut a bullet, split the slide, or pick a layout with more room. When one indivisible block is oversized (a wide table, a chart, a generated list), scale that block alone with `m.fit(my-table)`, which measures it against its region and scales geometrically. `m.fit(grow: true)[42%]` goes the other way, filling a cell with display type. A fitted block never overflows and so stops appearing in the overflow records, which is why it is for indivisible blocks rather than crowded slides. It also cannot contain `m.steps.pause`, `m.steps`, or `m.note`: measuring hides the body from the runtime's walk, so those would be lost. `m.fit` raises an error rather than dropping them; keep them outside the fitted block.
 
 A direct `m.layouts.content/title/section(...)` value retains its semantic layout name. A raw custom grid uses ordinary content-slide semantics.
 
@@ -260,7 +260,7 @@ Key setup arguments:
 - `spacing:`: for example `(inset: 1.5em)` to set the default cell inset.
 - `handout: true`: emit only the final frame of each logical slide.
 - `output:`: `"slides"` (default), `"speaker"`, or `"notes"`.
-- `overflow:`: `"warn"` (default) emits queryable `<mosaic-overflow-warning>` metadata for any cell whose content exceeds its allocation, `"error"` fails the compile at the end of the deck and names every offending cell with its slide and frame, and `"off"` disables observation.
+- `overflow:`: `"off"` (default) observes nothing, because measuring every cell on every frame roughly doubles the layout work a deck does. `"error"` fails the compile at the end of the deck and names every offending cell with its slide and frame, which is the mode to run once before presenting. `"record"` emits queryable `<mosaic-overflow-warning>` metadata for any cell whose content exceeds its allocation and keeps compiling; it prints nothing, since Typst gives a package no warning channel.
 - `frozen-counters:` / `frozen-states:`: values that advance once per logical slide instead of once per frame.
 
 Do not introduce a separate footer, logo, background, or foreground feature API: recurring named-cell content and the reserved `content.background` / `content.foreground` planes own those jobs.
@@ -466,7 +466,7 @@ Both companion outputs write one page per emitted frame and fail with an explici
 - **Reuse a slide**: define it as a function and call it wherever it should appear; each call is a new logical slide with the same incremental sequence.
 - **One-off dark slide**: scope `set text(fill: white)` and a `background` block inside `#[ ... ]` around one slide.
 - **Aspect ratio**: `setup(paper: "4-3")`; default is `"16-9"`.
-- **Inspect overflowing cells**: Mosaic emits non-fatal metadata when a rendered cell exceeds its allocation:
+- **Inspect overflowing cells**: set `overflow: "record"` on `setup` first, since observation is off by default. Mosaic then emits non-fatal metadata when a rendered cell exceeds its allocation:
 
   ```sh
   typst eval 'query(<mosaic-overflow-warning>).map(it => it.value)' --in slides.typ

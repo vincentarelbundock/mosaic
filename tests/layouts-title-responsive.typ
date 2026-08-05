@@ -4,7 +4,7 @@
 #let appearance = sys.inputs.at("appearance", default: "light")
 #show: mosaic.setup.with(
   paper: paper,
-  overflow: "warn",
+  overflow: "record",
 )
 #show: body => {
   if appearance == "dark" {

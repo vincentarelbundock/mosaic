@@ -7,7 +7,7 @@
 // divide. None of the three may overflow or clip. The control slide carries a
 // body that genuinely overflows, so the single warning proves the fitters ran
 // rather than that the content fit anyway.
-#show: mosaic.setup.with(overflow: "warn", title: [Fitting])
+#show: mosaic.setup.with(overflow: "record", title: [Fitting])
 
 = Alpha
 = Beta

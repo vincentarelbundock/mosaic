@@ -40,6 +40,6 @@
 #assert(make-settings(notes: (margin: 8mm)).notes.margin == 8mm)
 // An unmerged field keeps its default rather than dropping out of the record.
 #assert(make-settings(notes: (margin: 8mm)).notes.note-gap == 3mm)
-#assert(settings.overflow == "warn")
+#assert(settings.overflow == "off")
 #assert(make-settings(overflow: "off").overflow == "off")
 #assert(validate-settings(settings) == settings)

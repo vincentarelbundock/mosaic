@@ -67,7 +67,7 @@ noncanonical-slide-command|invalid slide command record
 noncanonical-temporal-record|invalid temporal-on record
 notes-output-overflow|notes output notes overflow on frame 1
 overflow-error|content overflows cell "body" on slide 2 frame 1
-overflow-policy|setup overflow must be "off", "warn", or "error"
+overflow-policy|setup overflow must be "off", "record", or "error"
 pause-record|invalid pause record
 reserved-cell-id|cell id "background" is reserved for the background plane
 setup-authors-type|setup authors must be an array
