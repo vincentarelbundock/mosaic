@@ -5,14 +5,14 @@
 // image plumbing, and the directional geometry is the same private machinery
 // title and section layouts already use.
 #import "../shared.typ": fail
-#import "../caption-fit.typ": captioned-picture
+#import "../caption-fit.typ": captioned-image
 #import "../grid/constructors.typ": styled-cell, v, t
-#import "core.typ": image-fit-modes, make-layout, validate-visual-spec
-#import "support.typ": visual-content, header-inset
+#import "core.typ": image-fit-modes, make-layout, validate-image-spec
+#import "support.typ": image-content, header-inset
 #import "image-support.typ": (
   directional-image-layout,
   image-background-cell,
-  image-region,
+  image-cell,
   validate-directional-tracks,
 )
 
@@ -30,7 +30,7 @@
   if fields.image == none {
     fail("layout \"image\" requires an image")
   }
-  let _ = validate-visual-spec(
+  _ = validate-image-spec(
     fields.image,
     "layout \"image\" image",
     allow-size: false,
@@ -44,7 +44,7 @@
     fail("layout \"image\" caption applies only to the \"figure\" variant")
   }
   if variant in directional-variants {
-    validate-directional-tracks(fields.tracks, "layout \"image\" tracks")
+    _ = validate-directional-tracks(fields.tracks, "layout \"image\" tracks")
   } else if fields.tracks != auto {
     fail("layout \"image\" tracks apply only to directional variants")
   }
@@ -163,7 +163,7 @@
 
 // Header above, body filling the rest: the arrangement that sits beside a
 // directional image and over a full-bleed one.
-#let text-region(settings) = v(
+#let text-column(settings) = v(
   t(auto, text-cell("header", settings, content-sized: true)),
   t(1fr, text-cell("body", settings)),
 )
@@ -177,9 +177,9 @@
   let resize(height, width) = if type(fields.image) == content {
     block(width: width, height: height, fields.image)
   } else {
-    visual-content(
+    image-content(
       fields.image,
-      subject: "layout \"image\" image",
+      "layout \"image\" image",
       width: width,
       height: height,
       fit: fitting,
@@ -196,7 +196,7 @@
     let content = if fields.caption == none {
       picture
     } else {
-      captioned-picture(resize, fields.caption)
+      captioned-image(resize, fields.caption)
     }
     let children = (
       t(auto, text-cell("header", settings, content-sized: true)),
@@ -219,8 +219,8 @@
   } else {
     directional-image-layout(
       fields.variant,
-      image-region(picture),
-      text-region(settings),
+      image-cell(picture),
+      text-column(settings),
       tracks: fields.tracks,
       gutter: settings.spacing.gap,
     )

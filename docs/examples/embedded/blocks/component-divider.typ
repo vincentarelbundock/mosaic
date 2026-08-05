@@ -7,7 +7,7 @@
 #block(width: 85%)[
   #lorem(12)
   #v(0.6em)
-  #m.components.divider(label: [Evidence])
+  #m.components.divider(title: [Evidence])
   #v(0.6em)
   #lorem(12)
   #v(0.6em)

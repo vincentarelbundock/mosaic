@@ -36,9 +36,9 @@ Create a compact inline label with configurable corners and text styling.
 
 #embedded-example(
   calepin.elements.gallery,
-  "blocks/component-label",
+  "blocks/component-tag",
   frames: 1,
-  title: "components.label()",
+  title: "components.tag()",
 )
 
 = `quote()`

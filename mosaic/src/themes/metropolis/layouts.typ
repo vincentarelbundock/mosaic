@@ -4,13 +4,27 @@
 
 #let content = _base.content.with(variant: "header-body")
 
-// Academic when the call site provides authors, swiss otherwise.
-#let title(title: auto, subtitle: auto, authors: auto, date: auto) = _base.title(
+// Academic when the call site provides authors, swiss otherwise. Every other
+// base parameter passes through untouched, so the themed layout keeps the
+// full base signature.
+#let title(
+  title: auto,
+  subtitle: auto,
+  authors: auto,
+  date: auto,
+  variant: auto,
+  ..rest,
+) = _base.title(
   title: title,
   subtitle: subtitle,
   authors: authors,
   date: date,
-  variant: if type(authors) == array and authors.len() > 0 { "academic" } else { "swiss" },
+  variant: if variant == auto {
+    if type(authors) == array and authors.len() > 0 { "academic" } else { "swiss" }
+  } else {
+    variant
+  },
+  ..rest,
 )
 
 #let section = _base.section

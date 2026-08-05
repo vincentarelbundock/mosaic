@@ -5,5 +5,5 @@
 // therefore re-exports them unchanged: there is no dark-specific component code
 // left to hold.
 #import "../../component/api.typ": (
-  frame, callout, label, quote, divider, progress, image, figure,
+  frame, callout, tag, quote, divider, progress, image, figure,
 )

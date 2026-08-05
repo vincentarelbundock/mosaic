@@ -1,6 +1,6 @@
 // Captioned figure sized to its cell: a picture, or any finished block content.
 #import "../shared.typ": fail
-#import "../caption-fit.typ": captioned-picture
+#import "../caption-fit.typ": captioned-image
 #import "../fit.typ": fit as fit-block
 #import "image.typ": image as picture
 
@@ -121,9 +121,9 @@
 ) = {
   // A source is something Mosaic can rebuild at any size. Finished content can
   // only be measured and scaled, which is a different fitting problem.
-  let is-picture = type(body) != content
+  let is-image = type(body) != content
 
-  if not is-picture {
+  if not is-image {
     if fit != "contain" {
       fail("figure fit applies only to a picture source")
     }
@@ -138,7 +138,7 @@
     }
   }
 
-  let resize = if is-picture {
+  let resize = if is-image {
     (height, width) => picture(
       body,
       width: width,
@@ -177,16 +177,16 @@
     return place(resize(if height == auto { 100% } else { height }, width))
   }
 
-  let figure-args = if is-picture { (:) } else { native.named() }
+  let figure-args = if is-image { (:) } else { native.named() }
   if height == auto {
     // A picture stretches to the cell, so pinning its caption to the foot gives
     // two figures in adjacent cells one caption baseline however their aspect
     // ratios differ. Content keeps its own height, so its caption stays with it.
-    return captioned-picture(
+    return captioned-image(
       resize,
       caption,
       width: width,
-      pin: is-picture,
+      pin: is-image,
       figure-args: figure-args,
     )
   }

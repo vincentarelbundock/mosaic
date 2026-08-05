@@ -1,12 +1,12 @@
 #import "@local/mosaic:0.0.1" as m
 
-#let grid = m.grid.h(
+#let grid = m.grids.h(
   ..m.steps.reveal(
     before: "removed",
     after: "visible",
-    m.grid.cell("first", inset: 1.5em),
-    m.grid.cell("second", inset: 1.5em),
-    m.grid.cell("third", inset: 1.5em),
+    m.grids.cell("first", inset: 1.5em),
+    m.grids.cell("second", inset: 1.5em),
+    m.grids.cell("third", inset: 1.5em),
   ),
 )
 

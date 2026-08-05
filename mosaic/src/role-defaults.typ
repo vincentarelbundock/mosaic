@@ -11,12 +11,12 @@
 // `information` is a spelling of `accent`, not a role of its own: same
 // treatment, clearer intent at the call site. Binding them to one value keeps
 // them from drifting apart.
-#let _accent-role = (fill: rgb("#e8f1fb"), accent: rgb("#0072B2"), text: black)
+#let accent-role = (fill: rgb("#e8f1fb"), accent: rgb("#0072B2"), text: black)
 
 #let default-roles = (
   neutral: (fill: luma(96%), accent: luma(35%), text: black),
-  accent: _accent-role,
-  information: _accent-role,
+  accent: accent-role,
+  information: accent-role,
   success: (fill: rgb("#e5f5ee"), accent: rgb("#009E73"), text: black),
   warning: (fill: rgb("#fff8d8"), accent: rgb("#E69F00"), text: black),
   danger: (fill: rgb("#fbe9e5"), accent: rgb("#D55E00"), text: black),

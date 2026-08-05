@@ -4,7 +4,7 @@
 #import "incremental/pause.typ": pause
 #import "fit.typ": fit
 #import "surface.typ": surface
-#import "grid/api.typ" as grid
+#import "grid/api.typ" as grids
 #import "layout/api.typ" as layouts
 #import "incremental/api.typ" as steps
 #import "component/api.typ" as components

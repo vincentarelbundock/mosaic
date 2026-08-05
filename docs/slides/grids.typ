@@ -8,11 +8,11 @@
 
 Every `m.slide()` uses a layout. You can select a #link("layouts.html")[built-in layout] or pass a custom grid of named cells. The #link("../start/semantic-slide.html")[semantic slide tutorial] starts with one cell. This page shows how to arrange larger grids and size their tracks.
 
-Each example below outlines its cells so the structure is visible. Those outlines are nothing but ordinary label rules, described in #link("../appearance/styling.html")[Styling cells]: they open every listing and are no part of the grid, which is the `#m.grid` tree alone.
+Each example below outlines its cells so the structure is visible. Those outlines are nothing but ordinary label rules, described in #link("../appearance/styling.html")[Styling cells]: they open every listing and are no part of the grid, which is the `#m.grids` tree alone.
 
 = Grids with `h()` and `v()`
 
-Describe a custom grid by splitting the available space. `m.grid.h` places cells side by side; `m.grid.v` stacks them. Each string is a cell ID. Import Mosaic under a short alias so native Typst `h()` and `v()` remain available:
+Describe a custom grid by splitting the available space. `m.grids.h` places cells side by side; `m.grids.v` stacks them. Each string is a cell ID. Import Mosaic under a short alias so native Typst `h()` and `v()` remain available:
 
 ```typ
 #import "@local/mosaic:0.0.1" as m
@@ -29,7 +29,7 @@ Assign the grid to a binding, then pass it to `m.slide` through `layout:`. The s
   show-captions: false,
 )
 
-Use `m.grid.v` for equal-height rows instead:
+Use `m.grids.v` for equal-height rows instead:
 
 #embedded-example(
   calepin.elements.gallery,
@@ -77,7 +77,7 @@ Splits nest to any depth. Read a grid from the outside inward: choose the larges
 
 = Grid sizes (tracks)
 
-By default, every direct child of `m.grid.h` or `m.grid.v` receives a `1fr` track. Wrap a child with `m.grid.t` when it needs another size:
+By default, every direct child of `m.grids.h` or `m.grids.v` receives a `1fr` track. Wrap a child with `m.grids.t` when it needs another size:
 
 #embedded-example(
   calepin.elements.gallery,
@@ -110,4 +110,4 @@ Fractions compose, so three tracks can center a double-width column:
   show-captions: false,
 )
 
-The #link("../api/grid.html")[Grid API] lists the exact accepted forms and their diagnostics.
+The #link("../api/grids.html")[Grid API] lists the exact accepted forms and their diagnostics.

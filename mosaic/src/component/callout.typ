@@ -1,5 +1,5 @@
 // Framed callout with a semantic side stripe.
-#import "style.typ": role as component-role, structure
+#import "style.typ": role as component-role, component-metrics
 #import "frame.typ": frame
 
 /// Creates a framed callout with a semantic side stripe.
@@ -9,12 +9,12 @@
 /// neutral panel, this one announces what kind of remark it holds.
 ///
 /// ```typ
-/// #mosaic.components.callout(kind: "warning", title: [Caveat])[
+/// #mosaic.components.callout(role: "warning", title: [Caveat])[
 ///   The estimate assumes independent errors.
 /// ]
 /// ```
 ///
-/// *Kinds*
+/// *Roles*
 ///
 /// - `information`: the default, and a synonym for `accent`.
 /// - `success`, `warning`, `danger`: the conventional status colors.
@@ -31,7 +31,7 @@
   /// Semantic role name driving the stripe and title color: `information`,
   /// `success`, `warning`, `danger`, `takeaway`, `neutral`, or `accent`.
   /// -> str
-  kind: "information",
+  role: "information",
   /// Bold title set above the body in the accent color.
   /// -> content | none
   title: none,
@@ -41,7 +41,7 @@
   /// -> dictionary
   style: (:),
 ) = context {
-  let colors = component-role(kind, contextual: true)
+  let colors = component-role(role, contextual: true)
   frame(
     [
       #if title != none {
@@ -50,9 +50,9 @@
       }
       #body
     ],
-    role: kind,
+    role: role,
     style: (
-      stroke: (left: structure.callout-rail + colors.accent, rest: none),
+      stroke: (left: component-metrics.callout-rail + colors.accent, rest: none),
     ) + style,
   )
 }

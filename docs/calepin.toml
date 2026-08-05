@@ -154,7 +154,7 @@ title = "API reference"
   target = "api/steps.typ"
 
   [[sidebar.section.item]]
-  target = "api/grid.typ"
+  target = "api/grids.typ"
 
   [[sidebar.section.item]]
   target = "api/layouts.typ"

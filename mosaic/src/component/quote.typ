@@ -1,6 +1,6 @@
 // Quotation treatment with optional attribution.
 #import "frame.typ": frame
-#import "style.typ": structure, deck-colors
+#import "style.typ": component-metrics, deck-colors
 
 /// Creates a quotation treatment with optional attribution.
 ///
@@ -49,16 +49,16 @@
   /// -> dictionary
   style: (:),
 ) = context {
-  // The wash is the deck's own text color laid over the canvas, not a fixed
-  // black: on a dark deck a black wash is invisible, while a wash of the text
+  // The tint is the deck's own text color laid over the canvas, not a fixed
+  // black: on a dark deck a black tint is invisible, while a tint of the text
   // color reads as the same faint lift in either direction. Pass `fill` in
   // `style` to replace it outright.
   let colors = deck-colors()
-  let wash = if colors == none { black } else { colors.text }
+  let tint = if colors == none { black } else { colors.text }
   frame(
     role: role,
     style: (
-      fill: wash.transparentize(structure.quote-wash),
+      fill: tint.transparentize(component-metrics.quote-tint),
       stroke: none,
     ) + style,
   )[
@@ -67,8 +67,8 @@
       // `block(above:)` rather than a `linebreak()` followed by block-level
       // content: that stacked an empty line on top of the paragraph break before
       // the block, leaving the attribution floating far below the quotation.
-      block(above: structure.quote-attribution-gap, width: 100%, align(right)[
-        #text(size: structure.quote-attribution-size)[
+      block(above: component-metrics.quote-attribution-gap, width: 100%, align(right)[
+        #text(size: component-metrics.quote-attribution-size)[
           #if attribution != none { attribution }
           #if attribution != none and source != none { [, ] }
           #if source != none { source }

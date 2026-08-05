@@ -23,7 +23,7 @@ A semantic heading feeds outlines, bookmarks, and content slides. Use `text` dir
 
 Leading, lists, and captions remain native `par`, `list`, `enum`, `terms`, and `figure.caption` styling.
 
-A heading cannot be placed inside an incremental grid node (`m.grid.on`, `m.steps.reveal`, and related reducers); keep it structurally stable across a slide's frames.
+A heading cannot be placed inside an incremental grid node (`m.grids.on`, `m.steps.reveal`, and related reducers); keep it structurally stable across a slide's frames.
 
 = Color
 
@@ -46,7 +46,7 @@ The accepted roles are `canvas`, `surface`, `text`, `muted`, `line`, and `accent
       #m.components.progress(
         variant: "line",
         width: 100%,
-        color: rgb("#e69f00"),
+        accent: rgb("#e69f00"),
       )
     ]
   ]),
@@ -64,6 +64,6 @@ Native rules after `m.setup` are still the right tool for typography or a specia
 ]
 ```
 
-Color collections remain ordinary Typst arrays. Define them near the chart or diagram that uses them, or import a color package. Component `role:` values remain local to components such as `frame`, `label`, and `quote`.
+Color collections remain ordinary Typst arrays. Define them near the chart or diagram that uses them, or import a color package. Component `role:` values remain local to components such as `frame`, `tag`, and `quote`.
 
 To recolor an entire slide at once, use the `<mosaic-slide>` label described under #link("styling.html#styling-a-whole-slide")[Styling a whole slide].

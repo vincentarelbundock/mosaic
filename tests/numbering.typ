@@ -2,11 +2,11 @@
 #import "support/grid.typ" as grid-test
 
 #set page(width: 160pt, height: 90pt, margin: 5pt)
-#let numbered-grid = mosaic.grid.v(
+#let numbered-grid = mosaic.grids.v(
   "left",
-  mosaic.grid.t(
+  mosaic.grids.t(
     auto,
-    mosaic.grid.cell(id: "right", content: align(right)[Fixed furniture]),
+    mosaic.grids.cell(id: "right", content: align(right)[Fixed furniture]),
   ),
 )
 #assert(grid-test.count(numbered-grid) == 2)
@@ -37,7 +37,7 @@
 // foreground set to none explicitly suppresses both inherited furniture and
 // the number; background none disables the inherited background plane.
 #mosaic.slide(
-  layout: mosaic.grid.cell(id: "body"),
+  layout: mosaic.grids.cell(id: "body"),
   content: (background: none, foreground: none),
   numbered: false,
 )[Unnumbered]
@@ -45,7 +45,7 @@
 // Two replacement frames inherit the deck background and override only the
 // foreground. This is logical slide 2.
 #mosaic.slide(
-  layout: mosaic.grid.cell(id: "body"),
+  layout: mosaic.grids.cell(id: "body"),
   content: (foreground: [Local foreground #slide-number]),
 )[
   #mosaic.steps.replace[Before][After]
@@ -53,7 +53,7 @@
 
 // Temporal foreground content contributes frames even when the body is static.
 #mosaic.slide(
-  layout: mosaic.grid.cell(id: "body"),
+  layout: mosaic.grids.cell(id: "body"),
   content: (
     background: none,
     foreground: [#mosaic.steps.on("2-")[Foreground step] #slide-number],

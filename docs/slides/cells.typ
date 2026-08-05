@@ -10,10 +10,10 @@ A slide accepts cell content in two distinct forms. Use positional content block
 
 = Positional content with `[][]`
 
-Place content blocks directly after the `m.slide(...)` call. Each pair of brackets is one positional body: `[a][b][c]` supplies three bodies. Mosaic matches them to cell IDs in source order, left to right within `m.grid.h`, top to bottom within `m.grid.v`, and recursively through nested grids.
+Place content blocks directly after the `m.slide(...)` call. Each pair of brackets is one positional body: `[a][b][c]` supplies three bodies. Mosaic matches them to cell IDs in source order, left to right within `m.grids.h`, top to bottom within `m.grids.v`, and recursively through nested grids.
 
 ```typ
-#m.slide(layout: m.grid.h("a", "b", "c"))[a][b][c]
+#m.slide(layout: m.grids.h("a", "b", "c"))[a][b][c]
 ```
 
 #embedded-example(
@@ -36,14 +36,14 @@ Pass a dictionary to the named `content:` argument to associate each body with a
   title: "Three bodies assigned explicitly by cell ID",
 )
 
-The cell ID connects all three layers: `m.grid.cell("body")` defines the cell, `content: (body: [...])` fills it, and `label("mosaic-cell-body")` styles it. Content-bearing cells are optional and resolve to empty content when omitted; unknown IDs are errors.
+The cell ID connects all three layers: `m.grids.cell("body")` defines the cell, `content: (body: [...])` fills it, and `label("mosaic-cell-body")` styles it. Content-bearing cells are optional and resolve to empty content when omitted; unknown IDs are errors.
 
 = Fixed cell content
 
 When a grid owns fixed content such as an image or logo, put it directly on the cell. Fixed cell content needs no positional body or `content:` entry:
 
 ```typ
-#m.grid.cell("logo", content: image("logo.svg"))
+#m.grids.cell("logo", content: image("logo.svg"))
 ```
 
 = Fitting a block to its cell

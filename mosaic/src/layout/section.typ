@@ -5,14 +5,14 @@
 #import "core.typ": (
   make-layout,
   validate-accent,
-  validate-visual-spec,
+  validate-image-spec,
 )
 
-#import "support.typ": adapt-fill, as-content, subordinate-block, affix
+#import "support.typ": adapt-fill, as-content, subordinate-block, content-or-empty
 #import "image-support.typ": (
   directional-image-layout,
   image-background-cell,
-  image-region,
+  image-cell,
   optional-fixed-image,
   semantic-directional-variants,
   semantic-image-position,
@@ -112,7 +112,7 @@
 )
 
 #let validate-fields(fields, allow-auto: false) = {
-  validate-accent(fields, "section", allow-auto: allow-auto)
+  let fields = validate-accent(fields, "section", allow-auto: allow-auto)
   let variant = fields.variant
   if type(variant) != str or variant not in variants {
     fail(
@@ -120,15 +120,15 @@
         + "; expected one of " + repr(variants),
     )
   }
-  validate-semantic-image-use(fields, "layout \"section\"")
+  let fields = validate-semantic-image-use(fields, "layout \"section\"")
   if fields.image != none {
-    let _ = validate-visual-spec(
+    _ = validate-image-spec(
       fields.image,
       "layout \"section\" image",
     )
   }
   if variant in semantic-directional-variants {
-    validate-directional-tracks(fields.tracks, "layout \"section\" tracks")
+    _ = validate-directional-tracks(fields.tracks, "layout \"section\" tracks")
   } else if fields.tracks != auto {
     fail("layout \"section\" tracks apply only to directional image variants")
   }
@@ -254,7 +254,7 @@
 #let title-text(body, styles, transform: none) = text(..styles, context {
   let size = text.size
   let rest = styles
-  let _ = rest.remove("size", default: none)
+  _ = rest.remove("size", default: none)
   show heading: it => text(size: size, ..rest, it.body)
   if transform == none { body } else { transform(body) }
 })
@@ -274,9 +274,9 @@
 
 // The section number as a labeled tier, so a theme can restyle it without
 // reaching into the variant's composition.
-#let number-text(styles, body) = [#text(..styles, body)<mosaic-section-number>]
+#let number-text(body, styles) = [#text(..styles, body)<mosaic-section-number>]
 
-// A heavy full-width rule with the title mass hanging beneath it, everything
+// A heavy full-width rule with the heading stack hanging beneath it, everything
 // flush left. The rule carries the design; the number sits above it like a
 // running head.
 #let resolve-rule-section(fields, settings, metrics) = styled-cell(
@@ -287,12 +287,12 @@
     map: body => {
       set par(spacing: metrics.paragraph-spacing)
       number-text(
+        auto-number(fields.number),
         (
           size: metrics.number-size,
           weight: metrics.number-weight,
           fill: fields.accent,
         ),
-        auto-number(fields.number),
       )
       v(metrics.gap-below-number)
       line(length: 100%, stroke: metrics.rule-thickness + settings.colors.text)
@@ -321,13 +321,13 @@
       dx: metrics.number-dx,
       dy: metrics.number-dy,
       number-text(
+        auto-number(fields.number),
         (
           size: metrics.number-size,
           weight: metrics.number-weight,
           tracking: metrics.number-tracking,
           fill: settings.colors.line,
         ),
-        auto-number(fields.number),
       ),
     ),
     map: body => {
@@ -371,12 +371,12 @@
           tracking: metrics.title-tracking,
         )),
         number-text(
+          auto-number(fields.number),
           (
             size: metrics.number-size,
             weight: metrics.number-weight,
             fill: settings.colors.muted,
           ),
-          auto-number(fields.number),
         ),
       )
       v(metrics.gap-above-rule)
@@ -410,12 +410,12 @@
               column-gutter: metrics.gutter,
               align: (left + bottom, left + bottom),
               number-text(
+                auto-number(fields.number),
                 (
                   size: metrics.item-size,
                   weight: metrics.current-weight,
                   fill: fields.accent,
                 ),
-                auto-number(fields.number),
               ),
               title-text(body, (
                 size: metrics.item-size,
@@ -459,8 +459,8 @@
   }
   let before = if fields.number != none {
     number-text(
-      (size: metrics.number-size, fill: fields.accent),
       fields.number,
+      (size: metrics.number-size, fill: fields.accent),
     )
     parbreak()
   } else {
@@ -477,8 +477,8 @@
   let section-cell = styled-cell(
     id: "section",
     style: (
-      before: affix(before),
-      after: affix(after),
+      before: content-or-empty(before),
+      after: content-or-empty(after),
       content-sized: fields.variant in semantic-directional-variants,
       fit: "width",
       inset: settings.spacing.inset,
@@ -488,7 +488,7 @@
     let position = semantic-image-position(fields.variant)
     directional-image-layout(
       position,
-      image-region(image),
+      image-cell(image),
       section-cell,
       tracks: fields.tracks,
       gutter: settings.spacing.gap,

@@ -48,7 +48,7 @@
     // theme's rendered output, which is a design call rather than a cleanup.
     #components.progress(
       variant: "line", count: "sections", width: 100%, thickness: 3.01pt,
-      track: colors.line, color: colors.accent,
+      fill: colors.line, accent: colors.accent,
     )
   ]
   show label("mosaic-cell-footer"): set text(size: 0.55em, fill: colors.muted)

@@ -11,6 +11,6 @@
 
 // Tracks accept percentages and fixed lengths too: a 25% banner over a body
 // that takes the remaining height.
-#let banner = m.grid.v(m.grid.t(25%, "a"), "b")
+#let banner = m.grids.v(m.grids.t(25%, "a"), "b")
 
 #m.slide(layout: banner)[a][b]

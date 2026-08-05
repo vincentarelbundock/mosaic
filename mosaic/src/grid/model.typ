@@ -8,7 +8,7 @@
 // block of their own with native `scale(.., reflow: true)`.
 #let fit-modes = (none, "width", "contain")
 
-#let valid-track-size(size) = (
+#let is-track-size(size) = (
   size == auto
     or type(size) in (
       type(1fr),
@@ -41,7 +41,7 @@
 
 #let split-name(axis) = if axis == "width" { "h" } else { "v" }
 
-#let valid-rule(value) = (
+#let is-stroke(value) = (
   value == none
     or type(value) in (
       length,

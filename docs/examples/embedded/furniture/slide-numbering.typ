@@ -1,6 +1,6 @@
 #import "@local/mosaic:0.0.1" as m
 
-#let grid = m.grid.cell("body", inset: 1.5em)
+#let grid = m.grids.cell("body", inset: 1.5em)
 
 #show: m.setup.with(
   layouts: (content: grid),

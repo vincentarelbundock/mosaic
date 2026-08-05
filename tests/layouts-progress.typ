@@ -8,16 +8,16 @@
       variant: "line",
       width: 100%,
       thickness: 0.12em,
-      color: color,
+      accent: color,
     )
   ]]
 } else {
   [#place(bottom + right, dx: -1.25em, dy: -0.35em)[
     #mosaic.components.progress(
       variant: variant,
-      size: 1em,
+      width: 1em,
       thickness: 0.12em,
-      color: color,
+      accent: color,
     )
   ]]
 }

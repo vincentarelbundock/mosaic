@@ -4,7 +4,7 @@
 #set page(fill: rgb("#f4f1ea"))
 #set text(size: 22pt, fill: rgb("#172033"))
 
-#m.slide(layout: m.grid.h("a", "b"))[
+#m.slide(layout: m.grids.h("a", "b"))[
   #m.components.figure(
     path("/docs/assets/images/bonsai.webp"),
     caption: [Figure in a cell.],

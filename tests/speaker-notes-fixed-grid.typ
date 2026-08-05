@@ -3,7 +3,7 @@
 #show: m.setup
 
 #m.slide(
-  layout: m.grid.cell(
+  layout: m.grids.cell(
     id: "fixed",
     content: [FIXED VISUAL #m.note[FIXED CELL NOTE]],
   ),
@@ -12,7 +12,7 @@
 #m.slide(
   layout: m.steps.on(
     "2-",
-    m.grid.cell(
+    m.grids.cell(
       id: "timed-fixed",
       content: [TIMED FIXED VISUAL #m.note[TIMED FIXED NOTE]],
     ),

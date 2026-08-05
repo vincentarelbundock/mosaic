@@ -2,11 +2,11 @@
 #import "../shared.typ": fail, reject-unknown-keys
 #import "../settings.typ": resolve-colors
 #import "../role-defaults.typ": validate-roles
-#import "../setup-core.typ": setup-core, setup-defaults
+#import "../setup-core.typ": setup-core, default-setup
 #import "../layout/config.typ": standard-layouts, validate-layouts
 
 #let identity(body, colors: (:), options: (:)) = body
-#let definition-defaults = (
+#let default-definition = (
   name: "Custom",
   colors: none,
   roles: auto,
@@ -18,21 +18,21 @@
 // The theme-neutral option names are exactly what themed setup accepts:
 // setup-core's own options plus `colors`, which the engine resolves against
 // the theme palette before setup-core runs.
-#let generic-options = setup-defaults.keys() + ("colors",)
+#let generic-options = default-setup.keys() + ("colors",)
 
 #let validate-theme(theme) = {
   if type(theme) != dictionary {
     fail("theme must be a dictionary")
   }
-  reject-unknown-keys(theme, definition-defaults, "theme")
-  let theme = definition-defaults + theme
+  reject-unknown-keys(theme, default-definition, "theme")
+  let theme = default-definition + theme
   if type(theme.name) != str or theme.name.trim() == "" {
     fail("theme name must be a non-empty string")
   }
   if theme.colors == none {
     fail("theme requires a complete colors dictionary")
   }
-  let _ = resolve-colors(theme.colors, (:))
+  _ = resolve-colors(theme.colors, (:))
   if type(theme.defaults) != dictionary {
     fail("theme defaults must be a dictionary")
   }
@@ -45,7 +45,7 @@
   if "roles" in theme.defaults {
     fail("theme defaults must configure roles through theme roles")
   }
-  let _ = validate-roles(theme.roles, name: "theme roles")
+  _ = validate-roles(theme.roles, name: "theme roles")
   if type(theme.options) != dictionary {
     fail("theme options must be a dictionary")
   }
@@ -75,7 +75,7 @@
   if type(layouts) != dictionary {
     fail("theme layouts must return a dictionary")
   }
-  validate-layouts(layouts, subject: "theme layouts")
+  validate-layouts(layouts, name: "theme layouts")
 }
 
 // Receives a definition already normalized by `validate-theme`; the public

@@ -14,11 +14,11 @@ IMPORT = re.compile(
 )
 LET = re.compile(r"(?m)^#let\s+([A-Za-z_][A-Za-z0-9_-]*)\b")
 
-NEUTRAL_API = {"setup", "definition", "slide", "note", "pause", "fit", "surface", "grid", "layouts", "steps", "components", "theme", "themes"}
-SHARED_API = {"slide", "note", "pause", "fit", "surface", "grid", "layouts", "steps", "components", "theme"}
-THEMED_API = {"setup", "definition", "slide", "note", "pause", "fit", "surface", "grid", "layouts", "steps", "components", "theme"}
+NEUTRAL_API = {"setup", "definition", "slide", "note", "pause", "fit", "surface", "grids", "layouts", "steps", "components", "theme", "themes"}
+SHARED_API = {"slide", "note", "pause", "fit", "surface", "grids", "layouts", "steps", "components", "theme"}
+THEMED_API = {"setup", "definition", "slide", "note", "pause", "fit", "surface", "grids", "layouts", "steps", "components", "theme"}
 THEMED_LAYOUTS = {"content", "title", "section", "image", "author"}
-THEMED_COMPONENTS = {"frame", "callout", "label", "quote", "divider", "progress", "image", "figure"}
+THEMED_COMPONENTS = {"frame", "callout", "tag", "quote", "divider", "progress", "image", "figure"}
 
 EXPECTED = {
     "mosaic/lib.typ": NEUTRAL_API,

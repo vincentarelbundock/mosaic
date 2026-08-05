@@ -3,19 +3,19 @@
 
 #set page(width: 160pt, height: 90pt, margin: 5pt)
 // Composable grid construction and bounded grid introspection.
-#assert(mosaic.grid.h("a", "b").gutter == 0pt)
-#assert(mosaic.grid.h(gutter: 1em, "a", "b").gutter == 1em)
-#assert(grid-test.count(mosaic.grid.v(mosaic.grid.h("a", "b"), mosaic.grid.h("c", "d"))) == 4)
+#assert(mosaic.grids.h("a", "b").gutter == 0pt)
+#assert(mosaic.grids.h(gutter: 1em, "a", "b").gutter == 1em)
+#assert(grid-test.count(mosaic.grids.v(mosaic.grids.h("a", "b"), mosaic.grids.h("c", "d"))) == 4)
 #assert(
   grid-test.count(
-    mosaic.grid.h(mosaic.grid.v("a", "b"), mosaic.grid.v("c", "d"), mosaic.grid.v("e", "f", "g")),
+    mosaic.grids.h(mosaic.grids.v("a", "b"), mosaic.grids.v("c", "d"), mosaic.grids.v("e", "f", "g")),
   ) == 7,
 )
 
 // Public cell introspection uses required string names. Track
 // descriptors identify the parent path, local child, value, and every leaf
 // affected by that track.
-#let stacked = mosaic.grid.v("a", "b")
+#let stacked = mosaic.grids.v("a", "b")
 #let first-row = grid-test.info(stacked, "a")
 #assert(first-row.id == "a")
 #assert(first-row.path == (0,))
@@ -30,12 +30,12 @@
 // Track sizes and insets are structural; appearance comes from native rules
 // targeting each cell's <mosaic-cell-ID> label.
 #let pink = rgb("#f8dce5")
-#let configured = mosaic.grid.v(
-  mosaic.grid.t(
+#let configured = mosaic.grids.v(
+  mosaic.grids.t(
     auto,
-    mosaic.grid.cell("banner", inset: 4pt),
+    mosaic.grids.cell("banner", inset: 4pt),
   ),
-  mosaic.grid.cell("body", inset: 4pt),
+  mosaic.grids.cell("body", inset: 4pt),
 )
 #assert(configured.tracks == (auto, 1fr))
 #assert(grid-test.info(configured, "banner").cell.id == "banner")
@@ -43,7 +43,7 @@
 
 // Nested cells expose both controlling axes. A parent track can affect more
 // than one leaf, while the nested perpendicular track remains cell-specific.
-#let top-bottom = mosaic.grid.v("a", mosaic.grid.h("b", "c"))
+#let top-bottom = mosaic.grids.v("a", mosaic.grids.h("b", "c"))
 #let bottom-left = grid-test.info(top-bottom, "b")
 #assert(bottom-left.path == (1, 0))
 #assert(bottom-left.tracks.len() == 2)
@@ -53,8 +53,8 @@
 #assert(bottom-left.tracks.at(1).affects == ("b",))
 
 // Temporal wrappers do not add an artificial step to the child path.
-#let temporal-grid = mosaic.grid.v(
-  mosaic.grid.t(auto, mosaic.steps.on("2-", mosaic.grid.cell(id: "first"))),
+#let temporal-grid = mosaic.grids.v(
+  mosaic.grids.t(auto, mosaic.steps.on("2-", mosaic.grids.cell(id: "first"))),
   "second",
 )
 #let temporal-info = grid-test.info(temporal-grid, "first")
@@ -63,10 +63,10 @@
 #assert(temporal-grid.tracks == (auto, 1fr))
 
 // A fixed image cell owns content; appearance stays native.
-#let image-grid = mosaic.grid.h(
-  mosaic.grid.t(
+#let image-grid = mosaic.grids.h(
+  mosaic.grids.t(
     30%,
-    mosaic.grid.cell(
+    mosaic.grids.cell(
       id: "image",
       inset: 0pt,
       content: image(
@@ -78,7 +78,7 @@
       ),
     ),
   ),
-  mosaic.grid.cell("text"),
+  mosaic.grids.cell("text"),
 )
 #let image-info = grid-test.info(image-grid, "image")
 #assert(image-info.cell.content != none)
@@ -87,7 +87,7 @@
 // Set the deck-wide default; slides can still override it explicitly.
 #show: mosaic.setup.with(
   spacing: (inset: 5pt),
-  layouts: (content: mosaic.grid.h("a", "b")),
+  layouts: (content: mosaic.grids.h("a", "b")),
 )
 #set text(size: 7pt)
 
@@ -107,19 +107,19 @@
 ]
 
 // Page 2: equal vertical splits, mixed inner tracks, and depth-first bodies.
-#let nested = mosaic.grid.v(
+#let nested = mosaic.grids.v(
   "top",
-  mosaic.grid.h(
+  mosaic.grids.h(
     gutter: 2pt,
     "left",
-    mosaic.grid.t(20pt, mosaic.grid.v("middle-top", "middle-bottom")),
-    mosaic.grid.t(auto, "right"),
+    mosaic.grids.t(20pt, mosaic.grids.v("middle-top", "middle-bottom")),
+    mosaic.grids.t(auto, "right"),
   ),
 )
 #mosaic.slide(layout: nested)[1][2][3][4][5]
 
 // Page 3: an explicit single-cell override containing a native grid.
-#mosaic.slide(layout: mosaic.grid.cell(id: "body"))[
+#mosaic.slide(layout: mosaic.grids.cell(id: "body"))[
   #grid(
     columns: (1fr, 1fr),
     rows: (1fr, 1fr),
@@ -129,12 +129,12 @@
 
 // Page 4: label-targeted rules style both fixed and supplied cell content;
 // scoping them in a block limits them to this one slide.
-#let text-grid = mosaic.grid.v(
-  mosaic.grid.cell(
+#let text-grid = mosaic.grids.v(
+  mosaic.grids.cell(
     id: "fixed",
     content: [Fixed content],
   ),
-  mosaic.grid.cell("supplied"),
+  mosaic.grids.cell("supplied"),
 )
 #[
   #show label("mosaic-cell-fixed"): set text(size: 0.8em, fill: blue)
@@ -158,10 +158,10 @@
     fill: pink,
     it,
   )
-  #mosaic.slide(layout: mosaic.grid.h(
-    mosaic.grid.t(
+  #mosaic.slide(layout: mosaic.grids.h(
+    mosaic.grids.t(
       30%,
-      mosaic.grid.cell(
+      mosaic.grids.cell(
         id: "a",
         inset: 2pt,
         content: image(
@@ -173,11 +173,11 @@
         ),
       ),
     ),
-    mosaic.grid.cell("b"),
+    mosaic.grids.cell("b"),
   ))[Configured grid]
 
-  #mosaic.slide(layout: mosaic.grid.h(
-    mosaic.grid.cell("a"),
-    mosaic.grid.cell("b"),
+  #mosaic.slide(layout: mosaic.grids.h(
+    mosaic.grids.cell("a"),
+    mosaic.grids.cell("b"),
   ))[A][B]
 ]

@@ -8,7 +8,7 @@
 #assert("cell-styles" not in command.keys())
 
 // Structural inset is the only visual-adjacent knob on a public cell.
-#let structural = mosaic.grid.cell("flat", inset: 4pt)
+#let structural = mosaic.grids.cell("flat", inset: 4pt)
 #assert(structural.id == "flat")
 #assert(structural.style.inset == 4pt)
 

@@ -3,7 +3,7 @@
 
 #let shared = (
   "setup", "slide", "note", "pause", "surface",
-  "grid", "layouts", "steps", "components", "theme",
+  "grids", "layouts", "steps", "components", "theme",
 )
 #assert(shared.all(name => name in mosaic and name in light))
 #assert(mosaic.setup == light.setup)
@@ -11,7 +11,7 @@
 #assert(mosaic.note == light.note)
 #assert(mosaic.pause == light.pause)
 #assert(mosaic.surface == light.surface)
-#assert(mosaic.grid == light.grid)
+#assert(mosaic.grids == light.grids)
 #assert(mosaic.layouts == light.layouts)
 #assert(mosaic.steps == light.steps)
 #assert(mosaic.components == light.components)

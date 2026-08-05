@@ -1,7 +1,7 @@
 // Shared content and surface primitives for layout resolvers.
 #import "../grid/constructors.typ": styled-cell, t
 #import "../component/image.typ": image as mosaic-image
-#import "core.typ": validate-visual-spec
+#import "core.typ": validate-image-spec
 
 // Subordinate tiers composed inside a single cell (title subtitle, title
 // metadata, section subtitle) pin a muted `fill` so they read as secondary on
@@ -10,7 +10,7 @@
 // the whole stack to follow.
 #let inherit-fill(styles) = if "fill" in styles {
   let styles = styles
-  let _ = styles.remove("fill")
+  _ = styles.remove("fill")
   styles
 } else {
   styles
@@ -41,15 +41,15 @@
   [#value]
 }
 
-#let affix(value) = if value == none { [] } else { as-content(value) }
+#let content-or-empty(value) = if value == none { [] } else { as-content(value) }
 
-// Edge regions — headers, footers, captions — hug their own content vertically
+// Edge cells — headers, footers, captions — hug their own content vertically
 // and take the deck's inset horizontally, exactly like every other cell. The
 // vertical padding stays equal above and below, so a recolored header still
 // reads as a balanced band, but it is a fraction of the horizontal inset: a
 // heading is one line tall, and full inset on both sides makes the band deeper
 // than the text it carries. A single asymmetric gap is what would look
-// unconsidered, not a shallower symmetric one. The region also sits close to
+// unconsidered, not a shallower symmetric one. The cell also sits close to
 // the body it introduces because the gutter between them is zero.
 #let header-inset(settings) = (
   x: settings.spacing.inset,
@@ -62,7 +62,7 @@
   nodes.zip(tracks).map(((node, size)) => t(size, node))
 }
 
-#let visual-path(value) = if type(value) != str {
+#let image-path(value) = if type(value) != str {
   value
 } else if value.starts-with("/") {
   value
@@ -72,19 +72,19 @@
 
 #let path-image(
   value,
-  subject,
+  name,
   width: auto,
   height: auto,
   fit: "cover",
   allow-size: true,
 ) = {
-  let spec = validate-visual-spec(value, subject, allow-size: allow-size)
+  let spec = validate-image-spec(value, name, allow-size: allow-size)
   let alt = spec.at("alt", default: none)
   let image-fit = spec.at("fit", default: fit)
   // The scrim rides the picture rather than the cell, so it hugs an inset
   // figure exactly as it covers a full-bleed background.
   mosaic-image(
-    visual-path(spec.path),
+    image-path(spec.path),
     alt: alt,
     width: if allow-size { spec.at("width", default: width) } else { width },
     height: if allow-size { spec.at("height", default: height) } else { height },
@@ -93,9 +93,9 @@
   )
 }
 
-#let visual-content(
+#let image-content(
   value,
-  subject: "image specification",
+  name,
   width: auto,
   height: auto,
   fit: "cover",
@@ -106,7 +106,7 @@
   } else {
     path-image(
       value,
-      subject,
+      name,
       width: width,
       height: height,
       fit: fit,

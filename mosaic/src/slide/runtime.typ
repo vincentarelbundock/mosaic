@@ -153,7 +153,7 @@
       - style.thumbnail-gap
       - heading-height
       - style.heading-gap
-      - style.padding
+      - style.bottom-gap
   )
   [
     #scale(
@@ -193,7 +193,7 @@
   bounded-note-list(
     notes,
     region.width,
-    region.height - heading-height - style.heading-gap - style.padding,
+    region.height - heading-height - style.heading-gap - style.bottom-gap,
     "notes",
     step,
     style,
@@ -203,20 +203,20 @@
 // A plane renders as one full-slide block labeled <mosaic-ID> (ID is
 // "background" or "foreground"), so native label rules can style it without
 // conflating planes with grid cells.
-#let render-plane(value, step, heading-key) = if value == none {
+#let render-plane(body, step, heading-scope) = if body == none {
   []
 } else {
   let body = block(
     width: 100%,
     height: 100%,
     transform(
-      value,
+      body,
       step,
       headings: "visual",
-      heading-key: heading-key,
+      heading-scope: heading-scope,
     ),
   )
-  [#body#label("mosaic-" + heading-key)]
+  [#body#label("mosaic-" + heading-scope)]
 }
 
 // The single write of the deck record. Every field validates here, at the one
@@ -308,8 +308,8 @@
   } else {
     foreground-override
   }
-  validate-plane(resolved-background, "background")
-  validate-plane(resolved-foreground, "foreground")
+  let resolved-background = validate-plane(resolved-background, "background")
+  let resolved-foreground = validate-plane(resolved-foreground, "foreground")
   // Named and positional content collapse to one id -> content map before
   // rendering, so the renderer, overflow, and incremental paths look content up
   // by cell id with no positional cursor.

@@ -3,7 +3,7 @@
 #show: m.setup
 
 #m.slide(
-  layout: m.grid.cell(
+  layout: m.grids.cell(
     id: "fixed",
     content: [
       FIXED PAUSE FIRST

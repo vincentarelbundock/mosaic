@@ -1,7 +1,7 @@
 // Validation of canonical grid trees.
 #import "../shared.typ": fail, tag
 #import "../incremental/core.typ": parse-range, validate-states
-#import "model.typ": fit-modes, split-name, valid-track-size
+#import "model.typ": fit-modes, split-name, is-track-size
 #import "traversal.typ": collect-cell-ids
 
 #let require-unique-cell-ids(node, path: "root") = {
@@ -12,7 +12,7 @@
   }
 }
 
-#let valid-cell-style(style) = (
+#let is-cell-style(style) = (
   type(style) == dictionary
     and "inset" in style
     and style.keys().all(
@@ -33,7 +33,7 @@
     and type(style.at("content-sized", default: false)) == bool
 )
 
-#let valid-node-shape(node) = {
+#let is-node-shape(node) = {
   if type(node) != dictionary {
     false
   } else {
@@ -51,16 +51,16 @@
         )
         and type(node.id) == str
         and node.id != ""
-        and valid-cell-style(node.style)
+        and is-cell-style(node.style)
     )
     let split-fields = (
       node.at("kind", default: none) == "split"
         and keys == (
-          "axis", "children", "gutter", "kind", "mosaic", "rule", "tracks",
+          "axis", "children", "gutter", "kind", "mosaic", "stroke", "tracks",
         )
         and node.axis in ("width", "height")
         and type(node.children) == array
-        and valid-track-size(node.gutter)
+        and is-track-size(node.gutter)
     )
     let on-fields = (
       node.at("kind", default: none) == "on"
@@ -71,12 +71,12 @@
 }
 
 #let validate-shape(node, path: "root") = {
-  if not valid-node-shape(node) {
+  if not is-node-shape(node) {
     fail("invalid grid node at " + path)
   }
   if node.kind == "on" {
     _ = parse-range(node.range)
-    validate-states(node.before, node.after)
+    _ = validate-states(node.before, node.after)
     validate-shape(node.child, path: path + ".child")
   } else if node.kind != "cell" {
     if node.children.len() == 0 {
@@ -88,7 +88,7 @@
     if node.tracks != auto and (
       type(node.tracks) != array
         or node.tracks.len() != node.children.len()
-        or not node.tracks.all(valid-track-size)
+        or not node.tracks.all(is-track-size)
     ) {
       fail(
         split-name(node.axis) + " at " + path

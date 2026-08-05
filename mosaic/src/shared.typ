@@ -14,7 +14,7 @@
 #let typst-styled = text(red)[].func()
 #let typst-space = [ ].func()
 
-#let valid-path(value) = type(value) == path or (
+#let is-path(value) = type(value) == path or (
   type(value) == str and value != ""
 )
 
@@ -22,11 +22,11 @@
 // accepts and needs no Mosaic-specific vocabulary of its own. One validator
 // serves both the component and every layout that carries an image, so the
 // spelling cannot drift between them.
-#let valid-paint(value) = type(value) in (color, gradient, tiling)
+#let is-paint(value) = type(value) in (color, gradient, tiling)
 
-#let validate-scrim(value, subject) = {
-  if value != none and not valid-paint(value) {
-    fail(subject + " scrim must be a color, gradient, or tiling")
+#let validate-scrim(value, name) = {
+  if value != none and not is-paint(value) {
+    fail(name + " scrim must be a color, gradient, or tiling")
   }
   value
 }

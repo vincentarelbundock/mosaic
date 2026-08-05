@@ -69,14 +69,14 @@
 #let fraction-precision = 1000000
 
 // Drops the trailing "fr" that `repr` appends.
-#let _fraction-unit-length = 2
+#let fraction-unit-length = 2
 
 #let size-to-pt(size, container-dimension) = {
   let resolved = size
   if type(size) == fraction {
     let fraction-text = repr(size * fraction-precision)
     resolved = float(
-      fraction-text.slice(0, fraction-text.len() - _fraction-unit-length),
+      fraction-text.slice(0, fraction-text.len() - fraction-unit-length),
     ) / fraction-precision
   }
   if type(resolved) in (int, float, ratio) {

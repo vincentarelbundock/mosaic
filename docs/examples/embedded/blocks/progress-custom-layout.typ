@@ -2,9 +2,9 @@
 
 #show: m.setup
 
-#let slide-grid = m.grid.h(
-  m.grid.cell("left"),
-  m.grid.cell("right"),
+#let slide-grid = m.grids.h(
+  m.grids.cell("left"),
+  m.grids.cell("right"),
 )
 
 // The two panels share a centered, bold look; the right one is tinted. Both
@@ -27,8 +27,8 @@
     block(width: 100%)[
       #m.components.progress(
         variant: "line",
-        color: black,
-        track: white,
+        accent: black,
+        fill: white,
         thickness: 8pt,
       )
     ],

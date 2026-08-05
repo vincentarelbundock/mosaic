@@ -102,29 +102,29 @@
 #let render-commands(values, step, hide, dim) = {
   let result = ()
   for value in command-array(values) {
-    let timed = if is-command-on(value) {
+    let temporal = if is-command-on(value) {
       value
     } else if is-temporal(value, kind: "temporal-on") {
       value.value
     } else {
       none
     }
-    if timed != none {
-      let state = status(timed.range, timed.before, timed.after, step)
-      let body = render-commands(timed.body, step, hide, dim)
+    if temporal != none {
+      let state = status(temporal.range, temporal.before, temporal.after, step)
+      let body = render-commands(temporal.body, step, hide, dim)
       result += render-command-state(state, body, hide, dim)
     } else if is-temporal(value, kind: "temporal-reveal") {
-      let timed = value.value
-      for slot in reveal-slots(timed.items).slots {
+      let temporal = value.value
+      for slot in reveal-slots(temporal.items).slots {
         let body = render-commands(slot.body, step, hide, dim)
         if slot.index == none {
           result += body
           continue
         }
         let state = status(
-          timed.start + slot.index,
-          timed.before,
-          timed.after,
+          temporal.start + slot.index,
+          temporal.before,
+          temporal.after,
           step,
         )
         result += render-command-state(state, body, hide, dim)
@@ -142,7 +142,7 @@
   body,
   step,
   headings: auto,
-  heading-key: "content",
+  heading-scope: "content",
 ) = {
   let heading-mode = if headings == auto {
     if step == 1 { "canonical" } else { "visual" }
@@ -154,8 +154,8 @@
     message: "mosaic: internal heading mode must be canonical or visual",
   )
   assert(
-    type(heading-key) == str,
-    message: "mosaic: internal heading key must be a string",
+    type(heading-scope) == str,
+    message: "mosaic: internal heading scope must be a string",
   )
 
   let visit(body) = {
@@ -173,7 +173,7 @@
         fail("heading bodies cannot contain nested headings")
       }
       let style-state = state(
-        key("heading-style:" + heading-key + ":" + repr(body)),
+        key("heading-style:" + heading-scope + ":" + repr(body)),
         none,
       )
       return if heading-mode == "canonical" {
@@ -210,8 +210,8 @@
           step,
         )
         let (list: list-mode, slots) = reveal-slots(value.items)
-        let timed = slots.filter(slot => slot.index != none)
-        let kinds = timed.map(slot => slot.body.func()).dedup()
+        let indexed = slots.filter(slot => slot.index != none)
+        let kinds = indexed.map(slot => slot.body.func()).dedup()
         // A uniform bullet or numbered list is drawn as a marker grid so that
         // hidden items keep their markers aligned with the revealed ones.
         if list-mode and kinds.len() == 1 and kinds.first() in (
@@ -224,7 +224,7 @@
           // in a native enum; removed items still hold their number so the
           // visible markers never shift between steps.
           let number = 1
-          for slot in timed {
+          for slot in indexed {
             number = slot.body.fields().at("number", default: number)
             let state = item-state(slot.index)
             if state != "removed" {
@@ -320,7 +320,7 @@
             segment-body,
             calc.max(local-step, 1),
             headings: heading-mode,
-            heading-key: heading-key + ":pause-" + str(index),
+            heading-scope: heading-scope + ":pause-" + str(index),
           )
           result.push(
             if local-step < 1 { hide(transformed) } else { transformed },

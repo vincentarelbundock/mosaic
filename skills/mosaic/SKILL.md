@@ -118,7 +118,7 @@ Variants:
 - **Content**: `body`, `header-body`, `body-footer`, `header-body-footer`.
 - **Image**: `figure` (the default), `full`, `left`, `right`, `top`, `bottom`.
 
-`m.layouts.title()` inherits `title`, `subtitle`, `authors`, and `date` from setup, so `m.slide(layout: "title")` needs no body. An explicit layout argument wins; pass `none` (or `()` for `authors`) to suppress an inherited field on one slide. For image variants, `scrim:` on the image spec quiets the photograph, as in `image: (path: "cover.webp", scrim: black.transparentize(55%))`; pair `image-background` with a scoped text-color rule on the `<mosaic-cell-title>` or `<mosaic-cell-section>` label for contrast. One such rule recolors the whole stack: the subtitle and metadata are muted only while the cell carries the deck's ordinary text color, and follow any override, so light-on-dark titles need no hand-built grid. A size rule on the same label works the same way, scaling the stack as a unit (`show label("mosaic-cell-title"): set text(size: 0.45em)` for quiet type in a corner), because the display line carries its own `<mosaic-title-display>` label where the theme states the display size. There is no `scale:` argument, and a hand-built grid is never the way to resize a title.
+`m.layouts.title()` inherits `title`, `subtitle`, `authors`, and `date` from setup, so `m.slide(layout: "title")` needs no body. An explicit layout argument wins; pass `none` (or `()` for `authors`) to suppress an inherited field on one slide. For image variants, `scrim:` on the image spec quiets the photograph, as in `image: (path: "cover.webp", scrim: black.transparentize(55%))`; pair `image-background` with a scoped text-color rule on the `<mosaic-cell-title>` or `<mosaic-cell-section>` label for contrast. One such rule recolors the whole stack: the subtitle and details are muted only while the cell carries the deck's ordinary text color, and follow any override, so light-on-dark titles need no hand-built grid. A size rule on the same label works the same way, scaling the stack as a unit (`show label("mosaic-cell-title"): set text(size: 0.45em)` for quiet type in a corner), because the display line carries its own `<mosaic-title-display>` label where the theme states the display size. There is no `scale:` argument, and a hand-built grid is never the way to resize a title.
 
 Mosaic has no automatic shrink-to-fit for body content, by design: a deck whose type size is decided slide by slide loses the typographic scale that holds it together. An overflow warning means cut a bullet, split the slide, or pick a layout with more room. When one indivisible block is oversized (a wide table, a chart, a generated list), scale that block alone with `m.fit(my-table)`, which measures it against its region and scales geometrically. `m.fit(grow: true)[42%]` goes the other way, filling a cell with display type. A fitted block never overflows and so stops appearing in the overflow records, which is why it is for indivisible blocks rather than crowded slides. It also cannot contain `m.pause`, `m.steps`, or `m.note`: measuring hides the body from the runtime's walk, so those would be lost. `m.fit` raises an error rather than dropping them; keep them outside the fitted block.
 
@@ -306,11 +306,11 @@ Only `colors` is required; `name`, `defaults`, `options`, `layouts`, and `apply`
 Build custom structure only when headings and layout factories are insufficient. A Mosaic grid is a transparent tree of named cells:
 
 ```typ
-#let composition = m.grid.h(
-  m.grid.t(2fr, "main"),
-  m.grid.t(1fr, m.grid.v(
-    m.grid.t(2fr, "notes"),
-    m.grid.t(1fr, "source"),
+#let composition = m.grids.h(
+  m.grids.t(2fr, "main"),
+  m.grids.t(1fr, m.grids.v(
+    m.grids.t(2fr, "notes"),
+    m.grids.t(1fr, "source"),
   )),
 )
 
@@ -324,9 +324,9 @@ Build custom structure only when headings and layout factories are insufficient.
 )
 ```
 
-- `m.grid.h(...)` places children side by side; `m.grid.v(...)` stacks them. Each string is a cell ID. Children may be nested grids. Both accept `gutter:` (a native track size between adjacent children, default `0pt`) and `rule:` (a stroke drawn along each interior boundary, centered in the gutter, default `none`).
-- Every direct child gets a `1fr` track by default. Wrap a child in `m.grid.t(size, child)` for another size; tracks accept `auto`, fixed lengths, percentages, and `fr` values.
-- `m.grid.cell(id, ...)` creates an explicitly configured cell: `inset:` (padding, affects layout measurement), fixed `content:` (an image or logo owned by the grid, needing no body or `content:` entry). Cells do not fit or scale their content: they are structural only.
+- `m.grids.h(...)` places children side by side; `m.grids.v(...)` stacks them. Each string is a cell ID. Children may be nested grids. Both accept `gutter:` (a native track size between adjacent children, default `0pt`) and `stroke:` (a stroke drawn along each interior boundary, centered in the gutter, default `none`).
+- Every direct child gets a `1fr` track by default. Wrap a child in `m.grids.t(size, child)` for another size; tracks accept `auto`, fixed lengths, percentages, and `fr` values.
+- `m.grids.cell(id, ...)` creates an explicitly configured cell: `inset:` (padding, affects layout measurement), fixed `content:` (an image or logo owned by the grid, needing no body or `content:` entry). Cells do not fit or scale their content: they are structural only.
 - Read a grid from the outside inward: largest split first, then replace children with nested splits. Keep descriptive IDs and indentation.
 
 Cell insets provide slide margins (`setup` uses a zero page margin). Adjacent cells each contribute their own inset; a grid `gutter` separates cell surfaces and defaults to `0pt`. Use a layout factory instead of rebuilding a standard title, section, header/body, or footer structure as a raw grid.
@@ -338,7 +338,7 @@ A slide accepts cell content in two distinct forms. Do not mix them in one slide
 **Positional bodies** for short grids with obvious traversal order — matched in source order, left to right within `h`, top to bottom within `v`, recursively through nesting:
 
 ```typ
-#m.slide(layout: m.grid.h("a", "b", "c"))[a][b][c]
+#m.slide(layout: m.grids.h("a", "b", "c"))[a][b][c]
 ```
 
 **Named `content:`** for anything larger or reusable — assignment stays independent of traversal order:
@@ -347,14 +347,14 @@ A slide accepts cell content in two distinct forms. Do not mix them in one slide
 #m.slide(layout: composition, content: (main: [...], notes: [...], source: [...]))
 ```
 
-The cell ID connects all three layers: `m.grid.cell("body")` defines the cell, `content: (body: [...])` fills it, and `label("mosaic-cell-body")` styles it. Every content-bearing cell must be supplied; unknown IDs are errors, except `id: none`, which means "suppress" and is a no-op when the layout has no such cell. That makes `content: (body: [...], footer: none)` safe to write across slides whose layouts do not all carry a footer.
+The cell ID connects all three layers: `m.grids.cell("body")` defines the cell, `content: (body: [...])` fills it, and `label("mosaic-cell-body")` styles it. Every content-bearing cell must be supplied; unknown IDs are errors, except `id: none`, which means "suppress" and is a no-op when the layout has no such cell. That makes `content: (body: [...], footer: none)` safe to write across slides whose layouts do not all carry a footer.
 
 Useful content values:
 
 - `m.components.image(path("photo.webp"), alt: "...")`: like native `image()` but defaults `width`/`height` to `100%` and `fit` to `"cover"`. `scrim:` paints a layer over the picture and takes any Typst paint, so `scrim: black.transparentize(55%)` darkens the whole frame and a `gradient.linear(..)` darkens only the band the text occupies. The same key is accepted in the image dictionaries the `title`, `section`, and `image` layouts take. Use Typst's `path()` so the location anchors to the calling document across the package boundary. For a full-bleed image, set the cell's `inset: 0pt`.
 - `m.components.figure(path("chart.png"), caption: [..])`: the in-cell figure. Defaults `fit` to `"contain"` so nothing is cropped, centres the picture, and with the default `height: auto` hands it the cell's height less whatever the caption consumes. Two of them in adjacent cells caption on one baseline whatever their aspect ratios, so no matching height has to be found by hand. `auto` reads the cell, not the space left inside it, so a figure that follows prose in the same cell needs an explicit `height:` and then captions directly beneath itself. Use `m.components.image` instead for a background plane or a deliberately cropped cell.
   The body can be content rather than a source: `m.components.figure(my-table, caption: [..], kind: table)` captions a table or a code-drawn diagram, keeps its natural size, and scales it as a whole only when it is too large for the cell (never magnifies it). State `kind: table` because scaling costs the automatic detection; further named arguments go to the native `figure` for a content body and to the native `image` for a picture source. `fit:` and `scrim:` are picture-only and are rejected for content.
-- `m.components.frame()` (clipped semantic frame), `callout()` (side stripe with optional title), `label()` (compact inline label), `quote()` (attribution treatment), `divider()` (horizontal rule), `progress()` (position indicator). All return ordinary content for any cell or plane. Component `role:` values (`neutral`, `accent`) resolve from the theme palette.
+- `m.components.frame()` (clipped semantic frame), `callout()` (side stripe with optional title), `tag()` (compact inline tag), `quote()` (attribution treatment), `divider()` (horizontal rule), `progress()` (position indicator). All return ordinary content for any cell or plane. Component `role:` values (`neutral`, `accent`) resolve from the theme palette.
 - Native math, `figure` with captions and references, MiTeX for LaTeX math, ctheorems for theorem environments: all work unchanged inside cells.
 
 ## 9. Style with native Typst rules
@@ -412,7 +412,7 @@ Keep three concerns distinct:
 
 A logo is ordinary setup foreground content: `place(top + right, dx: .., dy: ..)[#image(..)]` inside `m.setup(content: (foreground: ...))`. A photographic background is a slide-sized `m.components.image` (with `scrim:` for contrast) in the `background` entry.
 
-`m.components.progress()` follows the logical slide counter (all frames of one slide share a number). Its `variant:` is `"1/1"` (default), `"1"`, `"circle"`, or `"line"`. `count:` selects the `"slides"` (default) or `"sections"` counter; `current:` and `total:` override the counter explicitly. Appearance goes through `role:` (default `"accent"`), `color:`, `track:` (the inactive color), `width:` (line variant), `size:` (circle diameter), and `thickness:`.
+`m.components.progress()` follows the logical slide counter (all frames of one slide share a number). Its `variant:` is `"1/1"` (default), `"1"`, `"circle"`, or `"line"`. `count:` selects the `"slides"` (default) or `"sections"` counter; `current:` and `total:` override the counter explicitly. Appearance goes through `role:` (default `"accent"`), `accent:` (the completed portion), `fill:` (the inactive remainder), `width:` (line length or circle diameter), and `thickness:`.
 
 Navigation stays native because headings stay native:
 

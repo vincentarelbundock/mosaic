@@ -10,15 +10,15 @@
 // states its colors without restating its shapes. Before the split, a themed
 // component module had to repeat the stroke thickness, radius, and inset just to
 // change a fill, and the two copies drifted.
-#let structure = (
+#let component-metrics = (
   stroke-thickness: 0.8pt,
   radius: 6pt,
   inset: 0.65em,
   // The rail a callout hangs its accent on, replacing the full border.
   callout-rail: 4pt,
-  divider-gutter: 0.45em,
-  label-radius: 3pt,
-  label-inset: (x: 0.7em, y: 0.3em),
+  divider-gap: 0.45em,
+  tag-radius: 3pt,
+  tag-inset: (x: 0.7em, y: 0.3em),
   progress-size: 1em,
   progress-thickness: 2pt,
   // A conic gradient starts due east; a progress ring reads from the top.
@@ -26,7 +26,7 @@
   quote-attribution-gap: 0.45em,
   quote-attribution-size: 0.72em,
   // How far the quotation's wash is lightened toward the canvas it sits on.
-  quote-wash: 94%,
+  quote-tint: 94%,
 )
 
 // The deck's own colors, for component defaults that should follow the theme
@@ -91,9 +91,9 @@
   let colors = role(role-name, contextual: contextual)
   (
     fill: colors.fill,
-    stroke: structure.stroke-thickness + colors.accent,
-    radius: structure.radius,
-    inset: structure.inset,
+    stroke: component-metrics.stroke-thickness + colors.accent,
+    radius: component-metrics.radius,
+    inset: component-metrics.inset,
     align: left,
     text: (fill: colors.text),
   ) + defaults + style

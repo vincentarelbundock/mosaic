@@ -31,27 +31,27 @@
 
 #let selectable-layout-names = layout-names + unconfigured-layouts.keys()
 
-#let validate-layout-value(value, subject) = {
+#let validate-layout-value(value, name) = {
   if not is-node(value) and not is-layout(value) {
-    fail(subject + " must be a Mosaic grid tree or layout")
+    fail(name + " must be a Mosaic grid tree or layout")
   }
   value
 }
 
-#let validate-layouts(value, subject: "setup layouts", partial: false) = {
+#let validate-layouts(value, name: "setup layouts", partial: false) = {
   if type(value) != dictionary {
-    fail(subject + " must be a dictionary")
+    fail(name + " must be a dictionary")
   }
-  reject-unknown-keys(value, layout-names, subject)
+  reject-unknown-keys(value, layout-names, name)
   if not partial {
-    for name in layout-names {
-      if name not in value {
-        fail(subject + " requires " + repr(name))
+    for layout-name in layout-names {
+      if layout-name not in value {
+        fail(name + " requires " + repr(layout-name))
       }
     }
   }
-  for (name, layout) in value {
-    let _ = validate-layout-value(layout, subject + " " + repr(name))
+  for (layout-name, layout) in value {
+    _ = validate-layout-value(layout, name + " " + repr(layout-name))
   }
   value
 }

@@ -26,19 +26,19 @@
   #grid(
     columns: (1fr, 1fr),
     gutter: 12pt,
-    m.components.callout(kind: "information", title: [Information])[Telemetry connected.],
-    m.components.callout(kind: "success", title: [Success])[Deployment healthy.],
-    m.components.callout(kind: "warning", title: [Warning])[Capacity at 80%.],
-    m.components.callout(kind: "danger", title: [Danger])[Queue is stalled.],
-    m.components.callout(kind: "takeaway", title: [Takeaway])[Prefer bounded work.],
+    m.components.callout(role: "information", title: [Information])[Telemetry connected.],
+    m.components.callout(role: "success", title: [Success])[Deployment healthy.],
+    m.components.callout(role: "warning", title: [Warning])[Capacity at 80%.],
+    m.components.callout(role: "danger", title: [Danger])[Queue is stalled.],
+    m.components.callout(role: "takeaway", title: [Takeaway])[Prefer bounded work.],
     m.components.frame[
-      #m.components.label(role: "accent")[API]
+      #m.components.tag(role: "accent")[API]
       #h(8pt)
       #m.components.progress()
     ],
   )
 
-  #m.components.divider(label: [Evidence])
+  #m.components.divider(title: [Evidence])
   #m.components.quote(
     attribution: [Grace Hopper],
     source: [Systems practice],

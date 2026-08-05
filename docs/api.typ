@@ -42,8 +42,8 @@ descriptions.
     ),
   ),
   (
-    title: "mosaic.grid constructors",
-    href: "api/grid.html",
+    title: "mosaic.grids constructors",
+    href: "api/grids.html",
     sources: ("/api/modules/grid-constructors.typ",),
   ),
   (
@@ -63,7 +63,7 @@ descriptions.
     sources: (
       "/api/modules/component-frame.typ",
       "/api/modules/component-callout.typ",
-      "/api/modules/component-label.typ",
+      "/api/modules/component-tag.typ",
       "/api/modules/component-quote.typ",
       "/api/modules/component-divider.typ",
       "/api/modules/component-progress.typ",

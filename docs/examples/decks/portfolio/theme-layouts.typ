@@ -11,18 +11,18 @@
 
 #let section(subtitle: none) = {
   let band = if subtitle == none {
-    _mosaic.grid.cell("section", inset: 28pt)
+    _mosaic.grids.cell("section", inset: 28pt)
   } else {
-    _mosaic.grid.v(
-      _mosaic.grid.cell("section", inset: 28pt),
-      _mosaic.grid.t(
+    _mosaic.grids.v(
+      _mosaic.grids.cell("section", inset: 28pt),
+      _mosaic.grids.t(
         auto,
-        _mosaic.grid.cell("section-subtitle", content: subtitle, inset: 28pt),
+        _mosaic.grids.cell("section-subtitle", content: subtitle, inset: 28pt),
       ),
     )
   }
-  _mosaic.grid.h(
-    _mosaic.grid.t(0.38fr, band),
-    _mosaic.grid.t(0.62fr, _mosaic.grid.cell("rest", content: [])),
+  _mosaic.grids.h(
+    _mosaic.grids.t(0.38fr, band),
+    _mosaic.grids.t(0.62fr, _mosaic.grids.cell("rest", content: [])),
   )
 }

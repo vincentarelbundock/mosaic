@@ -123,16 +123,16 @@
 #let render-cell(
   content,
   style,
+  step,
+  path: "grid",
   overflow: "off",
-  key: "grid",
   slide: initial-context.slide,
-  step: initial-context.step,
   track: none,
   vertical: false,
 ) = {
   if style == none {
     if overflow != "off" {
-      return observe-overflow(content, key, slide, step)
+      return observe-overflow(content, path, slide, step)
     }
     return content
   }
@@ -183,7 +183,7 @@
   if overflow != "off" and fit == none {
     content = observe-overflow(
       content,
-      if id == none { key } else { id },
+      if id == none { path } else { id },
       slide,
       step,
     )
@@ -250,7 +250,7 @@
   node,
   contents,
   step,
-  key: "grid",
+  path: "grid",
   overflow: "off",
   slide: initial-context.slide,
 ) = {
@@ -276,7 +276,7 @@
       node.child,
       contents,
       step,
-      key: key + ".on",
+      path: path + ".on",
       overflow: overflow,
       slide: slide,
     )
@@ -289,7 +289,7 @@
     }
     let style = if style.len() == 0 { none } else { style }
     let body = if node.content == none { contents.at(node.id) } else { node.content }
-    (transform(body, step, heading-key: key), false, style)
+    (transform(body, step, heading-scope: path), false, style)
   } else {
     let rendered = ()
     let tracks = ()
@@ -299,7 +299,7 @@
         child,
         contents,
         step,
-        key: key + "." + str(index),
+        path: path + "." + str(index),
         overflow: overflow,
         slide: slide,
       )
@@ -307,10 +307,10 @@
         let content = render-cell(
           child-content,
           style,
+          step,
+          path: path + "." + str(index),
           overflow: overflow,
-          key: key + "." + str(index),
           slide: slide,
-          step: step,
           track: resolved.at(index),
           vertical: node.axis != "width",
         )
@@ -323,13 +323,13 @@
     }
     // Interior boundaries between the tracks that survived this step; native
     // grid lines are drawn centered in the gutter.
-    let rule = node.at("rule", default: none)
-    let rules = if rule == none {
+    let stroke = node.at("stroke", default: none)
+    let rules = if stroke == none {
       ()
     } else if node.axis == "width" {
-      range(1, rendered.len()).map(x => grid.vline(x: x, stroke: rule))
+      range(1, rendered.len()).map(x => grid.vline(x: x, stroke: stroke))
     } else {
-      range(1, rendered.len()).map(y => grid.hline(y: y, stroke: rule))
+      range(1, rendered.len()).map(y => grid.hline(y: y, stroke: stroke))
     }
     let content = block(
       width: 100%,
@@ -361,7 +361,7 @@
     node,
     contents,
     step,
-    key: "grid",
+    path: "grid",
     overflow: overflow,
     slide: slide,
   )
@@ -374,10 +374,10 @@
       render-cell(
         body,
         style,
+        step,
+        path: "grid",
         overflow: overflow,
-        key: "grid",
         slide: slide,
-        step: step,
       ),
     )
   }

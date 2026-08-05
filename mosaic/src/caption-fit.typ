@@ -21,7 +21,7 @@
 // their aspect ratios. Unpinned, it hugs the picture, which is what a figure
 // centred on a slide of its own wants. The picture is the same size either way:
 // `contain` bounds it by the width in exactly the case the two differ.
-#let captioned-picture(
+#let captioned-image(
   resize,
   caption,
   width: 100%,

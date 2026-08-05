@@ -1,5 +1,5 @@
 // Exact public Dark facade: shared Mosaic API plus dark setup and layouts.
-#import "../shared-api.typ": slide, note, pause, fit, surface, grid, steps, theme
+#import "../shared-api.typ": slide, note, pause, fit, surface, grids, steps, theme
 #import "dark/definition.typ": definition
 #import "dark/layouts.typ" as layouts
 #import "dark/components.typ" as components

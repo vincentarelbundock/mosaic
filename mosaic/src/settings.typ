@@ -45,7 +45,7 @@
 // fill and the slide appears as a painted thumbnail inside it. A deck on a
 // different paper size overrides the margin and gaps.
 //
-// `padding` is the slack held back below the notes block so a full page does
+// `bottom-gap` is the slack held back below the notes block so a full page does
 // not butt against the bottom margin. The available note height is the region
 // minus the thumbnail, the heading, and every gap named here, so these fields
 // are the whole vertical budget: no unnamed allowance is folded in.
@@ -55,7 +55,7 @@
   note-gap: 3mm,
   thumbnail-gap: 7mm,
   heading-gap: 4mm,
-  padding: 2mm,
+  bottom-gap: 2mm,
 )
 
 // Overflow observation policy. "warn" emits queryable
@@ -76,6 +76,7 @@
   if value != none and type(value) not in (content, str) {
     fail("setup " + name + " must be content, a string, or none")
   }
+  value
 }
 
 #let make-deck(
@@ -84,13 +85,13 @@
   authors: (),
   date: none,
 ) = {
-  validate-optional-content(title, "title")
-  validate-optional-content(subtitle, "subtitle")
-  validate-optional-content(date, "date")
+  let title = validate-optional-content(title, "title")
+  let subtitle = validate-optional-content(subtitle, "subtitle")
+  let date = validate-optional-content(date, "date")
   if type(authors) != array {
     fail("setup authors must be an array")
   }
-  let _ = analyze-authors(authors, subject: "setup author")
+  _ = analyze-authors(authors, name: "setup author")
   (title: title, subtitle: subtitle, authors: authors, date: date)
 }
 
@@ -119,7 +120,7 @@
   base + overrides
 }
 
-#let make-content-defaults(value) = {
+#let normalize-content(value) = {
   if type(value) != dictionary {
     fail("setup content must be a dictionary")
   }
@@ -150,7 +151,7 @@
 ) = {
   let colors = validate-colors(colors)
   let roles = validate-roles(roles)
-  let content = make-content-defaults(content)
+  let content = normalize-content(content)
   let deck = make-deck(..deck)
   let spacing = merge-record(default-spacing, spacing, "spacing")
   let notes = merge-record(default-notes, notes, "notes")

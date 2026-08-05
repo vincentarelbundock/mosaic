@@ -11,10 +11,10 @@
 #show label("mosaic-cell-c"): outline
 
 // Fractions compose: 1fr + 2fr + 1fr centers a double-width column.
-#let center-stage = m.grid.h(
-  m.grid.t(1fr, "a"),
-  m.grid.t(2fr, "b"),
-  m.grid.t(1fr, "c"),
+#let center-stage = m.grids.h(
+  m.grids.t(1fr, "a"),
+  m.grids.t(2fr, "b"),
+  m.grids.t(1fr, "c"),
 )
 
 #m.slide(layout: center-stage)[a][b][c]

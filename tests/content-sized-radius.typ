@@ -13,9 +13,9 @@
   ),
 )
 
-#mosaic.slide(layout: mosaic.grid.v(
-  mosaic.grid.t(auto, compact),
-  mosaic.grid.cell(id: "body"),
+#mosaic.slide(layout: mosaic.grids.v(
+  mosaic.grids.t(auto, compact),
+  mosaic.grids.cell(id: "body"),
 ))[Body]
 
 #context {

@@ -15,11 +15,11 @@
 
 // Splits nest to any depth. Read it from the outside inward: three bands, then
 // the middle band divides again, and its right side divides once more.
-#let dashboard = m.grid.v(
+#let dashboard = m.grids.v(
   "banner",
-  m.grid.h(
+  m.grids.h(
     "sidebar",
-    m.grid.v("chart", m.grid.h("legend", "notes")),
+    m.grids.v("chart", m.grids.h("legend", "notes")),
   ),
   "status",
 )

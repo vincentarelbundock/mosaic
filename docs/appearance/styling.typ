@@ -19,7 +19,7 @@ Target a cell by its label. Font, size, color, and alignment are `set text`, `se
 #show label("mosaic-cell-copy"): set text(fill: black, size: 1.1em)
 #show label("mosaic-cell-copy"): m.surface(fill: white)
 
-#let columns = m.grid.h("copy", "image")
+#let columns = m.grids.h("copy", "image")
 #m.slide(layout: columns, content: (
   copy: [Copy],
   image: [Image],
@@ -52,7 +52,7 @@ Two kinds of rules cover a cell, split by what they touch. Properties of the con
 A full-height cell (`1fr` or a fixed track) fills its space with the default `height: 100%`; for a content-sized cell (an `auto` track) pass `height: auto` so the fill hugs the content. The full-slide planes carry the labels `<mosaic-background>` and `<mosaic-foreground>`, so the same two kinds of rules style them as well. The one structural setting that lives on the cell itself is `inset`, because padding affects layout measurement:
 
 ```typ
-#m.grid.cell("image", inset: 0pt)
+#m.grids.cell("image", inset: 0pt)
 ```
 
 Rules after `#show: m.setup` override the baseline deck-wide. Scope a rule and slide inside a block to change only that slide:
@@ -140,7 +140,7 @@ Bundle repeated cell rules in a function and apply it once with `#show:`:
 }
 
 #show: styled
-#m.slide(layout: m.grid.h("a", "b"))[Left][Right]
+#m.slide(layout: m.grids.h("a", "b"))[Left][Right]
 ```
 
 #embedded-example(

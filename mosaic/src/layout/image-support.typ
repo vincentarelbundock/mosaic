@@ -1,8 +1,8 @@
 // Private image composition shared by title and section layouts.
 #import "../shared.typ": fail
 #import "../grid/constructors.typ": styled-cell, h, v
-#import "../grid/model.typ": valid-track-size
-#import "support.typ": track-children, visual-content
+#import "../grid/model.typ": is-track-size
+#import "support.typ": track-children, image-content
 
 
 #let semantic-directional-variants = (
@@ -23,13 +23,14 @@
   "bottom"
 }
 
-#let validate-semantic-image-use(fields, subject) = {
+#let validate-semantic-image-use(fields, name) = {
   if fields.variant in semantic-image-variants and fields.image == none {
-    fail(subject + " variant " + repr(fields.variant) + " requires image")
+    fail(name + " variant " + repr(fields.variant) + " requires image")
   }
   if fields.variant not in semantic-image-variants and fields.image != none {
-    fail(subject + " variant " + repr(fields.variant) + " does not use image")
+    fail(name + " variant " + repr(fields.variant) + " does not use image")
   }
+  fields
 }
 
 // Two spellings, because authors ask two different questions. An array of 2 is
@@ -42,20 +43,21 @@
 // image band and a text band, swapped by position. The pair is the API's shape,
 // not a limit that a more general track list would lift, so the count is named
 // rather than parameterized. A layout wanting more regions is a grid.
-#let directional-regions = 2
+#let directional-cell-count = 2
 
-#let validate-directional-tracks(tracks, subject) = {
-  if tracks != auto and not valid-track-size(tracks) and (
+#let validate-directional-tracks(tracks, name) = {
+  if tracks != auto and not is-track-size(tracks) and (
     type(tracks) != array
-      or tracks.len() != directional-regions
-      or not tracks.all(valid-track-size)
+      or tracks.len() != directional-cell-count
+      or not tracks.all(is-track-size)
   ) {
     fail(
-      subject
+      name
         + " must be auto, one native Typst track size for the image, or an"
         + " array of 2 native Typst track sizes in visual order",
     )
   }
+  tracks
 }
 
 // Resolves either spelling to the visual-order pair the grid expects.
@@ -69,25 +71,25 @@
   (1fr, tracks)
 }
 
-#let fixed-image-content(value, subject) = visual-content(
+#let fixed-image-content(value, name) = image-content(
   value,
-  subject: subject,
+  name,
   width: 100%,
   height: 100%,
   fit: "cover",
   allow-size: false,
 )
 
-#let optional-fixed-image(value, subject) = if value == none {
+#let optional-fixed-image(value, name) = if value == none {
   none
 } else {
-  fixed-image-content(value, subject)
+  fixed-image-content(value, name)
 }
 
 // Image cells are full-bleed: the photograph owns its region edge to edge and
 // any framing is the image's own business.
-#let image-region(image-content) = styled-cell(
-  content: image-content,
+#let image-cell(content) = styled-cell(
+  content: content,
   id: "image",
   style: (
     content-sized: false,
@@ -104,7 +106,7 @@
 ) = {
   // `variant` is always the output of `semantic-image-position`, so it is one
   // of left/right/top/bottom by construction.
-  validate-directional-tracks(tracks, "directional image layout tracks")
+  _ = validate-directional-tracks(tracks, "directional image layout tracks")
   let image-first = variant in ("left", "top")
   let children = if image-first {
     (image, body)

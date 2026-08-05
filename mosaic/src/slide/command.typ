@@ -34,6 +34,7 @@
   if value != none and type(value) != content {
     fail(name + " must be content or none")
   }
+  value
 }
 
 #let validate-layout-selection(value) = {
@@ -117,7 +118,7 @@
 ///   `setup(layouts:)`. The name also determines numbering and the section
 ///   lifecycle.
 /// - A `mosaic.layouts.*` value: used directly, carrying its own semantic name.
-/// - A raw `mosaic.grid.*` tree: used directly and treated as a content layout.
+/// - A raw `mosaic.grids.*` tree: used directly and treated as a content layout.
 ///
 /// *Supplying content*
 ///
@@ -156,7 +157,7 @@
 #let slide(
   /// Which layout resolves this slide: `auto` for the configured content
   /// layout, one of the names `"content"`, `"title"`, or `"section"`, a
-  /// `mosaic.layouts.*` value, or a raw `mosaic.grid.*` tree.
+  /// `mosaic.layouts.*` value, or a raw `mosaic.grids.*` tree.
   /// -> auto | str | dictionary
   layout: auto,
   /// Whether the slide contributes to logical slide numbering. `auto` numbers
@@ -187,11 +188,11 @@
   }
   for name in plane-ids {
     if name in content {
-      validate-plane(content.at(name), name)
+      _ = validate-plane(content.at(name), name)
     }
   }
-  let cell-keys = content.keys().filter(key => key not in plane-ids)
-  if bodies.len() > 0 and cell-keys.len() > 0 {
+  let cell-ids = content.keys().filter(key => key not in plane-ids)
+  if bodies.len() > 0 and cell-ids.len() > 0 {
     fail("slide cannot combine named and positional cell content")
   }
   metadata(slide-command(

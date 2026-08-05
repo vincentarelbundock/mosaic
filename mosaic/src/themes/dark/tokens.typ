@@ -25,11 +25,11 @@
 // the base defaults and their colors from this table.
 //
 // `information` aliases `accent`, as in the light palette.
-#let _accent-role = (fill: rgb("#13233a"), accent: accent, text: text)
+#let accent-role = (fill: rgb("#13233a"), accent: accent, text: text)
 #let roles = (
   neutral: (fill: surface, accent: line, text: text),
-  accent: _accent-role,
-  information: _accent-role,
+  accent: accent-role,
+  information: accent-role,
   success: (fill: rgb("#102a22"), accent: rgb("#56d364"), text: text),
   warning: (fill: rgb("#2f2710"), accent: attention, text: text),
   danger: (fill: rgb("#321b1e"), accent: error, text: text),

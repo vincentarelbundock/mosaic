@@ -16,7 +16,7 @@
   ]
 ]
 
-#m.slide(layout: m.grid.h("a", "b"))[
+#m.slide(layout: m.grids.h("a", "b"))[
   #m.components.frame(
     width: 100%,
     height: 100%,

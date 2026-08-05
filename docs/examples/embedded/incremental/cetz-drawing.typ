@@ -8,12 +8,12 @@
   hide: cetz.draw.hide.with(bounds: true),
 )
 
-#let grid = m.grid.v(
-  m.grid.t(auto, m.grid.cell(
+#let grid = m.grids.v(
+  m.grids.t(auto, m.grids.cell(
     "title",
     inset: (top: 0.8em, right: 1.5em, bottom: 0.2em, left: 1.5em),
   )),
-  m.grid.cell(
+  m.grids.cell(
     "diagram",
     inset: (top: 0.2em, right: 1em, bottom: 0.8em, left: 1em),
   ),

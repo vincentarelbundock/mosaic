@@ -2,7 +2,7 @@
 #import "support/grid.typ" as grid-test
 
 #set page(width: 320pt, height: 180pt, margin: 8pt)
-#let base = mosaic.grid.cell(id: "main")
+#let base = mosaic.grids.cell(id: "main")
 #assert(grid-test.count(base) == 1)
 #assert(grid-test.info(base, "main").id == "main")
 #assert("image" in mosaic.components)
@@ -12,9 +12,9 @@
 )
 #set text(size: 9pt)
 
-#mosaic.slide(layout: mosaic.grid.h("a", "b"))[
+#mosaic.slide(layout: mosaic.grids.h("a", "b"))[
   #mosaic.components.frame(role: "information")[
-    #mosaic.components.label(
+    #mosaic.components.tag(
       radius: 999pt,
       style: (text: (weight: "bold")),
     )[Category]
@@ -31,13 +31,13 @@
 ]
 
 #mosaic.slide(
-  layout: mosaic.grid.h("first", "second", "third"),
+  layout: mosaic.grids.h("first", "second", "third"),
 )[
   #mosaic.components.frame(role: "information")[Panel body]
 ][
   #mosaic.components.callout(
     [Callout body],
-    kind: "takeaway",
+    role: "takeaway",
     title: [Result],
   )
 ][
@@ -45,11 +45,11 @@
 ]
 
 #mosaic.slide(
-  layout: mosaic.grid.h("numbers", "circle", "line"),
+  layout: mosaic.grids.h("numbers", "circle", "line"),
 )[
   #mosaic.components.progress(variant: "1/1")
 ][
-  #mosaic.components.progress(variant: "circle", size: 1.2em)
+  #mosaic.components.progress(variant: "circle", width: 1.2em)
 ][
   #mosaic.components.progress(variant: "line")
 ]
@@ -72,7 +72,7 @@
       ..range(state.total).map(index => rect(
         width: state.thickness,
         height: state.thickness,
-        fill: if index < state.current { state.active } else { state.track },
+        fill: if index < state.current { state.accent } else { state.fill },
       )),
     ),
   )

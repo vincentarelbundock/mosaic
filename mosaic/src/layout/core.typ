@@ -1,6 +1,6 @@
 // Shared record shape and validation primitives for semantic layouts.
 #import "../shared.typ": (
-  tag, fail, reject-unknown-keys, valid-path, validate-scrim,
+  tag, fail, reject-unknown-keys, is-path, validate-scrim,
 )
 
 #let layout-field-keys = (
@@ -26,6 +26,7 @@
   if type(fields.accent) != color and not (allow-auto and fields.accent == auto) {
     fail("layout " + repr(name) + " accent must be a color")
   }
+  fields
 }
 
 #let is-layout(value) = if (
@@ -50,21 +51,21 @@
 // built on the native element instead.
 #let image-fit-modes = ("cover", "contain")
 
-#let validate-visual-spec(
+#let validate-image-spec(
   value,
-  subject,
+  name,
   allow-size: true,
 ) = {
   if type(value) == content {
     return value
   }
-  let spec = if valid-path(value) {
+  let spec = if is-path(value) {
     (path: value)
   } else if type(value) == dictionary {
     value
   } else {
     fail(
-      subject
+      name
         + " must be content, a non-empty path string, a native path, or a path dictionary",
     )
   }
@@ -73,18 +74,18 @@
   } else {
     ("path", "alt", "fit", "scrim")
   }
-  reject-unknown-keys(spec, allowed, subject)
-  if "path" not in spec or not valid-path(spec.path) {
-    fail(subject + " path must be a non-empty string or native path")
+  reject-unknown-keys(spec, allowed, name)
+  if "path" not in spec or not is-path(spec.path) {
+    fail(name + " path must be a non-empty string or native path")
   }
   let alt = spec.at("alt", default: none)
   if alt != none and type(alt) != str {
-    fail(subject + " alt must be a string or none")
+    fail(name + " alt must be a string or none")
   }
   let fit = spec.at("fit", default: "cover")
   if type(fit) != str or fit not in image-fit-modes {
-    fail(subject + " fit must be \"cover\" or \"contain\"")
+    fail(name + " fit must be \"cover\" or \"contain\"")
   }
-  let _ = validate-scrim(spec.at("scrim", default: none), subject)
+  _ = validate-scrim(spec.at("scrim", default: none), name)
   spec
 }

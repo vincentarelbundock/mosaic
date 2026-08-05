@@ -1,7 +1,7 @@
 // Construction, validation, and resolution of the content layout.
 #import "../shared.typ": fail
 #import "../grid/constructors.typ": styled-cell, h, v, t
-#import "../grid/model.typ": valid-track-size
+#import "../grid/model.typ": is-track-size
 #import "core.typ": make-layout
 #import "support.typ": track-children, header-inset
 
@@ -28,7 +28,7 @@
   if tracks != auto and (
     type(tracks) != array
       or tracks.len() != columns
-      or not tracks.all(valid-track-size)
+      or not tracks.all(is-track-size)
   ) {
     fail(
       "layout \"content\" tracks must be auto or an array of "
@@ -113,7 +113,7 @@
   make-layout("content", fields)
 }
 
-#let region-cell(
+#let inset-cell(
   id,
   settings,
   content-sized: false,
@@ -126,12 +126,12 @@
   ),
 )
 
-#let shell(body, fields, settings) = {
+#let content-tree(body, fields, settings) = {
   let children = ()
   if fields.variant in ("header-body", "header-body-footer") {
     children.push(t(
       auto,
-      region-cell(
+      inset-cell(
         "header",
         settings,
         content-sized: true,
@@ -143,7 +143,7 @@
   if fields.variant in ("body-footer", "header-body-footer") {
     children.push(t(
       auto,
-      region-cell("footer", settings, content-sized: true),
+      inset-cell("footer", settings, content-sized: true),
     ))
   }
   v(..children)
@@ -151,7 +151,7 @@
 
 #let resolve-content-layout(command, settings) = {
   let fields = validate-fields(command.fields)
-  let body-cells = range(fields.columns).map(index => region-cell(
+  let body-cells = range(fields.columns).map(index => inset-cell(
     if fields.columns == 1 { "body" } else { "body-" + str(index + 1) },
     settings,
   ))
@@ -159,5 +159,5 @@
     gutter: settings.spacing.gap,
     ..track-children(body-cells, fields.tracks),
   )
-  shell(body, fields, settings)
+  content-tree(body, fields, settings)
 }

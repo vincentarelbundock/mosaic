@@ -5,10 +5,10 @@
 // The text cell centers its content vertically through its label.
 #show label("mosaic-cell-b"): set align(left + horizon)
 
-#m.slide(layout: m.grid.h(
-  m.grid.t(
+#m.slide(layout: m.grids.h(
+  m.grids.t(
     1fr,
-    m.grid.cell(
+    m.grids.cell(
       id: "a",
       inset: 0pt,
       content: m.components.image(
@@ -17,9 +17,9 @@
       ),
     ),
   ),
-  m.grid.t(
+  m.grids.t(
     2fr,
-    m.grid.cell("b"),
+    m.grids.cell("b"),
   ),
 ))[
   == A full-bleed image cell
@@ -28,5 +28,5 @@
   `m.components.image()` supplies the full-size cover defaults.
 
   The first child receives one third of the width through
-  `m.grid.t(1fr, ...)`.
+  `m.grids.t(1fr, ...)`.
 ]

@@ -16,9 +16,9 @@
 #show: framed("b")
 
 #m.slide(layout: 
-  m.grid.h(
-    m.grid.cell("a"),
-    m.grid.cell("b"),
+  m.grids.h(
+    m.grids.cell("a"),
+    m.grids.cell("b"),
   ),
 )[
   #m.components.image(

@@ -151,7 +151,7 @@
   ///   heading slides.
   ///
   /// Each value is either a deferred `mosaic.layouts.*` value or a low-level
-  /// `mosaic.grid.*` tree. Note that this option is distinct from the
+  /// `mosaic.grids.*` tree. Note that this option is distinct from the
   /// `content:` option above, which supplies inherited cell content rather than
   /// structure.
   ///

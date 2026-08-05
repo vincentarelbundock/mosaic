@@ -11,22 +11,23 @@
         + ", received " + repr(value),
     )
   }
+  value
 }
 
-#let validate-states(before, after) = {
-  validate-state(before, "before")
-  validate-state(after, "after")
-}
+#let validate-states(before, after) = (
+  validate-state(before, "before"),
+  validate-state(after, "after"),
+)
 
-// `source` names the value quoted in diagnostics when it differs from `value`,
+// `name` names the value quoted in diagnostics when it differs from `value`,
 // as it does for one endpoint of a parsed range.
-#let parse-positive-int(value, source: none) = {
-  let source = if source == none { value } else { source }
+#let parse-positive-int(value, name: none) = {
+  let name = if name == none { value } else { name }
   let parsed = if type(value) == int {
     value
   } else {
     if type(value) != str or value.match(regex("^\\d+$")) == none {
-      fail("invalid step range " + repr(source))
+      fail("invalid step range " + repr(name))
     }
     int(value)
   }
@@ -53,7 +54,7 @@
   }
   let parts = source.split("-")
   if parts.len() == 1 {
-    let step = parse-positive-int(parts.first(), source: spec)
+    let step = parse-positive-int(parts.first(), name: spec)
     return (start: step, end: step)
   }
   if parts.len() != 2 or (parts.first() == "" and parts.last() == "") {
@@ -62,12 +63,12 @@
   let start = if parts.first() == "" {
     1
   } else {
-    parse-positive-int(parts.first(), source: spec)
+    parse-positive-int(parts.first(), name: spec)
   }
   let end = if parts.last() == "" {
     none
   } else {
-    parse-positive-int(parts.last(), source: spec)
+    parse-positive-int(parts.last(), name: spec)
   }
   if end != none and start > end {
     fail("step range starts after it ends: " + repr(spec))

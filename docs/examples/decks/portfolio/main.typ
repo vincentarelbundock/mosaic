@@ -8,7 +8,7 @@
 #import "preamble.typ": *
 #assert((
   "setup", "slide", "note", "pause", "surface",
-  "grid", "layouts", "steps", "components",
+  "grids", "layouts", "steps", "components",
 ).all(name => name in m))
 #show: m.setup
 
@@ -34,10 +34,10 @@
     contents-edge: surface(fill: white),
   ),
   m.slide(
-    layout: m.grid.h(
-      m.grid.t(0.16fr, cell("contents-margin", content: [])),
-      m.grid.t(0.64fr, cell("contents-image", content: photo("image13.png"))),
-      m.grid.t(0.20fr, cell("contents-edge", content: [])),
+    layout: m.grids.h(
+      m.grids.t(0.16fr, cell("contents-margin", content: [])),
+      m.grids.t(0.64fr, cell("contents-image", content: photo("image13.png"))),
+      m.grids.t(0.20fr, cell("contents-edge", content: [])),
     ),
     content: (foreground: [
       #place(top + center, dy: -12pt)[
@@ -67,9 +67,9 @@
     hello-photo: surface(),
   ),
   m.slide(
-    layout: m.grid.h(
-      m.grid.t(0.48fr, cell("hello-copy")),
-      m.grid.t(0.52fr, cell("hello-photo", content: photo("image21.png"))),
+    layout: m.grids.h(
+      m.grids.t(0.48fr, cell("hello-copy")),
+      m.grids.t(0.52fr, cell("hello-photo", content: photo("image21.png"))),
     ),
   )[
     #black-panel([
@@ -90,9 +90,9 @@
     about-copy: surface(fill: white, inset: 24pt),
   ),
   m.slide(
-    layout: m.grid.v(
-      m.grid.t(1.05fr, cell("about-photo")),
-      m.grid.t(0.95fr, cell("about-copy")),
+    layout: m.grids.v(
+      m.grids.t(1.05fr, cell("about-photo")),
+      m.grids.t(0.95fr, cell("about-copy")),
     ),
   )[
     #box(width: 100%, height: 100%)[
@@ -119,10 +119,10 @@
     story: surface(fill: white, inset: 30pt, align: center + horizon),
   ),
   m.slide(
-    layout: m.grid.h(
-      m.grid.t(0.72fr, cell("pier", content: photo("image12.png"))),
-      m.grid.t(0.72fr, cell("portrait", content: photo("image9.png"))),
-      m.grid.t(1.05fr, cell("story")),
+    layout: m.grids.h(
+      m.grids.t(0.72fr, cell("pier", content: photo("image12.png"))),
+      m.grids.t(0.72fr, cell("portrait", content: photo("image9.png"))),
+      m.grids.t(1.05fr, cell("story")),
     ),
   )[
     #text(size: 13pt)[#lorem]
@@ -136,9 +136,9 @@
     mission-photo: surface(),
   ),
   m.slide(
-    layout: m.grid.h(
-      m.grid.t(1.3fr, cell("mission-body")),
-      m.grid.t(0.7fr, cell("mission-photo", content: photo("image1.png"))),
+    layout: m.grids.h(
+      m.grids.t(1.3fr, cell("mission-body")),
+      m.grids.t(0.7fr, cell("mission-photo", content: photo("image1.png"))),
     ),
   )[
     #set par(leading: 0.3em)
@@ -182,10 +182,10 @@
     best-list: surface(fill: ink, inset: 22pt, align: center + horizon),
   ),
   m.slide(
-    layout: m.grid.h(
-      m.grid.t(0.95fr, cell("best-intro")),
-      m.grid.t(0.62fr, cell("best-photo", content: photo("image5.png"))),
-      m.grid.t(0.9fr, cell("best-list")),
+    layout: m.grids.h(
+      m.grids.t(0.95fr, cell("best-intro")),
+      m.grids.t(0.62fr, cell("best-photo", content: photo("image5.png"))),
+      m.grids.t(0.9fr, cell("best-list")),
     ),
   )[
     #set par(leading: 0.3em)
@@ -267,9 +267,9 @@
     chart-graphic: surface(fill: white, inset: 18pt),
   ),
   m.slide(
-    layout: m.grid.h(
-      m.grid.t(0.85fr, cell("chart-copy")),
-      m.grid.t(1.15fr, cell("chart-graphic", content: photo("image8.png", fit: "contain"))),
+    layout: m.grids.h(
+      m.grids.t(0.85fr, cell("chart-copy")),
+      m.grids.t(1.15fr, cell("chart-graphic", content: photo("image8.png", fit: "contain"))),
     ),
   )[
     #set text(fill: white)
@@ -292,9 +292,9 @@
     exhibition-3: surface(fill: ink, inset: 14pt),
   ),
   m.slide(
-    layout: m.grid.v(
-      m.grid.t(0.28fr, cell("exhibitions-title")),
-      m.grid.t(1fr, m.grid.h(
+    layout: m.grids.v(
+      m.grids.t(0.28fr, cell("exhibitions-title")),
+      m.grids.t(1fr, m.grids.h(
         cell("exhibition-1"),
         cell("exhibition-2"),
         cell("exhibition-3"),
@@ -343,9 +343,9 @@
     ),
   ),
   m.slide(
-    layout: m.grid.h(
-      m.grid.t(0.42fr, cell("thanks")),
-      m.grid.t(0.58fr, cell(
+    layout: m.grids.h(
+      m.grids.t(0.42fr, cell("thanks")),
+      m.grids.t(0.58fr, cell(
         "closing-photo",
         content: photo("image20.png"),
       )),

@@ -45,7 +45,7 @@ API_MODULE_MAP := \
   author:author \
   component-frame:component/frame \
   component-callout:component/callout \
-  component-label:component/label \
+  component-tag:component/tag \
   component-quote:component/quote \
   component-divider:component/divider \
   component-progress:component/progress \

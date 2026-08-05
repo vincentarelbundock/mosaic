@@ -10,8 +10,8 @@
 #show label("mosaic-cell-left"): set align(center + horizon)
 #show label("mosaic-cell-right"): set align(center + horizon)
 
-#let comparison = m.grid.h(
-  m.grid.v("heading", "left"),
+#let comparison = m.grids.h(
+  m.grids.v("heading", "left"),
   "right",
 )
 

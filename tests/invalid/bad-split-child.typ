@@ -1,3 +1,3 @@
 #import "@local/mosaic:0.0.1" as mosaic
 
-#let grid = mosaic.grid.v([Fixed content must use cell])
+#let grid = mosaic.grids.v([Fixed content must use cell])

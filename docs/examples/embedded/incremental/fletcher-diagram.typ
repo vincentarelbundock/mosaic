@@ -16,7 +16,7 @@
 #show label("mosaic-cell-diagram"): set align(center + horizon)
 
 #m.slide(layout: 
-  m.grid.cell("diagram"),
+  m.grids.cell("diagram"),
 )[
   #diagram(
     node-stroke: 0.1em,

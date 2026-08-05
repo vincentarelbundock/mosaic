@@ -55,7 +55,7 @@ class ThemeArchitectureTests(unittest.TestCase):
         self.assertFalse((STARTER / "_starter-layouts-impl.typ").exists())
         self.assertFalse((STARTER / "_starter-tokens.typ").exists())
         self.assertIn("theme.setup(definition)", facade)
-        for name in ("slide", "note", "pause", "fit", "surface", "grid", "steps", "components", "theme"):
+        for name in ("slide", "note", "pause", "fit", "surface", "grids", "steps", "components", "theme"):
             self.assertIn(name, facade)
 
     def test_portfolio_uses_the_same_reduced_structure(self) -> None:

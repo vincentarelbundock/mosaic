@@ -315,7 +315,7 @@ than copied into the deck.
     fill: ink,
     it,
   )
-  #m.slide(layout: m.grid.cell("questions"))[
+  #m.slide(layout: m.grids.cell("questions"))[
     #text(size: 1.6em, weight: "medium", fill: white)[Questions?]
   ]
 ]

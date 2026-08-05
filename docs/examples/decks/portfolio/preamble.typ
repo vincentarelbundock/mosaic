@@ -25,7 +25,7 @@ consequat.]
 // Cells are structural. This deck paints them by hand, so every cell starts
 // with a zero inset; `surface()` carries the padding, which `styled()` applies
 // through the cell's <mosaic-cell-ID> label alongside the fill and alignment.
-#let cell(..args) = m.grid.cell(..args, inset: 0pt)
+#let cell(..args) = m.grids.cell(..args, inset: 0pt)
 #let surface(..overrides) = (
   (fill: none, inset: 0pt, align: top + left) + overrides.named()
 )

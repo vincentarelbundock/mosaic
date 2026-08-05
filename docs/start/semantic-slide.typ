@@ -46,7 +46,7 @@ Build a semantic slide in three separate layers: define its named grid, assign c
 Start with one named cell and pass it to `slide` as the layout.
 
 ```typ
-#let single = m.grid.cell("main")
+#let single = m.grids.cell("main")
 
 #m.slide(
   layout: single,
@@ -58,10 +58,10 @@ Start with one named cell and pass it to `slide` as the layout.
 
 = Split the grid
 
-`m.grid.h` places cells side by side. Each key in `content:` matches one cell ID.
+`m.grids.h` places cells side by side. Each key in `content:` matches one cell ID.
 
 ```typ
-#let columns = m.grid.h("main", "aside")
+#let columns = m.grids.h("main", "aside")
 
 #m.slide(
   layout: columns,
@@ -79,11 +79,11 @@ Start with one named cell and pass it to `slide` as the layout.
 Splits nest directly: `v` stacks the sidebar cells, `t` assigns their proportions, and `h` combines the sidebar with the main cell.
 
 ```typ
-#let composition = m.grid.h(
-  m.grid.t(2fr, "main"),
-  m.grid.t(1fr, m.grid.v(
-    m.grid.t(2fr, "notes"),
-    m.grid.t(1fr, "source"),
+#let composition = m.grids.h(
+  m.grids.t(2fr, "main"),
+  m.grids.t(1fr, m.grids.v(
+    m.grids.t(2fr, "notes"),
+    m.grids.t(1fr, "source"),
   )),
 )
 

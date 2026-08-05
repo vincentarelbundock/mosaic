@@ -1,3 +1,3 @@
 #import "@local/mosaic:0.0.1" as mosaic
 
-#mosaic.grid.cell("positional", id: "named")
+#mosaic.grids.cell("positional", id: "named")

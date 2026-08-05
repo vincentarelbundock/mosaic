@@ -11,6 +11,6 @@
 #show label("mosaic-cell-c"): outline
 
 // The same three strings under v() stack into equal-height rows.
-#let three-rows = m.grid.v("a", "b", "c")
+#let three-rows = m.grids.v("a", "b", "c")
 
 #m.slide(layout: three-rows)[a][b][c]

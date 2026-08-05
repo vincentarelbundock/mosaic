@@ -7,9 +7,9 @@
 ).map(color => color.lighten(85%))
 
 // One grid, reused by both slides.
-#let two-columns = m.grid.h(
-  m.grid.cell("a"),
-  m.grid.cell("b"),
+#let two-columns = m.grids.h(
+  m.grids.cell("a"),
+  m.grids.cell("b"),
 )
 
 // One set of deck-wide fill rules, reused by both slides. Because they are

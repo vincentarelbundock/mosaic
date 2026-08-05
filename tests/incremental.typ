@@ -15,9 +15,9 @@
 ]
 
 // Two pages: the active cell changes and removed tracks reflow.
-#let changing-columns = mosaic.grid.h(
-  mosaic.steps.on(1, after: "removed", mosaic.grid.cell(id: "first")),
-  mosaic.steps.on("2-", before: "removed", mosaic.grid.cell(id: "second")),
+#let changing-columns = mosaic.grids.h(
+  mosaic.steps.on(1, after: "removed", mosaic.grids.cell(id: "first")),
+  mosaic.steps.on("2-", before: "removed", mosaic.grids.cell(id: "second")),
 )
 #mosaic.slide(layout: changing-columns)[First cell][Second cell]
 

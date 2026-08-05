@@ -1,7 +1,7 @@
 // Position indicator driven by the deck's logical slide and section counters.
 #import "../shared.typ": fail
 #import "../deck-state.typ": logical-slide, logical-section
-#import "style.typ": role as component-role, structure
+#import "style.typ": role as component-role, component-metrics
 
 /// Displays progress through logical slides or semantic sections in the deck.
 ///
@@ -21,9 +21,9 @@
 ///
 /// - `1/1`: the current and final values, as text. The default.
 /// - `1`: the current value alone.
-/// - `circle`: a compact ring filling clockwise, sized by `size` and
+/// - `circle`: a compact ring filling clockwise, sized by `width` and
 ///   `thickness`.
-/// - `line`: a horizontal track filling left to right, sized by `width` and
+/// - `line`: a horizontal bar filling left to right, sized by `width` and
 ///   `thickness`.
 ///
 /// *What it counts*
@@ -35,8 +35,8 @@
 #let progress(
   /// Visual treatment: `"1/1"`, `"1"`, `"circle"`, `"line"`, or a function
   /// drawing one. A renderer is called with a dictionary holding `current`,
-  /// `total`, `amount`, `active`, `track`, `width`, `size`, and `thickness`,
-  /// and returns the content to place.
+  /// `total`, `amount`, `accent`, `fill`, `width`, and `thickness`, and
+  /// returns the content to place.
   ///
   /// ```typ
   /// #mosaic.components.progress(
@@ -44,7 +44,7 @@
   ///     columns: state.total,
   ///     ..range(state.total).map(i => rect(
   ///       height: state.thickness,
-  ///       fill: if i < state.current { state.active } else { state.track },
+  ///       fill: if i < state.current { state.accent } else { state.fill },
   ///     )),
   ///   ),
   /// )
@@ -56,25 +56,23 @@
   count: "slides",
   /// Semantic role supplying the default colors: `accent`, `neutral`,
   /// `information`, `success`, `warning`, `danger`, or `takeaway`. The role's
-  /// accent paints the active part and its fill paints the track.
+  /// accent paints the completed portion and its fill paints the remainder.
   /// -> str
   role: "accent",
-  /// Width of the `line` variant.
-  /// -> length | relative | fraction
-  width: 100%,
-  /// Diameter of the `circle` variant.
-  /// -> length
-  size: structure.progress-size,
+  /// Length of the `line` variant, or diameter of the `circle` variant. `auto`
+  /// is the full width for `line` and a compact fixed diameter for `circle`.
+  /// -> auto | length | relative | fraction
+  width: auto,
   /// Stroke thickness of the `circle` and `line` variants.
   /// -> length
-  thickness: structure.progress-thickness,
-  /// Color of the inactive remainder. `auto` uses the role's fill.
+  thickness: component-metrics.progress-thickness,
+  /// Paint of the inactive remainder. `auto` uses the role's fill.
   /// -> auto | color | gradient | tiling
-  track: auto,
-  /// Color of the completed portion, and of the text variants. `auto` uses the
+  fill: auto,
+  /// Paint of the completed portion, and of the text variants. `auto` uses the
   /// role's accent.
   /// -> auto | color
-  color: auto,
+  accent: auto,
 ) = context {
   if type(variant) != function and (
     type(variant) != str or variant not in ("1/1", "1", "circle", "line")
@@ -97,8 +95,13 @@
   // section slide exists; the ratio below guards against dividing by it.
   let total = calc.max(automatic-counter.final().first(), 1)
   let colors = component-role(role, contextual: true)
-  let track = if track == auto { colors.fill } else { track }
-  let active = if color == auto { colors.accent } else { color }
+  let fill = if fill == auto { colors.fill } else { fill }
+  let accent = if accent == auto { colors.accent } else { accent }
+  let width = if width == auto {
+    if variant == "circle" { component-metrics.progress-size } else { 100% }
+  } else {
+    width
+  }
   let amount = 100% * current / total
 
   // A renderer receives everything the built-in treatments draw from, so an
@@ -108,28 +111,27 @@
       current: current,
       total: total,
       amount: amount,
-      active: active,
-      track: track,
+      accent: accent,
+      fill: fill,
       width: width,
-      size: size,
       thickness: thickness,
     ))
   }
   if variant == "1/1" {
-    text(fill: active)[#current/#total]
+    text(fill: accent)[#current/#total]
   } else if variant == "1" {
-    text(fill: active)[#current]
+    text(fill: accent)[#current]
   } else if variant == "circle" {
     box(circle(
-      width: size,
-      height: size,
+      width: width,
+      height: width,
       fill: none,
       stroke: thickness + gradient.conic(
-        (active, 0%),
-        (active, amount),
-        (track, amount),
-        (track, 100%),
-        angle: structure.progress-start-angle,
+        (accent, 0%),
+        (accent, amount),
+        (fill, amount),
+        (fill, 100%),
+        angle: component-metrics.progress-start-angle,
         space: rgb,
       ),
     ))
@@ -138,12 +140,12 @@
       #place(top + left, rect(
         width: 100%,
         height: thickness,
-        fill: track,
+        fill: fill,
       ))
       #place(top + left, rect(
         width: amount,
         height: thickness,
-        fill: active,
+        fill: accent,
       ))
     ]
   }

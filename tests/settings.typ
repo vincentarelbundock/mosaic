@@ -28,7 +28,7 @@
 // show rules on the <mosaic-note-heading> and <mosaic-note-body> labels, not
 // in settings. Every geometric field is overridable.
 #assert(settings.notes.keys().sorted() == (
-  "heading-gap", "margin", "note-gap", "padding", "thumbnail-gap",
+  "bottom-gap", "heading-gap", "margin", "note-gap", "thumbnail-gap",
   "thumbnail-stroke",
 ))
 #assert(settings.notes.margin == 15mm)

@@ -4,12 +4,12 @@
 #import "@local/mosaic:0.0.1" as mosaic
 #import "../mosaic/src/grid/content.typ": body-cell-ids, resolve-content
 
-#let comparison = mosaic.grid.h(
-  mosaic.grid.v(
-    mosaic.grid.cell("heading"),
-    mosaic.grid.cell("left"),
+#let comparison = mosaic.grids.h(
+  mosaic.grids.v(
+    mosaic.grids.cell("heading"),
+    mosaic.grids.cell("left"),
   ),
-  mosaic.grid.cell("right"),
+  mosaic.grids.cell("right"),
 )
 
 // Content-bearing IDs follow the grid's depth-first declaration order.
@@ -36,9 +36,9 @@
 #assert(command.bodies == ())
 
 // A fixed-content cell is owned by the grid and is not a named destination.
-#let with-fixed = mosaic.grid.h(
-  mosaic.grid.cell("logo", content: [LOGO]),
-  mosaic.grid.cell("body"),
+#let with-fixed = mosaic.grids.h(
+  mosaic.grids.cell("logo", content: [LOGO]),
+  mosaic.grids.cell("body"),
 )
 #assert(body-cell-ids(with-fixed) == ("body",))
 #assert(resolve-content(with-fixed, (body: [Body]), ()) == (body: [Body]))
@@ -59,9 +59,9 @@
 )
 
 // Incremental destinations are counted by ID too.
-#let temporal = mosaic.grid.v(
-  mosaic.grid.cell("top"),
-  mosaic.steps.on("2-", mosaic.grid.cell("bottom")),
+#let temporal = mosaic.grids.v(
+  mosaic.grids.cell("top"),
+  mosaic.steps.on("2-", mosaic.grids.cell("bottom")),
 )
 #assert(body-cell-ids(temporal) == ("top", "bottom"))
 

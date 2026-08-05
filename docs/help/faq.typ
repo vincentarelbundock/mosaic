@@ -158,11 +158,11 @@ Typst writes these as internal PDF destinations, so Mosaic does not need a separ
 ```typ
 #show: m.setup
 
-#let grid = m.grid.v(
-  m.grid.cell("a", inset: 1.5em),
-  m.grid.h(
-    m.grid.cell("b", inset: 1.5em),
-    m.grid.cell("c", inset: 1.5em),
+#let grid = m.grids.v(
+  m.grids.cell("a", inset: 1.5em),
+  m.grids.h(
+    m.grids.cell("b", inset: 1.5em),
+    m.grids.cell("c", inset: 1.5em),
   ),
 )
 
@@ -306,7 +306,7 @@ The cell IDs are arbitrary names you choose; each one becomes a
 
 ```typ
 #let framed(title, body) = m.slide(
-  layout: m.grid.v("banner", "copy"),
+  layout: m.grids.v("banner", "copy"),
   content: (banner: title, copy: body),
 )
 

@@ -2,7 +2,7 @@
 #import "../shared.typ": tag, fail
 #import "model.typ": (
   plane-ids, is-node, is-track, split-name,
-  valid-rule, valid-track-size,
+  is-stroke, is-track-size,
 )
 #import "validation.typ": validate
 
@@ -64,9 +64,9 @@
 /// not both.
 ///
 /// ```typ
-/// #mosaic.grid.v(
-///   mosaic.grid.t(auto, mosaic.grid.cell("header")),
-///   mosaic.grid.cell("body"),
+/// #mosaic.grids.v(
+///   mosaic.grids.t(auto, mosaic.grids.cell("header")),
+///   mosaic.grids.cell("body"),
 /// )
 /// ```
 ///
@@ -117,10 +117,10 @@
 /// evenly. Wrap one in `t` to give it a size of its own.
 ///
 /// ```typ
-/// #mosaic.grid.v(
-///   mosaic.grid.t(auto, "header"),   // as tall as its content
+/// #mosaic.grids.v(
+///   mosaic.grids.t(auto, "header"),   // as tall as its content
 ///   "body",                          // 1fr, taking the rest
-///   mosaic.grid.t(2em, "footer"),    // a fixed strip
+///   mosaic.grids.t(2em, "footer"),    // a fixed strip
 /// )
 /// ```
 ///
@@ -139,7 +139,7 @@
   /// -> str | dictionary
   child,
 ) = {
-  if not valid-track-size(size) {
+  if not is-track-size(size) {
     fail(
       "t size must be auto, a fixed or relative length, or a fractional length",
     )
@@ -152,13 +152,13 @@
   )
 }
 
-// Canonical branch constructor. Public callers use mosaic.grid.h() and
-// mosaic.grid.v().
+// Canonical branch constructor. Public callers use mosaic.grids.h() and
+// mosaic.grids.v().
 #let split(
   axis,
   tracks: auto,
   gutter: 0pt,
-  rule: none,
+  stroke: none,
   ..children,
 ) = {
   let name = split-name(axis)
@@ -172,16 +172,16 @@
   if not children.all(is-node) {
     fail(name + " children must be Mosaic grid nodes")
   }
-  if not valid-track-size(gutter) {
+  if not is-track-size(gutter) {
     fail(name + " gutter must be a native Typst track size")
   }
-  if not valid-rule(rule) {
-    fail(name + " rule must be none or a native Typst stroke")
+  if not is-stroke(stroke) {
+    fail(name + " stroke must be none or a native Typst stroke")
   }
   if tracks != auto and (
     type(tracks) != array
       or tracks.len() != children.len()
-      or not tracks.all(valid-track-size)
+      or not tracks.all(is-track-size)
   ) {
     fail(
       name + " tracks must contain one native Typst track size per child",
@@ -193,7 +193,7 @@
     axis: axis,
     tracks: tracks,
     gutter: gutter,
-    rule: rule,
+    stroke: stroke,
     children: children,
   )
   validate(result)
@@ -215,7 +215,7 @@
   (size, child)
 }
 
-#let split-node(axis, gutter, rule, children) = {
+#let split-node(axis, gutter, stroke, children) = {
   let name = split-name(axis)
   if children.len() == 0 {
     fail(name + " must contain at least one child")
@@ -223,7 +223,7 @@
   let parts = children.map(normalize-split-child)
   let tracks = parts.map(part => part.at(0))
   let nodes = parts.map(part => part.at(1))
-  split(axis, tracks: tracks, gutter: gutter, rule: rule, ..nodes)
+  split(axis, tracks: tracks, gutter: gutter, stroke: stroke, ..nodes)
 }
 
 /// Splits the available width, arranging its children as columns.
@@ -238,10 +238,10 @@
 /// the width evenly.
 ///
 /// ```typ
-/// #mosaic.grid.h(
+/// #mosaic.grids.h(
 ///   gutter: 1em,
-///   rule: 0.5pt + gray,
-///   mosaic.grid.t(2fr, "left"),
+///   stroke: 0.5pt + gray,
+///   mosaic.grids.t(2fr, "left"),
 ///   "right",
 /// )
 /// ```
@@ -252,14 +252,14 @@
   /// -> auto | length | ratio | relative | fraction
   gutter: 0pt,
   /// Stroke drawn along each interior column boundary, centered in the gutter.
-  /// A gutter of `0pt` leaves the rule sitting directly between the columns.
+  /// A gutter of `0pt` leaves the stroke sitting directly between the columns.
   /// -> none | stroke
-  rule: none,
+  stroke: none,
   /// The columns: string cell ids, Mosaic grid nodes, or values wrapped with
   /// `t`. At least one is required.
   /// -> arguments
   ..children,
-) = split-node("width", gutter, rule, children.pos())
+) = split-node("width", gutter, stroke, children.pos())
 
 /// Splits the available height, arranging its children as rows.
 ///
@@ -268,11 +268,11 @@
 /// row.
 ///
 /// ```typ
-/// #mosaic.grid.v(
+/// #mosaic.grids.v(
 ///   gutter: 0.7em,
-///   mosaic.grid.t(auto, "header"),
-///   mosaic.grid.h(gutter: 1em, "left", "right"),
-///   mosaic.grid.t(auto, "footer"),
+///   mosaic.grids.t(auto, "header"),
+///   mosaic.grids.h(gutter: 1em, "left", "right"),
+///   mosaic.grids.t(auto, "footer"),
 /// )
 /// ```
 ///
@@ -283,11 +283,11 @@
   gutter: 0pt,
   /// Stroke drawn along each interior row boundary, centered in the gutter.
   /// -> none | stroke
-  rule: none,
+  stroke: none,
   /// The rows: string cell ids, Mosaic grid nodes, or values wrapped with `t`.
   /// At least one is required.
   /// -> arguments
   ..children,
-) = split-node("height", gutter, rule, children.pos())
+) = split-node("height", gutter, stroke, children.pos())
 
 

@@ -1,6 +1,6 @@
 #import "@local/mosaic:0.0.1" as m
 
-#show: m.setup.with(layouts: (content: m.grid.cell("body", inset: 1.5em)))
+#show: m.setup.with(layouts: (content: m.grids.cell("body", inset: 1.5em)))
 #set text(size: 18pt)
 
 // One style governs both the in-text citations and the reference list.

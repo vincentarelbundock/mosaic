@@ -3,7 +3,7 @@
 
 #let expected = (
   "setup", "slide", "note", "pause", "surface",
-  "grid", "layouts", "steps", "components",
+  "grids", "layouts", "steps", "components",
 )
 #assert(expected.all(name => name in m))
 #assert(("tokens", "code-theme", "base-setup").all(name => name not in m))

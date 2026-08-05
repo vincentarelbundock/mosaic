@@ -12,6 +12,6 @@
 
 // Any child can be another grid: the outer split gives "a" the left half, and
 // a nested vertical split stacks "b" and "c" on the right.
-#let nested = m.grid.h("a", m.grid.v("b", "c"))
+#let nested = m.grids.h("a", m.grids.v("b", "c"))
 
 #m.slide(layout: nested)[a][b][c]

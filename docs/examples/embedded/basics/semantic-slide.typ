@@ -15,7 +15,7 @@
 #show label("mosaic-cell-source"): set align(left + horizon)
 
 // Start with one named cell.
-#let single = m.grid.cell("main")
+#let single = m.grids.cell("main")
 
 #m.slide(
   layout: single,
@@ -23,7 +23,7 @@
 )
 
 // Split the same slide into two equal columns.
-#let columns = m.grid.h("main", "aside")
+#let columns = m.grids.h("main", "aside")
 
 #m.slide(
   layout: columns,
@@ -34,11 +34,11 @@
 )
 
 // Add nested rows and explicit track proportions.
-#let composition = m.grid.h(
-  m.grid.t(2fr, "main"),
-  m.grid.t(1fr, m.grid.v(
-    m.grid.t(2fr, "notes"),
-    m.grid.t(1fr, "source"),
+#let composition = m.grids.h(
+  m.grids.t(2fr, "main"),
+  m.grids.t(1fr, m.grids.v(
+    m.grids.t(2fr, "notes"),
+    m.grids.t(1fr, "source"),
   )),
 )
 

@@ -13,7 +13,7 @@
 // Every option `setup` accepts, with its default. This is the single list:
 // `theme-engine` derives the set of theme-neutral option names from these keys
 // rather than restating them.
-#let setup-defaults = (
+#let default-setup = (
   paper: default-paper,
   margin: 0pt,
   spacing: (:),
@@ -40,7 +40,7 @@
   if type(options) != dictionary {
     fail("internal setup options must be a dictionary; got " + repr(type(options)))
   }
-  let defaults = setup-defaults
+  let defaults = default-setup
   reject-unknown-keys(options, defaults, "setup")
   let options = defaults + options
   let paper = options.paper

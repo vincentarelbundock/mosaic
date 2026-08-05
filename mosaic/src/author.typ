@@ -9,18 +9,19 @@
   "name",
   "orcid",
 )
-#let valid-name(value) = value != none and (
+#let is-name(value) = value != none and (
   type(value) == content
     or (type(value) == str and value != "")
 )
 
-#let validate-affiliation(value, subject) = {
-  if not valid-name(value) {
-    fail(subject + " must be content or a non-empty string")
+#let validate-affiliation(value, name) = {
+  if not is-name(value) {
+    fail(name + " must be content or a non-empty string")
   }
+  value
 }
 
-#let valid-email(value) = type(value) == str and value.match(
+#let is-email(value) = type(value) == str and value.match(
   regex("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"),
 ) != none
 
@@ -28,42 +29,42 @@
 // character. The iD also carries a mod-11 check digit, but verifying it here
 // bought little (it catches only rare transcription slips a format check
 // misses) at the cost of the most intricate arithmetic in the file.
-#let valid-orcid(value) = type(value) == str and value.match(
+#let is-orcid(value) = type(value) == str and value.match(
   regex("^\\d{4}-\\d{4}-\\d{4}-\\d{3}[\\dX]$"),
 ) != none
 
-#let validate-author(value, subject: "author") = {
+#let validate-author(value, name: "author") = {
   if (
     type(value) != dictionary
       or value.keys().sorted() != author-keys
       or value.kind != "mosaic-author"
   ) {
-    fail(subject + " must be created with author()")
+    fail(name + " must be created with author()")
   }
-  if not valid-name(value.name) {
-    fail(subject + " name must be content or a non-empty string")
+  if not is-name(value.name) {
+    fail(name + " name must be content or a non-empty string")
   }
   let affiliations = value.affiliations
   if type(affiliations) != array {
-    fail(subject + " affiliations must be an array")
+    fail(name + " affiliations must be an array")
   }
   for (index, affiliation) in affiliations.enumerate() {
-    validate-affiliation(affiliation, subject + " affiliation " + str(index + 1))
+    _ = validate-affiliation(affiliation, name + " affiliation " + str(index + 1))
   }
   let email = value.email
-  if email != none and not valid-email(email) {
-    fail(subject + " email must be a valid email address")
+  if email != none and not is-email(email) {
+    fail(name + " email must be a valid email address")
   }
   let orcid = value.orcid
-  if orcid != none and not valid-orcid(orcid) {
-    fail(subject + " orcid must be a valid ORCID iD")
+  if orcid != none and not is-orcid(orcid) {
+    fail(name + " orcid must be a valid ORCID iD")
   }
   let corresponding = value.corresponding
   if type(corresponding) != bool {
-    fail(subject + " corresponding must be a boolean")
+    fail(name + " corresponding must be a boolean")
   }
   if corresponding and email == none and orcid == none {
-    fail(subject + " corresponding requires email or orcid")
+    fail(name + " corresponding requires email or orcid")
   }
   value
 }
@@ -76,14 +77,14 @@
 // identifier to declare. The key is the `repr` of the affiliation as content,
 // because content is not hashable and because a string and the same text as
 // content are one institution, not two.
-#let analyze-authors(values, subject: "layout \"title\" author") = {
+#let analyze-authors(values, name: "layout \"title\" author") = {
   let known = (:)
   let affiliations = ()
   let authors = ()
   for (author-index, value) in values.enumerate() {
     let author = validate-author(
       value,
-      subject: subject + " " + str(author-index + 1),
+      name: name + " " + str(author-index + 1),
     )
     let numbers = ()
     for affiliation in author.affiliations {

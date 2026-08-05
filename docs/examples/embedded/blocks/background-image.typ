@@ -1,6 +1,6 @@
 #import "@local/mosaic:0.0.1" as m
 
-#let grid = m.grid.cell("body", inset: 2em)
+#let grid = m.grids.cell("body", inset: 2em)
 
 #show: m.setup
 #set page(fill: rgb("#f4f1ea"))

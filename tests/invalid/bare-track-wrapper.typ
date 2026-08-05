@@ -2,5 +2,5 @@
 
 #show: mosaic.setup
 #mosaic.slide(
-  layout: mosaic.grid.t(2fr, "main"),
+  layout: mosaic.grids.t(2fr, "main"),
 )[Bare track wrapper]

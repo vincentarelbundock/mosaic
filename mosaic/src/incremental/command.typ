@@ -121,7 +121,7 @@
   body,
 ) = {
   _ = parse-range(range)
-  validate-states(before, after)
+  _ = validate-states(before, after)
   if is-node(body) {
     (
       mosaic: tag,
@@ -245,7 +245,7 @@
   ..items,
 ) = {
   start = parse-positive-int(start)
-  validate-states(before, after)
+  _ = validate-states(before, after)
   let items = items.pos()
   if items.len() == 0 {
     fail("reveal expects content or at least one grid node")
