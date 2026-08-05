@@ -122,19 +122,7 @@ Typography goes through labels, exactly as a cell does. Every tier a variant emi
 #show label("mosaic-title-display"): set text(tracking: -0.02em)
 ```
 
-Geometry does not. The `v(0.24em)` between a rule and a title, or the `dy: -1.15em` that bleeds an oversized numeral off the top edge, is produced while the layout composes itself, and no show rule can reach inside it. Those measurements are named fields of the variant's recipe instead, and `style:` merges over them. State only what changes:
-
-```typ
-#m.slide(
-  layout: m.layouts.section(
-    variant: "numeral",
-    subtitle: [A quieter ghost numeral],
-    style: (number-size: 5em, number-dy: -0.8em),
-  ),
-)[Methods]
-```
-
-Sizes in a recipe are em against the layout's own display type, so a theme that rescales the deck rescales the whole composition with it. Reach for `style:` only when the arrangement itself is wrong for your content; a size, weight, or color is a label rule.
+Geometry does not. The `v(0.24em)` between a rule and a title, or the `dy: -1.15em` that bleeds an oversized numeral off the top edge, is produced while the layout composes itself, and no show rule can reach inside it. Those measurements are the variant's design, and they are deliberately not parameters: a variant earns its place by being a finished composition. When the arrangement itself is wrong for your content, pick another variant, or draw the slide you want as an ordinary grid of cells and style it with label rules. A size, weight, or color is always a label rule.
 
 = Reusable looks
 

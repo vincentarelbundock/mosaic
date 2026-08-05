@@ -8,12 +8,12 @@
   #m.components.label(
     role: "information",
     radius: 0pt,
-    text-style: (size: 1.35em, weight: "bold"),
+    style: (text: (size: 1.35em, weight: "bold")),
   )[Square corners]
   #h(1em)
   #m.components.label(
     role: "information",
-    radius: "pill",
-    text-style: (size: 1.35em, weight: "bold"),
+    radius: 999pt,
+    style: (text: (size: 1.35em, weight: "bold")),
   )[Rounded corners]
 ]
