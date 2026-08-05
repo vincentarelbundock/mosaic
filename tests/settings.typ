@@ -24,14 +24,17 @@
   "accent", "canvas", "line", "muted", "surface", "text",
 ))
 #assert(settings.colors.values().all(value => type(value) == color))
-// The printed outputs read against paper, not against the deck palette, so the
-// defaults stay black regardless of theme. Every field is overridable.
-#assert(settings.notes.text-fill == black)
+// The notes record is geometry only: the printed pages' typography lives in
+// show rules on the <mosaic-note-heading> and <mosaic-note-body> labels, not
+// in settings. Every geometric field is overridable.
+#assert(settings.notes.keys().sorted() == (
+  "heading-gap", "margin", "note-gap", "padding", "thumbnail-gap",
+  "thumbnail-stroke",
+))
 #assert(settings.notes.margin == 15mm)
 #assert(make-settings(notes: (margin: 8mm)).notes.margin == 8mm)
-#assert(make-settings(notes: (text-fill: red)).notes.text-fill == red)
 // An unmerged field keeps its default rather than dropping out of the record.
-#assert(make-settings(notes: (margin: 8mm)).notes.text-size == 10pt)
+#assert(make-settings(notes: (margin: 8mm)).notes.note-gap == 3mm)
 #assert(settings.overflow == "warn")
 #assert(make-settings(overflow: "off").overflow == "off")
 #assert(validate-settings(settings) == settings)

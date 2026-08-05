@@ -155,6 +155,8 @@ Every rendered cell has a native label named `<mosaic-cell-ID>`. Style it with o
 
 Typography, headings, figures, tables, and one-off local styling also use native `set` and `show` rules. Put deck-level rules after `#show: m.setup`.
 
+Mosaic's design promise is precise: every rule a slide renders with comes from the active theme or from your own rules, never from the engine. The engine holds a single deck record, written once by `setup` and immutable afterward, containing only what you declared there: structure, geometry, and the semantic colors. The colors and roles are the one sanctioned exception to rule-based styling, because Typst offers no native channel that could carry paint values into a component call. There is no other configuration state.
+
 ## Deck setup
 
 Declare deck metadata, semantic colors, recurring cell defaults, and full-slide planes once:

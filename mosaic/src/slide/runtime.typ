@@ -10,31 +10,40 @@
 #import "../note/command.typ": is-note
 #import "../grid/render.typ": max-node, render
 #import "../fit.typ": fit-ratio
-#import "../settings.typ": settings-state
+#import "../settings.typ": validate-settings
 #import "../layout/resolver.typ": resolve-layout
 #import "../layout/core.typ": is-layout
-#import "../layout/config.typ": unconfigured-layouts, validate-layouts
+#import "../layout/config.typ": (
+  standard-layouts,
+  unconfigured-layouts,
+  validate-layouts,
+)
 #import "../deck-state.typ": (
-  layouts-state,
+  deck-state,
+  write-deck-record,
   logical-slide,
   logical-slide-id,
   logical-section,
 )
 #import "command.typ": validate-plane
 
-#let frozen-counters-state = state(key("frozen-counters"), ())
-#let frozen-states-state = state(key("frozen-states"), ())
-#let handout-state = state(key("handout"), false)
-#let output-state = state(key("output"), "slides")
-// The slide size as resolved dimensions, never as a preset name: the printed
-// outputs scale a thumbnail of this size onto a page of a different one.
-#let paper-state = state(key("paper"), paper-aliases.at(default-paper))
+// The record a reader assumes when no deck wrote one: components and cells
+// rendered outside `setup` see these library defaults. `paper` holds resolved
+// dimensions, never a preset name, because the printed outputs scale a
+// thumbnail of this size onto a page of a different one.
+#let default-deck-record = (
+  settings: none,
+  layouts: (:),
+  frozen-counters: (),
+  frozen-states: (),
+  handout: false,
+  output: "slides",
+  paper: paper-aliases.at(default-paper),
+)
 
-#let configure-handout(value) = {
-  if type(value) != bool {
-    fail("setup handout must be a boolean")
-  }
-  handout-state.update(value)
+#let read-deck-record() = {
+  let record = deck-state.get()
+  if record == none { default-deck-record } else { record }
 }
 
 #let validate-frozen(values, expected, name) = {
@@ -47,19 +56,6 @@
   values
 }
 
-#let configure-freezing(counters: (), states: ()) = {
-  frozen-counters-state.update(validate-frozen(
-    counters,
-    counter,
-    "frozen-counters",
-  ))
-  frozen-states-state.update(validate-frozen(
-    states,
-    state,
-    "frozen-states",
-  ))
-}
-
 #let physical-steps(total, handout) = if handout {
   (total,)
 } else {
@@ -68,7 +64,8 @@
 
 #let prepare-frame(step, location, handout: false) = context {
   if not handout and step > 1 {
-    for value in frozen-counters-state.get() + frozen-states-state.get() {
+    let record = read-deck-record()
+    for value in record.frozen-counters + record.frozen-states {
       value.update(value.at(selector(location)))
     }
   }
@@ -97,8 +94,12 @@
   body,
 )
 
+// The printed pages carry no typography of their own. The note text and the
+// frame heading render under the <mosaic-note-body> and <mosaic-note-heading>
+// labels; setup states neutral paper-reading defaults for them as show rules,
+// and any later rule on the same label overrides those. Only geometry comes
+// from `settings.notes`.
 #let note-list(notes, style) = {
-  set text(size: style.text-size, fill: style.text-fill)
   if notes.len() == 0 {
     emph[No speaker notes for this frame.]
   } else {
@@ -110,25 +111,23 @@
   }
 }
 
-#let note-heading(slide, step, steps, style) = text(
-  size: style.heading-size,
-  weight: style.heading-weight,
-  fill: style.heading-fill,
-)[Slide #slide · Frame #step of #steps]
+#let note-heading(slide, step, steps) = [#text[Slide #slide · Frame #step of #steps]#label("mosaic-note-heading")]
 
 #let bounded-note-list(notes, width, height, output, step, style) = {
-  let body = note-list(notes, style)
-  let natural = measure(body, width: width)
-  if natural.height > height {
-    fail(output + " output notes overflow on frame " + str(step))
-  }
-  block(
+  // The label wraps the block that is both measured and placed, so the
+  // overflow check observes the same label rules the page renders with.
+  let body = [#block(
     width: width,
     breakable: false,
     above: 0pt,
     below: 0pt,
-    body,
-  )
+    note-list(notes, style),
+  )#label("mosaic-note-body")]
+  let natural = measure(body, width: width)
+  if natural.height > height {
+    fail(output + " output notes overflow on frame " + str(step))
+  }
+  body
 }
 
 #let speaker-page(frame, notes, slide, step, steps, source-size, fill, style) = layout(region => {
@@ -144,7 +143,7 @@
   // geometry rather than from a second copy of the arithmetic here.
   let factor = fit-ratio(source-size, width: region.width)
   let thumbnail-height = source-size.height * factor
-  let heading = note-heading(slide, step, steps, style)
+  let heading = note-heading(slide, step, steps)
   let heading-height = measure(heading, width: region.width).height
   // The vertical budget, stated as the sum of what the page actually places
   // rather than as one combined allowance.
@@ -187,7 +186,7 @@
     height: source-size.height,
     fill: fill,
   )))
-  let heading = note-heading(slide, step, steps, style)
+  let heading = note-heading(slide, step, steps)
   let heading-height = measure(heading, width: region.width).height
   heading
   v(style.heading-gap)
@@ -220,22 +219,36 @@
   [#body#label("mosaic-" + heading-key)]
 }
 
+// The single write of the deck record. Every field validates here, at the one
+// place a value can enter the record; `write-deck-record` rejects a second
+// write, which is what makes the record immutable declared configuration
+// rather than mutable state.
 #let configure-deck(
-  layouts: (:),
+  settings: none,
+  layouts: standard-layouts,
   frozen-counters: (),
   frozen-states: (),
-  handout: auto,
+  handout: false,
   output: "slides",
   paper: paper-aliases.at(default-paper),
 ) = {
-  layouts-state.update(validate-layouts(layouts))
-  configure-freezing(counters: frozen-counters, states: frozen-states)
-  if handout != auto {
-    configure-handout(handout)
+  if type(handout) != bool {
+    fail("setup handout must be a boolean")
   }
   // `output` and `paper` are validated by `setup`, the only caller.
-  output-state.update(output)
-  paper-state.update(paper)
+  write-deck-record((
+    settings: validate-settings(settings),
+    layouts: validate-layouts(layouts),
+    frozen-counters: validate-frozen(
+      frozen-counters,
+      counter,
+      "frozen-counters",
+    ),
+    frozen-states: validate-frozen(frozen-states, state, "frozen-states"),
+    handout: handout,
+    output: output,
+    paper: paper,
+  ))
 }
 
 #let select-layout(value, configured) = if value == auto {
@@ -250,10 +263,10 @@
   ("content", value)
 }
 
-#let render-slide-with-settings(command, settings) = context {
+#let render-slide-with-record(command, record, settings) = context {
   let (layout-name, requested-layout) = select-layout(
     command.layout,
-    layouts-state.get(),
+    record.layouts,
   )
   // Field overlay (see `slide-command`): the slide's named arguments and the
   // deck compiler's automatic section tagline. It refines the configured
@@ -335,9 +348,9 @@
   }
   let slide = logical-slide-id.get().first()
   let freeze-location = here()
-  let handout = handout-state.get()
-  let output = output-state.get()
-  let paper = paper-state.get()
+  let handout = record.handout
+  let output = record.output
+  let paper = record.paper
   let slide-fill = if page.fill == auto { settings.colors.canvas } else { page.fill }
   for step in physical-steps(steps, handout) {
     // The whole cell grid carries <mosaic-slide>, so one native rule can reach
@@ -405,9 +418,10 @@
 // <mosaic-cell-*> display scale applies. Layouts anchor their composed tiers to
 // it, which is what keeps a title's subtitle proportional to its own theme.
 #let render-slide(command) = context {
-  let settings = settings-state.get()
+  let record = read-deck-record()
+  let settings = record.settings
   if settings != none {
     settings.insert("base-size", text.size)
   }
-  render-slide-with-settings(command, settings)
+  render-slide-with-record(command, record, settings)
 }

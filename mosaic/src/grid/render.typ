@@ -9,7 +9,8 @@
 // Aliased: `fit` is the local variable name for a cell's fit mode throughout
 // this module, and the helper must not shadow it.
 #import "../fit.typ": fit as fit-helper
-#import "../settings.typ": settings-state, default-spacing
+#import "../settings.typ": default-spacing
+#import "../deck-state.typ": deck-state
 
 // Records one queryable warning per overflowing cell.
 //
@@ -98,11 +99,15 @@
 #let initial-context = (slide: 0, step: 1)
 
 // A cell that states no inset of its own takes the deck's configured token.
-// Read inside the render context, where the settings state is live; a component
+// Read inside the render context, where the deck record is live; a component
 // rendered outside `setup` falls back to the library default.
 #let configured-inset() = {
-  let settings = settings-state.get()
-  if settings == none { default-spacing.inset } else { settings.spacing.inset }
+  let record = deck-state.get()
+  if record == none {
+    default-spacing.inset
+  } else {
+    record.settings.spacing.inset
+  }
 }
 
 #let resolve-inset(inset, base) = if type(inset) == dictionary {

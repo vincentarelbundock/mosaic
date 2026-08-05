@@ -1,4 +1,18 @@
-// Private presentation settings and contextual configuration.
+// Constructors and validation for the settings half of the deck record.
+//
+// Everything here is a pure value: `setup` builds one settings dictionary,
+// validates it, and stores it inside the single deck record (deck-state.typ).
+// Nothing in this module holds state of its own.
+//
+// Two of these fields, `colors` and `roles`, are Mosaic's one sanctioned
+// semantic token layer. Components are ordinary functions, and Typst's rule
+// system offers no channel that could carry paint values (surface fills,
+// accent rails) into a function call the way `set text` carries typography
+// into text. A palette record is therefore unavoidable; keeping it to six
+// deck colors plus the role palette, both declared at `setup`, is the
+// containment. Everything typographic stays out of this module by design:
+// every `set` and `show` rule a slide renders with belongs to the active
+// theme's `apply`.
 #import "shared.typ": fail, require-dictionary, reject-unknown-keys
 #import "color-defaults.typ": default-colors, default-line
 #import "role-defaults.typ": validate-roles
@@ -21,14 +35,15 @@
   compact-gap: 0.35em,
 )
 
-// Geometry and paint for the printed `speaker` and `notes` outputs.
+// Geometry for the printed `speaker` and `notes` outputs. Geometry only: the
+// heading and note text on these pages render under the <mosaic-note-heading>
+// and <mosaic-note-body> labels, and their typography is stated as `show`
+// rules (neutral engine defaults in setup-core, overridable with ordinary
+// rules after `setup`), not as fields here.
 //
 // These pages are paper, not slide canvas: the page keeps its default white
-// fill and the slide appears as a painted thumbnail inside it. The defaults are
-// therefore chosen to read against paper rather than against the deck's own
-// palette, which is why the text paints black even for a dark theme. A deck
-// printing on tinted stock overrides the fills; a deck on a different paper
-// size overrides the margin and gaps.
+// fill and the slide appears as a painted thumbnail inside it. A deck on a
+// different paper size overrides the margin and gaps.
 //
 // `padding` is the slack held back below the notes block so a full page does
 // not butt against the bottom margin. The available note height is the region
@@ -36,11 +51,6 @@
 // are the whole vertical budget: no unnamed allowance is folded in.
 #let default-notes = (
   margin: 15mm,
-  text-size: 10pt,
-  text-fill: black,
-  heading-size: 12pt,
-  heading-weight: "bold",
-  heading-fill: black,
   thumbnail-stroke: 0.6pt + default-line,
   note-gap: 3mm,
   thumbnail-gap: 7mm,
@@ -129,8 +139,6 @@
   result
 }
 
-#let settings-state = state("mosaic:settings", none)
-
 #let make-settings(
   colors: default-colors,
   content: default-content,
@@ -190,5 +198,3 @@
   }
   value
 }
-
-#let configure-settings(value) = settings-state.update(validate-settings(value))

@@ -52,6 +52,13 @@ Choose an output in `m.setup` when you need a printable companion document:
 #show: m.setup.with(output: "notes")
 ```
 
+On these printed pages, the frame heading renders under the `<mosaic-note-heading>` label and the note text under `<mosaic-note-body>`. Both default to plain black type that reads against paper regardless of theme; restyle them with ordinary rules after `m.setup`:
+
+```typ
+#show label("mosaic-note-body"): set text(size: 11pt)
+#show label("mosaic-note-heading"): set text(fill: rgb("#0072B2"))
+```
+
 = Final-frame handouts
 
 Set `handout: true` to render only the final frame of each slide:

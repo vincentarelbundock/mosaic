@@ -6,7 +6,9 @@
 
 #title()
 
-A slide is a stack of native Typst layers: a background plane, a grid of cells, and a foreground plane. The planes are content you supply directly; each cell is a single block labeled `<mosaic-cell-ID>`. You style all of it with ordinary `set` and `show` rules. Every rule a deck renders with comes from its theme: Mosaic's engine contributes page geometry, deck information, and colors, but no typography of its own. Rules you write after `m.setup` layer on top of the theme's. There is no separate styling system to learn.
+A slide is a stack of native Typst layers: a background plane, a grid of cells, and a foreground plane. The planes are content you supply directly; each cell is a single block labeled `<mosaic-cell-ID>`. You style all of it with ordinary `set` and `show` rules. Every rule a slide renders with comes from its theme: Mosaic's engine contributes page geometry, deck information, and colors, but no slide typography of its own. Rules you write after `m.setup` layer on top of the theme's. There is no separate styling system to learn.
+
+Behind that, the engine keeps exactly one record of its own: the deck record, written once by `m.setup` and never changed afterward. It holds what you declare there, structure and geometry, plus the semantic colors and roles. Those colors are the one deliberate exception to "everything is a rule": components are functions, and no native rule can carry a surface fill or an accent color into a function call the way `set text` carries typography into text. Declaring six colors and a role palette at setup is the whole extent of it.
 
 = Styling cells
 

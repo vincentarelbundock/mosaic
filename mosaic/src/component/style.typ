@@ -1,7 +1,7 @@
 // Shared semantic roles, structural defaults, and style normalization for
 // components.
 #import "../shared.typ": fail, require-dictionary, reject-unknown-keys
-#import "../settings.typ": settings-state
+#import "../deck-state.typ": deck-state
 #import "../role-defaults.typ": default-roles
 
 #let roles = default-roles
@@ -38,8 +38,8 @@
 // The deck's own colors, for component defaults that should follow the theme
 // rather than a fixed value. Components call this inside `context`.
 #let deck-colors() = {
-  let settings = settings-state.get()
-  if settings == none { none } else { settings.colors }
+  let record = deck-state.get()
+  if record == none { none } else { record.settings.colors }
 }
 
 #let role(name, contextual: false) = {
@@ -53,10 +53,11 @@
   if not contextual {
     return fallback
   }
-  let settings = settings-state.get()
-  if settings == none {
+  let record = deck-state.get()
+  if record == none {
     return fallback
   }
+  let settings = record.settings
   // A deck (or theme) that states a complete palette is authoritative: its
   // entry is used verbatim, including roles the derivation below never touches.
   if settings.roles != auto {

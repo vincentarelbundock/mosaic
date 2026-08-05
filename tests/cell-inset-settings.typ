@@ -3,9 +3,8 @@
 // outranked the configured token and made `spacing.inset` a no-op for cells.
 #import "../mosaic/src/grid/constructors.typ": cell, styled-cell
 #import "../mosaic/src/grid/render.typ": configured-inset
-#import "../mosaic/src/settings.typ": (
-  configure-settings, default-spacing, make-settings,
-)
+#import "../mosaic/src/settings.typ": default-spacing, make-settings
+#import "../mosaic/src/slide/runtime.typ": configure-deck
 
 // The constructor defers rather than deciding.
 #assert(styled-cell(id: "body").style.inset == auto)
@@ -17,7 +16,7 @@
 // Outside `setup` there is no deck to read, so the library default applies.
 #context assert(configured-inset() == default-spacing.inset)
 
-#configure-settings(make-settings(spacing: (inset: 33pt)))
+#configure-deck(settings: make-settings(spacing: (inset: 33pt)))
 #context assert(configured-inset() == 33pt)
 
 Cell inset follows setup spacing.

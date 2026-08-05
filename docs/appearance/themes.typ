@@ -81,7 +81,7 @@ A theme is a plain dictionary, so the quickest way to start is to bind one in th
 #show: m.theme.setup(mine)
 ```
 
-Because the engine emits no typography, a theme states its whole look, including the rules that style the canonical `<mosaic-cell-*>` vocabulary. Copy Light's `definition.typ` to see that complete set in its plainest form.
+Because the engine emits no slide typography, a theme states its whole look, including the rules that style the canonical `<mosaic-cell-*>` vocabulary. Copy Light's `definition.typ` to see that complete set in its plainest form. The engine's only rules of its own style the printed `speaker` and `notes` pages, whose furniture must read black-on-white regardless of theme; they live on the `<mosaic-note-heading>` and `<mosaic-note-body>` labels, and a theme or deck rule on the same label overrides them.
 
 Every facade also exports the definition its `setup` is bound to, so a theme can start from a bundled one by ordinary dictionary merge:
 

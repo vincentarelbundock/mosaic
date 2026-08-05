@@ -4,7 +4,7 @@
   compile-deck, default-heading-policy, validate-heading-policy,
 )
 #import "grid/render.typ": overflow-report
-#import "settings.typ": make-settings, configure-settings
+#import "settings.typ": make-settings
 #import "shared.typ": fail, reject-unknown-keys
 #import "color-defaults.typ": default-colors
 #import "layout/config.typ": standard-layouts, validate-layouts
@@ -105,13 +105,27 @@
     ()
   }
   set document(title: settings.deck.title, author: document-authors)
-  // No typography here by design. Every `set` and `show` rule a deck renders
-  // with comes from the active theme's `apply`, including the rules that style
-  // the canonical <mosaic-cell-*> vocabulary. This engine owns structure only:
-  // page geometry, document metadata, deck configuration, and compilation.
-  configure-settings(settings)
+  // No slide typography here by design. Every `set` and `show` rule a slide
+  // renders with comes from the active theme's `apply`, including the rules
+  // that style the canonical <mosaic-cell-*> vocabulary. This engine owns
+  // structure only: page geometry, document metadata, the deck record, and
+  // compilation.
+  //
+  // The one typographic exception is the pair of rules below for the printed
+  // `speaker` and `notes` outputs. Those pages are paper, not slide canvas, so
+  // their furniture must read black-on-white regardless of theme; the engine
+  // states that neutral default on the note labels, and any later rule on the
+  // same label (a theme's or the deck's) overrides it. The labels never occur
+  // in the `slides` output, so the rules are inert there.
+  show label("mosaic-note-heading"): set text(
+    size: 12pt, weight: "bold", fill: black,
+  )
+  show label("mosaic-note-body"): set text(size: 10pt, fill: black)
   [#metadata(settings.deck) <mosaic-deck-metadata>]
+  // The single write of the deck record: everything `setup` declares, stored
+  // as one immutable value.
   configure-deck(
+    settings: settings,
     layouts: layouts,
     frozen-counters: frozen-counters,
     frozen-states: frozen-states,
