@@ -34,7 +34,7 @@ depth = 3
   label = "Get started"
 
   [[menus.main]]
-  target = "api/setup.typ"
+  target = "api.typ"
   label = "API"
 
 [[footer.item]]
@@ -137,6 +137,9 @@ title = "Incremental reveals"
 
 [[sidebar.section]]
 title = "API reference"
+
+  [[sidebar.section.item]]
+  target = "api.typ"
 
   [[sidebar.section.item]]
   target = "api/setup.typ"

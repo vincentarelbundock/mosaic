@@ -26,23 +26,38 @@
     signature += " -> " + fn.return-types.join(" | ")
   }
 
-  let signature-lines = signature.split("\n")
-  block(
-    width: 100%,
-    inset: (x: 0.8em, y: 0.65em),
-    fill: luma(246),
-    radius: 4pt,
-    {
-      set text(font: ("DejaVu Sans Mono", "Liberation Mono"), size: 0.9em)
-      for (index, line) in signature-lines.enumerate() {
-        line
-        if index < signature-lines.len() - 1 {
-          linebreak()
-        }
-      }
-    },
-  )
+  raw(signature, lang: "typ", block: true)
   block(above: 1em, below: 0.5em, strong[Parameters])
+}
+
+#let api-parameter-block(
+  function-name: none,
+  name,
+  types,
+  content,
+  style-args,
+  show-default: false,
+  default: none,
+) = {
+  let details = ()
+  if types.len() > 0 {
+    let shown-types = types.map(t => (style-args.style.show-type)(t, style-args: style-args))
+    details.push([Type: #shown-types.join([ or ])])
+  }
+  if show-default {
+    details.push([Default: #raw(lang: "typc", default)])
+  }
+  if content != none and content != [] {
+    details.push(content)
+  }
+
+  // Bare list items emitted for consecutive parameters merge into one list.
+  list.item({
+    raw(name, lang: none)
+    if details.len() > 0 {
+      list(..details)
+    }
+  })
 }
 
 #let api-outline(module-doc, style-args: (:)) = {
@@ -67,7 +82,7 @@
   show-type: tidy.styles.default.show-type,
   show-function: tidy.styles.default.show-function,
   show-parameter-list: api-signature,
-  show-parameter-block: tidy.styles.default.show-parameter-block,
+  show-parameter-block: api-parameter-block,
   show-reference: tidy.styles.default.show-reference,
   show-example: tidy.styles.default.show-example,
   show-variable: tidy.styles.default.show-variable,
