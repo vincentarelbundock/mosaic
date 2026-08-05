@@ -7,7 +7,7 @@
 // Used under the MIT License; see THIRD_PARTY_LICENSES.md.
 #import "shared.typ": fail
 #import "incremental/analysis.typ": max-step
-#import "note/analysis.typ": notes-at
+#import "note/analysis.typ": has-note
 
 #let reflow-scale(ratio, body) = scale(
   ratio,
@@ -35,8 +35,10 @@
 // `measure` there is none: the region is reported unbounded, and a `1fr`
 // height inside it resolves to zero. Both degenerate cases would drive the
 // ratios to infinity or zero and make the refinement steps divide by zero, so
-// the fitters detect them and return the body untouched. Overflow observation
-// measures every cell, so this is a routine path, not an edge case.
+// the fitters detect them and return the body untouched. This is a routine
+// path, not an edge case: `steps.replace` measures its alternatives, captions
+// measure their frame, the speaker thumbnail measures a whole slide, and
+// overflow observation measures every cell whenever it is switched on.
 #let unsolvable(length) = (
   float.is-infinite(length.pt()) or float.is-nan(length.pt()) or length <= 0pt
 )
@@ -275,7 +277,10 @@
   // Measuring means capturing the body in a closure, where the runtime's
   // incremental and note walks cannot reach it. Refusing here is the difference
   // between a diagnostic and a deck that quietly loses its reveals.
-  if max-step(body) > 1 or notes-at(body, 1).len() > 0 {
+  // `has-note` rather than `notes-at(body, 1).len() > 0`: this is a yes/no
+  // question, and the extraction form builds an array of every note just to
+  // test it for emptiness. A cell with `fit` runs this on every frame.
+  if max-step(body) > 1 or has-note(body) {
     fail(
       "fit cannot hold incremental steps or speaker notes; they would be "
         + "invisible to the slide runtime. Move pause, steps, and note outside "

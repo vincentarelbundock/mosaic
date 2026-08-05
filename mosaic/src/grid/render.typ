@@ -59,7 +59,7 @@
   fail(
     "content overflows "
       + records.map(describe).join("; ")
-      + " (set overflow: \"warn\" to report these without failing)",
+      + " (set overflow: \"record\" to report these without failing)",
   )
 }
 
@@ -69,6 +69,28 @@
   (node, child) => child,
   (node, children) => children.any(value => value),
 )
+
+// A heading inside an incremental grid node would be added and removed with the
+// node, so its outline entry would come and go between frames. Structural, and
+// therefore asked once per slide rather than once per rendered frame.
+#let require-stable-grid-headings(node, contents) = {
+  let offending = fold-grid(
+    node,
+    cell => false,
+    (node, child) => (
+      child
+        or body-cell-ids(node.child).map(id => contents.at(id, default: none)).any(contains-heading)
+        or fixed-content-has-heading(node.child)
+    ),
+    (node, children) => children.any(value => value),
+  )
+  if offending {
+    fail(
+      "headings cannot be placed in incremental grid nodes; "
+        + "keep semantic headings structurally stable across frames",
+    )
+  }
+}
 
 #let max-node(node) = fold-grid(
   node,
@@ -130,10 +152,12 @@
   track: none,
   vertical: false,
 ) = {
+  // A styleless cell is a container the tree produced, not one an author named.
+  // Its content is measured again by every cell inside it, so observing it too
+  // re-measures each subtree once per level of nesting, and the path it would
+  // report ("grid.0") names nothing an author can act on. The offending cell
+  // reports itself.
   if style == none {
-    if overflow != "off" {
-      return observe-overflow(content, path, slide, step)
-    }
     return content
   }
   let surface = style
@@ -255,13 +279,6 @@
   slide: initial-slide,
 ) = {
   if node.kind == "on" {
-    let supplied = body-cell-ids(node.child).map(id => contents.at(id))
-    if supplied.any(contains-heading) or fixed-content-has-heading(node.child) {
-      fail(
-        "headings cannot be placed in incremental grid nodes; "
-          + "keep semantic headings structurally stable across frames",
-      )
-    }
     let state = status(
       node.range,
       node.before,

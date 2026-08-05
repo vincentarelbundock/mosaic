@@ -22,7 +22,7 @@
   spacing: (:),
   notes: (:),
   roles: auto,
-  overflow: "warn",
+  overflow: "off",
   layouts: standard-layouts,
   headings: default-heading-policy,
   handout: false,

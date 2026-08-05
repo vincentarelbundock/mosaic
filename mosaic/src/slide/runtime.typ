@@ -5,11 +5,23 @@
 #import "../grid/validation.typ": validate
 #import "../grid/content.typ": resolve-content
 #import "../incremental/analysis.typ": max-step
-#import "../incremental/transform.typ": transform
+#import "../incremental/transform.typ": (
+  transform,
+  require-stable-temporal-headings,
+)
 #import "../incremental/heading.typ": strip-headings
-#import "../note/analysis.typ": notes-at, fixed-grid-notes-at
+#import "../note/analysis.typ": (
+  notes-at,
+  fixed-grid-notes-at,
+  has-note,
+  fixed-grid-has-note,
+)
 #import "../note/command.typ": is-note
-#import "../grid/render.typ": max-node, render
+#import "../grid/render.typ": (
+  max-node,
+  render,
+  require-stable-grid-headings,
+)
 #import "../fit.typ": fit-ratio
 #import "../settings.typ": validate-settings
 #import "../layout/resolver.typ": resolve-layout
@@ -332,6 +344,24 @@
       title: strip-headings(contents.at("section", default: none)),
     )) <mosaic-section-title>]
   }
+  // Heading stability is a property of the slide's structure, not of any one
+  // frame, so both checks run here rather than inside the render and transform
+  // walks that the frame loop repeats.
+  require-stable-grid-headings(resolved-grid, contents)
+  for value in contents.values() {
+    require-stable-temporal-headings(value)
+  }
+  require-stable-temporal-headings(planes.background)
+  require-stable-temporal-headings(planes.foreground)
+  // Whether this slide holds any note at all, asked once rather than once per
+  // frame. Note extraction is four content walks per frame, and a deck with no
+  // notes would otherwise pay all of them on every page.
+  let any-notes = (
+    fixed-grid-has-note(resolved-grid)
+      or has-note(contents.values())
+      or has-note(planes.background)
+      or has-note(planes.foreground)
+  )
   let slide = logical-slide-id.get().first()
   let freeze-location = here()
   let handout = record.handout
@@ -362,12 +392,14 @@
     prepare-frame(step, freeze-location, handout: handout)
     let background-content = render-plane(planes.background, step, "background")
     let foreground-content = render-plane(planes.foreground, step, "foreground")
-    let notes = (
-      fixed-grid-notes-at(resolved-grid, step)
-        + notes-at(contents.values(), step)
-        + notes-at(planes.background, step)
-        + notes-at(planes.foreground, step)
-    )
+    let notes = if not any-notes { () } else {
+      (
+        fixed-grid-notes-at(resolved-grid, step)
+          + notes-at(contents.values(), step)
+          + notes-at(planes.background, step)
+          + notes-at(planes.foreground, step)
+      )
+    }
     let frame = [
         #show metadata: it => if is-note(it) { [] } else { it }
         #full-slide-layer(background-content)

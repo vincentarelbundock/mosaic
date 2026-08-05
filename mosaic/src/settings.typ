@@ -58,10 +58,16 @@
   bottom-gap: 2mm,
 )
 
-// Overflow observation policy. "warn" emits queryable
-// <mosaic-overflow-warning> metadata and keeps compiling; "error" emits it and
-// fails the compile, so a build stops instead of shipping a clipped slide.
-#let overflow-modes = ("off", "warn", "error")
+// Overflow observation policy. Observation measures every cell on every frame,
+// which roughly doubles the layout work a deck does, so it is off by default
+// and turned on for a deliberate checking pass.
+//
+// "record" emits queryable <mosaic-overflow-warning> metadata and keeps
+// compiling, for tooling that reads the records itself; Typst gives a package
+// no warning channel, so nothing is printed. "error" emits the same records and
+// fails the compile, so a build stops instead of shipping a clipped slide. That
+// is the mode to run before presenting.
+#let overflow-modes = ("off", "record", "error")
 
 #let default-cells = (:)
 
@@ -158,7 +164,7 @@
   spacing: (:),
   notes: (:),
   roles: auto,
-  overflow: "warn",
+  overflow: "off",
 ) = {
   let colors = validate-colors(colors)
   let roles = validate-roles(roles)

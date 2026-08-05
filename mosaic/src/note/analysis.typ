@@ -13,6 +13,39 @@
 #import "../incremental/analysis.typ": max-step
 #import "../shared.typ": typst-sequence
 
+// Does this value hold a speaker note on any step at all?
+//
+// `notes-at` answers "which notes are visible on step N", which the frame loop
+// needs, but running it per frame makes a deck without notes pay for a full
+// content walk on every page. This predicate is the step-independent question,
+// asked once per slide so the per-frame walks can be skipped entirely. It
+// short-circuits and allocates nothing.
+//
+// Structure matters more than order here: a Mosaic temporal wrapper is itself a
+// `metadata` element, so foreign metadata can only be rejected after the
+// temporal check, exactly as in `notes-at` below.
+#let has-note(value) = {
+  if is-note(value) { return true }
+  if is-command-on(value) { return has-note(value.body) }
+  if type(value) == array { return value.any(has-note) }
+  if type(value) == dictionary { return value.values().any(has-note) }
+  if type(value) != content { return false }
+  if value.func() == metadata {
+    return is-temporal(value) and has-note(value.value)
+  }
+  value.fields().values().any(has-note)
+}
+
+// Every note the grid's fixed cell content holds, on any step. Fixed content
+// lives on the grid node rather than in the id -> content map, so a slide's
+// note check has to look in both places.
+#let fixed-grid-has-note(node) = fold-grid(
+  node,
+  cell => cell.content != none and has-note(cell.content),
+  (node, child) => child,
+  (node, children) => children.any(value => value),
+)
+
 #let notes-at(value, step) = {
   let visit(value) = {
     if is-note(value) {

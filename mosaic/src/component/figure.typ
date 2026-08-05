@@ -9,7 +9,7 @@
 /// Creates a centered, captioned figure sized to its cell.
 ///
 /// This is the in-cell counterpart to the
-/// #link("../slides/layouts.html#image")[image layout]. Use the layout when one
+/// #link("../slides/image.html")[image layout]. Use the layout when one
 /// picture is the whole point of a slide; use this when a figure shares the
 /// slide with other content, most often as one of two side by side.
 ///

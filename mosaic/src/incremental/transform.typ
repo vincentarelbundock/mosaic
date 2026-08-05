@@ -131,6 +131,40 @@
   result
 }
 
+// Whether any temporal wrapper in this value holds a heading, which is the one
+// thing `transform` cannot reconstruct: a heading that appears and disappears
+// between frames would take its outline entry with it.
+//
+// The `contains-heading` guard prunes: a subtree with no heading anywhere can
+// hold no offending temporal either, so a deck whose bodies carry no headings
+// (the common case) costs one walk and stops. The check is structural, so the
+// slide runtime asks it once rather than on every frame.
+#let has-temporal-heading(value) = {
+  if not contains-heading(value) {
+    return false
+  }
+  if type(value) == array {
+    return value.any(has-temporal-heading)
+  }
+  if type(value) == dictionary {
+    return value.values().any(has-temporal-heading)
+  }
+  if type(value) != content {
+    return false
+  }
+  if is-temporal(value) {
+    return true
+  }
+  value.fields().values().any(has-temporal-heading)
+}
+
+#let require-stable-temporal-headings(value) = if has-temporal-heading(value) {
+  fail(
+    "headings cannot be wrapped in on, reveal, replace, or drawing; "
+      + "keep semantic headings structurally stable across frames",
+  )
+}
+
 #let transform(
   body,
   step,
@@ -177,12 +211,6 @@
       }
     }
     if is-temporal(body) {
-      if contains-heading(body) {
-        fail(
-          "headings cannot be wrapped in on, reveal, replace, or drawing; "
-            + "keep semantic headings structurally stable across frames",
-        )
-      }
       let value = body.value
       if value.kind == "temporal-on" {
         let state = status(
