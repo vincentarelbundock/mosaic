@@ -7,3 +7,4 @@
 #import "divider.typ": divider
 #import "progress.typ": progress
 #import "image.typ": image
+#import "figure.typ": figure

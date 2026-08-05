@@ -53,8 +53,10 @@ API_MODULE_MAP := \
   note-command:note/command \
   pause-command:incremental/pause \
   surface:surface \
+  fit:fit \
   grid-constructors:grid/constructors \
   image:component/image \
+  component-figure:component/figure \
   incremental-command:incremental/command \
   theme-extension:themes/extension \
   layout-content:layout/content \

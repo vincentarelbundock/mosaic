@@ -9,6 +9,7 @@
 #import "../note/analysis.typ": notes-at, fixed-grid-notes-at
 #import "../note/command.typ": is-note
 #import "../grid/render.typ": max-node, render
+#import "../fit.typ": fit-ratio
 #import "../settings.typ": settings-state
 #import "../layout/resolver.typ": resolve-layout
 #import "../layout/core.typ": is-layout
@@ -138,8 +139,11 @@
     fill: fill,
     stroke: style.thumbnail-stroke,
   )
-  let factor = region.width / source-size.width * 100%
-  let thumbnail-height = source-size.height * (region.width / source-size.width)
+  // The thumbnail is a whole slide scaled into the notes column, which is the
+  // same width problem the fitters solve, so the factor comes from their shared
+  // geometry rather than from a second copy of the arithmetic here.
+  let factor = fit-ratio(source-size, width: region.width)
+  let thumbnail-height = source-size.height * factor
   let heading = note-heading(slide, step, steps, style)
   let heading-height = measure(heading, width: region.width).height
   // The vertical budget, stated as the sum of what the page actually places

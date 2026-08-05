@@ -14,7 +14,8 @@
   assert(("author", "content", "section", "title").all(name => name in theme.layouts))
   assert(("on", "reduce", "replace", "reveal").all(name => name in theme.steps))
   assert((
-    "callout", "divider", "frame", "image", "label", "progress", "quote",
+    "callout", "divider", "figure", "frame", "image", "label", "progress",
+    "quote",
   ).all(name => name in theme.components))
   assert(type(theme.layouts.content()) == dictionary)
   assert(type(theme.layouts.title(title: [No-author title])) == dictionary)

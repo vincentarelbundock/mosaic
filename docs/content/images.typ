@@ -21,31 +21,65 @@ Typst's standard `image()` works perfectly well in Mosaic and remains useful whe
 )
 ```
 
-When one picture is the whole point of a slide, use the #link("../slides/layouts.html#image")[image layout] instead of placing it in a cell yourself. Place images in cells when they share the slide with other content. The most common case is two figures side by side on a two-column content slide, each with `fit: "contain"` so neither is cropped:
+When one picture is the whole point of a slide, use the #link("../slides/layouts.html#image")[image layout] instead of placing it in a cell yourself.
+
+= Figures in a cell
+
+Place images in cells when they share the slide with other content, and reach for `m.components.figure()` there. Its defaults are the ones a chart or a photograph in a cell wants rather than the ones a full-bleed background wants: `fit` is `"contain"`, so nothing is cropped, and the picture is centred and sized to its cell. The most common case is two figures side by side on a two-column content slide:
 
 ```typ
 #m.slide(layout: "content", columns: 2)[== Before and after][
-  #m.components.image(path("fig/equilibrium_0.png"), fit: "contain")
+  #m.components.figure(path("fig/equilibrium_0.png"))
 ][
-  #m.components.image(path("fig/equilibrium_1.png"), fit: "contain")
+  #m.components.figure(path("fig/equilibrium_1.png"))
 ]
 ```
 
-When each picture needs its own caption, wrap it in a native `figure` and give both images the same explicit height so the captions line up:
+A `caption:` composes a native Typst `figure` around the picture, and the picture gives up exactly the height the caption and its gap consume. Nothing has to be measured by hand: each picture is as large as its own aspect ratio allows, and the two captions share one baseline at the foot of the cells whether the pictures are portrait, landscape, or one of each.
 
 ```typ
 #m.slide(layout: "content", columns: 2)[== Two failure modes][
-  #figure(
-    m.components.image(path("fig/first.jpg"), fit: "contain", height: 75%),
+  #m.components.figure(
+    path("fig/first.jpg"),
     caption: [Ineffective donations],
   )
 ][
-  #figure(
-    m.components.image(path("fig/second.jpg"), fit: "contain", height: 75%),
+  #m.components.figure(
+    path("fig/second.jpg"),
     caption: [Ineffective cooperation],
   )
 ]
 ```
+
+The default `height: auto` reads the size of the cell, not the space left over inside it. A figure that follows prose in the same cell therefore needs an explicit height, and captions directly beneath itself rather than at the foot of the cell:
+
+```typ
+#m.slide(layout: "content", columns: 2)[== Two revenues][
+  - Payroll taxes carry the system
+  - Consumption taxes are regressive
+  #m.components.figure(path("fig/photo.jpg"), height: 50%)
+][
+  #m.components.figure(path("fig/chart.png"), caption: [Shares since 1980])
+]
+```
+
+`m.components.image()` stays the right call for a background plane, or for a cell that should be filled edge to edge and where cropping is the point.
+
+== Tables, diagrams, and other bodies
+
+A figure's body does not have to be a picture. Pass content instead of a source and the same caption sizing applies, which is the way to caption a table or a diagram drawn in code:
+
+```typ
+#m.components.figure(
+  table(columns: 3, ..cells),
+  caption: [Estimates by specification],
+  kind: table,
+)
+```
+
+Such a body cannot be re-fitted the way a picture can, so it keeps its own size and is scaled as a whole only when it is too large for the cell, exactly as #link("../slides/cells.html")[`m.fit`] does. A body that already fits is left untouched, and it is never magnified past its natural size. The caption keeps the size the deck gave it either way: only the body is scaled.
+
+Two details follow from that. A content body that does not fill its cell sits at the top of it and captions directly beneath itself, rather than stretching and captioning at the foot of the cell as a picture does. And scaling costs a table the `kind` a native `figure` would have detected on its own, so state `kind: table` when you want table numbering and the "Table" supplement. Further named arguments reach the native `figure` here, where they reach the native `image` for a picture source.
 
 = Scrims
 
@@ -124,13 +158,13 @@ Cells have an `inset` by default. To make an image cover the full cell, includin
   title: "Full-bleed image cell",
 )
 
-= Figures
+= Native figures
 
-Native `figure` semantics, captions, numbering, and references continue to work inside cells.
+`m.components.figure()` composes a native Typst `figure`, so captions take the deck's own `show figure.caption` styling, and numbering and references work as usual. Switch numbering off with an ordinary `set figure(numbering: none)`. Writing the `figure` out yourself works too, and is the way in when the body is a table, a diagram, or anything else that is not a picture.
 
 #embedded-example(
   calepin.elements.gallery,
   "blocks/figure",
   frames: 1,
-  title: "Semantic figure in a cell",
+  title: "A captioned figure sized to its cell",
 )

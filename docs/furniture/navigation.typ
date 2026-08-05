@@ -10,7 +10,21 @@ Because Mosaic keeps Typst headings native, the same headings that create slides
 
 = Table of contents
 
-Use Typst's `outline` to create a table of contents. Set `depth: 2` to include sections and slides, or a smaller depth for a shorter overview. Every entry links to its heading.
+Mosaic keeps headings native, so a table of contents is Typst's own #link("https://typst.app/docs/reference/model/outline/")[`outline`]. Three of its defaults behave differently on a slide than in a document.
+
+== Depth
+
+`depth: 1` lists sections. `depth: 2` adds every slide, which on most decks is the whole slide list.
+
+== Entries
+
+A default entry ends in dotted leaders and the page its heading falls on. On slides that page is the physical frame, so on a deck using `#m.pause` it differs from the logical slide number in the footer.
+
+A `show outline.entry` rule replaces the entry. `it.body()` is the title, `it.element.location()` is the link target, and `it.prefix()` is the heading number when headings are numbered.
+
+== The contents slide itself
+
+Its own heading is outlined like any other, so it appears in its own outline unless it carries `#heading(outlined: false)` or a narrower `target:` excludes it.
 
 #embedded-example(
   calepin.elements.gallery,
@@ -18,6 +32,39 @@ Use Typst's `outline` to create a table of contents. Set `depth: 2` to include s
   frames: 5,
   title: "A linked table of contents",
 )
+
+== Columns
+
+`#columns(2, outline(..))` does not spread entries across a slide. Typst fills the first column to the full height of its container before starting the second, and a slide cell is full-slide height, so a list that fits vertically stays in column one. A surrounding `block` does not change that.
+
+`query(heading.where(level: 1, outlined: true))` returns the section headings in document order, each with a `body` to print and a `location()` to link to. Slice them and place the chunks in a native `grid`.
+
+#embedded-example(
+  calepin.elements.gallery,
+  "furniture/outline-columns",
+  frames: 7,
+  title: "Contents in two columns",
+)
+
+== Lists longer than the slide
+
+An overflowing cell is drawn past the bottom edge rather than clipped. #link("../api/slides.html")[`m.fit`] scales a block into the space available:
+
+```typ
+#m.fit(outline(title: none, depth: 1))
+```
+
+Fitting scales the type with the layout, so the contents slide no longer matches the deck's type scale.
+
+== The current section
+
+The #link("../slides/layouts.html#section")[section layout]'s `toc` variant lists every section with the current one marked, reading the deck's section records rather than an outline:
+
+```typ
+#m.slide(layout: "section", variant: "toc")[Results]
+```
+
+It takes no `outline` and no query, and fits itself to the slide.
 
 = Breadcrumbs
 

@@ -2,6 +2,7 @@
 #import "slide/command.typ": slide
 #import "note/command.typ": note
 #import "incremental/pause.typ": pause
+#import "fit.typ": fit
 #import "surface.typ": surface
 #import "grid/api.typ" as grid
 #import "layout/api.typ" as layouts

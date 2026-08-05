@@ -14,17 +14,20 @@ IMPORT = re.compile(
 )
 LET = re.compile(r"(?m)^#let\s+([A-Za-z_][A-Za-z0-9_-]*)\b")
 
-NEUTRAL_API = {"setup", "definition", "slide", "note", "pause", "surface", "grid", "layouts", "steps", "components", "theme", "themes"}
-SHARED_API = {"slide", "note", "pause", "surface", "grid", "layouts", "steps", "components", "theme"}
-THEMED_API = {"setup", "definition", "slide", "note", "pause", "surface", "grid", "layouts", "steps", "components", "theme"}
+NEUTRAL_API = {"setup", "definition", "slide", "note", "pause", "fit", "surface", "grid", "layouts", "steps", "components", "theme", "themes"}
+SHARED_API = {"slide", "note", "pause", "fit", "surface", "grid", "layouts", "steps", "components", "theme"}
+THEMED_API = {"setup", "definition", "slide", "note", "pause", "fit", "surface", "grid", "layouts", "steps", "components", "theme"}
 THEMED_LAYOUTS = {"content", "title", "section", "image", "author"}
-THEMED_COMPONENTS = {"frame", "callout", "label", "quote", "divider", "progress", "image"}
+THEMED_COMPONENTS = {"frame", "callout", "label", "quote", "divider", "progress", "image", "figure"}
 
 EXPECTED = {
     "mosaic/lib.typ": NEUTRAL_API,
     "mosaic/src/shared-api.typ": SHARED_API,
     "mosaic/src/grid/api.typ": {"cell", "h", "v", "t"},
     "mosaic/src/surface.typ": {"surface"},
+    # fit.typ is not listed: it carries the vendored fitting internals beside
+    # the one public entry point, and only `fit` is re-exported from the
+    # facades, which the entries above already pin.
     "mosaic/src/layout/api.typ": {"content", "title", "section", "image", "author"},
     "mosaic/src/incremental/api.typ": {"on", "reveal", "replace", "reduce"},
     "mosaic/src/component/api.typ": THEMED_COMPONENTS,

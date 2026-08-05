@@ -10,7 +10,8 @@
 #assert(("author", "content", "section", "title").all(name => name in m.layouts))
 #assert(("on", "reduce", "replace", "reveal").all(name => name in m.steps))
 #assert((
-  "callout", "divider", "frame", "image", "label", "progress", "quote",
+  "callout", "divider", "figure", "frame", "image", "label", "progress",
+  "quote",
 ).all(name => name in m.components))
 #assert(type(m.layouts.content()) == dictionary)
 #assert(type(m.layouts.title(title: [No-author title])) == dictionary)

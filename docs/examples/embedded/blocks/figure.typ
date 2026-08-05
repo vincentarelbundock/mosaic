@@ -5,18 +5,13 @@
 #set text(size: 22pt, fill: rgb("#172033"))
 
 #m.slide(layout: m.grid.h("a", "b"))[
-  #figure(
-    m.components.image(
-      path("/docs/assets/images/bonsai.webp"),
-      width: 100%,
-      height: 10.2em,
-      fit: "contain",
-      alt: "A pine bonsai",
-    ),
+  #m.components.figure(
+    path("/docs/assets/images/bonsai.webp"),
     caption: [Figure in a cell.],
+    alt: "A pine bonsai",
   )
 ][
-  == Figures remain native
+  == Figures fit their cell
 
-  Use `figure(m.components.image(...), caption: ...)` for captions, numbering, and references.
+  `m.components.figure(..)` contains the picture, centres it, and leaves the caption exactly the height it needs.
 ]

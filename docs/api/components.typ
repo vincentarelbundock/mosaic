@@ -10,5 +10,6 @@
     "/api/modules/component-divider.typ",
     "/api/modules/component-progress.typ",
     "/api/modules/image.typ",
+    "/api/modules/component-figure.typ",
   ),
 )

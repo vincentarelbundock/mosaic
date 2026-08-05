@@ -211,18 +211,20 @@ Mosaic records a warning when a cell's content is taller than the cell. Query th
 Each record identifies the slide, frame, cell, and measured height. Set `setup(overflow: "error")` to fail the compile instead, naming every overflowing cell with the same slide and frame numbers the query reports, or `setup(overflow: "off")` to turn the check off; see the
 #link("../api/setup.html")[Setup API].
 
-A warning means the slide holds more than it can show. The remedy is editorial: cut a bullet, split the slide in two, or move to a layout with more room. Mosaic deliberately offers no shrink-to-fit switch for body content, because a deck whose type size is decided slide by slide loses the scale that holds it together.
+A warning means the slide holds more than it can show. The remedy is editorial: cut a bullet, split the slide in two, or move to a layout with more room. Mosaic deliberately offers no automatic shrink-to-fit for body content, because a deck whose type size is decided slide by slide loses the scale that holds it together.
 
-When a single indivisible block is the problem, a wide table or a chart, scale that one block with native Typst and leave the deck's typography alone:
+When a single indivisible block is the problem, a wide table or a chart, scale that one block with `m.fit` and leave the deck's typography alone:
 
 ```typ
 #m.slide[
   == Regression results
-  #align(center + horizon, scale(70%, reflow: true, my-table))
+  #m.fit(my-table)
 ]
 ```
 
-`reflow: true` makes the surrounding layout account for the scaled size, so the block still aligns and no longer overflows.
+`m.fit` measures the block against the space it was given and scales it geometrically, so the surrounding layout accounts for the new size. It shrinks only unless `grow: true` is passed, and it takes no hand-picked factor, so the block stays within the cell when the table gains a row. See the #link("../api/slides.html")[Slides API].
+
+A fitted block cannot overflow, so it no longer appears in the overflow records.
 
 = How does Mosaic compare to Touying?
 

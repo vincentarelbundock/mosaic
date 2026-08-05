@@ -5,6 +5,7 @@
 // image plumbing, and the directional geometry is the same private machinery
 // title and section layouts already use.
 #import "../shared.typ": fail
+#import "../caption-fit.typ": captioned-picture
 #import "../grid/constructors.typ": styled-cell, v, t
 #import "core.typ": make-layout, validate-visual-spec
 #import "support.typ": visual-content, header-inset
@@ -198,32 +199,7 @@
     let content = if fields.caption == none {
       picture
     } else {
-      // A native Typst figure does the composition: caption beneath the
-      // picture, centred, with the deck's own `show figure.caption` styling and
-      // numbering. All this adds is the sizing, which the figure cannot do for
-      // itself: the picture has to give up exactly the height the caption and
-      // its gap consume, or the figure is taller than the cell it sits in.
-      let framed(height) = figure(resize(height, 100%), caption: fields.caption)
-      layout(region => {
-        let natural = measure(
-          resize(auto, region.width),
-          width: region.width,
-        ).height
-        // Whatever the figure adds around the picture: caption, gap, and any
-        // supplement the deck's numbering puts there.
-        let chrome = measure(framed(auto), width: region.width).height - natural
-        // Measurement passes hand out an unbounded region. Reporting a natural
-        // height there would make the overflow observer flag every captioned
-        // figure, so fall back to the relative height the cell would otherwise
-        // carry and let the bounded pass do the real fitting.
-        let bounded = region.height < 1e5pt
-        let picture-height = if bounded {
-          calc.min(natural, calc.max(region.height - chrome, 0pt))
-        } else {
-          100%
-        }
-        align(center + horizon, framed(picture-height))
-      })
+      captioned-picture(resize, fields.caption)
     }
     let children = (
       t(auto, text-cell("header", settings, content-sized: true)),

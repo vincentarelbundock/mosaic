@@ -46,4 +46,27 @@ When a grid owns fixed content such as an image or logo, put it directly on the 
 #m.grid.cell("logo", content: image("logo.svg"))
 ```
 
+= Fitting a block to its cell
+
+A cell does not resize its content. A body larger than its cell is drawn past the edge and #link("../help/faq.html#how-do-i-inspect-overflowing-cells")[recorded as an overflow]. `m.fit` scales one block into the space its cell gives it:
+
+```typ
+#m.fit(generated-list)
+```
+
+It measures the block, scales it geometrically, and reflows the surrounding layout around the new size. Shrinking is the default. `grow: true` also scales content up, which is how a single number or word fills a cell.
+
+The block is offered the cell's width first, so text and lists wrap and are then scaled only if they are still too tall. A table or diagram given a narrower width rearranges itself instead of shrinking, so `wrap: false` measures and scales it as written.
+
+`width:` and `height:` fit to part of the region instead of all of it, and take a length, ratio, or fraction. A fitted block cannot overflow, so it no longer appears in the overflow records.
+
+Measuring a block means holding it inside a closure, which the slide runtime cannot look into. `m.pause`, `m.steps`, and `m.note` are found by walking the slide's content, so inside a fitted block they would be invisible: the reveals would collapse into one frame and the notes would never reach the speaker output. `m.fit` reports that as an error instead. Keep them outside the fitted block, or fit each revealed part on its own.
+
+#embedded-example(
+  calepin.elements.gallery,
+  "content/fit-block",
+  frames: 2,
+  title: "A table scaled to its cell, and display type grown to fill one",
+)
+
 Cells hold ordinary Typst content. The #link("../content/images.html")[Content] section collects what most often goes inside them: images, the reusable `m.components` library, and math.

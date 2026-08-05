@@ -6,7 +6,9 @@
 #import "../incremental/analysis.typ": max-step
 #import "../incremental/heading.typ": contains-heading, apply-state
 #import "../incremental/transform.typ": transform
-#import "../fit.typ": fit-to-width, fit-to-height
+// Aliased: `fit` is the local variable name for a cell's fit mode throughout
+// this module, and the helper must not shadow it.
+#import "../fit.typ": fit as fit-helper
 #import "../settings.typ": settings-state, default-spacing
 
 // Records one queryable warning per overflowing cell.
@@ -154,10 +156,13 @@
   // keep their own typography.
   let content = if map == none { content } else { map(content) }
   let content = before + content + after
+  // Cell fit modes are the public `fit` helper under two fixed settings, so a
+  // layout that shrinks a cell and a deck that shrinks a block go through the
+  // same code and cannot drift apart.
   let content = if fit == "width" {
-    fit-to-width(width: 1fr, grow: false, content)
+    fit-helper(content, width: 1fr, grow: false)
   } else if fit == "contain" {
-    fit-to-height(height: 1fr, grow: false, shrink: true, content)
+    fit-helper(content, grow: false, shrink: true)
   } else {
     content
   }

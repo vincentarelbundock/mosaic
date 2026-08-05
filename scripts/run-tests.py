@@ -47,6 +47,15 @@ def require_contains(path: Path, needle: str, *, count: int | None = None, absen
         raise TestFailure(f"{path} does not contain {needle!r}")
 
 
+def require_same_line(path: Path, first: str, second: str) -> None:
+    """Require both needles on one line, which in a -layout extraction means
+    they share a baseline on the page."""
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        if first in line and second in line:
+            return
+    raise TestFailure(f"{path} has no line holding both {first!r} and {second!r}")
+
+
 def typst_compile(typst: str, source: str, output: Path, *extra: str) -> None:
     command([typst, "compile", "--root", ".", *extra, f"tests/{source}", str(output)])
 
@@ -153,6 +162,15 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(image, "#ffffff33")
     # A scrim takes any paint, so a gradient reaches the page unflattened.
     require_contains(image, "linearGradient")
+
+    # The figure component's `height: auto` gives adjacent captions one baseline
+    # whatever the pictures' aspect ratios, which is the whole reason a
+    # hand-found matching height had to be tuned per slide.
+    figure_pair = pdf_page_text("figure", 1)
+    require_same_line(figure_pair, "PORTRAIT CAPTION", "LANDSCAPE CAPTION")
+    figure_prose = pdf_page_text("figure", 2)
+    for expected in ("INLINE CAPTION", "FULL CELL CAPTION"):
+        require_contains(figure_prose, expected)
 
     typst_compile(
         typst,

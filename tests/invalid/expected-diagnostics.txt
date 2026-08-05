@@ -19,6 +19,12 @@ cell-surface-ownership|cell accepts only a cell id, optional fixed content, and 
 components-progress-count|progress count must be "slides" or "sections"
 duplicate-cell-id|duplicate cell id "same" in grid at root
 empty-split|h must contain at least one child
+figure-args-uncaptioned|figure arguments apply to the native figure, so they need a caption
+figure-fit-content|figure fit applies only to a picture source
+figure-positional-content|figure takes one body; further arguments must be named
+figure-scrim-content|figure scrim applies only to a picture source
+fit-incremental|fit cannot hold incremental steps or speaker notes
+fit-note|fit cannot hold incremental steps or speaker notes
 frozen-counters-type|frozen-counters must contain only counter values
 frozen-states-type|frozen-states must contain only state values
 handout-type|setup handout must be a boolean

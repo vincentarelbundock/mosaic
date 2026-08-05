@@ -120,7 +120,7 @@ Variants:
 
 `m.layouts.title()` inherits `title`, `subtitle`, `authors`, and `date` from setup, so `m.slide(layout: "title")` needs no body. An explicit layout argument wins; pass `none` (or `()` for `authors`) to suppress an inherited field on one slide. For image variants, `scrim:` on the image spec quiets the photograph, as in `image: (path: "cover.webp", scrim: black.transparentize(55%))`; pair `image-background` with a scoped text-color rule on the `<mosaic-cell-title>` or `<mosaic-cell-section>` label for contrast. One such rule recolors the whole stack: the subtitle and metadata are muted only while the cell carries the deck's ordinary text color, and follow any override, so light-on-dark titles need no hand-built grid. A size rule on the same label works the same way, scaling the stack as a unit (`show label("mosaic-cell-title"): set text(size: 0.45em)` for quiet type in a corner), because the display line carries its own `<mosaic-title-display>` label where the theme states the display size. There is no `scale:` argument, and a hand-built grid is never the way to resize a title.
 
-Mosaic has no shrink-to-fit switch for body content, by design: a deck whose type size is decided slide by slide loses the typographic scale that holds it together. An overflow warning means cut a bullet, split the slide, or pick a layout with more room. When one indivisible block is oversized (a wide table, a chart), scale that block alone with native `scale(70%, reflow: true, ..)`.
+Mosaic has no automatic shrink-to-fit for body content, by design: a deck whose type size is decided slide by slide loses the typographic scale that holds it together. An overflow warning means cut a bullet, split the slide, or pick a layout with more room. When one indivisible block is oversized (a wide table, a chart, a generated list), scale that block alone with `m.fit(my-table)`, which measures it against its region and scales geometrically. `m.fit(grow: true)[42%]` goes the other way, filling a cell with display type. A fitted block never overflows and so stops appearing in the overflow records, which is why it is for indivisible blocks rather than crowded slides. It also cannot contain `m.pause`, `m.steps`, or `m.note`: measuring hides the body from the runtime's walk, so those would be lost. `m.fit` raises an error rather than dropping them; keep them outside the fitted block.
 
 A direct `m.layouts.content/title/section(...)` value retains its semantic layout name. A raw custom grid uses ordinary content-slide semantics.
 
@@ -166,7 +166,7 @@ Most decks are built from a handful of recurring shapes. Reach for the named for
 ]
 ```
 
-Use it for side-by-side figures too, wrapping each in `m.components.image(..., fit: "contain")` so neither is cropped. Add `tracks: (2fr, 1fr)` for an uneven split.
+Use it for side-by-side figures too, wrapping each in `m.components.figure(..)`, which contains the picture and sizes it to its cell. Add `tracks: (2fr, 1fr)` for an uneven split.
 
 **Figure slide.** The image layout's default variant: a header above a contained picture, with an optional caption beneath.
 
@@ -203,12 +203,12 @@ Pass `[]` as the second block when the picture needs a title but no body. `track
 
 `full` inherits the deck's ordinary text color, so it needs both halves of the contrast pair: a `scrim:` on the image spec to quiet the photograph, and a text fill override in the body. Omit the body entirely (`#m.slide(layout: "image", variant: "full", image: ...)`) for a bare picture slide with no text at all. Prefer `full` over `image-background` on a title or section layout when the composition is free-form rather than a titled preset.
 
-**One big number or phrase.** Scope a centering rule around a single content slide:
+**One big number or phrase.** Scope a centering rule around a single content slide, and let `m.fit(grow: true)` size the type to the cell instead of picking an em value that breaks when the number gains a digit:
 
 ```typ
 #[
   #show label("mosaic-cell-body"): set align(center + horizon)
-  #m.slide(content: (body: text(size: 6em, weight: "bold")[15 000 000]))
+  #m.slide(content: (body: m.fit(grow: true, strong[15 000 000])))
 ]
 ```
 
@@ -352,6 +352,8 @@ The cell ID connects all three layers: `m.grid.cell("body")` defines the cell, `
 Useful content values:
 
 - `m.components.image(path("photo.webp"), alt: "...")`: like native `image()` but defaults `width`/`height` to `100%` and `fit` to `"cover"`. `scrim:` paints a layer over the picture and takes any Typst paint, so `scrim: black.transparentize(55%)` darkens the whole frame and a `gradient.linear(..)` darkens only the band the text occupies. The same key is accepted in the image dictionaries the `title`, `section`, and `image` layouts take. Use Typst's `path()` so the location anchors to the calling document across the package boundary. For a full-bleed image, set the cell's `inset: 0pt`.
+- `m.components.figure(path("chart.png"), caption: [..])`: the in-cell figure. Defaults `fit` to `"contain"` so nothing is cropped, centres the picture, and with the default `height: auto` hands it the cell's height less whatever the caption consumes. Two of them in adjacent cells caption on one baseline whatever their aspect ratios, so no matching height has to be found by hand. `auto` reads the cell, not the space left inside it, so a figure that follows prose in the same cell needs an explicit `height:` and then captions directly beneath itself. Use `m.components.image` instead for a background plane or a deliberately cropped cell.
+  The body can be content rather than a source: `m.components.figure(my-table, caption: [..], kind: table)` captions a table or a code-drawn diagram, keeps its natural size, and scales it as a whole only when it is too large for the cell (never magnifies it). State `kind: table` because scaling costs the automatic detection; further named arguments go to the native `figure` for a content body and to the native `image` for a picture source. `fit:` and `scrim:` are picture-only and are rejected for content.
 - `m.components.frame()` (clipped semantic frame), `callout()` (side stripe with optional title), `label()` (compact inline label), `quote()` (attribution treatment), `divider()` (horizontal rule), `progress()` (position indicator). All return ordinary content for any cell or plane. Component `role:` values (`neutral`, `accent`) resolve from the theme palette.
 - Native math, `figure` with captions and references, MiTeX for LaTeX math, ctheorems for theorem environments: all work unchanged inside cells.
 
@@ -474,7 +476,7 @@ Both companion outputs write one page per emitted frame and fail with an explici
   typst compile --root . slides.typ /tmp/p-{n}.png --pages 20,23 --ppi 55
   ```
 
-  Overflow is nearly always a *body* cell holding more prose than its band. On a stacked image variant (`top`/`bottom`) the usual fix is a smaller `tracks:` so the text band grows; when the body is a full bullet list plus a picture, abandon the image layout and use an ordinary content slide with `m.components.image(.., fit: "contain", height: N%)`, which is predictable.
+  Overflow is nearly always a *body* cell holding more prose than its band. On a stacked image variant (`top`/`bottom`) the usual fix is a smaller `tracks:` so the text band grows; when the body is a full bullet list plus a picture, abandon the image layout and use an ordinary content slide with `m.components.figure(.., height: N%)`, which is predictable.
 
 - **Convert a whole deck set**: when porting many sibling decks, keep an identical `m.setup` block in each so they stay a series, and drive the build from one pattern rule. Watch for output collisions before running that rule: `quarto render` + `pagedown::chrome_print` print `<deck>.pdf` from the same basename a Typst deck compiles to, so a first `make` can overwrite an existing set of PDFs. Whether that is wanted (the Typst decks are replacing them) or not (both sets must survive, so Typst output belongs in its own directory) is the author's call — ask rather than assume, and check whether the directory is under version control before finding out the hard way.
 
