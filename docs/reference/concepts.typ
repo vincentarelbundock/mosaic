@@ -38,6 +38,6 @@ The grid is sandwiched between two full-slide planes. The *background* plane is 
 #html.elem("div", attrs: (class: "mosaic-diagram"), html.frame(slide-planes))
 #v(1em)\
 
-Where a grid is the structure you build, a *layout* is one Mosaic has already built for a familiar slide kind. Mosaic ships layouts for titles, sections, ordinary content, and images; each offers several named *variants* of its arrangement.
+Where a grid is the structure you build, a *layout* is one Mosaic has already built for a familiar slide kind. Mosaic ships layouts for #link("../slides/content.html")[content], #link("../slides/title.html")[titles], #link("../slides/section.html")[sections], and #link("../slides/image.html")[images]; each offers several named *variants* of its arrangement. #link("../slides/custom.html")[Custom slides] build a grid instead.
 
 Every cell, the background, and the foreground is a native Typst layer, and each one carries a *label*: `<mosaic-cell-ID>`, `<mosaic-background>`, and `<mosaic-foreground>`. Ordinary Typst `show` and `set` rules can therefore style every part of a slide. See #link("../appearance/styling.html")[Styling cells] for a detailed tutorial.

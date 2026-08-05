@@ -447,6 +447,17 @@ body:has(.mosaic-hero) .calepin-website-toc {
   display: none !important;
 }
 
+.mosaic-side-by-side {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.mosaic-side-by-side > * {
+  min-width: 0;
+}
+
 @media (max-width: 800px) {
   .mosaic-hero {
     grid-template-columns: 1fr;
@@ -455,6 +466,10 @@ body:has(.mosaic-hero) .calepin-website-toc {
 
   .mosaic-feature-cards {
     grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+
+  .mosaic-side-by-side {
+    grid-template-columns: 1fr;
   }
 }
 

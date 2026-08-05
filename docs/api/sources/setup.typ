@@ -145,13 +145,19 @@
   spacing: (:),
   /// What to do when a cell's content is taller than the cell.
   ///
-  /// - `"warn"`: emit queryable `<mosaic-overflow-warning>` metadata and keep
-  ///   compiling. The default.
-  /// - `"error"`: emit the same metadata and fail the compile, so a build stops
-  ///   rather than shipping a clipped slide.
-  /// - `"off"`: observe nothing.
+  /// Observation measures every cell on every frame, which roughly doubles the
+  /// layout work a deck does, so it is off by default and switched on for a
+  /// deliberate checking pass rather than left on while you write.
+  ///
+  /// - `"off"`: observe nothing. The default.
+  /// - `"record"`: emit queryable `<mosaic-overflow-warning>` metadata and keep
+  ///   compiling. Typst gives a package no warning channel, so nothing is
+  ///   printed; this mode is for tooling that reads the records itself.
+  /// - `"error"`: emit the same metadata and fail the compile, naming every
+  ///   offending cell. Run this before presenting, so a build stops rather than
+  ///   shipping a clipped slide.
   /// -> str
-  overflow: "warn",
+  overflow: "off",
   /// Partial named-layout overrides. Omitted names keep the active theme's
   /// layout.
   ///

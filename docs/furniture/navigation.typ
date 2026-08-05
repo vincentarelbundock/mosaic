@@ -58,7 +58,7 @@ Fitting scales the type with the layout, so the contents slide no longer matches
 
 == The current section
 
-The #link("../slides/layouts.html#section")[section layout]'s `toc` variant lists every section with the current one marked, reading the deck's section records rather than an outline:
+The #link("../slides/section.html#variants")[section layout]'s `toc` variant lists every section with the current one marked, reading the deck's section records rather than an outline:
 
 ```typ
 #m.slide(layout: "section", variant: "toc")[Results]

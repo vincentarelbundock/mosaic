@@ -21,7 +21,7 @@ Typst's standard `image()` works perfectly well in Mosaic and remains useful whe
 )
 ```
 
-When one picture is the whole point of a slide, use the #link("../slides/layouts.html#image")[image layout] instead of placing it in a cell yourself.
+When one picture is the whole point of a slide, use the #link("../slides/image.html")[image layout] instead of placing it in a cell yourself.
 
 = Figures in a cell
 
@@ -77,7 +77,7 @@ A figure's body does not have to be a picture. Pass content instead of a source 
 )
 ```
 
-Such a body cannot be re-fitted the way a picture can, so it keeps its own size and is scaled as a whole only when it is too large for the cell, exactly as #link("../slides/cells.html")[`m.fit`] does. A body that already fits is left untouched, and it is never magnified past its natural size. The caption keeps the size the deck gave it either way: only the body is scaled.
+Such a body cannot be re-fitted the way a picture can, so it keeps its own size and is scaled as a whole only when it is too large for the cell, exactly as #link("../slides/custom.html#fitting-a-block-to-its-cell")[`m.fit`] does. A body that already fits is left untouched, and it is never magnified past its natural size. The caption keeps the size the deck gave it either way: only the body is scaled.
 
 Two details follow from that. A content body that does not fill its cell sits at the top of it and captions directly beneath itself, rather than stretching and captioning at the foot of the cell as a picture does. And scaling costs a table the `kind` a native `figure` would have detected on its own, so state `kind: table` when you want table numbering and the "Table" supplement. Further named arguments reach the native `figure` here, where they reach the native `image` for a picture source.
 
@@ -134,7 +134,7 @@ In the `title`, `section`, and `image` layouts, the image is given as a specific
 ))
 ```
 
-A scrim changes the picture, never the text. Light-on-dark compositions still recolor the text through the cell's label, as the #link("../slides/layouts.html")[Layouts] page shows for the title and section layouts.
+A scrim changes the picture, never the text. Light-on-dark compositions still recolor the text through the cell's label, as the #link("../slides/title.html")[Title slides] and #link("../slides/section.html")[Section slides] pages show.
 
 = Image fitting
 

@@ -58,23 +58,23 @@ title = "Get started"
   [[sidebar.section.item]]
   target = "start/first-deck.typ"
 
-  [[sidebar.section.item]]
-  target = "start/concepts.typ"
-
-  [[sidebar.section.item]]
-  target = "start/semantic-slide.typ"
-
 [[sidebar.section]]
-title = "Slide structure"
+title = "Slides"
 
   [[sidebar.section.item]]
-  target = "slides/grids.typ"
+  target = "slides/content.typ"
 
   [[sidebar.section.item]]
-  target = "slides/layouts.typ"
+  target = "slides/title.typ"
 
   [[sidebar.section.item]]
-  target = "slides/cells.typ"
+  target = "slides/section.typ"
+
+  [[sidebar.section.item]]
+  target = "slides/image.typ"
+
+  [[sidebar.section.item]]
+  target = "slides/custom.typ"
 
 [[sidebar.section]]
 title = "Content"
@@ -128,6 +128,9 @@ title = "Incremental reveals"
   target = "incremental/notes.typ"
 
 [[sidebar.section]]
+
+  [[sidebar.section.item]]
+  target = "reference/concepts.typ"
 
   [[sidebar.section.item]]
   target = "help/faq.typ"
