@@ -1,9 +1,7 @@
 #import "@local/mosaic:0.0.1" as m
 
-#let grid = m.grids.cell("body", inset: 1.5em)
-
 #show: m.setup.with(
-  layouts: (content: grid),
+  layouts: (content: m.layouts.content(variant: "body")),
   content: (
     foreground: [
       #place(bottom + right, dx: -1.5em, dy: -0.6em)[

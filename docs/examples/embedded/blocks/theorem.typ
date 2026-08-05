@@ -2,7 +2,7 @@
 #import "@preview/ctheorems:1.1.3": thmbox, thmproof, thmrules
 
 #show: thmrules.with(qed-symbol: $square$)
-#show: m.setup.with(layouts: (content: m.grids.cell("body", inset: 1.5em)))
+#show: m.setup
 #set text(size: 18pt)
 
 #let theorem = thmbox(
@@ -14,7 +14,7 @@
 
 #let slide = m.slide
 
-#slide[
+#slide("content", variant: "body")[
   == A theorem environment
 
   #theorem("Pythagoras")[

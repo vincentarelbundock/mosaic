@@ -1,6 +1,6 @@
 #import "@local/mosaic:0.0.1" as m
 
-#show: m.setup.with(layouts: (content: m.grids.cell("body", inset: 1.5em)))
+#show: m.setup
 #set text(size: 22pt)
 #let slide = m.slide
 
@@ -15,7 +15,7 @@
   The evidence is *#word.*
 ]
 
-#slide[
+#slide("content", variant: "body")[
   == Replace content
 
   #m.steps.replace(

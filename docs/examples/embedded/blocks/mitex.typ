@@ -1,11 +1,11 @@
 #import "@local/mosaic:0.0.1" as m
 #import "@preview/mitex:0.2.7": mi, mitex
 
-#show: m.setup.with(layouts: (content: m.grids.cell("body", inset: 1.5em)))
+#show: m.setup
 #set text(size: 20pt)
 #let slide = m.slide
 
-#slide[
+#slide("content", variant: "body")[
   == LaTeX equations with MiTeX
 
   Write inline LaTeX such as #mi("\int_{-\infty}^{\infty} e^{-x^2}\,dx = \sqrt{\pi}") in ordinary text.
