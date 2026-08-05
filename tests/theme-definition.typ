@@ -23,6 +23,8 @@
     muted: rgb("#52657f"),
     line: rgb("#aeb9c8"),
     accent: rgb("#a23b72"),
+    warning: rgb("#E69F00"),
+    error: rgb("#D55E00"),
   ),
   defaults: (
     spacing: (inset: 32pt),

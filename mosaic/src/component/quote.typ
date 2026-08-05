@@ -27,7 +27,7 @@
 /// )
 /// ```
 ///
-/// See `card` for the list of roles and the accepted `style` keys.
+/// See `card` for the list of roles and the full list of overrides.
 ///
 /// -> content
 #let quote(
@@ -40,34 +40,57 @@
   /// Where the quotation comes from, appended after the attribution.
   /// -> content | none
   source: none,
-  /// Semantic role name: `neutral`, `accent`, `information`, `success`,
-  /// `warning`, `danger`, or `takeaway`.
+  /// Semantic role name: `neutral`, `accent`, `warning`, or `error`.
   /// -> str
   role: "neutral",
-  /// Partial style overrides passed through to `card`, with the keys `fill`,
-  /// `stroke`, `radius`, `inset`, `align`, and `text`.
+  /// Panel fill. `auto` is a faint wash of the deck's text color.
+  /// -> auto | color | gradient | tiling | none
+  fill: auto,
+  /// Rail color. `auto` uses the role's own color.
+  /// -> auto | color
+  accent: auto,
+  /// Border stroke. `auto` draws none.
+  /// -> auto | stroke | dictionary | none
+  stroke: auto,
+  /// Corner radius. `auto` uses the shared component radius.
+  /// -> auto | length | dictionary
+  radius: auto,
+  /// Padding inside the panel. `auto` uses the shared component inset.
+  /// -> auto | length | relative | dictionary
+  inset: auto,
+  /// Horizontal alignment of the body. `auto` is `left`.
+  /// -> auto | alignment
+  align: auto,
+  /// Native `text` arguments merged over the role's text color.
   /// -> dictionary
-  style: (:),
+  text: (:),
 ) = context {
   // The tint is the deck's own text color laid over the canvas, not a fixed
   // black: on a dark deck a black tint is invisible, while a tint of the text
-  // color reads as the same faint lift in either direction. Pass `fill` in
-  // `style` to replace it outright.
+  // color reads as the same faint lift in either direction. Pass `fill` to
+  // replace it outright.
   let tint = deck-colors().text
   card(
     role: role,
-    style: (
-      fill: tint.transparentize(component-tokens.quote-tint),
-      stroke: none,
-    ) + style,
+    fill: if fill == auto {
+      tint.transparentize(component-tokens.quote-tint)
+    } else {
+      fill
+    },
+    accent: accent,
+    stroke: if stroke == auto { none } else { stroke },
+    radius: radius,
+    inset: inset,
+    align: align,
+    text: text,
   )[
     #body
     #if attribution != none or source != none {
       // `block(above:)` rather than a `linebreak()` followed by block-level
       // content: that stacked an empty line on top of the paragraph break before
       // the block, leaving the attribution floating far below the quotation.
-      block(above: component-tokens.quote-attribution-gap, width: 100%, align(right)[
-        #text(size: component-tokens.quote-attribution-size)[
+      block(above: component-tokens.quote-attribution-gap, width: 100%, std.align(right)[
+        #std.text(size: component-tokens.quote-attribution-size)[
           #if attribution != none { attribution }
           #if attribution != none and source != none { [, ] }
           #if source != none { source }

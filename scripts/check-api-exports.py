@@ -36,9 +36,8 @@ EXPECTED = {
     "mosaic/src/themes/extension.typ": {
         "setup",
         "light-palette",
-        "light-roles",
     },
-    "mosaic/src/themes/api.typ": {"metropolis", "cream", "minimalist", "light", "dark", "setup", "light-palette", "light-roles"},
+    "mosaic/src/themes/api.typ": {"metropolis", "cream", "minimalist", "light", "dark", "setup", "light-palette"},
     "mosaic/src/themes/light.typ": THEMED_API,
     "mosaic/src/themes/light/layouts.typ": THEMED_LAYOUTS,
     "mosaic/src/themes/dark.typ": THEMED_API,

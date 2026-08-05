@@ -12,6 +12,6 @@
     ]],
     attribution: [Ada Example],
     source: [Field notes],
-    style: (inset: 1.3em),
+    inset: 1.3em,
   )
 ]

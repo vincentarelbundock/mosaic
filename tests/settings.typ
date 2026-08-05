@@ -3,11 +3,8 @@
 #let settings = make-settings()
 #assert(settings.keys().sorted() == (
   "background", "cells", "colors", "deck", "foreground", "notes", "overflow",
-  "roles", "spacing",
+  "spacing",
 ))
-// `auto` means the semantic roles follow the deck's own colors. A theme with a
-// component look of its own supplies a complete palette instead.
-#assert(settings.roles == auto)
 // The header default rides in the settings record itself, so every reader of
 // `settings.cells` sees the same optional-header contract.
 #assert(settings.cells == (header: none))
@@ -25,8 +22,10 @@
 #assert(settings.background == none)
 #assert(settings.foreground == none)
 #assert(settings.deck == (title: none, subtitle: none, authors: (), date: none))
+// One flat palette: six deck colors plus the three status colors components
+// paint with. There is no second role record beside it.
 #assert(settings.colors.keys().sorted() == (
-  "accent", "canvas", "line", "muted", "surface", "text",
+  "accent", "canvas", "error", "line", "muted", "surface", "text", "warning",
 ))
 #assert(settings.colors.values().all(value => type(value) == color))
 // The notes record is geometry only: the printed pages' typography lives in

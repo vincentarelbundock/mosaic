@@ -188,7 +188,9 @@ def run_core(typst: str, sources: list[str]) -> None:
     # The swiss title rule takes the text color, so the accent's page-1 carrier
     # is gone; the accent-role progress line on later pages proves the flow.
     require_contains(dark_pages[1], "#58a6ff")
-    for dark_color in ("#13233a", "#161b22", "#30363d", "#d2a8ff", "#ff7b72", "#ffa657"):
+    # "#182434" is the accent role's panel fill: the accent tinted into Dark's
+    # canvas, derived rather than stored in a per-theme table.
+    for dark_color in ("#182434", "#161b22", "#30363d", "#d2a8ff", "#ff7b72", "#ffa657"):
         require_contains(dark_pages[1], dark_color)
 
     typst_compile(
@@ -199,9 +201,11 @@ def run_core(typst: str, sources: list[str]) -> None:
         "svg",
     )
     dark_components = TMP / "mosaic-theme-dark-components-1.svg"
+    # Role accents come straight from Dark's flat palette; the "#18"/"#26"/"#2c"
+    # fills are those accents tinted into its canvas.
     for dark_color in (
-        "#102a22", "#13233a", "#161b22", "#241d33", "#2f2710",
-        "#321b1e", "#56d364", "#58a6ff", "#bc8cff", "#d29922", "#ff7b72",
+        "#161b22", "#182434", "#26231f", "#2c2024",
+        "#58a6ff", "#bc8cff", "#d29922", "#ff7b72",
     ):
         require_contains(dark_components, dark_color)
     for light_color in ("#fafaf9", "#1c1917", "#2563eb", "#78716c", "#e7e5e4"):

@@ -1,7 +1,7 @@
 // Position indicator driven by the deck's logical slide and section counters.
 #import "../shared.typ": fail
 #import "../deck-state.typ": logical-slide, logical-section
-#import "style.typ": role as component-role, component-tokens
+#import "style.typ": role-colors, component-tokens
 
 /// Displays progress through logical slides or semantic sections in the deck.
 ///
@@ -55,8 +55,8 @@
   /// -> str
   count: "slides",
   /// Semantic role supplying the default colors: `accent`, `neutral`,
-  /// `information`, `success`, `warning`, `danger`, or `takeaway`. The role's
-  /// accent paints the completed portion and its fill paints the remainder.
+  /// `warning`, or `error`. The role's own color paints the
+  /// completed portion and its tinted fill paints the remainder.
   /// -> str
   role: "accent",
   /// Length of the `line` variant, or diameter of the `circle` variant. `auto`
@@ -94,7 +94,7 @@
   // A deck's final section count can legitimately be zero before the first
   // section slide exists; the ratio below guards against dividing by it.
   let total = calc.max(automatic-counter.final().first(), 1)
-  let colors = component-role(role, contextual: true)
+  let colors = role-colors(role, contextual: true)
   let fill = if fill == auto { colors.fill } else { fill }
   let accent = if accent == auto { colors.accent } else { accent }
   let width = if width == auto {

@@ -103,6 +103,9 @@ title = "Appearance"
   [[sidebar.section.item]]
   target = "appearance/themes.typ"
 
+  [[sidebar.section.item]]
+  target = "appearance/theme-authoring.typ"
+
 [[sidebar.section]]
 title = "Slide furniture"
 
@@ -131,6 +134,9 @@ title = "Incremental reveals"
 
   [[sidebar.section.item]]
   target = "reference/concepts.typ"
+
+  [[sidebar.section.item]]
+  target = "reference/labels.typ"
 
   [[sidebar.section.item]]
   target = "help/faq.typ"

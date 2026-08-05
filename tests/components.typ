@@ -13,10 +13,10 @@
 #set text(size: 9pt)
 
 #mosaic.slide(layout: mosaic.grids.columns("a", "b"))[
-  #mosaic.components.card(role: "information")[
+  #mosaic.components.card(role: "accent")[
     #mosaic.components.badge(
       radius: 999pt,
-      style: (text: (weight: "bold")),
+      text: (weight: "bold"),
     )[Category]
     #parbreak()
     #text(size: 2em, weight: "bold")[77%]
@@ -33,11 +33,11 @@
 #mosaic.slide(
   layout: mosaic.grids.columns("first", "second", "third"),
 )[
-  #mosaic.components.card(role: "information")[Panel body]
+  #mosaic.components.card(role: "accent")[Panel body]
 ][
   #mosaic.components.callout(
     [Callout body],
-    role: "takeaway",
+    role: "warning",
     title: [Result],
   )
 ][

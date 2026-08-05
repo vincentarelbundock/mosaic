@@ -1,13 +1,16 @@
-// Shared semantic roles, structural defaults, and style normalization for
-// components.
-#import "../shared.typ": fail, validate-dictionary, validate-keys
+// Shared semantic role resolution, structural defaults, and style resolution
+// for components.
+#import "../shared.typ": fail, validate-dictionary
 #import "../deck-state.typ": deck-settings
-#import "../role-defaults.typ": default-roles
 #import "../color-defaults.typ": default-colors
 
-#let roles = default-roles
+// The role names a component's `role` argument accepts. Every name but
+// `neutral` is a key in the deck palette, so a role is one color the deck
+// already states rather than a parallel record of its own. `neutral` is the
+// deck's own surface, which needs no palette entry.
+#let role-names = ("neutral", "accent", "warning", "error")
 
-// Geometry every component shares, kept apart from the role palette so a theme
+// Geometry every component shares, kept apart from the palette so a theme
 // states its colors without restating its shapes. Before the split, a themed
 // component module had to repeat the stroke thickness, radius, and inset just to
 // change a fill, and the two copies drifted.
@@ -28,6 +31,11 @@
   quote-attribution-size: 0.72em,
   // How far the quotation's wash is lightened toward the canvas it sits on.
   quote-tint: 94%,
+  // How much of a role's color goes into its panel fill, the rest being the
+  // deck canvas. Mixing toward the canvas rather than toward white is what
+  // lets a dark theme reuse the same rule: the tint follows the deck in both
+  // directions, so no theme needs a hand-tuned table of panel fills.
+  role-tint: 15%,
 )
 
 // The deck's own colors, for component defaults that should follow the theme
@@ -38,66 +46,82 @@
   if settings == none { default-colors } else { settings.colors }
 }
 
-#let role(name, contextual: false) = {
-  if type(name) != str or name not in roles {
+// Resolves a role name to the three paints a component draws with. All three
+// come from the deck palette: the accent is the named color itself, the text is
+// the deck's text color, and the fill is the accent tinted into the canvas.
+#let role-colors(name, contextual: false) = {
+  if type(name) != str or name not in role-names {
     fail(
       "unknown semantic role " + repr(name) + "; expected "
-        + roles.keys().sorted().map(repr).join(", "),
+        + role-names.map(repr).join(", "),
     )
   }
-  let fallback = roles.at(name)
-  if not contextual {
-    return fallback
+  let colors = if contextual { deck-colors() } else { default-colors }
+  if name == "neutral" {
+    return (fill: colors.surface, accent: colors.line, text: colors.text)
   }
-  let settings = deck-settings()
-  if settings == none {
-    return fallback
-  }
-  // A deck (or theme) that states a complete palette is authoritative: its
-  // entry is used verbatim, including roles the derivation below never touches.
-  if settings.roles != auto {
-    return settings.roles.at(name)
-  }
-  // Otherwise the two roles that mean "the deck's own surface" follow the deck
-  // colors, and the semantic roles keep their fixed palette.
-  if name not in ("neutral", "accent") {
-    fallback
-  } else if name == "neutral" {
-    (
-      fill: settings.colors.surface,
-      accent: settings.colors.line,
-      text: settings.colors.text,
-    )
-  } else {
-    (
-      fill: settings.colors.surface,
-      accent: settings.colors.accent,
-      text: settings.colors.text,
-    )
-  }
+  let accent = colors.at(name)
+  (
+    // Mixed in oklab, which keeps a small amount of a saturated color from
+    // reading as muddy, then converted back to sRGB so the resolved fill is an
+    // ordinary hex color in the exported PDF and SVG rather than an `oklab()`
+    // literal.
+    fill: rgb(color.mix(
+      (accent, component-tokens.role-tint),
+      (colors.canvas, 100% - component-tokens.role-tint),
+    )),
+    accent: accent,
+    text: colors.text,
+  )
 }
 
-#let validate-style(
-  style: (:),
-  role-name: "neutral",
+// Resolves a component's paint and geometry from its role plus the flat
+// overrides its caller was given. `auto` on any argument means "take it from
+// the role", which is resolved here and never stored, so no sentinel escapes
+// this call. `defaults` is the calling component's own baseline: it overrides
+// the role-derived values and is in turn overridden by anything the user
+// passed explicitly.
+#let resolve-style(
+  role: "neutral",
+  fill: auto,
+  accent: auto,
+  stroke: auto,
+  radius: auto,
+  inset: auto,
+  align: auto,
+  text: (:),
   defaults: (:),
   contextual: false,
 ) = {
-  _ = validate-dictionary(style, "component style")
-  let allowed = (
-    "fill", "stroke", "radius", "inset", "align", "text",
-  )
-  _ = validate-keys(style, allowed, "component style")
-  _ = validate-dictionary(style.at("text", default: (:)), "component style text")
-  let colors = role(role-name, contextual: contextual)
-  (
+  _ = validate-dictionary(text, "component text")
+  let colors = role-colors(role, contextual: contextual)
+  let base = (
     fill: colors.fill,
-    stroke: component-tokens.stroke-thickness + colors.accent,
+    accent: colors.accent,
+    stroke: auto,
     radius: component-tokens.radius,
     inset: component-tokens.inset,
     align: left,
-    text: (fill: colors.text),
-  ) + defaults + style
+  ) + defaults
+  let accent = if accent == auto { base.accent } else { accent }
+  let stroke = if stroke != auto {
+    stroke
+  } else if base.stroke == auto {
+    component-tokens.stroke-thickness + accent
+  } else {
+    base.stroke
+  }
+  (
+    fill: if fill == auto { base.fill } else { fill },
+    accent: accent,
+    stroke: stroke,
+    radius: if radius == auto { base.radius } else { radius },
+    inset: if inset == auto { base.inset } else { inset },
+    align: if align == auto { base.align } else { align },
+    // Merged rather than replaced: setting a size should not silently drop the
+    // role's text color.
+    text: (fill: colors.text) + text,
+  )
 }
 
 #let styled-body(style, body) = {

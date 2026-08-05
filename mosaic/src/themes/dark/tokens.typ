@@ -1,13 +1,17 @@
 // Private Dark theme design tokens.
-// `colors` is this theme's stable palette export and carries exactly the six
-// canonical roles. The named constants above it are private mixing values:
-// a derived theme should extend `colors`, never reach for them by name.
+// `colors` is this theme's stable palette export: one flat dictionary holding
+// the six deck colors and the three status colors. The named constants above it
+// are private mixing values: a derived theme should extend `colors`, never
+// reach for them by name.
+//
+// Dark states no component palette of its own. Components tint their panel
+// fills into `canvas`, so the same rule that produces pale washes on a light
+// deck produces deep ones here.
 #let canvas = rgb("#0d1117")
 #let surface = rgb("#161b22")
 #let text = rgb("#e6edf3")
 #let muted = rgb("#8b949e")
 #let accent = rgb("#58a6ff")
-#let secondary = rgb("#bc8cff")
 #let attention = rgb("#d29922")
 #let error = rgb("#ff7b72")
 #let line = rgb("#30363d")
@@ -18,20 +22,6 @@
   text: text,
   muted: muted,
   line: line,
-)
-
-// The complete semantic component palette. Dark states it as data here rather
-// than as a parallel component module: the components take their geometry from
-// the base defaults and their colors from this table.
-//
-// `information` aliases `accent`, as in the light palette.
-#let accent-role = (fill: rgb("#13233a"), accent: accent, text: text)
-#let roles = (
-  neutral: (fill: surface, accent: line, text: text),
-  accent: accent-role,
-  information: accent-role,
-  success: (fill: rgb("#102a22"), accent: rgb("#56d364"), text: text),
-  warning: (fill: rgb("#2f2710"), accent: attention, text: text),
-  danger: (fill: rgb("#321b1e"), accent: error, text: text),
-  takeaway: (fill: rgb("#241d33"), accent: secondary, text: text),
+  warning: attention,
+  error: error,
 )

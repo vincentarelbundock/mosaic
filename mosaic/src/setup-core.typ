@@ -21,7 +21,6 @@
   margin: 0pt,
   spacing: (:),
   notes: (:),
-  roles: auto,
   overflow: "off",
   layouts: standard-layouts,
   headings: default-heading-policy,
@@ -51,7 +50,6 @@
   let paper = options.paper
   let spacing = options.spacing
   let notes = options.notes
-  let roles = options.roles
   let overflow = options.overflow
   // Validated where it enters the deck record, by `configure-deck`.
   let layouts = options.layouts
@@ -79,7 +77,6 @@
     deck: deck,
     spacing: spacing,
     notes: notes,
-    roles: roles,
     overflow: overflow,
   )
   let page-options = if output == "slides" {

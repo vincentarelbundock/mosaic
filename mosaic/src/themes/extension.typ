@@ -1,14 +1,31 @@
 // Stable extension surface for engine-consumed theme definitions.
 #import "engine.typ": theme-setup as _theme-setup, validate-theme as _validate-theme
 #import "../color-defaults.typ": light-palette
-#import "../role-defaults.typ": default-roles as light-roles
 
-/// Binds a passive theme definition to Mosaic's setup engine.
+/// Turns a passive theme definition into a setup function.
+///
+/// Two different things are called `setup` here, and the distinction is worth
+/// stating plainly. `mosaic.setup` is the document show rule you apply to a
+/// deck. `mosaic.themes.setup` sets up nothing on its own: it takes a theme
+/// definition and *returns* a show rule of that same kind, with the same
+/// signature as `mosaic.setup` plus any options the theme declares. So the
+/// usual shape is a facade that names the result once,
+///
+/// ```typ
+/// #let setup = mosaic.themes.setup(definition)
+/// ```
+///
+/// and decks then apply that `setup` exactly as they would a built-in theme's.
+/// Applying the result inline works too, as the example below shows.
 ///
 /// A theme is data, not code: you describe colors, defaults, and rules in a
-/// plain dictionary, and this turns that dictionary into a setup function with
-/// the same signature as `mosaic.setup`. The definition is validated here, at
-/// binding time, so a malformed theme fails where it is bound.
+/// plain dictionary. The definition is validated here, where the setup is
+/// built, so a malformed theme fails at that line rather than somewhere inside
+/// a deck.
+///
+/// Every bundled theme facade also exports the `definition` its own `setup`
+/// was built from, so `mosaic.themes.light.definition` and friends are the
+/// starting points for a variation on a bundled look.
 ///
 /// ```typ
 /// #let starlight = (
@@ -17,6 +34,7 @@
 ///     canvas: rgb("#0b1020"), surface: rgb("#161d33"),
 ///     text: white, muted: rgb("#9aa4c0"),
 ///     line: rgb("#2a3350"), accent: rgb("#7cc4ff"),
+///     warning: rgb("#fbbf24"), error: rgb("#f87171"),
 ///   ),
 ///   defaults: (overflow: "error"),
 ///   options: (density: "airy"),
@@ -37,8 +55,12 @@
 ///
 /// Only `colors` is required.
 ///
-/// - `colors`: the complete six-role dictionary, with `canvas`, `surface`,
-///   `text`, `muted`, `line`, and `accent`.
+/// - `colors`: the complete palette, one flat dictionary of colors. Six name
+///   the deck's own chrome (`canvas`, `surface`, `text`, `muted`, `line`,
+///   `accent`) and two name the status colors components paint with
+///   (`warning`, `error`). A component's `role:` argument selects
+///   one of these by name, so a theme states each color once and every
+///   component follows.
 /// - `name`: the theme's display name, used in its error messages. Defaults to
 ///   `"Custom"`.
 /// - `defaults`: ordinary `setup` options the theme presets. A deck can still

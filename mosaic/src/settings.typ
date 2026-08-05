@@ -4,18 +4,16 @@
 // validates it, and stores it inside the single deck record (deck-state.typ).
 // Nothing in this module holds state of its own.
 //
-// Two of these fields, `colors` and `roles`, are Mosaic's one sanctioned
-// semantic token layer. Components are ordinary functions, and Typst's rule
-// system offers no channel that could carry paint values (surface fills,
-// accent rails) into a function call the way `set text` carries typography
-// into text. A palette record is therefore unavoidable; keeping it to six
-// deck colors plus the role palette, both declared at `setup`, is the
-// containment. Everything typographic stays out of this module by design:
+// One of these fields, `colors`, is Mosaic's one sanctioned semantic token
+// layer. Components are ordinary functions, and Typst's rule system offers no
+// channel that could carry paint values (surface fills, accent rails) into a
+// function call the way `set text` carries typography into text. A palette
+// record is therefore unavoidable; keeping it to one flat dictionary of colors,
+// declared at `setup`, is the containment. Everything typographic stays out of this module by design:
 // every `set` and `show` rule a slide renders with belongs to the active
 // theme's `apply`.
 #import "shared.typ": fail, validate-choice, validate-dictionary, validate-keys
 #import "color-defaults.typ": default-colors, default-line
-#import "role-defaults.typ": validate-roles
 #import "author.typ": analyze-authors
 
 #let merge-record(base, override, name) = {
@@ -163,11 +161,9 @@
   deck: default-deck,
   spacing: (:),
   notes: (:),
-  roles: auto,
   overflow: "off",
 ) = {
   let colors = validate-colors(colors)
-  let roles = validate-roles(roles)
   // Every slide layout can consult the header default, so it is injected
   // here, where the other field defaults already live.
   let cells = (header: none) + validate-cells(cells)
@@ -185,7 +181,6 @@
     deck: deck,
     spacing: spacing,
     notes: notes,
-    roles: roles,
     overflow: overflow,
   )
 }
@@ -201,7 +196,7 @@
     type(value) != dictionary
       or value.keys().sorted() != (
         "background", "cells", "colors", "deck", "foreground", "notes",
-        "overflow", "roles", "spacing",
+        "overflow", "spacing",
       )
   ) {
     fail("invalid internal presentation settings")

@@ -61,7 +61,6 @@
 #let definition = (
   name: "Dark",
   colors: tokens.colors,
-  roles: tokens.roles,
   options: (
     font: ("Inter", "Source Sans 3", "Liberation Sans", "DejaVu Sans"),
     font-mono: "DejaVu Sans Mono",

@@ -26,9 +26,7 @@
           ]
         ]
         #html.elem("p")[
-          Write a deck as an ordinary Typst document. Each slide is a grid of
-          cells between a background and foreground plane. Mosaic labels the
-          cells; you style them with native Typst show and set rules.
+          Write your talk as an ordinary Typst document and Mosaic makes beautiful slides for you. Style the slides with standard Typst, as you would any other document. Batteries included: modern themes, ready-made layouts, complex grids with nested rows and columns, incremental reveals, speaker notes, handouts, callouts, cards, quotes, progress indicators, etc.
         ]
       ]
       #html.elem("div", attrs: (class: "mosaic-showcase-frame"))[
@@ -102,7 +100,7 @@
           ]
         ]
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
-          #html.elem("h2")[Native styling]
+          #html.elem("h2")[Plain Typst]
           #html.elem("p")[
             Cells, background, and foreground are native Typst layers, and
             every cell has a stable label. Style them with ordinary show and
@@ -115,8 +113,6 @@
   fallback: () => [
     = Slides with Typst
 
-    Write a deck as an ordinary Typst document. Each slide is a grid of cells
-    between a background and foreground plane. Mosaic labels the cells; you
-    style them with native Typst show and set rules.
+    Write your talk as an ordinary Typst document and Mosaic makes beautiful slides for you. Style the slides with standard Typst, as you would any other document. Batteries included: modern themes, ready-made layouts, complex grids with nested rows and columns, incremental reveals, speaker notes, handouts, callouts, cards, quotes, progress indicators, etc.
   ],
 )

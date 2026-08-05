@@ -39,6 +39,8 @@
     muted: _navy.lighten(25%),
     line: _navy.lighten(55%),
     accent: _gold,
+    warning: rgb("#E69F00"),
+    error: rgb("#D55E00"),
   ),
   options: (font: "Inter", base-size: 20pt),
   layouts: (

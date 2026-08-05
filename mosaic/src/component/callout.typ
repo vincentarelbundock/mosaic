@@ -1,5 +1,5 @@
 // Card-based callout with a semantic side stripe.
-#import "style.typ": role as component-role, component-tokens
+#import "style.typ": resolve-style, component-tokens
 #import "card.typ": card
 
 /// Creates a callout with a semantic side stripe.
@@ -16,43 +16,90 @@
 ///
 /// *Roles*
 ///
-/// - `information`: the default, and a synonym for `accent`.
-/// - `success`, `warning`, `danger`: the conventional status colors.
-/// - `takeaway`: reserved for conclusions.
-/// - `neutral`, `accent`: the theme's own colors.
+/// - `accent`: the deck's accent. The default.
+/// - `warning`, `error`: the status colors.
+/// - `neutral`: the deck's own surface.
 ///
-/// See `card` for how roles resolve against the active theme.
+/// *Custom colors*
+///
+/// A role is the portable spelling, and it stays correct when the deck changes
+/// theme. When a callout needs a color the palette does not name, pass
+/// `accent` directly: it paints both the stripe and the title, and the panel
+/// fill follows unless `fill` is given too.
+///
+/// ```typ
+/// #mosaic.components.callout(accent: rgb("#7c3aed"), title: [Takeaway])[
+///   Bounded work beats unbounded intent.
+/// ]
+/// ```
+///
+/// See `card` for the full list of overrides.
 ///
 /// -> content
 #let callout(
   /// Callout content.
   /// -> content
   body,
-  /// Semantic role name driving the stripe and title color: `information`,
-  /// `success`, `warning`, `danger`, `takeaway`, `neutral`, or `accent`.
+  /// Semantic role name: `accent`, `warning`, `error`, or `neutral`.
   /// -> str
-  role: "information",
-  /// Bold title set above the body in the accent color.
+  role: "accent",
+  /// Bold title set above the body in the stripe color.
   /// -> content | none
   title: none,
-  /// Partial style overrides passed through to `card`, with the keys `fill`,
-  /// `stroke`, `radius`, `inset`, `align`, and `text`. Setting `stroke` replaces
-  /// the side stripe.
+  /// Panel fill. `auto` uses the role's color tinted into the deck canvas.
+  /// -> auto | color | gradient | tiling | none
+  fill: auto,
+  /// Stripe and title color. `auto` uses the role's own color.
+  /// -> auto | color
+  accent: auto,
+  /// Border stroke. `auto` draws the left stripe and no other edge.
+  /// -> auto | stroke | dictionary | none
+  stroke: auto,
+  /// Corner radius. `auto` uses the shared component radius.
+  /// -> auto | length | dictionary
+  radius: auto,
+  /// Padding inside the panel. `auto` uses the shared component inset.
+  /// -> auto | length | relative | dictionary
+  inset: auto,
+  /// Horizontal alignment of the body. `auto` is `left`.
+  /// -> auto | alignment
+  align: auto,
+  /// Native `text` arguments merged over the role's text color.
   /// -> dictionary
-  style: (:),
+  text: (:),
 ) = context {
-  let colors = component-role(role, contextual: true)
+  let it = resolve-style(
+    role: role,
+    fill: fill,
+    accent: accent,
+    radius: radius,
+    inset: inset,
+    align: align,
+    text: text,
+    contextual: true,
+  )
+  // The stripe is this component's whole border, so an explicit `stroke`
+  // replaces it rather than adding to it.
+  let stroke = if stroke == auto {
+    (left: component-tokens.callout-rail + it.accent, rest: none)
+  } else {
+    stroke
+  }
   card(
     [
       #if title != none {
-        text(weight: "bold", fill: colors.accent)[#title]
+        std.text(weight: "bold", fill: it.accent)[#title]
         parbreak()
       }
       #body
     ],
     role: role,
-    style: (
-      stroke: (left: component-tokens.callout-rail + colors.accent, rest: none),
-    ) + style,
+    fill: it.fill,
+    accent: it.accent,
+    stroke: stroke,
+    radius: it.radius,
+    inset: it.inset,
+    align: it.align,
+    text: it.text,
   )
 }

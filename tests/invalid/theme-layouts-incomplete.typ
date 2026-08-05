@@ -7,6 +7,8 @@
     text: black,
     muted: gray,
     line: luma(180),
+    warning: orange,
+    error: red,
   ),
   layouts: (content: mosaic.layouts.content()),
 )

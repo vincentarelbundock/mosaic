@@ -9,4 +9,6 @@
   muted: gray,
   line: gray,
   accent: accent,
+  warning: rgb("#E69F00"),
+  error: rgb("#D55E00"),
 )

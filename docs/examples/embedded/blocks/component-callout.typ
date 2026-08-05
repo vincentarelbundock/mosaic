@@ -7,7 +7,7 @@
 #align(center + horizon)[
   #m.components.callout(
     [Null-only papers remain rare.],
-    role: "takeaway",
+    accent: rgb("#7c3aed"),
     title: [Main result],
   )
 ]

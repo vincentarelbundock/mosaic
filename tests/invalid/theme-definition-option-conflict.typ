@@ -7,6 +7,8 @@
     muted: gray,
     line: gray,
     accent: blue,
+    warning: orange,
+    error: red,
   ),
   options: (paper: "16-9"),
 )

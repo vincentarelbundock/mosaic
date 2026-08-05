@@ -6,14 +6,14 @@
 
 #align(center + horizon)[
   #m.components.badge(
-    role: "information",
+    role: "accent",
     radius: 0pt,
-    style: (text: (size: 1.35em, weight: "bold")),
+    text: (size: 1.35em, weight: "bold"),
   )[Square corners]
   #h(1em)
   #m.components.badge(
-    role: "information",
+    role: "accent",
     radius: 999pt,
-    style: (text: (size: 1.35em, weight: "bold")),
+    text: (size: 1.35em, weight: "bold"),
   )[Rounded corners]
 ]

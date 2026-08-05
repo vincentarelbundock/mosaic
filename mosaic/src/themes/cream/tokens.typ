@@ -1,7 +1,8 @@
 // Cream design tokens.
-// `colors` is this theme's stable palette export and carries exactly the six
-// canonical roles. The named constants above it are private mixing values:
-// a derived theme should extend `colors`, never reach for them by name.
+// `colors` is this theme's stable palette export: one flat dictionary holding
+// the six deck colors and the two status colors. The named constants above it
+// are private mixing values: a derived theme should extend `colors`, never
+// reach for them by name.
 #let sage = rgb("#aebdb3")
 #let cream = rgb("#f2eee5")
 #let ink = rgb("#111111")
@@ -13,4 +14,6 @@
   muted: ink,
   line: ink,
   accent: ink,
+  warning: rgb("#E69F00"),
+  error: rgb("#D55E00"),
 )

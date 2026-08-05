@@ -6,9 +6,10 @@
 
 #align(center + horizon)[
   #m.components.card(
-    role: "information",
+    role: "accent",
     width: 75%,
-    style: (radius: 10pt, inset: 1.2em),
+    radius: 10pt,
+    inset: 1.2em,
   )[
     #text(size: 1.4em, weight: "bold")[One dependable container]
     #linebreak()
@@ -20,7 +21,8 @@
   #m.components.card(
     width: 100%,
     height: 100%,
-    style: (radius: 12pt, inset: 1em),
+    radius: 12pt,
+    inset: 1em,
   )[
     #lorem(24)
   ]
@@ -28,7 +30,8 @@
   #m.components.card(
     width: 100%,
     height: 100%,
-    style: (radius: 12pt, inset: 1em),
+    radius: 12pt,
+    inset: 1em,
   )[
     #lorem(24)
   ]

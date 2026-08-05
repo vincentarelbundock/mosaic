@@ -1,15 +1,17 @@
 // Every built-in theme exports its palette under one schema, so a derived theme
 // can extend `colors` instead of depending on private token names.
 #import "../mosaic/src/color-defaults.typ": light-palette
-#import "../mosaic/src/role-defaults.typ": (
-  default-roles, role-fields, role-names, validate-roles,
-)
+#import "../mosaic/src/component/style.typ": role-colors, role-names
 #import "../mosaic/src/themes/cream/tokens.typ" as cream
 #import "../mosaic/src/themes/dark/tokens.typ" as dark
 #import "../mosaic/src/themes/metropolis/tokens.typ" as metropolis
 #import "../mosaic/src/themes/minimalist/tokens.typ" as minimalist
 
-#let palette-keys = ("accent", "canvas", "line", "muted", "surface", "text")
+// One flat palette per theme: six deck colors and two status colors. There is
+// no parallel role record, so this list is the whole color surface of a theme.
+#let palette-keys = (
+  "accent", "canvas", "error", "line", "muted", "surface", "text", "warning",
+)
 #assert(light-palette.keys().sorted() == palette-keys)
 
 #for palette in (cream.colors, dark.colors, metropolis.colors, minimalist.colors) {
@@ -17,13 +19,18 @@
   assert(palette.values().all(value => type(value) == color))
 }
 
-// The semantic role palette has its own schema, and Dark is the theme that
-// states a complete one rather than deriving it from the deck colors.
-#assert(role-names == default-roles.keys().sorted())
-#assert(role-fields == ("accent", "fill", "text"))
-#assert(validate-roles(dark.roles) == dark.roles)
-#assert(validate-roles(default-roles) == default-roles)
-// `auto` is the other legal value: derive the roles from the deck's colors.
-#assert(validate-roles(auto) == auto)
+// A component role is a palette key, not a record of its own. `neutral` is the
+// one name that is not: it means the deck's own surface.
+#assert(role-names == ("neutral", "accent", "warning", "error"))
+#for name in role-names {
+  assert(name == "neutral" or name in light-palette)
+}
+
+// Outside a deck the roles resolve against the library's light palette, and all
+// three paints come from it rather than from stored per-role values.
+#assert(role-colors("warning").accent == light-palette.warning)
+#assert(role-colors("warning").text == light-palette.text)
+#assert(role-colors("neutral").fill == light-palette.surface)
+#assert(role-colors("neutral").accent == light-palette.line)
 
 Theme palettes share one schema.
