@@ -2,7 +2,7 @@
 // for components.
 #import "../shared.typ": fail, validate-dictionary
 #import "../deck-state.typ": deck-settings
-#import "../color-defaults.typ": default-colors
+#import "../palettes.typ": light
 
 // The role names a component's `role` argument accepts. Every name but
 // `neutral` is a key in the deck palette, so a role is one color the deck
@@ -24,7 +24,10 @@
   badge-radius: 3pt,
   badge-inset: (x: 0.7em, y: 0.3em),
   progress-size: 1em,
-  progress-thickness: 2pt,
+  // The drawn-rule weight shared by progress bars, dividers, and the section
+  // baseline rule, matched to the heft of the title layout's rules so every
+  // horizontal gesture in a deck reads at one weight.
+  rule-thickness: 3pt,
   // A conic gradient starts due east; a progress ring reads from the top.
   progress-start-angle: -90deg,
   quote-attribution-gap: 0.45em,
@@ -43,7 +46,7 @@
 // deck they render in the library's light palette rather than an ad-hoc gray.
 #let deck-colors() = {
   let settings = deck-settings()
-  if settings == none { default-colors } else { settings.colors }
+  if settings == none { light } else { settings.colors }
 }
 
 // Resolves a role name to the three paints a component draws with. All three
@@ -56,7 +59,7 @@
         + role-names.map(repr).join(", "),
     )
   }
-  let colors = if contextual { deck-colors() } else { default-colors }
+  let colors = if contextual { deck-colors() } else { light }
   if name == "neutral" {
     return (fill: colors.surface, accent: colors.line, text: colors.text)
   }

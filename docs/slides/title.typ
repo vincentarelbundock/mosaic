@@ -1,60 +1,134 @@
 #import "/.calepin/calepin.typ" as calepin
 #import "/_includes/embedded-examples.typ": (
-  embedded-example,
-  thumbnail-gallery,
+  example-source, slideshow, slideshow-grid,
 )
+#import "/_includes/site.typ": repo-file
 
 #set document(title: [Title slides])
-#metadata((title: "Title slides")) <website-metadata>
+#metadata((title: "Title")) <website-metadata>
 
 #title()
 
-Use `layout: "title"` for an opening slide. Declare the deck's title information once in `m.setup`, then create the slide where you want it:
+A title slide takes its content from the deck rather than from the slide, and its arrangement from a variant.
+
+= A simple title slide
+
+Declare the title information once in `m.setup`, then place `m.slide(layout: "title")` where the deck opens:
+
+#example-source("structure/title-simple")
+
+#slideshow(calepin.elements.gallery, "structure/title-simple", 1, "A title slide built from the deck's own information", caption: [The default title slide])
+
+The slide names no content of its own. It reads the title, subtitle, authors, and date straight from `setup`, so the deck states them once and a title slide, a handout header, and the PDF's own metadata all agree.
+
+An author is usually just a name, and `authors:` takes one the way `title:` and `subtitle:` do. Several names go in parentheses, separated by commas:
 
 ```typ
-#show: m.setup.with(
-  title: [Reliable systems],
-  authors: (m.layouts.author("Ada Lovelace"),),
-  date: [2026],
-)
-
-#m.slide(layout: "title")
+authors: ([Ada Lovelace], [Charles Babbage])
 ```
 
-#embedded-example(
-  calepin.elements.gallery,
-  "appearance/setup-deck",
-  frames: 2,
-  title: "Title information shared across a deck",
-)
+Wrap a name in `m.layouts.author` when it carries more than itself: an affiliation, an ORCID iD, an email address. The next section does exactly that.
 
-To change one field for one slide, name it on `slide`: `m.slide(layout: "title", variant: "academic")`. Pass `m.layouts.title(...)` directly when the slide needs a title layout built from scratch rather than a refinement of the configured one. See #link("content.html#layout-fields-on-a-slide")[Layout fields on a slide] for the difference between refining and replacing.
+To change one field on one slide, name it on `slide`. This deck opens on a draft date without touching the deck's own:
+
+```typ
+#m.slide(layout: "title", date: [Draft])
+```
+
+Writing `none` drops an inherited title, subtitle, or date from that slide, and `()` drops the authors.
 
 = Variants
 
-The text variants each borrow a classic minimalist tradition: `swiss` (the default) rests the title mass on a full-width baseline rule with author, affiliation, and date in aligned columns beneath it; `centered` holds the mass at the slide's center with the metadata at the bottom edge; `plate` fills the slide with the deck's text color and knocks the type out in the canvas color; and `bordered` closes a centered stack inside one thin border. `academic` is the conference-poster arrangement with superscript affiliations and a contact line. The gallery then moves to layouts that place an image beside, above, below, or behind the title.
+Each variant borrows a classic minimalist tradition. The six text variants need nothing beyond the deck's own information:
 
-#embedded-example(
-  calepin.elements.gallery,
-  "structure/title-layout",
-  frames: 9,
-  title: "Nine structural title variants with inline academic metadata and images",
-  renderer: thumbnail-gallery,
-)
+- `centered`: the heading stack at the slide's center, details at the bottom edge.
+- `bordered`: a thin border closes around a centered stack.
+- `ruled`, the default: the heading stack over a full-width accent rule, flush left at the vertical center. The beamer-metropolis title page.
+- `kicker`: the magazine masthead: an opening rule, the subtitle as a tracked-caps eyebrow, details at the bottom edge.
+- `panel`: an ink side panel carries the details; the heading stack takes the main field.
+- `academic`: the conference poster: superscript affiliation numbers, a numbered legend, a contact line. Requires at least one author.
 
-= Styling the title stack
+The `image` variant requires an `image` and places a full-bleed picture beside or above the title stack: `position:` is `"left"` (the default), `"right"`, `"top"`, or `"bottom"`, and `tracks` sizes the split. A full-slide photographic title is not a variant; the #link(label("custom-title-page"))[Custom title page] section below composes one by hand.
 
-Every variant composes its title, subtitle, and metadata inside one `<mosaic-cell-title>` cell, and a native rule on that label reaches all three. Color it and the whole stack follows, which is what a light-on-dark title over a photograph needs; size it and the whole stack scales as a unit, which is how to ask for quiet type in a corner:
+Every variant renders every field the deck and its authors declare: the title and subtitle, each name with its linked ORCID icon and the corresponding asterisk, the affiliations, the contact addresses, and the date. Choosing a variant changes the arrangement, never the information.
+
+The thumbnails below all render the same title information: one deck title and subtitle, and three authors over two institutions, one of which two of them share. Every author carries an affiliation and an ORCID iD, and one of them is marked corresponding with an email address, so the `academic` legend has something to number and the ORCID icons, the contact line, and the corresponding-author asterisk all have somewhere to land. The contact line lists every author who gave an address, so it can carry more than the corresponding one. Only the variant changes between them, so anything you see move, resize, or change color is the variant's doing rather than the content's.
+
+Written out in full, one of those decks is this:
 
 ```typ
-#[
-  #show label("mosaic-cell-title"): set text(fill: white, size: 0.45em)
-  #m.slide(layout: "title", variant: "image-background", image: path("fig/cover.webp"))
-]
+#import "@local/mosaic:0.0.1" as m
+
+#let ccp = [Centre for Comparative Politics]
+#let eis = [European Institute for Social Data]
+
+#show: m.setup.with(
+  title: [Bootstrapping the Median],
+  subtitle: [Resampling without a closed form],
+  authors: (
+    m.layouts.author(
+      [Priya Nair],
+      affiliations: (ccp, eis),
+      email: "priya.nair@example.org",
+      orcid: "0000-0001-2345-6789",
+      corresponding: true,
+    ),
+    m.layouts.author(
+      [Elena García],
+      affiliations: (eis,),
+      orcid: "0000-0002-1825-0097",
+    ),
+    m.layouts.author(
+      [Tomás Ferreira],
+      affiliations: (ccp,),
+      orcid: "0000-0003-4567-8901",
+    ),
+  ),
+  date: [Toronto · July 2027],
+)
+
+#m.slide(layout: "title", variant: "academic")
 ```
 
-The proportions hold because the display line carries its own `<mosaic-title-display>` label, which is where a theme states the title's display size. The tiers beneath it are ordinary ems of the cell, so they never compound with that size and never outgrow the title.
+An affiliation is the institution itself rather than an identifier for it, so two authors land on one legend number exactly when they name the same institution. Binding `ccp` and `eis` once and reusing the bindings is what makes that happen.
 
-Image paths inside layout arguments cross the package boundary, so wrap every asset path in Typst's `path()`; a bare string is searched for inside the installed Mosaic package.
+The remaining decks are that same file with a different variant on the last line, and the image decks also pass an `image:`. When you hand a layout an image path, wrap it in Typst's `path()`, as in `image: path("cover.webp")`: a bare string is looked up inside the Mosaic package rather than in your project, and the picture is not found.
 
-When no title variant fits the talk, the #link("image.html")[image layout's] `full` variant gives you a full-bleed picture with a single body cell, and the title becomes ordinary text you place yourself.
+In your own deck, write the title information directly in `setup`, as the listing above does. The decks on this page keep it in one shared #repo-file("docs/examples/embedded/structure/_title-info.typ")[file] only so the page has a single copy to edit.
+
+Open any thumbnail to see the slide at full size:
+
+#slideshow-grid[
+  #slideshow(calepin.elements.gallery, "structure/title-centered", 1, "The shared title information under the centered variant", caption: [`centered`])
+  #slideshow(calepin.elements.gallery, "structure/title-bordered", 1, "The shared title information under the bordered variant", caption: [`bordered`])
+  #slideshow(calepin.elements.gallery, "structure/title-ruled", 1, "The shared title information under the ruled variant", caption: [`ruled`])
+  #slideshow(calepin.elements.gallery, "structure/title-kicker", 1, "The shared title information under the kicker variant", caption: [`kicker`])
+  #slideshow(calepin.elements.gallery, "structure/title-panel", 1, "The shared title information under the panel variant", caption: [`panel`])
+  #slideshow(calepin.elements.gallery, "structure/title-academic", 1, "The shared title information under the academic variant", caption: [`academic`])
+  #slideshow(calepin.elements.gallery, "structure/title-image-left", 1, "The shared title information with the picture on the left", caption: [`image`, `position: "left"`])
+  #slideshow(calepin.elements.gallery, "structure/title-image-right", 1, "The shared title information with the picture on the right", caption: [`image`, `position: "right"`])
+  #slideshow(calepin.elements.gallery, "structure/title-image-top", 1, "The shared title information with the picture above", caption: [`image`, `position: "top"`])
+  #slideshow(calepin.elements.gallery, "structure/title-image-bottom", 1, "The shared title information with the picture below", caption: [`image`, `position: "bottom"`])
+]
+
+= Inverted
+
+There is no inverted variant, because inversion is not an arrangement. Pass `invert: true` on any slide to swap that slide's ground and ink: the slide takes the deck's text color as its ground, the type is knocked out in the canvas color, and the muted and line tones follow. Any variant composes with it, and so does any other layout, so an inverted section plate or an inverted big-number slide is the same one flag.
+
+```typ
+#m.slide(layout: "title", variant: "kicker", invert: true)
+```
+
+#slideshow(calepin.elements.gallery, "structure/title-invert", 1, "The kicker variant inverted: light type on the deck's text color", caption: [`kicker` with `invert: true`])
+
+= Custom title page <custom-title-page>
+
+When no variant draws the page you want, build the slide yourself. `m.deck()` returns the `title`, `subtitle`, `authors`, and `date` you declared on `setup`, so the custom slide can use them without repeating them. Each author comes back as a dictionary with `name`, `affiliations`, `email`, `orcid`, and `corresponding` fields. Call `m.deck()` inside a `context` block, as the example below does.
+
+The deck below composes a full-slide photograph on the slide's `background:` plane, anchors the heading to the top edge, and pins the byline to the bottom, an arrangement no built-in variant draws:
+
+#example-source("structure/title-custom")
+
+#slideshow(calepin.elements.gallery, "structure/title-custom", 1, "A hand-built cover: full-slide photograph, heading at the top edge, byline at the bottom", caption: [A custom cover from `m.deck()`])
+
+The `scrim:` on the background image quiets the photograph exactly as it does on the image variants, and `numbered: false` keeps the cover out of the slide count the way named title layouts stay out of it automatically.

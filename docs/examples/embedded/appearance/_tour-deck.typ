@@ -76,6 +76,11 @@
     ]
   ]
 
+  // A second section, so the section-aware themes show movement: the
+  // metropolis bars advance, the mono toc gains an entry, and the numbered
+  // section variants count up.
+  m.slide("section", cells: (section: [In practice]))
+
   m.slide(
     layout: m.layouts.image(
       (

@@ -32,3 +32,11 @@
 #let logical-slide = counter(key("logical-slide"))
 #let logical-slide-id = counter(key("logical-slide-id"))
 #let logical-section = counter(key("logical-section"))
+
+// Whether the slide currently rendering is numbered. The slide runtime writes
+// it once per slide, before the planes render, so deck furniture (a folio, a
+// statusline, a progress ring) can quiet itself on unnumbered pages such as
+// titles and sections:
+//
+//   context if slide-numbered.get() { .. }
+#let slide-numbered = state(key("slide-numbered"), true)

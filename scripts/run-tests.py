@@ -106,8 +106,8 @@ def run_core(typst: str, sources: list[str]) -> None:
 
     typst_compile(typst, "setup-native-defaults.typ", TMP / "mosaic-setup-native-defaults-{0p}.svg", "--format", "svg")
     native = TMP / "mosaic-setup-native-defaults-1.svg"
-    require_contains(native, "#fafaf9")
-    require_contains(native, "#1c1917")
+    require_contains(native, "#f8f8f7")
+    require_contains(native, "#18181b")
 
     deck_metadata = pdf_text("setup-deck-metadata")
     for expected in (
@@ -181,16 +181,18 @@ def run_core(typst: str, sources: list[str]) -> None:
     )
     dark_pages = [TMP / f"mosaic-theme-dark-{page}.svg" for page in (1, 2, 3)]
     for page in dark_pages:
-        require_contains(page, "#0d1117")
-        require_contains(page, "#e6edf3")
-        for light_color in ("#fafaf9", "#1c1917", "#2563eb", "#78716c", "#e7e5e4"):
+        require_contains(page, "#16181b")
+        require_contains(page, "#f2f2f0")
+        for light_color in ("#f8f8f7", "#18181b", "#4a6274", "#737373", "#e3e3e0"):
             require_contains(page, light_color, absent=True)
-    # The swiss title rule takes the text color, so the accent's page-1 carrier
-    # is gone; the accent-role progress line on later pages proves the flow.
-    require_contains(dark_pages[1], "#58a6ff")
-    # "#182434" is the accent role's panel fill: the accent tinted into Dark's
-    # canvas, derived rather than stored in a per-theme table.
-    for dark_color in ("#182434", "#161b22", "#30363d", "#d2a8ff", "#ff7b72", "#ffa657"):
+    # The ruled title draws its rule in the palette accent, and the
+    # accent-role progress line on later pages proves the same flow.
+    require_contains(dark_pages[1], "#7e97ad")
+    # "#182434" is the accent role's panel fill: the accent tinted into the
+    # dark canvas, derived rather than stored in a per-theme table. The
+    # remaining values are the dark syntax theme, which the light theme swaps
+    # in on its own once the palette's canvas reads as dark.
+    for dark_color in ("#24292e", "#d2a8ff", "#ff7b72", "#ffa657"):
         require_contains(dark_pages[1], dark_color)
 
     typst_compile(
@@ -201,14 +203,14 @@ def run_core(typst: str, sources: list[str]) -> None:
         "svg",
     )
     dark_components = TMP / "mosaic-theme-dark-components-1.svg"
-    # Role accents come straight from Dark's flat palette; the "#18"/"#26"/"#2c"
+    # Role accents come straight from Dark's flat palette; the "#24"/"#2a"/"#2c"
     # fills are those accents tinted into its canvas.
     for dark_color in (
-        "#161b22", "#182434", "#26231f", "#2c2024",
-        "#58a6ff", "#bc8cff", "#d29922", "#ff7b72",
+        "#1e2125", "#24292e", "#2a2925", "#2c2728",
+        "#7e97ad", "#bc8cff", "#b39a5f", "#c08476",
     ):
         require_contains(dark_components, dark_color)
-    for light_color in ("#fafaf9", "#1c1917", "#2563eb", "#78716c", "#e7e5e4"):
+    for light_color in ("#f8f8f7", "#18181b", "#4a6274", "#737373", "#e3e3e0"):
         require_contains(dark_components, light_color, absent=True)
 
     typst_compile(
@@ -452,6 +454,36 @@ def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
             if result.stdout.strip() != "0":
                 raise TestFailure(f"responsive title emitted overflow warnings for {appearance}/{paper}")
 
+    # The title layout's field contract: every variant page of the coverage
+    # fixture must carry every deck and author field. Text is compared with
+    # whitespace stripped and case folded, because variants may track, wrap, or
+    # uppercase a tier without dropping it.
+    coverage_fields = (
+        "Provable coverage", "Every field on every variant", "Ada Lovelace",
+        "Charles Babbage", "Analytical Society", "University of London",
+        "ada@example.org", "babbage@example.org", "2026-08-05",
+    )
+    coverage_pages = (
+        "centered", "bordered", "ruled", "kicker", "panel",
+        "academic", "image left", "inverted ruled",
+    )
+    for page, variant in enumerate(coverage_pages, 1):
+        page_text = pdf_page_text("layouts-title-coverage", page)
+        haystack = "".join(page_text.read_text(encoding="utf-8").split()).casefold()
+        for expected in coverage_fields:
+            needle = "".join(expected.split()).casefold()
+            if needle not in haystack:
+                raise TestFailure(
+                    f"title coverage: {variant} (page {page}) is missing {expected!r}"
+                )
+
+    # The inverted coverage page paints the deck text color as its ground and
+    # knocks the type out in the canvas color.
+    typst_compile(typst, "layouts-title-coverage.typ", TMP / "mosaic-layouts-title-coverage-{p}.svg", "--format", "svg")
+    inverted = TMP / "mosaic-layouts-title-coverage-8.svg"
+    require_contains(inverted, "#18181b")
+    require_contains(inverted, "#f8f8f7")
+
     typst_compile(typst, "layout-accents.typ", TMP / "mosaic-layout-accents-{0p}.svg", "--format", "svg")
     for page, color in enumerate(("#654321", "#a1b2c3"), 1):
         require_contains(TMP / f"mosaic-layout-accents-{page}.svg", color)
@@ -476,12 +508,12 @@ def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
     # it, so no muted default survives on the overridden pages.
     typst_compile(typst, "layouts-stack-fill.typ", TMP / "mosaic-layouts-stack-fill-{p}.svg", "--format", "svg")
     stack_default = TMP / "mosaic-layouts-stack-fill-1.svg"
-    for color in ("#1c1917", "#78716c"):
+    for color in ("#18181b", "#737373"):
         require_contains(stack_default, color)
     for page, color in ((2, "#fedcba"), (3, "#abcdef")):
         path = TMP / f"mosaic-layouts-stack-fill-{page}.svg"
         require_contains(path, color)
-        require_contains(path, "#78716c", absent=True)
+        require_contains(path, "#737373", absent=True)
     for page, color in enumerate(("#d97706", "#ffffff", "#fedcba", "#123456"), 1):
         require_contains(TMP / f"mosaic-layouts-progress-{page}.svg", color)
 

@@ -12,6 +12,7 @@
   bodies,
   layout: auto,
   numbered: auto,
+  invert: false,
   cells: (:),
   background: auto,
   foreground: auto,
@@ -21,6 +22,7 @@
   kind: "slide",
   layout: layout,
   numbered: numbered,
+  invert: invert,
   cells: cells,
   background: background,
   foreground: foreground,
@@ -170,6 +172,14 @@
   /// explicit boolean always wins.
   /// -> auto | bool
   numbered: auto,
+  /// Whether to invert this slide's polarity: the slide ground takes the
+  /// deck's text color, type is knocked out in the canvas color, and the
+  /// muted and line colors are derived to match. Works with any layout, so an
+  /// inverted title, section plate, or big-number slide are all one flag.
+  /// Theme rules that pin an explicit fill other than the deck text color are
+  /// not rewritten; override those on their own labels where needed.
+  /// -> bool
+  invert: false,
   /// Cell bodies keyed by cell id. Mutually exclusive with positional bodies.
   /// -> dictionary
   cells: (:),
@@ -204,6 +214,9 @@
   if numbered != auto and type(numbered) != bool {
     fail("slide numbered must be auto or a boolean")
   }
+  if type(invert) != bool {
+    fail("slide invert must be a boolean")
+  }
   if type(cells) != dictionary {
     fail("slide cells must be a dictionary")
   }
@@ -223,6 +236,7 @@
     bodies,
     layout: layout,
     numbered: numbered,
+    invert: invert,
     cells: cells,
     background: background,
     foreground: foreground,

@@ -1,5 +1,5 @@
 // Exact public Metropolis facade: shared Mosaic API plus themed setup/layouts.
-#import "../shared-api.typ": slide, note, fit, surface, grids, steps, components
+#import "../shared-api.typ": slide, deck, note, fit, surface, grids, steps, components, palettes
 #import "extension.typ" as _extension
 #import "metropolis/definition.typ": definition
 #import "metropolis/layouts.typ" as layouts

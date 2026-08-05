@@ -1,10 +1,10 @@
 {
   "decks": [
     {
-      "slug": "cream",
-      "title": "Cream, Green, and Black",
+      "slug": "editorial",
+      "title": "Editorial",
       "frames": 18,
-      "alt": "Cream, Green, and Black deck, first slide"
+      "alt": "Editorial deck, first slide"
     },
     {
       "slug": "metropolis",
@@ -13,10 +13,10 @@
       "alt": "Metropolis deck, first slide"
     },
     {
-      "slug": "minimalist",
-      "title": "Minimalist White",
+      "slug": "manifesto",
+      "title": "Manifesto",
       "frames": 19,
-      "alt": "Minimalist White deck, first slide"
+      "alt": "Manifesto deck, first slide"
     },
     {
       "slug": "portfolio",
@@ -35,7 +35,7 @@
       "pages": [1]
     },
     {
-      "source": "docs/examples/decks/cream/cream.pdf",
+      "source": "docs/examples/decks/editorial/editorial.pdf",
       "pages": [1, 2, 11, 17]
     },
     {
@@ -43,7 +43,7 @@
       "pages": [1, 4, [5, 6, 7, 8], [18, 19, 20, 21], 23]
     },
     {
-      "source": "docs/examples/decks/minimalist/minimalist.pdf",
+      "source": "docs/examples/decks/manifesto/manifesto.pdf",
       "pages": [1, 5, 8, 16]
     },
     {
@@ -51,8 +51,8 @@
       "pages": [1]
     },
     {
-      "source": "docs/assets/examples/structure/title-layout.pdf",
-      "pages": [9]
+      "source": "docs/assets/examples/structure/title-image-bottom.pdf",
+      "pages": [1]
     },
     {
       "source": "docs/assets/examples/structure/section-layout.pdf",

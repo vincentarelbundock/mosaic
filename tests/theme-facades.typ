@@ -1,14 +1,15 @@
 #import "@local/mosaic:0.0.1" as mosaic
-#import mosaic.themes.cream as cream
-#import mosaic.themes.dark as dark
-#import mosaic.themes.light as light
-#import mosaic.themes.minimalist as minimalist
+#import mosaic.themes.editorial as editorial
+#import mosaic.themes.default as default-theme
+#import mosaic.themes.metropolis as metropolis
+#import mosaic.themes.manifesto as manifesto
+#import mosaic.themes.mono as mono
 
 #let expected = (
   "setup", "slide", "note", "surface", "grids", "layouts", "steps", "components",
 )
 
-#for theme in (cream, dark, light, minimalist) {
+#for theme in (default-theme, editorial, manifesto, metropolis, mono) {
   assert(expected.all(name => name in theme))
   assert(("cell", "columns", "rows", "track").all(name => name in theme.grids))
   assert(("author", "content", "section", "title").all(name => name in theme.layouts))

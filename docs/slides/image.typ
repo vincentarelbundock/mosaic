@@ -5,7 +5,7 @@
 )
 
 #set document(title: [Image slides])
-#metadata((title: "Image slides")) <website-metadata>
+#metadata((title: "Image")) <website-metadata>
 
 #title()
 

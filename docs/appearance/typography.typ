@@ -1,9 +1,7 @@
-#set document(title: [Typography and color])
-#metadata((title: "Typography and color")) <website-metadata>
+#set document(title: [Typography])
+#metadata((title: "Typography")) <website-metadata>
 
 #title()
-
-= Typography
 
 Place native Typst text and heading rules after `m.setup` so they apply across the deck:
 
@@ -25,45 +23,4 @@ Leading, lists, and captions remain native `par`, `list`, `enum`, `terms`, and `
 
 A heading cannot be placed inside an incremental grid node (`m.grids.on`, `m.steps.reveal`, and related step commands); keep it structurally stable across a slide's frames.
 
-= Color
-
-Each theme supplies a complete color palette. Override only the deck-wide colors that need to change; omitted colors keep the theme defaults:
-
-```typ
-#show: m.setup.with(colors: (
-  canvas: rgb("#f4f8f7"),
-  accent: rgb("#007f73"),
-))
-```
-
-The palette holds eight entries: `canvas`, `surface`, `text`, `muted`, `line`, and `accent` for the deck itself, plus `warning` and `error` for the status colors components paint with. Unknown names and non-color values are errors. The canvas, typography, components, and layouts all use the resolved values, and #link("themes.html")[Themes] describes what each entry paints. Explicit component colors remain local overrides:
-
-```typ
-#m.slide(
-  layout: m.layouts.content(variant: "header-body"),
-  foreground: [
-    #place(bottom + left)[
-      #m.components.progress(
-        variant: "line",
-        width: 100%,
-        accent: rgb("#e69f00"),
-      )
-    ]
-  ],
-)[Title][Body]
-```
-
-Native rules after `m.setup` are still the right tool for typography or a special local composition:
-
-```typ
-#[
-  #show label("mosaic-cell-body"): set text(fill: white)
-  #m.slide(
-    background: block(width: 100%, height: 100%, fill: rgb("#111827")),
-  )[Dark for this slide only]
-]
-```
-
-Color collections remain ordinary Typst arrays. Define them near the chart or diagram that uses them, or import a color package. A component's `role:` names one palette entry, so recoloring the palette recolors every `card`, `badge`, and `quote` that uses it.
-
-To recolor an entire slide at once, use the `<mosaic-slide>` label described under #link("styling.html#styling-a-whole-slide")[Styling a whole slide].
+Everything about the deck's palette, overriding entries, the bundled palette collection, and inverting a slide, lives on the #link("colors.html")[Colors] page.

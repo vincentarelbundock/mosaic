@@ -1,5 +1,4 @@
-#import "@local/mosaic:0.0.1" as mosaic
-#import mosaic.themes.light as m
+#import "@local/mosaic:0.0.1" as m
 #import "_tour-deck.typ": deck
 
 #show: m.setup

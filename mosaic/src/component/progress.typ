@@ -65,7 +65,7 @@
   width: auto,
   /// Stroke thickness of the `circle` and `line` variants.
   /// -> length
-  thickness: component-tokens.progress-thickness,
+  thickness: component-tokens.rule-thickness,
   /// Paint of the inactive remainder. `auto` uses the role's fill.
   /// -> auto | color | gradient | tiling
   fill: auto,

@@ -16,9 +16,9 @@
     canvas: rgb("#f5f7fb"),
     accent: rgb("#7c3aed"),
   ),
-  // The swiss title rule takes the text color, so the configured accent's
-  // path to the rendered page is verified through a component that resolves
-  // the accent role.
+  // Besides the ruled title's accent rule, the configured accent's path to
+  // the rendered page is verified through a component that resolves the
+  // accent role.
   foreground: place(bottom + right, dx: -12pt, dy: -12pt, m.components.badge(role: "accent")[deck]),
 )
 

@@ -14,9 +14,10 @@ IMPORT = re.compile(
 )
 LET = re.compile(r"(?m)^#let\s+([A-Za-z_][A-Za-z0-9_-]*)\b")
 
-NEUTRAL_API = {"setup", "definition", "slide", "note", "fit", "surface", "grids", "layouts", "steps", "components", "themes"}
-SHARED_API = {"slide", "note", "fit", "surface", "grids", "layouts", "steps", "components"}
-THEMED_API = {"setup", "definition", "slide", "note", "fit", "surface", "grids", "layouts", "steps", "components"}
+NEUTRAL_API = {"setup", "definition", "slide", "deck", "note", "fit", "surface", "grids", "layouts", "steps", "components", "themes", "palettes"}
+SHARED_API = {"slide", "deck", "note", "fit", "surface", "grids", "layouts", "steps", "components", "palettes"}
+THEMED_API = {"setup", "definition", "slide", "deck", "note", "fit", "surface", "grids", "layouts", "steps", "components", "palettes"}
+PALETTES = {"light", "dark", "parchment", "sage", "stone", "espresso", "forest", "slate"}
 THEMED_LAYOUTS = {"content", "title", "section", "image", "author"}
 THEMED_COMPONENTS = {"card", "callout", "badge", "quote", "divider", "progress", "image", "figure"}
 
@@ -25,29 +26,31 @@ EXPECTED = {
     "mosaic/src/shared-api.typ": SHARED_API,
     "mosaic/src/grid/api.typ": {"cell", "columns", "rows", "track"},
     "mosaic/src/surface.typ": {"surface"},
+    "mosaic/src/deck.typ": {"deck"},
     # fit.typ is not listed: it carries the vendored fitting internals beside
     # the one public entry point, and only `fit` is re-exported from the
     # facades, which the entries above already pin.
     "mosaic/src/layout/api.typ": {"content", "title", "section", "image", "author"},
     "mosaic/src/incremental/api.typ": {"on", "reveal", "replace", "drawing", "pause"},
     "mosaic/src/component/api.typ": THEMED_COMPONENTS,
-    # light-palette and light-roles are the built-in colors and semantic role
-    # table, exported so a custom theme extends them instead of copying them.
-    "mosaic/src/themes/extension.typ": {
-        "setup",
-        "light-palette",
-    },
-    "mosaic/src/themes/api.typ": {"metropolis", "cream", "minimalist", "light", "dark", "setup", "light-palette"},
-    "mosaic/src/themes/light.typ": THEMED_API,
-    "mosaic/src/themes/light/layouts.typ": THEMED_LAYOUTS,
-    "mosaic/src/themes/dark.typ": THEMED_API,
+    # The curated palette collection every facade exposes as `palettes`.
+    # tests/test_palettes.py enforces the contrast contract on these values.
+    "mosaic/src/palettes.typ": PALETTES,
+    # The theme-extension API is `setup` alone. The built-in polarity pair is
+    # not duplicated here: it reaches decks and custom themes as
+    # `palettes.light` and `palettes.dark`, one name per value.
+    "mosaic/src/themes/extension.typ": {"setup"},
+    "mosaic/src/themes/api.typ": {"metropolis", "editorial", "manifesto", "mono", "default", "setup"},
+    "mosaic/src/themes/default.typ": THEMED_API,
+    "mosaic/src/themes/default/layouts.typ": THEMED_LAYOUTS,
     "mosaic/src/themes/metropolis.typ": THEMED_API,
-    "mosaic/src/themes/cream.typ": THEMED_API,
-    "mosaic/src/themes/minimalist.typ": THEMED_API,
+    "mosaic/src/themes/editorial.typ": THEMED_API,
+    "mosaic/src/themes/manifesto.typ": THEMED_API,
+    "mosaic/src/themes/mono.typ": THEMED_API,
     "mosaic/src/themes/metropolis/layouts.typ": THEMED_LAYOUTS,
-    "mosaic/src/themes/cream/layouts.typ": THEMED_LAYOUTS,
-    "mosaic/src/themes/minimalist/layouts.typ": THEMED_LAYOUTS,
-    "mosaic/src/themes/dark/layouts.typ": THEMED_LAYOUTS,
+    "mosaic/src/themes/editorial/layouts.typ": THEMED_LAYOUTS,
+    "mosaic/src/themes/manifesto/layouts.typ": THEMED_LAYOUTS,
+    "mosaic/src/themes/mono/layouts.typ": THEMED_LAYOUTS,
 }
 
 

@@ -49,17 +49,17 @@
 
 #mosaic.slide(layout: mosaic.layouts.title(
   title: [When public data disappears],
-  variant: "swiss",
+  variant: "ruled",
   subtitle: [Open Data Day 2027 · What disappearing archives teach us about reproducibility],
   authors: (mosaic.layouts.author([Vincent Arel-Bundock], affiliations: (ccp,)),),
   date: [March 2027],
 ))
 
 // Several authors across several affiliations must stay composed in the
-// swiss metadata columns.
+// ruled details tiers.
 #mosaic.slide(layout: mosaic.layouts.title(
   title: [When public data disappears],
-  variant: "swiss",
+  variant: "ruled",
   subtitle: [Open Data Day 2027],
   authors: (
     mosaic.layouts.author([Priya Nair], affiliations: (ccp,)),
@@ -80,7 +80,7 @@
 
 #mosaic.slide(layout: mosaic.layouts.title(
   title: [Models, evidence, and public decisions],
-  variant: "plate",
+  variant: "kicker",
   subtitle: [Annual Research Lecture · A public conversation about uncertainty],
   authors: (
     mosaic.layouts.author([Maya Thompson], affiliations: (eis,)),
@@ -99,7 +99,8 @@
 
 #mosaic.slide(layout: mosaic.layouts.title(
   title: [Measuring environmental change],
-  variant: "image-right",
+  variant: "image",
+  position: "right",
   image: (path: path("/docs/assets/images/title-river.webp"), alt: "Autumn wetlands"),
   subtitle: [Field observations across twelve sites],
   authors: (mosaic.layouts.author([River Systems Group]),),
@@ -107,37 +108,10 @@
 
 #mosaic.slide(layout: mosaic.layouts.title(
   title: [Measuring environmental change],
-  variant: "image-bottom",
+  variant: "image",
+  position: "bottom",
   image: (path: path("/docs/assets/images/title-river.webp"), alt: "Autumn wetlands"),
   subtitle: [Field observations from the St. Lawrence wetlands],
   authors: (mosaic.layouts.author([River Systems Group]),),
   rule: true,
-))
-
-#[
-  // Light-on-dark composition: a scoped label rule recolors the title cell.
-  #show label("mosaic-cell-title"): set text(fill: white)
-  #mosaic.slide(
-    layout: mosaic.layouts.title(
-      title: [Cities after dark],
-      variant: "image-background",
-      image: (
-        path: path("/docs/assets/images/title-city.webp"),
-        scrim: black.transparentize(55%),
-        alt: "Coastal city lights at night",
-      ),
-      align: left + bottom,
-      subtitle: [Public lecture · Infrastructure, evidence, and life after sunset],
-      authors: (mosaic.layouts.author([Amara Johnson], orcid: "0000-0001-2345-6789"),),
-      date: [Montréal · October 2027],
-    ),
-  )
-]
-
-#mosaic.slide(layout: mosaic.layouts.title(
-  title: [Cities after dark, unadjusted],
-  variant: "image-background",
-  image: (path: path("/docs/assets/images/title-city.webp"), alt: "Coastal city lights at night"),
-  align: top + right,
-  subtitle: [The same background with the ordinary document text color],
 ))

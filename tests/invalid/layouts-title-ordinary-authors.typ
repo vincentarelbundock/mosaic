@@ -2,6 +2,6 @@
 
 #mosaic.layouts.title(
   title: [Title],
-  variant: "swiss",
-  authors: ([One author],),
+  variant: "centered",
+  authors: ((name: [Ada], affiliations: ()),),
 )

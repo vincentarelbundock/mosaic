@@ -19,13 +19,13 @@
 
   date: [July 2027],
 ))
-#mosaic.slide(layout: mosaic.layouts.title(title: [Swiss title], variant: "swiss", subtitle: [Conference · Swiss subtitle]))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Ruled title], variant: "ruled", subtitle: [Conference · Ruled subtitle]))
 #mosaic.slide(layout: mosaic.layouts.title(title: [Centered title], variant: "centered", subtitle: [Centered subtitle]))
-#mosaic.slide(layout: mosaic.layouts.title(title: [Plate title], variant: "plate", subtitle: [Workshop]))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Kicker title], variant: "kicker", subtitle: [Workshop]))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Panel title], variant: "panel", subtitle: [Workshop]))
 #mosaic.slide(layout: mosaic.layouts.title(title: [Bordered title], variant: "bordered", subtitle: [Colloquium]))
-#mosaic.slide(layout: mosaic.layouts.title(title: [Image-right title], variant: "image-right", image: path("/docs/assets/images/title-river.webp")))
-#mosaic.slide(layout: mosaic.layouts.title(title: [Image-top title], variant: "image-top", image: (path: path("/docs/assets/images/title-river.webp"), alt: "Wetlands")))
-#mosaic.slide(layout: mosaic.layouts.title(title: [Image-background title], variant: "image-background", image: path("/docs/assets/images/title-city.webp")))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Image-right title], variant: "image", position: "right", image: path("/docs/assets/images/title-river.webp")))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Image-top title], variant: "image", position: "top", image: (path: path("/docs/assets/images/title-river.webp"), alt: "Wetlands")))
 
 #mosaic.slide(layout: mosaic.layouts.section())[Plain section]
 #mosaic.slide(layout: mosaic.layouts.section(number: [01]))[Numbered section]

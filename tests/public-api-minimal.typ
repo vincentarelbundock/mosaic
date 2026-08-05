@@ -11,4 +11,4 @@
 #assert((
   "badge", "callout", "card", "divider", "image", "progress", "quote",
 ).all(name => name in m.components))
-#assert(("cream", "metropolis", "minimalist").all(name => name in m.themes))
+#assert(("default", "editorial", "manifesto", "metropolis", "mono").all(name => name in m.themes))

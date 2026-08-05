@@ -4,7 +4,7 @@
 )
 #import "@local/mosaic:0.0.1" as mosaic
 
-#let base = mosaic.themes.light.definition
+#let base = mosaic.themes.default.definition
 
 // `density` is the theme's own option. Mosaic knows nothing about it: the name
 // simply becomes a named argument of the setup below, and its resolved value

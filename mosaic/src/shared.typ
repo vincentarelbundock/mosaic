@@ -73,8 +73,8 @@
   value
 }
 
-#let array-max(values, default: 1) = if values.len() == 0 {
-  default
+#let array-max(values) = if values.len() == 0 {
+  1
 } else {
   calc.max(..values)
 }

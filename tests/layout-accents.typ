@@ -3,8 +3,8 @@
 #let title-accent = rgb("#654321")
 #let title-layout = mosaic.layouts.title(
   title: [Explicit title accent],
-  // Swiss draws its baseline rule in the explicit accent when one is given.
-  variant: "swiss",
+  // Ruled draws its full-width rule in the explicit accent when one is given.
+  variant: "ruled",
   accent: title-accent,
 )
 #assert(title-layout.fields.accent == title-accent)

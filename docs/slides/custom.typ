@@ -4,7 +4,7 @@
 #import "/_includes/site.typ": asset-url
 
 #set document(title: [Custom slides])
-#metadata((title: "Custom slides")) <website-metadata>
+#metadata((title: "Custom")) <website-metadata>
 
 // One step of the canonical semantic-slide example, shown through the same
 // PDF slideshow treatment as every other embedded example. The preview image

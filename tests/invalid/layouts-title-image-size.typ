@@ -2,6 +2,7 @@
 
 #mosaic.layouts.title(
   title: [Title],
-  variant: "image-right",
+  variant: "image",
+  position: "right",
   image: (path: path("/docs/assets/images/title-river.webp"), width: 20%),
 )

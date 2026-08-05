@@ -122,15 +122,13 @@
   id,
   settings,
   inset: none,
-  content-sized: true,
-  surface: (:),
 ) = styled-cell(
   content: as-content(body),
   id: id,
   style: (
-    content-sized: content-sized,
+    content-sized: true,
     inset: if inset == none { settings.spacing.compact-gap } else { inset },
-  ) + surface,
+  ),
 )
 
 // Structural slide-filled cell: the slide supplies its content, and `auto`

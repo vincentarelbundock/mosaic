@@ -2,6 +2,6 @@
 
 #mosaic.layouts.title(
   title: [Title],
-  variant: "swiss",
+  variant: "centered",
   tracks: (1fr, 1fr),
 )

@@ -1,13 +1,13 @@
 anonymous-cell|cell id must be a non-empty string
-author-affiliation|author affiliation 1 must be content or a non-empty string
 author-affiliations|author affiliations must be an array
+author-affiliation|author affiliation 1 must be content or a non-empty string
 author-corresponding|author corresponding requires email or orcid
 author-email|author email must be a valid email address
 author-mutated|author 1 email must be a valid email address
 author-name|author name must be content or a non-empty string
 author-orcid|author orcid must be a valid ORCID iD
-author-raw|author 1 must be created with author()
-author-sparse|author 1 must be created with author()
+author-raw|author 1 must be a name or created with author()
+author-sparse|author 1 must be a name or created with author()
 bad-range|step range starts after it ends: "3-2"
 bad-split-child|columns/rows children must be string cell IDs or Mosaic grid nodes
 bad-split-gutter|columns gutter must be a native Typst track size
@@ -30,6 +30,7 @@ frozen-states-type|frozen-states must contain only state values
 handout-type|setup handout must be a boolean
 headings-preamble|content appears before the first heading handled by setup; expected one of heading levels 1, 2
 image-scrim-type|image scrim must be a color, gradient, or tiling
+image-tracks-invalid|layout "image" tracks must be auto, one native Typst track size for the image, or an array of 2 native Typst track sizes in visual order
 layouts-content-columns|columns must be a positive integer
 layouts-content-mutated-command|columns must be a positive integer
 layouts-content-progress-removed|native:unexpected argument: progress
@@ -40,24 +41,24 @@ layouts-image-scrim-type|layout "image" image scrim must be a color, gradient, o
 layouts-section-accent|layout "section" accent must be a color
 layouts-section-image-unused|variant "plain" does not use image
 layouts-section-mutated-command|variant "image-bottom" requires image
-layouts-section-tracks|"section" tracks must be auto, one native Typst track size for the image, or an array of 2 native Typst track sizes in visual order
 layouts-section-tracks-scope|tracks apply only to directional image variants
+layouts-section-tracks|"section" tracks must be auto, one native Typst track size for the image, or an array of 2 native Typst track sizes in visual order
 layouts-title-accent|layout "title" accent must be a color
-layouts-title-align|align must use left, center, or right
-layouts-title-align-scope|align applies only to variant "image-background"
-layouts-title-authors|"title" authors must be an array
 layouts-title-authors-empty|variant "academic" requires at least one author
+layouts-title-authors|layout "title" author 1 must be a name or created with author()
 layouts-title-content|requires title content through title:
 layouts-title-image-path|image path must be a non-empty string
-layouts-title-image-required|variant "image-background" requires image
+layouts-title-image-required|variant "image" requires image
 layouts-title-image-size|image does not accept "width"
 layouts-title-image-type|image must be content, a non-empty path string, a native path, or a path dictionary
-layouts-title-image-unused|variant "swiss" does not use image
-layouts-title-mutated-command|variant "image-right" requires image
-layouts-title-ordinary-authors|author 1 must be created with author()
+layouts-title-image-unused|variant "centered" does not use image
+layouts-title-mutated-command|variant "image" requires image
+layouts-title-ordinary-authors|author 1 must be a name or created with author()
+layouts-title-position-scope|position applies only to variant "image"
+layouts-title-position|position must be auto or one of
 layouts-title-rule|rule must be auto, true, or false
+layouts-title-tracks-scope|tracks apply only to the image variant
 layouts-title-tracks|"title" tracks must be auto, one native Typst track size for the image, or an array of 2 native Typst track sizes in visual order
-layouts-title-tracks-scope|tracks apply only to directional image variants
 layouts-title-variant|unsupported variant "unknown"
 noncanonical-cell-record|invalid grid node at root
 noncanonical-cell-style|invalid grid node at root
@@ -70,20 +71,22 @@ overflow-error|content overflows cell "body" on slide 2 frame 1
 overflow-policy|setup overflow must be "off", "record", or "error"
 pause-record|invalid pause record
 reserved-cell-id|cell id "background" is reserved for the background plane
-setup-authors-type|setup authors must be an array
+setup-authors-type|setup author 1 must be a name or created with author()
 setup-auto-slide-removed|setup does not accept "auto-slide"
-setup-colors-type|setup colors accent must be a color
-setup-colors-unknown|setup colors does not accept "brand"
 setup-cells-empty-id|setup cells cell id must be non-empty
 setup-cells-type|setup cells must be a dictionary
 setup-cells-value|setup cells for "footer" must be content, a string, or none
+setup-colors-type|setup colors accent must be a color
+setup-colors-unknown|setup colors does not accept "brand"
 setup-default-grid-removed|setup does not accept "default-grid"
 setup-features-slide-number|setup does not accept "features"
 setup-layout-invalid|setup layouts "content" must be a Mosaic grid tree or layout
+setup-layouts-image-not-configurable|setup layouts does not accept "image"
 setup-layouts-type|setup layouts must be a dictionary
 setup-layouts-unknown|setup layouts does not accept "aside"
 setup-output|setup output must be "slides", "speaker", or "notes"
 setup-paper|setup paper must be "16-9", "4-3", or a dictionary with width and height
+setup-plane-value|setup background must be content, a string, or none
 setup-section-grid-removed|setup does not accept "section-grid"
 setup-title-type|setup title must be content, a string, or none
 slide-cells-fixed|slide cells cannot supply fixed-content cell "logo"
@@ -92,6 +95,8 @@ slide-cells-type|slide cells must be a dictionary
 slide-cells-unknown|slide cells contains unknown cell id "sidebar"
 slide-cells-value-type|slide cells for "body" must be content or none
 slide-grid-removed|slide layout "content" has no field "grid"; expected one of ("columns", "tracks", "variant")
+slide-image-layout-missing-image|layout "image" requires an image
+slide-invert-type|slide invert must be a boolean
 slide-layout-fields-explicit|slide cannot combine layout fields with an explicit layout value; pass "variant" to the layout constructor instead
 slide-layout-fields-raw-grid|the configured content layout is a raw grid, which cannot carry layout fields
 slide-layout-fields-scope|slide layout "title" has no field "columns"
@@ -99,6 +104,7 @@ slide-layout-invalid|slide layout must be a Mosaic grid tree or layout
 slide-layout-name-unknown|slide layout name must be one of ("content", "title", "section", "image")
 slide-layout-positional-conflict|slide layout given both positionally and as layout:
 slide-named-argument|slide layout "content" has no field "bogus"; expected one of ("columns", "tracks", "variant")
+slide-plane-in-cells|slide background is a plane, not a cell; pass it as background:
 slide-plane-value-type|slide background must be content, none, or auto
 slide-role-removed|slide layout "content" has no field "role"; expected one of ("columns", "tracks", "variant")
 slide-section-removed|slide layout "content" has no field "section"; expected one of ("columns", "tracks", "variant")
@@ -106,14 +112,9 @@ speaker-note-body|speaker note body must be content
 speaker-note-overflow|speaker output notes overflow on frame 1
 speaker-note-record|invalid speaker note record
 split-stroke-type|columns stroke must be none or a native Typst stroke
-temporal-heading|headings cannot be wrapped in on, reveal, replace, or drawing; keep semantic headings structurally stable across frames
 temporal-heading-grid|headings cannot be placed in incremental grid nodes; keep semantic headings structurally stable across frames
+temporal-heading|headings cannot be wrapped in on, reveal, replace, or drawing; keep semantic headings structurally stable across frames
 theme-definition-option-conflict|theme option "paper" conflicts with setup
 theme-definition-unknown|theme does not accept "mystery"
 theme-layouts-incomplete|theme layouts requires "title"
 too-many|grid expects 1 bodies with setup defaults or 2 bodies to override them, received 3
-slide-image-layout-missing-image|layout "image" requires an image
-setup-layouts-image-not-configurable|setup layouts does not accept "image"
-image-tracks-invalid|layout "image" tracks must be auto, one native Typst track size for the image, or an array of 2 native Typst track sizes in visual order
-setup-plane-value|setup background must be content, a string, or none
-slide-plane-in-cells|slide background is a plane, not a cell; pass it as background:

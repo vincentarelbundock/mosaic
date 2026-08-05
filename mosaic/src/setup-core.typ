@@ -4,9 +4,10 @@
   compile-deck, default-heading-policy, validate-heading-policy,
 )
 #import "grid/render.typ": overflow-report
+#import "author.typ": plain-name
 #import "settings.typ": make-settings
 #import "shared.typ": fail, validate-choice, validate-keys
-#import "color-defaults.typ": default-colors
+#import "palettes.typ": light
 #import "layout/config.typ": standard-layouts
 #import "paper.typ": default-paper, resolve-paper
 
@@ -40,7 +41,7 @@
 
 // Private setup engine. The theme engine supplies an exact options dictionary
 // and fully resolved semantic colors; no color registry enters the API.
-#let setup-core(options, body, colors: default-colors) = {
+#let setup-core(options, body, colors: light) = {
   if type(options) != dictionary {
     fail("internal setup options must be a dictionary; got " + repr(type(options)))
   }
@@ -99,11 +100,11 @@
     )
   }
   set page(..page-options)
-  let document-authors = if settings.deck.authors.all(author => type(author.name) == str) {
-    settings.deck.authors.map(author => author.name)
-  } else {
-    ()
-  }
+  // All or nothing: a partial byline in the PDF's metadata would read as the
+  // deck's whole author list, so one unflattenable name suppresses the field
+  // rather than quietly dropping that author from it.
+  let names = settings.deck.authors.map(author => plain-name(author.name))
+  let document-authors = if none in names { () } else { names }
   set document(title: settings.deck.title, author: document-authors)
   // No slide typography here by design. Every `set` and `show` rule a slide
   // renders with comes from the active theme's `apply`, including the rules

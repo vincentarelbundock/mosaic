@@ -1,12 +1,8 @@
-#import "@local/mosaic:0.0.1" as mosaic
-#import mosaic.themes.dark as m
-
-#let expected = (
-  "setup", "slide", "note", "surface",
-  "grids", "layouts", "steps", "components",
-)
-#assert(expected.all(name => name in m))
-#assert(("tokens", "code-theme", "base-setup").all(name => name not in m))
+// Dark is a palette, not a theme: any theme flips polarity by passing
+// `palettes.dark` through `setup(colors: ..)`. This deck runs the
+// default light theme under that swap and must come out fully dark, syntax
+// highlighting included, which exercises the canvas-luminance branch.
+#import "@local/mosaic:0.0.1" as m
 
 #let authors = (m.layouts.author(
   "Ada Lovelace",
@@ -14,6 +10,7 @@
 ),)
 
 #show: m.setup.with(
+  colors: m.palettes.dark,
   title: [SYSTEMS AT SCALE],
   subtitle: [A practical engineering talk],
   authors: authors,

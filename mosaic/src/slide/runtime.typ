@@ -37,6 +37,7 @@
   logical-slide,
   logical-slide-id,
   logical-section,
+  slide-numbered,
 )
 
 // The record a reader assumes when no deck wrote one: components and cells
@@ -83,6 +84,21 @@
   }
 }
 
+
+// The palette of one inverted slide: ground and ink swap, and the derived
+// tones follow. `muted` and `line` become translucent washes of the new ink so
+// they read against the dark ground the way the palette's own muted and line
+// read against the canvas; `surface` joins the ground because a raised panel
+// has no darker ink to rise from. The semantic accent and the status colors
+// survive untouched: they are chosen to carry on either polarity, and a deck
+// that disagrees passes its own palette.
+#let invert-colors(colors) = colors + (
+  canvas: colors.text,
+  surface: colors.text,
+  text: colors.canvas,
+  muted: colors.canvas.transparentize(30%),
+  line: colors.canvas.transparentize(78%),
+)
 
 #let full-slide-layer(body) = place(
   top + left,
@@ -272,6 +288,13 @@
 }
 
 #let render-slide-with-record(command, record, settings) = context {
+  // Inversion happens here, before the layout resolves, so every reader of
+  // `settings.colors` below — variant resolvers, muted tiers, accents — paints
+  // from the swapped palette without knowing the slide is inverted.
+  let settings = settings
+  if command.invert {
+    settings.colors = invert-colors(settings.colors)
+  }
   let (layout-name, requested-layout) = select-layout(
     command.layout,
     record.layouts,
@@ -332,6 +355,9 @@
   if numbered {
     logical-slide.step()
   }
+  // Written before the planes render, so deck furniture can quiet itself on
+  // unnumbered pages; see slide-numbered in deck-state.
+  slide-numbered.update(_ => numbered)
   if layout-name == "section" {
     logical-section.step()
     // One queryable record per section slide, emitted right after the step so
@@ -367,7 +393,13 @@
   let handout = record.handout
   let output = record.output
   let paper = record.paper
-  let slide-fill = if page.fill == auto { settings.colors.canvas } else { page.fill }
+  // An inverted slide's ground is its own inverted canvas, whatever the page
+  // paints; the printed thumbnails need the same answer.
+  let slide-fill = if command.invert or page.fill == auto {
+    settings.colors.canvas
+  } else {
+    page.fill
+  }
   for step in physical-steps(steps, handout) {
     // The whole cell grid carries <mosaic-slide>, so one native rule can reach
     // every cell of a slide at once:
@@ -406,6 +438,16 @@
         #full-slide-layer(rendered)
         #full-slide-layer(foreground-content)
     ]
+    if command.invert {
+      // The knocked-out ink, stated inside the frame so it overrides the
+      // theme's document-level fill, plus the same statement on headings,
+      // which themes pin through show-set rules a plain `set` cannot reach.
+      frame = {
+        set text(fill: settings.colors.text)
+        show heading: set text(fill: settings.colors.text)
+        frame
+      }
+    }
     place(hide([
       #metadata((
         mosaic: tag,
@@ -416,7 +458,7 @@
       )) <mosaic-speaker-notes>
     ]))
     if output == "slides" {
-      slide-frame(frame)
+      slide-frame(frame, fill: if command.invert { settings.colors.canvas } else { none })
     } else {
       render-printed-page(
         frame, notes, slide, step, steps, paper, slide-fill, settings.notes, output,

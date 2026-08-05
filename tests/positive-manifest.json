@@ -24,6 +24,7 @@
     "numbering.typ",
     "overflow-off.typ",
     "overflow-warning.typ",
+    "palettes.typ",
     "pause-compose.typ",
     "pause-empty-markers.typ",
     "pause-fixed-grid.typ",
@@ -62,7 +63,7 @@
     "theme-definition.typ",
     "theme-facade-metropolis.typ",
     "theme-facades.typ",
-    "theme-light.typ"
+    "theme-default.typ"
   ],
   "layout": [
     "fit.typ",
@@ -76,7 +77,9 @@
     "layouts-stack-fill.typ",
     "layouts-section-variants.typ",
     "layouts-structural.typ",
+    "layouts-title-coverage.typ",
     "layouts-title-scale.typ",
+    "layouts-title-stress.typ",
     "layouts-title-variants.typ",
     "layouts.typ",
     "slide-layout-fields.typ",

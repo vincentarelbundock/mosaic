@@ -13,8 +13,8 @@
 // every `set` and `show` rule a slide renders with belongs to the active
 // theme's `apply`.
 #import "shared.typ": fail, validate-choice, validate-dictionary, validate-keys
-#import "color-defaults.typ": default-colors, default-line
-#import "author.typ": analyze-authors
+#import "palettes.typ": light
+#import "author.typ": resolve-authors
 
 #let merge-record(base, override, name) = {
   _ = validate-dictionary(override, name)
@@ -49,7 +49,7 @@
 // are the whole vertical budget: no unnamed allowance is folded in.
 #let default-notes = (
   margin: 15mm,
-  thumbnail-stroke: 0.6pt + default-line,
+  thumbnail-stroke: 0.6pt + light.line,
   note-gap: 3mm,
   thumbnail-gap: 7mm,
   heading-gap: 4mm,
@@ -92,17 +92,16 @@
   let title = validate-optional-content(title, "title")
   let subtitle = validate-optional-content(subtitle, "subtitle")
   let date = validate-optional-content(date, "date")
-  if type(authors) != array {
-    fail("setup authors must be an array")
-  }
-  _ = analyze-authors(authors, name: "setup author")
+  // Stored as records, so every reader downstream sees one shape whatever the
+  // deck wrote: a name, a record, or an array mixing the two.
+  let authors = resolve-authors(authors, name: "setup author")
   (title: title, subtitle: subtitle, authors: authors, date: date)
 }
 
 #let validate-colors(colors) = {
   if (
     type(colors) != dictionary
-      or colors.keys().sorted() != default-colors.keys().sorted()
+      or colors.keys().sorted() != light.keys().sorted()
       or not colors.values().all(value => type(value) == color)
   ) {
     fail("invalid internal presentation colors")
@@ -154,7 +153,7 @@
 }
 
 #let make-settings(
-  colors: default-colors,
+  colors: light,
   cells: default-cells,
   background: none,
   foreground: none,

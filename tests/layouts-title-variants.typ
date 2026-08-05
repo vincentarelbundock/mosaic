@@ -69,29 +69,26 @@
   assert(grid-test.info(orcid-only, id).cell.id == id)
 }
 
-#let swiss = resolve-layout(mosaic.layouts.title(
+// `ruled` is the default variant, so an unnamed variant resolves the same
+// single-cell composition an explicit `ruled` does.
+#let ruled = resolve-layout(mosaic.layouts.title(
   title: [When public data disappears],
-  variant: "swiss",
+  variant: "ruled",
   subtitle: [Evidence from twelve public archives],
   authors: (mosaic.layouts.author([Vincent Arel-Bundock], affiliations: (udem,)),),
   date: [March 2027],
 ), settings)
-#assert(swiss.kind == "split")
-#assert(swiss.axis == "height")
-#assert(swiss.tracks == (1fr, auto))
-#assert(grid-test.count(swiss) == 2)
-#assert(grid-test.info(swiss, "title").cell.content != none)
-#assert(grid-test.info(swiss, "details").cell.content != none)
+#assert(ruled.kind == "cell")
+#assert(ruled.id == "title")
+#assert(grid-test.count(ruled) == 1)
 
-// Without metadata and with the baseline rule suppressed, swiss collapses to
-// the plain title mass.
-#let bare-swiss = resolve-layout(mosaic.layouts.title(
+#let default-variant = resolve-layout(mosaic.layouts.title(
   title: [Bare title],
   authors: (),
   rule: false,
 ), settings)
-#assert(bare-swiss.kind == "cell")
-#assert(grid-test.count(bare-swiss) == 1)
+#assert(default-variant.kind == "cell")
+#assert(grid-test.count(default-variant) == 1)
 
 #let centered = resolve-layout(mosaic.layouts.title(
   title: [Models and evidence],
@@ -102,14 +99,26 @@
 #assert(centered.kind == "cell")
 #assert(grid-test.count(centered) == 1)
 
-#let plate = resolve-layout(mosaic.layouts.title(
+#let kicker = resolve-layout(mosaic.layouts.title(
   title: [Models and evidence],
-  variant: "plate",
+  variant: "kicker",
   subtitle: [Annual research lecture],
   authors: (mosaic.layouts.author([Vincent Arel-Bundock]),),
 ), settings)
-#assert(plate.kind == "cell")
-#assert(plate.style.fill == settings.colors.text)
+#assert(kicker.kind == "cell")
+#assert(grid-test.count(kicker) == 1)
+
+#let panel = resolve-layout(mosaic.layouts.title(
+  title: [Models and evidence],
+  variant: "panel",
+  subtitle: [Annual research lecture],
+  authors: (mosaic.layouts.author([Vincent Arel-Bundock]),),
+), settings)
+#assert(panel.kind == "split")
+#assert(panel.axis == "width")
+#assert(panel.children.at(0).id == "details")
+#assert(panel.children.at(0).style.fill == settings.colors.text)
+#assert(panel.children.at(1).id == "title")
 
 #let bordered = resolve-layout(mosaic.layouts.title(
   title: [Models and evidence],
@@ -121,7 +130,8 @@
 
 #let split-right = resolve-layout(mosaic.layouts.title(
   title: [Measuring environmental change],
-  variant: "image-right",
+  variant: "image",
+  position: "right",
   image: image-path,
 ), settings)
 #assert(split-right.kind == "split")
@@ -131,9 +141,11 @@
 #assert(split-right.children.at(1).id == "image")
 #assert(grid-test.count(split-right) == 2)
 
+// `position` defaults to `left`, so the image variant with no position is the
+// left split.
 #let split-left = resolve-layout(mosaic.layouts.title(
   title: [Measuring environmental change],
-  variant: "image-left",
+  variant: "image",
   image: image-path,
   tracks: (3fr, 2fr),
 ), settings)
@@ -143,7 +155,8 @@
 
 #let band = resolve-layout(mosaic.layouts.title(
   title: [Measuring environmental change],
-  variant: "image-top",
+  variant: "image",
+  position: "top",
   image: image-path,
 ), settings)
 #assert(band.kind == "split")
@@ -152,39 +165,6 @@
 #assert(band.children.at(0).id == "image")
 #assert(band.children.at(1).kind == "cell")
 #assert(grid-test.count(band) == 2)
-
-#let background = resolve-layout(mosaic.layouts.title(
-  title: [Cities after dark],
-  variant: "image-background",
-  image: path("/docs/assets/images/title-city.webp"),
-  align: top + left,
-), settings)
-#assert(background.kind == "cell")
-#assert(background.id == "title")
-#assert(background.content != none)
-#assert(background.style.background != none)
-#assert(background.style.at("fill", default: none) == none)
-// Structural cells carry no text or align styles; typography comes from the
-// <mosaic-cell-title> label rules and the anchor is applied in the content.
-#assert("text" not in background.style)
-#assert("align" not in background.style)
-
-#let centered-background = resolve-layout(mosaic.layouts.title(
-  title: [Cities after dark],
-  variant: "image-background",
-  image: image-path,
-  align: center,
-), settings)
-#assert(centered-background.style.inset.left == centered-background.style.inset.right)
-
-#let right-background = resolve-layout(mosaic.layouts.title(
-  title: [Cities after dark],
-  variant: "image-background",
-  image: image-path,
-  align: right,
-), settings)
-#assert(background.style.inset.left == right-background.style.inset.right)
-#assert(background.style.inset.right == right-background.style.inset.left)
 
 #show: mosaic.setup
 #mosaic.slide(layout: academic-command)

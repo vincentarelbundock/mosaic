@@ -30,7 +30,7 @@
   let stroke = if stroke != auto {
     stroke
   } else {
-    component-tokens.stroke-thickness + deck-colors().line
+    component-tokens.rule-thickness + deck-colors().line
   }
   grid(
     columns: if title == none { (1fr,) } else { (1fr, auto, 1fr) },

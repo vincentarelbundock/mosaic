@@ -1,6 +1,6 @@
-// Documentation-only signature model for the engine-owned Light setup.
-// Runtime ownership lives in Light's passive definition and theme-engine.typ;
-// the Light facade binds them directly.
+// Documentation-only signature model for the engine-owned Default setup.
+// Runtime ownership lives in Default's passive definition and theme-engine.typ;
+// the Default facade binds them directly.
 
 /// Applies Mosaic's presentation defaults and compiles headings and slide
 /// commands into pages.
@@ -13,7 +13,7 @@
 /// #import "@local/mosaic:0.0.1" as mosaic
 /// #show: mosaic.setup.with(
 ///   title: [Tree-based slide grids],
-///   authors: (mosaic.layouts.author("Ada Lovelace"),),
+///   authors: [Ada Lovelace],
 ///   date: [2026-08-03],
 /// )
 ///
@@ -41,10 +41,10 @@
 ///
 /// *Themes*
 ///
-/// This is the Light facade's setup. A themed facade such as
-/// `mosaic.themes.dark` exposes the same signature with different defaults, and
-/// may add its own options on top. See `theme.setup` for binding a custom
-/// theme definition.
+/// This is the Default facade's setup. A themed facade such as
+/// `mosaic.themes.metropolis` exposes the same signature with different
+/// defaults, and may add its own options on top. See `theme.setup` for binding
+/// a custom theme definition.
 ///
 /// -> content
 #let setup(
@@ -65,20 +65,30 @@
   /// `auto`.
   /// -> content | str | none
   subtitle: none,
-  /// Canonical author records, each created with `layouts.author`. Title
-  /// layouts inherit the array when their own `authors` is `auto`.
+  /// Canonical deck authorship. Title layouts inherit it when their own
+  /// `authors` is `auto`. A name on its own is enough, so this reads like
+  /// `title` and `subtitle` in the common case:
+  ///
+  /// ```typ
+  /// authors: [Ada Lovelace]
+  /// authors: ([Ada Lovelace], [Charles Babbage])
+  /// ```
+  ///
+  /// Wrap a name in `layouts.author` when it carries affiliations, an ORCID
+  /// iD, or a contact address. Names and records mix in one array:
   ///
   /// ```typ
   /// authors: (
   ///   mosaic.layouts.author(
-  ///     "Ada Lovelace",
-  ///     affiliations: ("Analytical Society",),
+  ///     [Ada Lovelace],
+  ///     affiliations: ([Analytical Society],),
   ///     email: "ada@example.org",
   ///     corresponding: true,
   ///   ),
+  ///   [Charles Babbage],
   /// )
   /// ```
-  /// -> array
+  /// -> content | str | array
   authors: (),
   /// Canonical display date. Title layouts inherit it when their `date` is
   /// `auto`.

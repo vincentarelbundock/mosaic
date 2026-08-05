@@ -8,7 +8,7 @@ ROOT = Path(__file__).parents[1]
 SRC = ROOT / "mosaic" / "src"
 STARTER = ROOT / "docs" / "examples" / "embedded" / "appearance"
 PORTFOLIO = ROOT / "docs" / "examples" / "decks" / "portfolio"
-BUILTINS = ("light", "dark", "cream", "metropolis", "minimalist")
+BUILTINS = ("default", "editorial", "manifesto", "metropolis", "mono")
 RETIRED_HELPERS = (
     "configured-theme",
     "configured-options",
@@ -18,11 +18,11 @@ RETIRED_HELPERS = (
 
 
 class ThemeArchitectureTests(unittest.TestCase):
-    def test_light_owns_a_concrete_theme_definition(self) -> None:
-        light = SRC / "themes" / "light"
-        self.assertTrue((light / "definition.typ").is_file())
-        self.assertFalse((light / "setup.typ").exists())
-        facade = (SRC / "themes" / "light.typ").read_text(encoding="utf-8")
+    def test_default_owns_a_concrete_theme_definition(self) -> None:
+        theme = SRC / "themes" / "default"
+        self.assertTrue((theme / "definition.typ").is_file())
+        self.assertFalse((theme / "setup.typ").exists())
+        facade = (SRC / "themes" / "default.typ").read_text(encoding="utf-8")
         self.assertIn("_extension.setup(definition)", facade)
         self.assertNotIn('"../setup.typ": setup', facade)
 

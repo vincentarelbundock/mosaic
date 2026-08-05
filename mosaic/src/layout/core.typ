@@ -7,7 +7,7 @@
   content: ("columns", "tracks", "variant"),
   image: ("caption", "fit", "image", "tracks", "variant"),
   title: (
-    "accent", "align", "authors", "date", "image", "rule", "subtitle",
+    "accent", "authors", "date", "image", "position", "rule", "subtitle",
     "title", "tracks", "variant",
   ),
   section: (

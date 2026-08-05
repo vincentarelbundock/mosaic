@@ -102,9 +102,9 @@
   }
 }
 
-#let validate(node, path: "root") = {
-  validate-shape(node, path: path)
-  _ = validate-unique-cell-ids(node, path: path)
+#let validate(node) = {
+  validate-shape(node, path: "root")
+  _ = validate-unique-cell-ids(node, path: "root")
 }
 
 

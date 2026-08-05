@@ -8,6 +8,7 @@
 )
 
 #import "support.typ": adapt-fill, as-content, subordinate-block
+#import "../component/style.typ": component-tokens
 #import "image-support.typ": (
   directional-image-layout,
   image-background-cell,
@@ -88,7 +89,6 @@
     number-size: 1.07em,
     number-weight: 200,
     gap-above-rule: 0.2em,
-    rule-thickness: 0.025em,
     gap-below-rule: 0.2em,
     subtitle-size: 0.41em,
   ),
@@ -242,12 +242,12 @@
 // captured just outside the heading, which an em-based show-set cannot
 // compound. The heading stays realized exactly once, keeping its outline
 // entry, bookmark, and link target.
-#let title-text(body, styles, transform: none) = text(..styles, context {
+#let title-text(body, styles) = text(..styles, context {
   let size = text.size
   let rest = styles
   _ = rest.remove("size", default: none)
   show heading: it => text(size: size, ..rest, it.body)
-  if transform == none { body } else { transform(body) }
+  body
 })
 
 // The title treatment every designed variant states from its own tokens. The
@@ -367,7 +367,12 @@
         ),
       )
       v(tokens.gap-above-rule)
-      line(length: 100%, stroke: tokens.rule-thickness + settings.colors.text)
+      // The tie between title and number takes the semantic accent: it is the
+      // one drawn gesture of the variant, and the number above it already
+      // holds the subordinate muted color.
+      // The tie is drawn at the shared component rule weight, so the section
+      // baseline, the progress bars, and the dividers read as one gesture.
+      line(length: 100%, stroke: component-tokens.rule-thickness + settings.colors.accent)
       v(tokens.gap-below-rule)
       subtitle-line(fields, settings, size: tokens.subtitle-size)
     },

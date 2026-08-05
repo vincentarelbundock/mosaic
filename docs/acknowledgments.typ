@@ -39,7 +39,7 @@ The explicit color arrays in several tutorials use the Okabe-Ito Color Universal
 
 == Example decks
 
-The example presentations on the #link("examples.html")[Examples] page are each adapted from a freely licensed source. The *Cream, Green, and Black*, *Minimalist White*, and *Photojournalist Portfolio* decks are Mosaic/Typst re-creations of designs published by
+The example presentations on the #link("examples.html")[Examples] page are each adapted from a freely licensed source. The *Editorial*, *Manifesto*, and *Photojournalist Portfolio* decks are Mosaic/Typst re-creations of designs published by
 #link("https://www.slidescarnival.com/")[SlidesCarnival], with photographs
 credited on the source templates to Pexels and Pixabay.
 

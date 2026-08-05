@@ -95,7 +95,7 @@ Use a layout factory (`m.layouts.*`) when building a layout from scratch rather 
   layout: m.layouts.title(
     title: [Reliable systems],
     subtitle: [One source of truth],
-    variant: "plate",
+    variant: "kicker",
   ),
 )
 
@@ -115,12 +115,12 @@ Use a layout factory (`m.layouts.*`) when building a layout from scratch rather 
 
 Variants:
 
-- **Title**: `swiss` (the default: title mass on a full-width baseline rule, metadata in aligned columns beneath), `centered` (mass at slide center, metadata at the bottom edge), `plate` (whole slide in the deck's text color, type knocked out in canvas), `bordered` (centered stack inside one thin border), `academic` (conference-poster arrangement with superscript affiliations), `image-left`, `image-right`, `image-top`, `image-bottom`, `image-background`. Every text variant composes 1..N authors: bylines join names with commas, and swiss gives authors/affiliations/date one column each. Structural marks (the swiss baseline rule and the bordered border) default to the text color; an explicit `accent:` recolors them.
-- **Section**: `plain`, the designed text variants `rule` (heavy full-width rule over a flush-left title), `numeral` (giant ghost number bleeding off the top-right), `baseline` (title and number sharing one baseline over a full-width hairline), `toc` (all sections listed, the current one alive), and the same five image variants. The designed text variants read the automatic section counter when `number:` is omitted. Section numbers never take the accent color: the `accent:` field defaults to the muted color and an explicit color is an override. The themed facades restyle the section cell, so under cream, minimalist, or Metropolis these variants render at that theme's quieter scale.
+- **Title**: `ruled` (the default: heading stack over a full-width accent rule with details beneath, flush left at the vertical center, the beamer-metropolis title page), `centered` (mass at slide center, metadata at the bottom edge), `bordered` (centered stack inside one thin border), `kicker` (magazine masthead: strong opening rule, subtitle as a tracked-caps eyebrow in the accent color, details at the bottom edge), `panel` (a vertical ink panel carries the details knocked out in canvas under a short accent rule; the title takes the main field), `academic` (conference-poster arrangement with superscript affiliations), and `image` with `position: "left"/"right"/"top"/"bottom"` (default left). Every variant renders every author field: names with ORCID icons and the corresponding asterisk, affiliations, contact addresses, and the date. Structural marks default to the text color (the bordered border, the kicker opening rule) or the semantic accent (the ruled rule); an explicit `accent:` recolors them. There is no plate variant: invert any slide with `m.slide(invert: true)`.
+- **Section**: `plain`, the designed text variants `rule` (heavy full-width rule over a flush-left title), `numeral` (giant ghost number bleeding off the top-right), `baseline` (title and number sharing one baseline over a full-width hairline), `toc` (all sections listed, the current one alive), and the same five image variants. The designed text variants read the automatic section counter when `number:` is omitted. Section numbers never take the accent color: the `accent:` field defaults to the muted color and an explicit color is an override. The themed facades restyle the section cell, so under editorial, manifesto, or metropolis these variants render at that theme's own scale.
 - **Content**: `body`, `header-body`, `body-footer`, `header-body-footer`.
 - **Image**: `figure` (the default), `full`, `left`, `right`, `top`, `bottom`.
 
-`m.layouts.title()` inherits `title`, `subtitle`, `authors`, and `date` from setup, so `m.slide(layout: "title")` needs no body. An explicit layout argument wins; pass `none` (or `()` for `authors`) to suppress an inherited field on one slide. For image variants, `scrim:` on the image spec quiets the photograph, as in `image: (path: "cover.webp", scrim: black.transparentize(55%))`; pair `image-background` with a scoped text-color rule on the `<mosaic-cell-title>` or `<mosaic-cell-section>` label for contrast. One such rule recolors the whole stack: the subtitle and details are muted only while the cell carries the deck's ordinary text color, and follow any override, so light-on-dark titles need no hand-built grid. A size rule on the same label works the same way, scaling the stack as a unit (`show label("mosaic-cell-title"): set text(size: 0.45em)` for quiet type in a corner), because the display line carries its own `<mosaic-title-display>` label where the theme states the display size. There is no `scale:` argument, and a hand-built grid is never the way to resize a title.
+`m.layouts.title()` inherits `title`, `subtitle`, `authors`, and `date` from setup, so `m.slide(layout: "title")` needs no body. An explicit layout argument wins; pass `none` (or `()` for `authors`) to suppress an inherited field on one slide. For image variants, `scrim:` on the image spec quiets the photograph, as in `image: (path: "cover.webp", scrim: black.transparentize(55%))`. A full-slide photographic title is not a variant: give the slide a `background:` plane (`background: m.components.image(path("cover.webp"), scrim: ..)`), and compose the type yourself with `m.deck()`, a contextual reader returning the `title`, `subtitle`, resolved `authors` records, and `date` declared on setup. Pair a photographic background with a scoped text-color rule on the `<mosaic-cell-title>` or `<mosaic-cell-section>` label for contrast. One such rule recolors the whole stack: the subtitle and details are muted only while the cell carries the deck's ordinary text color, and follow any override, so light-on-dark titles need no hand-built grid. A size rule on the same label works the same way, scaling the stack as a unit (`show label("mosaic-cell-title"): set text(size: 0.45em)` for quiet type in a corner), because the display line carries its own `<mosaic-title-display>` label where the theme states the display size. There is no `scale:` argument, and a hand-built grid is never the way to resize a title.
 
 Mosaic has no automatic shrink-to-fit for body content, by design: a deck whose type size is decided slide by slide loses the typographic scale that holds it together. An overflow means cut a bullet, split the slide, or pick a layout with more room. When one indivisible block is oversized (a wide table, a chart, a generated list), scale that block alone with `m.fit(my-table)`, which measures it against its region and scales geometrically. `m.fit(grow: true)[42%]` goes the other way, filling a cell with display type. A fitted block never overflows and so stops appearing in the overflow records, which is why it is for indivisible blocks rather than crowded slides. It also cannot contain `m.steps.pause`, `m.steps`, or `m.note`: measuring hides the body from the runtime's walk, so those would be lost. `m.fit` raises an error rather than dropping them; keep them outside the fitted block.
 
@@ -227,17 +227,10 @@ One recurring choice worth making once per deck:
 Put deck identity, semantic colors, layout overrides, recurring cell defaults, and page planes in `m.setup`:
 
 ```typ
-#let authors = (
-  m.layouts.author(
-    "Ada Lovelace",
-    affiliations: ([Systems Lab],),
-  ),
-)
-
 #show: m.setup.with(
   title: [Reliable systems],
   subtitle: [One source of truth],
-  authors: authors,
+  authors: ([Ada Lovelace], [Grace Hopper]),
   date: [2026],
   colors: (accent: rgb("#007f73")),
   cells: (
@@ -251,7 +244,7 @@ Put deck identity, semantic colors, layout overrides, recurring cell defaults, a
 
 Key setup arguments:
 
-- `title`, `subtitle`, `authors`, `date`: deck identity. An author record is built by `m.layouts.author(name, ...)` and accepts `affiliations` (an array of institutions, as content or strings, deduplicated by value so authors sharing one institution share its legend number), `corresponding`, `email`, `kind`, and `orcid`; the `academic` title variant requires at least one author. Feeds title layouts, Typst document metadata, and the queryable `<mosaic-deck-metadata>` record. Setup does not insert a title slide automatically; each `m.slide(layout: "title")` chooses where one appears.
+- `title`, `subtitle`, `authors`, `date`: deck identity. `authors` takes a bare name the way `title` does, an array of names for several, or records mixed in among them. An author record is built by `m.layouts.author(name, ...)` and accepts `affiliations` (an array of institutions, as content or strings, deduplicated by value so authors sharing one institution share its legend number), `corresponding`, `email`, `kind`, and `orcid`; the `academic` title variant requires at least one author. Feeds title layouts, Typst document metadata, and the queryable `<mosaic-deck-metadata>` record. Setup does not insert a title slide automatically; each `m.slide(layout: "title")` chooses where one appears.
 - `colors:`: partial overrides of the semantic palette. It is one flat dictionary: `canvas`, `surface`, `accent`, `text`, `muted`, and `line` are the deck's own chrome, and `warning` and `error` are the status colors components paint with. Unknown names and non-color values are errors; omitted names keep the active theme's defaults.
 - `layouts:`: a dictionary overriding only `content`, `title`, or `section`. Both explicit slides and automatic `==` slides use the configured `content` layout.
 - `cells:`: recurring cell defaults (such as `footer`). They apply only when the resolved layout contains that cell ID; explicit slide content or `none` overrides them.
@@ -271,14 +264,14 @@ Import one facade as `m` and keep the rest of the deck unchanged:
 
 ```typ
 #import "@local/mosaic:0.0.1" as mosaic
-#import mosaic.themes.dark as m
+#import mosaic.themes.metropolis as m
 
 #show: m.setup
 ```
 
-Bundled facades are `light`, `dark`, `cream`, `metropolis`, and `minimalist`. The root package is exactly the bundled light facade.
+Bundled facades are `default`, `editorial`, `metropolis`, `manifesto`, and `mono`. The root package is exactly the bundled default facade. There is no dark theme: flip any theme to dark by passing the bundled dark palette through `colors:`, as in `#show: m.setup.with(colors: mosaic.palettes.dark)`. Every theme adapts on its own, syntax highlighting included.
 
-Every facade exports the same `slide`, `note`, `pause`, `surface`, `grid`, `steps`, `components`, and `theme`, so those parts of a deck are theme-portable. Each facade also exports its own `definition`, the dictionary its `setup` is bound to. Each theme also exports `m.layouts`: the base layout constructors, rebound with that theme's defaults (for example, Cream's `content` defaults to `variant: "header-body"`). Every base argument remains available under every theme, with one exception: Metropolis's `title()` takes only `title`, `subtitle`, `authors`, and `date`, because it computes the variant from the authors itself.
+Every facade exports the same `slide`, `note`, `pause`, `surface`, `grid`, `steps`, `components`, and `theme`, so those parts of a deck are theme-portable. Each facade also exports its own `definition`, the dictionary its `setup` is bound to. Each theme also exports `m.layouts`: the base layout constructors, rebound with that theme's defaults (for example, Editorial's `content` defaults to `variant: "header-body"`). Every base argument remains available under every theme; for example, Metropolis binds `title` to `variant: "ruled"` and an explicit variant overrides it.
 
 To develop a theme, start locally: define the complete semantic palette and bind the dictionary directly:
 

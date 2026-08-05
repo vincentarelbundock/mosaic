@@ -42,7 +42,7 @@ label = "Mosaic 0.0.1 · Built with Typst and Calepin."
 
 
 [sidebar]
-fold = true
+fold = false
 
 [[sidebar.section]]
 
@@ -74,6 +74,21 @@ title = "Slides"
   target = "slides/custom.typ"
 
 [[sidebar.section]]
+title = "Appearance"
+
+  [[sidebar.section.item]]
+  target = "appearance/styling.typ"
+
+  [[sidebar.section.item]]
+  target = "appearance/typography.typ"
+
+  [[sidebar.section.item]]
+  target = "appearance/themes.typ"
+
+  [[sidebar.section.item]]
+  target = "appearance/colors.typ"
+
+[[sidebar.section]]
 title = "Content"
 
   [[sidebar.section.item]]
@@ -87,18 +102,6 @@ title = "Content"
 
   [[sidebar.section.item]]
   target = "content/citations.typ"
-
-[[sidebar.section]]
-title = "Appearance"
-
-  [[sidebar.section.item]]
-  target = "appearance/styling.typ"
-
-  [[sidebar.section.item]]
-  target = "appearance/typography.typ"
-
-  [[sidebar.section.item]]
-  target = "appearance/themes.typ"
 
 [[sidebar.section]]
 title = "Slide furniture"

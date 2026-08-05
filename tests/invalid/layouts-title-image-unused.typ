@@ -2,6 +2,6 @@
 
 #mosaic.layouts.title(
   title: [Title],
-  variant: "swiss",
+  variant: "centered",
   image: [Unused image],
 )

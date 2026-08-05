@@ -9,17 +9,28 @@
 
 #title()
 
-A theme decides how a deck looks: its colors, its type, and the way each slide arranges what you put on it. Every Mosaic deck uses a theme, even one that never mentions the word. Import the package without naming a theme and you get the default light theme. Name a different one and the whole deck changes at once, without a single edit to your slides.
+A theme decides how a deck looks: its colors, its type, and the way each slide arranges what you put on it. Every Mosaic deck uses a theme, even one that never mentions the word. Import the package without naming a theme and you get the default theme. Name a different one and the whole deck changes at once, without a single edit to your slides.
 
 = Selecting themes
 
-Five themes ship with the Mosaic package: `light`, `dark`, `cream`, `metropolis`, and `minimalist`. Import one as `m` and the whole deck follows it:
+Five themes ship with the Mosaic package, and each is a design voice rather than a color scheme: it chooses its own title, section, and content arrangements, its own type, and its own slide furniture.
+
+#table(
+  columns: (auto, 1fr),
+  [`default`], [The quiet baseline. Plain sans type with the accent kept functional: blue bullets and links, an accent baseline rule on sections, and a small progress ring on numbered slides.],
+  [`editorial`], [The magazine. Serif display over a sans body, a kicker masthead title under a strong opening rule, ghost-numeral sections, kicker rules under headings, and a folio in the corner.],
+  [`metropolis`], [The homage to the beamer classic. Inverted header bar, and a progress bar that fills across section slides and along the bottom edge of every slide.],
+  [`manifesto`], [The poster. One red on warm white, serif set large, uppercase tracked headings, a bordered title plate, rule sections, and a red progress ring.],
+  [`mono`], [The terminal. Monospace throughout, dark by default, a `\$` prompt on every heading, panel code blocks, toc sections, and a statusline with a slide counter.],
+)
+
+There is no dark theme, because darkness is a palette rather than a design; the Colors section below flips a deck with one line. Import a theme as `m` and the whole deck follows it:
 
 #example-source("appearance/select-metropolis")
 
 The imported theme provides the same `m.slide`, `m.layouts`, `m.components`, notes, pauses, and incremental commands. Every theme exposes an identical API. Moving a deck from one theme to another is a one-line edit at the import.
 
-The default import is the bundled light theme. These two spellings are the same deck:
+The default import is the bundled default theme. These two spellings are the same deck:
 
 ```typ
 // Default spelling
@@ -27,15 +38,15 @@ The default import is the bundled light theme. These two spellings are the same 
 ```
 
 ```typ
-// Explicit light spelling
+// Explicit spelling
 #import "@local/mosaic:0.0.1" as mosaic
-#import mosaic.themes.light as m
+#import mosaic.themes.default as m
 ```
 
 The two decks below are that same file. Only the theme on line two differs:
 
 #slideshow-grid[
-  #slideshow(calepin.elements.gallery, "appearance/select-light", 2, "The small example deck under the light theme", caption: [Light])
+  #slideshow(calepin.elements.gallery, "appearance/select-default", 2, "The small example deck under the default theme", caption: [Default])
   #slideshow(calepin.elements.gallery, "appearance/select-metropolis", 2, "The small example deck under the metropolis theme", caption: [Metropolis])
 ]
 
@@ -69,22 +80,23 @@ Each example imports that one name and ends with `#deck(m)`, which keeps the lis
 
 Five short wrappers each import a different theme and render the running example:
 
-#example-source("appearance/tour-light")
+#example-source("appearance/tour-default")
 
-Everything that differs between those five decks is what a theme owns. It is exactly three things:
+Everything that differs between those five decks is what a theme owns. It is exactly four things:
 
 - a *palette*, one flat dictionary of colors;
 - a set of *rules*, ordinary Typst `set` and `show` rules that state the typography;
-- a choice of *layouts*, the arrangements a title, section, or content slide is built from.
+- a choice of *layouts*, the arrangements a title, section, or content slide is built from;
+- optional *furniture*, ordinary `setup` defaults such as a `foreground` progress line or a `background` ghost number, which a deck can override like any other option.
 
-The three sections below take those in turn. Each shows how to change one of them on a bundled theme. That is as far as most decks need to go. Open any deck to page through it:
+The sections below take the first three in turn. Each shows how to change one of them on a bundled theme. That is as far as most decks need to go. Open any deck to page through it:
 
 #slideshow-grid[
-  #slideshow(calepin.elements.gallery, "appearance/tour-light", 7, "The bundled light theme", caption: [Light])
-  #slideshow(calepin.elements.gallery, "appearance/tour-dark", 7, "The bundled dark theme", caption: [Dark])
-  #slideshow(calepin.elements.gallery, "appearance/tour-cream", 7, "The bundled cream theme", caption: [Cream])
-  #slideshow(calepin.elements.gallery, "appearance/tour-metropolis", 7, "The bundled metropolis theme", caption: [Metropolis])
-  #slideshow(calepin.elements.gallery, "appearance/tour-minimalist", 7, "The bundled minimalist theme", caption: [Minimalist])
+  #slideshow(calepin.elements.gallery, "appearance/tour-default", 8, "The bundled default theme", caption: [Default])
+  #slideshow(calepin.elements.gallery, "appearance/tour-editorial", 8, "The bundled editorial theme", caption: [Editorial])
+  #slideshow(calepin.elements.gallery, "appearance/tour-metropolis", 8, "The bundled metropolis theme", caption: [Metropolis])
+  #slideshow(calepin.elements.gallery, "appearance/tour-manifesto", 8, "The bundled manifesto theme", caption: [Manifesto])
+  #slideshow(calepin.elements.gallery, "appearance/tour-mono", 8, "The bundled mono theme", caption: [Mono])
 ]
 
 = Colors
@@ -107,12 +119,29 @@ Pass `colors:` to `setup` to repaint any of them. The override is partial. Namin
 
 #example-source("appearance/palette-warm")
 
-Both decks below run the light theme. Only the one on the right passes a dictionary to the `colors` argument. That dictionary reaches components too. A callout, card, or badge names a palette entry through its `role:`. The accents and status colors on the last slide follow the same override.
+Both decks below run the default theme. Only the one on the right passes a dictionary to the `colors` argument. That dictionary reaches components too. A callout, card, or badge names a palette entry through its `role:`. The accents and status colors on the last slide follow the same override.
 
 #slideshow-grid[
-  #slideshow(calepin.elements.gallery, "appearance/palette-default", 7, "The light theme on its own palette", caption: [Default])
-  #slideshow(calepin.elements.gallery, "appearance/palette-warm", 7, "The light theme on a warm palette", caption: [Custom palette])
+  #slideshow(calepin.elements.gallery, "appearance/palette-default", 8, "The default theme on its own palette", caption: [Default])
+  #slideshow(calepin.elements.gallery, "appearance/palette-warm", 8, "The default theme on a warm palette", caption: [Custom palette])
 ]
+
+== Dark decks
+
+Polarity is a palette, not a theme. The package bundles one dark palette, and passing it to `colors:` flips any theme to a dark deck:
+
+#example-source("appearance/tour-dark")
+
+Everything adapts on its own. Component panels tint their role colors into the dark canvas instead of the light one, image scrims darken instead of lighten, and the theme swaps in a dark syntax highlighting theme once it sees a dark canvas. `mosaic.palettes.dark` is an ordinary palette dictionary, so extending it with your own accent works exactly like the partial override above:
+
+The two decks below are the default theme's tour deck once more, identical except for that one `colors:` line:
+
+#slideshow-grid[
+  #slideshow(calepin.elements.gallery, "appearance/tour-light", 8, "The default theme on its own light palette", caption: [Light palette])
+  #slideshow(calepin.elements.gallery, "appearance/tour-dark", 8, "The default theme on the bundled dark palette", caption: [Dark palette])
+]
+
+Beyond the polarity pair, every facade exports `palettes`, a curated collection of complete color schemes that composes with every theme the same way. The #link("colors.html")[Colors] page lists the collection and renders the default theme under each of its palettes.
 
 
 = Typography
@@ -128,8 +157,8 @@ Rules written that way stay in the deck that holds them. A theme's `apply` is th
 #example-source("appearance/type-apply")
 
 #slideshow-grid[
-  #slideshow(calepin.elements.gallery, "appearance/type-default", 7, "The light theme on its own type rules", caption: [Default])
-  #slideshow(calepin.elements.gallery, "appearance/type-apply", 7, "The light theme under four added type rules", caption: [Custom type])
+  #slideshow(calepin.elements.gallery, "appearance/type-default", 8, "The default theme on its own type rules", caption: [Default])
+  #slideshow(calepin.elements.gallery, "appearance/type-apply", 8, "The default theme under four added type rules", caption: [Custom type])
 ]
 
 = Layouts
@@ -140,11 +169,11 @@ Every theme supplies three configurable slide layouts: `content`, `title`, and `
 
 Explicit `m.slide(...)` commands and automatic heading slides both select from that dictionary. Set it once and the whole deck follows. The #link("../slides/content.html")[Slides] pages cover layouts in full.
 
-The deck on the right borrows a built-in title variant that the light theme does not normally use. Its section layout exists only in that deck:
+The deck on the right borrows a built-in title variant that the default theme does not normally use. Its section layout exists only in that deck:
 
 #slideshow-grid[
-  #slideshow(calepin.elements.gallery, "appearance/layout-default", 7, "The light theme on its own layouts", caption: [Default])
-  #slideshow(calepin.elements.gallery, "appearance/layout-override", 7, "The light theme on a borrowed title layout and a custom section layout", caption: [Custom layouts])
+  #slideshow(calepin.elements.gallery, "appearance/layout-default", 8, "The default theme on its own layouts", caption: [Default])
+  #slideshow(calepin.elements.gallery, "appearance/layout-override", 8, "The default theme on a borrowed title layout and a custom section layout", caption: [Custom layouts])
 ]
 
 = Writing themes
@@ -160,7 +189,7 @@ Bind one in the deck itself to see the whole shape at once. A theme needs only `
 
 #let mine = (
   name: "Mine",
-  colors: mosaic.themes.light-palette + (accent: rgb("#a23b72")),
+  colors: mosaic.palettes.light + (accent: rgb("#a23b72")),
   apply: (body, colors: (:), options: (:)) => {
     set text(font: "EB Garamond", size: 26pt)
     show heading: set text(fill: colors.accent)
@@ -203,11 +232,11 @@ Every bundled theme exports the `definition` behind its own `setup`. Varying a b
 
 ```typ
 #import "@local/mosaic:0.0.1" as mosaic
-#import mosaic.themes.dark as base
+#import mosaic.themes.metropolis as base
 
 #let mine = base.definition + (
   name: "Mine",
-  colors: base.definition.colors + (accent: rgb("#7cc4ff")),
+  colors: base.definition.colors + (accent: rgb("#0f766e")),
 )
 
 #show: mosaic.themes.setup(mine)
@@ -219,7 +248,7 @@ The merge replaces a key outright. Writing `colors: (accent: ..)` would hand the
 
 Replacing `apply` discards the base theme's entire look, since `apply` is the look. To add rules on top of an inherited one, run the base theme's own rules first, as the Typography section does.
 
-Only the root package exports `mosaic.themes`. A bundled theme such as `mosaic.themes.dark` exports `setup`, `layouts`, `components`, and `definition`, but not the `themes` namespace itself. Deriving from one therefore means importing the root package as well, as above.
+Only the root package exports `mosaic.themes`. A bundled theme such as `mosaic.themes.metropolis` exports `setup`, `layouts`, `components`, and `definition`, but not the `themes` namespace itself. Deriving from one therefore means importing the root package as well, as above.
 
 == Shipping it
 
@@ -242,8 +271,8 @@ The deck below imports a complete theme in that shape. Its three files sit besid
 It is the running example once more, this time under a theme of its own:
 
 #slideshow-grid[
-  #slideshow(calepin.elements.gallery, "appearance/starter-default", 7, "The light theme on its own look", caption: [Default])
-  #slideshow(calepin.elements.gallery, "appearance/starter-theme", 7, "The starter theme", caption: [Starter theme])
+  #slideshow(calepin.elements.gallery, "appearance/starter-default", 8, "The default theme on its own look", caption: [Default])
+  #slideshow(calepin.elements.gallery, "appearance/starter-theme", 8, "The starter theme", caption: [Starter theme])
 ]
 
 == Theme-specific options
@@ -263,6 +292,6 @@ An option name that collides with a built-in `setup` option raises an error wher
 The #link("../api/theme.html")[theme authoring API] documents every definition key in full.
 
 #slideshow-grid[
-  #slideshow(calepin.elements.gallery, "appearance/theme-options-airy", 7, "The seminar theme at its default density", caption: [Default])
-  #slideshow(calepin.elements.gallery, "appearance/theme-options-dense", 7, "The seminar theme at its dense setting", caption: [density: dense])
+  #slideshow(calepin.elements.gallery, "appearance/theme-options-airy", 8, "The seminar theme at its default density", caption: [Default])
+  #slideshow(calepin.elements.gallery, "appearance/theme-options-dense", 8, "The seminar theme at its dense setting", caption: [density: dense])
 ]

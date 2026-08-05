@@ -16,7 +16,8 @@
 // strings; `heading-role` below does the conversion in one place.
 #let default-heading-policy = ("1": "section", "2": "slide")
 
-#let validate-heading-policy(value, name: "setup headings") = {
+#let validate-heading-policy(value) = {
+  let name = "setup headings"
   if type(value) != dictionary {
     fail(
       name + " must be a dictionary mapping heading level to \"section\" or "

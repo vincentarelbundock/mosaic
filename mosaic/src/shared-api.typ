@@ -1,5 +1,6 @@
 // Curated public API shared by neutral Mosaic and every themed facade.
 #import "slide/command.typ": slide
+#import "deck.typ": deck
 #import "note/command.typ": note
 #import "fit.typ": fit
 #import "surface.typ": surface
@@ -7,3 +8,4 @@
 #import "layout/api.typ" as layouts
 #import "incremental/api.typ" as steps
 #import "component/api.typ" as components
+#import "palettes.typ" as palettes

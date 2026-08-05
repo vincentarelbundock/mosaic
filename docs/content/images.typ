@@ -125,7 +125,7 @@ In the `title`, `section`, and `image` layouts, the image is given as a specific
 ```typ
 #m.slide(layout: m.layouts.title(
   title: [Cities after dark],
-  variant: "image-background",
+  variant: "image",
   image: (
     path: path("cover.webp"),
     scrim: black.transparentize(45%),

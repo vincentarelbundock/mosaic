@@ -1,29 +1,25 @@
-#import "@local/mosaic:0.0.1" as mosaic
-#import mosaic.themes.dark as m
+#import "@local/mosaic:0.0.1" as m
 #import "../mosaic/src/component/style.typ": role-colors
-#import "../mosaic/src/themes/dark/tokens.typ" as dark-tokens
+#import "../mosaic/src/palettes.typ": dark
 
-// Dark carries no component code of its own: the whole namespace is the base
-// one, and the dark look arrives as a palette through setup.
-#assert(m.components.image == mosaic.components.image)
-#assert(m.components.callout == mosaic.components.callout)
-#assert(m.components.quote == mosaic.components.quote)
+// The dark look is one palette handed to setup; no theme carries dark
+// component code. Components resolve their paints out of that flat palette:
+// the role's own color is the accent, the deck text is the text, and the fill
+// is the role color tinted into the dark canvas rather than a hand-written
+// table entry.
+#show: m.setup.with(colors: dark, base-size: 17pt)
 
-#show: m.setup.with(base-size: 17pt)
-
-// Every role resolves out of Dark's one flat palette: the role's own color is
-// the accent, the deck text is the text, and the fill is that color tinted into
-// Dark's canvas rather than a hand-written table entry.
 #context {
-  assert(role-colors("error", contextual: true).accent == dark-tokens.error)
-  assert(role-colors("warning", contextual: true).text == dark-tokens.text)
+  assert(role-colors("error", contextual: true).accent == dark.error)
+  assert(role-colors("warning", contextual: true).text == dark.text)
   // `neutral` is the one role that is the deck surface rather than a tint.
-  assert(role-colors("neutral", contextual: true).fill == dark-tokens.surface)
+  assert(role-colors("neutral", contextual: true).fill == dark.surface)
   // A tinted fill sits between the role color and the deck canvas, so it is
-  // neither of them, and it follows the theme rather than the library default.
+  // neither of them, and it follows the palette rather than the library
+  // default.
   let warning-fill = role-colors("warning", contextual: true).fill
-  assert(warning-fill != dark-tokens.colors.warning)
-  assert(warning-fill != dark-tokens.canvas)
+  assert(warning-fill != dark.warning)
+  assert(warning-fill != dark.canvas)
   assert(warning-fill != role-colors("warning").fill)
 }
 

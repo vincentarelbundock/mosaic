@@ -50,6 +50,7 @@ API_MODULE_MAP := \
   component-divider:component/divider \
   component-progress:component/progress \
   slide-command:slide/command \
+  deck:deck \
   note-command:note/command \
   pause-command:incremental/pause \
   surface:surface \
@@ -104,7 +105,7 @@ SHOWCASE_OPENING := $(DOCS_DIR)/examples/showcase/opening.pdf
 SHOWCASE_STAMPS := $(DECK_STAMPS) $(SHOWCASE_OPENING) \
 	$(EMBEDDED_STAMP_DIR)/getting-started/first-slideshow.stamp \
 	$(EMBEDDED_STAMP_DIR)/structure/grid-dashboard.stamp \
-	$(EMBEDDED_STAMP_DIR)/structure/title-layout.stamp \
+	$(EMBEDDED_STAMP_DIR)/structure/title-image-bottom.stamp \
 	$(EMBEDDED_STAMP_DIR)/structure/section-layout.stamp
 
 help: ## Display this help screen
@@ -129,7 +130,7 @@ build: doctor install check website ## Validate prerequisites, then compile test
 check: install api-contract core-tests layout-tests negative-tests doc-integrity ## Run package, fixture, and documentation integrity tests
 
 api-contract: ## Verify exact neutral, themed, and nested facade exports
-	cd tests && $(PYTHON) -m unittest test_check_api_exports test_theme_architecture
+	cd tests && $(PYTHON) -m unittest test_check_api_exports test_theme_architecture test_palettes
 	$(PYTHON) scripts/check-api-exports.py
 
 core-tests: install ## Run explicitly classified non-layout positive tests

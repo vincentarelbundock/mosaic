@@ -1,6 +1,5 @@
 // Stable extension surface for engine-consumed theme definitions.
 #import "engine.typ": theme-setup as _theme-setup, validate-theme as _validate-theme
-#import "../color-defaults.typ": light-palette
 
 /// Turns a passive theme definition into a setup function.
 ///
@@ -24,7 +23,7 @@
 /// a deck.
 ///
 /// Every bundled theme facade also exports the `definition` its own `setup`
-/// was built from, so `mosaic.themes.light.definition` and friends are the
+/// was built from, so `mosaic.themes.default.definition` and friends are the
 /// starting points for a variation on a bundled look.
 ///
 /// ```typ
