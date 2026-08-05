@@ -3,20 +3,16 @@
 #set page(fill: rgb("#f4f0e8"))
 #set text(fill: rgb("#20262d"))
 
-// Invert a cell with ordinary native colors.
+// Two rules per cell: one for the text inside it, one for the block around it.
+// Header and footer sit in `auto` tracks, so the paint takes `height: auto`
+// and hugs the line each one carries.
 #let ink = rgb("#20262d")
 #let paper = white
-#let invert(id) = it => {
-  show label("mosaic-cell-" + id): set text(fill: paper)
-  show label("mosaic-cell-" + id): body => block(
-    width: 100%,
-    fill: ink,
-    body,
-  )
-  it
-}
-#show: invert("header")
-#show: invert("footer")
+
+#show label("mosaic-cell-header"): set text(fill: paper)
+#show label("mosaic-cell-header"): m.surface(fill: ink, height: auto)
+#show label("mosaic-cell-footer"): set text(fill: paper)
+#show label("mosaic-cell-footer"): m.surface(fill: ink, height: auto)
 
 #let myslide = m.slide.with(
   layout: m.layouts.content(),

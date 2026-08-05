@@ -39,15 +39,20 @@ Everything about the deck's palette, overriding entries, the bundled palette col
 Target a cell by its label. Font, size, color, and alignment are `set text`, `set par`, and `set align`; the cell's own fill, stroke, and corner radius go through `m.surface`. The #link("../api/labels.html")[label reference] lists every label a slide emits:
 
 ```typ
-#show label("mosaic-cell-copy"): set align(left + horizon)
-#show label("mosaic-cell-copy"): set text(fill: black, size: 1.1em)
-#show label("mosaic-cell-copy"): m.surface(fill: white)
+#let ink = rgb("#20262d")
 
-#let columns = m.grids.columns("copy", "image")
-#m.slide(layout: columns, cells: (
-  copy: [Copy],
-  image: [Image],
-))
+#show label("mosaic-cell-header"): set text(fill: white)
+#show label("mosaic-cell-header"): m.surface(fill: ink, height: auto)
+#show label("mosaic-cell-footer"): set text(fill: white)
+#show label("mosaic-cell-footer"): m.surface(fill: ink, height: auto)
+
+#m.slide(layout: m.layouts.content())[
+  == Inverted header and footer
+][
+  #lorem(36)
+][
+  Both regions share one pair of ordinary Typst color bindings.
+]
 ```
 
 #embedded-example(
@@ -63,9 +68,9 @@ Target a cell by its label. Font, size, color, and alignment are `set text`, `se
 Two kinds of rules cover a cell, split by what they touch. Properties of the content *inside* the cell (text, alignment, paragraphs, lists) pass through the label as ordinary `set` rules. Properties of the cell's *own block* (fill, stroke, corner radius) cannot, because that block is constructed before any rule applies; the only way to paint it is to wrap the labeled block in a new block that carries the paint. `m.surface(..)` builds exactly that wrapper, so it is shorthand for the native transform, not a separate styling system:
 
 ```typ
-#show label("mosaic-cell-copy"): m.surface(fill: white)
+#show label("mosaic-cell-body"): m.surface(fill: white)
 // is the same rule as
-#show label("mosaic-cell-copy"): it => block(
+#show label("mosaic-cell-body"): it => block(
   width: 100%,
   height: 100%,
   fill: white,
