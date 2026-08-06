@@ -3,15 +3,15 @@
   "images": {
     "/assets/examples/appearance/layout-default-cover.svg": {
       "path": "assets/examples/appearance/layout-default-cover.svg",
-      "xxh3": "40685e8fb046d1db",
-      "bytes": 112615,
+      "xxh3": "d980cc83afd217e7",
+      "bytes": 107639,
       "width": 842,
       "height": 474
     },
     "/assets/examples/appearance/layout-override-cover.svg": {
       "path": "assets/examples/appearance/layout-override-cover.svg",
-      "xxh3": "2bfd79ffecbaea6c",
-      "bytes": 112682,
+      "xxh3": "2002b4cb92b3eb02",
+      "bytes": 107702,
       "width": 842,
       "height": 474
     },
@@ -24,8 +24,8 @@
     },
     "/assets/examples/appearance/palette-default-cover.svg": {
       "path": "assets/examples/appearance/palette-default-cover.svg",
-      "xxh3": "40685e8fb046d1db",
-      "bytes": 112615,
+      "xxh3": "d980cc83afd217e7",
+      "bytes": 107639,
       "width": 842,
       "height": 474
     },
@@ -80,8 +80,8 @@
     },
     "/assets/examples/appearance/palette-warm-cover.svg": {
       "path": "assets/examples/appearance/palette-warm-cover.svg",
-      "xxh3": "233ddcf649d5363c",
-      "bytes": 112615,
+      "xxh3": "32edee9cc41b4f96",
+      "bytes": 107639,
       "width": 842,
       "height": 474
     },
@@ -108,92 +108,92 @@
     },
     "/assets/examples/appearance/starter-default-cover.svg": {
       "path": "assets/examples/appearance/starter-default-cover.svg",
-      "xxh3": "40685e8fb046d1db",
-      "bytes": 112615,
+      "xxh3": "d980cc83afd217e7",
+      "bytes": 107639,
       "width": 842,
       "height": 474
     },
     "/assets/examples/appearance/starter-theme-cover.svg": {
       "path": "assets/examples/appearance/starter-theme-cover.svg",
-      "xxh3": "a18f1e5cd4bc7875",
-      "bytes": 112129,
+      "xxh3": "e74bb4c291b896ac",
+      "bytes": 107142,
       "width": 842,
       "height": 474
     },
     "/assets/examples/appearance/theme-options-airy-cover.svg": {
       "path": "assets/examples/appearance/theme-options-airy-cover.svg",
-      "xxh3": "bf92f28b7fa77e13",
-      "bytes": 112824,
+      "xxh3": "4ab0eac6e5b8c006",
+      "bytes": 107822,
       "width": 842,
       "height": 474
     },
     "/assets/examples/appearance/theme-options-dense-cover.svg": {
       "path": "assets/examples/appearance/theme-options-dense-cover.svg",
-      "xxh3": "18d10f0c11bf3f53",
-      "bytes": 112631,
+      "xxh3": "7476d5ab4121ad2b",
+      "bytes": 107642,
       "width": 842,
       "height": 474
     },
     "/assets/examples/appearance/tour-dark-cover.svg": {
       "path": "assets/examples/appearance/tour-dark-cover.svg",
-      "xxh3": "5e5aa34c9de837aa",
-      "bytes": 112615,
+      "xxh3": "9c40367e312e0cd6",
+      "bytes": 107639,
       "width": 842,
       "height": 474
     },
     "/assets/examples/appearance/tour-default-cover.svg": {
       "path": "assets/examples/appearance/tour-default-cover.svg",
-      "xxh3": "40685e8fb046d1db",
-      "bytes": 112615,
+      "xxh3": "d980cc83afd217e7",
+      "bytes": 107639,
       "width": 842,
       "height": 474
     },
     "/assets/examples/appearance/tour-editorial-cover.svg": {
       "path": "assets/examples/appearance/tour-editorial-cover.svg",
-      "xxh3": "9c47cb756e1a23f4",
-      "bytes": 114652,
+      "xxh3": "4b72eb99b1c8ae22",
+      "bytes": 109724,
       "width": 842,
       "height": 474
     },
     "/assets/examples/appearance/tour-light-cover.svg": {
       "path": "assets/examples/appearance/tour-light-cover.svg",
-      "xxh3": "40685e8fb046d1db",
-      "bytes": 112615,
+      "xxh3": "d980cc83afd217e7",
+      "bytes": 107639,
       "width": 842,
       "height": 474
     },
     "/assets/examples/appearance/tour-manifesto-cover.svg": {
       "path": "assets/examples/appearance/tour-manifesto-cover.svg",
-      "xxh3": "e7f6f4800c349fc7",
-      "bytes": 150696,
+      "xxh3": "ee45588b5b9bbb64",
+      "bytes": 142825,
       "width": 842,
       "height": 474
     },
     "/assets/examples/appearance/tour-metropolis-cover.svg": {
       "path": "assets/examples/appearance/tour-metropolis-cover.svg",
-      "xxh3": "b309e2547c3144a0",
-      "bytes": 101900,
+      "xxh3": "a4d82c4e5aee959d",
+      "bytes": 97462,
       "width": 842,
       "height": 474
     },
     "/assets/examples/appearance/tour-mono-cover.svg": {
       "path": "assets/examples/appearance/tour-mono-cover.svg",
-      "xxh3": "51bbf9f211ab7c32",
-      "bytes": 86308,
+      "xxh3": "245ff40ea1dde17d",
+      "bytes": 82493,
       "width": 842,
       "height": 474
     },
     "/assets/examples/appearance/type-apply-cover.svg": {
       "path": "assets/examples/appearance/type-apply-cover.svg",
-      "xxh3": "f2d96556961c7e82",
-      "bytes": 99410,
+      "xxh3": "962cd7fb0d71a825",
+      "bytes": 95535,
       "width": 842,
       "height": 474
     },
     "/assets/examples/appearance/type-custom-1.svg": {
       "path": "assets/examples/appearance/type-custom-1.svg",
-      "xxh3": "f2d96556961c7e82",
-      "bytes": 99410,
+      "xxh3": "962cd7fb0d71a825",
+      "bytes": 95535,
       "width": 842,
       "height": 474
     },
@@ -248,8 +248,8 @@
     },
     "/assets/examples/appearance/type-default-cover.svg": {
       "path": "assets/examples/appearance/type-default-cover.svg",
-      "xxh3": "40685e8fb046d1db",
-      "bytes": 112615,
+      "xxh3": "d980cc83afd217e7",
+      "bytes": 107639,
       "width": 842,
       "height": 474
     },
@@ -780,22 +780,22 @@
     },
     "/assets/examples/structure/title-academic-cover.svg": {
       "path": "assets/examples/structure/title-academic-cover.svg",
-      "xxh3": "945b46f39c0ffa64",
-      "bytes": 128218,
+      "xxh3": "2018226407afea86",
+      "bytes": 123158,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/title-bordered-cover.svg": {
       "path": "assets/examples/structure/title-bordered-cover.svg",
-      "xxh3": "e798d8607e02a557",
-      "bytes": 128416,
+      "xxh3": "510a2e69bbe74a5e",
+      "bytes": 123277,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/title-centered-cover.svg": {
       "path": "assets/examples/structure/title-centered-cover.svg",
-      "xxh3": "55cd96443f616c03",
-      "bytes": 128253,
+      "xxh3": "7b59102af42f4c12",
+      "bytes": 123198,
       "width": 842,
       "height": 474
     },
@@ -808,57 +808,57 @@
     },
     "/assets/examples/structure/title-image-bottom-cover.svg": {
       "path": "assets/examples/structure/title-image-bottom-cover.svg",
-      "xxh3": "c1d3d26b61f71ed2",
-      "bytes": 304504,
+      "xxh3": "f2a010c81fe17de4",
+      "bytes": 299352,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/title-image-left-cover.svg": {
       "path": "assets/examples/structure/title-image-left-cover.svg",
-      "xxh3": "05a70b2ca4b8dfd6",
-      "bytes": 304005,
+      "xxh3": "d948561969ec9f94",
+      "bytes": 298863,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/title-image-right-cover.svg": {
       "path": "assets/examples/structure/title-image-right-cover.svg",
-      "xxh3": "767f58396fea290e",
-      "bytes": 304005,
+      "xxh3": "d8c1466476edac99",
+      "bytes": 298863,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/title-image-top-cover.svg": {
       "path": "assets/examples/structure/title-image-top-cover.svg",
-      "xxh3": "b6e7a985019aabb5",
-      "bytes": 304503,
+      "xxh3": "58e4d2a5555bd91d",
+      "bytes": 299351,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/title-invert-cover.svg": {
       "path": "assets/examples/structure/title-invert-cover.svg",
-      "xxh3": "bf491da411bdfc19",
-      "bytes": 122655,
+      "xxh3": "ab7fff520f0dbf99",
+      "bytes": 117598,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/title-kicker-cover.svg": {
       "path": "assets/examples/structure/title-kicker-cover.svg",
-      "xxh3": "0166c4413beaf9f6",
-      "bytes": 122400,
+      "xxh3": "efb25928da5d0f57",
+      "bytes": 117343,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/title-panel-cover.svg": {
       "path": "assets/examples/structure/title-panel-cover.svg",
-      "xxh3": "7085ef62f9bcf3b3",
-      "bytes": 128471,
+      "xxh3": "87b4c0734ab137fc",
+      "bytes": 123353,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/title-ruled-cover.svg": {
       "path": "assets/examples/structure/title-ruled-cover.svg",
-      "xxh3": "c0d130e17d94ea84",
-      "bytes": 128333,
+      "xxh3": "76c5cc20b34cf4a9",
+      "bytes": 123198,
       "width": 842,
       "height": 474
     },
@@ -899,10 +899,10 @@
     },
     "/assets/images/showcase-contact-sheet.webp": {
       "path": "assets/images/showcase-contact-sheet.webp",
-      "xxh3": "5b4b7de8d1bbabe4",
-      "bytes": 256796,
+      "xxh3": "00ebefcc969734ce",
+      "bytes": 315082,
       "width": 1968,
-      "height": 2616
+      "height": 3360
     },
     "/assets/images/showcase-poster.webp": {
       "path": "assets/images/showcase-poster.webp",
@@ -1284,8 +1284,8 @@
     },
     "/examples/decks/metropolis/cover.jpg": {
       "path": "examples/decks/metropolis/cover.jpg",
-      "xxh3": "4b91b3120ed41dc5",
-      "bytes": 40554,
+      "xxh3": "d95de6a9bfa88848",
+      "bytes": 40958,
       "width": 1200,
       "height": 675
     },
@@ -1431,8 +1431,8 @@
     },
     "/examples/decks/quarto-clean/cover.jpg": {
       "path": "examples/decks/quarto-clean/cover.jpg",
-      "xxh3": "45cecb7835124aba",
-      "bytes": 39571,
+      "xxh3": "be5ec9612878d343",
+      "bytes": 40586,
       "width": 1200,
       "height": 675
     },
@@ -1445,15 +1445,15 @@
     },
     "assets/examples/appearance/layout-default-cover.svg": {
       "path": "assets/examples/appearance/layout-default-cover.svg",
-      "xxh3": "40685e8fb046d1db",
-      "bytes": 112615,
+      "xxh3": "d980cc83afd217e7",
+      "bytes": 107639,
       "width": 842,
       "height": 474
     },
     "assets/examples/appearance/layout-override-cover.svg": {
       "path": "assets/examples/appearance/layout-override-cover.svg",
-      "xxh3": "2bfd79ffecbaea6c",
-      "bytes": 112682,
+      "xxh3": "2002b4cb92b3eb02",
+      "bytes": 107702,
       "width": 842,
       "height": 474
     },
@@ -1466,8 +1466,8 @@
     },
     "assets/examples/appearance/palette-default-cover.svg": {
       "path": "assets/examples/appearance/palette-default-cover.svg",
-      "xxh3": "40685e8fb046d1db",
-      "bytes": 112615,
+      "xxh3": "d980cc83afd217e7",
+      "bytes": 107639,
       "width": 842,
       "height": 474
     },
@@ -1522,8 +1522,8 @@
     },
     "assets/examples/appearance/palette-warm-cover.svg": {
       "path": "assets/examples/appearance/palette-warm-cover.svg",
-      "xxh3": "233ddcf649d5363c",
-      "bytes": 112615,
+      "xxh3": "32edee9cc41b4f96",
+      "bytes": 107639,
       "width": 842,
       "height": 474
     },
@@ -1550,92 +1550,92 @@
     },
     "assets/examples/appearance/starter-default-cover.svg": {
       "path": "assets/examples/appearance/starter-default-cover.svg",
-      "xxh3": "40685e8fb046d1db",
-      "bytes": 112615,
+      "xxh3": "d980cc83afd217e7",
+      "bytes": 107639,
       "width": 842,
       "height": 474
     },
     "assets/examples/appearance/starter-theme-cover.svg": {
       "path": "assets/examples/appearance/starter-theme-cover.svg",
-      "xxh3": "a18f1e5cd4bc7875",
-      "bytes": 112129,
+      "xxh3": "e74bb4c291b896ac",
+      "bytes": 107142,
       "width": 842,
       "height": 474
     },
     "assets/examples/appearance/theme-options-airy-cover.svg": {
       "path": "assets/examples/appearance/theme-options-airy-cover.svg",
-      "xxh3": "bf92f28b7fa77e13",
-      "bytes": 112824,
+      "xxh3": "4ab0eac6e5b8c006",
+      "bytes": 107822,
       "width": 842,
       "height": 474
     },
     "assets/examples/appearance/theme-options-dense-cover.svg": {
       "path": "assets/examples/appearance/theme-options-dense-cover.svg",
-      "xxh3": "18d10f0c11bf3f53",
-      "bytes": 112631,
+      "xxh3": "7476d5ab4121ad2b",
+      "bytes": 107642,
       "width": 842,
       "height": 474
     },
     "assets/examples/appearance/tour-dark-cover.svg": {
       "path": "assets/examples/appearance/tour-dark-cover.svg",
-      "xxh3": "5e5aa34c9de837aa",
-      "bytes": 112615,
+      "xxh3": "9c40367e312e0cd6",
+      "bytes": 107639,
       "width": 842,
       "height": 474
     },
     "assets/examples/appearance/tour-default-cover.svg": {
       "path": "assets/examples/appearance/tour-default-cover.svg",
-      "xxh3": "40685e8fb046d1db",
-      "bytes": 112615,
+      "xxh3": "d980cc83afd217e7",
+      "bytes": 107639,
       "width": 842,
       "height": 474
     },
     "assets/examples/appearance/tour-editorial-cover.svg": {
       "path": "assets/examples/appearance/tour-editorial-cover.svg",
-      "xxh3": "9c47cb756e1a23f4",
-      "bytes": 114652,
+      "xxh3": "4b72eb99b1c8ae22",
+      "bytes": 109724,
       "width": 842,
       "height": 474
     },
     "assets/examples/appearance/tour-light-cover.svg": {
       "path": "assets/examples/appearance/tour-light-cover.svg",
-      "xxh3": "40685e8fb046d1db",
-      "bytes": 112615,
+      "xxh3": "d980cc83afd217e7",
+      "bytes": 107639,
       "width": 842,
       "height": 474
     },
     "assets/examples/appearance/tour-manifesto-cover.svg": {
       "path": "assets/examples/appearance/tour-manifesto-cover.svg",
-      "xxh3": "e7f6f4800c349fc7",
-      "bytes": 150696,
+      "xxh3": "ee45588b5b9bbb64",
+      "bytes": 142825,
       "width": 842,
       "height": 474
     },
     "assets/examples/appearance/tour-metropolis-cover.svg": {
       "path": "assets/examples/appearance/tour-metropolis-cover.svg",
-      "xxh3": "b309e2547c3144a0",
-      "bytes": 101900,
+      "xxh3": "a4d82c4e5aee959d",
+      "bytes": 97462,
       "width": 842,
       "height": 474
     },
     "assets/examples/appearance/tour-mono-cover.svg": {
       "path": "assets/examples/appearance/tour-mono-cover.svg",
-      "xxh3": "51bbf9f211ab7c32",
-      "bytes": 86308,
+      "xxh3": "245ff40ea1dde17d",
+      "bytes": 82493,
       "width": 842,
       "height": 474
     },
     "assets/examples/appearance/type-apply-cover.svg": {
       "path": "assets/examples/appearance/type-apply-cover.svg",
-      "xxh3": "f2d96556961c7e82",
-      "bytes": 99410,
+      "xxh3": "962cd7fb0d71a825",
+      "bytes": 95535,
       "width": 842,
       "height": 474
     },
     "assets/examples/appearance/type-custom-1.svg": {
       "path": "assets/examples/appearance/type-custom-1.svg",
-      "xxh3": "f2d96556961c7e82",
-      "bytes": 99410,
+      "xxh3": "962cd7fb0d71a825",
+      "bytes": 95535,
       "width": 842,
       "height": 474
     },
@@ -1690,8 +1690,8 @@
     },
     "assets/examples/appearance/type-default-cover.svg": {
       "path": "assets/examples/appearance/type-default-cover.svg",
-      "xxh3": "40685e8fb046d1db",
-      "bytes": 112615,
+      "xxh3": "d980cc83afd217e7",
+      "bytes": 107639,
       "width": 842,
       "height": 474
     },
@@ -2222,22 +2222,22 @@
     },
     "assets/examples/structure/title-academic-cover.svg": {
       "path": "assets/examples/structure/title-academic-cover.svg",
-      "xxh3": "945b46f39c0ffa64",
-      "bytes": 128218,
+      "xxh3": "2018226407afea86",
+      "bytes": 123158,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/title-bordered-cover.svg": {
       "path": "assets/examples/structure/title-bordered-cover.svg",
-      "xxh3": "e798d8607e02a557",
-      "bytes": 128416,
+      "xxh3": "510a2e69bbe74a5e",
+      "bytes": 123277,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/title-centered-cover.svg": {
       "path": "assets/examples/structure/title-centered-cover.svg",
-      "xxh3": "55cd96443f616c03",
-      "bytes": 128253,
+      "xxh3": "7b59102af42f4c12",
+      "bytes": 123198,
       "width": 842,
       "height": 474
     },
@@ -2250,57 +2250,57 @@
     },
     "assets/examples/structure/title-image-bottom-cover.svg": {
       "path": "assets/examples/structure/title-image-bottom-cover.svg",
-      "xxh3": "c1d3d26b61f71ed2",
-      "bytes": 304504,
+      "xxh3": "f2a010c81fe17de4",
+      "bytes": 299352,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/title-image-left-cover.svg": {
       "path": "assets/examples/structure/title-image-left-cover.svg",
-      "xxh3": "05a70b2ca4b8dfd6",
-      "bytes": 304005,
+      "xxh3": "d948561969ec9f94",
+      "bytes": 298863,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/title-image-right-cover.svg": {
       "path": "assets/examples/structure/title-image-right-cover.svg",
-      "xxh3": "767f58396fea290e",
-      "bytes": 304005,
+      "xxh3": "d8c1466476edac99",
+      "bytes": 298863,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/title-image-top-cover.svg": {
       "path": "assets/examples/structure/title-image-top-cover.svg",
-      "xxh3": "b6e7a985019aabb5",
-      "bytes": 304503,
+      "xxh3": "58e4d2a5555bd91d",
+      "bytes": 299351,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/title-invert-cover.svg": {
       "path": "assets/examples/structure/title-invert-cover.svg",
-      "xxh3": "bf491da411bdfc19",
-      "bytes": 122655,
+      "xxh3": "ab7fff520f0dbf99",
+      "bytes": 117598,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/title-kicker-cover.svg": {
       "path": "assets/examples/structure/title-kicker-cover.svg",
-      "xxh3": "0166c4413beaf9f6",
-      "bytes": 122400,
+      "xxh3": "efb25928da5d0f57",
+      "bytes": 117343,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/title-panel-cover.svg": {
       "path": "assets/examples/structure/title-panel-cover.svg",
-      "xxh3": "7085ef62f9bcf3b3",
-      "bytes": 128471,
+      "xxh3": "87b4c0734ab137fc",
+      "bytes": 123353,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/title-ruled-cover.svg": {
       "path": "assets/examples/structure/title-ruled-cover.svg",
-      "xxh3": "c0d130e17d94ea84",
-      "bytes": 128333,
+      "xxh3": "76c5cc20b34cf4a9",
+      "bytes": 123198,
       "width": 842,
       "height": 474
     },
@@ -2341,10 +2341,10 @@
     },
     "assets/images/showcase-contact-sheet.webp": {
       "path": "assets/images/showcase-contact-sheet.webp",
-      "xxh3": "5b4b7de8d1bbabe4",
-      "bytes": 256796,
+      "xxh3": "00ebefcc969734ce",
+      "bytes": 315082,
       "width": 1968,
-      "height": 2616
+      "height": 3360
     },
     "assets/images/showcase-poster.webp": {
       "path": "assets/images/showcase-poster.webp",
@@ -2726,8 +2726,8 @@
     },
     "examples/decks/metropolis/cover.jpg": {
       "path": "examples/decks/metropolis/cover.jpg",
-      "xxh3": "4b91b3120ed41dc5",
-      "bytes": 40554,
+      "xxh3": "d95de6a9bfa88848",
+      "bytes": 40958,
       "width": 1200,
       "height": 675
     },
@@ -2873,8 +2873,8 @@
     },
     "examples/decks/quarto-clean/cover.jpg": {
       "path": "examples/decks/quarto-clean/cover.jpg",
-      "xxh3": "45cecb7835124aba",
-      "bytes": 39571,
+      "xxh3": "be5ec9612878d343",
+      "bytes": 40586,
       "width": 1200,
       "height": 675
     },

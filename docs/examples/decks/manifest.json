@@ -68,7 +68,7 @@
     },
     {
       "source": "docs/examples/decks/manifesto/manifesto.pdf",
-      "pages": [1, 5, 8, 16]
+      "pages": [5, 8, 16]
     },
     {
       "source": "docs/assets/examples/structure/grid-dashboard.pdf",
@@ -85,6 +85,14 @@
     {
       "source": "docs/assets/examples/structure/section-layout.pdf",
       "pages": [3, 4, 5]
+    },
+    {
+      "source": "docs/examples/decks/simpres/simpres.pdf",
+      "pages": [5, 9]
+    },
+    {
+      "source": "docs/assets/examples/appearance/tour-editorial.pdf",
+      "pages": [1, 7]
     }
   ]
 }
