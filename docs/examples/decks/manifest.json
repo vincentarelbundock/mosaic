@@ -79,6 +79,10 @@
       "pages": [1]
     },
     {
+      "source": "docs/examples/decks/beamer-annarbor/beamer-annarbor.pdf",
+      "pages": [1, 7]
+    },
+    {
       "source": "docs/assets/examples/structure/section-layout.pdf",
       "pages": [3, 4, 5]
     }
