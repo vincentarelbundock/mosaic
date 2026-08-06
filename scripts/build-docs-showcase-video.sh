@@ -3,7 +3,8 @@
 set -euo pipefail
 
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-output="$repo_dir/docs/assets/images/showcase.webm"
+webm_output="$repo_dir/docs/assets/images/showcase.webm"
+mp4_output="$repo_dir/docs/assets/images/showcase.mp4"
 poster="$repo_dir/docs/assets/images/showcase-poster.webp"
 # One still holding every slide the reel visits, three across. Incremental
 # builds contribute only their completed frame, so the sheet reads as one
@@ -24,6 +25,7 @@ width=1280
 height=720
 fps=20
 crf=40
+mp4_crf=26
 
 # Contact-sheet geometry: three columns of half-size frames, separated and
 # framed by the same gap so no slide edge touches another.
@@ -101,7 +103,7 @@ done
 # settings.
 fingerprint="$(
   {
-    printf 'v3 %s %s %s %s\n' "$width" "$height" "$fps" "$crf"
+    printf 'v4 %s %s %s %s %s\n' "$width" "$height" "$fps" "$crf" "$mp4_crf"
     printf 'sheet %s %s %s %s %s\n' \
       "$sheet_columns" "$sheet_cell_width" "$sheet_cell_height" "$sheet_gap" "$sheet_quality"
     for index in "${!frames[@]}"; do
@@ -110,12 +112,12 @@ fingerprint="$(
   } | sha256sum | cut -d' ' -f1
 )"
 
-if [[ -f "$fingerprint_file" && -f "$output" && -f "$poster" && -f "$sheet" ]] &&
+if [[ -f "$fingerprint_file" && -f "$webm_output" && -f "$mp4_output" && -f "$poster" && -f "$sheet" ]] &&
   [[ "$(cat "$fingerprint_file")" == "$fingerprint" ]]; then
-  # Bump the mtimes so Make stops asking, but leave the bytes alone: an
-  # identical re-encode would still differ byte for byte and dirty the tree.
-  touch "$output" "$poster" "$sheet" "$fingerprint_file"
-  echo "showcase: slides unchanged, kept ${output#"$repo_dir/"}"
+  # Bump the mtimes so Make stops asking, but leave the bytes alone: identical
+  # re-encodes would still differ byte for byte and dirty the tree.
+  touch "$webm_output" "$mp4_output" "$poster" "$sheet" "$fingerprint_file"
+  echo "showcase: slides unchanged, kept ${webm_output#"$repo_dir/"} and ${mp4_output#"$repo_dir/"}"
   exit 0
 fi
 
@@ -130,7 +132,7 @@ for index in "${!frames[@]}"; do
 done
 printf "file '%s'\n" "${frames[-1]}" >>"$manifest"
 
-mkdir -p "$(dirname "$output")"
+mkdir -p "$(dirname "$webm_output")"
 ffmpeg -hide_banner -loglevel error -y \
   -f concat \
   -safe 0 \
@@ -144,7 +146,24 @@ ffmpeg -hide_banner -loglevel error -y \
   -row-mt 1 \
   -auto-alt-ref 1 \
   -lag-in-frames 20 \
-  "$output"
+  "$webm_output"
+
+# H.264 in MP4 remains the broadest video format for iPadOS Safari. Main
+# profile, level 3.1, yuv420p, and fast-start metadata keep the file compatible
+# with older iPads and let playback begin before the whole file is downloaded.
+ffmpeg -hide_banner -loglevel error -y \
+  -f concat \
+  -safe 0 \
+  -i "$manifest" \
+  -vf "fps=$fps,format=yuv420p" \
+  -an \
+  -c:v libx264 \
+  -profile:v main \
+  -level:v 3.1 \
+  -crf "$mp4_crf" \
+  -preset medium \
+  -movflags +faststart \
+  "$mp4_output"
 
 # The poster is the first frame itself, so the still shown before playback and
 # under prefers-reduced-motion matches where the reel starts.
@@ -175,6 +194,6 @@ ffmpeg -hide_banner -loglevel error -y \
 
 printf '%s\n' "$fingerprint" >"$fingerprint_file"
 
-echo "showcase: wrote ${output#"$repo_dir/"} ($(awk "BEGIN { printf \"%.1f\", $length }")s, ${#frames[@]} frames)"
+echo "showcase: wrote ${webm_output#"$repo_dir/"} and ${mp4_output#"$repo_dir/"} ($(awk "BEGIN { printf \"%.1f\", $length }")s, ${#frames[@]} frames)"
 echo "showcase: wrote ${poster#"$repo_dir/"}"
 echo "showcase: wrote ${sheet#"$repo_dir/"} (${#beats[@]} slides, ${sheet_columns}x${sheet_rows})"

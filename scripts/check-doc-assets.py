@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
+import json
 import re
 import subprocess
 import sys
@@ -66,6 +67,58 @@ def pdf_pages(path: Path) -> int:
     if not match:
         raise IntegrityError(f"could not read PDF page count: {path}")
     return int(match.group(1))
+
+
+def video_stream(path: Path) -> dict[str, object]:
+    result = subprocess.run(
+        [
+            "ffprobe",
+            "-v", "error",
+            "-select_streams", "v:0",
+            "-show_entries", "stream=codec_name,profile,pix_fmt,width,height",
+            "-of", "json",
+            str(path),
+        ],
+        text=True,
+        capture_output=True,
+    )
+    if result.returncode:
+        raise IntegrityError(f"ffprobe failed for {path}: {result.stderr.strip()}")
+    streams = json.loads(result.stdout).get("streams", [])
+    if len(streams) != 1:
+        raise IntegrityError(f"expected one video stream in {path}")
+    return streams[0]
+
+
+def check_ipad_media(errors: list[str]) -> None:
+    webm = DOCS / "assets/images/showcase.webm"
+    mp4 = DOCS / "assets/images/showcase.mp4"
+    for path in (webm, mp4):
+        if not path.is_file():
+            errors.append(f"missing showcase video: {path.relative_to(ROOT)}")
+    if webm.is_file() and video_stream(webm).get("codec_name") != "vp9":
+        errors.append("showcase.webm must use VP9")
+    if mp4.is_file():
+        stream = video_stream(mp4)
+        if stream.get("codec_name") != "h264" or stream.get("pix_fmt") != "yuv420p":
+            errors.append("showcase.mp4 must use H.264 with yuv420p for iPadOS")
+
+    index_source = (DOCS / "index.typ").read_text(encoding="utf-8")
+    mp4_source = 'src: "assets/images/showcase.mp4"'
+    webm_source = 'src: "assets/images/showcase.webm"'
+    if mp4_source not in index_source or webm_source not in index_source:
+        errors.append("home-page video must provide MP4 and WebM sources")
+    elif index_source.index(mp4_source) > index_source.index(webm_source):
+        errors.append("the iPad-compatible MP4 source must precede WebM")
+
+    viewer = (DOCS / "theme/js/pdf-slideshow.js").read_text(encoding="utf-8")
+    for required in (
+        "iPad|iPhone|iPod",
+        'navigator.platform === "MacIntel"',
+        'typeof dialog.showModal !== "function"',
+    ):
+        if required not in viewer:
+            errors.append(f"PDF slideshow native fallback is missing {required!r}")
 
 
 def check_greyscale_theme(manifest: dict, errors: list[str]) -> None:
@@ -135,6 +188,7 @@ def check_sources() -> tuple[list[ExampleCall], set[Path]]:
 
     manifest = load_manifest()
     check_greyscale_theme(manifest, errors)
+    check_ipad_media(errors)
     for item in manifest["showcase"]:
         source = ROOT / item["source"]
         selected = max(flatten_pages(item["pages"]))

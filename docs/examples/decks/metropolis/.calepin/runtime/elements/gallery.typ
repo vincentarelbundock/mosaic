@@ -27,6 +27,8 @@
 
         .calepin-elements-gallery__item {
           display: block;
+          break-inside: avoid;
+          margin-block-end: var(--calepin-elements-gallery-gap, 0.75em);
           border-radius: 0.5rem;
           border: 1px solid var(--pico-muted-border-color);
           overflow: hidden;
@@ -164,15 +166,20 @@
 #let _style(columns, gap, max-width) = {
   let gap = _css-size(gap)
   let width = _css-size(max-width)
-  let template = if type(columns) == str {
-    columns
+  let style = if type(columns) == int {
+    let columns = if columns <= 0 { 3 } else { columns }
+    "column-count: " + str(columns) + "; "
+  } else if type(columns) == str {
+    "display: grid; align-items: start; grid-template-columns: " + columns + "; "
   } else {
-    let columns = if type(columns) == int and columns > 0 { columns } else { 3 }
-    "repeat(" + str(columns) + ", minmax(0, 1fr))"
+    "column-count: 3; "
   }
-  let style = "display: grid; align-items: start; grid-template-columns: " + template + "; "
   if gap != none {
-    style += "gap: " + gap + "; "
+    style += if type(columns) == int {
+      "column-gap: " + gap + "; --calepin-elements-gallery-gap: " + gap + "; "
+    } else {
+      "gap: " + gap + "; "
+    }
   }
   if width != none {
     style += "max-width: " + width + "; "

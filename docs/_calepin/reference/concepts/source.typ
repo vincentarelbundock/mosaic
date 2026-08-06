@@ -25,8 +25,8 @@ On this website, we will refer to the different components of a slide deck in th
 - *Variant*: a named alternative arrangement offered by a layout.
 - *Component*: a reusable piece of slide content such as a callout, quote, or badge.
 - *Theme*: a coordinated set of colors, text styles, and layouts.
-- *Step*: one stage of a slide's timed build. Each step renders as its own frame.
-- *Frame*: one page of the compiled document; a slide with timed content spans several frames.
+- *Step*: one stage of a slide that reveals or replaces content incrementally. Each step renders as its own frame.
+- *Frame*: one page of the compiled document; a slide built from several steps spans several frames.
 
 = Anatomy of a slide deck
 

@@ -347,13 +347,6 @@ h3 {
   margin-top: 0;
 }
 
-/* Fragment navigation (TOC links, cross-references) must land anchor targets
-   below the sticky topbar, not underneath it. Standalone documents have no
-   topbar and keep the default scroll position. */
-body:has(.calepin-site-topbar) [id] {
-  scroll-margin-top: calc(var(--calepin-topbar-height) + 1rem);
-}
-
 .calepin-content img,
 .calepin-content svg,
 .calepin-content video,
@@ -1131,14 +1124,6 @@ a:has(.calepin-nav-icon) {
   background: var(--calepin-surface-muted);
 }
 
-/* calepin.elements.columns: honor the requested column count above Pico's
-   .grid breakpoint. Falls back to Pico's auto-fit when no count is set. */
-@media (min-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(var(--calepin-grid-columns, auto-fit), minmax(0%, 1fr));
-  }
-}
-
     </style>
 
     <style>
@@ -1260,9 +1245,11 @@ a:has(.calepin-nav-icon) {
   grid-template-areas: "sidebar main toc";
   gap: var(--calepin-shell-gap);
   width: min(100% - 2rem, 95rem);
-  margin-inline: auto;
+  margin: 0;
   justify-items: stretch;
+  justify-content: start;
   padding: 2rem 0 4rem;
+  padding-inline-start: 1rem;
 }
 
 .calepin-website-sidebar {
@@ -3268,7 +3255,7 @@ html[data-theme="dark"] .mosaic-diagram {
                     <ul>
 
 
-<li class="calepin-website-sidebar-link"><a href="../index.html" aria-label="Home">Home</a></li>
+<li class="calepin-website-sidebar-link"><a href="../index.html" aria-label="Mosaic">Mosaic</a></li>
 
 
 
@@ -3294,23 +3281,23 @@ html[data-theme="dark"] .mosaic-diagram {
                         <ul>
 
 
-<li class="calepin-website-sidebar-link"><a href="../slides/content.html" aria-label="Content">Content</a></li>
+<li class="calepin-website-sidebar-link"><a href="../slides/content.html" aria-label="Content slides">Content slides</a></li>
 
 
 
-<li class="calepin-website-sidebar-link"><a href="../slides/title.html" aria-label="Title">Title</a></li>
+<li class="calepin-website-sidebar-link"><a href="../slides/title.html" aria-label="Title slides">Title slides</a></li>
 
 
 
-<li class="calepin-website-sidebar-link"><a href="../slides/section.html" aria-label="Section">Section</a></li>
+<li class="calepin-website-sidebar-link"><a href="../slides/section.html" aria-label="Section slides">Section slides</a></li>
 
 
 
-<li class="calepin-website-sidebar-link"><a href="../slides/image.html" aria-label="Image">Image</a></li>
+<li class="calepin-website-sidebar-link"><a href="../slides/image.html" aria-label="Image slides">Image slides</a></li>
 
 
 
-<li class="calepin-website-sidebar-link"><a href="../slides/custom.html" aria-label="Custom">Custom</a></li>
+<li class="calepin-website-sidebar-link"><a href="../slides/custom.html" aria-label="Custom slides">Custom slides</a></li>
 
 
 
@@ -3445,31 +3432,31 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-<li class="calepin-website-sidebar-link"><a href="../api/setup.html" aria-label="Document setup">Document setup</a></li>
+<li class="calepin-website-sidebar-link"><a href="../api/setup.html" aria-label="setup">setup</a></li>
 
 
 
-<li class="calepin-website-sidebar-link"><a href="../api/theme.html" aria-label="Theme authoring">Theme authoring</a></li>
+<li class="calepin-website-sidebar-link"><a href="../api/theme.html" aria-label="theme">theme</a></li>
 
 
 
-<li class="calepin-website-sidebar-link"><a href="../api/slides.html" aria-label="Slides">Slides</a></li>
+<li class="calepin-website-sidebar-link"><a href="../api/slides.html" aria-label="slides">slides</a></li>
 
 
 
-<li class="calepin-website-sidebar-link"><a href="../api/steps.html" aria-label="Incremental steps">Incremental steps</a></li>
+<li class="calepin-website-sidebar-link"><a href="../api/steps.html" aria-label="steps">steps</a></li>
 
 
 
-<li class="calepin-website-sidebar-link"><a href="../api/grids.html" aria-label="mosaic.grids constructors">mosaic.grids constructors</a></li>
+<li class="calepin-website-sidebar-link"><a href="../api/grids.html" aria-label="grids">grids</a></li>
 
 
 
-<li class="calepin-website-sidebar-link"><a href="../api/layouts.html" aria-label="Semantic layouts">Semantic layouts</a></li>
+<li class="calepin-website-sidebar-link"><a href="../api/layouts.html" aria-label="layouts">layouts</a></li>
 
 
 
-<li class="calepin-website-sidebar-link"><a href="../api/components.html" aria-label="Components and furniture">Components and furniture</a></li>
+<li class="calepin-website-sidebar-link"><a href="../api/components.html" aria-label="components">components</a></li>
 
 
 
@@ -4972,6 +4959,13 @@ html[data-theme="dark"] .mosaic-diagram {
 
   let pdfJsPromise = null;
 
+  function prefersNativePdf() {
+    return (
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+    );
+  }
+
   function loadPdfJs() {
     if (!pdfJsPromise) {
       pdfJsPromise = import(PDFJS_URL).then((pdfjs) => {
@@ -4983,9 +4977,20 @@ html[data-theme="dark"] .mosaic-diagram {
   }
 
   function initializeViewer(dialog) {
-    const trigger = document.querySelector(
-      `[data-pdf-dialog="${CSS.escape(dialog.id)}"]`,
-    );
+    const trigger = Array.from(
+      document.querySelectorAll("[data-pdf-dialog]"),
+    ).find((candidate) => candidate.dataset.pdfDialog === dialog.id);
+
+    if (
+      !trigger ||
+      prefersNativePdf() ||
+      typeof dialog.showModal !== "function"
+    ) {
+      trigger?.removeAttribute("aria-haspopup");
+      trigger?.removeAttribute("aria-controls");
+      return;
+    }
+
     const canvas = dialog.querySelector("[data-pdf-canvas]");
     const stage = dialog.querySelector("[data-pdf-stage]");
     const message = dialog.querySelector("[data-pdf-message]");
@@ -5156,8 +5161,13 @@ html[data-theme="dark"] .mosaic-diagram {
       ) {
         return;
       }
+      try {
+        dialog.showModal();
+      } catch (error) {
+        console.error("Unable to open PDF slideshow dialog", error);
+        return;
+      }
       event.preventDefault();
-      dialog.showModal();
       close.focus();
       await ensureLoaded();
     });

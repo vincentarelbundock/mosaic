@@ -2,7 +2,7 @@
 #import "/.calepin/calepin.typ": *
 #let document = _calepin-document-element
 
-#let _calepin-expected-generation = "a15f30f370799017-1349cde127705c16"
+#let _calepin-expected-generation = "037d00e36897af2d-1349cde127705c16"
 #let _calepin-verify-generation() = {
   let path = sys.inputs.at("calepin-results", default: none)
   if path != none and path != "" {
@@ -340,7 +340,7 @@ than copied into the deck.
   - citations disconnected from claims
 ]
 
-// One-off closing slide: the theme's inverted ground, one large phrase.
+// One-off closing slide: the theme's inverted canvas, one large phrase.
 #[
   #show label("mosaic-cell-body"): set align(center + horizon)
   #m.slide(invert: true, cells: (

@@ -1,8 +1,8 @@
 {
   "schema": 2,
-  "calepin_version": "0.0.42",
+  "calepin_version": "0.0.37",
   "input": "slides/custom.typ",
-  "generation": "699c3ef4c61d5cb8-1349cde127705c16",
+  "generation": "669c1c4919c742d4-1349cde127705c16",
   "store": {},
   "chunks": {}
 }

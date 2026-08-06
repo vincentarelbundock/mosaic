@@ -514,8 +514,8 @@
     },
     "/assets/examples/getting-started/first-slideshow-cover.svg": {
       "path": "assets/examples/getting-started/first-slideshow-cover.svg",
-      "xxh3": "62d3d552f35376ea",
-      "bytes": 41495,
+      "xxh3": "4081080589464f73",
+      "bytes": 30942,
       "width": 842,
       "height": 474
     },
@@ -612,8 +612,8 @@
     },
     "/assets/examples/structure/grid-dashboard-1.svg": {
       "path": "assets/examples/structure/grid-dashboard-1.svg",
-      "xxh3": "e8cb4984be774b1a",
-      "bytes": 186575,
+      "xxh3": "38b2796d4591c54b",
+      "bytes": 181980,
       "width": 842,
       "height": 474
     },
@@ -689,78 +689,78 @@
     },
     "/assets/examples/structure/section-layout-01.svg": {
       "path": "assets/examples/structure/section-layout-01.svg",
-      "xxh3": "e1ead610f68b86f9",
-      "bytes": 14463,
+      "xxh3": "d45181bbede25edc",
+      "bytes": 11372,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/section-layout-02.svg": {
       "path": "assets/examples/structure/section-layout-02.svg",
-      "xxh3": "0fbccc56f1f8a4bb",
-      "bytes": 17799,
+      "xxh3": "866dbd58fcba9a6a",
+      "bytes": 13254,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/section-layout-03.svg": {
       "path": "assets/examples/structure/section-layout-03.svg",
-      "xxh3": "bbac98875eb9c4fe",
-      "bytes": 28132,
+      "xxh3": "08b06510b856b984",
+      "bytes": 21411,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/section-layout-04.svg": {
       "path": "assets/examples/structure/section-layout-04.svg",
-      "xxh3": "176038db3b8094f5",
-      "bytes": 33013,
+      "xxh3": "17dfb0142c53d937",
+      "bytes": 25460,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/section-layout-05.svg": {
       "path": "assets/examples/structure/section-layout-05.svg",
-      "xxh3": "1a9f23c07ee8e46f",
-      "bytes": 33693,
+      "xxh3": "c23969c32ac60ff0",
+      "bytes": 26698,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/section-layout-06.svg": {
       "path": "assets/examples/structure/section-layout-06.svg",
-      "xxh3": "22b3b4a57e1031ae",
-      "bytes": 54648,
+      "xxh3": "834e9c782e3b7316",
+      "bytes": 37261,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/section-layout-07.svg": {
       "path": "assets/examples/structure/section-layout-07.svg",
-      "xxh3": "58f58b4704731121",
-      "bytes": 121173,
+      "xxh3": "0b9c484b8b803d42",
+      "bytes": 117002,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/section-layout-08.svg": {
       "path": "assets/examples/structure/section-layout-08.svg",
-      "xxh3": "31427d0c0806a98b",
-      "bytes": 121874,
+      "xxh3": "7c79b70b848961a2",
+      "bytes": 117672,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/section-layout-09.svg": {
       "path": "assets/examples/structure/section-layout-09.svg",
-      "xxh3": "c6af8e2ab525f919",
-      "bytes": 121577,
+      "xxh3": "185069d8948bcdb0",
+      "bytes": 117095,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/section-layout-10.svg": {
       "path": "assets/examples/structure/section-layout-10.svg",
-      "xxh3": "106a064d134f8503",
-      "bytes": 121962,
+      "xxh3": "72f674af869a210e",
+      "bytes": 117456,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/section-layout-11.svg": {
       "path": "assets/examples/structure/section-layout-11.svg",
-      "xxh3": "37e21ad2d110186b",
-      "bytes": 125652,
+      "xxh3": "971589335729e129",
+      "bytes": 120433,
       "width": 842,
       "height": 474
     },
@@ -815,8 +815,8 @@
     },
     "/assets/examples/structure/title-image-bottom-cover.svg": {
       "path": "assets/examples/structure/title-image-bottom-cover.svg",
-      "xxh3": "f2a010c81fe17de4",
-      "bytes": 299352,
+      "xxh3": "f7709a7bb519dc2d",
+      "bytes": 280731,
       "width": 842,
       "height": 474
     },
@@ -906,8 +906,8 @@
     },
     "/assets/images/showcase-contact-sheet.webp": {
       "path": "assets/images/showcase-contact-sheet.webp",
-      "xxh3": "5cfb070e87cbd83d",
-      "bytes": 346518,
+      "xxh3": "c7966e1dd4b06945",
+      "bytes": 345126,
       "width": 1968,
       "height": 3732
     },
@@ -955,8 +955,8 @@
     },
     "/examples/decks/calmly/cover.jpg": {
       "path": "examples/decks/calmly/cover.jpg",
-      "xxh3": "ead18cbeff1c1e88",
-      "bytes": 26822,
+      "xxh3": "468b95c08ac5022a",
+      "bytes": 28208,
       "width": 1200,
       "height": 675
     },
@@ -1158,8 +1158,8 @@
     },
     "/examples/decks/editorial/cover.jpg": {
       "path": "examples/decks/editorial/cover.jpg",
-      "xxh3": "6124711db9010af2",
-      "bytes": 43206,
+      "xxh3": "25bc8860d5d0e2d6",
+      "bytes": 43426,
       "width": 1200,
       "height": 675
     },
@@ -1284,15 +1284,15 @@
     },
     "/examples/decks/manifesto/cover.jpg": {
       "path": "examples/decks/manifesto/cover.jpg",
-      "xxh3": "1ce2c696b63ef690",
-      "bytes": 27890,
+      "xxh3": "455be95df9093397",
+      "bytes": 27336,
       "width": 1200,
       "height": 675
     },
     "/examples/decks/metropolis/cover.jpg": {
       "path": "examples/decks/metropolis/cover.jpg",
-      "xxh3": "d95de6a9bfa88848",
-      "bytes": 40958,
+      "xxh3": "9f603c675922ad17",
+      "bytes": 40725,
       "width": 1200,
       "height": 675
     },
@@ -1431,22 +1431,22 @@
     },
     "/examples/decks/portfolio/cover.jpg": {
       "path": "examples/decks/portfolio/cover.jpg",
-      "xxh3": "45e0cfc326b6731a",
-      "bytes": 50097,
+      "xxh3": "04717fcf79314f98",
+      "bytes": 50077,
       "width": 1200,
       "height": 675
     },
     "/examples/decks/quarto-clean/cover.jpg": {
       "path": "examples/decks/quarto-clean/cover.jpg",
-      "xxh3": "be5ec9612878d343",
-      "bytes": 40586,
+      "xxh3": "a3348f6ed7337f4f",
+      "bytes": 42029,
       "width": 1200,
       "height": 675
     },
     "/examples/decks/simpres/cover.jpg": {
       "path": "examples/decks/simpres/cover.jpg",
-      "xxh3": "b5b1d405a9aad152",
-      "bytes": 37967,
+      "xxh3": "7b47144a4c90aa50",
+      "bytes": 38879,
       "width": 1200,
       "height": 675
     },
@@ -1963,8 +1963,8 @@
     },
     "assets/examples/getting-started/first-slideshow-cover.svg": {
       "path": "assets/examples/getting-started/first-slideshow-cover.svg",
-      "xxh3": "62d3d552f35376ea",
-      "bytes": 41495,
+      "xxh3": "4081080589464f73",
+      "bytes": 30942,
       "width": 842,
       "height": 474
     },
@@ -2061,8 +2061,8 @@
     },
     "assets/examples/structure/grid-dashboard-1.svg": {
       "path": "assets/examples/structure/grid-dashboard-1.svg",
-      "xxh3": "e8cb4984be774b1a",
-      "bytes": 186575,
+      "xxh3": "38b2796d4591c54b",
+      "bytes": 181980,
       "width": 842,
       "height": 474
     },
@@ -2138,78 +2138,78 @@
     },
     "assets/examples/structure/section-layout-01.svg": {
       "path": "assets/examples/structure/section-layout-01.svg",
-      "xxh3": "e1ead610f68b86f9",
-      "bytes": 14463,
+      "xxh3": "d45181bbede25edc",
+      "bytes": 11372,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/section-layout-02.svg": {
       "path": "assets/examples/structure/section-layout-02.svg",
-      "xxh3": "0fbccc56f1f8a4bb",
-      "bytes": 17799,
+      "xxh3": "866dbd58fcba9a6a",
+      "bytes": 13254,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/section-layout-03.svg": {
       "path": "assets/examples/structure/section-layout-03.svg",
-      "xxh3": "bbac98875eb9c4fe",
-      "bytes": 28132,
+      "xxh3": "08b06510b856b984",
+      "bytes": 21411,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/section-layout-04.svg": {
       "path": "assets/examples/structure/section-layout-04.svg",
-      "xxh3": "176038db3b8094f5",
-      "bytes": 33013,
+      "xxh3": "17dfb0142c53d937",
+      "bytes": 25460,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/section-layout-05.svg": {
       "path": "assets/examples/structure/section-layout-05.svg",
-      "xxh3": "1a9f23c07ee8e46f",
-      "bytes": 33693,
+      "xxh3": "c23969c32ac60ff0",
+      "bytes": 26698,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/section-layout-06.svg": {
       "path": "assets/examples/structure/section-layout-06.svg",
-      "xxh3": "22b3b4a57e1031ae",
-      "bytes": 54648,
+      "xxh3": "834e9c782e3b7316",
+      "bytes": 37261,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/section-layout-07.svg": {
       "path": "assets/examples/structure/section-layout-07.svg",
-      "xxh3": "58f58b4704731121",
-      "bytes": 121173,
+      "xxh3": "0b9c484b8b803d42",
+      "bytes": 117002,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/section-layout-08.svg": {
       "path": "assets/examples/structure/section-layout-08.svg",
-      "xxh3": "31427d0c0806a98b",
-      "bytes": 121874,
+      "xxh3": "7c79b70b848961a2",
+      "bytes": 117672,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/section-layout-09.svg": {
       "path": "assets/examples/structure/section-layout-09.svg",
-      "xxh3": "c6af8e2ab525f919",
-      "bytes": 121577,
+      "xxh3": "185069d8948bcdb0",
+      "bytes": 117095,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/section-layout-10.svg": {
       "path": "assets/examples/structure/section-layout-10.svg",
-      "xxh3": "106a064d134f8503",
-      "bytes": 121962,
+      "xxh3": "72f674af869a210e",
+      "bytes": 117456,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/section-layout-11.svg": {
       "path": "assets/examples/structure/section-layout-11.svg",
-      "xxh3": "37e21ad2d110186b",
-      "bytes": 125652,
+      "xxh3": "971589335729e129",
+      "bytes": 120433,
       "width": 842,
       "height": 474
     },
@@ -2264,8 +2264,8 @@
     },
     "assets/examples/structure/title-image-bottom-cover.svg": {
       "path": "assets/examples/structure/title-image-bottom-cover.svg",
-      "xxh3": "f2a010c81fe17de4",
-      "bytes": 299352,
+      "xxh3": "f7709a7bb519dc2d",
+      "bytes": 280731,
       "width": 842,
       "height": 474
     },
@@ -2355,8 +2355,8 @@
     },
     "assets/images/showcase-contact-sheet.webp": {
       "path": "assets/images/showcase-contact-sheet.webp",
-      "xxh3": "5cfb070e87cbd83d",
-      "bytes": 346518,
+      "xxh3": "c7966e1dd4b06945",
+      "bytes": 345126,
       "width": 1968,
       "height": 3732
     },
@@ -2404,8 +2404,8 @@
     },
     "examples/decks/calmly/cover.jpg": {
       "path": "examples/decks/calmly/cover.jpg",
-      "xxh3": "ead18cbeff1c1e88",
-      "bytes": 26822,
+      "xxh3": "468b95c08ac5022a",
+      "bytes": 28208,
       "width": 1200,
       "height": 675
     },
@@ -2607,8 +2607,8 @@
     },
     "examples/decks/editorial/cover.jpg": {
       "path": "examples/decks/editorial/cover.jpg",
-      "xxh3": "6124711db9010af2",
-      "bytes": 43206,
+      "xxh3": "25bc8860d5d0e2d6",
+      "bytes": 43426,
       "width": 1200,
       "height": 675
     },
@@ -2733,15 +2733,15 @@
     },
     "examples/decks/manifesto/cover.jpg": {
       "path": "examples/decks/manifesto/cover.jpg",
-      "xxh3": "1ce2c696b63ef690",
-      "bytes": 27890,
+      "xxh3": "455be95df9093397",
+      "bytes": 27336,
       "width": 1200,
       "height": 675
     },
     "examples/decks/metropolis/cover.jpg": {
       "path": "examples/decks/metropolis/cover.jpg",
-      "xxh3": "d95de6a9bfa88848",
-      "bytes": 40958,
+      "xxh3": "9f603c675922ad17",
+      "bytes": 40725,
       "width": 1200,
       "height": 675
     },
@@ -2880,22 +2880,22 @@
     },
     "examples/decks/portfolio/cover.jpg": {
       "path": "examples/decks/portfolio/cover.jpg",
-      "xxh3": "45e0cfc326b6731a",
-      "bytes": 50097,
+      "xxh3": "04717fcf79314f98",
+      "bytes": 50077,
       "width": 1200,
       "height": 675
     },
     "examples/decks/quarto-clean/cover.jpg": {
       "path": "examples/decks/quarto-clean/cover.jpg",
-      "xxh3": "be5ec9612878d343",
-      "bytes": 40586,
+      "xxh3": "a3348f6ed7337f4f",
+      "bytes": 42029,
       "width": 1200,
       "height": 675
     },
     "examples/decks/simpres/cover.jpg": {
       "path": "examples/decks/simpres/cover.jpg",
-      "xxh3": "b5b1d405a9aad152",
-      "bytes": 37967,
+      "xxh3": "7b47144a4c90aa50",
+      "bytes": 38879,
       "width": 1200,
       "height": 675
     }

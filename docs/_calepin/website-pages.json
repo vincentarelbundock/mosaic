@@ -2,10 +2,7 @@
   {
     "href": "acknowledgments.html",
     "language": null,
-    "meta": {
-      "description": "Projects, authors, and discussions that informed Mosaic.",
-      "title": "Acknowledgments"
-    },
+    "meta": {},
     "path": "acknowledgments.typ",
     "pdf": null,
     "title": "Acknowledgments",
@@ -15,10 +12,7 @@
   {
     "href": "api.html",
     "language": null,
-    "meta": {
-      "description": "Every exported Mosaic function, grouped by reference page.",
-      "title": "API reference"
-    },
+    "meta": {},
     "path": "api.typ",
     "pdf": null,
     "title": "API reference",
@@ -28,33 +22,27 @@
   {
     "href": "api/components.html",
     "language": null,
-    "meta": {
-      "title": "Components and furniture"
-    },
+    "meta": {},
     "path": "api/components.typ",
     "pdf": null,
-    "title": "Components and furniture",
+    "title": "components",
     "translation_key": "api/components",
     "translations": {}
   },
   {
     "href": "api/grids.html",
     "language": null,
-    "meta": {
-      "title": "mosaic.grids constructors"
-    },
+    "meta": {},
     "path": "api/grids.typ",
     "pdf": null,
-    "title": "mosaic.grids constructors",
+    "title": "grids",
     "translation_key": "api/grids",
     "translations": {}
   },
   {
     "href": "api/labels.html",
     "language": null,
-    "meta": {
-      "title": "Labels"
-    },
+    "meta": {},
     "path": "api/labels.typ",
     "pdf": null,
     "title": "Labels",
@@ -64,69 +52,57 @@
   {
     "href": "api/layouts.html",
     "language": null,
-    "meta": {
-      "title": "Semantic layouts"
-    },
+    "meta": {},
     "path": "api/layouts.typ",
     "pdf": null,
-    "title": "Semantic layouts",
+    "title": "layouts",
     "translation_key": "api/layouts",
     "translations": {}
   },
   {
     "href": "api/setup.html",
     "language": null,
-    "meta": {
-      "title": "Document setup"
-    },
+    "meta": {},
     "path": "api/setup.typ",
     "pdf": null,
-    "title": "Document setup",
+    "title": "setup",
     "translation_key": "api/setup",
     "translations": {}
   },
   {
     "href": "api/slides.html",
     "language": null,
-    "meta": {
-      "title": "Slides"
-    },
+    "meta": {},
     "path": "api/slides.typ",
     "pdf": null,
-    "title": "Slides",
+    "title": "slides",
     "translation_key": "api/slides",
     "translations": {}
   },
   {
     "href": "api/steps.html",
     "language": null,
-    "meta": {
-      "title": "Incremental steps"
-    },
+    "meta": {},
     "path": "api/steps.typ",
     "pdf": null,
-    "title": "Incremental steps",
+    "title": "steps",
     "translation_key": "api/steps",
     "translations": {}
   },
   {
     "href": "api/theme.html",
     "language": null,
-    "meta": {
-      "title": "Theme authoring"
-    },
+    "meta": {},
     "path": "api/theme.typ",
     "pdf": null,
-    "title": "Theme authoring",
+    "title": "theme",
     "translation_key": "api/theme",
     "translations": {}
   },
   {
     "href": "appearance/colors.html",
     "language": null,
-    "meta": {
-      "title": "Colors"
-    },
+    "meta": {},
     "path": "appearance/colors.typ",
     "pdf": null,
     "title": "Colors",
@@ -136,9 +112,7 @@
   {
     "href": "appearance/styling.html",
     "language": null,
-    "meta": {
-      "title": "Styling cells"
-    },
+    "meta": {},
     "path": "appearance/styling.typ",
     "pdf": null,
     "title": "Styling cells",
@@ -148,9 +122,7 @@
   {
     "href": "appearance/themes.html",
     "language": null,
-    "meta": {
-      "title": "Themes"
-    },
+    "meta": {},
     "path": "appearance/themes.typ",
     "pdf": null,
     "title": "Themes",
@@ -160,9 +132,7 @@
   {
     "href": "content/citations.html",
     "language": null,
-    "meta": {
-      "title": "Citations"
-    },
+    "meta": {},
     "path": "content/citations.typ",
     "pdf": null,
     "title": "Citations",
@@ -172,9 +142,7 @@
   {
     "href": "content/components.html",
     "language": null,
-    "meta": {
-      "title": "Components"
-    },
+    "meta": {},
     "path": "content/components.typ",
     "pdf": null,
     "title": "Components",
@@ -184,9 +152,7 @@
   {
     "href": "content/images.html",
     "language": null,
-    "meta": {
-      "title": "Images"
-    },
+    "meta": {},
     "path": "content/images.typ",
     "pdf": null,
     "title": "Images",
@@ -196,9 +162,7 @@
   {
     "href": "content/math.html",
     "language": null,
-    "meta": {
-      "title": "Math"
-    },
+    "meta": {},
     "path": "content/math.typ",
     "pdf": null,
     "title": "Math",
@@ -208,10 +172,7 @@
   {
     "href": "examples.html",
     "language": null,
-    "meta": {
-      "description": "Complete slide decks built with Mosaic's bundled themes and layouts.",
-      "title": "Examples"
-    },
+    "meta": {},
     "path": "examples.typ",
     "pdf": null,
     "title": "Examples",
@@ -221,13 +182,7 @@
   {
     "href": "help/faq.html",
     "language": null,
-    "meta": {
-      "tags": [
-        "help",
-        "questions"
-      ],
-      "title": "FAQ"
-    },
+    "meta": {},
     "path": "help/faq.typ",
     "pdf": null,
     "title": "FAQ",
@@ -237,9 +192,7 @@
   {
     "href": "incremental/handouts.html",
     "language": null,
-    "meta": {
-      "title": "Handouts"
-    },
+    "meta": {},
     "path": "incremental/handouts.typ",
     "pdf": null,
     "title": "Handouts",
@@ -249,9 +202,7 @@
   {
     "href": "incremental/reveals.html",
     "language": null,
-    "meta": {
-      "title": "Reveal and replace"
-    },
+    "meta": {},
     "path": "incremental/reveals.typ",
     "pdf": null,
     "title": "Reveal and replace",
@@ -261,9 +212,7 @@
   {
     "href": "incremental/steps.html",
     "language": null,
-    "meta": {
-      "title": "Steps and pauses"
-    },
+    "meta": {},
     "path": "incremental/steps.typ",
     "pdf": null,
     "title": "Steps and pauses",
@@ -273,25 +222,17 @@
   {
     "href": "index.html",
     "language": null,
-    "meta": {
-      "layout": "layouts/site-landing.html",
-      "title": "Home",
-      "toc": {
-        "enabled": false
-      }
-    },
+    "meta": {},
     "path": "index.typ",
     "pdf": null,
-    "title": "Home",
+    "title": "Mosaic",
     "translation_key": "index",
     "translations": {}
   },
   {
     "href": "presenting/footer.html",
     "language": null,
-    "meta": {
-      "title": "Footer and progress"
-    },
+    "meta": {},
     "path": "presenting/footer.typ",
     "pdf": null,
     "title": "Footer and progress",
@@ -301,9 +242,7 @@
   {
     "href": "presenting/navigation.html",
     "language": null,
-    "meta": {
-      "title": "Navigation"
-    },
+    "meta": {},
     "path": "presenting/navigation.typ",
     "pdf": null,
     "title": "Navigation",
@@ -313,9 +252,7 @@
   {
     "href": "presenting/notes.html",
     "language": null,
-    "meta": {
-      "title": "Speaker notes"
-    },
+    "meta": {},
     "path": "presenting/notes.typ",
     "pdf": null,
     "title": "Speaker notes",
@@ -325,9 +262,7 @@
   {
     "href": "presenting/overflow.html",
     "language": null,
-    "meta": {
-      "title": "Overflow and fitting"
-    },
+    "meta": {},
     "path": "presenting/overflow.typ",
     "pdf": null,
     "title": "Overflow and fitting",
@@ -337,9 +272,7 @@
   {
     "href": "reference/concepts.html",
     "language": null,
-    "meta": {
-      "title": "Concepts"
-    },
+    "meta": {},
     "path": "reference/concepts.typ",
     "pdf": null,
     "title": "Concepts",
@@ -349,9 +282,7 @@
   {
     "href": "slides/background.html",
     "language": null,
-    "meta": {
-      "title": "Background"
-    },
+    "meta": {},
     "path": "slides/background.typ",
     "pdf": null,
     "title": "Background",
@@ -361,33 +292,27 @@
   {
     "href": "slides/content.html",
     "language": null,
-    "meta": {
-      "title": "Content"
-    },
+    "meta": {},
     "path": "slides/content.typ",
     "pdf": null,
-    "title": "Content",
+    "title": "Content slides",
     "translation_key": "slides/content",
     "translations": {}
   },
   {
     "href": "slides/custom.html",
     "language": null,
-    "meta": {
-      "title": "Custom"
-    },
+    "meta": {},
     "path": "slides/custom.typ",
     "pdf": null,
-    "title": "Custom",
+    "title": "Custom slides",
     "translation_key": "slides/custom",
     "translations": {}
   },
   {
     "href": "slides/foreground.html",
     "language": null,
-    "meta": {
-      "title": "Foreground"
-    },
+    "meta": {},
     "path": "slides/foreground.typ",
     "pdf": null,
     "title": "Foreground",
@@ -397,45 +322,37 @@
   {
     "href": "slides/image.html",
     "language": null,
-    "meta": {
-      "title": "Image"
-    },
+    "meta": {},
     "path": "slides/image.typ",
     "pdf": null,
-    "title": "Image",
+    "title": "Image slides",
     "translation_key": "slides/image",
     "translations": {}
   },
   {
     "href": "slides/section.html",
     "language": null,
-    "meta": {
-      "title": "Section"
-    },
+    "meta": {},
     "path": "slides/section.typ",
     "pdf": null,
-    "title": "Section",
+    "title": "Section slides",
     "translation_key": "slides/section",
     "translations": {}
   },
   {
     "href": "slides/title.html",
     "language": null,
-    "meta": {
-      "title": "Title"
-    },
+    "meta": {},
     "path": "slides/title.typ",
     "pdf": null,
-    "title": "Title",
+    "title": "Title slides",
     "translation_key": "slides/title",
     "translations": {}
   },
   {
     "href": "start/first-deck.html",
     "language": null,
-    "meta": {
-      "title": "Get started"
-    },
+    "meta": {},
     "path": "start/first-deck.typ",
     "pdf": null,
     "title": "Get started",

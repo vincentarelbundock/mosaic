@@ -142,6 +142,6 @@ Omit the body entirely for a bare picture slide with no text at all. The `full` 
   renderer: thumbnail-gallery,
 )
 
-Image paths inside layout arguments cross the package boundary, so wrap every asset path in Typst's `path()`; see #link("configuring.html#asset-paths")[Asset paths].
+Image paths inside layout arguments cross the package boundary, so wrap every asset path in Typst's `path()`; see #link("../content/images.html#asset-paths")[Asset paths].
 
-Named arguments on an image slide refine the configured layout rather than replacing it; see #link("configuring.html#layout-fields-on-a-slide")[Layout fields on a slide]. For image loading, fitting, scrims, and figures in ordinary cells, see #link("../content/images.html")[Images]; for a picture on a plane behind the whole grid, see #link("background.html")[Background].
+Named arguments on an image slide refine the configured layout rather than replacing it; see #link("custom.html#refine-a-layout")[Refine a layout]. For image loading, fitting, scrims, and figures in ordinary cells, see #link("../content/images.html")[Images]; for a picture on a plane behind the whole grid, see #link("background.html")[Background].

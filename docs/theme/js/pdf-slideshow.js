@@ -12,6 +12,13 @@
 
   let pdfJsPromise = null;
 
+  function prefersNativePdf() {
+    return (
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+    );
+  }
+
   function loadPdfJs() {
     if (!pdfJsPromise) {
       pdfJsPromise = import(PDFJS_URL).then((pdfjs) => {
@@ -23,9 +30,20 @@
   }
 
   function initializeViewer(dialog) {
-    const trigger = document.querySelector(
-      `[data-pdf-dialog="${CSS.escape(dialog.id)}"]`,
-    );
+    const trigger = Array.from(
+      document.querySelectorAll("[data-pdf-dialog]"),
+    ).find((candidate) => candidate.dataset.pdfDialog === dialog.id);
+
+    if (
+      !trigger ||
+      prefersNativePdf() ||
+      typeof dialog.showModal !== "function"
+    ) {
+      trigger?.removeAttribute("aria-haspopup");
+      trigger?.removeAttribute("aria-controls");
+      return;
+    }
+
     const canvas = dialog.querySelector("[data-pdf-canvas]");
     const stage = dialog.querySelector("[data-pdf-stage]");
     const message = dialog.querySelector("[data-pdf-message]");
@@ -196,8 +214,13 @@
       ) {
         return;
       }
+      try {
+        dialog.showModal();
+      } catch (error) {
+        console.error("Unable to open PDF slideshow dialog", error);
+        return;
+      }
       event.preventDefault();
-      dialog.showModal();
       close.focus();
       await ensureLoaded();
     });

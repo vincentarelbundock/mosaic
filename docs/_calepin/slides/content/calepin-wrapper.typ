@@ -2,7 +2,7 @@
 #import "/_calepin/calepin.typ": *
 #let document = _calepin-document-element
 
-#let _calepin-expected-generation = "28e48270619b4abd-1349cde127705c16"
+#let _calepin-expected-generation = "ac75e72270d1e31c-1349cde127705c16"
 #let _calepin-verify-generation() = {
   let path = sys.inputs.at("calepin-results", default: none)
   if path != none and path != "" {
@@ -102,17 +102,11 @@ Each exam counts for a third of the grade.
 
 Both forms render the same slide through the same layout. Write headings for the ordinary case and reach for `m.slide` when a slide needs arguments a heading cannot express.
 
-Mosaic recognizes four layouts by name: `"content"`, `"title"`, `"section"`, and `"image"`. Because `"content"` is the default you can usually omit it. This page covers the content layout; the rules for filling, refining, and replacing any of the four live on the #link("configuring.html")[Configuring layouts] page.
+Mosaic recognizes four layouts by name: `"content"`, `"title"`, `"section"`, and `"image"`. Because `"content"` is the default you can usually omit it. This page covers the content layout. Content reaches the cells of every layout the same two ways, described in #link("custom.html#filling-cells")[Filling cells].
 
 = Choosing a structure
 
-Use `m.layouts.content()` to choose a structure with a header, footer, or multiple columns. A text-heavy deck usually configures this once so that every `==` slide picks it up:
-
-```typ
-#show: m.setup.with(
-  layouts: (content: m.layouts.content(variant: "header-body")),
-)
-```
+The content layout comes in four variants: `body`, `header-body`, `body-footer`, and `header-body-footer`. Each theme picks one; the default theme uses `header-body`. Ask a slide for another with `variant:`. The `==` heading then fills the header, the next block fills the body, and a third block fills the footer:
 
 #embedded-example(
   calepin.elements.gallery,
@@ -126,23 +120,16 @@ See #link("../presenting/footer.html#default-footer-content")[Footer and progres
 
 = Two columns
 
-For a side-by-side comparison, set `columns: 2` and supply three #link("configuring.html#filling-cells")[positional blocks]: header, left, right. Write the header as a `==` heading so the slide keeps its place in the outline:
+For a side-by-side comparison, set `columns: 2` and supply three #link("custom.html#filling-cells")[positional blocks]: header, left, right. Write the header as a `==` heading so the slide keeps its place in the outline:
 
-```typ
-#m.slide(layout: "content", columns: 2)[== Three exams, equal weight][
-  Exam 1:
-
-  - In class.
-  - Multiple choice.
-  - Short answers: 3-5 sentences.
-][
-  Exam 2:
-
-  - Take-home reading.
-  - Define five concepts from the book.
-]
-```
+#embedded-example(
+  calepin.elements.gallery,
+  "structure/content-columns",
+  frames: 1,
+  title: "A two-column comparison under one header",
+  renderer: thumbnail-gallery,
+)
 
 Add `tracks: (2fr, 1fr)` for an uneven split.
 
-A single slide can also change one aspect of the configured layout through named arguments, and a deck can replace a layout throughout with `m.setup(layouts:)` or reuse one with `m.slide.with`. The #link("configuring.html")[Configuring layouts] page covers those rules for every layout; the #link("../api/layouts.html")[Layouts API] lists all variants, cell IDs, and arguments.
+Every layout takes its fields this way, and a deck can adopt one throughout instead of naming it slide by slide. #link("custom.html#refine-a-layout")[Refine a layout] and #link("custom.html#replace-or-reuse-a-layout")[Replace or reuse a layout] cover both; the #link("../api/layouts.html")[Layouts API] lists all variants, cell IDs, and arguments.

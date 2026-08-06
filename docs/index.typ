@@ -44,6 +44,10 @@
           "aria-label": "Slides made with Mosaic: a plain starter deck, three themed decks including a technical talk with a bulleted list, a two-column comparison, and an equation and a diagram built step by step, a nested grid diagram, and title and section variants",
         ))[
           #html.elem("source", attrs: (
+            src: "assets/images/showcase.mp4",
+            type: "video/mp4",
+          ))
+          #html.elem("source", attrs: (
             src: "assets/images/showcase.webm",
             type: "video/webm",
           ))

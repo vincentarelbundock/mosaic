@@ -328,7 +328,7 @@ than copied into the deck.
   - citations disconnected from claims
 ]
 
-// One-off closing slide: the theme's inverted ground, one large phrase.
+// One-off closing slide: the theme's inverted canvas, one large phrase.
 #[
   #show label("mosaic-cell-body"): set align(center + horizon)
   #m.slide(invert: true, cells: (

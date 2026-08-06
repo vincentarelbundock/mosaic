@@ -103,8 +103,14 @@ EMBEDDED_STAMPS := $(EMBEDDED_SLIDESHOW_STAMPS) $(EMBEDDED_IMAGE_STAMPS)
 $(foreach source,$(EMBEDDED_EXAMPLE_SOURCES),$(eval \
   $(patsubst $(EMBEDDED_EXAMPLES_DIR)/%.typ,$(EMBEDDED_STAMP_DIR)/%.stamp,$(source)): \
   $(wildcard $(dir $(source))_*.typ)))
-PACKAGE_SOURCES := $(shell find $(PACKAGE_DIR) -type f 2>/dev/null | sort)
-SHOWCASE_VIDEO := $(WEB_IMAGE_DIR)/showcase.webm
+# Package README illustrations do not affect compiled output. Excluding that
+# mirrored documentation tree also prevents the showcase sheet from becoming
+# both an input and an output of its own build.
+PACKAGE_SOURCES := $(shell find $(PACKAGE_DIR) -type f \
+  ! -path '$(PACKAGE_DIR)/docs/*' ! -name 'README.md' 2>/dev/null | sort)
+SHOWCASE_VIDEO_WEBM := $(WEB_IMAGE_DIR)/showcase.webm
+SHOWCASE_VIDEO_MP4 := $(WEB_IMAGE_DIR)/showcase.mp4
+SHOWCASE_VIDEOS := $(SHOWCASE_VIDEO_WEBM) $(SHOWCASE_VIDEO_MP4)
 SHOWCASE_POSTER := $(WEB_IMAGE_DIR)/showcase-poster.webp
 # One still of every slide the reel visits, three across.
 SHOWCASE_SHEET := $(WEB_IMAGE_DIR)/showcase-contact-sheet.webp
@@ -146,7 +152,7 @@ $(PACKAGE_README_ASSETS): $(PACKAGE_DIR)/%: %
 	@mkdir -p "$(@D)"
 	cp $< $@
 
-install: package-readme ## Copy Mosaic into Typst's package index as @preview/mosaic
+install: ## Copy Mosaic into Typst's package index as @preview/mosaic
 	rm -rf "$(LOCAL_PACKAGE_DIR)"
 	mkdir -p "$(LOCAL_PACKAGE_DIR)"
 	cp -R "$(PACKAGE_DIR)/." "$(LOCAL_PACKAGE_DIR)/"
@@ -156,7 +162,7 @@ uninstall: ## Remove the working-tree copy so imports resolve from Typst Univers
 	rm -rf "$(LOCAL_PACKAGE_DIR)"
 	@echo "Removed $(LOCAL_PACKAGE_DIR)"
 
-release-stage: install ## Stage the exact file set to copy into a typst/packages fork
+release-stage: package-readme install ## Stage the exact file set to copy into a typst/packages fork
 	rm -rf "$(RELEASE_DIR)"
 	mkdir -p "$(RELEASE_DIR)"
 	cp -R "$(PACKAGE_DIR)/." "$(RELEASE_DIR)/"
@@ -209,7 +215,7 @@ $(EMBEDDED_STAMPS): $(EMBEDDED_STAMP_DIR)/%.stamp: $(EMBEDDED_EXAMPLES_DIR)/%.ty
 	@$(TYPST) compile --root . --format svg "$<" $(EMBEDDED_SVG)
 	@touch "$@"
 
-showcase-video: $(SHOWCASE_VIDEO) $(SHOWCASE_POSTER) $(SHOWCASE_SHEET) ## Build the animated home-page showcase and its contact sheet
+showcase-video: $(SHOWCASE_VIDEOS) $(SHOWCASE_POSTER) $(SHOWCASE_SHEET) ## Build the animated home-page showcase and its contact sheet
 
 $(SHOWCASE_OPENING): $(SHOWCASE_OPENING_SOURCE) $(PACKAGE_SOURCES) | install
 	$(TYPST) compile --root . "$<" "$@"
@@ -217,8 +223,8 @@ $(SHOWCASE_OPENING): $(SHOWCASE_OPENING_SOURCE) $(PACKAGE_SOURCES) | install
 # One run writes the reel, its poster (the reel's first frame), and the contact
 # sheet of every slide it visits. A newer prerequisite only makes the script
 # re-render and re-hash the frames; unless a slide really changed it leaves all
-# three files untouched.
-$(SHOWCASE_VIDEO) $(SHOWCASE_POSTER) $(SHOWCASE_SHEET) &: scripts/build-docs-showcase-video.sh $(DECK_MANIFEST) $(SHOWCASE_STAMPS)
+# four files untouched.
+$(SHOWCASE_VIDEOS) $(SHOWCASE_POSTER) $(SHOWCASE_SHEET) &: scripts/build-docs-showcase-video.sh $(DECK_MANIFEST) $(SHOWCASE_STAMPS)
 	./scripts/build-docs-showcase-video.sh $(PYTHON)
 
 components: install ## Compile the public facade and components test deck

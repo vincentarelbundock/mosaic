@@ -105,7 +105,7 @@ Write the slide with `m.slide` when it needs arguments a heading cannot carry. T
 )[Structure]
 ```
 
-An explicit `number:` overrides the automatic counter for that slide. Omit it and the designed variants read the counter themselves, which is what you want in the ordinary case. Named arguments here refine the configured section layout rather than replacing it; see #link("configuring.html#layout-fields-on-a-slide")[Layout fields on a slide].
+An explicit `number:` overrides the automatic counter for that slide. Omit it and the designed variants read the counter themselves, which is what you want in the ordinary case. Named arguments here refine the configured section layout rather than replacing it; see #link("custom.html#refine-a-layout")[Refine a layout].
 
 = Variants
 
@@ -119,7 +119,7 @@ Each variant borrows a classic minimalist tradition:
 
 The designed variants build their composition around the section number, so an omitted `number:` reads the automatic counter.
 
-The image variants place the section text beside a full-bleed picture (`image-left`, `image-right`, `image-top`, `image-bottom`, sized by `tracks:`) or directly over one (`image-background`). Every image variant requires `image:`, wrapped in Typst's `path()` so the picture is found in your project rather than in the package; see #link("configuring.html#asset-paths")[Asset paths].
+The image variants place the section text beside a full-bleed picture (`image-left`, `image-right`, `image-top`, `image-bottom`, sized by `tracks:`) or directly over one (`image-background`). Every image variant requires `image:`, wrapped in Typst's `path()` so the picture is found in your project rather than in the package; see #link("../content/images.html#asset-paths")[Asset paths].
 
 Written out in full, one of those slides is:
 
