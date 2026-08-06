@@ -1,6 +1,5 @@
 // Logical-slide runtime: frame policy, state, resolution, and page rendering.
 #import "../shared.typ": fail, tag
-#import "../paper.typ": default-paper, paper-aliases
 #import "../grid/model.typ": plane-ids
 #import "../grid/validation.typ": validate
 #import "../grid/content.typ": resolve-content
@@ -23,52 +22,17 @@
   require-stable-grid-headings,
 )
 #import "../fit.typ": fit-ratio
-#import "../settings.typ": validate-settings
 #import "../layout/resolver.typ": resolve-layout
 #import "../layout/core.typ": is-layout
-#import "../layout/config.typ": (
-  standard-layouts,
-  unconfigured-layouts,
-  validate-layouts,
-)
+#import "../layout/config.typ": unconfigured-layouts
+#import "../deck-record.typ": read-deck-record
 #import "../deck-state.typ": (
-  deck-state,
-  write-deck-record,
   logical-slide,
   logical-slide-id,
   logical-section,
   slide-numbered,
   section-title,
 )
-
-// The record a reader assumes when no deck wrote one: components and cells
-// rendered outside `setup` see these library defaults. `paper` holds resolved
-// dimensions, never a preset name, because the printed outputs scale a
-// thumbnail of this size onto a page of a different one.
-#let default-deck-record = (
-  settings: none,
-  layouts: (:),
-  frozen-counters: (),
-  frozen-states: (),
-  handout: false,
-  output: "slides",
-  paper: paper-aliases.at(default-paper),
-)
-
-#let read-deck-record() = {
-  let record = deck-state.get()
-  if record == none { default-deck-record } else { record }
-}
-
-#let validate-frozen(values, expected, name) = {
-  if type(values) != array {
-    fail(name + " must be an array")
-  }
-  if not values.all(value => type(value) == expected) {
-    fail(name + " must contain only " + repr(expected) + " values")
-  }
-  values
-}
 
 #let physical-steps(total, handout) = if handout {
   (total,)
@@ -84,7 +48,6 @@
     }
   }
 }
-
 
 // The palette of one inverted slide: ground and ink swap, and the derived
 // tones follow. `muted` and `line` become translucent washes of the new ink so
@@ -239,41 +202,6 @@
     ),
   )
   [#body#label("mosaic-" + heading-scope)]
-}
-
-// The single write of the deck record. Every field validates here, at the one
-// place a value can enter the record; `write-deck-record` rejects a second
-// write, which is what makes the record immutable declared configuration
-// rather than mutable state.
-// The named defaults are unreachable in practice: `setup`, the sole caller,
-// passes every argument. They mirror `default-deck-record`, except `layouts`,
-// whose record value of `(:)` deliberately means "outside a deck".
-#let configure-deck(
-  settings: default-deck-record.settings,
-  layouts: standard-layouts,
-  frozen-counters: default-deck-record.frozen-counters,
-  frozen-states: default-deck-record.frozen-states,
-  handout: default-deck-record.handout,
-  output: default-deck-record.output,
-  paper: default-deck-record.paper,
-) = {
-  if type(handout) != bool {
-    fail("setup handout must be a boolean")
-  }
-  // `output` and `paper` are validated by `setup`, the only caller.
-  write-deck-record((
-    settings: validate-settings(settings),
-    layouts: validate-layouts(layouts),
-    frozen-counters: validate-frozen(
-      frozen-counters,
-      counter,
-      "frozen-counters",
-    ),
-    frozen-states: validate-frozen(frozen-states, state, "frozen-states"),
-    handout: handout,
-    output: output,
-    paper: paper,
-  ))
 }
 
 #let select-layout(value, configured) = if value == auto {

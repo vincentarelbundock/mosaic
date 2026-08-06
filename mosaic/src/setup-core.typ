@@ -1,5 +1,5 @@
 // Sane presentation defaults, applied as a document-wide show rule.
-#import "slide/runtime.typ": configure-deck
+#import "deck-record.typ": configure-deck
 #import "deck-compiler.typ": (
   compile-deck, default-heading-policy, validate-heading-policy,
 )

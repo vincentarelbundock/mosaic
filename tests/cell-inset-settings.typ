@@ -4,7 +4,7 @@
 #import "../mosaic/src/grid/constructors.typ": cell, styled-cell
 #import "../mosaic/src/grid/render.typ": configured-inset
 #import "../mosaic/src/settings.typ": default-spacing, make-settings
-#import "../mosaic/src/slide/runtime.typ": configure-deck
+#import "../mosaic/src/deck-record.typ": configure-deck
 
 // The constructor defers rather than deciding.
 #assert(styled-cell(id: "body").style.inset == auto)
