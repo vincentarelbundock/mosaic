@@ -2,7 +2,7 @@
 
 Mosaic is a slide package for [Typst](https://typst.app/). Write ordinary Typst headings and content for most slides, choose a named layout when you need a title or section divider, and drop down to a grid of named cells for custom composition.
 
-![An academic title slide made with Mosaic](docs/assets/examples/structure/title-layout-1.svg)
+![An academic title slide made with Mosaic](docs/assets/examples/structure/title-academic-cover.svg)
 
 Mosaic provides:
 
@@ -280,3 +280,9 @@ make build     # run the complete validation and documentation pipeline
 `make check` and `make website` install the current worktree before compiling, so `@local/mosaic:0.0.1` never resolves to a stale package during repository development.
 
 Mosaic is licensed under MIT; see [`mosaic/typst.toml`](mosaic/typst.toml).
+
+## Gallery
+
+One slide per beat from the example decks, in the order the showcase reel plays them.
+
+![Contact sheet of slides from the Mosaic example decks, three across](docs/assets/images/showcase-contact-sheet.webp)
