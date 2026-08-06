@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help doctor install uninstall release-stage build check api-contract core-tests negative-tests layout-tests doc-integrity web-images embedded-examples showcase-video components api-sources examples artifacts website docs clean clean-generated distclean
+.PHONY: help doctor package-readme install uninstall release-stage build check api-contract core-tests negative-tests layout-tests doc-integrity web-images embedded-examples showcase-video components api-sources examples artifacts website docs clean clean-generated distclean
 
 TYPST ?= typst
 CALEPIN ?= calepin
@@ -19,6 +19,11 @@ TYPST_PACKAGE_PATH ?= $(or \
 # it keeps every source in the repository free of a development-only import.
 LOCAL_PACKAGE_DIR := $(TYPST_PACKAGE_PATH)/preview/$(PACKAGE_NAME)/$(PACKAGE_VERSION)
 DOCS_DIR := docs
+# Illustrations the README links to, mirrored into the package at the same
+# relative paths so one README text works both on GitHub and on Typst Universe.
+PACKAGE_README_ASSETS := \
+  $(PACKAGE_DIR)/docs/assets/mosaic-slide.svg \
+  $(PACKAGE_DIR)/docs/assets/images/showcase-contact-sheet.webp
 # Staging tree for a Typst Universe pull request: copy RELEASE_DIR into
 # packages/preview/$(PACKAGE_NAME)/$(PACKAGE_VERSION) of a typst/packages fork.
 RELEASE_DIR := dist/packages/preview/$(PACKAGE_NAME)/$(PACKAGE_VERSION)
@@ -129,7 +134,19 @@ doctor: ## Check mandatory, documentation, and optional build prerequisites
 # Build targets
 # ==============================================================================
 
-install: ## Copy Mosaic into Typst's package index as @preview/mosaic
+# The package ships the repository README verbatim, because that is the text
+# Typst Universe displays. Its illustrations must therefore resolve at the same
+# relative paths inside the package; `exclude` keeps them out of the download.
+package-readme: $(PACKAGE_DIR)/README.md $(PACKAGE_README_ASSETS) ## Sync the README and its illustrations into the package
+
+$(PACKAGE_DIR)/README.md: README.md
+	cp $< $@
+
+$(PACKAGE_README_ASSETS): $(PACKAGE_DIR)/%: %
+	@mkdir -p "$(@D)"
+	cp $< $@
+
+install: package-readme ## Copy Mosaic into Typst's package index as @preview/mosaic
 	rm -rf "$(LOCAL_PACKAGE_DIR)"
 	mkdir -p "$(LOCAL_PACKAGE_DIR)"
 	cp -R "$(PACKAGE_DIR)/." "$(LOCAL_PACKAGE_DIR)/"
