@@ -1,6 +1,9 @@
 .build/
 __pycache__/
 *.pyc
+# uv provisions this from pyproject.toml for the repo's Python tooling; it is
+# generated and machine-specific. pyproject.toml and uv.lock are committed.
+.venv/
 .claude/settings.local.json
 .hermes/
 docs-src/examples/decks/*/.calepin/
