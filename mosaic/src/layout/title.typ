@@ -463,16 +463,21 @@
 // Code blocks, not markup blocks: markup newlines become spaces, which would
 // leak into joined lists as stray gaps before separators.
 #let orcid-link(author, settings) = if author.orcid != none {
+  let size = settings.title-tokens.orcid-size
   box(width: settings.title-tokens.orcid-gap)
   box(
     link(
       "https://orcid.org/" + author.orcid,
-      text(size: settings.title-tokens.orcid-size, [ORCID]),
+      image(
+        "../../assets/orcid.svg",
+        height: size,
+        alt: "ORCID profile for " + repr(author.name),
+      ),
     ),
   )
 }
 
-// One byline entry: the name, the linked ORCID label, the superscript
+// One byline entry: the name, the linked ORCID icon, the superscript
 // affiliation numbers when the deck carries more than one institution, and
 // the corresponding asterisk.
 #let author-entry(author, settings, numbered: false) = {
