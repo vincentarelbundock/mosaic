@@ -19,7 +19,10 @@ from deck_metadata import flatten_pages, load_manifest  # type: ignore[import-no
 from embedded_examples import ExampleCall, parse_calls
 
 ROOT = Path(__file__).resolve().parents[1]
-DOCS = ROOT / "docs"
+# DOCS is the authored website; SITE is what Calepin renders from it. Everything
+# but check_site() reads sources and their committed artifacts, so it reads DOCS.
+DOCS = ROOT / "docs-src"
+SITE = ROOT / "docs"
 SOURCES = DOCS / "examples/embedded"
 ASSETS = DOCS / "assets/examples"
 GREYSCALE_DECK = DOCS / "examples/decks/portfolio"
@@ -51,7 +54,7 @@ def padded(page: int, total: int) -> str:
 def expected_assets(call: ExampleCall) -> set[Path]:
     base = ASSETS / call.slug
     if call.renderer == "slideshow":
-        return {base.with_suffix(".pdf"), Path(str(base) + "-cover.svg")}
+        return {base.with_suffix(".pdf"), Path(str(base) + "-cover.webp")}
     last = call.start + call.frames - 1
     return {base.with_suffix(".pdf")} | {
         Path(str(base) + f"-{padded(page, last)}.svg")
@@ -126,7 +129,8 @@ def check_greyscale_theme(manifest: dict, errors: list[str]) -> None:
     if entry is None or entry["title"] != "Greyscale":
         errors.append('portfolio deck must be presented as the "Greyscale" theme')
 
-    for path in sorted((GREYSCALE_DECK / "assets").glob("*.png")):
+    assets = (GREYSCALE_DECK / "assets")
+    for path in sorted([*assets.glob("*.png"), *assets.glob("*.jpg")]):
         red, green, blue = Image.open(path).convert("RGB").split()
         if red.tobytes() != green.tobytes() or green.tobytes() != blue.tobytes():
             errors.append(f"greyscale theme contains a color image: {path.relative_to(ROOT)}")
@@ -180,7 +184,7 @@ def check_sources() -> tuple[list[ExampleCall], set[Path]]:
 
     actual = {
         path for path in ASSETS.rglob("*")
-        if path.is_file() and path.suffix in {".pdf", ".svg"}
+        if path.is_file() and path.suffix in {".pdf", ".svg", ".webp"}
     }
     stale = sorted(path.relative_to(ROOT).as_posix() for path in actual - expected)
     if stale:
@@ -235,7 +239,7 @@ class DocumentParser(HTMLParser):
 
 def check_site() -> None:
     html_files = sorted(
-        path for path in DOCS.rglob("*.html")
+        path for path in SITE.rglob("*.html")
         if "_calepin" not in path.parts
         and ".calepin" not in path.parts
         and "theme" not in path.parts
@@ -253,7 +257,7 @@ def check_site() -> None:
             if parts.scheme or parts.netloc or raw.startswith(("mailto:", "tel:", "data:")):
                 continue
             local = unquote(parts.path)
-            target = page if not local else ((DOCS / local.lstrip("/")) if local.startswith("/") else (page.parent / local))
+            target = page if not local else ((SITE / local.lstrip("/")) if local.startswith("/") else (page.parent / local))
             target = target.resolve()
             if target.is_dir():
                 target = target / "index.html"

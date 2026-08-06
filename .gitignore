@@ -3,7 +3,15 @@ __pycache__/
 *.pyc
 .claude/settings.local.json
 .hermes/
-docs/examples/decks/*/.calepin/
+docs-src/examples/decks/*/.calepin/
+# Calepin writes these per-page wrappers next to the page it is rendering and
+# does not always clean them up. They are scratch, never source.
+.calepin-entry.*
+# docs/ is the rendered site: build output only, and Calepin wipes and rewrites
+# the whole directory on every build. It stays out of the index by default so an
+# ordinary commit never carries a rebuild; publishing to GitHub Pages is the
+# deliberate act of force-adding it. See CLAUDE.md for the command.
+docs/
 trash/
 dist/
 # Syncthing scratch files

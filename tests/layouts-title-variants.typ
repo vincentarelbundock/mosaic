@@ -7,7 +7,7 @@
 // from the live context so composed title tiers track the active theme. A
 // fixture that resolves layouts directly supplies it the same way.
 #let settings = make-settings() + (base-size: 28pt)
-#let image-path = path("/docs/assets/images/title-river.webp")
+#let image-path = path("/docs-src/assets/images/title-river.webp")
 #let udem = [Universite de Montreal]
 #let cirano = [CIRANO]
 #let academic-authors = (

@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MANIFEST = ROOT / "docs/examples/decks/manifest.json"
+MANIFEST = ROOT / "docs-src/examples/decks/manifest.json"
 
 
 def load_manifest() -> dict:
@@ -33,11 +33,11 @@ def load_manifest() -> dict:
             raise ValueError(f"deck {slug} requires alt text")
         if type(entry["frames"]) is not int or entry["frames"] < 1:
             raise ValueError(f"deck {slug} frames must be a positive integer")
-        if not (ROOT / f"docs/examples/decks/{slug}/Makefile").is_file():
+        if not (ROOT / f"docs-src/examples/decks/{slug}/Makefile").is_file():
             raise ValueError(f"deck {slug} has no Makefile")
     directories = {
         path.parent.name
-        for path in (ROOT / "docs/examples/decks").glob("*/Makefile")
+        for path in (ROOT / "docs-src/examples/decks").glob("*/Makefile")
     }
     if directories != seen:
         raise ValueError(

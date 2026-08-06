@@ -6,8 +6,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).parents[1]
 SRC = ROOT / "mosaic" / "src"
-STARTER = ROOT / "docs" / "examples" / "embedded" / "appearance"
-PORTFOLIO = ROOT / "docs" / "examples" / "decks" / "portfolio"
+STARTER = ROOT / "docs-src" / "examples" / "embedded" / "appearance"
+PORTFOLIO = ROOT / "docs-src" / "examples" / "decks" / "portfolio"
 BUILTINS = ("default", "editorial", "manifesto", "metropolis", "mono")
 RETIRED_HELPERS = (
     "configured-theme",

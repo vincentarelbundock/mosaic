@@ -37,14 +37,14 @@ Touying copyright notice and license:
 
 ## SlidesCarnival presentation templates
 
-Some example decks in `docs/examples/decks/` are adapted from free
+Some example decks in `docs-src/examples/decks/` are adapted from free
 presentation templates published by SlidesCarnival:
 
-- `docs/examples/decks/editorial/`: adapted from the *Cream, Green,
+- `docs-src/examples/decks/editorial/`: adapted from the *Cream, Green,
   and Black Geometric Blocks Clean Minimal Presentation* template.
-- `docs/examples/decks/manifesto/`: adapted from the *Minimalist White
+- `docs-src/examples/decks/manifesto/`: adapted from the *Minimalist White
   Slides* template.
-- `docs/examples/decks/portfolio/`: adapted from the *Photojournalist
+- `docs-src/examples/decks/portfolio/`: adapted from the *Photojournalist
   Portfolio* template.
 
 Each deck is a Mosaic/Typst re-creation of the corresponding template's layout,
@@ -61,7 +61,7 @@ SlidesCarnival with a link to its website, and the material has been adapted.
 
 ## Metropolis Beamer theme
 
-Mosaic's bundled `metropolis` theme, and the `docs/examples/decks/metropolis/`
+Mosaic's bundled `metropolis` theme, and the `docs-src/examples/decks/metropolis/`
 deck built on it, adapt the visual design of the **Metropolis** Beamer theme
 by Matthias Vogelgesang:
 
@@ -75,7 +75,7 @@ license. The original theme sources are not redistributed here.
 
 ## Calmly Touying theme
 
-The `docs/examples/decks/calmly/` deck re-creates the visual design of the
+The `docs-src/examples/decks/calmly/` deck re-creates the visual design of the
 **Calmly** presentation theme for Touying by Yichen Han:
 
 - <https://github.com/YHan228/calmly-touying>
@@ -108,7 +108,7 @@ redistributed here.
 
 ## Simpres Touying template
 
-The `docs/examples/decks/simpres/` deck re-creates the visual design of the
+The `docs-src/examples/decks/simpres/` deck re-creates the visual design of the
 **Simpres** presentation template for Touying by thy0s:
 
 - <https://github.com/thy0s/touying-simpres>
@@ -141,7 +141,7 @@ redistributed here.
 
 ## Clean Touying and Quarto theme
 
-The `docs/examples/decks/quarto-clean/` deck re-creates the visual design of
+The `docs-src/examples/decks/quarto-clean/` deck re-creates the visual design of
 the **Clean** theme for Touying and Quarto by Kazuharu Yanagimoto:
 
 - <https://github.com/kazuyanagimoto/quarto-clean-typst>

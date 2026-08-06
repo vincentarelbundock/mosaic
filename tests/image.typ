@@ -3,7 +3,7 @@
 #set page(width: 240pt, height: 160pt, margin: 0pt)
 
 #let defaults = mosaic.components.image(
-  path("/docs/assets/images/dog.webp"),
+  path("/docs-src/assets/images/dog.webp"),
   alt: "A brown dog",
 )
 #assert(defaults.func() == image)
@@ -13,7 +13,7 @@
 #assert(defaults.at("alt") == "A brown dog")
 
 #let configured = mosaic.components.image(
-  path("/docs/assets/images/dog.webp"),
+  path("/docs-src/assets/images/dog.webp"),
   width: 40pt,
   height: 30pt,
   fit: "contain",
@@ -30,7 +30,7 @@
 // A scrim wraps the picture in a clipped block, so the result is no longer a
 // bare image element.
 #let scrimmed = mosaic.components.image(
-  path("/docs/assets/images/dog.webp"),
+  path("/docs-src/assets/images/dog.webp"),
   scrim: black.transparentize(65%),
   alt: "A darkened brown dog",
 )
@@ -42,12 +42,12 @@
   columns: (1fr, 1fr, 1fr),
   scrimmed,
   mosaic.components.image(
-    path("/docs/assets/images/dog.webp"),
+    path("/docs-src/assets/images/dog.webp"),
     scrim: white.transparentize(80%),
     alt: "A lightened brown dog",
   ),
   mosaic.components.image(
-    path("/docs/assets/images/dog.webp"),
+    path("/docs-src/assets/images/dog.webp"),
     scrim: gradient.linear(
       black.transparentize(100%),
       black.transparentize(20%),

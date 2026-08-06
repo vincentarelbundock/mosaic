@@ -35,5 +35,5 @@
   layout: "title",
   variant: "image",
   position: "top",
-  image: path("/docs/assets/images/title-river.webp"),
+  image: path("/docs-src/assets/images/title-river.webp"),
 )

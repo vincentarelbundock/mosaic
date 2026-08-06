@@ -2,7 +2,7 @@
 
 #show: mosaic.setup
 
-#let photo = mosaic.components.image(path("/docs/assets/images/dog.webp"))
+#let photo = mosaic.components.image(path("/docs-src/assets/images/dog.webp"))
 
 // The figure variant owns its picture and caption, so the slide supplies only
 // the header cell.
@@ -34,7 +34,7 @@
 #mosaic.slide(
   layout: mosaic.layouts.image(
     (
-      path: path("/docs/assets/images/dog.webp"),
+      path: path("/docs-src/assets/images/dog.webp"),
       scrim: black.transparentize(55%),
     ),
     variant: "full",

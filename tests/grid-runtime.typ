@@ -70,7 +70,7 @@
       id: "image",
       inset: 0pt,
       content: image(
-        "../docs/assets/images/mosaic-logo.svg",
+        "../docs-src/assets/images/mosaic-logo.svg",
         width: 100%,
         height: 100%,
         fit: "contain",
@@ -165,7 +165,7 @@
         id: "a",
         inset: 2pt,
         content: image(
-          "../docs/assets/images/mosaic-logo.svg",
+          "../docs-src/assets/images/mosaic-logo.svg",
           width: 100%,
           height: 100%,
           fit: "contain",

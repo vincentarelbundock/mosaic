@@ -101,7 +101,7 @@
   title: [Measuring environmental change],
   variant: "image",
   position: "right",
-  image: (path: path("/docs/assets/images/title-river.webp"), alt: "Autumn wetlands"),
+  image: (path: path("/docs-src/assets/images/title-river.webp"), alt: "Autumn wetlands"),
   subtitle: [Field observations across twelve sites],
   authors: (mosaic.layouts.author([River Systems Group]),),
 ))
@@ -110,7 +110,7 @@
   title: [Measuring environmental change],
   variant: "image",
   position: "bottom",
-  image: (path: path("/docs/assets/images/title-river.webp"), alt: "Autumn wetlands"),
+  image: (path: path("/docs-src/assets/images/title-river.webp"), alt: "Autumn wetlands"),
   subtitle: [Field observations from the St. Lawrence wetlands],
   authors: (mosaic.layouts.author([River Systems Group]),),
   rule: true,

@@ -1,7 +1,7 @@
 #import "@preview/mosaic:0.0.1" as mosaic
 
-#let dog = path("/docs/assets/images/dog.webp")
-#let bonsai = path("/docs/assets/images/bonsai.webp")
+#let dog = path("/docs-src/assets/images/dog.webp")
+#let bonsai = path("/docs-src/assets/images/bonsai.webp")
 
 // Without a caption the result is a centered picture and no figure is involved.
 // The defaults are the in-cell ones: uncropped, and filling the cell.

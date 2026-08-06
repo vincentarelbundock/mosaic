@@ -1,0 +1,6 @@
+# Calepin's render caches and the Tidy modules the Makefile stages. Everything
+# else here is authored: pages, config, theme, assets, examples.
+.calepin/
+_calepin/
+api/modules/
+examples/decks/*/.calepin/

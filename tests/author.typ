@@ -67,7 +67,7 @@
 #assert(plain-name([Ada#linebreak()Lovelace]) == "Ada Lovelace")
 
 // A name with no plain reading suppresses the metadata rather than guessing.
-#assert(plain-name(image("../docs/assets/images/dog.webp", width: 1pt)) == none)
+#assert(plain-name(image("../docs-src/assets/images/dog.webp", width: 1pt)) == none)
 
 // Coerced names carry no affiliations, so they add nothing to the legend.
 #let legend = analyze-authors((ada, [Alan Turing]))

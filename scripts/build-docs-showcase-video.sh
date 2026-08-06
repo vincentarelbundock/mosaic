@@ -3,17 +3,17 @@
 set -euo pipefail
 
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-webm_output="$repo_dir/docs/assets/images/showcase.webm"
-mp4_output="$repo_dir/docs/assets/images/showcase.mp4"
-poster="$repo_dir/docs/assets/images/showcase-poster.webp"
+webm_output="$repo_dir/docs-src/assets/images/showcase.webm"
+mp4_output="$repo_dir/docs-src/assets/images/showcase.mp4"
+poster="$repo_dir/docs-src/assets/images/showcase-poster.webp"
 # One still holding every slide the reel visits, three across. Incremental
 # builds contribute only their completed frame, so the sheet reads as one
 # slide per beat.
-sheet="$repo_dir/docs/assets/images/showcase-contact-sheet.webp"
+sheet="$repo_dir/docs-src/assets/images/showcase-contact-sheet.webp"
 # Records what the committed reel was encoded from. Slide PDFs are rebuilt with
 # fresh metadata on every docs build, so their bytes cannot answer "did the
 # slides change?"; the rendered frames can, and they are what the reel shows.
-fingerprint_file="$repo_dir/docs/assets/images/showcase.fingerprint"
+fingerprint_file="$repo_dir/docs-src/assets/images/showcase.fingerprint"
 work_dir="$(mktemp -d)"
 trap 'rm -rf "$work_dir"' EXIT
 

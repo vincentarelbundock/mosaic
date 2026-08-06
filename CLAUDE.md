@@ -7,14 +7,15 @@ Mosaic is a slide package for Typst (0.15+). The `mosaic/` directory is the pack
 ## Commands
 
 - `make install` — copy `mosaic/` into Typst's package index as `@preview/mosaic:0.0.1`. Tests, docs, and example decks all import that published spelling, so the working tree shadows the Universe copy while developing; run this after any package source change and before compiling anything by hand. `make uninstall` removes the shadow.
-- `make check` — full test suite: `api-contract`, `core-tests`, `layout-tests`, `negative-tests`, `doc-integrity`.
-- `make core-tests` / `make layout-tests` / `make negative-tests` — one manifest group (`uv run python scripts/run-tests.py core|layout|negative --typst typst` under the hood).
-- `make api-contract` — exact facade export checks: `cd tests && uv run python -m unittest test_check_api_exports test_theme_architecture`, plus `scripts/check-api-exports.py`.
+- `make check` — the whole test suite in one target: the facade export contract (`cd tests && uv run python -m unittest test_check_api_exports test_theme_architecture test_palettes`, plus `scripts/check-api-exports.py`), the `core` and `layout` and `negative` manifest groups, and `scripts/check-doc-assets.py`.
+- One manifest group, without a make target: `uv run python scripts/run-tests.py core|layout|negative --typst typst`.
 - Single positive test: `make install`, then `typst compile --root . tests/<name>.typ /tmp/out.pdf` from the repo root. Many core tests also have output assertions in `scripts/run-tests.py` (pdftotext/SVG greps), so a clean compile is necessary but not always sufficient.
 - Single negative test: `typst compile --root . tests/invalid/<name>.typ /tmp/out.pdf` must fail with the exact diagnostic listed in `tests/invalid/expected-diagnostics.txt`.
-- `make website` (or `docs`) — build the Calepin documentation site from the committed example artifacts; `make build` = doctor + install + check + website. `make doctor` checks prerequisites.
+- `make website` — render `docs-src/` into `docs/` from the committed example artifacts; `make build` = doctor + install + check + website. `make doctor` checks prerequisites. Calepin owns `docs/` and wipes it on every build, so never edit anything there and never add a file to it by hand.
+- `make publish-docs` — `docs/` is gitignored so routine commits never carry a rebuild. This target rebuilds the site and force-stages it (`git add -f`, minus Calepin's manifest and Syncthing conflict copies) for a deliberate GitHub Pages commit; it stages only, and never commits or pushes.
 - `make artifacts` — re-render the committed example artifacts (embedded PDFs and SVGs, deck PDFs and covers, the showcase reel). The website build no longer does this, so run it deliberately after changing an example or the package's visual output.
-- `make release-stage` — stage the Typst Universe file set in `dist/packages/preview/mosaic/{version}/`, ready to copy into a `typst/packages` fork.
+- `make release-stage` — sync the README and its illustrations into the package, then stage the Typst Universe file set in `dist/packages/preview/mosaic/{version}/`, ready to copy into a `typst/packages` fork.
+- `make clean` removes every generated file: build stamps, staged API modules, Calepin's caches, the rendered site, and all example artifacts. The artifacts are committed, so a clean shows up as deletions in `git status` until `make artifacts` re-renders them (minutes of work); restore them from git if all you wanted was a fresh cache. `make help` lists all eleven commands.
 
 Test manifests are exhaustive and enforced: every `tests/*.typ` must appear in `tests/positive-manifest.json` (groups `core`, `layout`, `responsive`), and every `tests/invalid/*.typ` needs a `stem|expected diagnostic` line in `tests/invalid/expected-diagnostics.txt`. Adding or renaming a fixture without updating the manifest fails the run.
 
@@ -26,7 +27,7 @@ Two project-specific rules worth restating:
 - Hard-coded visual constants belong in a theme's `apply` function as `set`/`show` rules, not as new token records.
 - Themes deliberately repeat structure; do not factor a shared base `apply` across themes.
 
-Documentation prose is never hard-wrapped. Write each paragraph as one long line and let the editor soft-wrap it; do not insert artificial line breaks at a column limit. This applies to prose in `docs/`, `skills/`, and Markdown files. Code blocks and code comments wrap normally.
+Documentation prose is never hard-wrapped. Write each paragraph as one long line and let the editor soft-wrap it; do not insert artificial line breaks at a column limit. This applies to prose in `docs-src/`, `skills/`, and Markdown files. Code blocks and code comments wrap normally.
 
 ## Architecture
 
@@ -45,6 +46,6 @@ Documentation prose is never hard-wrapped. Write each paragraph as one long line
 - `component/` — user-facing components (card, callout, badge, quote, divider, progress, figure, image).
 - `note/` — speaker notes; `shared.typ` — `fail()` (prefixes `mosaic: `, which negative tests rely on) and `key()` for state keys.
 
-**Docs.** `docs/` is a Calepin website. Embedded examples live in `docs/examples/embedded/` and full decks in `docs/examples/decks/<slug>/` (each with its own Makefile); the top-level Makefile renders them into `docs/assets/examples/` and `scripts/check-doc-assets.py` validates that pages, artifacts, and frame counts stay in sync. API reference pages stage package sources into `docs/api/modules/` via the `API_MODULE_MAP` in the Makefile; adding a public module means adding a mapping there.
+**Docs.** The website is split in two. `docs-src/` is the Calepin source: every authored page, `calepin.toml`, the `theme/`, the `_includes/`, the `diagrams/`, the `assets/`, and the example projects, plus the rendered example artifacts that are committed alongside them. `docs/` is the site Calepin writes from it: build output end to end, including the `.typ` copies and the `assets/` and `examples/` payloads Calepin stages there, so every edit belongs in `docs-src/`. It is gitignored and enters the index only through `make publish-docs`, which force-adds it; GitHub Pages serves whatever that last publish commit contained, so a source change is not live until the site is rebuilt and published. Embedded examples live in `docs-src/examples/embedded/` and full decks in `docs-src/examples/decks/<slug>/` (each with its own Makefile); the top-level Makefile renders them into `docs-src/assets/examples/` and `scripts/check-doc-assets.py` validates that pages, artifacts, and frame counts stay in sync, then re-checks links against the rendered `docs/`. API reference pages stage package sources into `docs-src/api/modules/` via the `API_MODULE_MAP` in the Makefile; adding a public module means adding a mapping there.
 
 **Authoring skill.** `skills/mosaic/SKILL.md` is the tutorial for writing decks with Mosaic; use it when authoring or debugging user-facing slide code rather than package internals.

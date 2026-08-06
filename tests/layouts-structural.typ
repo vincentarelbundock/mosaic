@@ -1,7 +1,7 @@
 #import "@preview/mosaic:0.0.1" as mosaic
 #show: mosaic.setup
-#let bonsai = image("/docs/assets/images/bonsai.webp", alt: "Bonsai tree", width: 100%, height: 100%, fit: "cover")
-#let dog = image("/docs/assets/images/dog.webp", alt: "Dog", width: 100%, height: 100%, fit: "cover")
+#let bonsai = image("/docs-src/assets/images/bonsai.webp", alt: "Bonsai tree", width: 100%, height: 100%, fit: "cover")
+#let dog = image("/docs-src/assets/images/dog.webp", alt: "Dog", width: 100%, height: 100%, fit: "cover")
 #let institute-a = [Institute A]
 #let institute-b = [Institute B]
 #let institute-c = [Institute C]
@@ -24,10 +24,10 @@
 #mosaic.slide(layout: mosaic.layouts.title(title: [Kicker title], variant: "kicker", subtitle: [Workshop]))
 #mosaic.slide(layout: mosaic.layouts.title(title: [Panel title], variant: "panel", subtitle: [Workshop]))
 #mosaic.slide(layout: mosaic.layouts.title(title: [Bordered title], variant: "bordered", subtitle: [Colloquium]))
-#mosaic.slide(layout: mosaic.layouts.title(title: [Image-right title], variant: "image", position: "right", image: path("/docs/assets/images/title-river.webp")))
-#mosaic.slide(layout: mosaic.layouts.title(title: [Image-top title], variant: "image", position: "top", image: (path: path("/docs/assets/images/title-river.webp"), alt: "Wetlands")))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Image-right title], variant: "image", position: "right", image: path("/docs-src/assets/images/title-river.webp")))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Image-top title], variant: "image", position: "top", image: (path: path("/docs-src/assets/images/title-river.webp"), alt: "Wetlands")))
 
 #mosaic.slide(layout: mosaic.layouts.section())[Plain section]
 #mosaic.slide(layout: mosaic.layouts.section(number: [01]))[Numbered section]
-#mosaic.slide(layout: mosaic.layouts.section(variant: "image-bottom", image: path("/docs/assets/images/dog.webp")))[Image-bottom section]
+#mosaic.slide(layout: mosaic.layouts.section(variant: "image-bottom", image: path("/docs-src/assets/images/dog.webp")))[Image-bottom section]
 #mosaic.slide(layout: mosaic.layouts.section(variant: "image-background", image: dog))[Image-background section]

@@ -1,36 +1,44 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help doctor package-readme install uninstall release-stage build check api-contract core-tests negative-tests layout-tests doc-integrity web-images embedded-examples showcase-video components api-sources examples artifacts website docs clean clean-generated distclean
+# Only the verbs a person types. Everything else in this file is a file rule
+# that a verb depends on, so it stays out of `make help` and out of the way.
+.PHONY: help doctor install uninstall check artifacts website publish-docs release-stage build clean distclean
 
 TYPST ?= typst
 CALEPIN ?= calepin
 PYTHON ?= uv run python
+# The directory name is also the package name.
 PACKAGE_DIR := mosaic
-PACKAGE_NAME := mosaic
 # Single source of truth: the manifest the package ships with.
 PACKAGE_VERSION := $(shell awk -F'"' '/^version[[:space:]]*=/{print $$2; exit}' $(PACKAGE_DIR)/typst.toml)
-TYPST_DATA_DIR ?= $(or $(XDG_DATA_HOME),$(HOME)/.local/share)
 TYPST_PACKAGE_PATH ?= $(or \
   $(strip $(shell $(TYPST) info 2>/dev/null | awk '/Package path/{print $$3; exit}')), \
-  $(TYPST_DATA_DIR)/typst/packages)
+  $(or $(XDG_DATA_HOME),$(HOME)/.local/share)/typst/packages)
 # Tests, docs, and example decks all import @preview/mosaic, the spelling a
 # published deck uses. Installing the working tree into the preview namespace is
 # the workflow Typst Universe documents for testing an unpublished package, and
 # it keeps every source in the repository free of a development-only import.
-LOCAL_PACKAGE_DIR := $(TYPST_PACKAGE_PATH)/preview/$(PACKAGE_NAME)/$(PACKAGE_VERSION)
-DOCS_DIR := docs
-# Illustrations the README links to, mirrored into the package at the same
-# relative paths so one README text works both on GitHub and on Typst Universe.
+LOCAL_PACKAGE_DIR := $(TYPST_PACKAGE_PATH)/preview/$(PACKAGE_DIR)/$(PACKAGE_VERSION)
+# The website has two halves. DOCS_SRC is everything authored by hand plus the
+# example artifacts the rules below render: pages, calepin.toml, the theme, the
+# assets, the example projects. SITE_DIR is what Calepin writes from it. Nothing
+# in SITE_DIR is edited directly and it is gitignored; `make website` reproduces
+# all of it and `make publish-docs` force-stages it for GitHub Pages.
+DOCS_SRC := docs-src
+SITE_DIR := docs
+# Illustrations the README links to. The README points at the published copies
+# under $(SITE_DIR)/assets, so one text works on GitHub and on the website; the
+# package mirrors them at those same relative paths for Typst Universe.
 PACKAGE_README_ASSETS := \
   $(PACKAGE_DIR)/docs/assets/mosaic-slide.svg \
   $(PACKAGE_DIR)/docs/assets/images/showcase-contact-sheet.webp
 # Staging tree for a Typst Universe pull request: copy RELEASE_DIR into
-# packages/preview/$(PACKAGE_NAME)/$(PACKAGE_VERSION) of a typst/packages fork.
-RELEASE_DIR := dist/packages/preview/$(PACKAGE_NAME)/$(PACKAGE_VERSION)
+# packages/preview/$(PACKAGE_DIR)/$(PACKAGE_VERSION) of a typst/packages fork.
+RELEASE_DIR := dist/packages/preview/$(PACKAGE_DIR)/$(PACKAGE_VERSION)
 
-# Full example decks shipped under docs/examples/decks/. Each has its own Makefile
+# Full example decks shipped under docs-src/examples/decks/. Each has its own Makefile
 # that builds <slug>.pdf; the top-level rule below also renders a cover.jpg.
-DECK_EXAMPLES_DIR := $(DOCS_DIR)/examples/decks
+DECK_EXAMPLES_DIR := $(DOCS_SRC)/examples/decks
 DECK_METADATA := scripts/deck_metadata.py
 DECK_MANIFEST := $(DECK_EXAMPLES_DIR)/manifest.json
 DECK_SLUGS := $(shell $(PYTHON) $(DECK_METADATA) slugs)
@@ -42,16 +50,14 @@ deck_sources = $(shell find $(DECK_EXAMPLES_DIR)/$(1) -type f \
 	! -path '*/.calepin/*' ! -name '*.pdf' ! -name 'cover.jpg' 2>/dev/null | sort)
 $(foreach slug,$(DECK_SLUGS),$(eval $(DECK_STAMP_DIR)/$(slug).stamp: $(call deck_sources,$(slug)) $(DECK_MANIFEST)))
 
-EMBEDDED_EXAMPLES_DIR := $(DOCS_DIR)/examples/embedded
-EMBEDDED_ASSETS_DIR := $(DOCS_DIR)/assets/examples
+EMBEDDED_EXAMPLES_DIR := $(DOCS_SRC)/examples/embedded
+EMBEDDED_ASSETS_DIR := $(DOCS_SRC)/assets/examples
 EMBEDDED_STAMP_DIR := .build/embedded-examples
-WEB_IMAGE_DIR := $(DOCS_DIR)/assets/images
-BONSAI_SOURCE := $(WEB_IMAGE_DIR)/bonsai.png
-BONSAI_WEBP := $(WEB_IMAGE_DIR)/bonsai.webp
-DOG_SOURCE := $(WEB_IMAGE_DIR)/dog.jpg
-DOG_WEBP := $(WEB_IMAGE_DIR)/dog.webp
-WEB_IMAGES := $(BONSAI_WEBP) $(DOG_WEBP)
-API_MODULES_DIR := $(DOCS_DIR)/api/modules
+WEB_IMAGE_DIR := $(DOCS_SRC)/assets/images
+# The photographs the examples use. These are committed source, not derivatives:
+# the examples re-render whenever one of them changes.
+WEB_IMAGES := $(WEB_IMAGE_DIR)/bonsai.webp $(WEB_IMAGE_DIR)/dog.webp
+API_MODULES_DIR := $(DOCS_SRC)/api/modules
 # Staged Tidy module name -> package source path, both without the .typ suffix.
 # The staged names stay flat because the docs pages reference them by name.
 API_MODULE_MAP := \
@@ -88,15 +94,15 @@ EMBEDDED_SLIDESHOW_INDEXER := scripts/list-embedded-slideshows.py
 # Recurse into the docs tree: authored pages live in subdirectories (start/,
 # slides/, ...), and a page missed here silently demotes its slideshow to a
 # per-frame image build. Mirror check-doc-assets.py's authored_pages().
-EMBEDDED_DOC_PAGES := $(shell find $(DOCS_DIR) -type f -name '*.typ' \
+EMBEDDED_DOC_PAGES := $(shell find $(DOCS_SRC) -type f -name '*.typ' \
   -not -path '*/_calepin/*' -not -path '*/.calepin/*' \
-  -not -path '$(DOCS_DIR)/examples/*' -not -path '$(DOCS_DIR)/api/modules/*' \
-  -not -path '$(DOCS_DIR)/api/sources/*' 2>/dev/null | sort)
-EMBEDDED_SLIDESHOW_SLUGS := $(shell $(PYTHON) $(EMBEDDED_SLIDESHOW_INDEXER) $(EMBEDDED_DOC_PAGES))
-EMBEDDED_SLIDESHOW_SOURCES := $(addprefix $(EMBEDDED_EXAMPLES_DIR)/,$(addsuffix .typ,$(EMBEDDED_SLIDESHOW_SLUGS)))
-EMBEDDED_IMAGE_SOURCES := $(filter-out $(EMBEDDED_SLIDESHOW_SOURCES),$(EMBEDDED_EXAMPLE_SOURCES))
+  -not -path '$(DOCS_SRC)/examples/*' -not -path '$(DOCS_SRC)/api/modules/*' \
+  -not -path '$(DOCS_SRC)/api/sources/*' 2>/dev/null | sort)
+EMBEDDED_SLIDESHOW_SOURCES := $(addprefix $(EMBEDDED_EXAMPLES_DIR)/,$(addsuffix .typ,\
+  $(shell $(PYTHON) $(EMBEDDED_SLIDESHOW_INDEXER) $(EMBEDDED_DOC_PAGES))))
 EMBEDDED_SLIDESHOW_STAMPS := $(patsubst $(EMBEDDED_EXAMPLES_DIR)/%.typ,$(EMBEDDED_STAMP_DIR)/%.stamp,$(EMBEDDED_SLIDESHOW_SOURCES))
-EMBEDDED_IMAGE_STAMPS := $(patsubst $(EMBEDDED_EXAMPLES_DIR)/%.typ,$(EMBEDDED_STAMP_DIR)/%.stamp,$(EMBEDDED_IMAGE_SOURCES))
+EMBEDDED_IMAGE_STAMPS := $(patsubst $(EMBEDDED_EXAMPLES_DIR)/%.typ,$(EMBEDDED_STAMP_DIR)/%.stamp,\
+  $(filter-out $(EMBEDDED_SLIDESHOW_SOURCES),$(EMBEDDED_EXAMPLE_SOURCES)))
 EMBEDDED_STAMPS := $(EMBEDDED_SLIDESHOW_STAMPS) $(EMBEDDED_IMAGE_STAMPS)
 # Adjacent underscore-prefixed modules are private support for executable
 # entries and must trigger the same rebuilds without becoming entry points.
@@ -108,9 +114,7 @@ $(foreach source,$(EMBEDDED_EXAMPLE_SOURCES),$(eval \
 # both an input and an output of its own build.
 PACKAGE_SOURCES := $(shell find $(PACKAGE_DIR) -type f \
   ! -path '$(PACKAGE_DIR)/docs/*' ! -name 'README.md' 2>/dev/null | sort)
-SHOWCASE_VIDEO_WEBM := $(WEB_IMAGE_DIR)/showcase.webm
-SHOWCASE_VIDEO_MP4 := $(WEB_IMAGE_DIR)/showcase.mp4
-SHOWCASE_VIDEOS := $(SHOWCASE_VIDEO_WEBM) $(SHOWCASE_VIDEO_MP4)
+SHOWCASE_VIDEOS := $(WEB_IMAGE_DIR)/showcase.webm $(WEB_IMAGE_DIR)/showcase.mp4
 SHOWCASE_POSTER := $(WEB_IMAGE_DIR)/showcase-poster.webp
 # One still of every slide the reel visits, three across.
 SHOWCASE_SHEET := $(WEB_IMAGE_DIR)/showcase-contact-sheet.webp
@@ -119,8 +123,7 @@ SHOWCASE_SHEET := $(WEB_IMAGE_DIR)/showcase-contact-sheet.webp
 # what decides whether the reel is actually stale.
 SHOWCASE_FINGERPRINT := $(WEB_IMAGE_DIR)/showcase.fingerprint
 # The reel's opening frame. No page embeds it, so it is not an embedded example.
-SHOWCASE_OPENING_SOURCE := $(DOCS_DIR)/examples/showcase/opening.typ
-SHOWCASE_OPENING := $(DOCS_DIR)/examples/showcase/opening.pdf
+SHOWCASE_OPENING := $(DOCS_SRC)/examples/showcase/opening.pdf
 # The reel draws on every complete deck plus a few structural examples, so any
 # of them can make it stale.
 SHOWCASE_STAMPS := $(DECK_STAMPS) $(SHOWCASE_OPENING) \
@@ -137,87 +140,68 @@ doctor: ## Check mandatory, documentation, and optional build prerequisites
 	$(PYTHON) scripts/doctor.py all
 
 # ==============================================================================
-# Build targets
+# The package
 # ==============================================================================
-
-# The package ships the repository README verbatim, because that is the text
-# Typst Universe displays. Its illustrations must therefore resolve at the same
-# relative paths inside the package; `exclude` keeps them out of the download.
-package-readme: $(PACKAGE_DIR)/README.md $(PACKAGE_README_ASSETS) ## Sync the README and its illustrations into the package
-
-$(PACKAGE_DIR)/README.md: README.md
-	cp $< $@
-
-$(PACKAGE_README_ASSETS): $(PACKAGE_DIR)/%: %
-	@mkdir -p "$(@D)"
-	cp $< $@
 
 install: ## Copy Mosaic into Typst's package index as @preview/mosaic
 	rm -rf "$(LOCAL_PACKAGE_DIR)"
 	mkdir -p "$(LOCAL_PACKAGE_DIR)"
 	cp -R "$(PACKAGE_DIR)/." "$(LOCAL_PACKAGE_DIR)/"
-	@echo "Installed @preview/$(PACKAGE_NAME):$(PACKAGE_VERSION) in $(LOCAL_PACKAGE_DIR)"
+	@echo "Installed @preview/$(PACKAGE_DIR):$(PACKAGE_VERSION) in $(LOCAL_PACKAGE_DIR)"
 
 uninstall: ## Remove the working-tree copy so imports resolve from Typst Universe
 	rm -rf "$(LOCAL_PACKAGE_DIR)"
 	@echo "Removed $(LOCAL_PACKAGE_DIR)"
 
-release-stage: package-readme install ## Stage the exact file set to copy into a typst/packages fork
-	rm -rf "$(RELEASE_DIR)"
-	mkdir -p "$(RELEASE_DIR)"
-	cp -R "$(PACKAGE_DIR)/." "$(RELEASE_DIR)/"
-	@echo "Staged $(PACKAGE_NAME) $(PACKAGE_VERSION) in $(RELEASE_DIR)"
+# ==============================================================================
+# Tests
+# ==============================================================================
 
-build: doctor install check website ## Validate prerequisites, then compile tests and documentation
-
-check: install api-contract core-tests layout-tests negative-tests doc-integrity ## Run package, fixture, and documentation integrity tests
-
-api-contract: ## Verify exact neutral, themed, and nested facade exports
+# Five groups, in cheapest-first order so a broken facade fails before minutes of
+# compiling: the exact export contract, the classified positive fixtures, the
+# negative fixtures and their exact diagnostics, and the documentation's sources,
+# artifacts, and frame counts. To run one group by hand, call it directly:
+#   uv run python scripts/run-tests.py core|layout|negative --typst typst
+check: install $(WEB_IMAGES) ## Run package, fixture, and documentation integrity tests
 	cd tests && $(PYTHON) -m unittest test_check_api_exports test_theme_architecture test_palettes
 	$(PYTHON) scripts/check-api-exports.py
-
-core-tests: install ## Run explicitly classified non-layout positive tests
 	$(PYTHON) scripts/run-tests.py core --typst "$(TYPST)"
-
-negative-tests: install ## Require every invalid fixture to emit its exact diagnostic contract
-	$(PYTHON) scripts/run-tests.py negative --typst "$(TYPST)"
-
-layout-tests: install web-images ## Run explicitly classified semantic layout tests
 	$(PYTHON) scripts/run-tests.py layout --typst "$(TYPST)"
-
-doc-integrity: ## Validate docs consumers, artifacts, frame counts, and deck metadata
+	$(PYTHON) scripts/run-tests.py negative --typst "$(TYPST)"
 	$(PYTHON) scripts/check-doc-assets.py
 
-web-images: $(WEB_IMAGES) ## Generate compact WebP derivatives while retaining source images
+# ==============================================================================
+# Example artifacts. The rendered artifacts (embedded PDFs and SVGs, deck PDFs
+# and covers, the showcase reel) are committed, so the site builds from the
+# files on hand. Rebuild them deliberately after changing an example or the
+# package's visual output; check-doc-assets.py still fails if a page and its
+# artifact disagree.
+# ==============================================================================
 
-# Each derivative is bounded on its long edge, which differs per source aspect.
-$(BONSAI_WEBP): $(BONSAI_SOURCE)
-$(BONSAI_WEBP): WEB_IMAGE_BOUND := --max-width 1600
-$(DOG_WEBP): $(DOG_SOURCE)
-$(DOG_WEBP): WEB_IMAGE_BOUND := --max-height 1600
+artifacts: $(EMBEDDED_STAMPS) $(DECK_STAMPS) $(SHOWCASE_VIDEOS) $(SHOWCASE_POSTER) $(SHOWCASE_SHEET) ## Re-render every committed example artifact
 
-$(WEB_IMAGES):
-	mkdir -p $(WEB_IMAGE_DIR)
-	$(PYTHON) scripts/convert-web-image.py $< $@ $(WEB_IMAGE_BOUND) --quality 80
+# Both flavours emit the same PDF; they differ only in what preview accompanies
+# it. A slideshow keeps a single first-frame cover, which the page only ever
+# shows as a bounded poster, so it is a 2x raster; a gallery item keeps one SVG
+# per frame, because those are read inline at arbitrary zoom.
+COVER_PPI := 115
+$(EMBEDDED_SLIDESHOW_STAMPS): EMBEDDED_PREVIEW = cover
+$(EMBEDDED_IMAGE_STAMPS): EMBEDDED_PREVIEW = frames
 
-embedded-examples: $(EMBEDDED_STAMPS) ## Render embedded examples to PDF slideshows or SVG gallery items
-
-# Both flavours emit the same PDF; they differ only in which SVGs accompany it.
-# A slideshow keeps a single first-frame cover, a gallery item one SVG per frame.
-$(EMBEDDED_SLIDESHOW_STAMPS): EMBEDDED_SVG = --pages 1 $(EMBEDDED_ASSETS_DIR)/$*-cover.svg
-$(EMBEDDED_IMAGE_STAMPS): EMBEDDED_SVG = '$(EMBEDDED_ASSETS_DIR)/$*-{0p}.svg'
-
-$(EMBEDDED_STAMPS): $(EMBEDDED_STAMP_DIR)/%.stamp: $(EMBEDDED_EXAMPLES_DIR)/%.typ $(PACKAGE_SOURCES) $(WEB_IMAGES) $(EMBEDDED_SLIDESHOW_INDEXER) scripts/embedded_examples.py Makefile | install
+$(EMBEDDED_STAMPS): $(EMBEDDED_STAMP_DIR)/%.stamp: $(EMBEDDED_EXAMPLES_DIR)/%.typ $(PACKAGE_SOURCES) $(WEB_IMAGES) $(EMBEDDED_SLIDESHOW_INDEXER) scripts/embedded_examples.py scripts/encode-cover.py Makefile | install
 	@mkdir -p "$(dir $(EMBEDDED_ASSETS_DIR)/$*)" "$(@D)"
-	@echo "typst compile $< $(EMBEDDED_ASSETS_DIR)/$*.pdf $(EMBEDDED_SVG)"
+	@echo "typst compile $< $(EMBEDDED_ASSETS_DIR)/$*.pdf ($(EMBEDDED_PREVIEW))"
 	@find "$(dir $(EMBEDDED_ASSETS_DIR)/$*)" -maxdepth 1 -type f -name "$(notdir $*)-*.svg" -delete
 	@$(TYPST) compile --root . "$<" "$(EMBEDDED_ASSETS_DIR)/$*.pdf"
-	@$(TYPST) compile --root . --format svg "$<" $(EMBEDDED_SVG)
+	@if [ "$(EMBEDDED_PREVIEW)" = cover ]; then \
+		$(TYPST) compile --root . --format png --ppi $(COVER_PPI) --pages 1 "$<" "$(EMBEDDED_ASSETS_DIR)/$*-cover.png" && \
+		$(PYTHON) scripts/encode-cover.py "$(EMBEDDED_ASSETS_DIR)/$*-cover.png" "$(EMBEDDED_ASSETS_DIR)/$*-cover.webp"; \
+	else \
+		$(TYPST) compile --root . --format svg "$<" '$(EMBEDDED_ASSETS_DIR)/$*-{0p}.svg'; \
+	fi
 	@touch "$@"
 
-showcase-video: $(SHOWCASE_VIDEOS) $(SHOWCASE_POSTER) $(SHOWCASE_SHEET) ## Build the animated home-page showcase and its contact sheet
-
-$(SHOWCASE_OPENING): $(SHOWCASE_OPENING_SOURCE) $(PACKAGE_SOURCES) | install
+$(SHOWCASE_OPENING): $(DOCS_SRC)/examples/showcase/opening.typ $(PACKAGE_SOURCES) | install
 	$(TYPST) compile --root . "$<" "$@"
 
 # One run writes the reel, its poster (the reel's first frame), and the contact
@@ -227,11 +211,6 @@ $(SHOWCASE_OPENING): $(SHOWCASE_OPENING_SOURCE) $(PACKAGE_SOURCES) | install
 $(SHOWCASE_VIDEOS) $(SHOWCASE_POSTER) $(SHOWCASE_SHEET) &: scripts/build-docs-showcase-video.sh $(DECK_MANIFEST) $(SHOWCASE_STAMPS)
 	./scripts/build-docs-showcase-video.sh $(PYTHON)
 
-components: install ## Compile the public facade and components test deck
-	$(TYPST) compile --root . tests/components.typ /tmp/mosaic-components.pdf
-
-api-sources: $(API_STAGED_MODULES) ## Stage public modules for Tidy inside the Calepin root
-
 $(foreach entry,$(API_MODULE_MAP),$(eval \
   $(API_MODULES_DIR)/$(word 1,$(subst :, ,$(entry))).typ: \
   $(PACKAGE_DIR)/src/$(word 2,$(subst :, ,$(entry))).typ))
@@ -240,11 +219,9 @@ $(API_MAPPED_MODULES):
 	mkdir -p $(API_MODULES_DIR)
 	cp $< $@
 
-$(API_MODULES_DIR)/setup.typ: $(DOCS_DIR)/api/sources/setup.typ
+$(API_MODULES_DIR)/setup.typ: $(DOCS_SRC)/api/sources/setup.typ
 	mkdir -p $(API_MODULES_DIR)
 	cp $< $@
-
-examples: $(DECK_STAMPS) ## Compile the docs/examples/decks projects (PDF slideshows + cover thumbnails)
 
 # Build each example deck via its own Makefile (which knows its typst flags and
 # fonts), then render the first page to a JPEG cover for the Examples gallery.
@@ -256,36 +233,89 @@ $(DECK_STAMP_DIR)/%.stamp: $(PACKAGE_SOURCES) $(DECK_METADATA) Makefile | instal
 		"$(DECK_EXAMPLES_DIR)/$*/$*.pdf" "$(DECK_EXAMPLES_DIR)/$*/cover"
 	@touch "$@"
 
-# The rendered example artifacts (embedded PDFs and SVGs, deck PDFs and covers,
-# the showcase reel) are committed, so the site builds from the files on hand.
-# Rebuild them deliberately with `make artifacts` after changing an example or
-# the package's visual output; check-doc-assets.py still fails if a page and its
-# artifact disagree.
-artifacts: embedded-examples examples showcase-video ## Re-render every committed example artifact
+# ==============================================================================
+# The website
+# ==============================================================================
 
-website: install api-sources ## Install Mosaic and build the Calepin website from committed artifacts
-	$(CALEPIN) compile $(DOCS_DIR) $(DOCS_DIR)
+website: install $(API_STAGED_MODULES) ## Render docs-src into the published docs/ site from committed artifacts
+# Calepin refuses to overwrite an output directory it does not recognise, and
+# Syncthing can re-materialise stray files under $(SITE_DIR) between builds.
+# Removing it first is safe because every byte in it is generated, and it makes
+# the build independent of whatever state the directory was left in.
+	rm -rf $(SITE_DIR)
+	$(CALEPIN) compile $(DOCS_SRC) $(SITE_DIR)
 	$(PYTHON) scripts/normalize-html.py
 	$(PYTHON) scripts/check-doc-assets.py --site
 # GitHub Pages runs Jekyll unless this file is present, and Jekyll drops every
-# path beginning with an underscore: the whole $(DOCS_DIR)/_calepin asset tree
-# and the per-directory _calepin caches the pages load from. Last, so it exists
-# whatever the build did before it.
-	@touch $(DOCS_DIR)/.nojekyll
+# path beginning with an underscore, including the $(SITE_DIR)/_calepin favicon
+# every page links. Last, so it exists whatever the build did before it.
+	@touch $(SITE_DIR)/.nojekyll
 
-docs: website ## Build the Calepin documentation website
+# $(SITE_DIR) is gitignored, so a routine commit never carries a rebuild of it.
+# Publishing to GitHub Pages is this deliberate step: stage the rendered site,
+# minus Calepin's own manifest and any Syncthing conflict copies, and leave the
+# commit to you.
+publish-docs: website ## Force-stage the rendered site for a GitHub Pages commit
+	git add -f $(SITE_DIR) \
+		':(exclude)$(SITE_DIR)/.calepin' \
+		':(exclude,glob)$(SITE_DIR)/**/*sync-conflict*'
+	@echo "Staged $(SITE_DIR). Review with 'git diff --cached --stat', then commit."
 
-clean: ## Remove ephemeral staging files and build stamps
+# ==============================================================================
+# Release and housekeeping
+# ==============================================================================
+
+# The package ships the repository README verbatim, because that is the text
+# Typst Universe displays. Its illustrations must therefore resolve at the same
+# relative paths inside the package; `exclude` keeps them out of the download.
+release-stage: $(PACKAGE_DIR)/README.md $(PACKAGE_README_ASSETS) install ## Stage the exact file set to copy into a typst/packages fork
+	rm -rf "$(RELEASE_DIR)"
+	mkdir -p "$(RELEASE_DIR)"
+	cp -R "$(PACKAGE_DIR)/." "$(RELEASE_DIR)/"
+	@echo "Staged $(PACKAGE_DIR) $(PACKAGE_VERSION) in $(RELEASE_DIR)"
+
+$(PACKAGE_DIR)/README.md: README.md
+	cp $< $@
+
+# The package copies keep the README's published `docs/assets/...` spelling, but
+# take their bytes from the authored tree so a stale site cannot leak into a
+# release.
+$(PACKAGE_DIR)/docs/assets/mosaic-slide.svg: $(DOCS_SRC)/assets/mosaic-slide.svg
+$(PACKAGE_DIR)/docs/assets/images/showcase-contact-sheet.webp: $(SHOWCASE_SHEET)
+
+$(PACKAGE_README_ASSETS):
+	@mkdir -p "$(@D)"
+	cp $< $@
+
+build: doctor install check website ## Validate prerequisites, then compile tests and documentation
+
+# Everything this removes is derived and cheap to rebuild, and none of it is
+# committed, so `make clean && make website` is a working sequence: the site
+# rebuilds from the example artifacts, which a clean deliberately leaves alone.
+# Removing those is `distclean`.
+clean: ## Remove build stamps, staged modules, Calepin caches, and the rendered site
 	rm -f $(API_MODULES_DIR)/*.typ
-	rm -rf $(EMBEDDED_STAMP_DIR)
-	rm -rf $(DECK_STAMP_DIR)
-	rm -rf $(DOCS_DIR)/.calepin
+	rm -rf $(EMBEDDED_STAMP_DIR) $(DECK_STAMP_DIR) $(SITE_DIR)
+# Calepin scatters caches through the source tree rather than keeping one: a
+# `_calepin` beside every page directory, a `.calepin` inside every example
+# deck, and stray per-page entry files. Sweep for them by name so a new page
+# directory never leaves a cache behind that clean does not know about.
+	find $(DOCS_SRC) -type d -name '.calepin' -exec rm -rf {} +
+# The favicon lives inside an otherwise-ignored `_calepin` directory and is
+# force-added to the index, so it is source that a name-based sweep must spare.
+	find $(DOCS_SRC) -path '*/_calepin/*' ! -name favicon.svg -delete 2>/dev/null || true
+# Emptying by content leaves the `_calepin` directories themselves behind, since
+# the pattern above only ever matches what is inside one. Take every directory
+# the sweep stripped bare; the favicon's parent is the one that survives.
+	find $(DOCS_SRC) -type d -name '_calepin' -empty -delete
+	find $(DOCS_SRC) -name '.calepin-entry.*' -delete
 
-clean-generated: clean ## Remove reproducible media and rendered example outputs
-	find $(EMBEDDED_ASSETS_DIR) -type f \( -name '*.pdf' -o -name '*.svg' \) -delete
+# The example artifacts and the showcase reel are committed, so this shows up as
+# deletions in `git status` until `make artifacts` re-renders them, which is
+# minutes of work. If all you wanted was a fresh cache, use `clean`; if you
+# already ran this, `git checkout -- $(DOCS_SRC)` restores the committed bytes
+# in seconds.
+distclean: clean ## Also remove the committed example artifacts and the showcase reel
+	find $(EMBEDDED_ASSETS_DIR) -type f \( -name '*.pdf' -o -name '*.svg' -o -name '*.webp' \) -delete
 	for slug in $(DECK_SLUGS); do rm -f "$(DECK_EXAMPLES_DIR)/$$slug/$$slug.pdf" "$(DECK_EXAMPLES_DIR)/$$slug/cover.jpg"; done
-	rm -f $(BONSAI_WEBP) $(DOG_WEBP) $(SHOWCASE_VIDEO) $(SHOWCASE_POSTER) $(SHOWCASE_FINGERPRINT) $(SHOWCASE_OPENING)
-
-distclean: clean-generated ## Also remove published HTML and Calepin's generated cache
-	find $(DOCS_DIR) -type f -name '*.html' -delete
-	find $(DOCS_DIR)/_calepin -mindepth 1 ! -name favicon.svg -delete 2>/dev/null || true
+	rm -f $(SHOWCASE_VIDEOS) $(SHOWCASE_POSTER) $(SHOWCASE_SHEET) $(SHOWCASE_FINGERPRINT) $(SHOWCASE_OPENING)

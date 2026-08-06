@@ -6,12 +6,12 @@ from __future__ import annotations
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DOCS = ROOT / "docs"
+SITE = ROOT / "docs"
 
 
 def main() -> int:
     changed = 0
-    for path in sorted(DOCS.rglob("*.html")):
+    for path in sorted(SITE.rglob("*.html")):
         if any(part in {"theme", "_calepin", ".calepin"} for part in path.parts):
             continue
         source = path.read_text(encoding="utf-8")

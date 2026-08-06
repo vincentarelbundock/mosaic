@@ -1,0 +1,34 @@
+#import "@preview/mosaic:0.0.1" as m
+
+#show: m.setup
+
+// Frame both image cells by targeting their labels with a native stroke.
+#let framed(id) = it => {
+  show label("mosaic-cell-" + id): body => block(
+    width: 100%,
+    height: 100%,
+    stroke: 3pt + rgb("#e69f00"),
+    body,
+  )
+  it
+}
+#show: framed("a")
+#show: framed("b")
+
+#m.slide(layout: 
+  m.grids.columns(
+    m.grids.cell("a"),
+    m.grids.cell("b"),
+  ),
+)[
+  #m.components.image(
+    path("/docs-src/assets/images/dog.webp"),
+    alt: "A brown dog",
+  )
+][
+  #m.components.image(
+    path("/docs-src/assets/images/dog.webp"),
+    fit: "contain",
+    alt: "A brown dog",
+  )
+]

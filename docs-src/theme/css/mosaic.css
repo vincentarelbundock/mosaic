@@ -1,0 +1,579 @@
+:root {
+  --calepin-font-body: Inter, ui-sans-serif, system-ui, sans-serif;
+  --calepin-font-heading: "Avenir Next", Avenir, Inter, ui-sans-serif, system-ui, sans-serif;
+  --calepin-content-width: 48rem;
+  --calepin-wide-width: 78rem;
+  --calepin-sidebar-width: 13rem;
+  --calepin-radius-md: 0.7rem;
+  --calepin-radius-lg: 1rem;
+  --mosaic-orange: #e69f00;
+  --mosaic-sky: #56b4e9;
+  --mosaic-green: #009e73;
+}
+
+html[data-theme="light"] {
+  --calepin-color-background: #fbfaf6;
+  --calepin-color-text: #172033;
+  --calepin-color-muted: #596579;
+  --calepin-color-accent: #0072b2;
+  --calepin-color-accent-hover: #005d91;
+  --calepin-surface: #ffffff;
+  --calepin-surface-muted: #f2f5f7;
+}
+
+html[data-theme="dark"] {
+  --calepin-color-background: #101723;
+  --calepin-color-text: #e8edf4;
+  --calepin-color-muted: #a3afbf;
+  --calepin-color-accent: #6ec9f2;
+  --calepin-color-accent-hover: #96daf8;
+  --calepin-surface: #172130;
+  --calepin-surface-muted: #1d2a3a;
+}
+
+.calepin-website-topbar .calepin-site-logo {
+  height: 1.75rem;
+}
+
+.calepin-website-topbar .calepin-site-brand {
+  gap: 0.5rem;
+}
+
+.mosaic-brand__typst-logo {
+  display: inline-block;
+  width: auto;
+  height: 0.9em;
+  margin-left: 0.2em;
+  /* Drop the box so the wordmark's own baseline meets the text baseline
+     (its descenders sit ~0.31 of the glyph height below that baseline). */
+  vertical-align: -0.28em;
+}
+
+body:has(.mosaic-hero) .calepin-website-shell {
+  display: block;
+  width: min(100% - 2rem, var(--calepin-wide-width));
+  margin-inline: auto;
+}
+
+body:has(.mosaic-hero) .calepin-website-sidebar,
+body:has(.mosaic-hero) .calepin-website-toc {
+  display: none;
+}
+
+.mosaic-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+  padding: clamp(2rem, 6vw, 5rem) 0;
+}
+
+.mosaic-hero h1 {
+  display: block;
+  margin: 0;
+  font-size: clamp(2.15rem, 5vw, 4.2rem);
+  line-height: 1.06;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+}
+
+.mosaic-hero__typst-box {
+  display: inline-flex;
+  align-items: center;
+  width: 2.6em;
+  height: 1em;
+  margin-left: 0.12em;
+  vertical-align: -0.35em;
+}
+
+.mosaic-hero__typst-logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.mosaic-hero p {
+  color: var(--calepin-color-muted);
+  font-size: 1.15rem;
+}
+
+.mosaic-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+
+.mosaic-home-links {
+  width: fit-content;
+  gap: 0.4rem;
+  margin: -1.5rem 0 clamp(2rem, 6vw, 5rem);
+}
+
+.mosaic-feature-showcase {
+  margin-bottom: clamp(2rem, 6vw, 5rem);
+}
+
+.mosaic-feature-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.mosaic-feature-card {
+  margin: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--calepin-color-border);
+  border-radius: var(--calepin-radius-lg);
+  background: var(--calepin-surface);
+  box-shadow: var(--calepin-shadow-card);
+}
+
+.mosaic-feature-card h2 {
+  margin: 0 0 0.45rem;
+  font-size: 1.15rem;
+}
+
+.mosaic-feature-card p {
+  margin: 0;
+  color: var(--calepin-color-muted);
+}
+
+/* The mark card carries no copy, so centre the artwork in whatever height the
+   text cards settle on. */
+.mosaic-feature-card--mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mosaic-showcase-frame {
+  display: flex;
+  align-items: center;
+}
+
+.mosaic-showcase {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 0;
+  border: 1px solid var(--calepin-color-border);
+  border-radius: var(--calepin-radius-lg);
+  box-shadow: var(--calepin-shadow-card);
+}
+
+.mosaic-showcase--poster {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mosaic-showcase--video {
+    display: none;
+  }
+
+  .mosaic-showcase--poster {
+    display: block;
+  }
+}
+
+.mosaic-button,
+.mosaic-button:visited {
+  padding: 0.7rem 1.1rem;
+  border: 2px solid var(--calepin-color-accent);
+  border-radius: 999px;
+  background: var(--calepin-color-accent);
+  color: white;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.mosaic-button--secondary,
+.mosaic-button--secondary:visited {
+  background: transparent;
+  color: var(--calepin-color-accent);
+}
+
+.mosaic-slide-demo {
+  display: block;
+  width: 100%;
+  max-height: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+}
+
+.calepin-elements-gallery__item {
+  border-radius: var(--calepin-radius-lg) !important;
+}
+
+.pdf-slideshow {
+  margin: 1.2rem 0 2.25rem;
+}
+
+.pdf-slideshow-preview {
+  display: block;
+  position: relative;
+  isolation: isolate;
+  margin-inline: auto;
+  overflow: hidden;
+  border: 1px solid var(--calepin-color-border);
+  border-radius: var(--calepin-radius-lg);
+  background: var(--calepin-surface);
+  box-shadow: var(--calepin-shadow-card);
+  color: white;
+  text-decoration: none;
+}
+
+.pdf-slideshow-preview::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(to top, rgba(10, 18, 31, 0.72), transparent 38%);
+}
+
+.pdf-slideshow-preview__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  background: var(--calepin-surface-muted);
+  object-fit: contain;
+}
+
+.pdf-slideshow-preview__caption {
+  position: absolute;
+  left: 0.85rem;
+  right: 0.85rem;
+  bottom: 0.75rem;
+  z-index: 2;
+  color: white;
+  font-family: var(--calepin-font-body);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.pdf-slideshow-preview:focus-visible {
+  outline: 0.18rem solid var(--calepin-color-accent);
+  outline-offset: 0.18rem;
+}
+
+.pdf-slideshow-dialog {
+  width: min(96vw, 90rem);
+  max-width: none;
+  height: min(94vh, 64rem);
+  max-height: none;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--calepin-color-border);
+  border-radius: var(--calepin-radius-lg);
+  background: var(--calepin-surface);
+  color: var(--calepin-color-text);
+  box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.35);
+}
+
+.pdf-slideshow-dialog::backdrop {
+  background: rgba(6, 12, 22, 0.82);
+  backdrop-filter: blur(0.25rem);
+}
+
+.pdf-slideshow-dialog__shell {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: 100%;
+  height: 100%;
+}
+
+.pdf-slideshow-dialog__header,
+.pdf-slideshow-dialog__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  border: 0;
+  background: var(--calepin-surface);
+}
+
+.pdf-slideshow-dialog__header {
+  border-bottom: 1px solid var(--calepin-color-border);
+}
+
+.pdf-slideshow-dialog__controls {
+  flex-wrap: wrap;
+  border-top: 1px solid var(--calepin-color-border);
+}
+
+.pdf-slideshow-dialog__title {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.pdf-slideshow-dialog__close,
+.pdf-slideshow-dialog__controls button,
+.pdf-slideshow-dialog__open {
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0.42rem 0.68rem;
+  border: 1px solid var(--calepin-color-border);
+  border-radius: 0.45rem;
+  background: var(--calepin-surface-muted);
+  color: var(--calepin-color-text);
+  font: inherit;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.pdf-slideshow-dialog__close {
+  padding: 0.25rem 0.55rem;
+  font-size: 1.2rem;
+}
+
+.pdf-slideshow-dialog__controls button:hover,
+.pdf-slideshow-dialog__controls button:focus-visible,
+.pdf-slideshow-dialog__close:hover,
+.pdf-slideshow-dialog__close:focus-visible,
+.pdf-slideshow-dialog__open:hover,
+.pdf-slideshow-dialog__open:focus-visible {
+  border-color: var(--calepin-color-accent);
+  color: var(--calepin-color-accent);
+}
+
+.pdf-slideshow-dialog__controls button:disabled {
+  opacity: 0.45;
+}
+
+.pdf-slideshow-dialog__stage {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  overflow: auto;
+  padding: 1rem;
+  background: #111827;
+}
+
+.pdf-slideshow-dialog__canvas {
+  display: none;
+  max-width: none;
+  margin: auto;
+  background: white;
+  box-shadow: 0 0.6rem 2rem rgba(0, 0, 0, 0.35);
+}
+
+.pdf-slideshow-dialog__message {
+  margin: auto;
+  color: white;
+  text-align: center;
+}
+
+.pdf-slideshow-dialog__group {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.pdf-slideshow-dialog__status {
+  min-width: 6.5rem;
+  color: var(--calepin-color-muted);
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+@media (max-width: 44rem) {
+  .pdf-slideshow-dialog {
+    width: 100vw;
+    height: 100dvh;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .pdf-slideshow-dialog__controls {
+    justify-content: center;
+  }
+}
+
+.pdf-slideshow .calepin-elements-gallery {
+  margin: 0 !important;
+}
+
+.pdf-slideshow:not(.pdf-slideshow--catalog)
+  .calepin-elements-gallery__item:not(:first-child) {
+  display: none;
+}
+
+.pdf-slideshow:not(.pdf-slideshow--catalog)
+  .calepin-elements-gallery__item:first-child {
+  margin: 0;
+  border: 1px solid var(--calepin-color-border);
+  box-shadow: var(--calepin-shadow-card);
+}
+
+.pdf-slideshow:not(.pdf-slideshow--catalog)
+  .calepin-elements-gallery__item:first-child::after {
+  display: block !important;
+  opacity: 1 !important;
+  background: linear-gradient(to top, rgba(10, 18, 31, 0.72), transparent 38%);
+}
+
+.pdf-slideshow .calepin-elements-gallery__image {
+  aspect-ratio: 16 / 9;
+  background: var(--calepin-surface-muted);
+  object-fit: contain;
+}
+
+.pdf-slideshow .calepin-elements-gallery__caption {
+  position: absolute !important;
+  display: block !important;
+  left: 0.85rem !important;
+  right: 0.85rem !important;
+  bottom: 0.75rem !important;
+  color: white !important;
+  font-family: var(--calepin-font-body);
+  font-size: 0.9rem !important;
+  font-weight: 700;
+  line-height: 1.25 !important;
+}
+
+.pdf-slideshow--catalog .calepin-elements-gallery__item {
+  border: 1px solid var(--calepin-color-border);
+  box-shadow: 0 0.2rem 0.65rem rgba(15, 23, 42, 0.12);
+}
+
+.pdf-slideshow--catalog .calepin-elements-gallery__caption {
+  display: none !important;
+}
+
+/* Several slideshow previews side by side, each opening its own dialog. */
+.mosaic-slideshow-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 1rem;
+  margin-block: 1.5rem;
+}
+
+.mosaic-slideshow-grid > .pdf-slideshow {
+  min-width: 0;
+  margin: 0;
+}
+
+.mosaic-slideshow-grid .pdf-slideshow-preview {
+  width: 100%;
+  max-width: none !important;
+}
+
+.mosaic-side-by-side {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.mosaic-side-by-side > * {
+  min-width: 0;
+}
+
+@media (max-width: 800px) {
+  .mosaic-hero {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .mosaic-feature-cards {
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+
+  .mosaic-side-by-side {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .mosaic-hero {
+    padding-block: 2rem;
+  }
+
+  .mosaic-hero h1 {
+    font-size: clamp(2rem, 11vw, 3rem);
+  }
+
+  .mosaic-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .mosaic-button {
+    text-align: center;
+  }
+
+  .mosaic-feature-card {
+    padding: 1rem;
+  }
+}
+
+/* Anatomy diagrams (docs-src/diagrams/*.typ).
+   Typst bakes fixed colors into the inline SVG, so the palette is restated
+   here as CSS custom properties and reapplied through attribute selectors
+   that match the literals the diagrams draw with. Labels and leader arrows
+   inherit the page text color; the surfaces get dark-mode counterparts. */
+.mosaic-diagram {
+  --mosaic-diagram-line: #176b87;
+  --mosaic-diagram-surface: #ffffff;
+  --mosaic-diagram-tint-blue: #e8f1fb;
+  --mosaic-diagram-tint-gold: #fff4cf;
+  --mosaic-diagram-tint-green: #e5f5ee;
+  --mosaic-diagram-tint-blue-soft: rgba(232, 241, 251, 0.7);
+}
+
+html[data-theme="dark"] .mosaic-diagram {
+  --mosaic-diagram-line: #7fb8cd;
+  --mosaic-diagram-surface: #223043;
+  --mosaic-diagram-tint-blue: #2c4157;
+  --mosaic-diagram-tint-gold: #4a4029;
+  --mosaic-diagram-tint-green: #24463c;
+  --mosaic-diagram-tint-blue-soft: rgba(44, 65, 87, 0.7);
+}
+
+/* Ink: label glyphs and the leader lines and arrowheads that point at cells. */
+.mosaic-diagram [fill="#1f2933"] {
+  fill: currentColor;
+}
+
+.mosaic-diagram [stroke="#1f2933"] {
+  stroke: currentColor;
+}
+
+/* Structural strokes and the abstract content marks inside the slide. */
+.mosaic-diagram [stroke="#176b87"] {
+  stroke: var(--mosaic-diagram-line);
+}
+
+.mosaic-diagram [fill="#176b87"] {
+  fill: var(--mosaic-diagram-line);
+}
+
+/* Surfaces. */
+.mosaic-diagram [fill="#ffffff"] {
+  fill: var(--mosaic-diagram-surface);
+}
+
+.mosaic-diagram [fill="#e8f1fb"] {
+  fill: var(--mosaic-diagram-tint-blue);
+}
+
+.mosaic-diagram [fill="#e8f1fbb2"] {
+  fill: var(--mosaic-diagram-tint-blue-soft);
+}
+
+.mosaic-diagram [fill="#fff4cf"] {
+  fill: var(--mosaic-diagram-tint-gold);
+}
+
+.mosaic-diagram [fill="#e5f5ee"] {
+  fill: var(--mosaic-diagram-tint-green);
+}
