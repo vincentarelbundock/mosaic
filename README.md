@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/mosaic-slide.svg" alt="The Mosaic logo: a slide divided into a wide header band and two body blocks" width="150">
+  <a href="https://vincentarelbundock.github.io/mosaic"><img src="docs/assets/mosaic-slide.svg" alt="The Mosaic logo: a slide divided into a wide header band and two body blocks" width="150"></a>
 </p>
 
 <h1 align="center">Mosaic</h1>
