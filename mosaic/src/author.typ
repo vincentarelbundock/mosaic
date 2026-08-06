@@ -121,7 +121,7 @@
   /// `mailto:`. Independent of `orcid`.
   /// -> str | none
   email: none,
-  /// ORCID iD in `0000-0000-0000-0000` form, rendered as a linked ORCID icon
+  /// ORCID iD in `0000-0000-0000-0000` form, rendered as a linked ORCID label
   /// beside the name on every title variant. Independent of `email`.
   /// -> str | none
   orcid: none,

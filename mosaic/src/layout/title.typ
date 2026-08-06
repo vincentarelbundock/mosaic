@@ -168,7 +168,7 @@
 /// names, or an array of records built with `layouts.author` for the authors
 /// that carry affiliations, an ORCID iD, or an address. Names and records mix
 /// freely in one array. Every variant renders every author field through the
-/// same tiers: a byline of names with linked ORCID icons, superscript
+/// same tiers: a byline of names with linked ORCID labels, superscript
 /// affiliation numbers, and the corresponding asterisk, then one fine-print
 /// line per kind of information: the numbered affiliation legend, the contact
 /// addresses, the date. Kinds never share a line, and the superscript markers
@@ -463,21 +463,16 @@
 // Code blocks, not markup blocks: markup newlines become spaces, which would
 // leak into joined lists as stray gaps before separators.
 #let orcid-link(author, settings) = if author.orcid != none {
-  let size = settings.title-tokens.orcid-size
   box(width: settings.title-tokens.orcid-gap)
   box(
     link(
       "https://orcid.org/" + author.orcid,
-      image(
-        "../../assets/orcid.svg",
-        height: size,
-        alt: "ORCID profile for " + repr(author.name),
-      ),
+      text(size: settings.title-tokens.orcid-size, [ORCID]),
     ),
   )
 }
 
-// One byline entry: the name, the linked ORCID icon, the superscript
+// One byline entry: the name, the linked ORCID label, the superscript
 // affiliation numbers when the deck carries more than one institution, and
 // the corresponding asterisk.
 #let author-entry(author, settings, numbered: false) = {
