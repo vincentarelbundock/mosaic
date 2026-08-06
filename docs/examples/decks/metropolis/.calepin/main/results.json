@@ -1,0 +1,92 @@
+{
+  "schema": 2,
+  "calepin_version": "0.0.42",
+  "input": "main.typ",
+  "generation": "35afbbb0211f1c98-1349cde127705c16",
+  "store": {},
+  "chunks": {
+    "fig-efficiency": {
+      "label": "fig-efficiency",
+      "engine": "r",
+      "source": "library(ggplot2)\nfit <- lm(mpg ~ hp + factor(am), data = mtcars)\n\nggplot(mtcars, aes(hp, mpg, color = factor(am))) +\n  geom_point(size = 2.6, alpha = 0.85) +\n  geom_smooth(method = \"lm\", se = FALSE, linewidth = 0.9) +\n  scale_color_manual(\n    values = c(\"0\" = \"#657377\", \"1\" = \"#f28e2b\"),\n    labels = c(\"Automatic\", \"Manual\")) +\n  labs(x = \"Horsepower\", y = \"Fuel efficiency (mpg)\", color = \"Transmission\") +\n  theme_minimal(base_family = \"Fira Sans\", base_size = 13) +\n  theme(legend.position = \"top\", panel.grid.minor = element_blank())\n",
+      "status": "ok",
+      "options": {
+        "echo": true,
+        "output": true,
+        "results": "hide",
+        "warning": true,
+        "message": false,
+        "placeholder": true,
+        "fig-width": "92%",
+        "fig-height": null,
+        "fig-align": "center",
+        "fig-responsive": true,
+        "fig-link": null,
+        "fig-caption": null,
+        "fig-cap-location": null,
+        "fig-alt-text": "Fuel efficiency versus horsepower by transmission type",
+        "fig-subcaptions": null,
+        "fig-layout-columns": null,
+        "fig-layout-rows": null,
+        "kind": null
+      },
+      "items": [
+        {
+          "type": "display",
+          "data": {
+            "image/svg+xml": {
+              "path": "/.calepin/main/figures/fig-efficiency.svg"
+            }
+          }
+        },
+        {
+          "type": "diagnostic",
+          "text": "`geom_smooth()` using formula = 'y ~ x'",
+          "level": "message"
+        }
+      ],
+      "crossref-labels": [
+        {
+          "kind": "fig",
+          "name": "fig-efficiency"
+        }
+      ]
+    },
+    "chunk-1": {
+      "label": "chunk-1",
+      "engine": "r",
+      "source": "b <- coef(summary(fit))\nr2 <- summary(fit)$r.squared\ncat(sprintf(\n  \"#strong[Estimated association] \\\n  Holding transmission fixed, an additional 10 horsepower is associated\n  with *%.2f fewer mpg*. The model explains *%.1f%%* of the observed\n  variation in fuel efficiency.\",\n  -10 * b[\"hp\", \"Estimate\"], 100 * r2\n))",
+      "status": "ok",
+      "options": {
+        "echo": false,
+        "output": true,
+        "results": "typst",
+        "warning": true,
+        "message": true,
+        "placeholder": true,
+        "fig-width": "70%",
+        "fig-height": null,
+        "fig-align": "center",
+        "fig-responsive": true,
+        "fig-link": null,
+        "fig-caption": null,
+        "fig-cap-location": null,
+        "fig-alt-text": null,
+        "fig-subcaptions": null,
+        "fig-layout-columns": null,
+        "fig-layout-rows": null,
+        "kind": null
+      },
+      "items": [
+        {
+          "type": "display",
+          "data": {
+            "text/x-typst": {
+              "path": "/.calepin/main/figures/chunk-1.typ"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

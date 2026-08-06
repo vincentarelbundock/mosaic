@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "images": {
+    "/cover.jpg": {
+      "path": "cover.jpg",
+      "xxh3": "2a625438bb7bccb5",
+      "bytes": 38027,
+      "width": 1200,
+      "height": 675
+    },
+    "cover.jpg": {
+      "path": "cover.jpg",
+      "xxh3": "2a625438bb7bccb5",
+      "bytes": 38027,
+      "width": 1200,
+      "height": 675
+    }
+  }
+}
