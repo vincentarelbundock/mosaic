@@ -93,6 +93,10 @@
     {
       "source": "docs/assets/examples/appearance/tour-editorial.pdf",
       "pages": [1, 7]
+    },
+    {
+      "source": "docs/assets/examples/appearance/tour-dark.pdf",
+      "pages": [5, 6, 7]
     }
   ]
 }

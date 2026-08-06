@@ -219,6 +219,11 @@ website: install embedded-examples showcase-video api-sources examples ## Instal
 	$(CALEPIN) compile $(DOCS_DIR) $(DOCS_DIR)
 	$(PYTHON) scripts/normalize-html.py
 	$(PYTHON) scripts/check-doc-assets.py --site
+# GitHub Pages runs Jekyll unless this file is present, and Jekyll drops every
+# path beginning with an underscore: the whole $(DOCS_DIR)/_calepin asset tree
+# and the per-directory _calepin caches the pages load from. Last, so it exists
+# whatever the build did before it.
+	@touch $(DOCS_DIR)/.nojekyll
 
 docs: website ## Build the Calepin documentation website
 

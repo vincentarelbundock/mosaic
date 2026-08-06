@@ -42,6 +42,13 @@ depth = 3
   label = "{icon:github}"
   aria-label = "GitHub"
 
+  # Lucide, the default icon set, has no Bluesky mark, so this one names its
+  # set explicitly.
+  [[menus.social]]
+  target = "https://bsky.app/profile/vincentab.bsky.social"
+  label = "{icon:simple-icons:bluesky}"
+  aria-label = "Bluesky"
+
 [[footer.item]]
 label = "Mosaic 0.0.1 · Built with Typst and Calepin."
 
