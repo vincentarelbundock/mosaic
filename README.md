@@ -10,6 +10,7 @@ Write your talk as an ordinary Typst document and Mosaic makes the slides for yo
 
 ## Website
 
+
 Detailed documentation, many examples, and themes can be found on the package website:
 
 <https://vincentarelbundock.github.io/mosaic>
