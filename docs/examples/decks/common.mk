@@ -2,7 +2,7 @@
 
 SOURCES := $(wildcard *.typ)
 DECK_DEPS ?=
-# The decks import the installed @local/mosaic package, so a package edit must
+# The decks import the installed @preview/mosaic package, so a package edit must
 # rebuild them; the repository tree is the dependency proxy for the installed
 # copy (make install refreshes the latter from the former).
 PACKAGE_SOURCES := $(shell find ../../../../mosaic -type f 2>/dev/null | sort)

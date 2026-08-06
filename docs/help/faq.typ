@@ -195,7 +195,7 @@ Here is a simple deck, with the Touying implementation on the left, and Mosaic o
   Another slide.
   ```],
   [```typ
-  #import "@local/mosaic:0.0.1" as m
+  #import "@preview/mosaic:0.0.1" as m
   #show: m.setup
 
   = Methods
@@ -221,7 +221,7 @@ Mosaic, in contrast, is designed as a thin layer on Typst, rather than a framewo
 Here, for instance, a deck is given a dark page, red text, and larger headers, without a single Mosaic-specific styling command:
 
 ```typ
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 #show: m.setup
 #set page(fill: rgb("#111827"))
 #set text(fill: red)

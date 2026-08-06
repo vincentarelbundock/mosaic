@@ -1,7 +1,7 @@
 // Deck-specific preamble. The look is the bundled default theme under a
 // custom greyscale palette, passed to `m.setup(colors: ..)` in main.typ; the
 // helpers below belong only to this deck.
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 
 #let ink = rgb("#111111")
 #let paper = rgb("#f7f7f5")

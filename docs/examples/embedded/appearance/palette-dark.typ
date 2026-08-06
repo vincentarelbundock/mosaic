@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 #import "_palette-deck.typ": deck
 
 #show: m.setup.with(colors: m.palettes.dark)

@@ -124,7 +124,7 @@ The thumbnails below all render the same title information: one deck title and s
 Written out in full, one of those decks is this:
 
 ```typ
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 
 #let ccp = [Centre for Comparative Politics]
 #let eis = [European Institute for Social Data]

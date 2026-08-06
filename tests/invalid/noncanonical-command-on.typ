@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 
 #let command = mosaic.steps.on("2-", "later")
 #command.insert("unknown", true)

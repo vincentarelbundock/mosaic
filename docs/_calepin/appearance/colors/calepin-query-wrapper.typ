@@ -140,7 +140,7 @@ To recolor an entire slide at once, use the `<mosaic-slide>` label described und
 Beyond per-entry overrides, every facade exports `palettes`, a curated collection of complete color schemes in one Japandi voice: oat and greige grounds, wood-tone and dried-plant accents, and status colors that whisper. Each entry is the same flat eight-color dictionary `colors:` accepts, so any of them repaints any theme with one line:
 
 ```typ
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 
 #show: m.setup.with(colors: m.palettes.espresso)
 ```

@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 
 #let title-accent = rgb("#654321")
 #let title-layout = mosaic.layouts.title(

@@ -9,7 +9,7 @@
 // This is a design, not a transcription. It states the palette and the few
 // structural gestures that make Calmly recognizable, and leaves everything
 // else to Mosaic's defaults.
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 #import mosaic: slide, note, fit, surface, grids, layouts, steps, components
 
 // Calmly's "tomorrow" palette, light variant. Six names are the deck's own

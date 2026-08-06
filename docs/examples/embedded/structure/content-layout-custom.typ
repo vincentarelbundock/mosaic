@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 
 // A reusable custom look is a set of deck-wide rules on the content layout's
 // structural cells. Bundle them in one transformer and apply it once.

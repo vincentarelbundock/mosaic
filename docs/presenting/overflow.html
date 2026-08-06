@@ -3298,10 +3298,6 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-<li class="calepin-website-sidebar-link"><a href="../slides/configuring.html" aria-label="Configuring layouts">Configuring layouts</a></li>
-
-
-
 <li class="calepin-website-sidebar-link"><a href="../slides/title.html" aria-label="Title">Title</a></li>
 
 
@@ -3494,7 +3490,7 @@ html[data-theme="dark"] .mosaic-diagram {
 </code></pre></div><p>Each record identifies the slide, frame, cell, and measured height. Typst gives a package no warning channel, so <code>"record"</code> prints nothing on its own; see the <a href="../api/setup.html">Setup API</a>.</p><p>An overflow means the slide holds more than it can show. The remedy is editorial: cut a bullet, split the slide in two, or move to a layout with more room. Mosaic deliberately offers no automatic shrink-to-fit for body content, because a deck whose type size is decided slide by slide loses the scale that holds it together.</p><h2 id="fitting-a-block-to-its-cell">Fitting a block to its cell</h2><p>When a single indivisible block is the problem, a wide table, a chart, or a generated list, scale that one block with <code>m.fit</code> and leave the deck’s typography alone:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#m.<span class="calepin-syntax-scope-1">slide</span>[
   == Regression results
   #m.<span class="calepin-syntax-scope-1">fit</span>(my-table)
-]</code></pre></div><p>It measures the block against the space its cell gives it, scales it geometrically, and reflows the surrounding layout around the new size. Shrinking is the default, and it takes no hand-picked factor, so the block stays within the cell when the table gains a row. <code>grow: true</code> also scales content up, which is how a single number or word fills a cell.</p><p>The block is offered the cell’s width first, so text and lists wrap and are then scaled only if they are still too tall. A table or diagram given a narrower width rearranges itself instead of shrinking, so <code>wrap: false</code> measures and scales it as written.</p><p><code>width:</code> and <code>height:</code> fit to part of the region instead of all of it, and take a length, ratio, or fraction. A fitted block cannot overflow, so it no longer appears in the overflow records.</p><p>Measuring a block means holding it inside a closure, which the slide runtime cannot look into. <code>m.pause</code>, <code>m.steps</code>, and <code>m.note</code> are found by walking the slide’s content, so inside a fitted block they would be invisible: the reveals would collapse into one frame and the notes would never reach the speaker output. <code>m.fit</code> reports that as an error instead. Keep them outside the fitted block, or fit each revealed part on its own.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#import "@local/mosaic:0.0.1" as m
+]</code></pre></div><p>It measures the block against the space its cell gives it, scales it geometrically, and reflows the surrounding layout around the new size. Shrinking is the default, and it takes no hand-picked factor, so the block stays within the cell when the table gains a row. <code>grow: true</code> also scales content up, which is how a single number or word fills a cell.</p><p>The block is offered the cell’s width first, so text and lists wrap and are then scaled only if they are still too tall. A table or diagram given a narrower width rearranges itself instead of shrinking, so <code>wrap: false</code> measures and scales it as written.</p><p><code>width:</code> and <code>height:</code> fit to part of the region instead of all of it, and take a length, ratio, or fraction. A fitted block cannot overflow, so it no longer appears in the overflow records.</p><p>Measuring a block means holding it inside a closure, which the slide runtime cannot look into. <code>m.pause</code>, <code>m.steps</code>, and <code>m.note</code> are found by walking the slide’s content, so inside a fitted block they would be invisible: the reveals would collapse into one frame and the notes would never reach the speaker output. <code>m.fit</code> reports that as an error instead. Keep them outside the fitted block, or fit each revealed part on its own.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#import "@preview/mosaic:0.0.1" as m
 
 #show: <span class="calepin-syntax-scope-1">m</span>.<span class="calepin-syntax-scope-1">setup</span>
 #set <span class="calepin-syntax-scope-1">text</span>(size: <span class="calepin-syntax-scope-2">22pt</span>)
@@ -3544,13 +3540,6 @@ html[data-theme="dark"] .mosaic-diagram {
         </aside>
 
     </div>
-
-
-
-
-
-
-
 
 
 

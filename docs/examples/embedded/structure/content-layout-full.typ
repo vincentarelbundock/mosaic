@@ -1,9 +1,7 @@
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 #show: m.setup
 
-#let myslide = m.slide.with(layout: m.layouts.content())
-
-#myslide[
+#m.slide(layout: "content", variant: "header-body-footer")[
   == Complete structure
 ][
   #lorem(50)

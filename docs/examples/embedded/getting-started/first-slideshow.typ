@@ -1,5 +1,5 @@
 // Configure the deck once: identity, layouts, and a progress line.
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 
 #show: m.setup.with(
   title: [Getting started],

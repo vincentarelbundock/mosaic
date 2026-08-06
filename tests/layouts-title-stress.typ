@@ -3,7 +3,7 @@
 // its metadata instead of colliding with the heading or the photograph. A
 // dozen authors across four institutions is far past every cap; every variant
 // must still compile with the heading clear of the details.
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 
 #let institutions = (
   [Centre for Comparative Politics],

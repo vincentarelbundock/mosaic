@@ -1,7 +1,7 @@
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 #show: m.setup
 
-// A ground and the text that reads against it are one decision, so bind each
+// A fill and the text that reads against it are one decision, so bind each
 // pair once. Mosaic derives neither half from the other.
 #let paper = (fill: rgb("#f4f0e8"), text: rgb("#20262d"))
 #let ink = (fill: rgb("#20262d"), text: rgb("#f4f0e8"))
@@ -26,12 +26,12 @@
   m.grids.track(0.56fr, m.grids.cell("copy", inset: 1.5em)),
 )
 
-#let panel(pair, ground) = [
+#let panel(pair, name) = [
   #show: painted(pair, "headline", "copy")
   #m.slide(layout: split, cells: (
     headline: [
       #set align(left + horizon)
-      #text(size: 1.6em, weight: "bold")[On #ground]
+      #text(size: 1.6em, weight: "bold")[On #name]
     ],
     copy: [
       #set align(left + horizon)

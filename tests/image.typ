@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 
 #set page(width: 240pt, height: 160pt, margin: 0pt)
 

@@ -4,3 +4,9 @@ __pycache__/
 .claude/settings.local.json
 .hermes/
 docs/examples/decks/*/.calepin/
+trash/
+dist/
+# Syncthing scratch files
+.syncthing.*.tmp
+*.sync-conflict-*
+*.tmp.[0-9]*.*

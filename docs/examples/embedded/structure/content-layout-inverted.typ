@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 #show: m.setup
 #set page(fill: rgb("#f4f0e8"))
 #set text(fill: rgb("#20262d"))

@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 #show: mosaic.setup
 #show label("mosaic-cell-body"): set text(fill: rgb("#fedcba"))
 #show label("mosaic-cell-body"): mosaic.surface(fill: rgb("#123456"))

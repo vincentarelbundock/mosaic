@@ -9,7 +9,7 @@
 // This is a design, not a transcription. It states the palette and the few
 // structural gestures that make Simpres recognizable, and leaves everything
 // else to Mosaic's defaults.
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 #import mosaic: slide, note, fit, surface, grids, layouts, steps, components
 #import "@preview/cetz:0.5.2"
 

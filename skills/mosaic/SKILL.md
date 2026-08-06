@@ -13,7 +13,7 @@ Prefer the smallest authoring surface that fits the request: headings for ordina
 
 1. Inspect the existing deck and preserve its import spelling and theme. Do not replace a themed facade with the root facade unless asked.
 2. Check that Typst is available with `typst --version`.
-3. When Mosaic is not installed, clone and install the package locally:
+3. Mosaic is published on Typst Universe, so `#import "@preview/mosaic:0.0.1"` downloads it on first compile and needs no installation step. To work against unreleased sources instead, clone the repository and install the working tree over that same import:
 
    ```sh
    git clone https://github.com/vincentarelbundock/mosaic.git
@@ -34,7 +34,7 @@ Do not claim success until Typst has compiled the edited deck.
 Import Mosaic and apply its setup rule. After `#show: m.setup`, headings create slides automatically:
 
 ```typ
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 
 #show: m.setup.with(title: [A short title])
 
@@ -220,7 +220,7 @@ Pass `[]` as the second block when the picture needs a title but no body. `track
 
 One recurring choice worth making once per deck:
 
-- **`path()`, not a bare string.** Image paths inside layout and component arguments cross the package boundary, so a bare `"fig/x.png"` is searched for inside the installed Mosaic package and fails with `file not found (searched at .../packages/local/mosaic/...)`. Wrap every asset path in Typst's `path()`.
+- **`path()`, not a bare string.** Image paths inside layout and component arguments cross the package boundary, so a bare `"fig/x.png"` is searched for inside the installed Mosaic package and fails with `file not found (searched at .../packages/preview/mosaic/...)`. Wrap every asset path in Typst's `path()`.
 
 ## 5. Configure the deck once
 
@@ -263,7 +263,7 @@ Do not introduce a separate footer, logo, background, or foreground feature API:
 Import one facade as `m` and keep the rest of the deck unchanged:
 
 ```typ
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 #import mosaic.themes.metropolis as m
 
 #show: m.setup

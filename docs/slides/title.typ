@@ -57,7 +57,7 @@ The thumbnails below all render the same title information: one deck title and s
 Written out in full, one of those decks is this:
 
 ```typ
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 
 #let ccp = [Centre for Comparative Politics]
 #let eis = [European Institute for Social Data]
@@ -92,7 +92,7 @@ Written out in full, one of those decks is this:
 
 An affiliation is the institution itself rather than an identifier for it, so two authors land on one legend number exactly when they name the same institution. Binding `ccp` and `eis` once and reusing the bindings is what makes that happen.
 
-The remaining decks are that same file with a different variant on the last line, and the image decks also pass an `image:` wrapped in Typst's `path()`, as #link("configuring.html#asset-paths")[Asset paths] explains.
+The remaining decks are that same file with a different variant on the last line, and the image decks also pass an `image:` wrapped in Typst's `path()`, as #link("../content/images.html#asset-paths")[Asset paths] explains.
 
 In your own deck, write the title information directly in `setup`, as the listing above does. The decks on this page keep it in one shared #repo-file("docs/examples/embedded/structure/_title-info.typ")[file] only so the page has a single copy to edit.
 
@@ -113,7 +113,7 @@ Open any thumbnail to see the slide at full size:
 
 = Inverted
 
-There is no inverted variant, because inversion is not an arrangement. Pass `invert: true` on any slide to swap that slide's ground and ink: the slide takes the deck's text color as its ground, the type is knocked out in the canvas color, and the muted and line tones follow. Any variant composes with it, and so does any other layout, so an inverted section plate or an inverted big-number slide is the same one flag.
+There is no inverted variant, because inversion is not an arrangement. Pass `invert: true` on any slide to swap that slide's canvas and text: the slide takes the deck's text color as its canvas, the type is knocked out in the canvas color, and the muted and line tones follow. Any variant composes with it, and so does any other layout, so an inverted section plate or an inverted big-number slide is the same one flag.
 
 ```typ
 #m.slide(layout: "title", variant: "kicker", invert: true)
@@ -125,10 +125,8 @@ There is no inverted variant, because inversion is not an arrangement. Pass `inv
 
 When no variant draws the page you want, build the slide yourself. `m.info()` returns the `title`, `subtitle`, `authors`, and `date` you declared on `setup`, so the custom slide can use them without repeating them. Each author comes back as a dictionary with `name`, `affiliations`, `email`, `orcid`, and `corresponding` fields. Call `m.info()` inside a `context` block, as the example below does. The same reader also reports where the slide sits in the deck, in its `slide` and `section` fields, which is what hand-built chrome is made of; the #link("../presenting/footer.html")[footer and progress] page covers that side of it.
 
-The deck below composes a full-slide photograph on the slide's `background:` plane, anchors the heading to the top edge, and pins the byline to the bottom, an arrangement no built-in variant draws:
+The deck below composes a full-slide photograph on the slide's `background:` plane, anchors the heading to the top edge, and pins the byline to the bottom, an arrangement no built-in variant draws. The `scrim:` on the background image quiets the photograph exactly as it does on the image variants, and `numbered: false` keeps the cover out of the slide count the way named title layouts stay out of it automatically.
 
 #example-source("structure/title-custom")
 
 #slideshow(calepin.elements.gallery, "structure/title-custom", 1, "A hand-built cover: full-slide photograph, heading at the top edge, byline at the bottom", caption: [A custom cover from `m.info()`])
-
-The `scrim:` on the background image quiets the photograph exactly as it does on the image variants, and `numbered: false` keeps the cover out of the slide count the way named title layouts stay out of it automatically.

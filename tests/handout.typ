@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 
 #let frozen-counter = counter("mosaic-handout-frozen")
 #let frozen-state = state("mosaic-handout-frozen-state", 0)

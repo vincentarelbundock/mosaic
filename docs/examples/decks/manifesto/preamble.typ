@@ -3,7 +3,7 @@
 // together with this deck's visual constants; importing this file with `*`
 // re-exports everything to main.typ. The helpers below belong to this deck's
 // content rather than to the theme.
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 #import mosaic.themes.manifesto as m
 
 // ── Colors ─────────────────────────────────────────────────────────────────

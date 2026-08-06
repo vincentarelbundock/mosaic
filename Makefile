@@ -1,19 +1,27 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help doctor install build check api-contract core-tests negative-tests layout-tests doc-integrity web-images embedded-examples showcase-video components api-sources examples website docs clean clean-generated distclean
+.PHONY: help doctor install uninstall release-stage build check api-contract core-tests negative-tests layout-tests doc-integrity web-images embedded-examples showcase-video components api-sources examples artifacts website docs clean clean-generated distclean
 
 TYPST ?= typst
 CALEPIN ?= calepin
 PYTHON ?= uv run python
 PACKAGE_DIR := mosaic
 PACKAGE_NAME := mosaic
-PACKAGE_VERSION := 0.0.1
+# Single source of truth: the manifest the package ships with.
+PACKAGE_VERSION := $(shell awk -F'"' '/^version[[:space:]]*=/{print $$2; exit}' $(PACKAGE_DIR)/typst.toml)
 TYPST_DATA_DIR ?= $(or $(XDG_DATA_HOME),$(HOME)/.local/share)
 TYPST_PACKAGE_PATH ?= $(or \
   $(strip $(shell $(TYPST) info 2>/dev/null | awk '/Package path/{print $$3; exit}')), \
   $(TYPST_DATA_DIR)/typst/packages)
-LOCAL_PACKAGE_DIR := $(TYPST_PACKAGE_PATH)/local/$(PACKAGE_NAME)/$(PACKAGE_VERSION)
+# Tests, docs, and example decks all import @preview/mosaic, the spelling a
+# published deck uses. Installing the working tree into the preview namespace is
+# the workflow Typst Universe documents for testing an unpublished package, and
+# it keeps every source in the repository free of a development-only import.
+LOCAL_PACKAGE_DIR := $(TYPST_PACKAGE_PATH)/preview/$(PACKAGE_NAME)/$(PACKAGE_VERSION)
 DOCS_DIR := docs
+# Staging tree for a Typst Universe pull request: copy RELEASE_DIR into
+# packages/preview/$(PACKAGE_NAME)/$(PACKAGE_VERSION) of a typst/packages fork.
+RELEASE_DIR := dist/packages/preview/$(PACKAGE_NAME)/$(PACKAGE_VERSION)
 
 # Full example decks shipped under docs/examples/decks/. Each has its own Makefile
 # that builds <slug>.pdf; the top-level rule below also renders a cover.jpg.
@@ -121,11 +129,21 @@ doctor: ## Check mandatory, documentation, and optional build prerequisites
 # Build targets
 # ==============================================================================
 
-install: ## Copy Mosaic into Typst's local package index
+install: ## Copy Mosaic into Typst's package index as @preview/mosaic
 	rm -rf "$(LOCAL_PACKAGE_DIR)"
 	mkdir -p "$(LOCAL_PACKAGE_DIR)"
 	cp -R "$(PACKAGE_DIR)/." "$(LOCAL_PACKAGE_DIR)/"
-	@echo "Installed @local/$(PACKAGE_NAME):$(PACKAGE_VERSION) in $(LOCAL_PACKAGE_DIR)"
+	@echo "Installed @preview/$(PACKAGE_NAME):$(PACKAGE_VERSION) in $(LOCAL_PACKAGE_DIR)"
+
+uninstall: ## Remove the working-tree copy so imports resolve from Typst Universe
+	rm -rf "$(LOCAL_PACKAGE_DIR)"
+	@echo "Removed $(LOCAL_PACKAGE_DIR)"
+
+release-stage: install ## Stage the exact file set to copy into a typst/packages fork
+	rm -rf "$(RELEASE_DIR)"
+	mkdir -p "$(RELEASE_DIR)"
+	cp -R "$(PACKAGE_DIR)/." "$(RELEASE_DIR)/"
+	@echo "Staged $(PACKAGE_NAME) $(PACKAGE_VERSION) in $(RELEASE_DIR)"
 
 build: doctor install check website ## Validate prerequisites, then compile tests and documentation
 
@@ -144,7 +162,7 @@ negative-tests: install ## Require every invalid fixture to emit its exact diagn
 layout-tests: install web-images ## Run explicitly classified semantic layout tests
 	$(PYTHON) scripts/run-tests.py layout --typst "$(TYPST)"
 
-doc-integrity: embedded-examples examples ## Validate docs consumers, artifacts, frame counts, and deck metadata
+doc-integrity: ## Validate docs consumers, artifacts, frame counts, and deck metadata
 	$(PYTHON) scripts/check-doc-assets.py
 
 web-images: $(WEB_IMAGES) ## Generate compact WebP derivatives while retaining source images
@@ -215,7 +233,14 @@ $(DECK_STAMP_DIR)/%.stamp: $(PACKAGE_SOURCES) $(DECK_METADATA) Makefile | instal
 		"$(DECK_EXAMPLES_DIR)/$*/$*.pdf" "$(DECK_EXAMPLES_DIR)/$*/cover"
 	@touch "$@"
 
-website: install embedded-examples showcase-video api-sources examples ## Install Mosaic and build the Calepin website
+# The rendered example artifacts (embedded PDFs and SVGs, deck PDFs and covers,
+# the showcase reel) are committed, so the site builds from the files on hand.
+# Rebuild them deliberately with `make artifacts` after changing an example or
+# the package's visual output; check-doc-assets.py still fails if a page and its
+# artifact disagree.
+artifacts: embedded-examples examples showcase-video ## Re-render every committed example artifact
+
+website: install api-sources ## Install Mosaic and build the Calepin website from committed artifacts
 	$(CALEPIN) compile $(DOCS_DIR) $(DOCS_DIR)
 	$(PYTHON) scripts/normalize-html.py
 	$(PYTHON) scripts/check-doc-assets.py --site

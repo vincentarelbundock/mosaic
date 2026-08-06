@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 #import "support/grid.typ" as grid-test
 
 #set page(width: 320pt, height: 180pt, margin: 8pt)

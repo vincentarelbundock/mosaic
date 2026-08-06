@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 
 // Content between a level-1 heading and the next level-2 heading becomes the
 // automatic section slide's subtitle, so a tagline costs no explicit slide and

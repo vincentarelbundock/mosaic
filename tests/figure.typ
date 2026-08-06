@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 
 #let dog = path("/docs/assets/images/dog.webp")
 #let bonsai = path("/docs/assets/images/bonsai.webp")

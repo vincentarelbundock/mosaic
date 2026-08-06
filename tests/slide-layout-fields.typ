@@ -1,6 +1,6 @@
 // Named arguments on `slide` refine the configured layout: the fields the
 // theme set survive, and only the named ones are replaced.
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 
 #let configured-accent = rgb("#654321")
 

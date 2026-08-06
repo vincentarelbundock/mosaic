@@ -359,18 +359,6 @@
     "translations": {}
   },
   {
-    "href": "slides/configuring.html",
-    "language": null,
-    "meta": {
-      "title": "Configuring layouts"
-    },
-    "path": "slides/configuring.typ",
-    "pdf": null,
-    "title": "Configuring layouts",
-    "translation_key": "slides/configuring",
-    "translations": {}
-  },
-  {
     "href": "slides/content.html",
     "language": null,
     "meta": {

@@ -191,13 +191,13 @@ A #link("themes.html")[theme] packages this pattern for a whole deck, and writin
 
 = Inverting cells by hand
 
-`slide(invert: true)`, described under #link("colors.html#inverting-one-slide")[Inverting one slide], swaps a whole slide's ground and ink within the palette. When you want finer control, invert selected cells with the same label rules as above. Pair each ground with the text color that reads against it, and apply both halves in the same rule: `m.surface` fills the cell's own block and a neighboring `set text` colors the content inside it, so a helper that takes a `(fill, text)` pair can repaint any set of cells:
+`slide(invert: true)`, described under #link("colors.html#inverting-one-slide")[Inverting one slide], swaps a whole slide's canvas and text within the palette. When you want finer control, invert selected cells with the same label rules as above. Pair each fill with the text color that reads against it, and apply both halves in the same rule: `m.surface` fills the cell's own block and a neighboring `set text` colors the content inside it, so a helper that takes a `(fill, text)` pair can repaint any set of cells:
 
 #embedded-example(
   calepin.elements.gallery,
   "faq/color-inversion",
   frames: 2,
-  title: "One layout rendered on a light ground and on a dark one",
+  title: "One layout rendered on a light canvas and on a dark one",
   renderer: thumbnail-gallery,
 )
 

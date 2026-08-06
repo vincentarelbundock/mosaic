@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 
 #let output = sys.inputs.at("output", default: "slides")
 #show: m.setup.with(output: output)

@@ -5,7 +5,7 @@
 // `deck` is the only export: the slides, called with the active theme facade
 // as `m`. The deck metadata rides on the title slide, so a wrapper needs no
 // second import.
-#import "@local/mosaic:0.0.1": layouts
+#import "@preview/mosaic:0.0.1": layouts
 #let author = layouts.author
 
 // The title and section slides name their layout rather than building one, so

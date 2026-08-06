@@ -6,13 +6,15 @@ Mosaic is a slide package for Typst (0.15+). The `mosaic/` directory is the pack
 
 ## Commands
 
-- `make install` — copy `mosaic/` into Typst's local package index as `@local/mosaic:0.0.1`. Tests and docs import the installed copy, so run this after any package source change and before compiling anything by hand.
+- `make install` — copy `mosaic/` into Typst's package index as `@preview/mosaic:0.0.1`. Tests, docs, and example decks all import that published spelling, so the working tree shadows the Universe copy while developing; run this after any package source change and before compiling anything by hand. `make uninstall` removes the shadow.
 - `make check` — full test suite: `api-contract`, `core-tests`, `layout-tests`, `negative-tests`, `doc-integrity`.
 - `make core-tests` / `make layout-tests` / `make negative-tests` — one manifest group (`uv run python scripts/run-tests.py core|layout|negative --typst typst` under the hood).
 - `make api-contract` — exact facade export checks: `cd tests && uv run python -m unittest test_check_api_exports test_theme_architecture`, plus `scripts/check-api-exports.py`.
 - Single positive test: `make install`, then `typst compile --root . tests/<name>.typ /tmp/out.pdf` from the repo root. Many core tests also have output assertions in `scripts/run-tests.py` (pdftotext/SVG greps), so a clean compile is necessary but not always sufficient.
 - Single negative test: `typst compile --root . tests/invalid/<name>.typ /tmp/out.pdf` must fail with the exact diagnostic listed in `tests/invalid/expected-diagnostics.txt`.
-- `make website` (or `docs`) — build the Calepin documentation site; `make build` = doctor + install + check + website. `make doctor` checks prerequisites.
+- `make website` (or `docs`) — build the Calepin documentation site from the committed example artifacts; `make build` = doctor + install + check + website. `make doctor` checks prerequisites.
+- `make artifacts` — re-render the committed example artifacts (embedded PDFs and SVGs, deck PDFs and covers, the showcase reel). The website build no longer does this, so run it deliberately after changing an example or the package's visual output.
+- `make release-stage` — stage the Typst Universe file set in `dist/packages/preview/mosaic/{version}/`, ready to copy into a `typst/packages` fork.
 
 Test manifests are exhaustive and enforced: every `tests/*.typ` must appear in `tests/positive-manifest.json` (groups `core`, `layout`, `responsive`), and every `tests/invalid/*.typ` needs a `stem|expected diagnostic` line in `tests/invalid/expected-diagnostics.txt`. Adding or renaming a fixture without updating the manifest fails the run.
 

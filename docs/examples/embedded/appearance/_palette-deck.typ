@@ -7,7 +7,7 @@
 // components slide on surface panels and the three roles; and the last slide
 // inverts, showing the swap `slide(invert: true)` performs within the active
 // palette.
-#import "@local/mosaic:0.0.1": layouts
+#import "@preview/mosaic:0.0.1": layouts
 #let author = layouts.author
 
 #let deck(m) = {
@@ -67,7 +67,7 @@
   ]
 
   m.slide(invert: true)[
-    One inverted slide for the headline number: the ground and ink swap within
+    One inverted slide for the headline number: canvas and text swap within
     the same palette, and the accent and status colors carry over unchanged.
 
     #m.components.badge(role: "accent")[+2.0 mm/yr]

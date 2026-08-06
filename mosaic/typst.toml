@@ -2,9 +2,12 @@
 name = "mosaic"
 version = "0.0.1"
 entrypoint = "lib.typ"
-authors = ["Vincent Arel-Bundock"]
-license = "MIT"
-description = "Tree-based slide grids and incremental reveals for Typst"
-keywords = ["presentation", "slides", "grid", "incremental"]
-categories = ["presentation"]
+authors = ["Vincent Arel-Bundock <@vincentarelbundock>"]
+license = "MIT AND CC-BY-SA-4.0"
+description = "Build slide decks with nested grids and incremental reveals."
+repository = "https://github.com/vincentarelbundock/mosaic"
+homepage = "https://vincentarelbundock.github.io/mosaic"
+keywords = ["presentation", "slides", "deck", "grid", "incremental"]
+categories = ["presentation", "layout", "components"]
 compiler = "0.15.0"
+exclude = ["/preview/"]

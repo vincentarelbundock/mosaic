@@ -76,7 +76,7 @@
 First, import Mosaic and apply its setup rule:
 
 ```typ
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 #show: m.setup
 ```
 

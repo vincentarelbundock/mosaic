@@ -1,7 +1,7 @@
 // Ambient `set text` must flow into layout-driven cells. Body regions carry
 // no text delta, so a deck's font (or any native override) reaches default,
 // title, and section layout bodies. Each probe asserts the inherited font.
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 
 #show: mosaic.setup
 #set text(font: "DejaVu Serif")

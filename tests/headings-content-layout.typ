@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 
 #show: mosaic.setup.with(
   layouts: (content: mosaic.grids.columns("header", "body")),

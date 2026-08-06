@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 #import "@preview/fletcher:0.5.8" as fletcher
 
 #set page(width: 160pt, height: 90pt, margin: 5pt)

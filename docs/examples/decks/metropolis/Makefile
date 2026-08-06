@@ -1,7 +1,7 @@
 .PHONY: all clean
 
 SOURCES := $(wildcard *.typ)
-# The deck imports the installed @local/mosaic package, so a package edit must
+# The deck imports the installed @preview/mosaic package, so a package edit must
 # rebuild it; the repository tree is the dependency proxy for the installed
 # copy (make install refreshes the latter from the former).
 PACKAGE_SOURCES := $(shell find ../../../../mosaic -type f 2>/dev/null | sort)

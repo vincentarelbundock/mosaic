@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 
 #show: m.setup.with(layouts: (content: m.layouts.content(variant: "body")))
 #set text(size: 18pt)

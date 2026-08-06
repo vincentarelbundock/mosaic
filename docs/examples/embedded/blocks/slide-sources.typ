@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 
 // A body cell over an auto-height strip that holds the notes for this slide.
 #let cited = m.grids.rows(

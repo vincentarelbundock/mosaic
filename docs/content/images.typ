@@ -10,9 +10,19 @@ An image can sit in a cell or on a
 #link("../slides/background.html")[background] or #link("../slides/foreground.html")[foreground] plane. Image loading,
 fitting, figures, captions, and references remain native Typst. Full-slide photographic backgrounds are documented on the #link("../slides/background.html")[Background] page.
 
+= Asset paths <asset-paths>
+
+An image or other asset named inside a layout or component argument crosses the package boundary: the function runs inside the installed Mosaic package, so a bare string like `"cover.webp"` is looked up in the package's own files rather than in your project, and the asset is not found. Wrap every asset path in Typst's `path()` so its location stays anchored to the calling document:
+
+```typ
+#m.slide(layout: "image", image: path("fig/gdp.png"))[== Growth since 1950]
+```
+
+This applies wherever a layout or component takes a path: the `image:` argument of the #link("../slides/title.html")[title], #link("../slides/section.html")[section], and #link("../slides/image.html")[image] layouts, and the source of `m.components.image()` and `m.components.figure()`.
+
 = Slide-sized images
 
-Typst's standard `image()` works perfectly well in Mosaic and remains useful when its native sizing defaults are what you want. `m.components.image()` is a small convenience for the common slide case: it defaults both `width` and `height` to `100%` and `fit` to `"cover"`. Other native arguments, including `alt`, pass straight through. Use Typst's native `path()` for an image in your project so its location remains anchored to the calling document across the package boundary.
+Typst's standard `image()` works perfectly well in Mosaic and remains useful when its native sizing defaults are what you want. `m.components.image()` is a small convenience for the common slide case: it defaults both `width` and `height` to `100%` and `fit` to `"cover"`. Other native arguments, including `alt`, pass straight through.
 
 ```typ
 #m.components.image(

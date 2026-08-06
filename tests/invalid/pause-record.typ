@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 #import "../../mosaic/src/shared.typ": tag
 
 #show: m.setup

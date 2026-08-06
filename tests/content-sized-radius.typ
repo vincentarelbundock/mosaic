@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 #import "../mosaic/src/grid/constructors.typ": styled-cell
 #show: mosaic.setup
 

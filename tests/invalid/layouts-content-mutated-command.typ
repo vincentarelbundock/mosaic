@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 
 #let command = mosaic.layouts.content(columns: 2)
 #command.fields.insert("columns", 0)

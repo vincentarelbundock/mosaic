@@ -1,7 +1,7 @@
 // Named cell content: `cells:` assigns content by cell ID, independent of
 // grid traversal order. Positional content remains the terse shorthand; both
 // normalize to one ordered body array, so equivalent slides render identically.
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 #import "../mosaic/src/grid/content.typ": body-cell-ids, resolve-content
 
 #let comparison = mosaic.grids.columns(

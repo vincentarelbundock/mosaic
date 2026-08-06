@@ -77,9 +77,6 @@ title = "Slides"
   target = "slides/content.typ"
 
   [[sidebar.section.item]]
-  target = "slides/configuring.typ"
-
-  [[sidebar.section.item]]
   target = "slides/title.typ"
 
   [[sidebar.section.item]]

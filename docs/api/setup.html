@@ -3298,10 +3298,6 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-<li class="calepin-website-sidebar-link"><a href="../slides/configuring.html" aria-label="Configuring layouts">Configuring layouts</a></li>
-
-
-
 <li class="calepin-website-sidebar-link"><a href="../slides/title.html" aria-label="Title">Title</a></li>
 
 
@@ -3489,7 +3485,7 @@ html[data-theme="dark"] .mosaic-diagram {
             </nav>
         </aside>
         <main class="calepin-website-main calepin-content" data-pagefind-body>
-            <h1 id="document-setup">Document setup</h1><p>The overview below links to each definition. Function definitions show signatures with parameter and return types; variables show their declared types. Descriptions and defaults follow.</p><div><ul><li><a href="#setup"><code>setup()</code></a></li></ul><h2 id="setup">setup</h2><p>Applies Mosaic’s presentation defaults and compiles headings and slide commands into pages.</p><p>Install it as a document-wide show rule. Everything after it is presentation source: level-two headings become slides, and <code>mosaic.slide</code> commands become slides.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#import "@local/mosaic:0.0.1" as mosaic
+            <h1 id="document-setup">Document setup</h1><p>The overview below links to each definition. Function definitions show signatures with parameter and return types; variables show their declared types. Descriptions and defaults follow.</p><div><ul><li><a href="#setup"><code>setup()</code></a></li></ul><h2 id="setup">setup</h2><p>Applies Mosaic’s presentation defaults and compiles headings and slide commands into pages.</p><p>Install it as a document-wide show rule. Everything after it is presentation source: level-two headings become slides, and <code>mosaic.slide</code> commands become slides.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#import "@preview/mosaic:0.0.1" as mosaic
 #show: mosaic.setup.<span class="calepin-syntax-scope-1">with</span>(
   title: [Tree-based slide grids],
   authors: [Ada Lovelace],
@@ -3543,13 +3539,6 @@ authors: ([Ada Lovelace], [Charles Babbage])</code></pre></div><p>Wrap a name in
         </aside>
 
     </div>
-
-
-
-
-
-
-
 
 
 

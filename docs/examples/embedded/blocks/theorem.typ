@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 #import "@preview/ctheorems:1.1.3": thmbox, thmproof, thmrules
 
 #show: thmrules.with(qed-symbol: $square$)

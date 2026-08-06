@@ -34,12 +34,12 @@ The default import is the bundled default theme. These two spellings are the sam
 
 ```typ
 // Default spelling
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 ```
 
 ```typ
 // Explicit spelling
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 #import mosaic.themes.default as m
 ```
 
@@ -173,7 +173,7 @@ Everything above lives in the deck that uses it. Move on when you start copying 
 Bind one in the deck itself to see the whole shape at once. A theme needs only `colors`:
 
 ```typ
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 
 #let mine = (
   name: "Mine",
@@ -219,7 +219,7 @@ The engine keeps two rules of its own, on `<mosaic-note-heading>` and `<mosaic-n
 Every bundled theme exports the `definition` behind its own `setup`. Varying a bundled look is therefore an ordinary dictionary merge:
 
 ```typ
-#import "@local/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 #import mosaic.themes.metropolis as base
 
 #let mine = base.definition + (
@@ -244,7 +244,7 @@ Once a theme is worth reusing, give it a file of its own. That file re-exports t
 
 ```typ
 // mytheme.typ
-#import "@local/mosaic:0.0.1": slide, note, fit, surface, grids, steps, components, themes
+#import "@preview/mosaic:0.0.1": slide, note, fit, surface, grids, steps, components, themes
 #import "definition.typ": definition
 #import "layouts.typ" as layouts
 #let setup = themes.setup(definition)

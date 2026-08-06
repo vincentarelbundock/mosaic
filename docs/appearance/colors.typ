@@ -73,7 +73,7 @@ To recolor an entire slide at once, use the `<mosaic-slide>` label described und
 Beyond per-entry overrides, every facade exports `palettes`, a curated collection of complete color schemes in one Japandi voice: oat and greige grounds, wood-tone and dried-plant accents, and status colors that whisper. Each entry is the same flat eight-color dictionary `colors:` accepts, so any of them repaints any theme with one line:
 
 ```typ
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 
 #show: m.setup.with(colors: m.palettes.espresso)
 ```
@@ -90,7 +90,7 @@ Beyond per-entry overrides, every facade exports `palettes`, a curated collectio
   [`slate`], [Blue-gray charcoal warmed by a wood accent.],
 )
 
-Every bundled palette is held to a tested contrast contract: body and muted text stay readable on the canvas, the accent and status colors stay legible on both the canvas and on an inverted slide's swapped ground, and rules stay visible without turning into ink. Your own palettes face no such gate. Whatever dictionary you pass to `colors:` is applied as given, and the bundled entries are ordinary dictionaries, so `m.palettes.espresso + (accent: ..)` extends one exactly like the partial overrides above.
+Every bundled palette is held to a tested contrast contract: body and muted text stay readable on the canvas, the accent and status colors stay legible on the canvas and on the text color an inverted slide puts behind them, and rules stay visible without turning into ink. Your own palettes face no such gate. Whatever dictionary you pass to `colors:` is applied as given, and the bundled entries are ordinary dictionaries, so `m.palettes.espresso + (accent: ..)` extends one exactly like the partial overrides above.
 
 = One deck, every palette
 
@@ -123,4 +123,4 @@ The last slide of every gallery above is the same command:
 ]
 ```
 
-`invert: true` swaps ground and ink within the active palette for that slide only: the canvas becomes the palette's text color, the text becomes its canvas, and muted, line, and surface are derived to match. The accent and status colors carry over unchanged, which is why a badge or callout keeps its color on the swapped ground. That survival is part of the bundled palettes' tested contract, so `invert:` composes with every scheme in the collection; a custom palette whose accent only reads on its own canvas will look washed out here, and passing a hand-picked palette to that one slide's components is the escape hatch.
+`invert: true` swaps canvas and text within the active palette for that slide only: the canvas becomes the palette's text color, the text becomes its canvas, and muted, line, and surface are derived to match. The accent and status colors carry over unchanged, which is why a badge or callout keeps its color behind the swap. That survival is part of the bundled palettes' tested contract, so `invert:` composes with every scheme in the collection; a custom palette whose accent only reads on its own canvas will look washed out here, and passing a hand-picked palette to that one slide's components is the escape hatch.

@@ -1,7 +1,7 @@
 // The title information every variant example on the Title slides page renders.
 // Three authors over two institutions, one of them shared, so the `academic`
 // legend has something to number; every field of `layouts.author` is exercised.
-#import "@local/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.1" as m
 
 #let ccp = [Centre for Comparative Politics]
 #let eis = [European Institute for Social Data]
