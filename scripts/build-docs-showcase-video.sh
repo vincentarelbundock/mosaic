@@ -81,10 +81,16 @@ for index in "${!slides[@]}"; do
 
   # Render above the target size, then downsample with lanczos so small type
   # in dense slides survives the scale.
+  #
+  # The reel is one fixed 16:9 canvas, but not every deck is 16:9: the beamer
+  # homage is 4:3, and stretching it to fill the frame would misrepresent the
+  # very proportions the example exists to show. `decrease` fits the slide
+  # inside the canvas whole, and `pad` centers it on black, so an off-ratio
+  # deck pillarboxes the way a projector shows it.
   pdftoppm -f "$page" -l "$page" -singlefile -png -r 192 "$source" "${frame%.png}-full"
   ffmpeg -hide_banner -loglevel error -y \
     -i "${frame%.png}-full.png" \
-    -vf "scale=$width:$height:flags=lanczos,setsar=1,format=rgb24" \
+    -vf "scale=$width:$height:force_original_aspect_ratio=decrease:flags=lanczos,pad=$width:$height:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1,format=rgb24" \
     -frames:v 1 \
     "$frame"
   frames+=("$frame")
@@ -95,7 +101,7 @@ done
 # settings.
 fingerprint="$(
   {
-    printf 'v2 %s %s %s %s\n' "$width" "$height" "$fps" "$crf"
+    printf 'v3 %s %s %s %s\n' "$width" "$height" "$fps" "$crf"
     printf 'sheet %s %s %s %s %s\n' \
       "$sheet_columns" "$sheet_cell_width" "$sheet_cell_height" "$sheet_gap" "$sheet_quality"
     for index in "${!frames[@]}"; do
