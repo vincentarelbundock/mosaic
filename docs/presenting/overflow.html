@@ -3154,6 +3154,20 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
+    <link rel="stylesheet" href="../pagefind/pagefind-component-ui.css">
+    <pagefind-config bundle-path="../pagefind"></pagefind-config>
+    <script>
+      (() => {
+        const config = document.querySelector("pagefind-config[bundle-path]");
+        if (config) {
+          let bundlePath = config.getAttribute("bundle-path") || "";
+          if (bundlePath && !bundlePath.endsWith("/")) bundlePath += "/";
+          config.setAttribute("bundle-path", new URL(bundlePath, window.location.href).toString());
+        }
+      })();
+    </script>
+    <script src="../pagefind/pagefind-component-ui.js" type="module"></script>
+
 
 <script id="calepin-website-source-data" type="application/json">"#import \"/.calepin/calepin.typ\" as calepin\n#import \"/_includes/embedded-examples.typ\": embedded-example\n\n#set document(title: [Overflow and fitting])\n#metadata((title: \"Overflow and fitting\")) <website-metadata>\n\n#title()\n\nA cell does not resize its content. A body larger than its cell is drawn past the edge, so a slide that holds too much fails silently on screen rather than at compile time. Before presenting, run a checking compile to find those slides, and scale the rare indivisible block with `m.fit`.\n\n= Inspecting overflowing cells\n\nOverflow observation is off by default, because measuring every cell on every frame roughly doubles the layout work a deck does. It is a checking pass, not something to leave on while you write. The usual way to run it is to set `overflow: \"error\"` on `setup` and compile once before presenting: Mosaic renders the whole deck, then fails naming every overflowing cell with its slide and frame.\n\nFor tooling that would rather read the records than stop the build, `setup(overflow: \"record\")` emits them and keeps compiling:\n\n```sh typst eval \\\n  'query(<mosaic-overflow-warning>).map(it => it.value)' \\\n  --in slides.typ\n```\n\nEach record identifies the slide, frame, cell, and measured height. Typst gives a package no warning channel, so `\"record\"` prints nothing on its own; see the\n#link(\"../api/setup.html\")[Setup API].\n\nAn overflow means the slide holds more than it can show. The remedy is editorial: cut a bullet, split the slide in two, or move to a layout with more room. Mosaic deliberately offers no automatic shrink-to-fit for body content, because a deck whose type size is decided slide by slide loses the scale that holds it together.\n\n= Fitting a block to its cell\n\nWhen a single indivisible block is the problem, a wide table, a chart, or a generated list, scale that one block with `m.fit` and leave the deck's typography alone:\n\n```typ\n#m.slide[\n  == Regression results\n  #m.fit(my-table)\n]\n```\n\nIt measures the block against the space its cell gives it, scales it geometrically, and reflows the surrounding layout around the new size. Shrinking is the default, and it takes no hand-picked factor, so the block stays within the cell when the table gains a row. `grow: true` also scales content up, which is how a single number or word fills a cell.\n\nThe block is offered the cell's width first, so text and lists wrap and are then scaled only if they are still too tall. A table or diagram given a narrower width rearranges itself instead of shrinking, so `wrap: false` measures and scales it as written.\n\n`width:` and `height:` fit to part of the region instead of all of it, and take a length, ratio, or fraction. A fitted block cannot overflow, so it no longer appears in the overflow records.\n\nMeasuring a block means holding it inside a closure, which the slide runtime cannot look into. `m.pause`, `m.steps`, and `m.note` are found by walking the slide's content, so inside a fitted block they would be invisible: the reveals would collapse into one frame and the notes would never reach the speaker output. `m.fit` reports that as an error instead. Keep them outside the fitted block, or fit each revealed part on its own.\n\n#embedded-example(\n  calepin.elements.gallery,\n  \"content/fit-block\",\n  frames: 2,\n  title: \"A table scaled to its cell, and display type grown to fill one\",\n)\n\nSee the #link(\"../api/slides.html\")[Slides API] for the full `m.fit` signature.\n"</script>
 </head><body>
@@ -3195,12 +3209,24 @@ html[data-theme="dark"] .mosaic-diagram {
                                 <li><a href="../api.html" aria-label="API">API</a></li>
 
 
+                                <li><a href="https://github.com/vincentarelbundock/mosaic" aria-label="GitHub"><span class="calepin-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5c.08-1.25-.27-2.48-1-3.5c.28-1.15.28-2.35 0-3.5c0 0-1 0-3 1.5c-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5c-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></g></svg></span></a></li>
+
                 <li class="calepin-website-theme-item">
 
 
                     <button class="calepin-site-theme-toggle" type="button" aria-label="Theme" title="Theme" data-calepin-theme-toggle data-calepin-theme-storage-key="calepin-website-theme" data-calepin-theme-param="theme">Theme</button>
                 </li>
 
+
+                <li class="calepin-website-search-item">
+                    <form class="calepin-website-search" role="search" data-calepin-search-form>
+                        <input class="calepin-website-search-input" type="search" placeholder="Search" aria-label="Search documentation" aria-haspopup="listbox" aria-expanded="false" autocomplete="off" spellcheck="false" data-calepin-search-input>
+                        <div class="calepin-website-search-results" role="listbox" aria-label="Search results" hidden data-calepin-search-results></div>
+                    </form>
+                </li>
+                <li class="calepin-website-mobile-search-item">
+                    <button class="calepin-website-mobile-search-button outline secondary" type="button" aria-label="Search documentation" title="Search" data-calepin-mobile-search-trigger><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg></button>
+                </li>
 
             </ul>
         </nav>
@@ -3218,6 +3244,8 @@ html[data-theme="dark"] .mosaic-diagram {
 
                                     <li><a href="../api.html" aria-label="API">API</a></li>
 
+
+                                    <li><a href="https://github.com/vincentarelbundock/mosaic" aria-label="GitHub"><span class="calepin-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5c.08-1.25-.27-2.48-1-3.5c.28-1.15.28-2.35 0-3.5c0 0-1 0-3 1.5c-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5c-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></g></svg></span></a></li>
 
                 </ul>
                 <div class="calepin-website-mobile-drawer-actions" aria-label="Site controls">
@@ -3826,6 +3854,8 @@ html[data-theme="dark"] .mosaic-diagram {
   </footer>
 
 
+
+    <pagefind-modal></pagefind-modal>
 
 
     <script>

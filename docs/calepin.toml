@@ -4,7 +4,7 @@ theme = "./theme"
 logo = "assets/mosaic-slide.svg"
 logo_alt = "Mosaic"
 pdf = false
-# search = "pagefind"
+search = "pagefind"
 asset-dir = "_calepin"
 
 [static]
@@ -36,6 +36,11 @@ depth = 3
   [[menus.main]]
   target = "api.typ"
   label = "API"
+
+  [[menus.social]]
+  target = "https://github.com/vincentarelbundock/mosaic"
+  label = "{icon:github}"
+  aria-label = "GitHub"
 
 [[footer.item]]
 label = "Mosaic 0.0.1 · Built with Typst and Calepin."

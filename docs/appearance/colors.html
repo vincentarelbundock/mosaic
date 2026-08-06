@@ -3154,6 +3154,20 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
+    <link rel="stylesheet" href="../pagefind/pagefind-component-ui.css">
+    <pagefind-config bundle-path="../pagefind"></pagefind-config>
+    <script>
+      (() => {
+        const config = document.querySelector("pagefind-config[bundle-path]");
+        if (config) {
+          let bundlePath = config.getAttribute("bundle-path") || "";
+          if (bundlePath && !bundlePath.endsWith("/")) bundlePath += "/";
+          config.setAttribute("bundle-path", new URL(bundlePath, window.location.href).toString());
+        }
+      })();
+    </script>
+    <script src="../pagefind/pagefind-component-ui.js" type="module"></script>
+
 
 <script id="calepin-website-source-data" type="application/json">"#import \"/.calepin/calepin.typ\" as calepin\n#import \"/_includes/embedded-examples.typ\": (\n  example-source, slideshow, slideshow-grid,\n)\n#import \"/_includes/site.typ\": repo-file\n\n#set document(title: [Colors])\n#metadata((title: \"Colors\")) <website-metadata>\n\n#title()\n\nEvery color in a Mosaic deck flows from one palette: a flat dictionary of eight colors that the theme supplies, `setup(colors: ..)` overrides, and every layout and component reads. This page covers the three ways to work with it: override individual entries, swap in one of the bundled palettes, or invert a single slide.\n\n= Overriding colors\n\nEach theme supplies a complete color palette. Override only the deck-wide colors that need to change; omitted colors keep the theme defaults:\n\n```typ\n#show: m.setup.with(colors: (\n  canvas: rgb(\"#f4f8f7\"),\n  accent: rgb(\"#007f73\"),\n))\n```\n\nThe palette holds eight entries: six name the deck's own surfaces and text, two name the status colors that components paint with:\n\n#table(\n  columns: (auto, 1fr),\n  [`canvas`], [The page fill behind every slide.],\n  [`surface`], [Raised panels: the fill a neutral card or badge sits on.],\n  [`text`], [Body text.],\n  [`muted`], [Secondary text: captions, footers, fine print.],\n  [`line`], [Drawn rules, borders, and dividers.],\n  [`accent`], [The deck's emphasis color.],\n  [`warning`], [A remark that qualifies what is on the slide.],\n  [`error`], [A remark that contradicts it.],\n)\n\nUnknown names and non-color values are errors. The canvas, typography, components, and layouts all use the resolved values. Explicit component colors remain local overrides:\n\n```typ\n#m.slide(\n  layout: m.layouts.content(variant: \"header-body\"),\n  foreground: [\n    #place(bottom + left)[\n      #m.components.progress(\n        variant: \"line\",\n        width: 100%,\n        accent: rgb(\"#e69f00\"),\n      )\n    ]\n  ],\n)[Title][Body]\n```\n\nNative rules after `m.setup` are still the right tool for typography or a special local composition:\n\n```typ\n#[\n  #show label(\"mosaic-cell-body\"): set text(fill: white)\n  #m.slide(\n    background: block(width: 100%, height: 100%, fill: rgb(\"#111827\")),\n  )[Dark for this slide only]\n]\n```\n\nColor collections remain ordinary Typst arrays. Define them near the chart or diagram that uses them, or import a color package. A component's `role:` names one palette entry, so recoloring the palette recolors every `card`, `badge`, and `quote` that uses it.\n\nTo recolor an entire slide at once, use the `<mosaic-slide>` label described under #link(\"styling.html#styling-a-whole-slide\")[Styling a whole slide].\n\n= Bundled palettes\n\nBeyond per-entry overrides, every facade exports `palettes`, a curated collection of complete color schemes in one Japandi voice: oat and greige grounds, wood-tone and dried-plant accents, and status colors that whisper. Each entry is the same flat eight-color dictionary `colors:` accepts, so any of them repaints any theme with one line:\n\n```typ\n#import \"@local/mosaic:0.0.1\" as m\n\n#show: m.setup.with(colors: m.palettes.espresso)\n```\n\n#table(\n  columns: (auto, 1fr),\n  [`light`], [The default light palette, applied when a deck names no colors.],\n  [`dark`], [The bundled dark polarity twin of `light`.],\n  [`parchment`], [Barely-oat paper with espresso ink and a walnut accent.],\n  [`sage`], [Cool daylight with the faintest green cast and a dried-sage accent.],\n  [`stone`], [Faintly warm greige with a muted indigo accent.],\n  [`espresso`], [Roasted brown-black with a pale wood accent.],\n  [`forest`], [Moss night with a dried-sage accent.],\n  [`slate`], [Blue-gray charcoal warmed by a wood accent.],\n)\n\nEvery bundled palette is held to a tested contrast contract: body and muted text stay readable on the canvas, the accent and status colors stay legible on both the canvas and on an inverted slide's swapped ground, and rules stay visible without turning into ink. Your own palettes face no such gate. Whatever dictionary you pass to `colors:` is applied as given, and the bundled entries are ordinary dictionaries, so `m.palettes.espresso + (accent: ..)` extends one exactly like the partial overrides above.\n\n= One deck, every palette\n\nThe galleries below all render the same five-slide deck under the default theme: a title slide, a content slide with a list, a code block, and a warning callout, a section slide, a components slide with a table, badges, and a card, and one inverted slide. Only the `colors:` line changes between them, so anything that shifts from gallery to gallery is the palette's doing rather than the theme's or the content's.\n\nThe deck lives in one #repo-file(\"docs/examples/embedded/appearance/_palette-deck.typ\")[shared file] exporting a single `deck` function, exactly like the running example on the #link(\"themes.html\")[Themes] page. Each wrapper imports it, names one bundled palette, and renders:\n\n#example-source(\"appearance/palette-espresso\")\n\nThe dark schemes swap in the dark syntax highlighting theme on their own; polarity is read off the canvas each palette supplies, never declared. Component panels tint their role colors into whichever canvas the palette brings, so the callout and badges stay quiet washes in every scheme.\n\n#slideshow-grid[\n  #slideshow(calepin.elements.gallery, \"appearance/palette-light\", 5, \"The palette deck on the default light palette\", caption: [`light`])\n  #slideshow(calepin.elements.gallery, \"appearance/palette-dark\", 5, \"The palette deck on the bundled dark palette\", caption: [`dark`])\n  #slideshow(calepin.elements.gallery, \"appearance/palette-parchment\", 5, \"The palette deck on the parchment palette\", caption: [`parchment`])\n  #slideshow(calepin.elements.gallery, \"appearance/palette-sage\", 5, \"The palette deck on the sage palette\", caption: [`sage`])\n  #slideshow(calepin.elements.gallery, \"appearance/palette-stone\", 5, \"The palette deck on the stone palette\", caption: [`stone`])\n  #slideshow(calepin.elements.gallery, \"appearance/palette-espresso\", 5, \"The palette deck on the espresso palette\", caption: [`espresso`])\n  #slideshow(calepin.elements.gallery, \"appearance/palette-forest\", 5, \"The palette deck on the forest palette\", caption: [`forest`])\n  #slideshow(calepin.elements.gallery, \"appearance/palette-slate\", 5, \"The palette deck on the slate palette\", caption: [`slate`])\n]\n\n= Inverting one slide\n\nThe last slide of every gallery above is the same command:\n\n```typ\n#m.slide(invert: true)[\n  One inverted slide for the headline number.\n]\n```\n\n`invert: true` swaps ground and ink within the active palette for that slide only: the canvas becomes the palette's text color, the text becomes its canvas, and muted, line, and surface are derived to match. The accent and status colors carry over unchanged, which is why a badge or callout keeps its color on the swapped ground. That survival is part of the bundled palettes' tested contract, so `invert:` composes with every scheme in the collection; a custom palette whose accent only reads on its own canvas will look washed out here, and passing a hand-picked palette to that one slide's components is the escape hatch.\n"</script>
 </head><body>
@@ -3195,12 +3209,24 @@ html[data-theme="dark"] .mosaic-diagram {
                                 <li><a href="../api.html" aria-label="API">API</a></li>
 
 
+                                <li><a href="https://github.com/vincentarelbundock/mosaic" aria-label="GitHub"><span class="calepin-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5c.08-1.25-.27-2.48-1-3.5c.28-1.15.28-2.35 0-3.5c0 0-1 0-3 1.5c-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5c-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></g></svg></span></a></li>
+
                 <li class="calepin-website-theme-item">
 
 
                     <button class="calepin-site-theme-toggle" type="button" aria-label="Theme" title="Theme" data-calepin-theme-toggle data-calepin-theme-storage-key="calepin-website-theme" data-calepin-theme-param="theme">Theme</button>
                 </li>
 
+
+                <li class="calepin-website-search-item">
+                    <form class="calepin-website-search" role="search" data-calepin-search-form>
+                        <input class="calepin-website-search-input" type="search" placeholder="Search" aria-label="Search documentation" aria-haspopup="listbox" aria-expanded="false" autocomplete="off" spellcheck="false" data-calepin-search-input>
+                        <div class="calepin-website-search-results" role="listbox" aria-label="Search results" hidden data-calepin-search-results></div>
+                    </form>
+                </li>
+                <li class="calepin-website-mobile-search-item">
+                    <button class="calepin-website-mobile-search-button outline secondary" type="button" aria-label="Search documentation" title="Search" data-calepin-mobile-search-trigger><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg></button>
+                </li>
 
             </ul>
         </nav>
@@ -3218,6 +3244,8 @@ html[data-theme="dark"] .mosaic-diagram {
 
                                     <li><a href="../api.html" aria-label="API">API</a></li>
 
+
+                                    <li><a href="https://github.com/vincentarelbundock/mosaic" aria-label="GitHub"><span class="calepin-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5c.08-1.25-.27-2.48-1-3.5c.28-1.15.28-2.35 0-3.5c0 0-1 0-3 1.5c-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5c-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></g></svg></span></a></li>
 
                 </ul>
                 <div class="calepin-website-mobile-drawer-actions" aria-label="Site controls">
@@ -3821,6 +3849,8 @@ html[data-theme="dark"] .mosaic-diagram {
   </footer>
 
 
+
+    <pagefind-modal></pagefind-modal>
 
 
     <script>

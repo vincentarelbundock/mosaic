@@ -3154,6 +3154,20 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
+    <link rel="stylesheet" href="../pagefind/pagefind-component-ui.css">
+    <pagefind-config bundle-path="../pagefind"></pagefind-config>
+    <script>
+      (() => {
+        const config = document.querySelector("pagefind-config[bundle-path]");
+        if (config) {
+          let bundlePath = config.getAttribute("bundle-path") || "";
+          if (bundlePath && !bundlePath.endsWith("/")) bundlePath += "/";
+          config.setAttribute("bundle-path", new URL(bundlePath, window.location.href).toString());
+        }
+      })();
+    </script>
+    <script src="../pagefind/pagefind-component-ui.js" type="module"></script>
+
 
 <script id="calepin-website-source-data" type="application/json">"#import \"/.calepin/calepin.typ\" as calepin\n#import \"/_includes/embedded-examples.typ\": embedded-example\n\n#set document(title: [Configuring layouts])\n#metadata((title: \"Configuring layouts\")) <website-metadata>\n\n#title()\n\nEvery slide, whatever its layout, is filled and configured the same way. This page collects that shared machinery once: how content reaches cells, how a single slide adjusts its layout, how a deck replaces a layout throughout, and how asset paths cross the package boundary. The #link(\"content.html\")[content], #link(\"title.html\")[title], #link(\"section.html\")[section], and #link(\"image.html\")[image] pages all rely on these rules.\n\n= Filling cells\n\nA slide accepts cell content in two distinct forms. Use positional content blocks (`[...][...]`) for a short grid whose traversal order is obvious, or use the named `cells:` dictionary to assign content by cell ID. Do not mix the two forms in one slide.\n\n== Positional content with `[][]`\n\nPlace content blocks directly after the `m.slide(...)` call. Each pair of brackets is one positional body: `[a][b][c]` supplies three bodies. Mosaic matches them to cell IDs in source order, left to right within columns, top to bottom within rows, and recursively through nested grids.\n\n```typ\n#m.slide(layout: m.grids.columns(\"a\", \"b\", \"c\"))[a][b][c]\n```\n\n#embedded-example(\n  calepin.elements.gallery,\n  \"structure/filling-cells\",\n  frames: 3,\n  title: \"Positional bodies assigned to horizontal and vertical grids\",\n)\n\nThis compact form is especially useful for a one-cell slide. In a larger or reusable grid, positional meaning can become hard to see after the grid changes.\n\n== Named content with `cells:`\n\nPass a dictionary to the named `cells:` argument to associate each body with an explicit cell ID. Assignment then remains independent of the grid's traversal order. In the example below the same IDs also anchor the styling: one `show` rule per cell label tints each cell, which is why the grid structure stays visible in the rendered slide.\n\n#embedded-example(\n  calepin.elements.gallery,\n  \"content/named-content\",\n  frames: 1,\n  title: \"Three bodies assigned explicitly by cell ID\",\n)\n\nThe cell ID connects all three layers: `m.grids.cell(\"body\")` defines the cell, `cells: (body: [...])` fills it, and `label(\"mosaic-cell-body\")` styles it. Content-bearing cells are optional and resolve to empty content when omitted; unknown IDs are errors.\n\n== Fixed cell content\n\nWhen a grid owns fixed content such as an image or logo, put it directly on the cell. Fixed cell content needs no positional body or `cells:` entry:\n\n```typ\n#m.grids.cell(\"logo\", content: image(\"logo.svg\"))\n```\n\n= Layout fields on a slide\n\nAny named argument `slide` does not recognize is a field of the selected layout. So a single slide can change one aspect of the configured layout without restating it:\n\n```typ\n#m.slide(layout: \"title\", variant: \"academic\")\n#m.slide(layout: \"section\", number: [03])[Methods]\n#m.slide(layout: \"image\", variant: \"right\", image: path(\"fig/photo.jpg\"))[== Title][Body]\n#m.slide(columns: 2)[== Comparison][Left column][Right column]\n```\n\nThis differs from passing `m.layouts.title(variant: \"academic\")`, which *replaces* the configured layout. Named arguments *refine* it: whatever the theme or `m.setup` set for that layout, such as an accent color or a background image, survives. Only the fields you name change.\n\nThe two forms are mutually exclusive on one slide. With an explicit `m.layouts.*` value, pass the fields to that constructor instead:\n\n```typ\n// Refines the configured title layout.\n#m.slide(layout: \"title\", variant: \"academic\")\n\n// Replaces it; the fields go to the constructor.\n#m.slide(layout: m.layouts.title(variant: \"academic\"))\n```\n\nField names are checked against the selected layout, so `m.slide(layout: \"title\", columns: 2)` fails at compile time rather than being silently ignored. Fields also require a layout chosen by name: if `m.setup` configures that layout as a raw grid rather than an `m.layouts.*` value, there are no fields to refine and Mosaic says so. The #link(\"../api/layouts.html\")[Layouts API] lists the fields each layout accepts.\n\n= Reusing a layout\n\nTo replace a named layout throughout a deck, configure it once in `m.setup`:\n\n```typ\n#show: m.setup.with(layouts: (\n  section: m.layouts.section(variant: \"image-background\", image: \"chapter.jpg\"),\n))\n```\n\nTo reuse a layout for selected slides, bind it with `m.slide.with`:\n\n```typ\n#let myslide = m.slide.with(\n  layout: m.layouts.content(\n    variant: \"header-body\",\n  ),\n)\n\n#myslide(cells: (header: [== Slide title], body: [Slide content]))\n```\n\nSee the #link(\"../api/layouts.html\")[Layouts API] for all variants, cell IDs, and arguments.\n\n= Asset paths <asset-paths>\n\nAn image or other asset named inside a layout argument crosses the package boundary: the layout function runs inside the installed Mosaic package, so a bare string like `\"cover.webp\"` is looked up in the package's own files rather than in your project, and the asset is not found. Wrap every asset path in Typst's `path()` so its location stays anchored to the calling document:\n\n```typ\n#m.slide(layout: \"image\", image: path(\"fig/gdp.png\"))[== Growth since 1950]\n```\n\nThis applies wherever a layout or component takes a path: the `image:` argument of the title, section, and image layouts, and the source of `m.components.image()` and `m.components.figure()`.\n"</script>
 </head><body>
@@ -3195,12 +3209,24 @@ html[data-theme="dark"] .mosaic-diagram {
                                 <li><a href="../api.html" aria-label="API">API</a></li>
 
 
+                                <li><a href="https://github.com/vincentarelbundock/mosaic" aria-label="GitHub"><span class="calepin-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5c.08-1.25-.27-2.48-1-3.5c.28-1.15.28-2.35 0-3.5c0 0-1 0-3 1.5c-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5c-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></g></svg></span></a></li>
+
                 <li class="calepin-website-theme-item">
 
 
                     <button class="calepin-site-theme-toggle" type="button" aria-label="Theme" title="Theme" data-calepin-theme-toggle data-calepin-theme-storage-key="calepin-website-theme" data-calepin-theme-param="theme">Theme</button>
                 </li>
 
+
+                <li class="calepin-website-search-item">
+                    <form class="calepin-website-search" role="search" data-calepin-search-form>
+                        <input class="calepin-website-search-input" type="search" placeholder="Search" aria-label="Search documentation" aria-haspopup="listbox" aria-expanded="false" autocomplete="off" spellcheck="false" data-calepin-search-input>
+                        <div class="calepin-website-search-results" role="listbox" aria-label="Search results" hidden data-calepin-search-results></div>
+                    </form>
+                </li>
+                <li class="calepin-website-mobile-search-item">
+                    <button class="calepin-website-mobile-search-button outline secondary" type="button" aria-label="Search documentation" title="Search" data-calepin-mobile-search-trigger><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg></button>
+                </li>
 
             </ul>
         </nav>
@@ -3218,6 +3244,8 @@ html[data-theme="dark"] .mosaic-diagram {
 
                                     <li><a href="../api.html" aria-label="API">API</a></li>
 
+
+                                    <li><a href="https://github.com/vincentarelbundock/mosaic" aria-label="GitHub"><span class="calepin-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5c.08-1.25-.27-2.48-1-3.5c.28-1.15.28-2.35 0-3.5c0 0-1 0-3 1.5c-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5c-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></g></svg></span></a></li>
 
                 </ul>
                 <div class="calepin-website-mobile-drawer-actions" aria-label="Site controls">
@@ -3872,6 +3900,8 @@ html[data-theme="dark"] .mosaic-diagram {
   </footer>
 
 
+
+    <pagefind-modal></pagefind-modal>
 
 
     <script>
