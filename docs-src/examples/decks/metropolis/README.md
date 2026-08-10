@@ -1,5 +1,7 @@
 # Metropolis: Mosaic adaptation
 
+> **Note:** This is the only example deck that cannot be compiled with `typst` alone. It embeds executable R code, so it is built with [Calepin](https://vincentarelbundock.github.io/calepin/), a computational notebook for Typst, which runs the code blocks and then hands the result to Typst. See the [installation instructions](https://vincentarelbundock.github.io/calepin/getting-started/install.html). Every other example in the documentation is plain Typst.
+
 A technical Mosaic/Typst deck that adapts the visual design of the
 **Metropolis** Beamer theme by Matthias Vogelgesang
 ([github.com/matze/mtheme](https://github.com/matze/mtheme)), whose layout
