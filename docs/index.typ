@@ -26,7 +26,7 @@
           ]
         ]
         #html.elem("p")[
-          Write your talk as an ordinary Typst document and Mosaic makes beautiful slides for you. Style the slides with standard Typst, as you would any other document. Batteries included: modern themes, ready-made layouts, complex grids with nested rows and columns, incremental reveals, speaker notes, handouts, callouts, cards, quotes, progress indicators, etc.
+          Write your talk as an ordinary Typst document and Mosaic makes beautiful PDF slides for you. Style the slides with standard Typst, as you would any other document. Batteries included: modern themes, ready-made layouts, complex grids with nested rows and columns, incremental reveals, speaker notes, handouts, callouts, cards, quotes, progress indicators, etc.
         ]
       ]
       #html.elem("div", attrs: (class: "mosaic-showcase-frame"))[
@@ -117,6 +117,6 @@
   fallback: () => [
     = Slides with Typst
 
-    Write your talk as an ordinary Typst document and Mosaic makes beautiful slides for you. Style the slides with standard Typst, as you would any other document. Batteries included: modern themes, ready-made layouts, complex grids with nested rows and columns, incremental reveals, speaker notes, handouts, callouts, cards, quotes, progress indicators, etc.
+    Write your talk as an ordinary Typst document and Mosaic makes beautiful PDF slides for you. Style the slides with standard Typst, as you would any other document. Batteries included: modern themes, ready-made layouts, complex grids with nested rows and columns, incremental reveals, speaker notes, handouts, callouts, cards, quotes, progress indicators, etc.
   ],
 )

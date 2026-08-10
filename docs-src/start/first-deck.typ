@@ -13,7 +13,7 @@ First, import Mosaic and apply its setup rule:
 #show: m.setup
 ```
 
-`m.setup` applies the page and theme defaults and turns headings and explicit `m.slide` commands into slides.
+`m.setup` applies the page and theme defaults and turns headings and explicit `m.slide` commands into slides; compiling the document as usual produces a PDF deck.
 
 After `#show: m.setup`, every `==` starts a *content slide*: the heading becomes the title and the text that follows becomes its content. A single `=` starts an unnumbered *section slide* with a larger, centered title, and any text between it and the next `==` becomes that section's subtitle.
 
