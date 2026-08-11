@@ -13,7 +13,7 @@ Prefer the smallest authoring surface that fits the request: headings for ordina
 
 1. Inspect the existing deck and preserve its import spelling and theme. Do not replace a themed facade with the root facade unless asked.
 2. Check that Typst is available with `typst --version`.
-3. Mosaic is published on Typst Universe, so `#import "@preview/mosaic:0.0.1"` downloads it on first compile and needs no installation step. To work against unreleased sources instead, clone the repository and install the working tree over that same import:
+3. Mosaic is published on Typst Universe, so `#import "@local/mosaic:0.0.2"` downloads it on first compile and needs no installation step. To work against unreleased sources instead, clone the repository and install the working tree over that same import:
 
    ```sh
    git clone https://github.com/vincentarelbundock/mosaic.git
@@ -34,7 +34,7 @@ Do not claim success until Typst has compiled the edited deck.
 Import Mosaic and apply its setup rule. After `#show: m.setup`, headings create slides automatically:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@local/mosaic:0.0.2" as m
 
 #show: m.setup.with(title: [A short title])
 
@@ -252,7 +252,7 @@ Key setup arguments:
 - `paper:`: `"16-9"` (default) or `"4-3"`.
 - `spacing:`: for example `(inset: 1.5em)` to set the default cell inset.
 - `handout: true`: emit only the final frame of each logical slide.
-- `output:`: `"slides"` (default), `"speaker"`, or `"notes"`.
+- `output:`: `"slides"` (default), `"speaker"`, `"notes"`, or `"split"`.
 - `overflow:`: `"off"` (default) observes nothing, because measuring every cell on every frame roughly doubles the layout work a deck does. `"error"` fails the compile at the end of the deck and names every offending cell with its slide and frame, which is the mode to run once before presenting. `"record"` emits queryable `<mosaic-overflow-warning>` metadata for any cell whose content exceeds its allocation and keeps compiling; it prints nothing, since Typst gives a package no warning channel.
 - `frozen-counters:` / `frozen-states:`: values that advance once per logical slide instead of once per frame.
 
@@ -263,7 +263,7 @@ Do not introduce a separate footer, logo, background, or foreground feature API:
 Import one facade as `m` and keep the rest of the deck unchanged:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.2" as mosaic
 #import mosaic.themes.metropolis as m
 
 #show: m.setup
@@ -450,9 +450,14 @@ Attach notes with `m.note[...]`. Notes never render in the default `output: "sli
 ```typ
 #show: m.setup.with(output: "speaker")  // A4: frame thumbnail + notes
 #show: m.setup.with(output: "notes")    // A4: notes only
+#show: m.setup.with(output: "split")    // double-width: slide | notes
 ```
 
-Both companion outputs write one page per emitted frame and fail with an explicit overflow diagnostic when notes do not fit. Every frame carries `<mosaic-speaker-notes>` metadata (`logical-slide`, `frame`, `notes`) queryable with Typst's `query`.
+Every companion output writes one page per emitted frame and fails with an explicit overflow diagnostic when notes do not fit. Every frame carries `<mosaic-speaker-notes>` metadata (`logical-slide`, `frame`, `notes`) queryable with Typst's `query`.
+
+`"split"` is the presenter-console build: each page is exactly twice the slide wide with no page margin, the slide unscaled on the left half and its notes on the right, which is the layout pympress splits automatically and pdfpc splits with `--notes=right`. The notes half stays black on white whatever polarity the deck carries.
+
+The `"slides"` build also generates a pdfpc sidecar from the same notes whenever a deck has any: it is attached to the PDF as `speaker-notes.pdfpc` and published as `<mosaic-pdfpc>` metadata, and `scripts/mosaic-pdfpc.py talk.typ` writes it to `talk.pdfpc` where pdfpc looks for it. Notes are flattened to Markdown text for that format, so a note whose layout matters belongs in `"split"` instead.
 
 ## 13. Recipes
 

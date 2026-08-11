@@ -1,5 +1,5 @@
 // Values and helpers shared by all internal Mosaic modules.
-#let tag = "mosaic:0.0.1"
+#let tag = "mosaic:0.0.2"
 
 // Every internal state, counter, and metadata key is built from `tag`, so the
 // namespace and its version bump in one place. Spelling a key literally would

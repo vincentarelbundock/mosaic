@@ -30,9 +30,10 @@
 //                                        advance once per frame.
 //   handout          bool                Whether every slide collapses to its
 //                                        final frame.
-//   output           str                 "slides", "speaker", or "notes": the
-//                                        rendering target, which decides page
-//                                        geometry and whether notes print.
+//   output           str                 "slides", "speaker", "notes", or
+//                                        "split": the rendering target, which
+//                                        decides page geometry and whether
+//                                        notes print.
 //   paper            dictionary          Resolved slide dimensions, never a
 //                                        preset name, because the printed
 //                                        outputs scale a thumbnail of this

@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.2" as mosaic
 #show: mosaic.setup
 #let bonsai = image("/docs-src/assets/images/bonsai.webp", alt: "Bonsai tree", width: 100%, height: 100%, fit: "cover")
 #let dog = image("/docs-src/assets/images/dog.webp", alt: "Dog", width: 100%, height: 100%, fit: "cover")

@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.2" as mosaic
 
 // Two consumers share one fitter. The section layouts fit content they generate
 // themselves: the `toc` variant shrinks a section list whose length the deck

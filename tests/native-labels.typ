@@ -1,7 +1,7 @@
 // Cells are structural; appearance is native. Every rendered cell is one
 // block labeled <mosaic-cell-ID>, so decks style cells with ordinary
 // label-targeted set/show rules, deck-wide or scoped around one slide.
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.2" as mosaic
 
 // The slide command carries no styling fields.
 #let command = mosaic.slide(layout: mosaic.layouts.section())[Section].value

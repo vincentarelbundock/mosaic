@@ -72,7 +72,9 @@ class ThemeArchitectureTests(unittest.TestCase):
         ):
             self.assertFalse((PORTFOLIO / name).exists())
         preamble = (PORTFOLIO / "preamble.typ").read_text(encoding="utf-8")
-        self.assertIn('"@preview/mosaic:0.0.1" as m', preamble)
+        # Version-agnostic on purpose: website examples pin the released
+        # version, which moves independently of the development tree.
+        self.assertRegex(preamble, r'"@preview/mosaic:\d+\.\d+\.\d+" as m')
         main = (PORTFOLIO / "main.typ").read_text(encoding="utf-8")
         self.assertIn("colors: greyscale", main)
 

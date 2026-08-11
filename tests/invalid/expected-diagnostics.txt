@@ -84,7 +84,7 @@ setup-layout-invalid|setup layouts "content" must be a Mosaic grid tree or layou
 setup-layouts-image-not-configurable|setup layouts does not accept "image"
 setup-layouts-type|setup layouts must be a dictionary
 setup-layouts-unknown|setup layouts does not accept "aside"
-setup-output|setup output must be "slides", "speaker", or "notes"
+setup-output|setup output must be "slides", "speaker", "notes", or "split"
 setup-paper|setup paper must be "16-9", "4-3", or a dictionary with width and height
 setup-plane-value|setup background must be content, a string, or none
 setup-section-grid-removed|setup does not accept "section-grid"
@@ -111,6 +111,7 @@ slide-section-removed|slide layout "content" has no field "section"; expected on
 speaker-note-body|speaker note body must be content
 speaker-note-overflow|speaker output notes overflow on frame 1
 speaker-note-record|invalid speaker note record
+split-note-overflow|split output notes overflow on frame 1
 split-stroke-type|columns stroke must be none or a native Typst stroke
 temporal-heading-grid|headings cannot be placed in incremental grid nodes; keep semantic headings structurally stable across frames
 temporal-heading|headings cannot be wrapped in on, reveal, replace, or drawing; keep semantic headings structurally stable across frames

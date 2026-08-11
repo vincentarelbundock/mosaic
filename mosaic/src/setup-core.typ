@@ -10,9 +10,15 @@
 #import "palettes.typ": light
 #import "layout/config.typ": standard-layouts
 #import "paper.typ": default-paper, resolve-paper
+#import "pdfpc.typ": emit-pdfpc
 
 // Rendering targets `setup` can compile the deck for.
-#let output-modes = ("slides", "speaker", "notes")
+//
+// `slides` is the deck itself, `speaker` and `notes` are printed A4 handouts,
+// and `split` is the presenter-console build: one double-wide page per frame,
+// slide beside notes, which pympress and pdfpc cut down the middle to drive two
+// screens.
+#let output-modes = ("slides", "speaker", "notes", "split")
 
 // Every option `setup` accepts, with its default. This is the single list:
 // `theme-engine` derives the set of theme-neutral option names from these keys
@@ -90,6 +96,17 @@
       margin: options.margin,
       fill: colors.canvas,
     )
+  } else if output == "split" {
+    // Exactly twice the slide wide and no margin: a presenter tool cuts this
+    // page at its midpoint, so anything the page held back would shift the cut
+    // off the slide's edge. The white ground belongs to the notes half; the
+    // slide half paints its own canvas.
+    (
+      width: 2 * paper-size.width,
+      height: paper-size.height,
+      margin: 0pt,
+      fill: white,
+    )
   } else {
     // No explicit fill: an `auto` page still prints white, and the slide
     // thumbnails read `page.fill == auto` as their cue to paint the deck's
@@ -135,6 +152,12 @@
     paper: paper-size,
   )
   compile-deck(body, headings: headings)
+  // The presented build is the one a presenter console opens, so it is the only
+  // one that carries a sidecar. The printed outputs already show their notes,
+  // and `split` puts them on the page beside the slide.
+  if output == "slides" {
+    emit-pdfpc()
+  }
   // Runs after the deck, where introspection has converged, so the diagnostic
   // can name the slide each clipped cell is on.
   if overflow == "error" {

@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.2" as mosaic
 
 #let paper = sys.inputs.at("paper", default: "16-9")
 #let appearance = sys.inputs.at("appearance", default: "light")

@@ -17,13 +17,13 @@ Detailed documentation, many examples, and themes can be found on the package we
 
 ## Install
 
-Mosaic 0.0.1 requires Typst 0.15 or newer. Once it is published on Typst Universe, no installation step is needed: importing it downloads it.
+Mosaic requires Typst 0.15 or newer. The released version is 0.0.1, published on Typst Universe, so importing it needs no installation step:
 
 ```typ
 #import "@preview/mosaic:0.0.1" as m
 ```
 
-To work from source instead, clone the repository and install the working tree over that same import, which is how the tests, the documentation, and the example decks in this repository resolve the package:
+This repository is the development version, 0.0.2. It carries features the released package does not have, and the documentation marks each of them where it describes them. To run it, clone the repository and install the working tree, which is how the tests resolve the package:
 
 ```sh
 git clone https://github.com/vincentarelbundock/mosaic.git
@@ -31,12 +31,12 @@ cd mosaic
 make install
 ```
 
-`make uninstall` removes the working-tree copy and restores the published one.
+Decks then import `@local/mosaic:0.0.2`. `make uninstall` removes the working-tree copy, after which only the published 0.0.1 resolves.
 
 ## A complete deck
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@local/mosaic:0.0.2" as m
 
 #show: m.setup.with(title: [A short talk])
 

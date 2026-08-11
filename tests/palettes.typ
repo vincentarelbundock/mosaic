@@ -5,7 +5,7 @@
 // editorial theme, exercises components and syntax highlighting on it, and
 // inverts one slide, which is the combination the palette contract in
 // tests/test_palettes.py exists to keep legible.
-#import "@preview/mosaic:0.0.1" as m
+#import "@local/mosaic:0.0.2" as m
 #import m.themes.editorial: setup, slide, layouts, components, palettes
 
 // The collection is one namespace on every facade: the polarity pair reached

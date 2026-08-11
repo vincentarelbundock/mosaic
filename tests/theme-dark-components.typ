@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as m
+#import "@local/mosaic:0.0.2" as m
 #import "../mosaic/src/component/style.typ": role-colors
 #import "../mosaic/src/palettes.typ": dark
 

@@ -2,7 +2,7 @@
 // `palettes.dark` through `setup(colors: ..)`. This deck runs the
 // default light theme under that swap and must come out fully dark, syntax
 // highlighting included, which exercises the canvas-luminance branch.
-#import "@preview/mosaic:0.0.1" as m
+#import "@local/mosaic:0.0.2" as m
 
 #let authors = (m.layouts.author(
   "Ada Lovelace",

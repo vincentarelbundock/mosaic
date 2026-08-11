@@ -33,7 +33,7 @@
   compact-gap: 0.35em,
 )
 
-// Geometry for the printed `speaker` and `notes` outputs. Geometry only: the
+// Geometry for the `speaker`, `notes`, and `split` outputs. Geometry only: the
 // heading and note text on these pages render under the <mosaic-note-heading>
 // and <mosaic-note-body> labels, and their typography is stated as `show`
 // rules (neutral engine defaults in setup-core, overridable with ordinary
@@ -47,8 +47,15 @@
 // not butt against the bottom margin. The available note height is the region
 // minus the thumbnail, the heading, and every gap named here, so these fields
 // are the whole vertical budget: no unnamed allowance is folded in.
+//
+// `split-inset` is the same idea for the `split` output, whose page carries no
+// margin of its own: the two halves of a split page must meet exactly at the
+// midpoint for a presenter tool to cut them apart, so the page margin is zero
+// and the notes half insets itself instead. `margin` stays the A4 page margin
+// the printed outputs use, so the two never have to agree.
 #let default-notes = (
   margin: 15mm,
+  split-inset: 12mm,
   thumbnail-stroke: 0.6pt + light.line,
   note-gap: 3mm,
   thumbnail-gap: 7mm,

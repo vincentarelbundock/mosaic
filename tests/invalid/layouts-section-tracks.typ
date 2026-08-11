@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.2" as mosaic
 
 #mosaic.layouts.section(
   variant: "image-left",

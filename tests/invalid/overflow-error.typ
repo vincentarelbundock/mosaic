@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.2" as mosaic
 
 // "error" reports the same records "record" queries, but from a context where
 // introspection has converged, so the slide number it names is the one the

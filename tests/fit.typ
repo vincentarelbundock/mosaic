@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.2" as mosaic
 
 // The public entry point, exercised through the package facade rather than the
 // module path, so a helper that stops being exported fails here.

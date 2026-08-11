@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.2" as mosaic
 #import mosaic.themes.editorial as editorial
 #import mosaic.themes.default as default-theme
 #import mosaic.themes.metropolis as metropolis

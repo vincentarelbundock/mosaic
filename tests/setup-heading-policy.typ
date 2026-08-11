@@ -1,6 +1,6 @@
 // A document whose hierarchy puts sections at `==` and slides at `===`
 // compiles on its own heading levels rather than on Mosaic's default two.
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.2" as mosaic
 
 #show: mosaic.setup.with(headings: ("2": "section", "3": "slide"))
 

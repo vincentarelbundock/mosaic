@@ -4,7 +4,7 @@
 // affiliations, both contact addresses, and the date, so a variant that drops
 // a field fails the run rather than shipping a title page with an author's
 // information missing.
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.2" as mosaic
 
 #let authors = (
   mosaic.layouts.author(

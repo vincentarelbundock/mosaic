@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as m
+#import "@local/mosaic:0.0.2" as m
 
 #let expected = (
   "setup", "slide", "note", "fit", "surface", "grids", "layouts", "steps", "components", "themes",

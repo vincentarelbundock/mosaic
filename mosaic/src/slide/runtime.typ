@@ -185,6 +185,48 @@
   }
 })
 
+// One `split` page: the slide at its true size on the left half, the same
+// heading-and-notes column the `notes` output prints on the right half.
+//
+// The geometry is the contract, not a style choice. Presenter tools recognize
+// this layout by aspect ratio alone — pympress treats any page wider than 2:1
+// as slide-plus-notes, and pdfpc cuts on `--notes=right` — and then split the
+// page at its exact midpoint. So the page is twice the slide wide, carries no
+// margin of its own, and the slide half is placed unscaled at the origin: what
+// the audience screen shows is the deck's own canvas, pixel for pixel, and the
+// presenter screen gets everything to the right of the cut.
+//
+// The notes half is deliberately paper, not canvas. It is read off a laptop by
+// one person under house lights, so it keeps the white ground and black text
+// the printed outputs use whatever polarity the deck itself carries.
+#let render-split-page(frame, notes, slide, step, steps, source-size, slide-fill, style) = {
+  place(top + left, slide-frame(
+    frame,
+    width: source-size.width,
+    height: source-size.height,
+    fill: slide-fill,
+  ))
+  place(top + left, dx: source-size.width, block(
+    width: source-size.width,
+    height: source-size.height,
+    inset: style.split-inset,
+    layout(region => {
+      let heading = note-heading(slide, step, steps)
+      let heading-height = measure(heading, width: region.width).height
+      heading
+      v(style.heading-gap)
+      bounded-note-list(
+        notes,
+        region.width,
+        region.height - heading-height - style.heading-gap - style.bottom-gap,
+        "split",
+        step,
+        style,
+      )
+    }),
+  ))
+}
+
 // A plane renders as one full-slide block labeled <mosaic-ID> (ID is
 // "background" or "foreground"), so native label rules can style it without
 // conflating planes with grid cells.
@@ -390,6 +432,14 @@
     ]))
     if output == "slides" {
       slide-frame(frame, fill: if command.invert { settings.colors.canvas } else { none })
+    } else if output == "split" {
+      // Always an explicit fill: the page ground under a split page is the
+      // notes half's white, so the slide half cannot inherit its canvas from
+      // the page the way the `slides` output does.
+      render-split-page(
+        frame, notes, slide, step, steps, paper, settings.colors.canvas,
+        settings.notes,
+      )
     } else {
       render-printed-page(
         frame, notes, slide, step, steps, paper, slide-fill, settings.notes, output,

@@ -198,6 +198,8 @@
   /// - `"slides"`: the presentation itself.
   /// - `"speaker"`: each frame above the notes that apply to it.
   /// - `"notes"`: the notes alone, without the slide image.
+  /// - `"split"`: each frame beside its notes on a double-width page, the
+  ///   layout pympress and pdfpc cut in half to drive two screens.
   /// -> str
   output: "slides",
   /// Counters restored to their pre-slide values before each continuation

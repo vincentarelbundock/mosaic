@@ -6,7 +6,7 @@ Mosaic is a slide package for Typst (0.15+). The `mosaic/` directory is the pack
 
 ## Commands
 
-- `make install` — copy `mosaic/` into Typst's package index as `@preview/mosaic:0.0.1`. Tests, docs, and example decks all import that published spelling, so the working tree shadows the Universe copy while developing; run this after any package source change and before compiling anything by hand. `make uninstall` removes the shadow.
+- `make install` — copy `mosaic/` into Typst's package index as `@local/mosaic:0.0.2` (the version comes from `mosaic/typst.toml`). Every test imports that spelling, so the working tree is what the suite exercises; run this after any package source change and before compiling anything by hand. `make uninstall` removes the copy.
 - `make check` — the whole test suite in one target: the facade export contract (`cd tests && uv run python -m unittest test_check_api_exports test_theme_architecture test_palettes`, plus `scripts/check-api-exports.py`), the `core` and `layout` and `negative` manifest groups, and `scripts/check-doc-assets.py`.
 - One manifest group, without a make target: `uv run python scripts/run-tests.py core|layout|negative --typst typst`.
 - Single positive test: `make install`, then `typst compile --root . tests/<name>.typ /tmp/out.pdf` from the repo root. Many core tests also have output assertions in `scripts/run-tests.py` (pdftotext/SVG greps), so a clean compile is necessary but not always sufficient.
@@ -18,6 +18,18 @@ Mosaic is a slide package for Typst (0.15+). The `mosaic/` directory is the pack
 - `make clean` removes every generated file: build stamps, staged API modules, Calepin's caches, the rendered site, and all example artifacts. The artifacts are committed, so a clean shows up as deletions in `git status` until `make artifacts` re-renders them (minutes of work); restore them from git if all you wanted was a fresh cache. `make help` lists all eleven commands.
 
 Test manifests are exhaustive and enforced: every `tests/*.typ` must appear in `tests/positive-manifest.json` (groups `core`, `layout`, `responsive`), and every `tests/invalid/*.typ` needs a `stem|expected diagnostic` line in `tests/invalid/expected-diagnostics.txt`. Adding or renaming a fixture without updating the manifest fails the run.
+
+## Versions
+
+Two version numbers are in play and they move independently. `mosaic/typst.toml` holds the *development* version, currently 0.0.2: what this source tree is. The *released* version, currently 0.0.1, is what Typst Universe serves, and publishing to Universe takes days, so it lags deliberately.
+
+That split decides which spelling a file imports:
+
+- **`tests/**` and the package's own files import the development version** (`@local/mosaic:0.0.2`). They must exercise the working tree; left on the released version they would resolve from Universe and pass while the source was broken.
+- **`docs-src/**` imports the released version** (`@preview/mosaic:0.0.1`), so every snippet and example deck on the website copy-pastes for a reader who has installed nothing. This is also why `make artifacts` renders the examples against the published package rather than the working tree — the website documents what is released.
+- **A documentation page describing an unreleased feature** is the one exception: it pins `@local/mosaic:0.0.2` in its own snippets and carries a `calepin.elements.callout(kind: "warning", ...)` naming the version and pointing at the README's install instructions. `docs-src/presenting/notes.typ` is the worked example.
+
+Bumping the development version is one `sed` over the non-`docs-src` tree plus `typst.toml`; it also rewrites `mosaic/src/shared.typ`'s `tag`, which is the state-key namespace and is meant to move with the version. Releasing is a separate act (`make release-stage`), and the website only reaches the public through `make publish-docs`, so a source change is never live before you choose.
 
 ## Conventions
 

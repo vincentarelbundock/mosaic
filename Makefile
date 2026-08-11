@@ -14,11 +14,15 @@ PACKAGE_VERSION := $(shell awk -F'"' '/^version[[:space:]]*=/{print $$2; exit}' 
 TYPST_PACKAGE_PATH ?= $(or \
   $(strip $(shell $(TYPST) info 2>/dev/null | awk '/Package path/{print $$3; exit}')), \
   $(or $(XDG_DATA_HOME),$(HOME)/.local/share)/typst/packages)
-# Tests, docs, and example decks all import @preview/mosaic, the spelling a
-# published deck uses. Installing the working tree into the preview namespace is
-# the workflow Typst Universe documents for testing an unpublished package, and
-# it keeps every source in the repository free of a development-only import.
-LOCAL_PACKAGE_DIR := $(TYPST_PACKAGE_PATH)/preview/$(PACKAGE_DIR)/$(PACKAGE_VERSION)
+# The development version installs into the `local` namespace, Typst's namespace
+# for packages that come from somewhere other than Universe, and the tests import
+# it as @local/mosaic. The two namespaces keep the two versions apart with no
+# shadowing: @preview/mosaic resolves the released package from Universe, which
+# is what every website example imports, and @local/mosaic resolves this working
+# tree. Installing an unpublished version under `preview` instead would claim a
+# Universe version that does not exist, and would silently mask the real one
+# once it did.
+LOCAL_PACKAGE_DIR := $(TYPST_PACKAGE_PATH)/local/$(PACKAGE_DIR)/$(PACKAGE_VERSION)
 # The website has two halves. DOCS_SRC is everything authored by hand plus the
 # example artifacts the rules below render: pages, calepin.toml, the theme, the
 # assets, the example projects. SITE_DIR is what Calepin writes from it. Nothing
@@ -143,13 +147,13 @@ doctor: ## Check mandatory, documentation, and optional build prerequisites
 # The package
 # ==============================================================================
 
-install: ## Copy Mosaic into Typst's package index as @preview/mosaic
+install: ## Copy Mosaic into Typst's package index as @local/mosaic
 	rm -rf "$(LOCAL_PACKAGE_DIR)"
 	mkdir -p "$(LOCAL_PACKAGE_DIR)"
 	cp -R "$(PACKAGE_DIR)/." "$(LOCAL_PACKAGE_DIR)/"
-	@echo "Installed @preview/$(PACKAGE_DIR):$(PACKAGE_VERSION) in $(LOCAL_PACKAGE_DIR)"
+	@echo "Installed @local/$(PACKAGE_DIR):$(PACKAGE_VERSION) in $(LOCAL_PACKAGE_DIR)"
 
-uninstall: ## Remove the working-tree copy so imports resolve from Typst Universe
+uninstall: ## Remove the working-tree copy, leaving only the released @preview/mosaic
 	rm -rf "$(LOCAL_PACKAGE_DIR)"
 	@echo "Removed $(LOCAL_PACKAGE_DIR)"
 

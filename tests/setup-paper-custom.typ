@@ -1,6 +1,6 @@
 // An explicit slide size, for aspect ratios the two aliases do not cover, plus
 // a real page margin on the slide canvas.
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.2" as mosaic
 #import "../mosaic/src/paper.typ": paper-aliases, resolve-paper
 
 // The aliases resolve to the dimensions of Typst's own presentation papers, so

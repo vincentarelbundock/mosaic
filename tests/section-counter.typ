@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.2" as mosaic
 
 #set page(width: 240pt, height: 135pt, margin: 8pt)
 #show: mosaic.setup.with(spacing: (inset: 8pt))
