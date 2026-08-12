@@ -421,39 +421,6 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(split_first, "SECOND FRAME NOTE", absent=True)
     require_contains(pdf_page_text("split-output", 2), "SECOND FRAME NOTE")
 
-    # The pdfpc sidecar carries the same per-frame notes as the printed
-    # outputs, keyed by zero-based page index, with every frame after a logical
-    # slide's first marked as a continuation of it.
-    pdfpc_payload = json.loads(
-        command(
-            [typst, "eval", "--root", ".", "query(<mosaic-pdfpc>).map(it => it.value.payload)", "--in", "tests/speaker-notes-output.typ"],
-            capture=True,
-        ).stdout
-    )[0]
-    pdfpc_json = TMP / "mosaic-pdfpc.json"
-    pdfpc_json.write_text(pdfpc_payload, encoding="utf-8")
-    sidecar = json.loads(pdfpc_payload)
-    if sidecar["pdfpcFormat"] != 2:
-        raise TestFailure(f"unexpected pdfpc format version {sidecar['pdfpcFormat']!r}")
-    expected_pages = [
-        {"idx": 0, "note": "GENERAL OUTPUT NOTE\n\nFIRST FRAME NOTE"},
-        {
-            "idx": 1,
-            "note": "GENERAL OUTPUT NOTE\n\nFIRST FRAME NOTE\n\nSECOND FRAME NOTE",
-            "forcedOverlay": True,
-        },
-    ]
-    if sidecar["pages"] != expected_pages:
-        raise TestFailure(f"unexpected pdfpc pages {sidecar['pages']!r}")
-    # The sidecar rides with the presented build and only with it: the printed
-    # and split outputs already show what it would carry.
-    attachments = command(
-        [typst, "eval", "--root", ".", "query(<mosaic-pdfpc>).len()", "--in", "tests/speaker-notes-output.typ", "--input", "output=split"],
-        capture=True,
-    ).stdout.strip()
-    if attachments != "0":
-        raise TestFailure(f"expected no pdfpc sidecar in the split output, got {attachments!r}")
-
     query = [typst, "eval", "--root", ".", "query(<mosaic-overflow-warning>).len()", "--in"]
     warning_count = command(query + ["tests/overflow-warning.typ"], capture=True).stdout.strip()
     if warning_count != "2":

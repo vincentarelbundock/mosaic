@@ -10,7 +10,6 @@
 #import "palettes.typ": light
 #import "layout/config.typ": standard-layouts
 #import "paper.typ": default-paper, resolve-paper
-#import "pdfpc.typ": emit-pdfpc
 
 // Rendering targets `setup` can compile the deck for.
 //
@@ -135,10 +134,16 @@
   // states that neutral default on the note labels, and any later rule on the
   // same label (a theme's or the deck's) overrides it. The labels never occur
   // in the `slides` output, so the rules are inert there.
+  // Neither rule states a size. The note text inherits the deck's own base
+  // size, the one the active theme's `apply` set on the document, so notes
+  // track the deck instead of a constant the engine invented; a theme with
+  // larger slide type gets proportionally larger notes for free. Only the
+  // color is forced, because that is the part paper actually requires. The
+  // heading is stated relative to the same inherited size for the same reason.
   show label("mosaic-note-heading"): set text(
-    size: 12pt, weight: "bold", fill: black,
+    size: 1.15em, weight: "bold", fill: black,
   )
-  show label("mosaic-note-body"): set text(size: 10pt, fill: black)
+  show label("mosaic-note-body"): set text(fill: black)
   [#metadata(settings.deck) <mosaic-deck-metadata>]
   // The single write of the deck record: everything `setup` declares, stored
   // as one immutable value.
@@ -152,12 +157,6 @@
     paper: paper-size,
   )
   compile-deck(body, headings: headings)
-  // The presented build is the one a presenter console opens, so it is the only
-  // one that carries a sidecar. The printed outputs already show their notes,
-  // and `split` puts them on the page beside the slide.
-  if output == "slides" {
-    emit-pdfpc()
-  }
   // Runs after the deck, where introspection has converged, so the diagnostic
   // can name the slide each clipped cell is on.
   if overflow == "error" {

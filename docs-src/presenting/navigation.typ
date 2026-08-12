@@ -18,7 +18,7 @@ Mosaic keeps headings native, so a table of contents is Typst's own #link("https
 
 == Entries
 
-A default entry ends in dotted leaders and the page its heading falls on. On slides that page is the physical frame, so on a deck using `#m.pause` it differs from the logical slide number in the footer.
+A default entry ends in dotted leaders and the page its heading falls on. On slides that page is the physical frame, so on a deck using `#m.steps.pause` it differs from the logical slide number in the footer.
 
 A `show outline.entry` rule replaces the entry. `it.body()` is the title, `it.element.location()` is the link target, and `it.prefix()` is the heading number when headings are numbered.
 

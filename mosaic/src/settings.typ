@@ -36,8 +36,9 @@
 // Geometry for the `speaker`, `notes`, and `split` outputs. Geometry only: the
 // heading and note text on these pages render under the <mosaic-note-heading>
 // and <mosaic-note-body> labels, and their typography is stated as `show`
-// rules (neutral engine defaults in setup-core, overridable with ordinary
-// rules after `setup`), not as fields here.
+// rules (neutral engine defaults in setup-core, which force the color and let
+// the size inherit the deck's base size, overridable with ordinary rules after
+// `setup`), not as fields here.
 //
 // These pages are paper, not slide canvas: the page keeps its default white
 // fill and the slide appears as a painted thumbnail inside it. A deck on a

@@ -56,6 +56,6 @@ These carry rules from Mosaic itself rather than from a theme. A theme or deck r
 #table(
   columns: (auto, 1fr),
   [`mosaic-note-heading`], [The heading on a printed speaker or notes page. Set black on white, because those pages are paper whatever the deck's theme does.],
-  [`mosaic-note-body`], [The note text on those same pages.],
+  [`mosaic-note-body`], [The note text on those same pages. Inherits the deck's base text size.],
   [`mosaic-overflow-warning`], [The diagnostic emitted when content exceeds its cell. Not a styling target.],
 )

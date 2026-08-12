@@ -42,9 +42,9 @@
 /// #mosaic.slide[
 ///   == Argument
 ///   The premise.
-///   #mosaic.pause
+///   #mosaic.steps.pause
 ///   The consequence.
-///   #mosaic.pause
+///   #mosaic.steps.pause
 ///   The objection.
 /// ]
 /// ```

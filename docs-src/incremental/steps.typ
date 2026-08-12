@@ -13,7 +13,7 @@ Every slide starts at step 1. Mosaic adds frames until the last timed command ha
 
 Choose the smallest command for the timing you need:
 
-- `m.pause` advances subsequent source-order content to the next frame.
+- `m.steps.pause` advances subsequent source-order content to the next frame.
 - `m.steps.on(range)[content]` shows content over an exact step range.
 - `m.steps.reveal[...]` accumulates a list or sequence one item at a time.
 - `m.steps.replace[first][second]` swaps alternatives in one stable slot.
@@ -23,13 +23,13 @@ The #link("reveals.html")[Reveal and replace] page shows each of these on real s
 
 = Pause between blocks
 
-Use `m.pause` when source order already expresses the reveal order:
+Use `m.steps.pause` when source order already expresses the reveal order:
 
 ```typ
 #m.slide[
   The estimate is positive.
 
-  #m.pause
+  #m.steps.pause
 
   The interval excludes zero.
 ]
@@ -46,14 +46,14 @@ A pause inside one column of a two-column slide therefore delays that column's c
     attribution: [Kant],
   )
 ][
-  #m.pause
+  #m.steps.pause
   #m.components.quote([Kant touch this.], attribution: [MC Hammer])
 ]
 ```
 
 = Hold back a whole block
 
-To open a slide on its title alone, or on one column alone, hold the rest back with `m.steps.on("2-")`. A leading `m.pause` does not work here: a pause with nothing before it in its content stream is collapsed, so the content would appear on frame 1. An explicit range forces the second frame, and because `before` defaults to `"hidden"`, the space is kept and the slide does not jump when the content arrives:
+To open a slide on its title alone, or on one column alone, hold the rest back with `m.steps.on("2-")`. A leading `m.steps.pause` does not work here: a pause with nothing before it in its content stream is collapsed, so the content would appear on frame 1. An explicit range forces the second frame, and because `before` defaults to `"hidden"`, the space is kept and the slide does not jump when the content arrives:
 
 ```typ
 == Consequences and remedies

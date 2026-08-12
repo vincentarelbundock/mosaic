@@ -212,7 +212,7 @@ Mosaic's engine emits no slide typography of its own. Every rule a slide renders
 
 A theme may omit `apply`. It then changes colors and layouts only, and every slide falls back to Typst's own text defaults. A theme derived from a bundled one inherits that theme's rules and can leave `apply` alone.
 
-The engine keeps two rules of its own, on `<mosaic-note-heading>` and `<mosaic-note-body>`. They style the printed speaker and notes pages. That furniture must read black on white whatever the theme does. A theme or deck rule on the same label overrides them.
+The engine keeps two rules of its own, on `<mosaic-note-heading>` and `<mosaic-note-body>`. They style the printed speaker and notes pages. That furniture must read black on white whatever the theme does, so the rules force the color and nothing else: the note text inherits the base size the theme's own `apply` set, rather than a size the engine picked. A theme or deck rule on the same label overrides them.
 
 == Customize a theme
 

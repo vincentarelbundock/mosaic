@@ -28,7 +28,7 @@ A note outside a timing command applies to every frame. A note inside `m.steps.o
 
 Notes also hold material that supports a slide without belonging on it: the source URL of a figure, a reminder of what to say, or the link behind an image slide.
 
-Where the notes go is an argument to `m.setup`. The rest of this page is the four answers: two printed, and two that put them on a second screen while you present.
+Where the notes go is an argument to `m.setup`. The rest of this page is the three answers: two printed, and one that puts them on a second screen while you present.
 
 = Printed outputs
 
@@ -42,10 +42,10 @@ To print a companion document, choose an output in `m.setup`:
 #show: m.setup.with(output: "notes")
 ```
 
-On those printed pages, the frame heading renders under the `<mosaic-note-heading>` label and the note text under `<mosaic-note-body>`. Both default to plain black type that reads against paper whatever the theme does. Restyle them with ordinary rules after `m.setup`:
+On those printed pages, the frame heading renders under the `<mosaic-note-heading>` label and the note text under `<mosaic-note-body>`. Both default to plain black type that reads against paper whatever the theme does. Neither states a size: the note text inherits the deck's own base size, so a theme with larger slide type gets proportionally larger notes, and the heading sits slightly above it. Restyle them with ordinary rules after `m.setup`:
 
 ```typ
-#show label("mosaic-note-body"): set text(size: 11pt)
+#show label("mosaic-note-body"): set text(size: 18pt)
 #show label("mosaic-note-heading"): set text(fill: rgb("#0072B2"))
 ```
 
@@ -63,22 +63,9 @@ The note outputs are independent of `handout:`, so a deck can print a #link("../
   See #link("https://github.com/vincentarelbundock/mosaic#install")[Install] for the full instructions. Everything above works with the package as published.
 ]
 
-A presenter console drives two displays: the projector shows the slide, your laptop shows the same slide with its notes, the next slide, and a clock. Typst produces a PDF, so the console is a separate program. Two of them read the formats Mosaic writes: #link("https://pympress.xyz/")[pympress] and #link("https://pdfpc.github.io/")[pdfpc]. Both are free, both run on Linux, macOS, and Windows, and neither needs anything installed alongside your deck.
+A presenter console drives two displays: the projector shows the slide, your laptop shows the same slide with its notes, the next slide, and a clock. Typst produces a PDF, so the console is a separate program. Several free ones exist — #link("https://pympress.xyz/")[pympress], #link("https://pdfpc.github.io/")[pdfpc], #link("https://github.com/beamerpresenter/BeamerPresenter")[BeamerPresenter] — and they run on Linux, macOS, and Windows.
 
-Mosaic offers two routes to them. The first changes the PDF's shape and needs no files beside it; the second keeps the deck a plain slide-shaped PDF and puts the notes in a companion file. Pick one.
-
-#table(
-  columns: 3,
-  align: (left, left, left),
-  table.header[][*Notes beside the slide*][*pdfpc sidecar*],
-  [In `m.setup`], [`output: "split"`], [nothing],
-  [Files to carry], [the PDF alone], [the PDF and its `.pdfpc`],
-  [Works with], [pympress and pdfpc], [pdfpc only],
-  [Notes keep], [full Typst layout], [Markdown text],
-  [The PDF alone is], [double-width], [an ordinary deck],
-)
-
-== Notes beside the slide
+Mosaic takes the route that works with all of them and needs no companion file, no sidecar format, and no configuration: the notes go on the page, and the console cuts the page in half.
 
 Compile the deck with the `split` output:
 
@@ -86,7 +73,7 @@ Compile the deck with the `split` output:
 #show: m.setup.with(output: "split")
 ```
 
-Every frame becomes one page, twice the slide's width: the slide at its true size on the left half, its notes on the right. This is the layout Beamer calls notes on a second screen, and both consoles recognize it by the page's proportions alone, so there is nothing to configure in the deck beyond that one argument.
+Every frame becomes one page, twice the slide's width: the slide at its true size on the left half, its notes on the right. This is the layout Beamer calls notes on a second screen, and the consoles recognize it by the page's proportions alone, so there is nothing to configure in the deck beyond that one argument.
 
 ```bash
 typst compile talk.typ            # talk.pdf, now double-width
@@ -94,7 +81,7 @@ pympress talk.pdf                 # splits automatically
 pdfpc --notes=right talk.pdf      # tell pdfpc where the notes are
 ```
 
-pympress treats any page more than twice as wide as it is tall as a slide beside its notes and needs no flag. pdfpc wants `--notes=right`, or the equivalent `beamerNotePosition` entry in a sidecar.
+pympress treats any page more than twice as wide as it is tall as a slide beside its notes and needs no flag. pdfpc wants `--notes=right`. BeamerPresenter reads the same layout through its own notes-on-second-screen mode.
 
 Because the page carries no margin of its own and the slide half is drawn unscaled, the cut falls exactly on the slide's edge: the projector shows the deck as it would look in the ordinary `slides` build, not a rescaled copy of it.
 
@@ -103,32 +90,3 @@ The notes half stays black on white whatever polarity the deck carries, because 
 If the notes on a frame do not fit their half, the compile fails and names the frame, the same way the `speaker` and `notes` outputs do. Shorten the note, or raise `notes: (split-inset: 6mm)` in `m.setup` to give it more room.
 
 Keep both builds if you want a clean deck to hand out afterwards: the `split` PDF is for presenting, and `output: "slides"` gives you the file to circulate.
-
-== A pdfpc sidecar
-
-pdfpc can instead read notes from a JSON file named after the PDF and sitting next to it: present `talk.pdf` and pdfpc looks for `talk.pdfpc`. This route leaves the deck an ordinary slide-shaped PDF, which is what you want when the same file has to be projected without a console, emailed, or posted.
-
-Nothing goes in `m.setup` for this. Mosaic builds the sidecar's contents from `m.note` while compiling the ordinary `slides` output; a script writes them out:
-
-```bash
-typst compile talk.typ                    # talk.pdf
-scripts/mosaic-pdfpc.py talk.typ          # talk.pdfpc
-pdfpc talk.pdf                            # finds the notes beside it
-```
-
-Frames after the first of a logical slide are marked as continuations of it, so pdfpc's next-slide preview skips past an incremental build to the slide that actually follows.
-
-The format is JSON holding plain strings, so notes are flattened out of Typst content on the way in. Emphasis, inline code, lists, and paragraph breaks survive as Markdown, which is how pdfpc renders a note. Anything with no textual reading — an image, a diagram, a table's structure — does not. A note whose layout matters belongs in the `split` output.
-
-pympress does not read this format at all. If you present with pympress, use `split`.
-
-== Notes carried inside the PDF
-
-The same payload is also attached to every `slides` build that has notes, under the name `speaker-notes.pdfpc`, so a deck handed to a colleague still carries what you would have said. No console reads that attachment on its own; it is transport, not installation. Recover it with poppler's `pdfdetach` and give it the PDF's name:
-
-```bash
-pdfdetach -saveall talk.pdf
-mv speaker-notes.pdfpc talk.pdfpc
-```
-
-The attachment and its `<mosaic-pdfpc>` metadata appear only in the `slides` build. The `speaker`, `notes`, and `split` outputs already show on the page what it would carry.
