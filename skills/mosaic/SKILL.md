@@ -457,6 +457,8 @@ Every companion output writes one page per emitted frame and fails with an expli
 
 `"split"` is the presenter-console build: each page is exactly twice the slide wide with no page margin, the slide unscaled on the left half and its notes on the right, which is the layout pympress splits automatically and pdfpc splits with `--notes=right`. The notes half stays black on white whatever polarity the deck carries.
 
+Independently of `output:`, a deck that holds any note also embeds those notes in the PDF as `speaker-notes.pdfpc`, the pdfpc interchange format, keyed to the physical page each note is visible on. This needs no argument: an ordinary `output: "slides"` deck looks unchanged and carries its notes as data for any console that reads them. Notes reach the attachment as text, so words survive and layout does not; a note whose shape matters belongs in the `split` build. Recover the conventional sidecar with `pdfdetach -savefile speaker-notes.pdfpc -o talk.pdfpc talk.pdf`.
+
 ## 13. Recipes
 
 - **Reuse a slide**: define it as a function and call it wherever it should appear; each call is a new logical slide with the same incremental sequence.

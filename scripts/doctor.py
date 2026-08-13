@@ -11,7 +11,7 @@ import subprocess
 
 GROUPS = {
     "check": {
-        "commands": ("uv", "typst", "pdftotext", "pdfinfo"),
+        "commands": ("uv", "typst", "pdftotext", "pdfinfo", "pdfdetach"),
         "modules": (),
     },
     "docs": {

@@ -101,6 +101,20 @@ def pdf_info(stem: str) -> Path:
     return target
 
 
+def pdf_attachment(stem: str, name: str) -> str:
+    """The text of one embedded file, extracted by name.
+
+    `pdfdetach` comes from the same poppler package as `pdftotext`, so the
+    attachment assertions cost the suite no prerequisite it did not already
+    have. Extraction is by name rather than by index: the check is that Mosaic
+    named the file what a console looks for, not that it happened to be first.
+    """
+    source = TMP / f"mosaic-{stem}.pdf"
+    target = TMP / f"mosaic-{stem}-{name}"
+    command(["pdfdetach", "-savefile", name, "-o", str(target), str(source)])
+    return target.read_text(encoding="utf-8")
+
+
 def run_core(typst: str, sources: list[str]) -> None:
     compile_group(typst, sources)
 
@@ -274,6 +288,33 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(metadata_show_text, "VISIBLE CONTENT")
     require_contains(metadata_show_text, "NESTED SECRET NOTE", absent=True)
     require_contains(metadata_show_text, "speaker-notes", absent=True)
+
+    # The embedded pdfpc payload. Asserted as parsed JSON rather than as a
+    # substring because the contract is the mapping — which physical page each
+    # note lands on — and a grep would pass on a payload that had every note
+    # under the wrong page.
+    embedded = json.loads(pdf_attachment("speaker-notes-embed", "speaker-notes.pdfpc"))
+    if embedded["pdfpcFormat"] != 2:
+        raise TestFailure(f"embedded pdfpc format: {embedded['pdfpcFormat']}")
+    notes = {page["idx"]: page["note"] for page in embedded["pages"]}
+    if sorted(notes) != [1, 4, 5]:
+        raise TestFailure(f"embedded pdfpc pages: {sorted(notes)}")
+    if notes[1] != "EMBED FIRST NOTE":
+        raise TestFailure(f"embedded note on page 1: {notes[1]!r}")
+    # The frame's own note, on the frame rather than on the slide's first page.
+    if notes[4] != "EMBED FRAME NOTE":
+        raise TestFailure(f"embedded note on page 4: {notes[4]!r}")
+    if notes[5] != "EMBED PAIR ONE\n\nEMBED PAIR TWO":
+        raise TestFailure(f"embedded notes on page 5: {notes[5]!r}")
+
+    # A deck with no notes carries no attachment, so `pdfdetach` finds nothing
+    # to list. The payload is not an empty file the reader must then interpret.
+    bare = command(
+        ["pdfdetach", "-list", str(TMP / "mosaic-setup-native-defaults.pdf")],
+        capture=True,
+    )
+    if "0 embedded files" not in bare.stdout:
+        raise TestFailure(f"a deck without notes carries an attachment: {bare.stdout!r}")
 
     pause_pages = [pdf_page_text("pause", page) for page in (1, 2, 3)]
     require_contains(pause_pages[0], "PAUSE FIRST")

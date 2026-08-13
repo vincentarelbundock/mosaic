@@ -4,6 +4,7 @@
   compile-deck, default-heading-policy, validate-heading-policy,
 )
 #import "grid/render.typ": overflow-report
+#import "note/pdfpc.typ": attach-notes
 #import "author.typ": plain-name
 #import "settings.typ": make-settings
 #import "shared.typ": fail, validate-choice, validate-keys
@@ -157,6 +158,10 @@
     paper: paper-size,
   )
   compile-deck(body, headings: headings)
+  // Notes travel inside the PDF whatever the output mode: a `slides` deck gets
+  // ordinary slides plus an embedded pdfpc payload a console can read, and the
+  // outputs that also print notes lose nothing by carrying them twice.
+  attach-notes()
   // Runs after the deck, where introspection has converged, so the diagnostic
   // can name the slide each clipped cell is on.
   if overflow == "error" {
