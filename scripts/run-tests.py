@@ -405,6 +405,11 @@ def run_core(typst: str, sources: list[str]) -> None:
     ):
         require_contains(speaker_second, expected)
 
+    # The note body renders at the deck's own weight in every printed output.
+    # The frame heading above it is bold, and its label once leaked that weight
+    # into the notes on the `notes` and `split` pages but not on `speaker`.
+    require_contains(speaker_first, 'weight="regular"')
+
     notes_first = pdf_page_text("notes-output", 1)
     notes_second = pdf_page_text("notes-output", 2)
     for stem in ("speaker-output", "notes-output"):
@@ -417,6 +422,7 @@ def run_core(typst: str, sources: list[str]) -> None:
     for expected in ("GENERAL OUTPUT NOTE", "FIRST FRAME NOTE"):
         require_contains(notes_first, expected)
     require_contains(notes_first, "SECOND FRAME NOTE", absent=True)
+    require_contains(notes_first, 'weight="regular"')
     for expected in ("GENERAL OUTPUT NOTE", "FIRST FRAME NOTE", "SECOND FRAME NOTE"):
         require_contains(notes_second, expected)
 
@@ -464,6 +470,7 @@ def run_core(typst: str, sources: list[str]) -> None:
     for expected in ("FIRST VISUAL", "GENERAL OUTPUT NOTE", "FIRST FRAME NOTE"):
         require_contains(split_first, expected)
     require_contains(split_first, "SECOND FRAME NOTE", absent=True)
+    require_contains(split_first, 'weight="regular"')
     require_contains(pdf_page_text("split-output", 2), "SECOND FRAME NOTE")
 
     query = [typst, "eval", "--root", ".", "query(<mosaic-overflow-warning>).len()", "--in"]

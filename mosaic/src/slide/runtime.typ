@@ -99,7 +99,11 @@
   }
 }
 
-#let note-heading(slide, step, steps) = [#text[Slide #slide · Frame #step of #steps]#label("mosaic-note-heading")]
+// The heading text is wrapped before it is labeled. The `·` splits the markup
+// into three text elements, so an unwrapped `text[..]` hands the label a bare
+// sequence; flattened into the code-mode joins below, such a label carries its
+// show rules into everything that follows, and the notes rendered bold.
+#let note-heading(slide, step, steps) = [#block(text[Slide #slide · Frame #step of #steps])#label("mosaic-note-heading")]
 
 #let bounded-note-list(notes, width, height, output, step, style) = {
   // The label wraps the block that is both measured and placed, so the
