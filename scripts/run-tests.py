@@ -186,6 +186,10 @@ def run_core(typst: str, sources: list[str]) -> None:
     for expected in ("INLINE CAPTION", "FULL CELL CAPTION"):
         require_contains(figure_prose, expected)
 
+    # A quote credit sets its comma tight against the attribution: the three
+    # branches join in code mode, where no markup newline can slip a space in.
+    require_contains(pdf_page_text("components", 1), "Author, Source")
+
     typst_compile(
         typst,
         "theme-dark.typ",

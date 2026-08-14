@@ -91,9 +91,13 @@
       // the block, leaving the attribution floating far below the quotation.
       block(above: component-tokens.quote-attribution-gap, width: 100%, std.align(right)[
         #std.text(size: component-tokens.quote-attribution-size)[
-          #if attribution != none { attribution }
-          #if attribution != none and source != none { [, ] }
-          #if source != none { source }
+          // Joined in code mode: separate markup lines would each contribute a
+          // newline, setting a space before the comma.
+          #{
+            if attribution != none { attribution }
+            if attribution != none and source != none { [, ] }
+            if source != none { source }
+          }
         ]
       ])
     }

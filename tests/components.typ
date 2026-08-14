@@ -27,6 +27,7 @@
   #mosaic.components.quote(
     [A compact quotation treatment.],
     attribution: [Author],
+    source: [Source],
   )
 ]
 
