@@ -3,8 +3,11 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Image slides</title>
 
 
-    <meta name="description" content="Tree-based slide grids and incremental reveals for Typst.">
-    <meta property="og:description" content="Tree-based slide grids and incremental reveals for Typst.">
+
+    <meta name="description" content="Use layout: &quot;image&quot; for any slide whose main content is a picture. In many decks this is the most common explicit slide.">
+    <meta property="og:description" content="Use layout: &quot;image&quot; for any slide whose main content is a picture. In many decks this is the most common explicit slide.">
+    <meta name="twitter:description" content="Use layout: &quot;image&quot; for any slide whose main content is a picture. In many decks this is the most common explicit slide.">
+
 
 
     <meta property="og:site_name" content="Mosaic">
@@ -15,7 +18,12 @@
 
 
     <meta property="og:title" content="Image slides | Mosaic">
+    <meta name="twitter:title" content="Image slides | Mosaic">
 
+
+    <meta property="og:type" content="article">
+
+    <meta name="twitter:card" content="summary">
 
 
 
@@ -550,19 +558,26 @@ figure > img {
   --calepin-syntax-foreground: #003b4f;
   --calepin-syntax-background: #f7f7f5;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #4759ab;
-  --scope-2-foreground: #ad0000;
-  --scope-3-foreground: #5e5e5e;
-  --scope-4-foreground: #5e5e5e;
-  --scope-5-foreground: #667321;
+  --scope-1-foreground: #003b4f;
+  --scope-2-foreground: #003b4f;
+  --scope-3-foreground: #8f5902;
+  --scope-4-foreground: #003b4f;
+  --scope-5-foreground: #003b4f;
   --scope-6-foreground: #003b4f;
-  --scope-6-font-weight: 700;
-  --fallback-7-foreground: #003b4f;
-  --fallback-8-foreground: #003b4f;
-  --fallback-9-foreground: #ad0000;
-  --fallback-10-foreground: #003b4f;
-  --fallback-11-foreground: #5e5e5e;
-  --fallback-12-foreground: #667321;
+  --scope-7-foreground: #8b41b1;
+  --scope-8-foreground: #003b4f;
+  --scope-9-foreground: #ad0000;
+  --scope-10-foreground: #8b41b1;
+  --scope-11-foreground: #003b4f;
+  --scope-12-foreground: #003b4f;
+  --scope-13-foreground: #003b4f;
+  --scope-13-font-weight: 700;
+  --fallback-14-foreground: #5e5e5e;
+  --fallback-15-foreground: #20794d;
+  --fallback-16-foreground: #ad0000;
+  --fallback-17-foreground: #0b6e79;
+  --fallback-18-foreground: #8b41b1;
+  --fallback-19-foreground: #667321;
 
 }
 
@@ -617,37 +632,72 @@ pre code .calepin-syntax-scope-5 {
 .sourceCode .calepin-syntax-scope-6,
 pre code .calepin-syntax-scope-6 {
   color: var(--scope-6-foreground);
-  font-weight: var(--scope-6-font-weight);
 }
 
-.sourceCode .calepin-syntax-fallback-7,
-pre code .calepin-syntax-fallback-7 {
-  color: var(--fallback-7-foreground);
+.sourceCode .calepin-syntax-scope-7,
+pre code .calepin-syntax-scope-7 {
+  color: var(--scope-7-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-8,
-pre code .calepin-syntax-fallback-8 {
-  color: var(--fallback-8-foreground);
+.sourceCode .calepin-syntax-scope-8,
+pre code .calepin-syntax-scope-8 {
+  color: var(--scope-8-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-9,
-pre code .calepin-syntax-fallback-9 {
-  color: var(--fallback-9-foreground);
+.sourceCode .calepin-syntax-scope-9,
+pre code .calepin-syntax-scope-9 {
+  color: var(--scope-9-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-10,
-pre code .calepin-syntax-fallback-10 {
-  color: var(--fallback-10-foreground);
+.sourceCode .calepin-syntax-scope-10,
+pre code .calepin-syntax-scope-10 {
+  color: var(--scope-10-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-11,
-pre code .calepin-syntax-fallback-11 {
-  color: var(--fallback-11-foreground);
+.sourceCode .calepin-syntax-scope-11,
+pre code .calepin-syntax-scope-11 {
+  color: var(--scope-11-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-12,
-pre code .calepin-syntax-fallback-12 {
-  color: var(--fallback-12-foreground);
+.sourceCode .calepin-syntax-scope-12,
+pre code .calepin-syntax-scope-12 {
+  color: var(--scope-12-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-13,
+pre code .calepin-syntax-scope-13 {
+  color: var(--scope-13-foreground);
+  font-weight: var(--scope-13-font-weight);
+}
+
+.sourceCode .calepin-syntax-fallback-14,
+pre code .calepin-syntax-fallback-14 {
+  color: var(--fallback-14-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-15,
+pre code .calepin-syntax-fallback-15 {
+  color: var(--fallback-15-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-16,
+pre code .calepin-syntax-fallback-16 {
+  color: var(--fallback-16-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-17,
+pre code .calepin-syntax-fallback-17 {
+  color: var(--fallback-17-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-18,
+pre code .calepin-syntax-fallback-18 {
+  color: var(--fallback-18-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-19,
+pre code .calepin-syntax-fallback-19 {
+  color: var(--fallback-19-foreground);
 }
 
 
@@ -708,19 +758,26 @@ html[data-theme="dark"] {
   --calepin-syntax-foreground: #d8e7ef;
   --calepin-syntax-background: #161b22;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #9db8ff;
-  --scope-2-foreground: #ffb3a7;
-  --scope-3-foreground: #b5bdc9;
-  --scope-4-foreground: #b5bdc9;
-  --scope-5-foreground: #c3d86c;
+  --scope-1-foreground: #d8e7ef;
+  --scope-2-foreground: #d8e7ef;
+  --scope-3-foreground: #ffcc9c;
+  --scope-4-foreground: #d8e7ef;
+  --scope-5-foreground: #d8e7ef;
   --scope-6-foreground: #d8e7ef;
-  --scope-6-font-weight: 700;
-  --fallback-7-foreground: #d8e7ef;
-  --fallback-8-foreground: #d8e7ef;
-  --fallback-9-foreground: #ffb3a7;
-  --fallback-10-foreground: #d8e7ef;
-  --fallback-11-foreground: #b5bdc9;
-  --fallback-12-foreground: #c3d86c;
+  --scope-7-foreground: #c8a2f0;
+  --scope-8-foreground: #d8e7ef;
+  --scope-9-foreground: #ffb3a7;
+  --scope-10-foreground: #c8a2f0;
+  --scope-11-foreground: #d8e7ef;
+  --scope-12-foreground: #d8e7ef;
+  --scope-13-foreground: #d8e7ef;
+  --scope-13-font-weight: 700;
+  --fallback-14-foreground: #8b949e;
+  --fallback-15-foreground: #8fd694;
+  --fallback-16-foreground: #ffb3a7;
+  --fallback-17-foreground: #7fd1de;
+  --fallback-18-foreground: #c8a2f0;
+  --fallback-19-foreground: #c3d86c;
 
 }
 
@@ -743,19 +800,26 @@ html[data-theme="dark"] .calepin-copy-code:focus-visible {
   --calepin-syntax-foreground: #d8e7ef;
   --calepin-syntax-background: #161b22;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #9db8ff;
-  --scope-2-foreground: #ffb3a7;
-  --scope-3-foreground: #b5bdc9;
-  --scope-4-foreground: #b5bdc9;
-  --scope-5-foreground: #c3d86c;
+  --scope-1-foreground: #d8e7ef;
+  --scope-2-foreground: #d8e7ef;
+  --scope-3-foreground: #ffcc9c;
+  --scope-4-foreground: #d8e7ef;
+  --scope-5-foreground: #d8e7ef;
   --scope-6-foreground: #d8e7ef;
-  --scope-6-font-weight: 700;
-  --fallback-7-foreground: #d8e7ef;
-  --fallback-8-foreground: #d8e7ef;
-  --fallback-9-foreground: #ffb3a7;
-  --fallback-10-foreground: #d8e7ef;
-  --fallback-11-foreground: #b5bdc9;
-  --fallback-12-foreground: #c3d86c;
+  --scope-7-foreground: #c8a2f0;
+  --scope-8-foreground: #d8e7ef;
+  --scope-9-foreground: #ffb3a7;
+  --scope-10-foreground: #c8a2f0;
+  --scope-11-foreground: #d8e7ef;
+  --scope-12-foreground: #d8e7ef;
+  --scope-13-foreground: #d8e7ef;
+  --scope-13-font-weight: 700;
+  --fallback-14-foreground: #8b949e;
+  --fallback-15-foreground: #8fd694;
+  --fallback-16-foreground: #ffb3a7;
+  --fallback-17-foreground: #7fd1de;
+  --fallback-18-foreground: #c8a2f0;
+  --fallback-19-foreground: #c3d86c;
 
   }
 
@@ -3422,6 +3486,10 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
+<li class="calepin-website-sidebar-link"><a href="../presenting/executable-code.html" aria-label="Executable code">Executable code</a></li>
+
+
+
 <li class="calepin-website-sidebar-link"><a href="../help/faq.html" aria-label="FAQ">FAQ</a></li>
 
 
@@ -3485,74 +3553,74 @@ html[data-theme="dark"] .mosaic-diagram {
             </nav>
         </aside>
         <main class="calepin-website-main calepin-content" data-pagefind-body>
-            <h1 id="image-slides">Image slides</h1><p>Use <code>layout: "image"</code> for any slide whose main content is a picture. In many decks this is the most common explicit slide.</p><h2 id="a-figure-with-a-caption">A figure with a caption</h2><p>The default <code>figure</code> variant places a header above a contained picture, with an optional <code>caption:</code> beneath. It never crops, which is what a chart or screenshot needs:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#m.<span class="calepin-syntax-scope-1">slide</span>(layout: "image", image: <span class="calepin-syntax-scope-1">path</span>("fig/gdp.png"))[== Growth since 1950]
+            <h1 id="image-slides">Image slides</h1><p>Use <code>layout: "image"</code> for any slide whose main content is a picture. In many decks this is the most common explicit slide.</p><h2 id="a-figure-with-a-caption">A figure with a caption</h2><p>The default <code>figure</code> variant places a header above a contained picture, with an optional <code>caption:</code> beneath. It never crops, which is what a chart or screenshot needs:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#m.<span class="calepin-syntax-scope-8">slide</span>(layout: <span class="calepin-syntax-scope-2">"image"</span>, image: <span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"fig/gdp.png"</span>))[== Growth since 1950]
 
-#m.<span class="calepin-syntax-scope-1">slide</span>(
-  layout: "image",
-  image: <span class="calepin-syntax-scope-1">path</span>("fig/pie.png"),
+#m.<span class="calepin-syntax-scope-8">slide</span>(
+  layout: <span class="calepin-syntax-scope-2">"image"</span>,
+  image: <span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"fig/pie.png"</span>),
   caption: [Teaching, research, admin],
-)[== My job]</code></pre></div><p>The <code>figure</code> variant has header, image, and caption cells but no body, so a single line of commentary belongs in <code>caption:</code>. The caption produces a native Typst <code>figure</code>, so it follows the deck’s <code>show figure.caption</code> rules.</p><h2 id="a-picture-beside-text">A picture beside text</h2><p>The directional variants <code>left</code>, <code>right</code>, <code>top</code>, and <code>bottom</code> pair a full-bleed picture cell with header and body cells, filled by two positional blocks. Pass <code>[]</code> as the second block when the picture needs a title but no body:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#m.<span class="calepin-syntax-scope-1">slide</span>(
-  layout: "image",
-  variant: "right",
-  image: <span class="calepin-syntax-scope-1">path</span>("fig/book.jpg"),
+)[== My job]</code></pre></div><p>The <code>figure</code> variant has header, image, and caption cells but no body, so a single line of commentary belongs in <code>caption:</code>. The caption produces a native Typst <code>figure</code>, so it follows the deck’s <code>show figure.caption</code> rules.</p><h2 id="a-picture-beside-text">A picture beside text</h2><p>The directional variants <code>left</code>, <code>right</code>, <code>top</code>, and <code>bottom</code> pair a full-bleed picture cell with header and body cells, filled by two positional blocks. Pass <code>[]</code> as the second block when the picture needs a title but no body:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#m.<span class="calepin-syntax-scope-8">slide</span>(
+  layout: <span class="calepin-syntax-scope-2">"image"</span>,
+  variant: <span class="calepin-syntax-scope-2">"right"</span>,
+  image: <span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"fig/book.jpg"</span>),
 )[== Readings][
-  <span class="calepin-syntax-scope-3">-</span> Almost every week.
-  <span class="calepin-syntax-scope-3">-</span> PDFs on the course site.
-]</code></pre></div><p>Two arguments control the picture cell:</p><ul><li><code>tracks:</code> sizes it. The value is independent of the side, so <code>tracks: 40%</code> means the same thing under <code>left</code> and <code>right</code>, and the two stay mirror images.</li><li><code>fit:</code> controls cropping. The directional variants default to <code>"cover"</code>, which fills the cell by cropping the picture. Pass <code>fit: "contain"</code> for a chart, a book cover, or any picture whose edges carry meaning.</li></ul><h2 id="a-full-bleed-picture">A full-bleed picture</h2><p>The <code>full</code> variant puts the picture behind a single body cell that covers the whole slide. The cell inherits the deck’s ordinary text color, so text over a photograph needs two things: a <code>scrim:</code> in the image specification to darken the picture, and a text fill override in the body:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#m.<span class="calepin-syntax-scope-1">slide</span>(
-  layout: "image",
-  variant: "full",
+  <span class="calepin-syntax-scope-10">-</span> Almost every week.
+  <span class="calepin-syntax-scope-10">-</span> PDFs on the course site.
+]</code></pre></div><p>Two arguments control the picture cell:</p><ul><li><code>tracks:</code> sizes it. The value is independent of the side, so <code>tracks: 40%</code> means the same thing under <code>left</code> and <code>right</code>, and the two stay mirror images.</li><li><code>fit:</code> controls cropping. The directional variants default to <code>"cover"</code>, which fills the cell by cropping the picture. Pass <code>fit: "contain"</code> for a chart, a book cover, or any picture whose edges carry meaning.</li></ul><h2 id="a-full-bleed-picture">A full-bleed picture</h2><p>The <code>full</code> variant puts the picture behind a single body cell that covers the whole slide. The cell inherits the deck’s ordinary text color, so text over a photograph needs two things: a <code>scrim:</code> in the image specification to darken the picture, and a text fill override in the body:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#m.<span class="calepin-syntax-scope-8">slide</span>(
+  layout: <span class="calepin-syntax-scope-2">"image"</span>,
+  variant: <span class="calepin-syntax-scope-2">"full"</span>,
   image: (
-    path: <span class="calepin-syntax-scope-1">path</span>("fig/auditorium.jpg"),
-    scrim: black.<span class="calepin-syntax-scope-1">transparentize</span>(<span class="calepin-syntax-scope-2">45%</span>),
+    path: <span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"fig/auditorium.jpg"</span>),
+    scrim: black.<span class="calepin-syntax-scope-8">transparentize</span>(<span class="calepin-syntax-scope-9">45%</span>),
   ),
 )[
-  #set <span class="calepin-syntax-scope-1">text</span>(fill: white)
+  <span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">set</span> <span class="calepin-syntax-scope-8">text</span>(fill: white)
   == Who are you?
-]</code></pre></div><p>Omit the body entirely for a bare picture slide with no text at all. The <code>full</code> variant also works for a custom opening slide: when no <a href="title.html">title variant</a> fits, write the title as ordinary text over a full-bleed picture.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#import "@preview/mosaic:0.0.1" as m
+]</code></pre></div><p>Omit the body entirely for a bare picture slide with no text at all. The <code>full</code> variant also works for a custom opening slide: when no <a href="title.html">title variant</a> fits, write the title as ordinary text over a full-bleed picture.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">import</span> <span class="calepin-syntax-scope-2">"@preview/mosaic:0.0.1"</span> <span class="calepin-syntax-scope-4">as</span> m
 
-#show: <span class="calepin-syntax-scope-1">m</span>.<span class="calepin-syntax-scope-1">setup</span>
+<span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">show</span>: <span class="calepin-syntax-scope-8">m</span>.<span class="calepin-syntax-scope-8">setup</span>
 
-// The default `figure` variant: a header above a contained picture, with an
-// optional caption beneath. Charts and screenshots are never cropped.
-#m.<span class="calepin-syntax-scope-1">slide</span>(
-  layout: "image",
-  image: <span class="calepin-syntax-scope-1">path</span>("/docs-src/assets/images/bonsai.webp"),
+<span class="calepin-syntax-scope-1">// The default `figure` variant: a header above a contained picture, with an</span>
+<span class="calepin-syntax-scope-1">// optional caption beneath. Charts and screenshots are never cropped.</span>
+#m.<span class="calepin-syntax-scope-8">slide</span>(
+  layout: <span class="calepin-syntax-scope-2">"image"</span>,
+  image: <span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"/docs-src/assets/images/bonsai.webp"</span>),
   caption: [Careful pruning, every year],
 )[== The figure variant]
 
-// A directional variant pairs a full-bleed picture with a header and body.
-// `tracks` sizes the picture band; the first block is the header, the second
-// is the body.
-#m.<span class="calepin-syntax-scope-1">slide</span>(
-  layout: "image",
-  variant: "right",
-  image: <span class="calepin-syntax-scope-1">path</span>("/docs-src/assets/images/dog.webp"),
-  tracks: <span class="calepin-syntax-scope-2">45%</span>,
+<span class="calepin-syntax-scope-1">// A directional variant pairs a full-bleed picture with a header and body.</span>
+<span class="calepin-syntax-scope-1">// `tracks` sizes the picture band; the first block is the header, the second</span>
+<span class="calepin-syntax-scope-1">// is the body.</span>
+#m.<span class="calepin-syntax-scope-8">slide</span>(
+  layout: <span class="calepin-syntax-scope-2">"image"</span>,
+  variant: <span class="calepin-syntax-scope-2">"right"</span>,
+  image: <span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"/docs-src/assets/images/dog.webp"</span>),
+  tracks: <span class="calepin-syntax-scope-9">45%</span>,
 )[== Picture beside text][
-  <span class="calepin-syntax-scope-3">-</span> The picture covers the right band.
-  <span class="calepin-syntax-scope-3">-</span> The text keeps the left.
+  <span class="calepin-syntax-scope-10">-</span> The picture covers the right band.
+  <span class="calepin-syntax-scope-10">-</span> The text keeps the left.
 ]
 
-// `bottom` stacks the text band above the picture. `fit: "contain"` keeps the
-// whole picture visible instead of cropping it to fill the band.
-#m.<span class="calepin-syntax-scope-1">slide</span>(
-  layout: "image",
-  variant: "bottom",
-  image: <span class="calepin-syntax-scope-1">path</span>("/docs-src/assets/images/bonsai.webp"),
-  fit: "contain",
+<span class="calepin-syntax-scope-1">// `bottom` stacks the text band above the picture. `fit: "contain"` keeps the</span>
+<span class="calepin-syntax-scope-1">// whole picture visible instead of cropping it to fill the band.</span>
+#m.<span class="calepin-syntax-scope-8">slide</span>(
+  layout: <span class="calepin-syntax-scope-2">"image"</span>,
+  variant: <span class="calepin-syntax-scope-2">"bottom"</span>,
+  image: <span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"/docs-src/assets/images/bonsai.webp"</span>),
+  fit: <span class="calepin-syntax-scope-2">"contain"</span>,
 )[== Picture below text][A single standing line above the picture.]
 
-// `full` puts the picture behind one free-form body cell. The scrim quiets
-// the photograph and the text fill supplies the contrast.
-#m.<span class="calepin-syntax-scope-1">slide</span>(
-  layout: "image",
-  variant: "full",
+<span class="calepin-syntax-scope-1">// `full` puts the picture behind one free-form body cell. The scrim quiets</span>
+<span class="calepin-syntax-scope-1">// the photograph and the text fill supplies the contrast.</span>
+#m.<span class="calepin-syntax-scope-8">slide</span>(
+  layout: <span class="calepin-syntax-scope-2">"image"</span>,
+  variant: <span class="calepin-syntax-scope-2">"full"</span>,
   image: (
-    path: <span class="calepin-syntax-scope-1">path</span>("/docs-src/assets/images/title-city.webp"),
-    scrim: black.<span class="calepin-syntax-scope-1">transparentize</span>(<span class="calepin-syntax-scope-2">45%</span>),
+    path: <span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"/docs-src/assets/images/title-city.webp"</span>),
+    scrim: black.<span class="calepin-syntax-scope-8">transparentize</span>(<span class="calepin-syntax-scope-9">45%</span>),
   ),
 )[
-  #set <span class="calepin-syntax-scope-1">text</span>(fill: white)
+  <span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">set</span> <span class="calepin-syntax-scope-8">text</span>(fill: white)
   == Full-bleed photograph
 ]
 </code></pre></div><link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.4/dist/photoswipe.css"><style>
@@ -3640,6 +3708,13 @@ html[data-theme="dark"] .mosaic-diagram {
         </aside>
 
     </div>
+
+
+
+
+
+
+
 
 
 

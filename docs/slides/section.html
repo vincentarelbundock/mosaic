@@ -3,8 +3,11 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Section slides</title>
 
 
-    <meta name="description" content="Tree-based slide grids and incremental reveals for Typst.">
-    <meta property="og:description" content="Tree-based slide grids and incremental reveals for Typst.">
+
+    <meta name="description" content="A section slide divides a talk into parts. It announces where the audience has arrived, carries no body content, and usually shows a number so the deck's shape stays legible.">
+    <meta property="og:description" content="A section slide divides a talk into parts. It announces where the audience has arrived, carries no body content, and usually shows a number so the deck's shape stays legible.">
+    <meta name="twitter:description" content="A section slide divides a talk into parts. It announces where the audience has arrived, carries no body content, and usually shows a number so the deck's shape stays legible.">
+
 
 
     <meta property="og:site_name" content="Mosaic">
@@ -15,7 +18,12 @@
 
 
     <meta property="og:title" content="Section slides | Mosaic">
+    <meta name="twitter:title" content="Section slides | Mosaic">
 
+
+    <meta property="og:type" content="article">
+
+    <meta name="twitter:card" content="summary">
 
 
 
@@ -550,19 +558,26 @@ figure > img {
   --calepin-syntax-foreground: #003b4f;
   --calepin-syntax-background: #f7f7f5;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #4759ab;
-  --scope-2-foreground: #ad0000;
-  --scope-3-foreground: #5e5e5e;
-  --scope-4-foreground: #5e5e5e;
-  --scope-5-foreground: #667321;
+  --scope-1-foreground: #003b4f;
+  --scope-2-foreground: #003b4f;
+  --scope-3-foreground: #8f5902;
+  --scope-4-foreground: #003b4f;
+  --scope-5-foreground: #003b4f;
   --scope-6-foreground: #003b4f;
-  --scope-6-font-weight: 700;
-  --fallback-7-foreground: #003b4f;
-  --fallback-8-foreground: #003b4f;
-  --fallback-9-foreground: #ad0000;
-  --fallback-10-foreground: #003b4f;
-  --fallback-11-foreground: #5e5e5e;
-  --fallback-12-foreground: #667321;
+  --scope-7-foreground: #8b41b1;
+  --scope-8-foreground: #003b4f;
+  --scope-9-foreground: #ad0000;
+  --scope-10-foreground: #8b41b1;
+  --scope-11-foreground: #003b4f;
+  --scope-12-foreground: #003b4f;
+  --scope-13-foreground: #003b4f;
+  --scope-13-font-weight: 700;
+  --fallback-14-foreground: #5e5e5e;
+  --fallback-15-foreground: #20794d;
+  --fallback-16-foreground: #ad0000;
+  --fallback-17-foreground: #0b6e79;
+  --fallback-18-foreground: #8b41b1;
+  --fallback-19-foreground: #667321;
 
 }
 
@@ -617,37 +632,72 @@ pre code .calepin-syntax-scope-5 {
 .sourceCode .calepin-syntax-scope-6,
 pre code .calepin-syntax-scope-6 {
   color: var(--scope-6-foreground);
-  font-weight: var(--scope-6-font-weight);
 }
 
-.sourceCode .calepin-syntax-fallback-7,
-pre code .calepin-syntax-fallback-7 {
-  color: var(--fallback-7-foreground);
+.sourceCode .calepin-syntax-scope-7,
+pre code .calepin-syntax-scope-7 {
+  color: var(--scope-7-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-8,
-pre code .calepin-syntax-fallback-8 {
-  color: var(--fallback-8-foreground);
+.sourceCode .calepin-syntax-scope-8,
+pre code .calepin-syntax-scope-8 {
+  color: var(--scope-8-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-9,
-pre code .calepin-syntax-fallback-9 {
-  color: var(--fallback-9-foreground);
+.sourceCode .calepin-syntax-scope-9,
+pre code .calepin-syntax-scope-9 {
+  color: var(--scope-9-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-10,
-pre code .calepin-syntax-fallback-10 {
-  color: var(--fallback-10-foreground);
+.sourceCode .calepin-syntax-scope-10,
+pre code .calepin-syntax-scope-10 {
+  color: var(--scope-10-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-11,
-pre code .calepin-syntax-fallback-11 {
-  color: var(--fallback-11-foreground);
+.sourceCode .calepin-syntax-scope-11,
+pre code .calepin-syntax-scope-11 {
+  color: var(--scope-11-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-12,
-pre code .calepin-syntax-fallback-12 {
-  color: var(--fallback-12-foreground);
+.sourceCode .calepin-syntax-scope-12,
+pre code .calepin-syntax-scope-12 {
+  color: var(--scope-12-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-13,
+pre code .calepin-syntax-scope-13 {
+  color: var(--scope-13-foreground);
+  font-weight: var(--scope-13-font-weight);
+}
+
+.sourceCode .calepin-syntax-fallback-14,
+pre code .calepin-syntax-fallback-14 {
+  color: var(--fallback-14-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-15,
+pre code .calepin-syntax-fallback-15 {
+  color: var(--fallback-15-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-16,
+pre code .calepin-syntax-fallback-16 {
+  color: var(--fallback-16-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-17,
+pre code .calepin-syntax-fallback-17 {
+  color: var(--fallback-17-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-18,
+pre code .calepin-syntax-fallback-18 {
+  color: var(--fallback-18-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-19,
+pre code .calepin-syntax-fallback-19 {
+  color: var(--fallback-19-foreground);
 }
 
 
@@ -708,19 +758,26 @@ html[data-theme="dark"] {
   --calepin-syntax-foreground: #d8e7ef;
   --calepin-syntax-background: #161b22;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #9db8ff;
-  --scope-2-foreground: #ffb3a7;
-  --scope-3-foreground: #b5bdc9;
-  --scope-4-foreground: #b5bdc9;
-  --scope-5-foreground: #c3d86c;
+  --scope-1-foreground: #d8e7ef;
+  --scope-2-foreground: #d8e7ef;
+  --scope-3-foreground: #ffcc9c;
+  --scope-4-foreground: #d8e7ef;
+  --scope-5-foreground: #d8e7ef;
   --scope-6-foreground: #d8e7ef;
-  --scope-6-font-weight: 700;
-  --fallback-7-foreground: #d8e7ef;
-  --fallback-8-foreground: #d8e7ef;
-  --fallback-9-foreground: #ffb3a7;
-  --fallback-10-foreground: #d8e7ef;
-  --fallback-11-foreground: #b5bdc9;
-  --fallback-12-foreground: #c3d86c;
+  --scope-7-foreground: #c8a2f0;
+  --scope-8-foreground: #d8e7ef;
+  --scope-9-foreground: #ffb3a7;
+  --scope-10-foreground: #c8a2f0;
+  --scope-11-foreground: #d8e7ef;
+  --scope-12-foreground: #d8e7ef;
+  --scope-13-foreground: #d8e7ef;
+  --scope-13-font-weight: 700;
+  --fallback-14-foreground: #8b949e;
+  --fallback-15-foreground: #8fd694;
+  --fallback-16-foreground: #ffb3a7;
+  --fallback-17-foreground: #7fd1de;
+  --fallback-18-foreground: #c8a2f0;
+  --fallback-19-foreground: #c3d86c;
 
 }
 
@@ -743,19 +800,26 @@ html[data-theme="dark"] .calepin-copy-code:focus-visible {
   --calepin-syntax-foreground: #d8e7ef;
   --calepin-syntax-background: #161b22;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #9db8ff;
-  --scope-2-foreground: #ffb3a7;
-  --scope-3-foreground: #b5bdc9;
-  --scope-4-foreground: #b5bdc9;
-  --scope-5-foreground: #c3d86c;
+  --scope-1-foreground: #d8e7ef;
+  --scope-2-foreground: #d8e7ef;
+  --scope-3-foreground: #ffcc9c;
+  --scope-4-foreground: #d8e7ef;
+  --scope-5-foreground: #d8e7ef;
   --scope-6-foreground: #d8e7ef;
-  --scope-6-font-weight: 700;
-  --fallback-7-foreground: #d8e7ef;
-  --fallback-8-foreground: #d8e7ef;
-  --fallback-9-foreground: #ffb3a7;
-  --fallback-10-foreground: #d8e7ef;
-  --fallback-11-foreground: #b5bdc9;
-  --fallback-12-foreground: #c3d86c;
+  --scope-7-foreground: #c8a2f0;
+  --scope-8-foreground: #d8e7ef;
+  --scope-9-foreground: #ffb3a7;
+  --scope-10-foreground: #c8a2f0;
+  --scope-11-foreground: #d8e7ef;
+  --scope-12-foreground: #d8e7ef;
+  --scope-13-foreground: #d8e7ef;
+  --scope-13-font-weight: 700;
+  --fallback-14-foreground: #8b949e;
+  --fallback-15-foreground: #8fd694;
+  --fallback-16-foreground: #ffb3a7;
+  --fallback-17-foreground: #7fd1de;
+  --fallback-18-foreground: #c8a2f0;
+  --fallback-19-foreground: #c3d86c;
 
   }
 
@@ -3422,6 +3486,10 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
+<li class="calepin-website-sidebar-link"><a href="../presenting/executable-code.html" aria-label="Executable code">Executable code</a></li>
+
+
+
 <li class="calepin-website-sidebar-link"><a href="../help/faq.html" aria-label="FAQ">FAQ</a></li>
 
 
@@ -3491,15 +3559,15 @@ What the data can and cannot support.
 
 == Data
 
-This is one slide.</code></pre></div><p>That is the whole mechanism for most decks. Sections declared this way also feed Typst’s native <code>outline</code>, the <code>toc</code> variant described below, and the breadcrumbs on the <a href="../presenting/navigation.html">Navigation</a> page, because the headings stay native throughout.</p><h2 id="explicit-section-slides">Explicit section slides</h2><p>Write the slide with <code>m.slide</code> when it needs arguments a heading cannot carry. The section text is the slide’s own content, so pass one positional block:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#m.<span class="calepin-syntax-scope-1">slide</span>(layout: "section")[Methods]
+This is one slide.</code></pre></div><p>That is the whole mechanism for most decks. Sections declared this way also feed Typst’s native <code>outline</code>, the <code>toc</code> variant described below, and the breadcrumbs on the <a href="../presenting/navigation.html">Navigation</a> page, because the headings stay native throughout.</p><h2 id="explicit-section-slides">Explicit section slides</h2><p>Write the slide with <code>m.slide</code> when it needs arguments a heading cannot carry. The section text is the slide’s own content, so pass one positional block:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#m.<span class="calepin-syntax-scope-8">slide</span>(layout: <span class="calepin-syntax-scope-2">"section"</span>)[Methods]
 
-#m.<span class="calepin-syntax-scope-1">slide</span>(
-  layout: "section",
+#m.<span class="calepin-syntax-scope-8">slide</span>(
+  layout: <span class="calepin-syntax-scope-2">"section"</span>,
   number: [02],
   subtitle: [How the grid resolves],
-)[Structure]</code></pre></div><p>An explicit <code>number:</code> overrides the automatic counter for that slide. Omit it and the designed variants read the counter themselves, which is what you want in the ordinary case. Named arguments here refine the configured section layout rather than replacing it; see <a href="custom.html#refine-a-layout">Refine a layout</a>.</p><h2 id="variants">Variants</h2><p>Each variant borrows a classic minimalist tradition:</p><ul><li><code>plain</code>, the default: the title alone at the slide’s center.</li><li><code>rule</code>: the title beneath a heavy full-width rule, the number above it.</li><li><code>numeral</code>: an enormous ghost number bleeding off the top-right edge behind a lower-left title stack.</li><li><code>baseline</code>: title and number tied to one baseline by a hairline.</li><li><code>toc</code>: every section in the deck listed, with the current one alive and the others ghosted.</li></ul><p>The designed variants build their composition around the section number, so an omitted <code>number:</code> reads the automatic counter.</p><p>The image variants place the section text beside a full-bleed picture (<code>image-left</code>, <code>image-right</code>, <code>image-top</code>, <code>image-bottom</code>, sized by <code>tracks:</code>) or directly over one (<code>image-background</code>). Every image variant requires <code>image:</code>, wrapped in Typst’s <code>path()</code> so the picture is found in your project rather than in the package; see <a href="../content/images.html#asset-paths">Asset paths</a>.</p><p>Written out in full, one of those slides is:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#m.<span class="calepin-syntax-scope-1">slide</span>(
-  layout: "section",
-  variant: "numeral",
+)[Structure]</code></pre></div><p>An explicit <code>number:</code> overrides the automatic counter for that slide. Omit it and the designed variants read the counter themselves, which is what you want in the ordinary case. Named arguments here refine the configured section layout rather than replacing it; see <a href="custom.html#refine-a-layout">Refine a layout</a>.</p><h2 id="variants">Variants</h2><p>Each variant borrows a classic minimalist tradition:</p><ul><li><code>plain</code>, the default: the title alone at the slide’s center.</li><li><code>rule</code>: the title beneath a heavy full-width rule, the number above it.</li><li><code>numeral</code>: an enormous ghost number bleeding off the top-right edge behind a lower-left title stack.</li><li><code>baseline</code>: title and number tied to one baseline by a hairline.</li><li><code>toc</code>: every section in the deck listed, with the current one alive and the others ghosted.</li></ul><p>The designed variants build their composition around the section number, so an omitted <code>number:</code> reads the automatic counter.</p><p>The image variants place the section text beside a full-bleed picture (<code>image-left</code>, <code>image-right</code>, <code>image-top</code>, <code>image-bottom</code>, sized by <code>tracks:</code>) or directly over one (<code>image-background</code>). Every image variant requires <code>image:</code>, wrapped in Typst’s <code>path()</code> so the picture is found in your project rather than in the package; see <a href="../content/images.html#asset-paths">Asset paths</a>.</p><p>Written out in full, one of those slides is:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#m.<span class="calepin-syntax-scope-8">slide</span>(
+  layout: <span class="calepin-syntax-scope-2">"section"</span>,
+  variant: <span class="calepin-syntax-scope-2">"numeral"</span>,
   subtitle: [A ghost numeral],
 )[Numeral section]</code></pre></div><p>The thumbnails below grow the same divider one argument at a time: plain, numbered, the designed text variants, then each image placement. Open any thumbnail to see the slide at full size:</p><link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.4/dist/photoswipe.css"><style>
         .calepin-elements-gallery {
@@ -3586,6 +3654,13 @@ This is one slide.</code></pre></div><p>That is the whole mechanism for most dec
         </aside>
 
     </div>
+
+
+
+
+
+
+
 
 
 

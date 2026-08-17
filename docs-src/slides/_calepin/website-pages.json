@@ -1,0 +1,494 @@
+[
+  {
+    "excerpt": "Projects, authors, and discussions that informed Mosaic.",
+    "href": "acknowledgments.html",
+    "language": null,
+    "meta": {
+      "description": "Projects, authors, and discussions that informed Mosaic.",
+      "title": "Acknowledgments"
+    },
+    "path": "acknowledgments.typ",
+    "pdf": null,
+    "title": "Acknowledgments",
+    "translation_key": "acknowledgments",
+    "translations": {}
+  },
+  {
+    "excerpt": "Every exported Mosaic function, grouped by reference page.",
+    "href": "api.html",
+    "language": null,
+    "meta": {
+      "description": "Every exported Mosaic function, grouped by reference page.",
+      "title": "API reference"
+    },
+    "path": "api.typ",
+    "pdf": null,
+    "title": "API reference",
+    "translation_key": "api",
+    "translations": {}
+  },
+  {
+    "excerpt": null,
+    "href": "api/components.html",
+    "language": null,
+    "meta": {
+      "title": "Components and furniture"
+    },
+    "path": "api/components.typ",
+    "pdf": null,
+    "title": "Components and furniture",
+    "translation_key": "api/components",
+    "translations": {}
+  },
+  {
+    "excerpt": null,
+    "href": "api/grids.html",
+    "language": null,
+    "meta": {
+      "title": "mosaic.grids constructors"
+    },
+    "path": "api/grids.typ",
+    "pdf": null,
+    "title": "mosaic.grids constructors",
+    "translation_key": "api/grids",
+    "translations": {}
+  },
+  {
+    "excerpt": "Every part of a rendered slide carries a Typst label, and those labels are the whole styling surface. A deck reaches them with ordinary show rules, and a theme's apply reaches the same ones. This page is the complete inventory.",
+    "href": "api/labels.html",
+    "language": null,
+    "meta": {
+      "title": "Labels"
+    },
+    "path": "api/labels.typ",
+    "pdf": null,
+    "title": "Labels",
+    "translation_key": "api/labels",
+    "translations": {}
+  },
+  {
+    "excerpt": null,
+    "href": "api/layouts.html",
+    "language": null,
+    "meta": {
+      "title": "Semantic layouts"
+    },
+    "path": "api/layouts.typ",
+    "pdf": null,
+    "title": "Semantic layouts",
+    "translation_key": "api/layouts",
+    "translations": {}
+  },
+  {
+    "excerpt": null,
+    "href": "api/setup.html",
+    "language": null,
+    "meta": {
+      "title": "Document setup"
+    },
+    "path": "api/setup.typ",
+    "pdf": null,
+    "title": "Document setup",
+    "translation_key": "api/setup",
+    "translations": {}
+  },
+  {
+    "excerpt": null,
+    "href": "api/slides.html",
+    "language": null,
+    "meta": {
+      "title": "Slides"
+    },
+    "path": "api/slides.typ",
+    "pdf": null,
+    "title": "Slides",
+    "translation_key": "api/slides",
+    "translations": {}
+  },
+  {
+    "excerpt": null,
+    "href": "api/steps.html",
+    "language": null,
+    "meta": {
+      "title": "Incremental steps"
+    },
+    "path": "api/steps.typ",
+    "pdf": null,
+    "title": "Incremental steps",
+    "translation_key": "api/steps",
+    "translations": {}
+  },
+  {
+    "excerpt": null,
+    "href": "api/theme.html",
+    "language": null,
+    "meta": {
+      "title": "Theme authoring"
+    },
+    "path": "api/theme.typ",
+    "pdf": null,
+    "title": "Theme authoring",
+    "translation_key": "api/theme",
+    "translations": {}
+  },
+  {
+    "excerpt": "Every color in a Mosaic deck flows from one palette: a flat dictionary of eight colors that the theme supplies, setup(colors: ..) overrides, and every layout and component reads. This page covers the three ways to work with it: override individual entries, swap in one of the…",
+    "href": "appearance/colors.html",
+    "language": null,
+    "meta": {
+      "title": "Colors"
+    },
+    "path": "appearance/colors.typ",
+    "pdf": null,
+    "title": "Colors",
+    "translation_key": "appearance/colors",
+    "translations": {}
+  },
+  {
+    "excerpt": "As the anatomy page shows, every part of a slide is a native Typst layer carrying a label, and you style all of it with ordinary set and show rules. Every rule a slide renders with comes from its theme: Mosaic's engine contributes page geometry, deck information, and colors, but…",
+    "href": "appearance/styling.html",
+    "language": null,
+    "meta": {
+      "title": "Styling cells"
+    },
+    "path": "appearance/styling.typ",
+    "pdf": null,
+    "title": "Styling cells",
+    "translation_key": "appearance/styling",
+    "translations": {}
+  },
+  {
+    "excerpt": "A theme decides how a deck looks: its colors, its type, and the way each slide arranges what you put on it. Every Mosaic deck uses a theme, even one that never mentions the word. Import the package without naming a theme and you get the default theme. Name a different one and the…",
+    "href": "appearance/themes.html",
+    "language": null,
+    "meta": {
+      "title": "Themes"
+    },
+    "path": "appearance/themes.typ",
+    "pdf": null,
+    "title": "Themes",
+    "translation_key": "appearance/themes",
+    "translations": {}
+  },
+  {
+    "excerpt": "Mosaic adds no citation machinery. A deck is an ordinary Typst document, so #cite, @key references, and #bibliography behave exactly as they do in a paper. Footnotes are the one exception worth knowing about, because a slide is a fixed-height frame rather than a flowing page.",
+    "href": "content/citations.html",
+    "language": null,
+    "meta": {
+      "title": "Citations"
+    },
+    "path": "content/citations.typ",
+    "pdf": null,
+    "title": "Citations",
+    "translation_key": "content/citations",
+    "translations": {}
+  },
+  {
+    "excerpt": "m.components provides reusable Typst content to place inside cells, or inside any native Typst composition. None of these create slides or grids on their own; they are values you place in a cell, a background, a foreground, or any native Typst composition. Each function has an…",
+    "href": "content/components.html",
+    "language": null,
+    "meta": {
+      "title": "Components"
+    },
+    "path": "content/components.typ",
+    "pdf": null,
+    "title": "Components",
+    "translation_key": "content/components",
+    "translations": {}
+  },
+  {
+    "excerpt": "An image can sit in a cell or on a",
+    "href": "content/images.html",
+    "language": null,
+    "meta": {
+      "title": "Images"
+    },
+    "path": "content/images.typ",
+    "pdf": null,
+    "title": "Images",
+    "translation_key": "content/images",
+    "translations": {}
+  },
+  {
+    "excerpt": "Typst's native math notation works inside Mosaic slides. Incremental commands can then focus attention on one part of an equation at a time without changing its layout.",
+    "href": "content/math.html",
+    "language": null,
+    "meta": {
+      "title": "Math"
+    },
+    "path": "content/math.typ",
+    "pdf": null,
+    "title": "Math",
+    "translation_key": "content/math",
+    "translations": {}
+  },
+  {
+    "excerpt": "Complete slide decks built with Mosaic's bundled themes and layouts.",
+    "href": "examples.html",
+    "language": null,
+    "meta": {
+      "description": "Complete slide decks built with Mosaic's bundled themes and layouts.",
+      "title": "Examples"
+    },
+    "path": "examples.typ",
+    "pdf": null,
+    "title": "Examples",
+    "translation_key": "examples",
+    "translations": {}
+  },
+  {
+    "excerpt": "How can I reuse slides and states?",
+    "href": "help/faq.html",
+    "language": null,
+    "meta": {
+      "tags": [
+        "help",
+        "questions"
+      ],
+      "title": "FAQ"
+    },
+    "path": "help/faq.typ",
+    "pdf": null,
+    "title": "FAQ",
+    "translation_key": "help/faq",
+    "translations": {}
+  },
+  {
+    "excerpt": "A deck with pauses and reveals prints badly: every frame becomes a page, and a reader pages through the same slide several times. Set handout: true to render only the final frame of each slide:",
+    "href": "incremental/handouts.html",
+    "language": null,
+    "meta": {
+      "title": "Handouts"
+    },
+    "path": "incremental/handouts.typ",
+    "pdf": null,
+    "title": "Handouts",
+    "translation_key": "incremental/handouts",
+    "translations": {}
+  },
+  {
+    "excerpt": "The timing commands introduced on the Steps and pauses page apply to lists, grid cells, inline text, equations, and drawing packages alike. Each section below shows one on a real slide. For equations, see Math.",
+    "href": "incremental/reveals.html",
+    "language": null,
+    "meta": {
+      "title": "Reveal and replace"
+    },
+    "path": "incremental/reveals.typ",
+    "pdf": null,
+    "title": "Reveal and replace",
+    "translation_key": "incremental/reveals",
+    "translations": {}
+  },
+  {
+    "excerpt": "You write one slide; Mosaic can reveal, replace, or remove parts of it over a sequence of frames. Each frame is one page of the compiled document, and all frames of one slide share its slide number.",
+    "href": "incremental/steps.html",
+    "language": null,
+    "meta": {
+      "title": "Steps and pauses"
+    },
+    "path": "incremental/steps.typ",
+    "pdf": null,
+    "title": "Steps and pauses",
+    "translation_key": "incremental/steps",
+    "translations": {}
+  },
+  {
+    "excerpt": null,
+    "href": "index.html",
+    "language": null,
+    "meta": {
+      "layout": "layouts/site-landing.html",
+      "title": "Home",
+      "toc": {
+        "enabled": false
+      }
+    },
+    "path": "index.typ",
+    "pdf": null,
+    "title": "Home",
+    "translation_key": "index",
+    "translations": {}
+  },
+  {
+    "excerpt": "Mosaic has no code-execution feature of its own: a .typ deck is plain Typst, and Typst does not run code blocks. To put a live analysis, a generated figure, or a computed number on a slide, run it with Calepin, a computational notebook for Typst that executes R (and other…",
+    "href": "presenting/executable-code.html",
+    "language": null,
+    "meta": {
+      "title": "Executable code"
+    },
+    "path": "presenting/executable-code.typ",
+    "pdf": null,
+    "title": "Executable code",
+    "translation_key": "presenting/executable-code",
+    "translations": {}
+  },
+  {
+    "excerpt": "Most decks repeat the same source, event name, or organization in every ordinary slide footer. Declare that value once in setup:",
+    "href": "presenting/footer.html",
+    "language": null,
+    "meta": {
+      "title": "Footer and progress"
+    },
+    "path": "presenting/footer.typ",
+    "pdf": null,
+    "title": "Footer and progress",
+    "translation_key": "presenting/footer",
+    "translations": {}
+  },
+  {
+    "excerpt": "Because Mosaic keeps Typst headings native, the same headings that create slides can drive tables of contents, breadcrumbs, and links between sections.",
+    "href": "presenting/navigation.html",
+    "language": null,
+    "meta": {
+      "title": "Navigation"
+    },
+    "path": "presenting/navigation.typ",
+    "pdf": null,
+    "title": "Navigation",
+    "translation_key": "presenting/navigation",
+    "translations": {}
+  },
+  {
+    "excerpt": "Attach speaker notes with m.note[...]. Notes never appear in the presentation and never add a frame:",
+    "href": "presenting/notes.html",
+    "language": null,
+    "meta": {
+      "title": "Speaker notes"
+    },
+    "path": "presenting/notes.typ",
+    "pdf": null,
+    "title": "Speaker notes",
+    "translation_key": "presenting/notes",
+    "translations": {}
+  },
+  {
+    "excerpt": "A cell does not resize its content. A body larger than its cell is drawn past the edge, so a slide that holds too much fails silently on screen rather than at compile time. Before presenting, run a checking compile to find those slides, and scale the rare indivisible block with…",
+    "href": "presenting/overflow.html",
+    "language": null,
+    "meta": {
+      "title": "Overflow and fitting"
+    },
+    "path": "presenting/overflow.typ",
+    "pdf": null,
+    "title": "Overflow and fitting",
+    "translation_key": "presenting/overflow",
+    "translations": {}
+  },
+  {
+    "excerpt": "On this website, we will refer to the different components of a slide deck in these terms:",
+    "href": "reference/concepts.html",
+    "language": null,
+    "meta": {
+      "title": "Concepts"
+    },
+    "path": "reference/concepts.typ",
+    "pdf": null,
+    "title": "Concepts",
+    "translation_key": "reference/concepts",
+    "translations": {}
+  },
+  {
+    "excerpt": "Cells occupy the main slide body. The background plane sits behind them, covering the slide without changing the grid. Put recurring background content in m.setup(background:), and set it for one slide with the same argument on m.slide. A plane is not a cell, so it never appears…",
+    "href": "slides/background.html",
+    "language": null,
+    "meta": {
+      "title": "Background"
+    },
+    "path": "slides/background.typ",
+    "pdf": null,
+    "title": "Background",
+    "translation_key": "slides/background",
+    "translations": {}
+  },
+  {
+    "excerpt": "Content slides carry the body of a talk: a title and some prose, a bulleted list, a two-column comparison. They are the most common slide in almost every deck, and Mosaic makes them the default. A slide with no layout: argument is a content slide, and so is every == heading in…",
+    "href": "slides/content.html",
+    "language": null,
+    "meta": {
+      "title": "Content"
+    },
+    "path": "slides/content.typ",
+    "pdf": null,
+    "title": "Content",
+    "translation_key": "slides/content",
+    "translations": {}
+  },
+  {
+    "excerpt": "When no built-in layout fits, write the slide's arrangement yourself. A custom slide names its own cells by purpose, such as header, body, footer, aside, or notes. This is semantic structure: content and styling refer to what each cell means instead of where it appears.",
+    "href": "slides/custom.html",
+    "language": null,
+    "meta": {
+      "title": "Custom"
+    },
+    "path": "slides/custom.typ",
+    "pdf": null,
+    "title": "Custom",
+    "translation_key": "slides/custom",
+    "translations": {}
+  },
+  {
+    "excerpt": "Cells occupy the main slide body. The foreground plane sits above them, covering the slide without changing the grid. Put recurring foreground content in m.setup(foreground:), and set it for one slide with the same argument on m.slide. A plane is not a cell, so it never appears…",
+    "href": "slides/foreground.html",
+    "language": null,
+    "meta": {
+      "title": "Foreground"
+    },
+    "path": "slides/foreground.typ",
+    "pdf": null,
+    "title": "Foreground",
+    "translation_key": "slides/foreground",
+    "translations": {}
+  },
+  {
+    "excerpt": "Use layout: \"image\" for any slide whose main content is a picture. In many decks this is the most common explicit slide.",
+    "href": "slides/image.html",
+    "language": null,
+    "meta": {
+      "title": "Image"
+    },
+    "path": "slides/image.typ",
+    "pdf": null,
+    "title": "Image",
+    "translation_key": "slides/image",
+    "translations": {}
+  },
+  {
+    "excerpt": "A section slide divides a talk into parts. It announces where the audience has arrived, carries no body content, and usually shows a number so the deck's shape stays legible.",
+    "href": "slides/section.html",
+    "language": null,
+    "meta": {
+      "title": "Section"
+    },
+    "path": "slides/section.typ",
+    "pdf": null,
+    "title": "Section",
+    "translation_key": "slides/section",
+    "translations": {}
+  },
+  {
+    "excerpt": "A title slide takes its content from the deck rather than from the slide, and its arrangement from a variant.",
+    "href": "slides/title.html",
+    "language": null,
+    "meta": {
+      "title": "Title"
+    },
+    "path": "slides/title.typ",
+    "pdf": null,
+    "title": "Title",
+    "translation_key": "slides/title",
+    "translations": {}
+  },
+  {
+    "excerpt": "First, import Mosaic and apply its setup rule:",
+    "href": "start/first-deck.html",
+    "language": null,
+    "meta": {
+      "title": "Get started"
+    },
+    "path": "start/first-deck.typ",
+    "pdf": null,
+    "title": "Get started",
+    "translation_key": "start/first-deck",
+    "translations": {}
+  }
+]

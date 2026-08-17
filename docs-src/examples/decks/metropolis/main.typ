@@ -4,20 +4,17 @@
 //  This deck is deliberately bare: it imports the bundled Metropolis theme
 //  and writes almost every slide as a `=` or `==` heading. The theme supplies
 //  the ruled title page, the section progress bars, the bottom progress line,
-//  and all typography. preamble.typ adds Fletcher, CeTZ, Calepin, and the
+//  and all typography. preamble.typ adds Fletcher, CeTZ, and the
 //  equation-annotation helpers used below.
 // ═══════════════════════════════════════════════════════════════════════════
-// Root-absolute import: Calepin compiles main.typ from a generated wrapper
-// directory, so a relative "preamble.typ" would not resolve. The Calepin root
-// is this example directory (cf. the "/references.bib" bibliography below).
-#import "/preamble.typ": *
+#import "preamble.typ": *
 
 #let ccp = [Centre for Comparative Politics]
 #let eis = [European Institute for Social Data]
 
 #show: m.setup.with(
   title: [Technical talk],
-  subtitle: [Math, Diagrams, and Executable Code],
+  subtitle: [Math and Diagrams],
   authors: (
     m.layouts.author(
       [Priya Nair],
@@ -36,15 +33,9 @@
 
 == Roadmap
 
-// `calepin.setup` runs once, inside the first slide's content, to enable the
-// R chunks used later in the deck. (Emitted before the first slide it would
-// count as stray content ahead of the deck's first heading.)
-#calepin.setup(echo: true, eval: true, results: "render")
-
 #set enum(numbering: "1.", spacing: 1.15em)
 #enum(
   [Formalize the decision problem],
-  [Expose the computation],
   [Explain system structure],
   [Connect results to evidence],
 )
@@ -72,110 +63,41 @@ and receives a reward.
 == Bellman optimality equation
 
 #show math.equation.where(block: true): set text(size: 1.35em)
-$
-  V^star(s) = max_a
-      #m.steps.replace(
-        align: top + center,
-        [$R(s, a)$],
-        [#explained(red, $R(s, a)$, [immediate reward])],
-        [#explained(red, $R(s, a)$, [immediate reward])],
-        [#explained(red, $R(s, a)$, [immediate reward])],
-      )
-      + #m.steps.replace(
-        align: top + center,
-        [$gamma$],
-        [$gamma$],
-        [#explained(blue, $gamma$, [discount factor])],
-        [#explained(blue, $gamma$, [discount factor])],
-      )
-      #m.steps.replace(
-        align: top + center,
-        [$sum_(s') P(s' | s, a) V^star(s')$],
-        [$sum_(s') P(s' | s, a) V^star(s')$],
-        [$sum_(s') P(s' | s, a) V^star(s')$],
-        [#explained(
-          green,
-          $sum_(s') P(s' | s, a) V^star(s')$,
-          [optimal future value],
-        )],
-      )
-$
+#math.equation(
+  block: true,
+  alt: "V star of s equals the maximum over a of: the immediate reward for state s and action a, plus the discount factor gamma times the sum over next states s prime of the transition probability times the optimal value of s prime.",
+  $
+    V^star(s) = max_a
+        #m.steps.replace(
+          align: top + center,
+          [$R(s, a)$],
+          [#explained(red, $R(s, a)$, [immediate reward])],
+          [#explained(red, $R(s, a)$, [immediate reward])],
+          [#explained(red, $R(s, a)$, [immediate reward])],
+        )
+        + #m.steps.replace(
+          align: top + center,
+          [$gamma$],
+          [$gamma$],
+          [#explained(blue, $gamma$, [discount factor])],
+          [#explained(blue, $gamma$, [discount factor])],
+        )
+        #m.steps.replace(
+          align: top + center,
+          [$sum_(s') P(s' | s, a) V^star(s')$],
+          [$sum_(s') P(s' | s, a) V^star(s')$],
+          [$sum_(s') P(s' | s, a) V^star(s')$],
+          [#explained(
+            green,
+            $sum_(s') P(s' | s, a) V^star(s')$,
+            [optimal future value],
+          )],
+        )
+  $,
+)
 #v(31pt)
 The recursion separates immediate utility from the expected value of all
 subsequent decisions #cite(<bellman1957>).
-
-= Computation
-
-// `calepin.chunk` runs R at compile time. The first chunk evaluates the code
-// and saves the plot under label "fig-efficiency" (retrieved on the next
-// slide with `calepin.results`); the second is eval:false, shown only as code.
-== An executable analysis
-
-The source below is executed during compilation. Its figure is cached by
-Calepin and placed on the following slide.
-
-#v(10pt)
-
-```r
-#| label: "fig-efficiency"
-#| echo: true
-#| eval: true
-#| message: false
-#| results: "hide"
-#| fig-width: 92%
-#| fig-device-width: 6.5
-#| fig-device-height: 4.2
-#| fig-alt-text: "Fuel efficiency versus horsepower by transmission type"
-library(ggplot2)
-fit <- lm(mpg ~ hp + factor(am), data = mtcars)
-
-ggplot(mtcars, aes(hp, mpg, color = factor(am))) +
-  geom_point(size = 2.6, alpha = 0.85) +
-  geom_smooth(method = "lm", se = FALSE, linewidth = 0.9) +
-  scale_color_manual(
-    values = c("0" = "#657377", "1" = "#f28e2b"),
-    labels = c("Automatic", "Manual")) +
-  labs(x = "Horsepower", y = "Fuel efficiency (mpg)", color = "Transmission") +
-  theme_minimal(base_family = "Fira Sans", base_size = 13) +
-  theme(legend.position = "top", panel.grid.minor = element_blank())
-```
-
-// A two-column content slide: the theme's own layout, an uneven split.
-#m.slide(variant: "header-body", columns: 2, tracks: (1.65fr, 1fr))[
-  == Horsepower predicts lower efficiency
-][
-  #calepin.results("fig-efficiency")
-][
-  #set text(size: 0.79em)
-  - Fuel efficiency declines as horsepower increases.
-  - Transmission groups occupy different regions of the sample.
-  - The fitted lines summarize association, not causation.
-  #v(14pt)
-  #text(size: 0.75em, style: "italic")[
-    Data: `mtcars`, 32 model-year 1973 to 1974 automobiles.
-  ]
-]
-
-== Computed model summary
-
-The same R session retains `fit`, so numerical claims can be generated rather
-than copied into the deck.
-#v(18pt)
-#m.components.card[
-  #calepin.chunk("r", echo: false, results: "typst")[
-      ```r
-      b <- coef(summary(fit))
-      r2 <- summary(fit)$r.squared
-      cat(sprintf(
-        "#strong[Estimated association] \
-        Holding transmission fixed, an additional 10 horsepower is associated
-        with *%.2f fewer mpg*. The model explains *%.1f%%* of the observed
-        variation in fuel efficiency.",
-        -10 * b["hp", "Estimate"], 100 * r2
-      ))
-      ```
-  ]
-]
 
 = Structure
 
@@ -298,7 +220,7 @@ than copied into the deck.
     header: [== References],
     body: [
       #set text(size: 0.63em)
-      #bibliography("/references.bib", title: none, style: "ieee")
+      #bibliography("references.bib", title: none, style: "ieee")
     ],
   ),
 )

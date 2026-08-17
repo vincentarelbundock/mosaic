@@ -149,6 +149,9 @@ title = "More"
   target = "presenting/overflow.typ"
 
   [[sidebar.section.item]]
+  target = "presenting/executable-code.typ"
+
+  [[sidebar.section.item]]
   target = "help/faq.typ"
 
   [[sidebar.section.item]]

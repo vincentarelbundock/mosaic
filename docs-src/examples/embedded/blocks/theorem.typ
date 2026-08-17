@@ -19,7 +19,7 @@
 
   #theorem("Pythagoras")[
     For a right triangle with legs $a$, $b$ and hypotenuse $c$,
-    $a^2 + b^2 = c^2$.
+    #math.equation(alt: "a squared plus b squared equals c squared", $a^2 + b^2 = c^2$).
   ]
 
   #proof[

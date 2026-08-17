@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>name</key>
+  <string>Calepin Paged Syntax</string>
+  <key>settings</key>
+  <array>
+    <dict>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#003b4f</string>
+        <key>background</key>
+        <string>#f7f7f5</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Comments</string>
+      <key>scope</key>
+      <string>comment, punctuation.definition.comment</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#5e5e5e</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Strings</string>
+      <key>scope</key>
+      <string>string, punctuation.definition.string</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#20794d</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Escape sequences</string>
+      <key>scope</key>
+      <string>constant.character.escape</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#8f5902</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Keywords</string>
+      <key>scope</key>
+      <string>keyword, storage, storage.type, storage.modifier, keyword.control</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#8b41b1</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Language constants</string>
+      <key>scope</key>
+      <string>constant.language, variable.language, support.constant</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#8f5902</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Types and classes</string>
+      <key>scope</key>
+      <string>entity.name.type, entity.name.class, entity.name.namespace, support.type, support.class</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#0b6e79</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Tags</string>
+      <key>scope</key>
+      <string>entity.name.tag</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#8b41b1</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Function calls</string>
+      <key>scope</key>
+      <string>entity.name.function, support.function, variable.function</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#4759ab</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Numeric literals</string>
+      <key>scope</key>
+      <string>constant.numeric</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#ad0000</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Operators and special characters</string>
+      <key>scope</key>
+      <string>keyword.operator, punctuation.definition, punctuation.separator</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#5e5e5e</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Assignments</string>
+      <key>scope</key>
+      <string>keyword.operator.assignment</string>
+      <key>settings</key>
+      <dict>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Named arguments</string>
+      <key>scope</key>
+      <string>variable.parameter, entity.other.attribute-name, support.variable.parameter</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#667321</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Output emphasis</string>
+      <key>scope</key>
+      <string>markup.strong</string>
+      <key>settings</key>
+      <dict>
+        <key>fontStyle</key>
+        <string>bold</string>
+      </dict>
+    </dict>
+  </array>
+</dict>
+</plist>

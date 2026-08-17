@@ -30,7 +30,7 @@ A semantic heading feeds outlines, bookmarks, and content slides. Use `text` dir
 
 Leading, lists, and captions remain native `par`, `list`, `enum`, `terms`, and `figure.caption` styling.
 
-A heading cannot be placed inside an incremental grid node (`m.grids.on`, `m.steps.reveal`, and related step commands); keep it structurally stable across a slide's frames.
+A heading cannot be placed inside a step command (`m.steps.on`, `m.steps.reveal`, `m.steps.replace`, or `m.steps.drawing`); keep it structurally stable across a slide's frames.
 
 Everything about the deck's palette, overriding entries, the bundled palette collection, and inverting a slide, lives on the #link("colors.html")[Colors] page.
 

@@ -9,7 +9,7 @@
     {
       "slug": "metropolis",
       "title": "Metropolis",
-      "frames": 25,
+      "frames": 21,
       "alt": "Metropolis deck, first slide"
     },
     {
@@ -64,7 +64,7 @@
     },
     {
       "source": "docs-src/examples/decks/metropolis/metropolis.pdf",
-      "pages": [1, 4, [5, 6, 7, 8], [18, 19, 20, 21], 23]
+      "pages": [1, 4, [5, 6, 7, 8], [14, 15, 16, 17], 19]
     },
     {
       "source": "docs-src/examples/decks/manifesto/manifesto.pdf",

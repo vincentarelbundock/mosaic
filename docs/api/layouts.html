@@ -3,8 +3,11 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Semantic layouts</title>
 
 
+
     <meta name="description" content="Tree-based slide grids and incremental reveals for Typst.">
     <meta property="og:description" content="Tree-based slide grids and incremental reveals for Typst.">
+    <meta name="twitter:description" content="Tree-based slide grids and incremental reveals for Typst.">
+
 
 
     <meta property="og:site_name" content="Mosaic">
@@ -15,7 +18,12 @@
 
 
     <meta property="og:title" content="Semantic layouts | Mosaic">
+    <meta name="twitter:title" content="Semantic layouts | Mosaic">
 
+
+    <meta property="og:type" content="article">
+
+    <meta name="twitter:card" content="summary">
 
 
 
@@ -550,19 +558,26 @@ figure > img {
   --calepin-syntax-foreground: #003b4f;
   --calepin-syntax-background: #f7f7f5;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #4759ab;
-  --scope-2-foreground: #ad0000;
-  --scope-3-foreground: #5e5e5e;
-  --scope-4-foreground: #5e5e5e;
-  --scope-5-foreground: #667321;
+  --scope-1-foreground: #003b4f;
+  --scope-2-foreground: #003b4f;
+  --scope-3-foreground: #8f5902;
+  --scope-4-foreground: #003b4f;
+  --scope-5-foreground: #003b4f;
   --scope-6-foreground: #003b4f;
-  --scope-6-font-weight: 700;
-  --fallback-7-foreground: #003b4f;
-  --fallback-8-foreground: #003b4f;
-  --fallback-9-foreground: #ad0000;
-  --fallback-10-foreground: #003b4f;
-  --fallback-11-foreground: #5e5e5e;
-  --fallback-12-foreground: #667321;
+  --scope-7-foreground: #8b41b1;
+  --scope-8-foreground: #003b4f;
+  --scope-9-foreground: #ad0000;
+  --scope-10-foreground: #8b41b1;
+  --scope-11-foreground: #003b4f;
+  --scope-12-foreground: #003b4f;
+  --scope-13-foreground: #003b4f;
+  --scope-13-font-weight: 700;
+  --fallback-14-foreground: #5e5e5e;
+  --fallback-15-foreground: #20794d;
+  --fallback-16-foreground: #ad0000;
+  --fallback-17-foreground: #0b6e79;
+  --fallback-18-foreground: #8b41b1;
+  --fallback-19-foreground: #667321;
 
 }
 
@@ -617,37 +632,72 @@ pre code .calepin-syntax-scope-5 {
 .sourceCode .calepin-syntax-scope-6,
 pre code .calepin-syntax-scope-6 {
   color: var(--scope-6-foreground);
-  font-weight: var(--scope-6-font-weight);
 }
 
-.sourceCode .calepin-syntax-fallback-7,
-pre code .calepin-syntax-fallback-7 {
-  color: var(--fallback-7-foreground);
+.sourceCode .calepin-syntax-scope-7,
+pre code .calepin-syntax-scope-7 {
+  color: var(--scope-7-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-8,
-pre code .calepin-syntax-fallback-8 {
-  color: var(--fallback-8-foreground);
+.sourceCode .calepin-syntax-scope-8,
+pre code .calepin-syntax-scope-8 {
+  color: var(--scope-8-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-9,
-pre code .calepin-syntax-fallback-9 {
-  color: var(--fallback-9-foreground);
+.sourceCode .calepin-syntax-scope-9,
+pre code .calepin-syntax-scope-9 {
+  color: var(--scope-9-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-10,
-pre code .calepin-syntax-fallback-10 {
-  color: var(--fallback-10-foreground);
+.sourceCode .calepin-syntax-scope-10,
+pre code .calepin-syntax-scope-10 {
+  color: var(--scope-10-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-11,
-pre code .calepin-syntax-fallback-11 {
-  color: var(--fallback-11-foreground);
+.sourceCode .calepin-syntax-scope-11,
+pre code .calepin-syntax-scope-11 {
+  color: var(--scope-11-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-12,
-pre code .calepin-syntax-fallback-12 {
-  color: var(--fallback-12-foreground);
+.sourceCode .calepin-syntax-scope-12,
+pre code .calepin-syntax-scope-12 {
+  color: var(--scope-12-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-13,
+pre code .calepin-syntax-scope-13 {
+  color: var(--scope-13-foreground);
+  font-weight: var(--scope-13-font-weight);
+}
+
+.sourceCode .calepin-syntax-fallback-14,
+pre code .calepin-syntax-fallback-14 {
+  color: var(--fallback-14-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-15,
+pre code .calepin-syntax-fallback-15 {
+  color: var(--fallback-15-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-16,
+pre code .calepin-syntax-fallback-16 {
+  color: var(--fallback-16-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-17,
+pre code .calepin-syntax-fallback-17 {
+  color: var(--fallback-17-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-18,
+pre code .calepin-syntax-fallback-18 {
+  color: var(--fallback-18-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-19,
+pre code .calepin-syntax-fallback-19 {
+  color: var(--fallback-19-foreground);
 }
 
 
@@ -708,19 +758,26 @@ html[data-theme="dark"] {
   --calepin-syntax-foreground: #d8e7ef;
   --calepin-syntax-background: #161b22;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #9db8ff;
-  --scope-2-foreground: #ffb3a7;
-  --scope-3-foreground: #b5bdc9;
-  --scope-4-foreground: #b5bdc9;
-  --scope-5-foreground: #c3d86c;
+  --scope-1-foreground: #d8e7ef;
+  --scope-2-foreground: #d8e7ef;
+  --scope-3-foreground: #ffcc9c;
+  --scope-4-foreground: #d8e7ef;
+  --scope-5-foreground: #d8e7ef;
   --scope-6-foreground: #d8e7ef;
-  --scope-6-font-weight: 700;
-  --fallback-7-foreground: #d8e7ef;
-  --fallback-8-foreground: #d8e7ef;
-  --fallback-9-foreground: #ffb3a7;
-  --fallback-10-foreground: #d8e7ef;
-  --fallback-11-foreground: #b5bdc9;
-  --fallback-12-foreground: #c3d86c;
+  --scope-7-foreground: #c8a2f0;
+  --scope-8-foreground: #d8e7ef;
+  --scope-9-foreground: #ffb3a7;
+  --scope-10-foreground: #c8a2f0;
+  --scope-11-foreground: #d8e7ef;
+  --scope-12-foreground: #d8e7ef;
+  --scope-13-foreground: #d8e7ef;
+  --scope-13-font-weight: 700;
+  --fallback-14-foreground: #8b949e;
+  --fallback-15-foreground: #8fd694;
+  --fallback-16-foreground: #ffb3a7;
+  --fallback-17-foreground: #7fd1de;
+  --fallback-18-foreground: #c8a2f0;
+  --fallback-19-foreground: #c3d86c;
 
 }
 
@@ -743,19 +800,26 @@ html[data-theme="dark"] .calepin-copy-code:focus-visible {
   --calepin-syntax-foreground: #d8e7ef;
   --calepin-syntax-background: #161b22;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #9db8ff;
-  --scope-2-foreground: #ffb3a7;
-  --scope-3-foreground: #b5bdc9;
-  --scope-4-foreground: #b5bdc9;
-  --scope-5-foreground: #c3d86c;
+  --scope-1-foreground: #d8e7ef;
+  --scope-2-foreground: #d8e7ef;
+  --scope-3-foreground: #ffcc9c;
+  --scope-4-foreground: #d8e7ef;
+  --scope-5-foreground: #d8e7ef;
   --scope-6-foreground: #d8e7ef;
-  --scope-6-font-weight: 700;
-  --fallback-7-foreground: #d8e7ef;
-  --fallback-8-foreground: #d8e7ef;
-  --fallback-9-foreground: #ffb3a7;
-  --fallback-10-foreground: #d8e7ef;
-  --fallback-11-foreground: #b5bdc9;
-  --fallback-12-foreground: #c3d86c;
+  --scope-7-foreground: #c8a2f0;
+  --scope-8-foreground: #d8e7ef;
+  --scope-9-foreground: #ffb3a7;
+  --scope-10-foreground: #c8a2f0;
+  --scope-11-foreground: #d8e7ef;
+  --scope-12-foreground: #d8e7ef;
+  --scope-13-foreground: #d8e7ef;
+  --scope-13-font-weight: 700;
+  --fallback-14-foreground: #8b949e;
+  --fallback-15-foreground: #8fd694;
+  --fallback-16-foreground: #ffb3a7;
+  --fallback-17-foreground: #7fd1de;
+  --fallback-18-foreground: #c8a2f0;
+  --fallback-19-foreground: #c3d86c;
 
   }
 
@@ -3422,6 +3486,10 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
+<li class="calepin-website-sidebar-link"><a href="../presenting/executable-code.html" aria-label="Executable code">Executable code</a></li>
+
+
+
 <li class="calepin-website-sidebar-link"><a href="../help/faq.html" aria-label="FAQ">FAQ</a></li>
 
 
@@ -3485,40 +3553,40 @@ html[data-theme="dark"] .mosaic-diagram {
             </nav>
         </aside>
         <main class="calepin-website-main calepin-content" data-pagefind-body>
-            <h1 id="semantic-layouts">Semantic layouts</h1><p>The overview below links to each definition. Function definitions show signatures with parameter and return types; variables show their declared types. Descriptions and defaults follow.</p><div><ul><li><a href="#author"><code>author()</code></a></li><li><a href="#content"><code>content()</code></a></li><li><a href="#image"><code>image()</code></a></li><li><a href="#title"><code>title()</code></a></li><li><a href="#section"><code>section()</code></a></li></ul><h2 id="author">author</h2><p>Creates a validated author record for <code>setup(authors:)</code> and <code>layouts.title(authors:)</code>.</p><p>A name on its own needs no record at all. <code>authors:</code> takes content or a string wherever it takes a record, so <code>authors: [Ada Lovelace]</code> and <code>authors: ([Ada Lovelace], [Charles Babbage])</code> are both complete author lists. Reach for <code>author()</code> when a name carries more than itself:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#let ada <span class="calepin-syntax-scope-3">=</span> mosaic.layouts.<span class="calepin-syntax-scope-1">author</span>(
+            <h1 id="semantic-layouts">Semantic layouts</h1><p>The overview below links to each definition. Function definitions show signatures with parameter and return types; variables show their declared types. Descriptions and defaults follow.</p><div><ul><li><a href="#author"><code>author()</code></a></li><li><a href="#content"><code>content()</code></a></li><li><a href="#image"><code>image()</code></a></li><li><a href="#title"><code>title()</code></a></li><li><a href="#section"><code>section()</code></a></li></ul><h2 id="author">author</h2><p>Creates a validated author record for <code>setup(authors:)</code> and <code>layouts.title(authors:)</code>.</p><p>A name on its own needs no record at all. <code>authors:</code> takes content or a string wherever it takes a record, so <code>authors: [Ada Lovelace]</code> and <code>authors: ([Ada Lovelace], [Charles Babbage])</code> are both complete author lists. Reach for <code>author()</code> when a name carries more than itself:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">let</span> ada <span class="calepin-syntax-scope-10">=</span> mosaic.layouts.<span class="calepin-syntax-scope-8">author</span>(
   [Ada Lovelace],
   affiliations: ([Analytical Society], [University of London]),
-  email: "ada@example.org",
-  orcid: "0000-0002-1825-0097",
-  corresponding: true,
-)</code></pre></div><p><strong>Affiliations</strong></p><p>An affiliation is the institution itself: content or a non-empty string. Two authors share one legend number exactly when they give the same affiliation, so bind a shared institution once and reuse the binding:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#let lon <span class="calepin-syntax-scope-3">=</span> [University of London]
-#let ada <span class="calepin-syntax-scope-3">=</span> mosaic.layouts.<span class="calepin-syntax-scope-1">author</span>([Ada Lovelace], affiliations: (lon,))
-#let bab <span class="calepin-syntax-scope-3">=</span> mosaic.layouts.<span class="calepin-syntax-scope-1">author</span>([Charles Babbage], affiliations: (lon,))</code></pre></div><p>The <code>academic</code> title variant renders these as superscript numbers over a numbered legend. Compact variants list them without numbering.</p><p><strong>Validation</strong></p><p>Values are checked at construction rather than at render time:</p><ul><li><code>email</code> must look like an address.</li><li><code>orcid</code> must be a well-formed iD.</li><li><code>corresponding</code> requires at least one of <code>email</code> or <code>orcid</code>.</li></ul><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">author(
+  email: <span class="calepin-syntax-scope-2">"ada@example.org"</span>,
+  orcid: <span class="calepin-syntax-scope-2">"0000-0002-1825-0097"</span>,
+  corresponding: <span class="calepin-syntax-scope-4">true</span>,
+)</code></pre></div><p><strong>Affiliations</strong></p><p>An affiliation is the institution itself: content or a non-empty string. Two authors share one legend number exactly when they give the same affiliation, so bind a shared institution once and reuse the binding:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">let</span> lon <span class="calepin-syntax-scope-10">=</span> [University of London]
+<span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">let</span> ada <span class="calepin-syntax-scope-10">=</span> mosaic.layouts.<span class="calepin-syntax-scope-8">author</span>([Ada Lovelace], affiliations: (lon,))
+<span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">let</span> bab <span class="calepin-syntax-scope-10">=</span> mosaic.layouts.<span class="calepin-syntax-scope-8">author</span>([Charles Babbage], affiliations: (lon,))</code></pre></div><p>The <code>academic</code> title variant renders these as superscript numbers over a numbered legend. Compact variants list them without numbering.</p><p><strong>Validation</strong></p><p>Values are checked at construction rather than at render time:</p><ul><li><code>email</code> must look like an address.</li><li><code>orcid</code> must be a well-formed iD.</li><li><code>corresponding</code> requires at least one of <code>email</code> or <code>orcid</code>.</li></ul><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">author(
   name: content | str,
   affiliations: array = (),
   email: str | none = none,
   orcid: str | none = none,
   corresponding: bool = false
-) -> dictionary</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>name</code></p><ul><li>Type: <code>content</code> or <code>str</code></li><li>The author’s name, as the sole positional argument.</li></ul></li><li><p><code>affiliations</code></p><ul><li>Type: <code>array</code></li><li>Default: <code data-lang="typc">()</code></li><li>Array of institutions, as content or non-empty strings, in the order they should be listed for this author.</li></ul></li><li><p><code>email</code></p><ul><li>Type: <code>str</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>Contact address, shown on the <code>academic</code> title variant and linked as a <code>mailto:</code>. Independent of <code>orcid</code>.</li></ul></li><li><p><code>orcid</code></p><ul><li>Type: <code>str</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>ORCID iD in <code>0000-0000-0000-0000</code> form, rendered as a linked ORCID label beside the name on every title variant. Independent of <code>email</code>.</li></ul></li><li><p><code>corresponding</code></p><ul><li>Type: <code>bool</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">false</span></code></li><li>Whether to mark this author as the corresponding one, with an asterisk beside the name and on the contact line. Requires <code>email</code> or <code>orcid</code>.</li></ul></li></ul><h2 id="content">content</h2><p>Creates a conventional header, body, and footer grid recipe.</p><p>This is the ordinary slide layout, and the one automatic level-two headings resolve to. It builds a vertical Mosaic split whose body child is a horizontal split of plain cells.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-1">slide</span>(
-  layout: mosaic.layouts.<span class="calepin-syntax-scope-1">content</span>(variant: "header-body", columns: <span class="calepin-syntax-scope-2">2</span>),
+) -> dictionary</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>name</code></p><ul><li>Type: <code>content</code> or <code>str</code></li><li>The author’s name, as the sole positional argument.</li></ul></li><li><p><code>affiliations</code></p><ul><li>Type: <code>array</code></li><li>Default: <code data-lang="typc">()</code></li><li>Array of institutions, as content or non-empty strings, in the order they should be listed for this author.</li></ul></li><li><p><code>email</code></p><ul><li>Type: <code>str</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>Contact address, shown on the <code>academic</code> title variant and linked as a <code>mailto:</code>. Independent of <code>orcid</code>.</li></ul></li><li><p><code>orcid</code></p><ul><li>Type: <code>str</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>ORCID iD in <code>0000-0000-0000-0000</code> form, rendered as a linked ORCID label beside the name on every title variant. Independent of <code>email</code>.</li></ul></li><li><p><code>corresponding</code></p><ul><li>Type: <code>bool</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">false</span></code></li><li>Whether to mark this author as the corresponding one, with an asterisk beside the name and on the contact line. Requires <code>email</code> or <code>orcid</code>.</li></ul></li></ul><h2 id="content">content</h2><p>Creates a conventional header, body, and footer grid recipe.</p><p>This is the ordinary slide layout, and the one automatic level-two headings resolve to. It builds a vertical Mosaic split whose body child is a horizontal split of plain cells.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-8">slide</span>(
+  layout: mosaic.layouts.<span class="calepin-syntax-scope-8">content</span>(variant: <span class="calepin-syntax-scope-2">"header-body"</span>, columns: <span class="calepin-syntax-scope-9">2</span>),
   [== Two columns],
   [Left body],
   [Right body],
-)</code></pre></div><p><strong>Cells</strong></p><p>The surrounding <code>mosaic.slide</code> fills cells in traversal order:</p><ul><li><code>header</code>, when the variant includes one.</li><li><code>body</code>, or <code>body-1</code>, <code>body-2</code>, and so on when <code>columns</code> is above one.</li><li><code>footer</code>, when the variant includes one.</li></ul><p>A setup-level <code>content: (footer: ...)</code> default can satisfy the footer, so a positional slide may omit that final block.</p><p><strong>Variants</strong></p><ul><li><code>body</code>: one region, edge to edge.</li><li><code>header-body</code>: a content-sized header above the body.</li><li><code>body-footer</code>: the body above a content-sized footer.</li><li><code>header-body-footer</code>: both. The default.</li></ul><p><strong>Labels</strong></p><p>Every resolved cell carries a label, so appearance comes from native Typst rules:</p><ul><li><code>mosaic-cell-header</code>: the header, in the variants that include one.</li><li><code>mosaic-cell-body</code>: the body, when <code>columns</code> is one.</li><li><code>mosaic-cell-body-1</code>, <code>mosaic-cell-body-2</code>, and so on: the body columns, when <code>columns</code> is above one.</li><li><code>mosaic-cell-footer</code>: the footer, in the variants that include one.</li></ul><p><strong>Styling</strong></p><p>The layout is purely structural, so its looks come from rules on those labels.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#show <span class="calepin-syntax-scope-1">label</span>("mosaic-cell-header"): mosaic.<span class="calepin-syntax-scope-1">surface</span>(fill: <span class="calepin-syntax-scope-1">luma</span>(<span class="calepin-syntax-scope-2">240</span>))</code></pre></div><p>The header cell carries no special typography of its own. Put a native level-two heading in its content to style it as a heading and register it with outlines.</p><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">content(
+)</code></pre></div><p><strong>Cells</strong></p><p>The surrounding <code>mosaic.slide</code> fills cells in traversal order:</p><ul><li><code>header</code>, when the variant includes one.</li><li><code>body</code>, or <code>body-1</code>, <code>body-2</code>, and so on when <code>columns</code> is above one.</li><li><code>footer</code>, when the variant includes one.</li></ul><p>A setup-level <code>content: (footer: ...)</code> default can satisfy the footer, so a positional slide may omit that final block.</p><p><strong>Variants</strong></p><ul><li><code>body</code>: one region, edge to edge.</li><li><code>header-body</code>: a content-sized header above the body.</li><li><code>body-footer</code>: the body above a content-sized footer.</li><li><code>header-body-footer</code>: both. The default.</li></ul><p><strong>Labels</strong></p><p>Every resolved cell carries a label, so appearance comes from native Typst rules:</p><ul><li><code>mosaic-cell-header</code>: the header, in the variants that include one.</li><li><code>mosaic-cell-body</code>: the body, when <code>columns</code> is one.</li><li><code>mosaic-cell-body-1</code>, <code>mosaic-cell-body-2</code>, and so on: the body columns, when <code>columns</code> is above one.</li><li><code>mosaic-cell-footer</code>: the footer, in the variants that include one.</li></ul><p><strong>Styling</strong></p><p>The layout is purely structural, so its looks come from rules on those labels.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">show</span> <span class="calepin-syntax-scope-8">label</span>(<span class="calepin-syntax-scope-2">"mosaic-cell-header"</span>): mosaic.<span class="calepin-syntax-scope-8">surface</span>(fill: <span class="calepin-syntax-scope-8">luma</span>(<span class="calepin-syntax-scope-9">240</span>))</code></pre></div><p>The header cell carries no special typography of its own. Put a native level-two heading in its content to style it as a heading and register it with outlines.</p><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">content(
   variant: str = "header-body-footer",
   columns: int = 1,
   tracks: auto | array = auto
-) -> dictionary</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>variant</code></p><ul><li>Type: <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"header-body-footer"</span></code></li><li>Structural arrangement: <code>body</code>, <code>header-body</code>, <code>body-footer</code>, or <code>header-body-footer</code>.</li></ul></li><li><p><code>columns</code></p><ul><li>Type: <code>int</code></li><li>Default: <code data-lang="typc"><span style="color: #b60157">1</span></code></li><li>Number of body columns, and therefore the number of body blocks the slide must supply. Must be a positive integer.</li></ul></li><li><p><code>tracks</code></p><ul><li>Type: <code>auto</code> or <code>array</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li><p>Native Typst track sizes for the body columns, one per column. <code>auto</code> splits the body evenly.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">mosaic.layouts.content(columns: 2, tracks: (2fr, 1fr))</code></pre></div></li></ul></li></ul><h2 id="image">image</h2><p>Creates an image-first grid recipe.</p><p>This is the image-first counterpart to <code>layouts.content</code>: the picture is the argument rather than slide content, and the text regions arrange around it. The surrounding <code>mosaic.slide</code> fills only the text cells.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-1">slide</span>(
-  layout: mosaic.layouts.<span class="calepin-syntax-scope-1">image</span>(
-    <span class="calepin-syntax-scope-1">path</span>("chart.webp"),
+) -> dictionary</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>variant</code></p><ul><li>Type: <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"header-body-footer"</span></code></li><li>Structural arrangement: <code>body</code>, <code>header-body</code>, <code>body-footer</code>, or <code>header-body-footer</code>.</li></ul></li><li><p><code>columns</code></p><ul><li>Type: <code>int</code></li><li>Default: <code data-lang="typc"><span style="color: #b60157">1</span></code></li><li>Number of body columns, and therefore the number of body blocks the slide must supply. Must be a positive integer.</li></ul></li><li><p><code>tracks</code></p><ul><li>Type: <code>auto</code> or <code>array</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li><p>Native Typst track sizes for the body columns, one per column. <code>auto</code> splits the body evenly.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">mosaic.layouts.content(columns: 2, tracks: (2fr, 1fr))</code></pre></div></li></ul></li></ul><h2 id="image">image</h2><p>Creates an image-first grid recipe.</p><p>This is the image-first counterpart to <code>layouts.content</code>: the picture is the argument rather than slide content, and the text regions arrange around it. The surrounding <code>mosaic.slide</code> fills only the text cells.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-8">slide</span>(
+  layout: mosaic.layouts.<span class="calepin-syntax-scope-8">image</span>(
+    <span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"chart.webp"</span>),
     caption: [Revenue by quarter],
   ),
   [== Results],
-)</code></pre></div><p><strong>Variants</strong></p><ul><li><code>figure</code>: a contained picture centered under a <code>header</code> cell, with an optional <code>caption</code> below it. The conventional academic figure slide, and the default.</li><li><code>left</code>, <code>right</code>, <code>top</code>, <code>bottom</code>: a full-bleed picture paired with a text region of <code>header</code> and <code>body</code> cells, sized by <code>tracks</code>.</li><li><code>full</code>: the picture behind a single <code>body</code> cell, so text reads over the photograph. Put a heading inside the body to title it, or pass an empty block for a bare full-bleed slide.</li></ul><p><strong>Captions</strong></p><p>A <code>caption</code> composes a native Typst <code>figure</code> around the picture, so it takes the deck’s own <code>show figure.caption</code> styling and figure numbering. Switch the numbering off with an ordinary <code>set figure(numbering: none)</code>. Captions are accepted by the <code>figure</code> variant only.</p><p><strong>Labels</strong></p><p>Every resolved cell carries a label, so appearance comes from native Typst rules:</p><ul><li><code>mosaic-cell-header</code>: the header, in the <code>figure</code> and directional variants.</li><li><code>mosaic-cell-body</code>: the text region, in the directional and <code>full</code> variants.</li><li><code>mosaic-cell-image</code>: the picture, in the <code>figure</code> and directional variants. The <code>full</code> variant paints the picture as the body cell’s background instead, so it has no image cell of its own.</li></ul><p><strong>Styling</strong></p><p>The layout is purely structural, so its looks come from rules on those labels. The <code>full</code> variant inherits the surrounding native text color, so quiet the photograph with the image dictionary’s <code>scrim</code> key and override the cell’s text fill.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#show <span class="calepin-syntax-scope-1">label</span>("mosaic-cell-body"): set <span class="calepin-syntax-scope-1">text</span>(fill: white)
-#mosaic.<span class="calepin-syntax-scope-1">slide</span>(
-  layout: mosaic.layouts.<span class="calepin-syntax-scope-1">image</span>(
-    (path: "photo.webp", scrim: black.<span class="calepin-syntax-scope-1">transparentize</span>(<span class="calepin-syntax-scope-2">55%</span>)),
-    variant: "full",
+)</code></pre></div><p><strong>Variants</strong></p><ul><li><code>figure</code>: a contained picture centered under a <code>header</code> cell, with an optional <code>caption</code> below it. The conventional academic figure slide, and the default.</li><li><code>left</code>, <code>right</code>, <code>top</code>, <code>bottom</code>: a full-bleed picture paired with a text region of <code>header</code> and <code>body</code> cells, sized by <code>tracks</code>.</li><li><code>full</code>: the picture behind a single <code>body</code> cell, so text reads over the photograph. Put a heading inside the body to title it, or pass an empty block for a bare full-bleed slide.</li></ul><p><strong>Captions</strong></p><p>A <code>caption</code> composes a native Typst <code>figure</code> around the picture, so it takes the deck’s own <code>show figure.caption</code> styling and figure numbering. Switch the numbering off with an ordinary <code>set figure(numbering: none)</code>. Captions are accepted by the <code>figure</code> variant only.</p><p><strong>Labels</strong></p><p>Every resolved cell carries a label, so appearance comes from native Typst rules:</p><ul><li><code>mosaic-cell-header</code>: the header, in the <code>figure</code> and directional variants.</li><li><code>mosaic-cell-body</code>: the text region, in the directional and <code>full</code> variants.</li><li><code>mosaic-cell-image</code>: the picture, in the <code>figure</code> and directional variants. The <code>full</code> variant paints the picture as the body cell’s background instead, so it has no image cell of its own.</li></ul><p><strong>Styling</strong></p><p>The layout is purely structural, so its looks come from rules on those labels. The <code>full</code> variant inherits the surrounding native text color, so quiet the photograph with the image dictionary’s <code>scrim</code> key and override the cell’s text fill.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">show</span> <span class="calepin-syntax-scope-8">label</span>(<span class="calepin-syntax-scope-2">"mosaic-cell-body"</span>): <span class="calepin-syntax-scope-4">set</span> <span class="calepin-syntax-scope-8">text</span>(fill: white)
+#mosaic.<span class="calepin-syntax-scope-8">slide</span>(
+  layout: mosaic.layouts.<span class="calepin-syntax-scope-8">image</span>(
+    (path: <span class="calepin-syntax-scope-2">"photo.webp"</span>, scrim: black.<span class="calepin-syntax-scope-8">transparentize</span>(<span class="calepin-syntax-scope-9">55%</span>)),
+    variant: <span class="calepin-syntax-scope-2">"full"</span>,
   ),
   [== Full bleed],
 )</code></pre></div><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">image(
@@ -3527,18 +3595,18 @@ html[data-theme="dark"] .mosaic-diagram {
   caption: content | none = none,
   fit: auto | str = auto,
   tracks: auto | length | ratio | relative | fraction | array = auto
-) -> dictionary</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>image</code></p><ul><li>Type: <code>content</code> or <code>str</code> or <code>path</code> or <code>dictionary</code></li><li>The picture the slide is built around, as the sole positional argument. Give a path, ready-made content, or a dictionary whose <code>scrim</code> key paints a layer over the picture and under any text composed on top of it.</li></ul></li><li><p><code>variant</code></p><ul><li>Type: <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"figure"</span></code></li><li>Structural arrangement of picture and text: <code>figure</code>, <code>full</code>, <code>left</code>, <code>right</code>, <code>top</code>, or <code>bottom</code>.</li></ul></li><li><p><code>caption</code></p><ul><li>Type: <code>content</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>Caption composed below a <code>figure</code> picture. Rejected by the other variants.</li></ul></li><li><p><code>fit</code></p><ul><li>Type: <code>auto</code> or <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li><p>How the picture fills its region.</p><ul><li><code>"contain"</code>: fit the whole picture inside the region. The <code>figure</code> default, since a chart must never be cropped.</li><li><code>"cover"</code>: fill the region, cropping the overhang. The default for every other variant.</li></ul><p><code>auto</code> picks the per-variant default above.</p></li></ul></li><li><p><code>tracks</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>ratio</code> or <code>relative</code> or <code>fraction</code> or <code>array</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Sizes the split of a directional variant, and is rejected by <code>figure</code> and <code>full</code>. One native Typst track size answers “how much room does the picture get” and is side-independent, so <code>left</code> and <code>right</code> stay mirror images without reordering anything; the text region takes the remaining <code>1fr</code>. An array of two is in visual order instead, and must be mirrored by hand when the variant flips.</li></ul></li></ul><h2 id="title">title</h2><p>Creates a presentation title grid.</p><p>The layout supplies every cell’s content itself, so the surrounding <code>mosaic.slide</code> consumes no slide bodies.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#show: mosaic.setup.<span class="calepin-syntax-scope-1">with</span>(
+) -> dictionary</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>image</code></p><ul><li>Type: <code>content</code> or <code>str</code> or <code>path</code> or <code>dictionary</code></li><li>The picture the slide is built around, as the sole positional argument. Give a path, ready-made content, or a dictionary whose <code>scrim</code> key paints a layer over the picture and under any text composed on top of it.</li></ul></li><li><p><code>variant</code></p><ul><li>Type: <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"figure"</span></code></li><li>Structural arrangement of picture and text: <code>figure</code>, <code>full</code>, <code>left</code>, <code>right</code>, <code>top</code>, or <code>bottom</code>.</li></ul></li><li><p><code>caption</code></p><ul><li>Type: <code>content</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>Caption composed below a <code>figure</code> picture. Rejected by the other variants.</li></ul></li><li><p><code>fit</code></p><ul><li>Type: <code>auto</code> or <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li><p>How the picture fills its region.</p><ul><li><code>"contain"</code>: fit the whole picture inside the region. The <code>figure</code> default, since a chart must never be cropped.</li><li><code>"cover"</code>: fill the region, cropping the overhang. The default for every other variant.</li></ul><p><code>auto</code> picks the per-variant default above.</p></li></ul></li><li><p><code>tracks</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>ratio</code> or <code>relative</code> or <code>fraction</code> or <code>array</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Sizes the split of a directional variant, and is rejected by <code>figure</code> and <code>full</code>. One native Typst track size answers “how much room does the picture get” and is side-independent, so <code>left</code> and <code>right</code> stay mirror images without reordering anything; the text region takes the remaining <code>1fr</code>. An array of two is in visual order instead, and must be mirrored by hand when the variant flips.</li></ul></li></ul><h2 id="title">title</h2><p>Creates a presentation title grid.</p><p>The layout supplies every cell’s content itself, so the surrounding <code>mosaic.slide</code> consumes no slide bodies.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">show</span>: mosaic.setup.<span class="calepin-syntax-scope-8">with</span>(
   title: [Tree-based slide grids],
   subtitle: [A layout model for Typst],
   authors: [Ada Lovelace],
   date: [2026-08-03],
 )
 
-#mosaic.<span class="calepin-syntax-scope-1">slide</span>(layout: "title", variant: "centered")</code></pre></div><p><strong>Inheritance</strong></p><p>Each of <code>title</code>, <code>subtitle</code>, <code>authors</code>, and <code>date</code> defaults to <code>auto</code>, which takes the value configured on <code>setup</code>. To override an inherited value:</p><ul><li>Pass explicit content or a string to replace it.</li><li>Pass <code>none</code> to suppress an inherited <code>title</code>, <code>subtitle</code>, or <code>date</code>.</li><li>Pass <code>()</code> to suppress inherited <code>authors</code>.</li></ul><p><strong>Variants</strong></p><p>Text variants:</p><ul><li><code>centered</code>: the heading stack at the slide’s center, details anchored to the bottom edge.</li><li><code>bordered</code>: a thin rule border inset from the slide edge with the centered stack inside it.</li><li><code>ruled</code>: the heading stack over a full-width accent rule with the details beneath, flush left at the slide’s vertical center. The beamer-metropolis title page, and the default.</li><li><code>kicker</code>: the magazine masthead. A strong opening rule, the subtitle set as a small tracked-caps eyebrow in the accent color, the title below it, and the details anchored to the bottom edge.</li><li><code>panel</code>: a vertical side panel in the deck’s text color carries the details, knocked out in the canvas color under a short accent rule; the heading stack takes the main field.</li><li><code>academic</code>: the conference-poster arrangement. Author names carry superscript affiliation numbers over a numbered affiliation legend and a contact line. Requires at least one author.</li></ul><p>One image variant, which requires <code>image</code> and reads <code>position</code>:</p><ul><li><code>image</code> with <code>position: "left"</code>, <code>"right"</code>, <code>"top"</code>, or <code>"bottom"</code> (the default is <code>"left"</code>): a full-bleed picture beside or above the title stack, sized by <code>tracks</code>.</li></ul><p>A full-slide photographic title is not a variant: give the slide a <code>background:</code> plane and compose the type yourself, reading the deck’s own metadata back through <code>info()</code>.</p><p>To invert any of these, with the slide ground in the deck’s text color and the type knocked out, pass <code>invert: true</code> on the slide rather than picking a variant; inversion is a polarity, not a structure.</p><p><strong>Authors</strong></p><p>Every variant accepts the same <code>authors</code>, written in whichever of three spellings fits the deck: one name as content or a string, an array of names, or an array of records built with <code>layouts.author</code> for the authors that carry affiliations, an ORCID iD, or an address. Names and records mix freely in one array. Every variant renders every author field through the same tiers: a byline of names with linked ORCID labels, superscript affiliation numbers, and the corresponding asterisk, then one fine-print line per kind of information: the numbered affiliation legend, the contact addresses, the date. Kinds never share a line, and the superscript markers appear exactly when the deck names more than one institution.</p><p><strong>Labels</strong></p><p>Every resolved cell carries a label, so appearance comes from native Typst rules:</p><ul><li><code>mosaic-cell-title</code>: the title stack, in every variant. Most variants compose the subtitle and the details inside it too.</li><li><code>mosaic-cell-details</code>: the affiliation and date band, in the <code>panel</code> and <code>academic</code> variants, which set those tiers outside the title cell.</li><li><code>mosaic-cell-authors</code>: the byline, in the <code>academic</code> variant.</li><li><code>mosaic-cell-image</code>: the picture, in the <code>image</code> variant.</li></ul><p>One further label is not a cell: the display line of the title stack carries <code>mosaic-title-display</code>, which is where a theme states the title’s display size.</p><p><strong>Styling</strong></p><p>The layout is structural. A rule on <code>&lt;mosaic-cell-title></code> reaches the whole composed stack: title, subtitle, and details alike. Recoloring it is what light-on-dark compositions over a photograph need.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#show <span class="calepin-syntax-scope-1">label</span>("mosaic-cell-title"): set <span class="calepin-syntax-scope-1">text</span>(fill: white)
-#mosaic.<span class="calepin-syntax-scope-1">slide</span>(
-  layout: "title",
-  background: mosaic.components.<span class="calepin-syntax-scope-1">image</span>("cover.webp", scrim: black.<span class="calepin-syntax-scope-1">transparentize</span>(<span class="calepin-syntax-scope-2">55%</span>)),
-)</code></pre></div><p>Sizing it works the same way, because the display line carries its own <code>&lt;mosaic-title-display></code> label and the theme’s display size lands there rather than on the cell. The tiers below are ordinary ems of the cell, so one rule scales the stack as a unit and the proportions hold. That is how to ask for quiet type in the corner of a photograph.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#show <span class="calepin-syntax-scope-1">label</span>("mosaic-cell-title"): set <span class="calepin-syntax-scope-1">text</span>(size: <span class="calepin-syntax-scope-2">0.45em</span>)</code></pre></div><p>A theme states the display size on the inner label instead, which leaves the outer one free for the deck to scale:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#show <span class="calepin-syntax-scope-1">label</span>("mosaic-title-display"): set <span class="calepin-syntax-scope-1">text</span>(size: <span class="calepin-syntax-scope-2">2em</span>, weight: "semibold")</code></pre></div><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">title(
+#mosaic.<span class="calepin-syntax-scope-8">slide</span>(layout: <span class="calepin-syntax-scope-2">"title"</span>, variant: <span class="calepin-syntax-scope-2">"centered"</span>)</code></pre></div><p><strong>Inheritance</strong></p><p>Each of <code>title</code>, <code>subtitle</code>, <code>authors</code>, and <code>date</code> defaults to <code>auto</code>, which takes the value configured on <code>setup</code>. To override an inherited value:</p><ul><li>Pass explicit content or a string to replace it.</li><li>Pass <code>none</code> to suppress an inherited <code>title</code>, <code>subtitle</code>, or <code>date</code>.</li><li>Pass <code>()</code> to suppress inherited <code>authors</code>.</li></ul><p><strong>Variants</strong></p><p>Text variants:</p><ul><li><code>centered</code>: the heading stack at the slide’s center, details anchored to the bottom edge.</li><li><code>bordered</code>: a thin rule border inset from the slide edge with the centered stack inside it.</li><li><code>ruled</code>: the heading stack over a full-width accent rule with the details beneath, flush left at the slide’s vertical center. The beamer-metropolis title page, and the default.</li><li><code>kicker</code>: the magazine masthead. A strong opening rule, the subtitle set as a small tracked-caps eyebrow in the accent color, the title below it, and the details anchored to the bottom edge.</li><li><code>panel</code>: a vertical side panel in the deck’s text color carries the details, knocked out in the canvas color under a short accent rule; the heading stack takes the main field.</li><li><code>academic</code>: the conference-poster arrangement. Author names carry superscript affiliation numbers over a numbered affiliation legend and a contact line. Requires at least one author.</li></ul><p>One image variant, which requires <code>image</code> and reads <code>position</code>:</p><ul><li><code>image</code> with <code>position: "left"</code>, <code>"right"</code>, <code>"top"</code>, or <code>"bottom"</code> (the default is <code>"left"</code>): a full-bleed picture beside or above the title stack, sized by <code>tracks</code>.</li></ul><p>A full-slide photographic title is not a variant: give the slide a <code>background:</code> plane and compose the type yourself, reading the deck’s own metadata back through <code>info()</code>.</p><p>To invert any of these, with the slide ground in the deck’s text color and the type knocked out, pass <code>invert: true</code> on the slide rather than picking a variant; inversion is a polarity, not a structure.</p><p><strong>Authors</strong></p><p>Every variant accepts the same <code>authors</code>, written in whichever of three spellings fits the deck: one name as content or a string, an array of names, or an array of records built with <code>layouts.author</code> for the authors that carry affiliations, an ORCID iD, or an address. Names and records mix freely in one array. Every variant renders every author field through the same tiers: a byline of names with linked ORCID labels, superscript affiliation numbers, and the corresponding asterisk, then one fine-print line per kind of information: the numbered affiliation legend, the contact addresses, the date. Kinds never share a line, and the superscript markers appear exactly when the deck names more than one institution.</p><p><strong>Labels</strong></p><p>Every resolved cell carries a label, so appearance comes from native Typst rules:</p><ul><li><code>mosaic-cell-title</code>: the title stack, in every variant. Most variants compose the subtitle and the details inside it too.</li><li><code>mosaic-cell-details</code>: the affiliation and date band, in the <code>panel</code> and <code>academic</code> variants, which set those tiers outside the title cell.</li><li><code>mosaic-cell-authors</code>: the byline, in the <code>academic</code> variant.</li><li><code>mosaic-cell-image</code>: the picture, in the <code>image</code> variant.</li></ul><p>One further label is not a cell: the display line of the title stack carries <code>mosaic-title-display</code>, which is where a theme states the title’s display size.</p><p><strong>Styling</strong></p><p>The layout is structural. A rule on <code>&lt;mosaic-cell-title></code> reaches the whole composed stack: title, subtitle, and details alike. Recoloring it is what light-on-dark compositions over a photograph need.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">show</span> <span class="calepin-syntax-scope-8">label</span>(<span class="calepin-syntax-scope-2">"mosaic-cell-title"</span>): <span class="calepin-syntax-scope-4">set</span> <span class="calepin-syntax-scope-8">text</span>(fill: white)
+#mosaic.<span class="calepin-syntax-scope-8">slide</span>(
+  layout: <span class="calepin-syntax-scope-2">"title"</span>,
+  background: mosaic.components.<span class="calepin-syntax-scope-8">image</span>(<span class="calepin-syntax-scope-2">"cover.webp"</span>, scrim: black.<span class="calepin-syntax-scope-8">transparentize</span>(<span class="calepin-syntax-scope-9">55%</span>)),
+)</code></pre></div><p>Sizing it works the same way, because the display line carries its own <code>&lt;mosaic-title-display></code> label and the theme’s display size lands there rather than on the cell. The tiers below are ordinary ems of the cell, so one rule scales the stack as a unit and the proportions hold. That is how to ask for quiet type in the corner of a photograph.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">show</span> <span class="calepin-syntax-scope-8">label</span>(<span class="calepin-syntax-scope-2">"mosaic-cell-title"</span>): <span class="calepin-syntax-scope-4">set</span> <span class="calepin-syntax-scope-8">text</span>(size: <span class="calepin-syntax-scope-9">0.45em</span>)</code></pre></div><p>A theme states the display size on the inner label instead, which leaves the outer one free for the deck to scale:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">show</span> <span class="calepin-syntax-scope-8">label</span>(<span class="calepin-syntax-scope-2">"mosaic-title-display"</span>): <span class="calepin-syntax-scope-4">set</span> <span class="calepin-syntax-scope-8">text</span>(size: <span class="calepin-syntax-scope-9">2em</span>, weight: <span class="calepin-syntax-scope-2">"semibold"</span>)</code></pre></div><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">title(
   title: auto | content | str = auto,
   subtitle: auto | content | str | none = auto,
   date: auto | content | str | none = auto,
@@ -3549,15 +3617,15 @@ html[data-theme="dark"] .mosaic-diagram {
   tracks: auto | length | ratio | relative | fraction | array = auto,
   rule: auto | bool = auto,
   accent: color | auto = auto
-) -> dictionary</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>title</code></p><ul><li>Type: <code>auto</code> or <code>content</code> or <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Title text. <code>auto</code> inherits <code>setup(title:)</code>.</li></ul></li><li><p><code>subtitle</code></p><ul><li>Type: <code>auto</code> or <code>content</code> or <code>str</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Subtitle set tight below the title. <code>auto</code> inherits <code>setup(subtitle:)</code>; <code>none</code> suppresses it.</li></ul></li><li><p><code>date</code></p><ul><li>Type: <code>auto</code> or <code>content</code> or <code>str</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Display date joined into the fine-print details line. <code>auto</code> inherits <code>setup(date:)</code>; <code>none</code> suppresses it.</li></ul></li><li><p><code>image</code></p><ul><li>Type: <code>none</code> or <code>content</code> or <code>str</code> or <code>path</code> or <code>dictionary</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>The picture used by the <code>image</code> variant, and rejected by the others. Give a path, ready-made content, or a dictionary whose <code>scrim</code> key quiets the photograph enough to read text over it, as in <code>(path: "cover.webp", scrim: black.transparentize(55%))</code>.</li></ul></li><li><p><code>variant</code></p><ul><li>Type: <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"ruled"</span></code></li><li>Structural arrangement: <code>ruled</code>, <code>centered</code>, <code>bordered</code>, <code>kicker</code>, <code>panel</code>, <code>academic</code>, or <code>image</code>.</li></ul></li><li><p><code>position</code></p><ul><li>Type: <code>auto</code> or <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Where the <code>image</code> variant’s picture sits, and rejected by the others: <code>left</code>, <code>right</code>, <code>top</code>, or <code>bottom</code>, for a full-bleed picture beside or above the title stack. <code>auto</code> means <code>left</code>.</li></ul></li><li><p><code>authors</code></p><ul><li>Type: <code>auto</code> or <code>content</code> or <code>str</code> or <code>array</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>One name, or an array of names and records created with <code>layouts.author</code>. <code>auto</code> inherits <code>setup(authors:)</code>; <code>()</code> suppresses an inherited list.</li></ul></li><li><p><code>tracks</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>ratio</code> or <code>relative</code> or <code>fraction</code> or <code>array</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Sizes the image variant’s split, and is rejected elsewhere. One native Typst track size sizes the picture and is side-independent, so the <code>left</code> and <code>right</code> positions stay mirror images; the title region takes the remaining <code>1fr</code>. An array of two is in visual order instead, and must be mirrored by hand when the position flips. <code>auto</code> gives the picture the smaller share.</li></ul></li><li><p><code>rule</code></p><ul><li>Type: <code>auto</code> or <code>bool</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Whether to draw the variant’s structural mark: the <code>ruled</code> full-width rule, the <code>bordered</code> border, or the <code>kicker</code> opening rule. On the <code>image</code> variant it draws the short accent rule of the compact stack instead. <code>auto</code> draws the structural marks and omits the accent rule on the <code>image</code> variant, where the photograph already does that work.</li></ul></li><li><p><code>accent</code></p><ul><li>Type: <code>color</code> or <code>auto</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Color of the variant’s structural mark. <code>auto</code> uses the deck’s text color for the marked text variants (<code>bordered</code>, <code>kicker</code>) and the semantic accent for the <code>image</code> variant’s short rule.</li></ul></li></ul><h2 id="section">section</h2><p>Creates a section divider grid.</p><p>The section cell’s text is the slide’s own content, so the surrounding <code>mosaic.slide</code> supplies one block. Automatic level-one headings resolve to this layout.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-1">slide</span>(
-  layout: "section",
+) -> dictionary</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>title</code></p><ul><li>Type: <code>auto</code> or <code>content</code> or <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Title text. <code>auto</code> inherits <code>setup(title:)</code>.</li></ul></li><li><p><code>subtitle</code></p><ul><li>Type: <code>auto</code> or <code>content</code> or <code>str</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Subtitle set tight below the title. <code>auto</code> inherits <code>setup(subtitle:)</code>; <code>none</code> suppresses it.</li></ul></li><li><p><code>date</code></p><ul><li>Type: <code>auto</code> or <code>content</code> or <code>str</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Display date joined into the fine-print details line. <code>auto</code> inherits <code>setup(date:)</code>; <code>none</code> suppresses it.</li></ul></li><li><p><code>image</code></p><ul><li>Type: <code>none</code> or <code>content</code> or <code>str</code> or <code>path</code> or <code>dictionary</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>The picture used by the <code>image</code> variant, and rejected by the others. Give a path, ready-made content, or a dictionary whose <code>scrim</code> key quiets the photograph enough to read text over it, as in <code>(path: "cover.webp", scrim: black.transparentize(55%))</code>.</li></ul></li><li><p><code>variant</code></p><ul><li>Type: <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"ruled"</span></code></li><li>Structural arrangement: <code>ruled</code>, <code>centered</code>, <code>bordered</code>, <code>kicker</code>, <code>panel</code>, <code>academic</code>, or <code>image</code>.</li></ul></li><li><p><code>position</code></p><ul><li>Type: <code>auto</code> or <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Where the <code>image</code> variant’s picture sits, and rejected by the others: <code>left</code>, <code>right</code>, <code>top</code>, or <code>bottom</code>, for a full-bleed picture beside or above the title stack. <code>auto</code> means <code>left</code>.</li></ul></li><li><p><code>authors</code></p><ul><li>Type: <code>auto</code> or <code>content</code> or <code>str</code> or <code>array</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>One name, or an array of names and records created with <code>layouts.author</code>. <code>auto</code> inherits <code>setup(authors:)</code>; <code>()</code> suppresses an inherited list.</li></ul></li><li><p><code>tracks</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>ratio</code> or <code>relative</code> or <code>fraction</code> or <code>array</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Sizes the image variant’s split, and is rejected elsewhere. One native Typst track size sizes the picture and is side-independent, so the <code>left</code> and <code>right</code> positions stay mirror images; the title region takes the remaining <code>1fr</code>. An array of two is in visual order instead, and must be mirrored by hand when the position flips. <code>auto</code> gives the picture the smaller share.</li></ul></li><li><p><code>rule</code></p><ul><li>Type: <code>auto</code> or <code>bool</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Whether to draw the variant’s structural mark: the <code>ruled</code> full-width rule, the <code>bordered</code> border, or the <code>kicker</code> opening rule. On the <code>image</code> variant it draws the short accent rule of the compact stack instead. <code>auto</code> draws the structural marks and omits the accent rule on the <code>image</code> variant, where the photograph already does that work.</li></ul></li><li><p><code>accent</code></p><ul><li>Type: <code>color</code> or <code>auto</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Color of the variant’s structural mark. <code>auto</code> uses the deck’s text color for the marked text variants (<code>bordered</code>, <code>kicker</code>) and the semantic accent for the <code>image</code> variant’s short rule.</li></ul></li></ul><h2 id="section">section</h2><p>Creates a section divider grid.</p><p>The section cell’s text is the slide’s own content, so the surrounding <code>mosaic.slide</code> supplies one block. Automatic level-one headings resolve to this layout.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-8">slide</span>(
+  layout: <span class="calepin-syntax-scope-2">"section"</span>,
   number: [02],
   subtitle: [How the grid resolves],
-)[Structure]</code></pre></div><p><strong>Variants</strong></p><ul><li><code>plain</code>: one centered <code>section</code> cell. The default.</li><li><code>rule</code>: a heavy full-width rule with the title hanging beneath it, flush left, the number above the rule.</li><li><code>numeral</code>: the section number set enormous in the line color, bleeding off the top-right edge behind a lower-left title stack.</li><li><code>baseline</code>: title flush left and number flush right sharing one baseline, tied together by a full-width hairline.</li><li><code>toc</code>: every section in the deck listed, the current one alive with its number, the others ghosted.</li><li><code>image-left</code>, <code>image-right</code>, <code>image-top</code>, <code>image-bottom</code>: that cell beside or above a full-bleed <code>image</code> cell, sized by <code>tracks</code>.</li><li><code>image-background</code>: the section text directly over a full-slide picture.</li></ul><p>Every image variant requires <code>image</code>. The designed text variants (every variant but <code>plain</code> and the image ones) treat an omitted <code>number</code> as the automatic section counter, so they need no argument in the ordinary case.</p><p><strong>Labels</strong></p><p>Every resolved cell carries a label, so appearance comes from native Typst rules:</p><ul><li><code>mosaic-cell-section</code>: the section text, in every variant. The number and subtitle are composed inside it, so one rule reaches the whole stack.</li><li><code>mosaic-cell-image</code>: the picture, in the directional image variants. The <code>image-background</code> variant paints the picture as the section cell’s background instead, so it has no image cell of its own.</li></ul><p><strong>Styling</strong></p><p>The layout is structural. The centered arrangement and title typography come from the <code>&lt;mosaic-cell-section></code> label rules <code>setup</code> emits. Over a photograph the text inherits the surrounding native text color, so quiet the picture with the image dictionary’s <code>scrim</code> key and override the cell’s text fill.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#show <span class="calepin-syntax-scope-1">label</span>("mosaic-cell-section"): set <span class="calepin-syntax-scope-1">text</span>(fill: white)
-#mosaic.<span class="calepin-syntax-scope-1">slide</span>(
-  layout: "section",
-  variant: "image-background",
-  image: (path: "cover.webp", scrim: black.<span class="calepin-syntax-scope-1">transparentize</span>(<span class="calepin-syntax-scope-2">55%</span>)),
+)[Structure]</code></pre></div><p><strong>Variants</strong></p><ul><li><code>plain</code>: one centered <code>section</code> cell. The default.</li><li><code>rule</code>: a heavy full-width rule with the title hanging beneath it, flush left, the number above the rule.</li><li><code>numeral</code>: the section number set enormous in the line color, bleeding off the top-right edge behind a lower-left title stack.</li><li><code>baseline</code>: title flush left and number flush right sharing one baseline, tied together by a full-width hairline.</li><li><code>toc</code>: every section in the deck listed, the current one alive with its number, the others ghosted.</li><li><code>image-left</code>, <code>image-right</code>, <code>image-top</code>, <code>image-bottom</code>: that cell beside or above a full-bleed <code>image</code> cell, sized by <code>tracks</code>.</li><li><code>image-background</code>: the section text directly over a full-slide picture.</li></ul><p>Every image variant requires <code>image</code>. The designed text variants (every variant but <code>plain</code> and the image ones) treat an omitted <code>number</code> as the automatic section counter, so they need no argument in the ordinary case.</p><p><strong>Labels</strong></p><p>Every resolved cell carries a label, so appearance comes from native Typst rules:</p><ul><li><code>mosaic-cell-section</code>: the section text, in every variant. The number and subtitle are composed inside it, so one rule reaches the whole stack.</li><li><code>mosaic-cell-image</code>: the picture, in the directional image variants. The <code>image-background</code> variant paints the picture as the section cell’s background instead, so it has no image cell of its own.</li></ul><p><strong>Styling</strong></p><p>The layout is structural. The centered arrangement and title typography come from the <code>&lt;mosaic-cell-section></code> label rules <code>setup</code> emits. Over a photograph the text inherits the surrounding native text color, so quiet the picture with the image dictionary’s <code>scrim</code> key and override the cell’s text fill.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">show</span> <span class="calepin-syntax-scope-8">label</span>(<span class="calepin-syntax-scope-2">"mosaic-cell-section"</span>): <span class="calepin-syntax-scope-4">set</span> <span class="calepin-syntax-scope-8">text</span>(fill: white)
+#mosaic.<span class="calepin-syntax-scope-8">slide</span>(
+  layout: <span class="calepin-syntax-scope-2">"section"</span>,
+  variant: <span class="calepin-syntax-scope-2">"image-background"</span>,
+  image: (path: <span class="calepin-syntax-scope-2">"cover.webp"</span>, scrim: black.<span class="calepin-syntax-scope-8">transparentize</span>(<span class="calepin-syntax-scope-9">55%</span>)),
 )[Structure]</code></pre></div><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">section(
   subtitle: content | str | none = none,
   number: content | str | none = none,
@@ -3588,6 +3656,13 @@ html[data-theme="dark"] .mosaic-diagram {
         </aside>
 
     </div>
+
+
+
+
+
+
+
 
 
 

@@ -1,0 +1,67 @@
+{
+  "schema": 2,
+  "calepin_version": "0.0.51",
+  "input": "presenting/notes.typ",
+  "generation": "8181699361b34399-1349cde127705c16",
+  "store": {},
+  "chunks": {
+    "chunk-1": {
+      "label": "chunk-1",
+      "engine": "bash",
+      "source": "typst compile talk.typ            # talk.pdf, now double-width\npympress talk.pdf                 # splits automatically\npdfpc --notes=right talk.pdf      # tell pdfpc where the notes are\n",
+      "status": "skipped",
+      "options": {
+        "echo": true,
+        "output": true,
+        "results": "render",
+        "warning": true,
+        "message": true,
+        "placeholder": true,
+        "fig-width": "70%",
+        "fig-height": null,
+        "fig-align": "center",
+        "fig-responsive": true,
+        "fig-link": null,
+        "fig-caption": null,
+        "fig-cap-location": null,
+        "fig-alt-text": null,
+        "fig-subcaptions": null,
+        "fig-layout-columns": null,
+        "fig-layout-rows": null,
+        "tbl-caption": null,
+        "lst-caption": null,
+        "kind": null
+      },
+      "items": []
+    },
+    "chunk-2": {
+      "label": "chunk-2",
+      "engine": "bash",
+      "source": "pdfdetach -savefile speaker-notes.pdfpc -o talk.pdfpc talk.pdf\npdfpc talk.pdf\n",
+      "status": "skipped",
+      "options": {
+        "echo": true,
+        "output": true,
+        "results": "render",
+        "warning": true,
+        "message": true,
+        "placeholder": true,
+        "fig-width": "70%",
+        "fig-height": null,
+        "fig-align": "center",
+        "fig-responsive": true,
+        "fig-link": null,
+        "fig-caption": null,
+        "fig-cap-location": null,
+        "fig-alt-text": null,
+        "fig-subcaptions": null,
+        "fig-layout-columns": null,
+        "fig-layout-rows": null,
+        "tbl-caption": null,
+        "lst-caption": null,
+        "kind": null
+      },
+      "items": []
+    }
+  }
+}

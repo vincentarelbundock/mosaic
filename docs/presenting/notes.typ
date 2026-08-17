@@ -90,3 +90,31 @@ The notes half stays black on white whatever polarity the deck carries, because 
 If the notes on a frame do not fit their half, the compile fails and names the frame, the same way the `speaker` and `notes` outputs do. Shorten the note, or raise `notes: (split-inset: 6mm)` in `m.setup` to give it more room.
 
 Keep both builds if you want a clean deck to hand out afterwards: the `split` PDF is for presenting, and `output: "slides"` gives you the file to circulate.
+
+= Inside the PDF
+
+The doubled page puts your notes where a console can see them, at the cost of a deck that is no longer the shape of a slide. There is a second route that costs nothing at all: whenever a deck holds a note, Mosaic also writes those notes into the PDF as data, in the interchange format the console world calls `pdfpc`.
+
+This needs no argument and no separate build. An ordinary deck carries it:
+
+```typ
+#show: m.setup
+
+#m.slide[
+  #m.note[Give the point estimate before the table.]
+  The estimate holds under both specifications.
+]
+```
+
+The result is the deck you would circulate anyway — single-width pages, nothing visible added, no extra frame — with a `speaker-notes.pdfpc` file embedded in it, keyed to the physical page each note belongs to. A console that reads embedded notes shows them beside the slide. Every other reader ignores the attachment entirely.
+
+The conventional form of this file is a sidecar: `talk.pdfpc` sitting next to `talk.pdf`. That file is lost the first time the deck is mailed, copied to a borrowed laptop, or dropped in a shared folder, which is usually the moment before you present. The same bytes inside the document travel with it.
+
+pdfpc itself reads only the sidecar, so recover one when you need it:
+
+```bash
+pdfdetach -savefile speaker-notes.pdfpc -o talk.pdfpc talk.pdf
+pdfpc talk.pdf
+```
+
+Notes reach the attachment as text, so a note's words survive and its layout does not. A note whose shape carries meaning belongs in the `split` build, where it is typeset rather than serialized. Both can be true of one deck: the attachment is written whatever output you compile, so a `split` PDF carries its notes on the page *and* as data, and the console takes whichever it handles better.

@@ -40,3 +40,17 @@ The #link("https://typst.app/universe/package/ctheorems/")[ctheorems package] pr
   frames: 1,
   title: "Typeset a theorem and proof",
 )
+
+= Accessible math
+
+Typst does not describe an equation's meaning to a screen reader or a PDF/UA-1 export on its own: give `math.equation` an `alt` string that reads the formula aloud in words. This is required for accessible export, not optional polish.
+
+```typ
+#math.equation(
+  alt: "a squared plus b squared equals c squared",
+  block: true,
+  $ a^2 + b^2 = c^2 $,
+)
+```
+
+Reserve this for equations that carry meaning on their own, such as the Bellman equation above or the Pythagorean identity in the theorem example; a lone symbol referenced in running text or a table header, such as $N$ for a sample size, does not need one.

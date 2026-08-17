@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "fingerprint": 9331855984608625561,
+  "generation": "8181699361b34399-1349cde127705c16",
+  "completed_store": {},
+  "stabilized_chunks": [
+    {
+      "label": "chunk-1",
+      "engine": "bash",
+      "code": "typst compile talk.typ            # talk.pdf, now double-width\npympress talk.pdf                 # splits automatically\npdfpc --notes=right talk.pdf      # tell pdfpc where the notes are\n",
+      "script": true,
+      "exec_options": {
+        "eval": true,
+        "error": false,
+        "store-get": [],
+        "store-set": [],
+        "fig_device_format": "svg",
+        "fig_device_dpi": 150,
+        "fig_device_width": 6.0,
+        "fig_device_height": null,
+        "fig_device_aspect": 0.618
+      },
+      "display_options": {
+        "echo": true,
+        "output": true,
+        "results": "render",
+        "warning": true,
+        "message": true,
+        "placeholder": true,
+        "fig-width": "70%",
+        "fig-height": null,
+        "fig-align": "center",
+        "fig-responsive": true,
+        "fig-link": null,
+        "fig-caption": null,
+        "fig-cap-location": null,
+        "fig-alt-text": null,
+        "fig-subcaptions": null,
+        "fig-layout-columns": null,
+        "fig-layout-rows": null,
+        "tbl-caption": null,
+        "lst-caption": null,
+        "kind": null
+      },
+      "ordinal": 10,
+      "crossref_labels": []
+    },
+    {
+      "label": "chunk-2",
+      "engine": "bash",
+      "code": "pdfdetach -savefile speaker-notes.pdfpc -o talk.pdfpc talk.pdf\npdfpc talk.pdf\n",
+      "script": true,
+      "exec_options": {
+        "eval": true,
+        "error": false,
+        "store-get": [],
+        "store-set": [],
+        "fig_device_format": "svg",
+        "fig_device_dpi": 150,
+        "fig_device_width": 6.0,
+        "fig_device_height": null,
+        "fig_device_aspect": 0.618
+      },
+      "display_options": {
+        "echo": true,
+        "output": true,
+        "results": "render",
+        "warning": true,
+        "message": true,
+        "placeholder": true,
+        "fig-width": "70%",
+        "fig-height": null,
+        "fig-align": "center",
+        "fig-responsive": true,
+        "fig-link": null,
+        "fig-caption": null,
+        "fig-cap-location": null,
+        "fig-alt-text": null,
+        "fig-subcaptions": null,
+        "fig-layout-columns": null,
+        "fig-layout-rows": null,
+        "tbl-caption": null,
+        "lst-caption": null,
+        "kind": null
+      },
+      "ordinal": 13,
+      "crossref_labels": []
+    }
+  ],
+  "writers": {}
+}

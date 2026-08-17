@@ -1,0 +1,2875 @@
+{
+  "schema": 1,
+  "images": {
+    "/assets/examples/appearance/layout-default-cover.webp": {
+      "path": "assets/examples/appearance/layout-default-cover.webp",
+      "xxh3": "6d6f3f3035acb754",
+      "bytes": 25160,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/layout-override-cover.webp": {
+      "path": "assets/examples/appearance/layout-override-cover.webp",
+      "xxh3": "e7e1462f6772281b",
+      "bytes": 24254,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/palette-dark-cover.webp": {
+      "path": "assets/examples/appearance/palette-dark-cover.webp",
+      "xxh3": "ddd0ae6ffedd170b",
+      "bytes": 15174,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/palette-default-cover.webp": {
+      "path": "assets/examples/appearance/palette-default-cover.webp",
+      "xxh3": "6d6f3f3035acb754",
+      "bytes": 25160,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/palette-espresso-cover.webp": {
+      "path": "assets/examples/appearance/palette-espresso-cover.webp",
+      "xxh3": "40839beb51eb8cbb",
+      "bytes": 15348,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/palette-forest-cover.webp": {
+      "path": "assets/examples/appearance/palette-forest-cover.webp",
+      "xxh3": "762f27561b835e96",
+      "bytes": 15224,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/palette-light-cover.webp": {
+      "path": "assets/examples/appearance/palette-light-cover.webp",
+      "xxh3": "639a2a84efcd710c",
+      "bytes": 15264,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/palette-parchment-cover.webp": {
+      "path": "assets/examples/appearance/palette-parchment-cover.webp",
+      "xxh3": "555b0a2cc26db316",
+      "bytes": 15648,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/palette-sage-cover.webp": {
+      "path": "assets/examples/appearance/palette-sage-cover.webp",
+      "xxh3": "66d6fbc408fcd552",
+      "bytes": 15100,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/palette-slate-cover.webp": {
+      "path": "assets/examples/appearance/palette-slate-cover.webp",
+      "xxh3": "af40d1809da5c71e",
+      "bytes": 14844,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/palette-stone-cover.webp": {
+      "path": "assets/examples/appearance/palette-stone-cover.webp",
+      "xxh3": "fb8d662f436be03a",
+      "bytes": 15254,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/palette-warm-cover.webp": {
+      "path": "assets/examples/appearance/palette-warm-cover.webp",
+      "xxh3": "3bd753e547863aa2",
+      "bytes": 26358,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/reusable-look-cover.webp": {
+      "path": "assets/examples/appearance/reusable-look-cover.webp",
+      "xxh3": "fdac57b3b81ffef5",
+      "bytes": 6188,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/select-default-cover.webp": {
+      "path": "assets/examples/appearance/select-default-cover.webp",
+      "xxh3": "d85ad0e5966da9b0",
+      "bytes": 18308,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/select-metropolis-cover.webp": {
+      "path": "assets/examples/appearance/select-metropolis-cover.webp",
+      "xxh3": "4a1f980f3da5589c",
+      "bytes": 14344,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/starter-default-cover.webp": {
+      "path": "assets/examples/appearance/starter-default-cover.webp",
+      "xxh3": "6d6f3f3035acb754",
+      "bytes": 25160,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/starter-theme-cover.webp": {
+      "path": "assets/examples/appearance/starter-theme-cover.webp",
+      "xxh3": "d09f384c1c4c9b05",
+      "bytes": 20938,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/theme-options-airy-cover.webp": {
+      "path": "assets/examples/appearance/theme-options-airy-cover.webp",
+      "xxh3": "25bccd56b515b02b",
+      "bytes": 26366,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/theme-options-dense-cover.webp": {
+      "path": "assets/examples/appearance/theme-options-dense-cover.webp",
+      "xxh3": "43790ac3f3122fc7",
+      "bytes": 20220,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/tour-dark-cover.webp": {
+      "path": "assets/examples/appearance/tour-dark-cover.webp",
+      "xxh3": "b27db4165e39b400",
+      "bytes": 25596,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/tour-default-cover.webp": {
+      "path": "assets/examples/appearance/tour-default-cover.webp",
+      "xxh3": "6d6f3f3035acb754",
+      "bytes": 25160,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/tour-editorial-cover.webp": {
+      "path": "assets/examples/appearance/tour-editorial-cover.webp",
+      "xxh3": "085e45761360fda8",
+      "bytes": 19032,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/tour-light-cover.webp": {
+      "path": "assets/examples/appearance/tour-light-cover.webp",
+      "xxh3": "6d6f3f3035acb754",
+      "bytes": 25160,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/tour-manifesto-cover.webp": {
+      "path": "assets/examples/appearance/tour-manifesto-cover.webp",
+      "xxh3": "377e9dd471468178",
+      "bytes": 19984,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/tour-metropolis-cover.webp": {
+      "path": "assets/examples/appearance/tour-metropolis-cover.webp",
+      "xxh3": "6aab5335eefb0170",
+      "bytes": 18772,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/tour-mono-cover.webp": {
+      "path": "assets/examples/appearance/tour-mono-cover.webp",
+      "xxh3": "949ebf3f8e6c40e4",
+      "bytes": 16912,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/type-apply-cover.webp": {
+      "path": "assets/examples/appearance/type-apply-cover.webp",
+      "xxh3": "bbceefd667ecd5f5",
+      "bytes": 19434,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/appearance/type-custom-1.svg": {
+      "path": "assets/examples/appearance/type-custom-1.svg",
+      "xxh3": "962cd7fb0d71a825",
+      "bytes": 95535,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/appearance/type-custom-2.svg": {
+      "path": "assets/examples/appearance/type-custom-2.svg",
+      "xxh3": "5162b01a5167c0dc",
+      "bytes": 218950,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/appearance/type-custom-3.svg": {
+      "path": "assets/examples/appearance/type-custom-3.svg",
+      "xxh3": "26883d9d4f4f7e6c",
+      "bytes": 14563,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/appearance/type-custom-4.svg": {
+      "path": "assets/examples/appearance/type-custom-4.svg",
+      "xxh3": "dbcc2fe106ad1702",
+      "bytes": 223239,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/appearance/type-custom-5.svg": {
+      "path": "assets/examples/appearance/type-custom-5.svg",
+      "xxh3": "f245b3f284d8c851",
+      "bytes": 230803,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/appearance/type-custom-6.svg": {
+      "path": "assets/examples/appearance/type-custom-6.svg",
+      "xxh3": "f1a00041345cc0d1",
+      "bytes": 11976,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/appearance/type-custom-7.svg": {
+      "path": "assets/examples/appearance/type-custom-7.svg",
+      "xxh3": "4312cc3ee39e2e40",
+      "bytes": 146434,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/appearance/type-custom-8.svg": {
+      "path": "assets/examples/appearance/type-custom-8.svg",
+      "xxh3": "25c5ea692ab55b39",
+      "bytes": 199348,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/appearance/type-default-cover.webp": {
+      "path": "assets/examples/appearance/type-default-cover.webp",
+      "xxh3": "6d6f3f3035acb754",
+      "bytes": 25160,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/basics/semantic-slide-1.svg": {
+      "path": "assets/examples/basics/semantic-slide-1.svg",
+      "xxh3": "46f0dca57f61ce31",
+      "bytes": 184534,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/basics/semantic-slide-2.svg": {
+      "path": "assets/examples/basics/semantic-slide-2.svg",
+      "xxh3": "b14f2dac454c2c5b",
+      "bytes": 187040,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/basics/semantic-slide-3.svg": {
+      "path": "assets/examples/basics/semantic-slide-3.svg",
+      "xxh3": "7ef5d01fdda8ffa0",
+      "bytes": 188383,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/basics/semantic-slide-4.svg": {
+      "path": "assets/examples/basics/semantic-slide-4.svg",
+      "xxh3": "5709cc98248dc77d",
+      "bytes": 234161,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/basics/semantic-slide-5.svg": {
+      "path": "assets/examples/basics/semantic-slide-5.svg",
+      "xxh3": "c17d5a75e395ca6b",
+      "bytes": 197839,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/blocks/background-image-cover.webp": {
+      "path": "assets/examples/blocks/background-image-cover.webp",
+      "xxh3": "76482f9b4cf77e26",
+      "bytes": 71522,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/blocks/citations-cover.webp": {
+      "path": "assets/examples/blocks/citations-cover.webp",
+      "xxh3": "c304ce27b6c7a8e5",
+      "bytes": 19648,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/blocks/component-badge-cover.webp": {
+      "path": "assets/examples/blocks/component-badge-cover.webp",
+      "xxh3": "b9859f49e0a95b8d",
+      "bytes": 13952,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/blocks/component-callout-cover.webp": {
+      "path": "assets/examples/blocks/component-callout-cover.webp",
+      "xxh3": "b37cf2f9caa36b25",
+      "bytes": 13058,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/blocks/component-card-cover.webp": {
+      "path": "assets/examples/blocks/component-card-cover.webp",
+      "xxh3": "c7dbb80b3e7c76fa",
+      "bytes": 20250,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/blocks/component-divider-cover.webp": {
+      "path": "assets/examples/blocks/component-divider-cover.webp",
+      "xxh3": "d9a70b8c38fe5040",
+      "bytes": 38808,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/blocks/component-quote-cover.webp": {
+      "path": "assets/examples/blocks/component-quote-cover.webp",
+      "xxh3": "ba07159eb2cc7d18",
+      "bytes": 19484,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/blocks/figure-cover.webp": {
+      "path": "assets/examples/blocks/figure-cover.webp",
+      "xxh3": "6c7e44eaffe78526",
+      "bytes": 37944,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/blocks/full-bleed-image-cover.webp": {
+      "path": "assets/examples/blocks/full-bleed-image-cover.webp",
+      "xxh3": "f93b4b65ac3f73ed",
+      "bytes": 56666,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/blocks/image-fit-cover.webp": {
+      "path": "assets/examples/blocks/image-fit-cover.webp",
+      "xxh3": "3030445e4eb9fa6f",
+      "bytes": 40100,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/blocks/image-scrim-cover.webp": {
+      "path": "assets/examples/blocks/image-scrim-cover.webp",
+      "xxh3": "154f1950f7c40e91",
+      "bytes": 131812,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/blocks/incremental-math-cover.webp": {
+      "path": "assets/examples/blocks/incremental-math-cover.webp",
+      "xxh3": "61606ffffc270f9a",
+      "bytes": 12838,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/blocks/mitex-cover.webp": {
+      "path": "assets/examples/blocks/mitex-cover.webp",
+      "xxh3": "94a5ec6e72056916",
+      "bytes": 22546,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/blocks/progress-custom-layout-cover.webp": {
+      "path": "assets/examples/blocks/progress-custom-layout-cover.webp",
+      "xxh3": "003d593b6f783c9b",
+      "bytes": 3204,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/blocks/progress-line-cover.webp": {
+      "path": "assets/examples/blocks/progress-line-cover.webp",
+      "xxh3": "26aa1cf3b024ecd1",
+      "bytes": 13948,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/blocks/progress-numbers-cover.webp": {
+      "path": "assets/examples/blocks/progress-numbers-cover.webp",
+      "xxh3": "b68677243b93372a",
+      "bytes": 14406,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/blocks/slide-sources-cover.webp": {
+      "path": "assets/examples/blocks/slide-sources-cover.webp",
+      "xxh3": "9a19886f61310696",
+      "bytes": 19728,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/blocks/theorem-cover.webp": {
+      "path": "assets/examples/blocks/theorem-cover.webp",
+      "xxh3": "0b3a624162b05d96",
+      "bytes": 24962,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/content/fit-block-cover.webp": {
+      "path": "assets/examples/content/fit-block-cover.webp",
+      "xxh3": "c741ba6038db473c",
+      "bytes": 33982,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/content/named-content-cover.webp": {
+      "path": "assets/examples/content/named-content-cover.webp",
+      "xxh3": "55c44de3defd72b6",
+      "bytes": 8408,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/faq/aspect-ratio-16-9-1.svg": {
+      "path": "assets/examples/faq/aspect-ratio-16-9-1.svg",
+      "xxh3": "6d0c96db09a55b9a",
+      "bytes": 179893,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/faq/aspect-ratio-4-3-1.svg": {
+      "path": "assets/examples/faq/aspect-ratio-4-3-1.svg",
+      "xxh3": "51fc83da823c51a9",
+      "bytes": 176559,
+      "width": 794,
+      "height": 595
+    },
+    "/assets/examples/faq/color-inversion-1.svg": {
+      "path": "assets/examples/faq/color-inversion-1.svg",
+      "xxh3": "73e250bf3be68323",
+      "bytes": 207549,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/faq/color-inversion-2.svg": {
+      "path": "assets/examples/faq/color-inversion-2.svg",
+      "xxh3": "b4453bb1dcf081fa",
+      "bytes": 202763,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/furniture/background-content-cover.webp": {
+      "path": "assets/examples/furniture/background-content-cover.webp",
+      "xxh3": "0e46bcbb3200fda6",
+      "bytes": 11138,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/furniture/breadcrumbs-cover.webp": {
+      "path": "assets/examples/furniture/breadcrumbs-cover.webp",
+      "xxh3": "a85b8f280964931b",
+      "bytes": 5750,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/furniture/foreground-content-cover.webp": {
+      "path": "assets/examples/furniture/foreground-content-cover.webp",
+      "xxh3": "9640fef9dc8e673f",
+      "bytes": 23908,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/furniture/foreground-image-cover.webp": {
+      "path": "assets/examples/furniture/foreground-image-cover.webp",
+      "xxh3": "da4bed74fa730fb9",
+      "bytes": 18352,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/furniture/outline-columns-cover.webp": {
+      "path": "assets/examples/furniture/outline-columns-cover.webp",
+      "xxh3": "273f816a68cd558f",
+      "bytes": 12240,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/furniture/outline-cover.webp": {
+      "path": "assets/examples/furniture/outline-cover.webp",
+      "xxh3": "14ad347bf198cf5e",
+      "bytes": 7156,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/furniture/section-links-cover.webp": {
+      "path": "assets/examples/furniture/section-links-cover.webp",
+      "xxh3": "4bb5d9d512f58c4e",
+      "bytes": 8782,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/furniture/slide-numbering-cover.webp": {
+      "path": "assets/examples/furniture/slide-numbering-cover.webp",
+      "xxh3": "ebc5974404046428",
+      "bytes": 16838,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/getting-started/first-slideshow-cover.webp": {
+      "path": "assets/examples/getting-started/first-slideshow-cover.webp",
+      "xxh3": "155455ea8ad8666b",
+      "bytes": 10926,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/incremental/cetz-drawing-cover.webp": {
+      "path": "assets/examples/incremental/cetz-drawing-cover.webp",
+      "xxh3": "54e3471edbafc5f6",
+      "bytes": 14836,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/incremental/fletcher-diagram-cover.webp": {
+      "path": "assets/examples/incremental/fletcher-diagram-cover.webp",
+      "xxh3": "a546a17b21f48a66",
+      "bytes": 8402,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/incremental/replace-content-cover.webp": {
+      "path": "assets/examples/incremental/replace-content-cover.webp",
+      "xxh3": "584ffe130f2f13bd",
+      "bytes": 10404,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/incremental/reveal-bullets-cover.webp": {
+      "path": "assets/examples/incremental/reveal-bullets-cover.webp",
+      "xxh3": "736f0e0c45962898",
+      "bytes": 9928,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/incremental/reveal-cells-cover.webp": {
+      "path": "assets/examples/incremental/reveal-cells-cover.webp",
+      "xxh3": "09d7cd7c2fe0fbe6",
+      "bytes": 5192,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/incremental/reveal-text-cover.webp": {
+      "path": "assets/examples/incremental/reveal-text-cover.webp",
+      "xxh3": "018883482179a374",
+      "bytes": 12756,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/structure/content-columns-1.svg": {
+      "path": "assets/examples/structure/content-columns-1.svg",
+      "xxh3": "7ebebd545dcc38e9",
+      "bytes": 231174,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/content-layout-custom-1.svg": {
+      "path": "assets/examples/structure/content-layout-custom-1.svg",
+      "xxh3": "b80810bcbc402b14",
+      "bytes": 231640,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/content-layout-custom-2.svg": {
+      "path": "assets/examples/structure/content-layout-custom-2.svg",
+      "xxh3": "1658c952f64c0e1c",
+      "bytes": 242889,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/content-layout-full-1.svg": {
+      "path": "assets/examples/structure/content-layout-full-1.svg",
+      "xxh3": "a094725a3bec4fab",
+      "bytes": 251393,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/content-layout-inverted-1.svg": {
+      "path": "assets/examples/structure/content-layout-inverted-1.svg",
+      "xxh3": "881b0940d5f00df5",
+      "bytes": 250727,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/filling-cells-cover.webp": {
+      "path": "assets/examples/structure/filling-cells-cover.webp",
+      "xxh3": "00b5c3ccc405b4a3",
+      "bytes": 3360,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/structure/grid-columns-1.svg": {
+      "path": "assets/examples/structure/grid-columns-1.svg",
+      "xxh3": "728b91fdca356c78",
+      "bytes": 170310,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/grid-dashboard-1.svg": {
+      "path": "assets/examples/structure/grid-dashboard-1.svg",
+      "xxh3": "e8cb4984be774b1a",
+      "bytes": 186575,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/grid-nested-1.svg": {
+      "path": "assets/examples/structure/grid-nested-1.svg",
+      "xxh3": "fb43bd8e784f2cc4",
+      "bytes": 170321,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/grid-quadrants-1.svg": {
+      "path": "assets/examples/structure/grid-quadrants-1.svg",
+      "xxh3": "3f4338ce318ae4fa",
+      "bytes": 172138,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/grid-rows-1.svg": {
+      "path": "assets/examples/structure/grid-rows-1.svg",
+      "xxh3": "503a6084813941a1",
+      "bytes": 170313,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/grid-track-banner-1.svg": {
+      "path": "assets/examples/structure/grid-track-banner-1.svg",
+      "xxh3": "ed18aa8ec4b231d1",
+      "bytes": 168360,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/grid-track-center-1.svg": {
+      "path": "assets/examples/structure/grid-track-center-1.svg",
+      "xxh3": "dc206df300dadb5a",
+      "bytes": 170313,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/grid-track-fraction-1.svg": {
+      "path": "assets/examples/structure/grid-track-fraction-1.svg",
+      "xxh3": "5d29148099a8f337",
+      "bytes": 168358,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/image-layout-1.svg": {
+      "path": "assets/examples/structure/image-layout-1.svg",
+      "xxh3": "d51c2c40a606feea",
+      "bytes": 165071,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/image-layout-2.svg": {
+      "path": "assets/examples/structure/image-layout-2.svg",
+      "xxh3": "eafaa6ab0a3f326c",
+      "bytes": 146495,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/image-layout-3.svg": {
+      "path": "assets/examples/structure/image-layout-3.svg",
+      "xxh3": "3fdea48dd239f7cb",
+      "bytes": 170560,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/image-layout-4.svg": {
+      "path": "assets/examples/structure/image-layout-4.svg",
+      "xxh3": "455cdcc6c810cde2",
+      "bytes": 79016,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/section-layout-01.svg": {
+      "path": "assets/examples/structure/section-layout-01.svg",
+      "xxh3": "e1ead610f68b86f9",
+      "bytes": 14463,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/section-layout-02.svg": {
+      "path": "assets/examples/structure/section-layout-02.svg",
+      "xxh3": "0fbccc56f1f8a4bb",
+      "bytes": 17799,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/section-layout-03.svg": {
+      "path": "assets/examples/structure/section-layout-03.svg",
+      "xxh3": "bbac98875eb9c4fe",
+      "bytes": 28132,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/section-layout-04.svg": {
+      "path": "assets/examples/structure/section-layout-04.svg",
+      "xxh3": "176038db3b8094f5",
+      "bytes": 33013,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/section-layout-05.svg": {
+      "path": "assets/examples/structure/section-layout-05.svg",
+      "xxh3": "1a9f23c07ee8e46f",
+      "bytes": 33693,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/section-layout-06.svg": {
+      "path": "assets/examples/structure/section-layout-06.svg",
+      "xxh3": "22b3b4a57e1031ae",
+      "bytes": 54648,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/section-layout-07.svg": {
+      "path": "assets/examples/structure/section-layout-07.svg",
+      "xxh3": "58f58b4704731121",
+      "bytes": 121173,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/section-layout-08.svg": {
+      "path": "assets/examples/structure/section-layout-08.svg",
+      "xxh3": "31427d0c0806a98b",
+      "bytes": 121874,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/section-layout-09.svg": {
+      "path": "assets/examples/structure/section-layout-09.svg",
+      "xxh3": "c6af8e2ab525f919",
+      "bytes": 121577,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/section-layout-10.svg": {
+      "path": "assets/examples/structure/section-layout-10.svg",
+      "xxh3": "106a064d134f8503",
+      "bytes": 121962,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/section-layout-11.svg": {
+      "path": "assets/examples/structure/section-layout-11.svg",
+      "xxh3": "37e21ad2d110186b",
+      "bytes": 125652,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/setup-content-1.svg": {
+      "path": "assets/examples/structure/setup-content-1.svg",
+      "xxh3": "9e04146d6b63fdde",
+      "bytes": 208188,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/setup-content-2.svg": {
+      "path": "assets/examples/structure/setup-content-2.svg",
+      "xxh3": "890018c68adbd072",
+      "bytes": 205529,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/setup-content-3.svg": {
+      "path": "assets/examples/structure/setup-content-3.svg",
+      "xxh3": "efba59dff000cfa8",
+      "bytes": 193046,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/structure/title-academic-cover.webp": {
+      "path": "assets/examples/structure/title-academic-cover.webp",
+      "xxh3": "04041d99837059bf",
+      "bytes": 26702,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/structure/title-bordered-cover.webp": {
+      "path": "assets/examples/structure/title-bordered-cover.webp",
+      "xxh3": "a4517d0e6477a0a6",
+      "bytes": 27740,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/structure/title-centered-cover.webp": {
+      "path": "assets/examples/structure/title-centered-cover.webp",
+      "xxh3": "bd1fe8e787806383",
+      "bytes": 29118,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/structure/title-custom-cover.webp": {
+      "path": "assets/examples/structure/title-custom-cover.webp",
+      "xxh3": "e08b1fcb9d15f1e9",
+      "bytes": 62370,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/structure/title-image-bottom-cover.webp": {
+      "path": "assets/examples/structure/title-image-bottom-cover.webp",
+      "xxh3": "97989ac5ea5da3d0",
+      "bytes": 83728,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/structure/title-image-left-cover.webp": {
+      "path": "assets/examples/structure/title-image-left-cover.webp",
+      "xxh3": "4c128b63af9ecd36",
+      "bytes": 75406,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/structure/title-image-right-cover.webp": {
+      "path": "assets/examples/structure/title-image-right-cover.webp",
+      "xxh3": "4d5ce6bb71ffd34c",
+      "bytes": 77792,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/structure/title-image-top-cover.webp": {
+      "path": "assets/examples/structure/title-image-top-cover.webp",
+      "xxh3": "b5db21b9964da2c6",
+      "bytes": 81878,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/structure/title-invert-cover.webp": {
+      "path": "assets/examples/structure/title-invert-cover.webp",
+      "xxh3": "7fbbcef3aeb0e0c5",
+      "bytes": 27128,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/structure/title-kicker-cover.webp": {
+      "path": "assets/examples/structure/title-kicker-cover.webp",
+      "xxh3": "77856c35f67b9114",
+      "bytes": 28714,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/structure/title-panel-cover.webp": {
+      "path": "assets/examples/structure/title-panel-cover.webp",
+      "xxh3": "d705ea3aa86b7633",
+      "bytes": 25262,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/structure/title-ruled-cover.webp": {
+      "path": "assets/examples/structure/title-ruled-cover.webp",
+      "xxh3": "3fc6e4ac0fa0a4c2",
+      "bytes": 29066,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/examples/structure/title-simple-cover.webp": {
+      "path": "assets/examples/structure/title-simple-cover.webp",
+      "xxh3": "d85ad0e5966da9b0",
+      "bytes": 18308,
+      "width": 1345,
+      "height": 756
+    },
+    "/assets/images/bonsai.webp": {
+      "path": "assets/images/bonsai.webp",
+      "xxh3": "1001966f509c9c88",
+      "bytes": 100006,
+      "width": 1600,
+      "height": 900
+    },
+    "/assets/images/dog.webp": {
+      "path": "assets/images/dog.webp",
+      "xxh3": "fa58e5afeac6de23",
+      "bytes": 78200,
+      "width": 1067,
+      "height": 1600
+    },
+    "/assets/images/showcase-contact-sheet.webp": {
+      "path": "assets/images/showcase-contact-sheet.webp",
+      "xxh3": "cdbc8c0f858efb0d",
+      "bytes": 346582,
+      "width": 1968,
+      "height": 3732
+    },
+    "/assets/images/showcase-poster.webp": {
+      "path": "assets/images/showcase-poster.webp",
+      "xxh3": "985c916123eeccc8",
+      "bytes": 71694,
+      "width": 1280,
+      "height": 720
+    },
+    "/assets/images/title-city.webp": {
+      "path": "assets/images/title-city.webp",
+      "xxh3": "9c3524d74eb5acbd",
+      "bytes": 46316,
+      "width": 1024,
+      "height": 576
+    },
+    "/assets/images/title-river.webp": {
+      "path": "assets/images/title-river.webp",
+      "xxh3": "3cc36483d3a11fa3",
+      "bytes": 142734,
+      "width": 1024,
+      "height": 576
+    },
+    "/assets/mosaic-slide.svg": {
+      "path": "assets/mosaic-slide.svg",
+      "xxh3": "f1a2dad286ac018c",
+      "bytes": 289,
+      "width": 160,
+      "height": 90
+    },
+    "/assets/typst.svg": {
+      "path": "assets/typst.svg",
+      "xxh3": "57fb5b19a1d48c90",
+      "bytes": 4634,
+      "width": 91,
+      "height": 35
+    },
+    "/examples/decks/beamer-annarbor/cover.jpg": {
+      "path": "examples/decks/beamer-annarbor/cover.jpg",
+      "xxh3": "858823ed37046434",
+      "bytes": 70432,
+      "width": 1200,
+      "height": 900
+    },
+    "/examples/decks/calmly/cover.jpg": {
+      "path": "examples/decks/calmly/cover.jpg",
+      "xxh3": "ead18cbeff1c1e88",
+      "bytes": 26822,
+      "width": 1200,
+      "height": 675
+    },
+    "/examples/decks/editorial/assets/image1.jpg": {
+      "path": "examples/decks/editorial/assets/image1.jpg",
+      "xxh3": "3ef7f4c3e9a3c5a9",
+      "bytes": 252977,
+      "width": 1318,
+      "height": 1977
+    },
+    "/examples/decks/editorial/assets/image10.jpg": {
+      "path": "examples/decks/editorial/assets/image10.jpg",
+      "xxh3": "949b58f70800c408",
+      "bytes": 330116,
+      "width": 1437,
+      "height": 1627
+    },
+    "/examples/decks/editorial/assets/image13.jpg": {
+      "path": "examples/decks/editorial/assets/image13.jpg",
+      "xxh3": "95c0111e6dc53580",
+      "bytes": 340692,
+      "width": 999,
+      "height": 1088
+    },
+    "/examples/decks/editorial/assets/image14.jpg": {
+      "path": "examples/decks/editorial/assets/image14.jpg",
+      "xxh3": "791d798b7cdd27fb",
+      "bytes": 168455,
+      "width": 1438,
+      "height": 809
+    },
+    "/examples/decks/editorial/assets/image15.jpg": {
+      "path": "examples/decks/editorial/assets/image15.jpg",
+      "xxh3": "2df7c4059eee6a86",
+      "bytes": 65753,
+      "width": 469,
+      "height": 609
+    },
+    "/examples/decks/editorial/assets/image17.jpg": {
+      "path": "examples/decks/editorial/assets/image17.jpg",
+      "xxh3": "229ed24d3fcde7aa",
+      "bytes": 103128,
+      "width": 471,
+      "height": 706
+    },
+    "/examples/decks/editorial/assets/image2.jpg": {
+      "path": "examples/decks/editorial/assets/image2.jpg",
+      "xxh3": "59e015cc89daf846",
+      "bytes": 168968,
+      "width": 1507,
+      "height": 2122
+    },
+    "/examples/decks/editorial/assets/image20.jpg": {
+      "path": "examples/decks/editorial/assets/image20.jpg",
+      "xxh3": "42981bcdaecff897",
+      "bytes": 619901,
+      "width": 1438,
+      "height": 1620
+    },
+    "/examples/decks/editorial/assets/image21.jpg": {
+      "path": "examples/decks/editorial/assets/image21.jpg",
+      "xxh3": "7fbdbec296140aac",
+      "bytes": 35173,
+      "width": 440,
+      "height": 661
+    },
+    "/examples/decks/editorial/assets/image22.jpg": {
+      "path": "examples/decks/editorial/assets/image22.jpg",
+      "xxh3": "2b1a7392fc8196d7",
+      "bytes": 120584,
+      "width": 847,
+      "height": 620
+    },
+    "/examples/decks/editorial/assets/image23.jpg": {
+      "path": "examples/decks/editorial/assets/image23.jpg",
+      "xxh3": "98ec40c894c4ac3b",
+      "bytes": 189689,
+      "width": 564,
+      "height": 847
+    },
+    "/examples/decks/editorial/assets/image24.jpg": {
+      "path": "examples/decks/editorial/assets/image24.jpg",
+      "xxh3": "7989a8cf0530d25d",
+      "bytes": 61456,
+      "width": 675,
+      "height": 577
+    },
+    "/examples/decks/editorial/assets/image25.jpg": {
+      "path": "examples/decks/editorial/assets/image25.jpg",
+      "xxh3": "a1bbe733f2edb566",
+      "bytes": 91792,
+      "width": 524,
+      "height": 785
+    },
+    "/examples/decks/editorial/assets/image26.jpg": {
+      "path": "examples/decks/editorial/assets/image26.jpg",
+      "xxh3": "7559e1932879f61d",
+      "bytes": 160210,
+      "width": 2407,
+      "height": 1605
+    },
+    "/examples/decks/editorial/assets/image28.jpg": {
+      "path": "examples/decks/editorial/assets/image28.jpg",
+      "xxh3": "ae71059b4d9afd47",
+      "bytes": 159594,
+      "width": 1184,
+      "height": 1776
+    },
+    "/examples/decks/editorial/assets/image29.jpg": {
+      "path": "examples/decks/editorial/assets/image29.jpg",
+      "xxh3": "d2a00d1537a85433",
+      "bytes": 130236,
+      "width": 827,
+      "height": 432
+    },
+    "/examples/decks/editorial/assets/image3.jpg": {
+      "path": "examples/decks/editorial/assets/image3.jpg",
+      "xxh3": "3a57c3c0107f6f31",
+      "bytes": 204801,
+      "width": 1613,
+      "height": 2016
+    },
+    "/examples/decks/editorial/assets/image30.jpg": {
+      "path": "examples/decks/editorial/assets/image30.jpg",
+      "xxh3": "ab975be78c939f89",
+      "bytes": 103893,
+      "width": 1158,
+      "height": 743
+    },
+    "/examples/decks/editorial/assets/image31.jpg": {
+      "path": "examples/decks/editorial/assets/image31.jpg",
+      "xxh3": "a299928a40ba170e",
+      "bytes": 95360,
+      "width": 676,
+      "height": 577
+    },
+    "/examples/decks/editorial/assets/image32.jpg": {
+      "path": "examples/decks/editorial/assets/image32.jpg",
+      "xxh3": "8c9b54b1e3bb1017",
+      "bytes": 66290,
+      "width": 552,
+      "height": 701
+    },
+    "/examples/decks/editorial/assets/image34.jpg": {
+      "path": "examples/decks/editorial/assets/image34.jpg",
+      "xxh3": "4e9ead4a3230e9da",
+      "bytes": 334745,
+      "width": 1000,
+      "height": 1445
+    },
+    "/examples/decks/editorial/assets/image35.jpg": {
+      "path": "examples/decks/editorial/assets/image35.jpg",
+      "xxh3": "2c24e2b7d20a6e84",
+      "bytes": 69457,
+      "width": 676,
+      "height": 577
+    },
+    "/examples/decks/editorial/assets/image36.jpg": {
+      "path": "examples/decks/editorial/assets/image36.jpg",
+      "xxh3": "d20fc9139319739c",
+      "bytes": 109951,
+      "width": 676,
+      "height": 577
+    },
+    "/examples/decks/editorial/assets/image37.jpg": {
+      "path": "examples/decks/editorial/assets/image37.jpg",
+      "xxh3": "e369de1b688e1325",
+      "bytes": 84274,
+      "width": 544,
+      "height": 1620
+    },
+    "/examples/decks/editorial/assets/image4.jpg": {
+      "path": "examples/decks/editorial/assets/image4.jpg",
+      "xxh3": "b7d1a1663edbba8c",
+      "bytes": 219099,
+      "width": 1262,
+      "height": 1446
+    },
+    "/examples/decks/editorial/assets/image47.jpg": {
+      "path": "examples/decks/editorial/assets/image47.jpg",
+      "xxh3": "f0982b5d3ab292b5",
+      "bytes": 143068,
+      "width": 1080,
+      "height": 1620
+    },
+    "/examples/decks/editorial/assets/image7.jpg": {
+      "path": "examples/decks/editorial/assets/image7.jpg",
+      "xxh3": "1aee5c8ea25f9826",
+      "bytes": 236079,
+      "width": 1000,
+      "height": 1445
+    },
+    "/examples/decks/editorial/assets/image8.jpg": {
+      "path": "examples/decks/editorial/assets/image8.jpg",
+      "xxh3": "52a6cb9bb8f79565",
+      "bytes": 106984,
+      "width": 1328,
+      "height": 1992
+    },
+    "/examples/decks/editorial/cover.jpg": {
+      "path": "examples/decks/editorial/cover.jpg",
+      "xxh3": "6124711db9010af2",
+      "bytes": 43206,
+      "width": 1200,
+      "height": 675
+    },
+    "/examples/decks/manifesto/assets/image1.png": {
+      "path": "examples/decks/manifesto/assets/image1.png",
+      "xxh3": "5060a82dd4b2c706",
+      "bytes": 28078,
+      "width": 2045,
+      "height": 911
+    },
+    "/examples/decks/manifesto/assets/image10.jpg": {
+      "path": "examples/decks/manifesto/assets/image10.jpg",
+      "xxh3": "6cd315c7621a1525",
+      "bytes": 84927,
+      "width": 450,
+      "height": 654
+    },
+    "/examples/decks/manifesto/assets/image12.jpg": {
+      "path": "examples/decks/manifesto/assets/image12.jpg",
+      "xxh3": "f76dcf712546613d",
+      "bytes": 32100,
+      "width": 337,
+      "height": 337
+    },
+    "/examples/decks/manifesto/assets/image15.jpg": {
+      "path": "examples/decks/manifesto/assets/image15.jpg",
+      "xxh3": "606623b47a8c389d",
+      "bytes": 26744,
+      "width": 337,
+      "height": 336
+    },
+    "/examples/decks/manifesto/assets/image18.jpg": {
+      "path": "examples/decks/manifesto/assets/image18.jpg",
+      "xxh3": "cbb3b733254208f4",
+      "bytes": 331835,
+      "width": 1284,
+      "height": 869
+    },
+    "/examples/decks/manifesto/assets/image2.jpg": {
+      "path": "examples/decks/manifesto/assets/image2.jpg",
+      "xxh3": "77ab699084ad636a",
+      "bytes": 23331,
+      "width": 337,
+      "height": 337
+    },
+    "/examples/decks/manifesto/assets/image21.jpg": {
+      "path": "examples/decks/manifesto/assets/image21.jpg",
+      "xxh3": "cc1d326126b2f992",
+      "bytes": 492147,
+      "width": 1284,
+      "height": 1302
+    },
+    "/examples/decks/manifesto/assets/image27.jpg": {
+      "path": "examples/decks/manifesto/assets/image27.jpg",
+      "xxh3": "5072148bbe0284e0",
+      "bytes": 203745,
+      "width": 1284,
+      "height": 660
+    },
+    "/examples/decks/manifesto/assets/image3.jpg": {
+      "path": "examples/decks/manifesto/assets/image3.jpg",
+      "xxh3": "933a873bf6908fb7",
+      "bytes": 191426,
+      "width": 1229,
+      "height": 654
+    },
+    "/examples/decks/manifesto/assets/image4.jpg": {
+      "path": "examples/decks/manifesto/assets/image4.jpg",
+      "xxh3": "760c52f27236131c",
+      "bytes": 77674,
+      "width": 436,
+      "height": 443
+    },
+    "/examples/decks/manifesto/assets/image41.jpg": {
+      "path": "examples/decks/manifesto/assets/image41.jpg",
+      "xxh3": "55b1d09dff5ada1e",
+      "bytes": 803942,
+      "width": 1284,
+      "height": 1302
+    },
+    "/examples/decks/manifesto/assets/image5.jpg": {
+      "path": "examples/decks/manifesto/assets/image5.jpg",
+      "xxh3": "4f465b597fcb34a3",
+      "bytes": 200293,
+      "width": 1229,
+      "height": 660
+    },
+    "/examples/decks/manifesto/assets/image54.jpg": {
+      "path": "examples/decks/manifesto/assets/image54.jpg",
+      "xxh3": "758a06bd49f96e51",
+      "bytes": 89694,
+      "width": 436,
+      "height": 443
+    },
+    "/examples/decks/manifesto/assets/image57.jpg": {
+      "path": "examples/decks/manifesto/assets/image57.jpg",
+      "xxh3": "b163ff5e036e1878",
+      "bytes": 180347,
+      "width": 908,
+      "height": 654
+    },
+    "/examples/decks/manifesto/assets/image6.jpg": {
+      "path": "examples/decks/manifesto/assets/image6.jpg",
+      "xxh3": "9e9d10f7d0b9b8c6",
+      "bytes": 148598,
+      "width": 799,
+      "height": 660
+    },
+    "/examples/decks/manifesto/assets/image7.jpg": {
+      "path": "examples/decks/manifesto/assets/image7.jpg",
+      "xxh3": "f5c61da42bd0d0f2",
+      "bytes": 228137,
+      "width": 1284,
+      "height": 654
+    },
+    "/examples/decks/manifesto/assets/image9.jpg": {
+      "path": "examples/decks/manifesto/assets/image9.jpg",
+      "xxh3": "ef025051265d85cb",
+      "bytes": 120286,
+      "width": 558,
+      "height": 660
+    },
+    "/examples/decks/manifesto/cover.jpg": {
+      "path": "examples/decks/manifesto/cover.jpg",
+      "xxh3": "1ce2c696b63ef690",
+      "bytes": 27890,
+      "width": 1200,
+      "height": 675
+    },
+    "/examples/decks/metropolis/cover.jpg": {
+      "path": "examples/decks/metropolis/cover.jpg",
+      "xxh3": "d95de6a9bfa88848",
+      "bytes": 40958,
+      "width": 1200,
+      "height": 675
+    },
+    "/examples/decks/portfolio/assets/image1.jpg": {
+      "path": "examples/decks/portfolio/assets/image1.jpg",
+      "xxh3": "3ee824f8d6c5c2da",
+      "bytes": 365706,
+      "width": 1056,
+      "height": 1620
+    },
+    "/examples/decks/portfolio/assets/image10.jpg": {
+      "path": "examples/decks/portfolio/assets/image10.jpg",
+      "xxh3": "7028983c790dd1d8",
+      "bytes": 333391,
+      "width": 2048,
+      "height": 576
+    },
+    "/examples/decks/portfolio/assets/image11.jpg": {
+      "path": "examples/decks/portfolio/assets/image11.jpg",
+      "xxh3": "9d3d80aaafdb6b87",
+      "bytes": 110090,
+      "width": 1131,
+      "height": 638
+    },
+    "/examples/decks/portfolio/assets/image12.jpg": {
+      "path": "examples/decks/portfolio/assets/image12.jpg",
+      "xxh3": "e7898e816cd29f07",
+      "bytes": 170320,
+      "width": 730,
+      "height": 1243
+    },
+    "/examples/decks/portfolio/assets/image13.jpg": {
+      "path": "examples/decks/portfolio/assets/image13.jpg",
+      "xxh3": "3127bdd74b0021b8",
+      "bytes": 284158,
+      "width": 1957,
+      "height": 1426
+    },
+    "/examples/decks/portfolio/assets/image16.jpg": {
+      "path": "examples/decks/portfolio/assets/image16.jpg",
+      "xxh3": "473cb5f137fa5cd4",
+      "bytes": 74573,
+      "width": 1131,
+      "height": 638
+    },
+    "/examples/decks/portfolio/assets/image17.jpg": {
+      "path": "examples/decks/portfolio/assets/image17.jpg",
+      "xxh3": "bae0e931c6038d37",
+      "bytes": 116440,
+      "width": 764,
+      "height": 732
+    },
+    "/examples/decks/portfolio/assets/image18.jpg": {
+      "path": "examples/decks/portfolio/assets/image18.jpg",
+      "xxh3": "e2c15d01f5a31846",
+      "bytes": 197835,
+      "width": 764,
+      "height": 732
+    },
+    "/examples/decks/portfolio/assets/image19.jpg": {
+      "path": "examples/decks/portfolio/assets/image19.jpg",
+      "xxh3": "4b5a2995b6b5839d",
+      "bytes": 279423,
+      "width": 2046,
+      "height": 1117
+    },
+    "/examples/decks/portfolio/assets/image2.jpg": {
+      "path": "examples/decks/portfolio/assets/image2.jpg",
+      "xxh3": "ddd88a409b8044f9",
+      "bytes": 122982,
+      "width": 1131,
+      "height": 637
+    },
+    "/examples/decks/portfolio/assets/image20.jpg": {
+      "path": "examples/decks/portfolio/assets/image20.jpg",
+      "xxh3": "3273d056f30e865c",
+      "bytes": 258111,
+      "width": 1785,
+      "height": 1025
+    },
+    "/examples/decks/portfolio/assets/image21.jpg": {
+      "path": "examples/decks/portfolio/assets/image21.jpg",
+      "xxh3": "abac455ae30a8a44",
+      "bytes": 242145,
+      "width": 2047,
+      "height": 1566
+    },
+    "/examples/decks/portfolio/assets/image3.jpg": {
+      "path": "examples/decks/portfolio/assets/image3.jpg",
+      "xxh3": "520ed2cb9bb06482",
+      "bytes": 160384,
+      "width": 764,
+      "height": 732
+    },
+    "/examples/decks/portfolio/assets/image4.jpg": {
+      "path": "examples/decks/portfolio/assets/image4.jpg",
+      "xxh3": "dba7fb1783d1ec6d",
+      "bytes": 185857,
+      "width": 2048,
+      "height": 1152
+    },
+    "/examples/decks/portfolio/assets/image5.jpg": {
+      "path": "examples/decks/portfolio/assets/image5.jpg",
+      "xxh3": "b0dc87e890504d9c",
+      "bytes": 86566,
+      "width": 830,
+      "height": 1296
+    },
+    "/examples/decks/portfolio/assets/image6.jpg": {
+      "path": "examples/decks/portfolio/assets/image6.jpg",
+      "xxh3": "d303ee135e181f91",
+      "bytes": 163549,
+      "width": 2048,
+      "height": 1152
+    },
+    "/examples/decks/portfolio/assets/image7.jpg": {
+      "path": "examples/decks/portfolio/assets/image7.jpg",
+      "xxh3": "13ce6441091a15d7",
+      "bytes": 115174,
+      "width": 1131,
+      "height": 637
+    },
+    "/examples/decks/portfolio/assets/image8.png": {
+      "path": "examples/decks/portfolio/assets/image8.png",
+      "xxh3": "8b8ae463afe96137",
+      "bytes": 20888,
+      "width": 1139,
+      "height": 1042
+    },
+    "/examples/decks/portfolio/assets/image9.jpg": {
+      "path": "examples/decks/portfolio/assets/image9.jpg",
+      "xxh3": "d7fdf69397ff6946",
+      "bytes": 63281,
+      "width": 729,
+      "height": 1243
+    },
+    "/examples/decks/portfolio/cover.jpg": {
+      "path": "examples/decks/portfolio/cover.jpg",
+      "xxh3": "e94b093f397ed6ba",
+      "bytes": 51138,
+      "width": 1200,
+      "height": 675
+    },
+    "/examples/decks/quarto-clean/cover.jpg": {
+      "path": "examples/decks/quarto-clean/cover.jpg",
+      "xxh3": "be5ec9612878d343",
+      "bytes": 40586,
+      "width": 1200,
+      "height": 675
+    },
+    "/examples/decks/simpres/cover.jpg": {
+      "path": "examples/decks/simpres/cover.jpg",
+      "xxh3": "b5b1d405a9aad152",
+      "bytes": 37967,
+      "width": 1200,
+      "height": 675
+    },
+    "assets/examples/appearance/layout-default-cover.webp": {
+      "path": "assets/examples/appearance/layout-default-cover.webp",
+      "xxh3": "6d6f3f3035acb754",
+      "bytes": 25160,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/layout-override-cover.webp": {
+      "path": "assets/examples/appearance/layout-override-cover.webp",
+      "xxh3": "e7e1462f6772281b",
+      "bytes": 24254,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/palette-dark-cover.webp": {
+      "path": "assets/examples/appearance/palette-dark-cover.webp",
+      "xxh3": "ddd0ae6ffedd170b",
+      "bytes": 15174,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/palette-default-cover.webp": {
+      "path": "assets/examples/appearance/palette-default-cover.webp",
+      "xxh3": "6d6f3f3035acb754",
+      "bytes": 25160,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/palette-espresso-cover.webp": {
+      "path": "assets/examples/appearance/palette-espresso-cover.webp",
+      "xxh3": "40839beb51eb8cbb",
+      "bytes": 15348,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/palette-forest-cover.webp": {
+      "path": "assets/examples/appearance/palette-forest-cover.webp",
+      "xxh3": "762f27561b835e96",
+      "bytes": 15224,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/palette-light-cover.webp": {
+      "path": "assets/examples/appearance/palette-light-cover.webp",
+      "xxh3": "639a2a84efcd710c",
+      "bytes": 15264,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/palette-parchment-cover.webp": {
+      "path": "assets/examples/appearance/palette-parchment-cover.webp",
+      "xxh3": "555b0a2cc26db316",
+      "bytes": 15648,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/palette-sage-cover.webp": {
+      "path": "assets/examples/appearance/palette-sage-cover.webp",
+      "xxh3": "66d6fbc408fcd552",
+      "bytes": 15100,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/palette-slate-cover.webp": {
+      "path": "assets/examples/appearance/palette-slate-cover.webp",
+      "xxh3": "af40d1809da5c71e",
+      "bytes": 14844,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/palette-stone-cover.webp": {
+      "path": "assets/examples/appearance/palette-stone-cover.webp",
+      "xxh3": "fb8d662f436be03a",
+      "bytes": 15254,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/palette-warm-cover.webp": {
+      "path": "assets/examples/appearance/palette-warm-cover.webp",
+      "xxh3": "3bd753e547863aa2",
+      "bytes": 26358,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/reusable-look-cover.webp": {
+      "path": "assets/examples/appearance/reusable-look-cover.webp",
+      "xxh3": "fdac57b3b81ffef5",
+      "bytes": 6188,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/select-default-cover.webp": {
+      "path": "assets/examples/appearance/select-default-cover.webp",
+      "xxh3": "d85ad0e5966da9b0",
+      "bytes": 18308,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/select-metropolis-cover.webp": {
+      "path": "assets/examples/appearance/select-metropolis-cover.webp",
+      "xxh3": "4a1f980f3da5589c",
+      "bytes": 14344,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/starter-default-cover.webp": {
+      "path": "assets/examples/appearance/starter-default-cover.webp",
+      "xxh3": "6d6f3f3035acb754",
+      "bytes": 25160,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/starter-theme-cover.webp": {
+      "path": "assets/examples/appearance/starter-theme-cover.webp",
+      "xxh3": "d09f384c1c4c9b05",
+      "bytes": 20938,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/theme-options-airy-cover.webp": {
+      "path": "assets/examples/appearance/theme-options-airy-cover.webp",
+      "xxh3": "25bccd56b515b02b",
+      "bytes": 26366,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/theme-options-dense-cover.webp": {
+      "path": "assets/examples/appearance/theme-options-dense-cover.webp",
+      "xxh3": "43790ac3f3122fc7",
+      "bytes": 20220,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/tour-dark-cover.webp": {
+      "path": "assets/examples/appearance/tour-dark-cover.webp",
+      "xxh3": "b27db4165e39b400",
+      "bytes": 25596,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/tour-default-cover.webp": {
+      "path": "assets/examples/appearance/tour-default-cover.webp",
+      "xxh3": "6d6f3f3035acb754",
+      "bytes": 25160,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/tour-editorial-cover.webp": {
+      "path": "assets/examples/appearance/tour-editorial-cover.webp",
+      "xxh3": "085e45761360fda8",
+      "bytes": 19032,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/tour-light-cover.webp": {
+      "path": "assets/examples/appearance/tour-light-cover.webp",
+      "xxh3": "6d6f3f3035acb754",
+      "bytes": 25160,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/tour-manifesto-cover.webp": {
+      "path": "assets/examples/appearance/tour-manifesto-cover.webp",
+      "xxh3": "377e9dd471468178",
+      "bytes": 19984,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/tour-metropolis-cover.webp": {
+      "path": "assets/examples/appearance/tour-metropolis-cover.webp",
+      "xxh3": "6aab5335eefb0170",
+      "bytes": 18772,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/tour-mono-cover.webp": {
+      "path": "assets/examples/appearance/tour-mono-cover.webp",
+      "xxh3": "949ebf3f8e6c40e4",
+      "bytes": 16912,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/type-apply-cover.webp": {
+      "path": "assets/examples/appearance/type-apply-cover.webp",
+      "xxh3": "bbceefd667ecd5f5",
+      "bytes": 19434,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/type-custom-1.svg": {
+      "path": "assets/examples/appearance/type-custom-1.svg",
+      "xxh3": "962cd7fb0d71a825",
+      "bytes": 95535,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/appearance/type-custom-2.svg": {
+      "path": "assets/examples/appearance/type-custom-2.svg",
+      "xxh3": "5162b01a5167c0dc",
+      "bytes": 218950,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/appearance/type-custom-3.svg": {
+      "path": "assets/examples/appearance/type-custom-3.svg",
+      "xxh3": "26883d9d4f4f7e6c",
+      "bytes": 14563,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/appearance/type-custom-4.svg": {
+      "path": "assets/examples/appearance/type-custom-4.svg",
+      "xxh3": "dbcc2fe106ad1702",
+      "bytes": 223239,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/appearance/type-custom-5.svg": {
+      "path": "assets/examples/appearance/type-custom-5.svg",
+      "xxh3": "f245b3f284d8c851",
+      "bytes": 230803,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/appearance/type-custom-6.svg": {
+      "path": "assets/examples/appearance/type-custom-6.svg",
+      "xxh3": "f1a00041345cc0d1",
+      "bytes": 11976,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/appearance/type-custom-7.svg": {
+      "path": "assets/examples/appearance/type-custom-7.svg",
+      "xxh3": "4312cc3ee39e2e40",
+      "bytes": 146434,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/appearance/type-custom-8.svg": {
+      "path": "assets/examples/appearance/type-custom-8.svg",
+      "xxh3": "25c5ea692ab55b39",
+      "bytes": 199348,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/appearance/type-default-cover.webp": {
+      "path": "assets/examples/appearance/type-default-cover.webp",
+      "xxh3": "6d6f3f3035acb754",
+      "bytes": 25160,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/basics/semantic-slide-1.svg": {
+      "path": "assets/examples/basics/semantic-slide-1.svg",
+      "xxh3": "46f0dca57f61ce31",
+      "bytes": 184534,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/basics/semantic-slide-2.svg": {
+      "path": "assets/examples/basics/semantic-slide-2.svg",
+      "xxh3": "b14f2dac454c2c5b",
+      "bytes": 187040,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/basics/semantic-slide-3.svg": {
+      "path": "assets/examples/basics/semantic-slide-3.svg",
+      "xxh3": "7ef5d01fdda8ffa0",
+      "bytes": 188383,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/basics/semantic-slide-4.svg": {
+      "path": "assets/examples/basics/semantic-slide-4.svg",
+      "xxh3": "5709cc98248dc77d",
+      "bytes": 234161,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/basics/semantic-slide-5.svg": {
+      "path": "assets/examples/basics/semantic-slide-5.svg",
+      "xxh3": "c17d5a75e395ca6b",
+      "bytes": 197839,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/blocks/background-image-cover.webp": {
+      "path": "assets/examples/blocks/background-image-cover.webp",
+      "xxh3": "76482f9b4cf77e26",
+      "bytes": 71522,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/blocks/citations-cover.webp": {
+      "path": "assets/examples/blocks/citations-cover.webp",
+      "xxh3": "c304ce27b6c7a8e5",
+      "bytes": 19648,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/blocks/component-badge-cover.webp": {
+      "path": "assets/examples/blocks/component-badge-cover.webp",
+      "xxh3": "b9859f49e0a95b8d",
+      "bytes": 13952,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/blocks/component-callout-cover.webp": {
+      "path": "assets/examples/blocks/component-callout-cover.webp",
+      "xxh3": "b37cf2f9caa36b25",
+      "bytes": 13058,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/blocks/component-card-cover.webp": {
+      "path": "assets/examples/blocks/component-card-cover.webp",
+      "xxh3": "c7dbb80b3e7c76fa",
+      "bytes": 20250,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/blocks/component-divider-cover.webp": {
+      "path": "assets/examples/blocks/component-divider-cover.webp",
+      "xxh3": "d9a70b8c38fe5040",
+      "bytes": 38808,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/blocks/component-quote-cover.webp": {
+      "path": "assets/examples/blocks/component-quote-cover.webp",
+      "xxh3": "ba07159eb2cc7d18",
+      "bytes": 19484,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/blocks/figure-cover.webp": {
+      "path": "assets/examples/blocks/figure-cover.webp",
+      "xxh3": "6c7e44eaffe78526",
+      "bytes": 37944,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/blocks/full-bleed-image-cover.webp": {
+      "path": "assets/examples/blocks/full-bleed-image-cover.webp",
+      "xxh3": "f93b4b65ac3f73ed",
+      "bytes": 56666,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/blocks/image-fit-cover.webp": {
+      "path": "assets/examples/blocks/image-fit-cover.webp",
+      "xxh3": "3030445e4eb9fa6f",
+      "bytes": 40100,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/blocks/image-scrim-cover.webp": {
+      "path": "assets/examples/blocks/image-scrim-cover.webp",
+      "xxh3": "154f1950f7c40e91",
+      "bytes": 131812,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/blocks/incremental-math-cover.webp": {
+      "path": "assets/examples/blocks/incremental-math-cover.webp",
+      "xxh3": "61606ffffc270f9a",
+      "bytes": 12838,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/blocks/mitex-cover.webp": {
+      "path": "assets/examples/blocks/mitex-cover.webp",
+      "xxh3": "94a5ec6e72056916",
+      "bytes": 22546,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/blocks/progress-custom-layout-cover.webp": {
+      "path": "assets/examples/blocks/progress-custom-layout-cover.webp",
+      "xxh3": "003d593b6f783c9b",
+      "bytes": 3204,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/blocks/progress-line-cover.webp": {
+      "path": "assets/examples/blocks/progress-line-cover.webp",
+      "xxh3": "26aa1cf3b024ecd1",
+      "bytes": 13948,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/blocks/progress-numbers-cover.webp": {
+      "path": "assets/examples/blocks/progress-numbers-cover.webp",
+      "xxh3": "b68677243b93372a",
+      "bytes": 14406,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/blocks/slide-sources-cover.webp": {
+      "path": "assets/examples/blocks/slide-sources-cover.webp",
+      "xxh3": "9a19886f61310696",
+      "bytes": 19728,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/blocks/theorem-cover.webp": {
+      "path": "assets/examples/blocks/theorem-cover.webp",
+      "xxh3": "0b3a624162b05d96",
+      "bytes": 24962,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/content/fit-block-cover.webp": {
+      "path": "assets/examples/content/fit-block-cover.webp",
+      "xxh3": "c741ba6038db473c",
+      "bytes": 33982,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/content/named-content-cover.webp": {
+      "path": "assets/examples/content/named-content-cover.webp",
+      "xxh3": "55c44de3defd72b6",
+      "bytes": 8408,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/faq/aspect-ratio-16-9-1.svg": {
+      "path": "assets/examples/faq/aspect-ratio-16-9-1.svg",
+      "xxh3": "6d0c96db09a55b9a",
+      "bytes": 179893,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/faq/aspect-ratio-4-3-1.svg": {
+      "path": "assets/examples/faq/aspect-ratio-4-3-1.svg",
+      "xxh3": "51fc83da823c51a9",
+      "bytes": 176559,
+      "width": 794,
+      "height": 595
+    },
+    "assets/examples/faq/color-inversion-1.svg": {
+      "path": "assets/examples/faq/color-inversion-1.svg",
+      "xxh3": "73e250bf3be68323",
+      "bytes": 207549,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/faq/color-inversion-2.svg": {
+      "path": "assets/examples/faq/color-inversion-2.svg",
+      "xxh3": "b4453bb1dcf081fa",
+      "bytes": 202763,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/furniture/background-content-cover.webp": {
+      "path": "assets/examples/furniture/background-content-cover.webp",
+      "xxh3": "0e46bcbb3200fda6",
+      "bytes": 11138,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/furniture/breadcrumbs-cover.webp": {
+      "path": "assets/examples/furniture/breadcrumbs-cover.webp",
+      "xxh3": "a85b8f280964931b",
+      "bytes": 5750,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/furniture/foreground-content-cover.webp": {
+      "path": "assets/examples/furniture/foreground-content-cover.webp",
+      "xxh3": "9640fef9dc8e673f",
+      "bytes": 23908,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/furniture/foreground-image-cover.webp": {
+      "path": "assets/examples/furniture/foreground-image-cover.webp",
+      "xxh3": "da4bed74fa730fb9",
+      "bytes": 18352,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/furniture/outline-columns-cover.webp": {
+      "path": "assets/examples/furniture/outline-columns-cover.webp",
+      "xxh3": "273f816a68cd558f",
+      "bytes": 12240,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/furniture/outline-cover.webp": {
+      "path": "assets/examples/furniture/outline-cover.webp",
+      "xxh3": "14ad347bf198cf5e",
+      "bytes": 7156,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/furniture/section-links-cover.webp": {
+      "path": "assets/examples/furniture/section-links-cover.webp",
+      "xxh3": "4bb5d9d512f58c4e",
+      "bytes": 8782,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/furniture/slide-numbering-cover.webp": {
+      "path": "assets/examples/furniture/slide-numbering-cover.webp",
+      "xxh3": "ebc5974404046428",
+      "bytes": 16838,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/getting-started/first-slideshow-cover.webp": {
+      "path": "assets/examples/getting-started/first-slideshow-cover.webp",
+      "xxh3": "155455ea8ad8666b",
+      "bytes": 10926,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/incremental/cetz-drawing-cover.webp": {
+      "path": "assets/examples/incremental/cetz-drawing-cover.webp",
+      "xxh3": "54e3471edbafc5f6",
+      "bytes": 14836,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/incremental/fletcher-diagram-cover.webp": {
+      "path": "assets/examples/incremental/fletcher-diagram-cover.webp",
+      "xxh3": "a546a17b21f48a66",
+      "bytes": 8402,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/incremental/replace-content-cover.webp": {
+      "path": "assets/examples/incremental/replace-content-cover.webp",
+      "xxh3": "584ffe130f2f13bd",
+      "bytes": 10404,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/incremental/reveal-bullets-cover.webp": {
+      "path": "assets/examples/incremental/reveal-bullets-cover.webp",
+      "xxh3": "736f0e0c45962898",
+      "bytes": 9928,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/incremental/reveal-cells-cover.webp": {
+      "path": "assets/examples/incremental/reveal-cells-cover.webp",
+      "xxh3": "09d7cd7c2fe0fbe6",
+      "bytes": 5192,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/incremental/reveal-text-cover.webp": {
+      "path": "assets/examples/incremental/reveal-text-cover.webp",
+      "xxh3": "018883482179a374",
+      "bytes": 12756,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/structure/content-columns-1.svg": {
+      "path": "assets/examples/structure/content-columns-1.svg",
+      "xxh3": "7ebebd545dcc38e9",
+      "bytes": 231174,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/content-layout-custom-1.svg": {
+      "path": "assets/examples/structure/content-layout-custom-1.svg",
+      "xxh3": "b80810bcbc402b14",
+      "bytes": 231640,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/content-layout-custom-2.svg": {
+      "path": "assets/examples/structure/content-layout-custom-2.svg",
+      "xxh3": "1658c952f64c0e1c",
+      "bytes": 242889,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/content-layout-full-1.svg": {
+      "path": "assets/examples/structure/content-layout-full-1.svg",
+      "xxh3": "a094725a3bec4fab",
+      "bytes": 251393,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/content-layout-inverted-1.svg": {
+      "path": "assets/examples/structure/content-layout-inverted-1.svg",
+      "xxh3": "881b0940d5f00df5",
+      "bytes": 250727,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/filling-cells-cover.webp": {
+      "path": "assets/examples/structure/filling-cells-cover.webp",
+      "xxh3": "00b5c3ccc405b4a3",
+      "bytes": 3360,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/structure/grid-columns-1.svg": {
+      "path": "assets/examples/structure/grid-columns-1.svg",
+      "xxh3": "728b91fdca356c78",
+      "bytes": 170310,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/grid-dashboard-1.svg": {
+      "path": "assets/examples/structure/grid-dashboard-1.svg",
+      "xxh3": "e8cb4984be774b1a",
+      "bytes": 186575,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/grid-nested-1.svg": {
+      "path": "assets/examples/structure/grid-nested-1.svg",
+      "xxh3": "fb43bd8e784f2cc4",
+      "bytes": 170321,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/grid-quadrants-1.svg": {
+      "path": "assets/examples/structure/grid-quadrants-1.svg",
+      "xxh3": "3f4338ce318ae4fa",
+      "bytes": 172138,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/grid-rows-1.svg": {
+      "path": "assets/examples/structure/grid-rows-1.svg",
+      "xxh3": "503a6084813941a1",
+      "bytes": 170313,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/grid-track-banner-1.svg": {
+      "path": "assets/examples/structure/grid-track-banner-1.svg",
+      "xxh3": "ed18aa8ec4b231d1",
+      "bytes": 168360,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/grid-track-center-1.svg": {
+      "path": "assets/examples/structure/grid-track-center-1.svg",
+      "xxh3": "dc206df300dadb5a",
+      "bytes": 170313,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/grid-track-fraction-1.svg": {
+      "path": "assets/examples/structure/grid-track-fraction-1.svg",
+      "xxh3": "5d29148099a8f337",
+      "bytes": 168358,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/image-layout-1.svg": {
+      "path": "assets/examples/structure/image-layout-1.svg",
+      "xxh3": "d51c2c40a606feea",
+      "bytes": 165071,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/image-layout-2.svg": {
+      "path": "assets/examples/structure/image-layout-2.svg",
+      "xxh3": "eafaa6ab0a3f326c",
+      "bytes": 146495,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/image-layout-3.svg": {
+      "path": "assets/examples/structure/image-layout-3.svg",
+      "xxh3": "3fdea48dd239f7cb",
+      "bytes": 170560,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/image-layout-4.svg": {
+      "path": "assets/examples/structure/image-layout-4.svg",
+      "xxh3": "455cdcc6c810cde2",
+      "bytes": 79016,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/section-layout-01.svg": {
+      "path": "assets/examples/structure/section-layout-01.svg",
+      "xxh3": "e1ead610f68b86f9",
+      "bytes": 14463,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/section-layout-02.svg": {
+      "path": "assets/examples/structure/section-layout-02.svg",
+      "xxh3": "0fbccc56f1f8a4bb",
+      "bytes": 17799,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/section-layout-03.svg": {
+      "path": "assets/examples/structure/section-layout-03.svg",
+      "xxh3": "bbac98875eb9c4fe",
+      "bytes": 28132,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/section-layout-04.svg": {
+      "path": "assets/examples/structure/section-layout-04.svg",
+      "xxh3": "176038db3b8094f5",
+      "bytes": 33013,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/section-layout-05.svg": {
+      "path": "assets/examples/structure/section-layout-05.svg",
+      "xxh3": "1a9f23c07ee8e46f",
+      "bytes": 33693,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/section-layout-06.svg": {
+      "path": "assets/examples/structure/section-layout-06.svg",
+      "xxh3": "22b3b4a57e1031ae",
+      "bytes": 54648,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/section-layout-07.svg": {
+      "path": "assets/examples/structure/section-layout-07.svg",
+      "xxh3": "58f58b4704731121",
+      "bytes": 121173,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/section-layout-08.svg": {
+      "path": "assets/examples/structure/section-layout-08.svg",
+      "xxh3": "31427d0c0806a98b",
+      "bytes": 121874,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/section-layout-09.svg": {
+      "path": "assets/examples/structure/section-layout-09.svg",
+      "xxh3": "c6af8e2ab525f919",
+      "bytes": 121577,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/section-layout-10.svg": {
+      "path": "assets/examples/structure/section-layout-10.svg",
+      "xxh3": "106a064d134f8503",
+      "bytes": 121962,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/section-layout-11.svg": {
+      "path": "assets/examples/structure/section-layout-11.svg",
+      "xxh3": "37e21ad2d110186b",
+      "bytes": 125652,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/setup-content-1.svg": {
+      "path": "assets/examples/structure/setup-content-1.svg",
+      "xxh3": "9e04146d6b63fdde",
+      "bytes": 208188,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/setup-content-2.svg": {
+      "path": "assets/examples/structure/setup-content-2.svg",
+      "xxh3": "890018c68adbd072",
+      "bytes": 205529,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/setup-content-3.svg": {
+      "path": "assets/examples/structure/setup-content-3.svg",
+      "xxh3": "efba59dff000cfa8",
+      "bytes": 193046,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/structure/title-academic-cover.webp": {
+      "path": "assets/examples/structure/title-academic-cover.webp",
+      "xxh3": "04041d99837059bf",
+      "bytes": 26702,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/structure/title-bordered-cover.webp": {
+      "path": "assets/examples/structure/title-bordered-cover.webp",
+      "xxh3": "a4517d0e6477a0a6",
+      "bytes": 27740,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/structure/title-centered-cover.webp": {
+      "path": "assets/examples/structure/title-centered-cover.webp",
+      "xxh3": "bd1fe8e787806383",
+      "bytes": 29118,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/structure/title-custom-cover.webp": {
+      "path": "assets/examples/structure/title-custom-cover.webp",
+      "xxh3": "e08b1fcb9d15f1e9",
+      "bytes": 62370,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/structure/title-image-bottom-cover.webp": {
+      "path": "assets/examples/structure/title-image-bottom-cover.webp",
+      "xxh3": "97989ac5ea5da3d0",
+      "bytes": 83728,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/structure/title-image-left-cover.webp": {
+      "path": "assets/examples/structure/title-image-left-cover.webp",
+      "xxh3": "4c128b63af9ecd36",
+      "bytes": 75406,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/structure/title-image-right-cover.webp": {
+      "path": "assets/examples/structure/title-image-right-cover.webp",
+      "xxh3": "4d5ce6bb71ffd34c",
+      "bytes": 77792,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/structure/title-image-top-cover.webp": {
+      "path": "assets/examples/structure/title-image-top-cover.webp",
+      "xxh3": "b5db21b9964da2c6",
+      "bytes": 81878,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/structure/title-invert-cover.webp": {
+      "path": "assets/examples/structure/title-invert-cover.webp",
+      "xxh3": "7fbbcef3aeb0e0c5",
+      "bytes": 27128,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/structure/title-kicker-cover.webp": {
+      "path": "assets/examples/structure/title-kicker-cover.webp",
+      "xxh3": "77856c35f67b9114",
+      "bytes": 28714,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/structure/title-panel-cover.webp": {
+      "path": "assets/examples/structure/title-panel-cover.webp",
+      "xxh3": "d705ea3aa86b7633",
+      "bytes": 25262,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/structure/title-ruled-cover.webp": {
+      "path": "assets/examples/structure/title-ruled-cover.webp",
+      "xxh3": "3fc6e4ac0fa0a4c2",
+      "bytes": 29066,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/structure/title-simple-cover.webp": {
+      "path": "assets/examples/structure/title-simple-cover.webp",
+      "xxh3": "d85ad0e5966da9b0",
+      "bytes": 18308,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/images/bonsai.webp": {
+      "path": "assets/images/bonsai.webp",
+      "xxh3": "1001966f509c9c88",
+      "bytes": 100006,
+      "width": 1600,
+      "height": 900
+    },
+    "assets/images/dog.webp": {
+      "path": "assets/images/dog.webp",
+      "xxh3": "fa58e5afeac6de23",
+      "bytes": 78200,
+      "width": 1067,
+      "height": 1600
+    },
+    "assets/images/showcase-contact-sheet.webp": {
+      "path": "assets/images/showcase-contact-sheet.webp",
+      "xxh3": "cdbc8c0f858efb0d",
+      "bytes": 346582,
+      "width": 1968,
+      "height": 3732
+    },
+    "assets/images/showcase-poster.webp": {
+      "path": "assets/images/showcase-poster.webp",
+      "xxh3": "985c916123eeccc8",
+      "bytes": 71694,
+      "width": 1280,
+      "height": 720
+    },
+    "assets/images/title-city.webp": {
+      "path": "assets/images/title-city.webp",
+      "xxh3": "9c3524d74eb5acbd",
+      "bytes": 46316,
+      "width": 1024,
+      "height": 576
+    },
+    "assets/images/title-river.webp": {
+      "path": "assets/images/title-river.webp",
+      "xxh3": "3cc36483d3a11fa3",
+      "bytes": 142734,
+      "width": 1024,
+      "height": 576
+    },
+    "assets/mosaic-slide.svg": {
+      "path": "assets/mosaic-slide.svg",
+      "xxh3": "f1a2dad286ac018c",
+      "bytes": 289,
+      "width": 160,
+      "height": 90
+    },
+    "assets/typst.svg": {
+      "path": "assets/typst.svg",
+      "xxh3": "57fb5b19a1d48c90",
+      "bytes": 4634,
+      "width": 91,
+      "height": 35
+    },
+    "examples/decks/beamer-annarbor/cover.jpg": {
+      "path": "examples/decks/beamer-annarbor/cover.jpg",
+      "xxh3": "858823ed37046434",
+      "bytes": 70432,
+      "width": 1200,
+      "height": 900
+    },
+    "examples/decks/calmly/cover.jpg": {
+      "path": "examples/decks/calmly/cover.jpg",
+      "xxh3": "ead18cbeff1c1e88",
+      "bytes": 26822,
+      "width": 1200,
+      "height": 675
+    },
+    "examples/decks/editorial/assets/image1.jpg": {
+      "path": "examples/decks/editorial/assets/image1.jpg",
+      "xxh3": "3ef7f4c3e9a3c5a9",
+      "bytes": 252977,
+      "width": 1318,
+      "height": 1977
+    },
+    "examples/decks/editorial/assets/image10.jpg": {
+      "path": "examples/decks/editorial/assets/image10.jpg",
+      "xxh3": "949b58f70800c408",
+      "bytes": 330116,
+      "width": 1437,
+      "height": 1627
+    },
+    "examples/decks/editorial/assets/image13.jpg": {
+      "path": "examples/decks/editorial/assets/image13.jpg",
+      "xxh3": "95c0111e6dc53580",
+      "bytes": 340692,
+      "width": 999,
+      "height": 1088
+    },
+    "examples/decks/editorial/assets/image14.jpg": {
+      "path": "examples/decks/editorial/assets/image14.jpg",
+      "xxh3": "791d798b7cdd27fb",
+      "bytes": 168455,
+      "width": 1438,
+      "height": 809
+    },
+    "examples/decks/editorial/assets/image15.jpg": {
+      "path": "examples/decks/editorial/assets/image15.jpg",
+      "xxh3": "2df7c4059eee6a86",
+      "bytes": 65753,
+      "width": 469,
+      "height": 609
+    },
+    "examples/decks/editorial/assets/image17.jpg": {
+      "path": "examples/decks/editorial/assets/image17.jpg",
+      "xxh3": "229ed24d3fcde7aa",
+      "bytes": 103128,
+      "width": 471,
+      "height": 706
+    },
+    "examples/decks/editorial/assets/image2.jpg": {
+      "path": "examples/decks/editorial/assets/image2.jpg",
+      "xxh3": "59e015cc89daf846",
+      "bytes": 168968,
+      "width": 1507,
+      "height": 2122
+    },
+    "examples/decks/editorial/assets/image20.jpg": {
+      "path": "examples/decks/editorial/assets/image20.jpg",
+      "xxh3": "42981bcdaecff897",
+      "bytes": 619901,
+      "width": 1438,
+      "height": 1620
+    },
+    "examples/decks/editorial/assets/image21.jpg": {
+      "path": "examples/decks/editorial/assets/image21.jpg",
+      "xxh3": "7fbdbec296140aac",
+      "bytes": 35173,
+      "width": 440,
+      "height": 661
+    },
+    "examples/decks/editorial/assets/image22.jpg": {
+      "path": "examples/decks/editorial/assets/image22.jpg",
+      "xxh3": "2b1a7392fc8196d7",
+      "bytes": 120584,
+      "width": 847,
+      "height": 620
+    },
+    "examples/decks/editorial/assets/image23.jpg": {
+      "path": "examples/decks/editorial/assets/image23.jpg",
+      "xxh3": "98ec40c894c4ac3b",
+      "bytes": 189689,
+      "width": 564,
+      "height": 847
+    },
+    "examples/decks/editorial/assets/image24.jpg": {
+      "path": "examples/decks/editorial/assets/image24.jpg",
+      "xxh3": "7989a8cf0530d25d",
+      "bytes": 61456,
+      "width": 675,
+      "height": 577
+    },
+    "examples/decks/editorial/assets/image25.jpg": {
+      "path": "examples/decks/editorial/assets/image25.jpg",
+      "xxh3": "a1bbe733f2edb566",
+      "bytes": 91792,
+      "width": 524,
+      "height": 785
+    },
+    "examples/decks/editorial/assets/image26.jpg": {
+      "path": "examples/decks/editorial/assets/image26.jpg",
+      "xxh3": "7559e1932879f61d",
+      "bytes": 160210,
+      "width": 2407,
+      "height": 1605
+    },
+    "examples/decks/editorial/assets/image28.jpg": {
+      "path": "examples/decks/editorial/assets/image28.jpg",
+      "xxh3": "ae71059b4d9afd47",
+      "bytes": 159594,
+      "width": 1184,
+      "height": 1776
+    },
+    "examples/decks/editorial/assets/image29.jpg": {
+      "path": "examples/decks/editorial/assets/image29.jpg",
+      "xxh3": "d2a00d1537a85433",
+      "bytes": 130236,
+      "width": 827,
+      "height": 432
+    },
+    "examples/decks/editorial/assets/image3.jpg": {
+      "path": "examples/decks/editorial/assets/image3.jpg",
+      "xxh3": "3a57c3c0107f6f31",
+      "bytes": 204801,
+      "width": 1613,
+      "height": 2016
+    },
+    "examples/decks/editorial/assets/image30.jpg": {
+      "path": "examples/decks/editorial/assets/image30.jpg",
+      "xxh3": "ab975be78c939f89",
+      "bytes": 103893,
+      "width": 1158,
+      "height": 743
+    },
+    "examples/decks/editorial/assets/image31.jpg": {
+      "path": "examples/decks/editorial/assets/image31.jpg",
+      "xxh3": "a299928a40ba170e",
+      "bytes": 95360,
+      "width": 676,
+      "height": 577
+    },
+    "examples/decks/editorial/assets/image32.jpg": {
+      "path": "examples/decks/editorial/assets/image32.jpg",
+      "xxh3": "8c9b54b1e3bb1017",
+      "bytes": 66290,
+      "width": 552,
+      "height": 701
+    },
+    "examples/decks/editorial/assets/image34.jpg": {
+      "path": "examples/decks/editorial/assets/image34.jpg",
+      "xxh3": "4e9ead4a3230e9da",
+      "bytes": 334745,
+      "width": 1000,
+      "height": 1445
+    },
+    "examples/decks/editorial/assets/image35.jpg": {
+      "path": "examples/decks/editorial/assets/image35.jpg",
+      "xxh3": "2c24e2b7d20a6e84",
+      "bytes": 69457,
+      "width": 676,
+      "height": 577
+    },
+    "examples/decks/editorial/assets/image36.jpg": {
+      "path": "examples/decks/editorial/assets/image36.jpg",
+      "xxh3": "d20fc9139319739c",
+      "bytes": 109951,
+      "width": 676,
+      "height": 577
+    },
+    "examples/decks/editorial/assets/image37.jpg": {
+      "path": "examples/decks/editorial/assets/image37.jpg",
+      "xxh3": "e369de1b688e1325",
+      "bytes": 84274,
+      "width": 544,
+      "height": 1620
+    },
+    "examples/decks/editorial/assets/image4.jpg": {
+      "path": "examples/decks/editorial/assets/image4.jpg",
+      "xxh3": "b7d1a1663edbba8c",
+      "bytes": 219099,
+      "width": 1262,
+      "height": 1446
+    },
+    "examples/decks/editorial/assets/image47.jpg": {
+      "path": "examples/decks/editorial/assets/image47.jpg",
+      "xxh3": "f0982b5d3ab292b5",
+      "bytes": 143068,
+      "width": 1080,
+      "height": 1620
+    },
+    "examples/decks/editorial/assets/image7.jpg": {
+      "path": "examples/decks/editorial/assets/image7.jpg",
+      "xxh3": "1aee5c8ea25f9826",
+      "bytes": 236079,
+      "width": 1000,
+      "height": 1445
+    },
+    "examples/decks/editorial/assets/image8.jpg": {
+      "path": "examples/decks/editorial/assets/image8.jpg",
+      "xxh3": "52a6cb9bb8f79565",
+      "bytes": 106984,
+      "width": 1328,
+      "height": 1992
+    },
+    "examples/decks/editorial/cover.jpg": {
+      "path": "examples/decks/editorial/cover.jpg",
+      "xxh3": "6124711db9010af2",
+      "bytes": 43206,
+      "width": 1200,
+      "height": 675
+    },
+    "examples/decks/manifesto/assets/image1.png": {
+      "path": "examples/decks/manifesto/assets/image1.png",
+      "xxh3": "5060a82dd4b2c706",
+      "bytes": 28078,
+      "width": 2045,
+      "height": 911
+    },
+    "examples/decks/manifesto/assets/image10.jpg": {
+      "path": "examples/decks/manifesto/assets/image10.jpg",
+      "xxh3": "6cd315c7621a1525",
+      "bytes": 84927,
+      "width": 450,
+      "height": 654
+    },
+    "examples/decks/manifesto/assets/image12.jpg": {
+      "path": "examples/decks/manifesto/assets/image12.jpg",
+      "xxh3": "f76dcf712546613d",
+      "bytes": 32100,
+      "width": 337,
+      "height": 337
+    },
+    "examples/decks/manifesto/assets/image15.jpg": {
+      "path": "examples/decks/manifesto/assets/image15.jpg",
+      "xxh3": "606623b47a8c389d",
+      "bytes": 26744,
+      "width": 337,
+      "height": 336
+    },
+    "examples/decks/manifesto/assets/image18.jpg": {
+      "path": "examples/decks/manifesto/assets/image18.jpg",
+      "xxh3": "cbb3b733254208f4",
+      "bytes": 331835,
+      "width": 1284,
+      "height": 869
+    },
+    "examples/decks/manifesto/assets/image2.jpg": {
+      "path": "examples/decks/manifesto/assets/image2.jpg",
+      "xxh3": "77ab699084ad636a",
+      "bytes": 23331,
+      "width": 337,
+      "height": 337
+    },
+    "examples/decks/manifesto/assets/image21.jpg": {
+      "path": "examples/decks/manifesto/assets/image21.jpg",
+      "xxh3": "cc1d326126b2f992",
+      "bytes": 492147,
+      "width": 1284,
+      "height": 1302
+    },
+    "examples/decks/manifesto/assets/image27.jpg": {
+      "path": "examples/decks/manifesto/assets/image27.jpg",
+      "xxh3": "5072148bbe0284e0",
+      "bytes": 203745,
+      "width": 1284,
+      "height": 660
+    },
+    "examples/decks/manifesto/assets/image3.jpg": {
+      "path": "examples/decks/manifesto/assets/image3.jpg",
+      "xxh3": "933a873bf6908fb7",
+      "bytes": 191426,
+      "width": 1229,
+      "height": 654
+    },
+    "examples/decks/manifesto/assets/image4.jpg": {
+      "path": "examples/decks/manifesto/assets/image4.jpg",
+      "xxh3": "760c52f27236131c",
+      "bytes": 77674,
+      "width": 436,
+      "height": 443
+    },
+    "examples/decks/manifesto/assets/image41.jpg": {
+      "path": "examples/decks/manifesto/assets/image41.jpg",
+      "xxh3": "55b1d09dff5ada1e",
+      "bytes": 803942,
+      "width": 1284,
+      "height": 1302
+    },
+    "examples/decks/manifesto/assets/image5.jpg": {
+      "path": "examples/decks/manifesto/assets/image5.jpg",
+      "xxh3": "4f465b597fcb34a3",
+      "bytes": 200293,
+      "width": 1229,
+      "height": 660
+    },
+    "examples/decks/manifesto/assets/image54.jpg": {
+      "path": "examples/decks/manifesto/assets/image54.jpg",
+      "xxh3": "758a06bd49f96e51",
+      "bytes": 89694,
+      "width": 436,
+      "height": 443
+    },
+    "examples/decks/manifesto/assets/image57.jpg": {
+      "path": "examples/decks/manifesto/assets/image57.jpg",
+      "xxh3": "b163ff5e036e1878",
+      "bytes": 180347,
+      "width": 908,
+      "height": 654
+    },
+    "examples/decks/manifesto/assets/image6.jpg": {
+      "path": "examples/decks/manifesto/assets/image6.jpg",
+      "xxh3": "9e9d10f7d0b9b8c6",
+      "bytes": 148598,
+      "width": 799,
+      "height": 660
+    },
+    "examples/decks/manifesto/assets/image7.jpg": {
+      "path": "examples/decks/manifesto/assets/image7.jpg",
+      "xxh3": "f5c61da42bd0d0f2",
+      "bytes": 228137,
+      "width": 1284,
+      "height": 654
+    },
+    "examples/decks/manifesto/assets/image9.jpg": {
+      "path": "examples/decks/manifesto/assets/image9.jpg",
+      "xxh3": "ef025051265d85cb",
+      "bytes": 120286,
+      "width": 558,
+      "height": 660
+    },
+    "examples/decks/manifesto/cover.jpg": {
+      "path": "examples/decks/manifesto/cover.jpg",
+      "xxh3": "1ce2c696b63ef690",
+      "bytes": 27890,
+      "width": 1200,
+      "height": 675
+    },
+    "examples/decks/metropolis/cover.jpg": {
+      "path": "examples/decks/metropolis/cover.jpg",
+      "xxh3": "d95de6a9bfa88848",
+      "bytes": 40958,
+      "width": 1200,
+      "height": 675
+    },
+    "examples/decks/portfolio/assets/image1.jpg": {
+      "path": "examples/decks/portfolio/assets/image1.jpg",
+      "xxh3": "3ee824f8d6c5c2da",
+      "bytes": 365706,
+      "width": 1056,
+      "height": 1620
+    },
+    "examples/decks/portfolio/assets/image10.jpg": {
+      "path": "examples/decks/portfolio/assets/image10.jpg",
+      "xxh3": "7028983c790dd1d8",
+      "bytes": 333391,
+      "width": 2048,
+      "height": 576
+    },
+    "examples/decks/portfolio/assets/image11.jpg": {
+      "path": "examples/decks/portfolio/assets/image11.jpg",
+      "xxh3": "9d3d80aaafdb6b87",
+      "bytes": 110090,
+      "width": 1131,
+      "height": 638
+    },
+    "examples/decks/portfolio/assets/image12.jpg": {
+      "path": "examples/decks/portfolio/assets/image12.jpg",
+      "xxh3": "e7898e816cd29f07",
+      "bytes": 170320,
+      "width": 730,
+      "height": 1243
+    },
+    "examples/decks/portfolio/assets/image13.jpg": {
+      "path": "examples/decks/portfolio/assets/image13.jpg",
+      "xxh3": "3127bdd74b0021b8",
+      "bytes": 284158,
+      "width": 1957,
+      "height": 1426
+    },
+    "examples/decks/portfolio/assets/image16.jpg": {
+      "path": "examples/decks/portfolio/assets/image16.jpg",
+      "xxh3": "473cb5f137fa5cd4",
+      "bytes": 74573,
+      "width": 1131,
+      "height": 638
+    },
+    "examples/decks/portfolio/assets/image17.jpg": {
+      "path": "examples/decks/portfolio/assets/image17.jpg",
+      "xxh3": "bae0e931c6038d37",
+      "bytes": 116440,
+      "width": 764,
+      "height": 732
+    },
+    "examples/decks/portfolio/assets/image18.jpg": {
+      "path": "examples/decks/portfolio/assets/image18.jpg",
+      "xxh3": "e2c15d01f5a31846",
+      "bytes": 197835,
+      "width": 764,
+      "height": 732
+    },
+    "examples/decks/portfolio/assets/image19.jpg": {
+      "path": "examples/decks/portfolio/assets/image19.jpg",
+      "xxh3": "4b5a2995b6b5839d",
+      "bytes": 279423,
+      "width": 2046,
+      "height": 1117
+    },
+    "examples/decks/portfolio/assets/image2.jpg": {
+      "path": "examples/decks/portfolio/assets/image2.jpg",
+      "xxh3": "ddd88a409b8044f9",
+      "bytes": 122982,
+      "width": 1131,
+      "height": 637
+    },
+    "examples/decks/portfolio/assets/image20.jpg": {
+      "path": "examples/decks/portfolio/assets/image20.jpg",
+      "xxh3": "3273d056f30e865c",
+      "bytes": 258111,
+      "width": 1785,
+      "height": 1025
+    },
+    "examples/decks/portfolio/assets/image21.jpg": {
+      "path": "examples/decks/portfolio/assets/image21.jpg",
+      "xxh3": "abac455ae30a8a44",
+      "bytes": 242145,
+      "width": 2047,
+      "height": 1566
+    },
+    "examples/decks/portfolio/assets/image3.jpg": {
+      "path": "examples/decks/portfolio/assets/image3.jpg",
+      "xxh3": "520ed2cb9bb06482",
+      "bytes": 160384,
+      "width": 764,
+      "height": 732
+    },
+    "examples/decks/portfolio/assets/image4.jpg": {
+      "path": "examples/decks/portfolio/assets/image4.jpg",
+      "xxh3": "dba7fb1783d1ec6d",
+      "bytes": 185857,
+      "width": 2048,
+      "height": 1152
+    },
+    "examples/decks/portfolio/assets/image5.jpg": {
+      "path": "examples/decks/portfolio/assets/image5.jpg",
+      "xxh3": "b0dc87e890504d9c",
+      "bytes": 86566,
+      "width": 830,
+      "height": 1296
+    },
+    "examples/decks/portfolio/assets/image6.jpg": {
+      "path": "examples/decks/portfolio/assets/image6.jpg",
+      "xxh3": "d303ee135e181f91",
+      "bytes": 163549,
+      "width": 2048,
+      "height": 1152
+    },
+    "examples/decks/portfolio/assets/image7.jpg": {
+      "path": "examples/decks/portfolio/assets/image7.jpg",
+      "xxh3": "13ce6441091a15d7",
+      "bytes": 115174,
+      "width": 1131,
+      "height": 637
+    },
+    "examples/decks/portfolio/assets/image8.png": {
+      "path": "examples/decks/portfolio/assets/image8.png",
+      "xxh3": "8b8ae463afe96137",
+      "bytes": 20888,
+      "width": 1139,
+      "height": 1042
+    },
+    "examples/decks/portfolio/assets/image9.jpg": {
+      "path": "examples/decks/portfolio/assets/image9.jpg",
+      "xxh3": "d7fdf69397ff6946",
+      "bytes": 63281,
+      "width": 729,
+      "height": 1243
+    },
+    "examples/decks/portfolio/cover.jpg": {
+      "path": "examples/decks/portfolio/cover.jpg",
+      "xxh3": "e94b093f397ed6ba",
+      "bytes": 51138,
+      "width": 1200,
+      "height": 675
+    },
+    "examples/decks/quarto-clean/cover.jpg": {
+      "path": "examples/decks/quarto-clean/cover.jpg",
+      "xxh3": "be5ec9612878d343",
+      "bytes": 40586,
+      "width": 1200,
+      "height": 675
+    },
+    "examples/decks/simpres/cover.jpg": {
+      "path": "examples/decks/simpres/cover.jpg",
+      "xxh3": "b5b1d405a9aad152",
+      "bytes": 37967,
+      "width": 1200,
+      "height": 675
+    }
+  }
+}

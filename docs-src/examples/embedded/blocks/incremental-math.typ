@@ -32,32 +32,36 @@
 #m.slide(layout: m.layouts.content(variant: "header-body"))[
   == Bellman optimality equation
 ][
-  $
-    V^star(s) = max_a
-      #m.steps.replace(
-        align: top + center,
-        [$R(s, a)$],
-        [#explained(reward, $R(s, a)$, [immediate reward])],
-        [#explained(reward, $R(s, a)$, [immediate reward])],
-        [#explained(reward, $R(s, a)$, [immediate reward])],
-      )
-      + #m.steps.replace(
-        align: top + center,
-        [$gamma$],
-        [$gamma$],
-        [#explained(discount, $gamma$, [discount factor])],
-        [#explained(discount, $gamma$, [discount factor])],
-      )
-      #m.steps.replace(
-        align: top + center,
-        [$sum_(s') P(s' | s, a) V^star(s')$],
-        [$sum_(s') P(s' | s, a) V^star(s')$],
-        [$sum_(s') P(s' | s, a) V^star(s')$],
-        [#explained(
-          future,
-          $sum_(s') P(s' | s, a) V^star(s')$,
-          [expected optimal future value],
-        )],
-      )
-  $
+  #math.equation(
+    block: true,
+    alt: "V star of s equals the maximum over a of: the immediate reward for state s and action a, plus the discount factor gamma times the sum over next states s prime of the transition probability times the optimal value of s prime.",
+    $
+      V^star(s) = max_a
+        #m.steps.replace(
+          align: top + center,
+          [$R(s, a)$],
+          [#explained(reward, $R(s, a)$, [immediate reward])],
+          [#explained(reward, $R(s, a)$, [immediate reward])],
+          [#explained(reward, $R(s, a)$, [immediate reward])],
+        )
+        + #m.steps.replace(
+          align: top + center,
+          [$gamma$],
+          [$gamma$],
+          [#explained(discount, $gamma$, [discount factor])],
+          [#explained(discount, $gamma$, [discount factor])],
+        )
+        #m.steps.replace(
+          align: top + center,
+          [$sum_(s') P(s' | s, a) V^star(s')$],
+          [$sum_(s') P(s' | s, a) V^star(s')$],
+          [$sum_(s') P(s' | s, a) V^star(s')$],
+          [#explained(
+            future,
+            $sum_(s') P(s' | s, a) V^star(s')$,
+            [expected optimal future value],
+          )],
+        )
+    $,
+  )
 ]

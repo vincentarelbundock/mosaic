@@ -1,0 +1,43 @@
+# Mosaic
+
+> Tree-based slide grids and incremental reveals for Typst.
+
+## Pages
+
+- [Acknowledgments](/acknowledgments.html): Projects, authors, and discussions that informed Mosaic.
+- [API reference](/api.html): Every exported Mosaic function, grouped by reference page.
+- [Components and furniture](/api/components.html)
+- [mosaic.grids constructors](/api/grids.html)
+- [Labels](/api/labels.html): Every part of a rendered slide carries a Typst label, and those labels are the whole styling surface. A deck reaches them with ordinary show rules, and a theme's apply reaches the same ones. This page is the complete inventory.
+- [Semantic layouts](/api/layouts.html)
+- [Document setup](/api/setup.html)
+- [Slides](/api/slides.html)
+- [Incremental steps](/api/steps.html)
+- [Theme authoring](/api/theme.html)
+- [Colors](/appearance/colors.html): Every color in a Mosaic deck flows from one palette: a flat dictionary of eight colors that the theme supplies, setup(colors: ..) overrides, and every layout and component reads. This page covers the three ways to work with it: override individual entries, swap in one of the…
+- [Styling cells](/appearance/styling.html): As the anatomy page shows, every part of a slide is a native Typst layer carrying a label, and you style all of it with ordinary set and show rules. Every rule a slide renders with comes from its theme: Mosaic's engine contributes page geometry, deck information, and colors, but…
+- [Themes](/appearance/themes.html): A theme decides how a deck looks: its colors, its type, and the way each slide arranges what you put on it. Every Mosaic deck uses a theme, even one that never mentions the word. Import the package without naming a theme and you get the default theme. Name a different one and the…
+- [Citations](/content/citations.html): Mosaic adds no citation machinery. A deck is an ordinary Typst document, so #cite, @key references, and #bibliography behave exactly as they do in a paper. Footnotes are the one exception worth knowing about, because a slide is a fixed-height frame rather than a flowing page.
+- [Components](/content/components.html): m.components provides reusable Typst content to place inside cells, or inside any native Typst composition. None of these create slides or grids on their own; they are values you place in a cell, a background, a foreground, or any native Typst composition. Each function has an…
+- [Images](/content/images.html): An image can sit in a cell or on a
+- [Math](/content/math.html): Typst's native math notation works inside Mosaic slides. Incremental commands can then focus attention on one part of an equation at a time without changing its layout.
+- [Examples](/examples.html): Complete slide decks built with Mosaic's bundled themes and layouts.
+- [FAQ](/help/faq.html): How can I reuse slides and states?
+- [Handouts](/incremental/handouts.html): A deck with pauses and reveals prints badly: every frame becomes a page, and a reader pages through the same slide several times. Set handout: true to render only the final frame of each slide:
+- [Reveal and replace](/incremental/reveals.html): The timing commands introduced on the Steps and pauses page apply to lists, grid cells, inline text, equations, and drawing packages alike. Each section below shows one on a real slide. For equations, see Math.
+- [Steps and pauses](/incremental/steps.html): You write one slide; Mosaic can reveal, replace, or remove parts of it over a sequence of frames. Each frame is one page of the compiled document, and all frames of one slide share its slide number.
+- [Home](/index.html)
+- [Executable code](/presenting/executable-code.html): Mosaic has no code-execution feature of its own: a .typ deck is plain Typst, and Typst does not run code blocks. To put a live analysis, a generated figure, or a computed number on a slide, run it with Calepin, a computational notebook for Typst that executes R (and other…
+- [Footer and progress](/presenting/footer.html): Most decks repeat the same source, event name, or organization in every ordinary slide footer. Declare that value once in setup:
+- [Navigation](/presenting/navigation.html): Because Mosaic keeps Typst headings native, the same headings that create slides can drive tables of contents, breadcrumbs, and links between sections.
+- [Speaker notes](/presenting/notes.html): Attach speaker notes with m.note[...]. Notes never appear in the presentation and never add a frame:
+- [Overflow and fitting](/presenting/overflow.html): A cell does not resize its content. A body larger than its cell is drawn past the edge, so a slide that holds too much fails silently on screen rather than at compile time. Before presenting, run a checking compile to find those slides, and scale the rare indivisible block with…
+- [Concepts](/reference/concepts.html): On this website, we will refer to the different components of a slide deck in these terms:
+- [Background](/slides/background.html): Cells occupy the main slide body. The background plane sits behind them, covering the slide without changing the grid. Put recurring background content in m.setup(background:), and set it for one slide with the same argument on m.slide. A plane is not a cell, so it never appears…
+- [Content](/slides/content.html): Content slides carry the body of a talk: a title and some prose, a bulleted list, a two-column comparison. They are the most common slide in almost every deck, and Mosaic makes them the default. A slide with no layout: argument is a content slide, and so is every == heading in…
+- [Custom](/slides/custom.html): When no built-in layout fits, write the slide's arrangement yourself. A custom slide names its own cells by purpose, such as header, body, footer, aside, or notes. This is semantic structure: content and styling refer to what each cell means instead of where it appears.
+- [Foreground](/slides/foreground.html): Cells occupy the main slide body. The foreground plane sits above them, covering the slide without changing the grid. Put recurring foreground content in m.setup(foreground:), and set it for one slide with the same argument on m.slide. A plane is not a cell, so it never appears…
+- [Image](/slides/image.html): Use layout: "image" for any slide whose main content is a picture. In many decks this is the most common explicit slide.
+- [Section](/slides/section.html): A section slide divides a talk into parts. It announces where the audience has arrived, carries no body content, and usually shows a number so the deck's shape stays legible.
+- [Title](/slides/title.html): A title slide takes its content from the deck rather than from the slide, and its arrangement from a variant.
+- [Get started](/start/first-deck.html): First, import Mosaic and apply its setup rule:
