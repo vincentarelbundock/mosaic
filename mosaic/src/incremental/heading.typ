@@ -1,4 +1,5 @@
 // Heading inspection, canonical style capture, and inert continuations.
+#import "../note/command.typ": is-note
 
 // Capture composable heading styles without changing the queried heading.
 // The scoped show rule returns the original element unchanged.
@@ -50,6 +51,12 @@
 }
 
 #let contains-heading(value) = {
+  // A speaker note never renders on a slide, so a heading written inside one
+  // cannot destabilize outline entries between frames and must not trip the
+  // temporal-heading guards.
+  if is-note(value) {
+    return false
+  }
   if type(value) == content {
     if value.func() == heading {
       return true

@@ -28,6 +28,7 @@ fit-note|fit cannot hold incremental steps or speaker notes
 frozen-counters-type|frozen-counters must contain only counter values
 frozen-states-type|frozen-states must contain only state values
 handout-type|setup handout must be a boolean
+headings-policy-key|setup headings levels must be positive integers written without leading zeros
 headings-preamble|content appears before the first heading handled by setup; expected one of heading levels 1, 2
 image-scrim-type|image scrim must be a color, gradient, or tiling
 image-tracks-invalid|layout "image" tracks must be auto, one native Typst track size for the image, or an array of 2 native Typst track sizes in visual order

@@ -2,7 +2,7 @@
 #import "../shared.typ": fail, tag
 #import "../grid/model.typ": plane-ids
 #import "../grid/validation.typ": validate
-#import "../grid/content.typ": resolve-content
+#import "../grid/content.typ": body-cell-ids, resolve-content
 #import "../incremental/analysis.typ": max-step
 #import "../incremental/transform.typ": (
   transform,
@@ -31,6 +31,7 @@
   logical-slide-id,
   logical-section,
   slide-numbered,
+  inverted-slide-colors,
   section-title,
 )
 
@@ -280,17 +281,30 @@
   // survive. Each layout's resolver re-validates the merged field set, so an
   // overlay cannot smuggle an unsupported combination past construction.
   let overlay = command.at("fields", default: (:))
+  let named-cells = command.cells
   if overlay.len() > 0 {
     if not is-layout(requested-layout) {
-      fail(
-        "the configured " + layout-name + " layout is a raw grid, which "
-          + "cannot carry layout fields; supply them on an explicit "
-          + "slide layout instead",
+      if command.automatic and overlay.keys() == ("subtitle",) {
+        // The automatic section tagline has no field to land in when the
+        // configured section layout is a raw grid, and a heading-generated
+        // slide has no constructor to move it to, so it renders in the
+        // section cell below the heading instead.
+        named-cells.insert(
+          "section",
+          named-cells.at("section", default: []) + overlay.subtitle,
+        )
+      } else {
+        fail(
+          "the configured " + layout-name + " layout is a raw grid, which "
+            + "cannot carry layout fields; supply them on an explicit "
+            + "slide layout instead",
+        )
+      }
+    } else {
+      requested-layout = requested-layout + (
+        fields: requested-layout.fields + overlay,
       )
     }
-    requested-layout = requested-layout + (
-      fields: requested-layout.fields + overlay,
-    )
   }
   let resolved-grid = if is-layout(requested-layout) {
     resolve-layout(requested-layout, settings)
@@ -298,6 +312,32 @@
     requested-layout
   }
   validate(resolved-grid)
+  // Automatic heading slides name the cells the standard layouts carry —
+  // "header" and "body" on content slides, "section" on section slides — but
+  // a configured layout may not have them all: a "body" content variant has
+  // no header cell, and a custom grid may name its cells differently. The
+  // author never wrote these ids, so content addressed to a cell this layout
+  // lacks folds into the first content-bearing cell not already claimed by an
+  // exact match, rather than failing on a name that appears nowhere in the
+  // deck's source.
+  if command.automatic and named-cells.len() > 0 {
+    let ids = body-cell-ids(resolved-grid)
+    if ids.len() == 0 {
+      fail(
+        "the configured " + layout-name + " layout has no content-bearing "
+          + "cell to receive an automatic heading slide",
+      )
+    }
+    let matched = named-cells.keys().filter(id => id in ids)
+    let unclaimed = ids.find(id => id not in matched)
+    let fallback = if unclaimed == none { ids.first() } else { unclaimed }
+    let folded = (:)
+    for (id, value) in named-cells {
+      let target = if id in ids { id } else { fallback }
+      folded.insert(target, folded.at(target, default: []) + value)
+    }
+    named-cells = folded
+  }
   // Planes arrive as their own command fields, already validated on the slide
   // and on `setup`: `auto` inherits the deck plane, anything else is this
   // slide's own, and `none` omits it.
@@ -311,7 +351,7 @@
   // by cell id with no positional cursor.
   let contents = resolve-content(
     resolved-grid,
-    command.cells,
+    named-cells,
     command.bodies,
     defaults: settings.cells,
   )
@@ -323,7 +363,10 @@
   )
   logical-slide-id.step()
   let numbered = if command.numbered == auto {
-    layout-name == "content"
+    // Only deck chrome goes unnumbered by default: title and section slides.
+    // Everything else — content, image, raw grids — is ordinary material and
+    // counts.
+    layout-name not in ("title", "section")
   } else {
     command.numbered
   }
@@ -333,6 +376,10 @@
   // Written before the planes render, so deck furniture can quiet itself on
   // unnumbered pages; see slide-numbered in deck-state.
   slide-numbered.update(_ => numbered)
+  // Published for layout-time color readers (components, the cell renderer's
+  // ink restatement); `none` on every slide that is not inverted.
+  let published-colors = if command.invert { settings.colors } else { none }
+  inverted-slide-colors.update(_ => published-colors)
   if layout-name == "section" {
     logical-section.step()
     // Heading-stripped, so consumers re-render it without minting duplicate

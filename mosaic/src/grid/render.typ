@@ -10,7 +10,7 @@
 // this module, and the helper must not shadow it.
 #import "../fit.typ": fit as fit-helper
 #import "../settings.typ": default-spacing
-#import "../deck-state.typ": deck-settings
+#import "../deck-state.typ": deck-settings, inverted-slide-colors
 
 // Records one queryable warning per overflowing cell.
 //
@@ -92,16 +92,38 @@
   }
 }
 
+// Whether a cell paints anything of its own beyond its content, which is what
+// decides if adding or removing it can change a frame visually.
+#let cell-paints(cell) = (
+  cell.style.at("fill", default: none) != none
+    or cell.style.at("stroke", default: none) != none
+    or cell.style.at("background", default: none) != none
+    or cell.style.at("before", default: []) != []
+    or cell.style.at("after", default: []) != []
+)
+
 #let max-node(node) = fold-grid(
   node,
   cell => {
     if cell.content == none {
       1
     } else {
-      max-step(cell.content)
+      let span = max-step(cell.content)
+      // A cell whose fixed content is visually empty and whose style paints
+      // nothing contributes no step of its own: wrapping such a spacer in
+      // `on(..)` must not mint frames on which nothing changes.
+      if span > 0 or cell-paints(cell) {
+        calc.max(1, span)
+      } else {
+        0
+      }
     }
   },
-  (node, child) => calc.max(range-last(node.range), child),
+  (node, child) => if child == 0 {
+    0
+  } else {
+    calc.max(range-last(node.range), child)
+  },
   (node, children) => array-max(children),
 )
 
@@ -223,6 +245,20 @@
   grid.cell(inset: 0pt, context {
     let base = text.size
     let inset = if inset == auto { configured-inset() } else { inset }
+    // On an inverted slide the ink is restated here, inside the cell label:
+    // theme rules pin text fills through <mosaic-cell-*> show-set rules, which
+    // sit outside this block and would otherwise keep the un-inverted color.
+    // Colors applied deeper as constructors — component roles, accents, the
+    // layout's own resolved tiers — still win.
+    let inverted = inverted-slide-colors.get()
+    let content = if inverted == none {
+      content
+    } else {
+      {
+        set text(fill: inverted.text)
+        content
+      }
+    }
     let body = block(
       width: 100%,
       height: region-height,

@@ -22,11 +22,28 @@
 #let pause-schedule(children, duration) = {
   let result = ()
   let start = 1
+  // A segment can span no step of its own yet still carry authored content —
+  // a segment holding only a speaker note has duration zero. Such children
+  // ride with the next spanning segment (or the last one, when nothing
+  // follows) rather than being dropped from the schedule.
+  let pending = ()
   for segment in pause-segments(children) {
     let span = duration(segment)
     if span > 0 {
-      result.push((children: segment, start: start, duration: span))
+      result.push((children: pending + segment, start: start, duration: span))
+      pending = ()
       start += span
+    } else {
+      pending += segment
+    }
+  }
+  if pending.len() > 0 {
+    if result.len() > 0 {
+      let last = result.pop()
+      last.children += pending
+      result.push(last)
+    } else {
+      result.push((children: pending, start: start, duration: 0))
     }
   }
   result

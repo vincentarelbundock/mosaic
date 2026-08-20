@@ -49,6 +49,13 @@
 //   context if slide-numbered.get() { .. }
 #let slide-numbered = state(key("slide-numbered"), true)
 
+// The inverted palette of the slide currently rendering, or `none` when that
+// slide is not inverted. The slide runtime writes it once per slide, before
+// the frames render, so readers that resolve colors at layout time — the
+// components, and the cell renderer restating ink inside cell labels — follow
+// `slide(invert: true)` without the write-once record changing.
+#let inverted-slide-colors = state(key("inverted-slide-colors"), none)
+
 // The current section's own text, written by the slide runtime on every
 // section slide. The counter above numbers the sections; this names the one
 // being presented, so chrome can print it without querying the document. The

@@ -8,11 +8,18 @@
 // resolves to, refining the configured layout rather than replacing it. The
 // deck compiler uses it for the automatic section tagline; the public `slide`
 // fills it from named arguments when the layout is chosen by name.
+//
+// `automatic` marks a command the deck compiler built from a heading rather
+// than one the author wrote. The runtime relaxes cell addressing for such
+// commands: the compiler names the cells the standard layouts carry, and a
+// configured layout that lacks one of them is the author's choice, not an
+// authoring error.
 #let slide-command(
   bodies,
   layout: auto,
   numbered: auto,
   invert: false,
+  automatic: false,
   cells: (:),
   background: auto,
   foreground: auto,
@@ -23,6 +30,7 @@
   layout: layout,
   numbered: numbered,
   invert: invert,
+  automatic: automatic,
   cells: cells,
   background: background,
   foreground: foreground,
@@ -168,7 +176,7 @@
   /// -> auto | str | dictionary
   layout: auto,
   /// Whether the slide contributes to logical slide numbering. `auto` numbers
-  /// content layouts and leaves title and section layouts unnumbered; an
+  /// every layout except title and section, which are deck chrome; an
   /// explicit boolean always wins.
   /// -> auto | bool
   numbered: auto,
@@ -176,8 +184,10 @@
   /// deck's text color, type is knocked out in the canvas color, and the
   /// muted and line colors are derived to match. Works with any layout, so an
   /// inverted title, section plate, or big-number slide are all one flag.
-  /// Theme rules that pin an explicit fill other than the deck text color are
-  /// not rewritten; override those on their own labels where needed.
+  /// Cell text and components follow the inverted palette, including fills a
+  /// theme pins on `<mosaic-cell-*>` labels; colors applied inside the
+  /// content itself, such as an explicit `text(fill: ..)`, keep their own
+  /// values.
   /// -> bool
   invert: false,
   /// Cell bodies keyed by cell id. Mutually exclusive with positional bodies.

@@ -507,6 +507,37 @@ def run_core(typst: str, sources: list[str]) -> None:
     tagline = pdf_text("headings-section-tagline")
     require_contains(tagline, "SECTION TAGLINE")
 
+    # The Metropolis section layout is a raw grid: its automatic tagline
+    # renders in the section cell instead of a subtitle field.
+    require_contains(pdf_text("theme-metropolis-tagline"), "SECTION TAGLINE METRO")
+
+    # A header-less content layout still receives the automatic heading; it
+    # folds into the body flow.
+    fold = pdf_text("headings-cell-fold")
+    require_contains(fold, "Folded Title")
+    require_contains(fold, "FOLDED BODY")
+
+    # The untimed aside inside a revealed list rides along on every frame.
+    for page in (1, 2):
+        require_contains(pdf_page_text("reveal-untimed-siblings", page), "UNTIMED ASIDE")
+
+    # A note alone between two pauses survives into the notes output.
+    require_contains(pdf_text("pause-note-segment"), "PAUSE SEGMENT NOTE")
+
+    # Wrapper prefixes are matched by identity: the styled sibling keeps its
+    # blue and the heading keeps its red.
+    typst_compile(typst, "headings-styled-siblings.typ", TMP / "mosaic-headings-styled-siblings-{p}.svg", "--format", "svg")
+    styled = TMP / "mosaic-headings-styled-siblings-1.svg"
+    require_contains(styled, "#ff4136")
+    require_contains(styled, "#0074d9")
+
+    # Inverted slides knock the type out in the canvas color even where the
+    # theme pins a cell-label fill (the Metropolis title) and inside
+    # components, whose colors resolve from the inverted palette.
+    typst_compile(typst, "slide-invert-cells.typ", TMP / "mosaic-slide-invert-cells-{p}.svg", "--format", "svg")
+    for page in (1, 2):
+        require_contains(TMP / f"mosaic-slide-invert-cells-{page}.svg", "#fafafa")
+
     section = pdf_text("section-counter")
     require_contains(section, "1/2")
     require_contains(section, "2/2")

@@ -1,5 +1,12 @@
 // Incremental command reduction and content reconstruction for one step.
-#import "../shared.typ": fail, array-max, key, typst-sequence, typst-styled
+#import "../shared.typ": (
+  fail,
+  array-max,
+  key,
+  typst-sequence,
+  typst-space,
+  typst-styled,
+)
 #import "core.typ": status
 #import "command.typ": (
   is-command-on,
@@ -237,7 +244,24 @@
           // in a native enum; removed items still hold their number so the
           // visible markers never shift between steps.
           let number = 1
-          for slot in indexed {
+          for slot in slots {
+            // An untimed sibling rides along, always visible, spanning both
+            // the marker and body columns. Pure spacing between items stays
+            // out: the grid's own row gutter already provides it, and a row
+            // per space would double every gap.
+            if slot.index == none {
+              if not (
+                slot.body == []
+                  or slot.body.func() in (typst-space, parbreak)
+              ) {
+                cells.push(grid.cell(
+                  colspan: 2,
+                  align: left,
+                  visit(slot.body),
+                ))
+              }
+              continue
+            }
             number = slot.body.fields().at("number", default: number)
             let state = slot-status(value, slot, step)
             if state != "removed" {

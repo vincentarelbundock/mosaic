@@ -25,9 +25,15 @@
     )
   }
   for (level, role) in value {
-    let depth = int(level)
-    if depth < 1 {
-      fail(name + " levels must be positive integers")
+    // Checked as a canonical decimal spelling rather than through `int()`: a
+    // non-numeric key would abort with a raw conversion error, and a
+    // zero-padded key would never match the `str(level)` lookup in
+    // `heading-role` below.
+    if level.match(regex("^[1-9][0-9]*$")) == none {
+      fail(
+        name + " levels must be positive integers written without leading "
+          + "zeros",
+      )
     }
     if role not in ("section", "slide") {
       fail(name + " " + repr(level) + " must be \"section\" or \"slide\"")
@@ -56,12 +62,13 @@
   value
 }
 
-#let top-level-content(body, wrappers: ()) = if (
+#let top-level-content(body, wrappers: (), path: ()) = if (
   type(body) == content and body.func() == typst-sequence
 ) {
-  body.children.map(child => top-level-content(
+  body.children.enumerate().map(((index, child)) => top-level-content(
     child,
     wrappers: wrappers,
+    path: path + (index,),
   )).flatten()
 } else if type(body) == content and body.func() == typst-styled {
   top-level-content(
@@ -69,7 +76,12 @@
     wrappers: wrappers + ((
       func: body.func(),
       styles: body.styles,
+      // The tree position of the styled element this wrapper came from, so
+      // two entries share a wrapper prefix only when they sit inside the very
+      // same styled elements, not merely equally many.
+      id: path,
     ),),
+    path: path + (0,),
   )
 } else {
   ((
@@ -78,6 +90,8 @@
     wrappers: wrappers,
   ),)
 }
+
+#let wrapper-ids(wrappers) = wrappers.map(wrapper => wrapper.id)
 // Automatic and explicit pages use the same layout-based slide command.
 #let compile-deck(body, headings: default-heading-policy) = {
   let output = ()
@@ -98,6 +112,7 @@
         render-slide(slide-command(
           (),
           layout: "content",
+          automatic: true,
           cells: (header: section, body: body),
         )),
         wrappers,
@@ -113,6 +128,7 @@
         render-slide(slide-command(
           (),
           layout: "section",
+          automatic: true,
           cells: (section: section),
           fields: if tagline == none { (:) } else { (subtitle: tagline) },
         )),
@@ -136,9 +152,14 @@
     // Content collected into an automatic slide is re-styled by
     // the outer wrap in flush(); strip the slide-level wrapper prefix from
     // each piece so those styles are not applied twice (relative units such
-    // as em sizes would compound). Wrappers nest, so the first N wrappers of
-    // every piece inside the slide match the heading's N wrappers.
-    let inner = if entry.wrappers.len() >= slide-wrappers.len() {
+    // as em sizes would compound). Only a genuine prefix is stripped — the
+    // piece must sit inside the very styled elements that wrap the heading —
+    // so a separately styled sibling keeps its own styles through `shown`.
+    let inner = if (
+      entry.wrappers.len() >= slide-wrappers.len()
+        and wrapper-ids(entry.wrappers.slice(0, slide-wrappers.len()))
+          == wrapper-ids(slide-wrappers)
+    ) {
       wrap-content(value, entry.wrappers.slice(slide-wrappers.len()))
     } else {
       shown
@@ -146,7 +167,13 @@
     let level = if (
       type(value) == content and value.func() == heading
     ) {
-      value.depth
+      // Markup headings carry `depth`; a heading constructed with
+      // `heading(level: ..)` carries `level` instead, and reading the absent
+      // field would abort with a raw Typst error. Anything non-numeric (an
+      // explicit `level: auto`) falls back to the native default depth of 1.
+      let fields = value.fields()
+      let depth = fields.at("depth", default: fields.at("level", default: 1))
+      if type(depth) == int { depth } else { 1 }
     } else {
       none
     }

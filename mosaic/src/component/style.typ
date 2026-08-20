@@ -1,7 +1,7 @@
 // Shared semantic role resolution, structural defaults, and style resolution
 // for components.
 #import "../shared.typ": fail, validate-dictionary
-#import "../deck-state.typ": deck-settings
+#import "../deck-state.typ": deck-settings, inverted-slide-colors
 #import "../palettes.typ": light
 
 // The role names a component's `role` argument accepts. Every name but
@@ -44,7 +44,13 @@
 // The deck's own colors, for component defaults that should follow the theme
 // rather than a fixed value. Components call this inside `context`; outside a
 // deck they render in the library's light palette rather than an ad-hoc gray.
+// On an inverted slide the runtime publishes the swapped palette, so a
+// component drawn there paints against the ground it actually sits on.
 #let deck-colors() = {
+  let inverted = inverted-slide-colors.get()
+  if inverted != none {
+    return inverted
+  }
   let settings = deck-settings()
   if settings == none { light } else { settings.colors }
 }
