@@ -6,6 +6,8 @@
 
 TYPST ?= typst
 CALEPIN ?= calepin
+# Generates the API reference entries from the package's `///` doc comments.
+TYPSTDOC ?= typst-doc
 PYTHON ?= uv run python
 # The directory name is also the package name.
 PACKAGE_DIR := mosaic
@@ -61,34 +63,29 @@ WEB_IMAGE_DIR := $(DOCS_SRC)/assets/images
 # The photographs the examples use. These are committed source, not derivatives:
 # the examples re-render whenever one of them changes.
 WEB_IMAGES := $(WEB_IMAGE_DIR)/bonsai.webp $(WEB_IMAGE_DIR)/dog.webp
-API_MODULES_DIR := $(DOCS_SRC)/api/modules
-# Staged Tidy module name -> package source path, both without the .typ suffix.
-# The staged names stay flat because the docs pages reference them by name.
-API_MODULE_MAP := \
-  author:author \
-  component-card:component/card \
-  component-callout:component/callout \
-  component-badge:component/badge \
-  component-quote:component/quote \
-  component-divider:component/divider \
-  component-progress:component/progress \
-  slide-command:slide/command \
-  info:info \
-  note-command:note/command \
-  pause-command:incremental/pause \
-  surface:surface \
-  fit:fit \
-  grid-constructors:grid/constructors \
-  image:component/image \
-  component-figure:component/figure \
-  incremental-command:incremental/command \
-  theme-extension:themes/extension \
-  layout-content:layout/content \
-  layout-image:layout/image \
-  layout-section:layout/section \
-  layout-title:layout/title
-API_MAPPED_MODULES := $(foreach entry,$(API_MODULE_MAP),$(API_MODULES_DIR)/$(word 1,$(subst :, ,$(entry))).typ)
-API_STAGED_MODULES := $(API_MAPPED_MODULES) $(API_MODULES_DIR)/setup.typ
+API_DIR := $(DOCS_SRC)/api
+API_GENERATED_DIR := $(API_DIR)/generated
+API_STAMP_DIR := .build/api
+# One typst-doc run per API reference page. typst-doc reads the `///` comments
+# straight out of the package sources, so nothing is staged first, and it
+# resolves a cross-reference only within a single run: grouping the inputs page
+# by page is what makes a link between two entries on the same page a real link
+# rather than plain code. Each list stays in the order the page presents them,
+# because typst-doc emits entries in the order it is given them.
+API_GROUP_setup := $(API_DIR)/sources/setup.typ
+API_GROUP_theme := $(PACKAGE_DIR)/src/themes/extension.typ
+API_GROUP_slides := $(addprefix $(PACKAGE_DIR)/src/,\
+  slide/command.typ info.typ note/command.typ surface.typ fit.typ)
+API_GROUP_steps := $(addprefix $(PACKAGE_DIR)/src/incremental/,command.typ pause.typ)
+API_GROUP_grids := $(PACKAGE_DIR)/src/grid/constructors.typ
+API_GROUP_layouts := $(addprefix $(PACKAGE_DIR)/src/,\
+  author.typ layout/content.typ layout/image.typ layout/title.typ layout/section.typ)
+API_GROUP_components := $(addprefix $(PACKAGE_DIR)/src/component/,\
+  card.typ callout.typ badge.typ quote.typ divider.typ progress.typ image.typ figure.typ)
+# The group name is the page stem: docs-src/api/<group>.typ includes
+# docs-src/api/generated/<group>/index.typ.
+API_GROUPS := setup theme slides steps grids layouts components
+API_GROUP_STAMPS := $(addprefix $(API_STAMP_DIR)/,$(addsuffix .stamp,$(API_GROUPS)))
 # These files are both compiled below and embedded verbatim in their owning pages.
 # Files whose name starts with "_" are shared includes, not standalone decks.
 EMBEDDED_EXAMPLE_SOURCES := $(shell find $(EMBEDDED_EXAMPLES_DIR) -type f -name '*.typ' ! -name '_*' 2>/dev/null | sort)
@@ -100,7 +97,7 @@ EMBEDDED_SLIDESHOW_INDEXER := scripts/list-embedded-slideshows.py
 # per-frame image build. Mirror check-doc-assets.py's authored_pages().
 EMBEDDED_DOC_PAGES := $(shell find $(DOCS_SRC) -type f -name '*.typ' \
   -not -path '*/_calepin/*' -not -path '*/.calepin/*' \
-  -not -path '$(DOCS_SRC)/examples/*' -not -path '$(DOCS_SRC)/api/modules/*' \
+  -not -path '$(DOCS_SRC)/examples/*' -not -path '$(DOCS_SRC)/api/generated/*' \
   -not -path '$(DOCS_SRC)/api/sources/*' 2>/dev/null | sort)
 EMBEDDED_SLIDESHOW_SOURCES := $(addprefix $(EMBEDDED_EXAMPLES_DIR)/,$(addsuffix .typ,\
   $(shell $(PYTHON) $(EMBEDDED_SLIDESHOW_INDEXER) $(EMBEDDED_DOC_PAGES))))
@@ -215,17 +212,28 @@ $(SHOWCASE_OPENING): $(DOCS_SRC)/examples/showcase/opening.typ $(PACKAGE_SOURCES
 $(SHOWCASE_VIDEOS) $(SHOWCASE_POSTER) $(SHOWCASE_SHEET) &: scripts/build-docs-showcase-video.sh $(DECK_MANIFEST) $(SHOWCASE_STAMPS)
 	./scripts/build-docs-showcase-video.sh $(PYTHON)
 
-$(foreach entry,$(API_MODULE_MAP),$(eval \
-  $(API_MODULES_DIR)/$(word 1,$(subst :, ,$(entry))).typ: \
-  $(PACKAGE_DIR)/src/$(word 2,$(subst :, ,$(entry))).typ))
+# A group's manual is a directory of files whose names come from the entries
+# typst-doc finds, so the stamp, not the output, is what make tracks. The
+# directory is wiped first: a renamed or deleted entry must not leave its old
+# file behind for index.typ to stop including but Calepin to keep serving.
+# Makefile too: a group's input list lives up in API_GROUP_<group>, so editing
+# it must rebuild that group's manual.
+$(foreach group,$(API_GROUPS),$(eval \
+  $(API_STAMP_DIR)/$(group).stamp: $(API_GROUP_$(group)) Makefile))
 
-$(API_MAPPED_MODULES):
-	mkdir -p $(API_MODULES_DIR)
-	cp $< $@
-
-$(API_MODULES_DIR)/setup.typ: $(DOCS_SRC)/api/sources/setup.typ
-	mkdir -p $(API_MODULES_DIR)
-	cp $< $@
+$(API_GROUP_STAMPS): $(API_STAMP_DIR)/%.stamp:
+	@mkdir -p "$(@D)"
+	rm -rf "$(API_GENERATED_DIR)/$*"
+	$(TYPSTDOC) $(API_GROUP_$*) --output "$(API_GENERATED_DIR)/$*"
+# The manual labels every entry heading with the entry's name, so the group's
+# own index is authoritative about what it contains and what each anchor is.
+# Ask it, rather than inferring names from file stems: the query cannot drift
+# from what was generated. The filter drops the outline's own "Contents"
+# heading, the one level-1 heading in the document that carries no label.
+	$(TYPST) eval --root . --format json --in "$(API_GENERATED_DIR)/$*/index.typ" \
+	  'query(heading.where(level: 1)).filter(it => it.at("label", default: none) != none).map(it => str(it.label))' \
+	  > "$(API_GENERATED_DIR)/$*/entries.json"
+	@touch "$@"
 
 # Build each example deck via its own Makefile (which knows its typst flags and
 # fonts), then render the first page to a JPEG cover for the Examples gallery.
@@ -241,7 +249,7 @@ $(DECK_STAMP_DIR)/%.stamp: $(PACKAGE_SOURCES) $(DECK_METADATA) Makefile | instal
 # The website
 # ==============================================================================
 
-website: install $(API_STAGED_MODULES) ## Render docs-src into the published docs/ site from committed artifacts
+website: install $(API_GROUP_STAMPS) ## Render docs-src into the published docs/ site from committed artifacts
 # Calepin refuses to overwrite an output directory it does not recognise, and
 # Syncthing can re-materialise stray files under $(SITE_DIR) between builds.
 # Removing it first is safe because every byte in it is generated, and it makes
@@ -297,8 +305,8 @@ build: doctor install check website ## Validate prerequisites, then compile test
 # committed, so `make clean && make website` is a working sequence: the site
 # rebuilds from the example artifacts, which a clean deliberately leaves alone.
 # Removing those is `distclean`.
-clean: ## Remove build stamps, staged modules, Calepin caches, and the rendered site
-	rm -f $(API_MODULES_DIR)/*.typ
+clean: ## Remove build stamps, generated API manuals, Calepin caches, and the rendered site
+	rm -rf $(API_GENERATED_DIR) $(API_STAMP_DIR)
 	rm -rf $(EMBEDDED_STAMP_DIR) $(DECK_STAMP_DIR) $(SITE_DIR)
 # Calepin scatters caches through the source tree rather than keeping one: a
 # `_calepin` beside every page directory, a `.calepin` inside every example

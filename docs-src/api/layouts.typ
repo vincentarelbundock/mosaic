@@ -1,12 +1,5 @@
-#import "/api/_module.typ": api-module
+#import "/api/_page.typ": api-page
 
-#api-module(
-  "Semantic layouts",
-  (
-    "/api/modules/author.typ",
-    "/api/modules/layout-content.typ",
-    "/api/modules/layout-image.typ",
-    "/api/modules/layout-title.typ",
-    "/api/modules/layout-section.typ",
-  ),
-)
+#show: api-page.with("Semantic layouts")
+
+#include "/api/generated/layouts/index.typ"

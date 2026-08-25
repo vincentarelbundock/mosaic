@@ -13,8 +13,8 @@ include = ["assets/**", "examples/**/*.pdf", "examples/**/cover.jpg"]
 [pages]
 exclude = [
   "_includes/**",
-  "api/_module.typ",
-  "api/modules/**",
+  "api/_page.typ",
+  "api/generated/**",
   "api/sources/**",
   "examples/**",
 ]

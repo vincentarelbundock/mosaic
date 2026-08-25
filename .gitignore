@@ -15,6 +15,9 @@ docs-src/examples/decks/*/.calepin/
 # ordinary commit never carries a rebuild; publishing to GitHub Pages is the
 # deliberate act of force-adding it. See CLAUDE.md for the command.
 docs/
+# typst-doc regenerates the API reference entries from the package sources on
+# every website build, so the manual it writes is output, not source.
+docs-src/api/generated/
 trash/
 dist/
 # Syncthing scratch files

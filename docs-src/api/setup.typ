@@ -1,3 +1,5 @@
-#import "/api/_module.typ": api-module
+#import "/api/_page.typ": api-page
 
-#api-module("Document setup", "/api/modules/setup.typ")
+#show: api-page.with("Document setup")
+
+#include "/api/generated/setup/index.typ"

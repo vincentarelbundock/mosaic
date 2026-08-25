@@ -1,6 +1,5 @@
-#import "/api/_module.typ": api-module
+#import "/api/_page.typ": api-page
 
-#api-module(
-  "mosaic.grids constructors",
-  ("/api/modules/grid-constructors.typ",),
-)
+#show: api-page.with("mosaic.grids constructors")
+
+#include "/api/generated/grids/index.typ"

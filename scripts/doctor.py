@@ -15,7 +15,7 @@ GROUPS = {
         "modules": (),
     },
     "docs": {
-        "commands": ("calepin", "pdftoppm", "ffmpeg", "ffprobe"),
+        "commands": ("calepin", "typst-doc", "pdftoppm", "ffmpeg", "ffprobe"),
         "modules": ("PIL",),
     },
 }
