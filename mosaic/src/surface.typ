@@ -6,7 +6,7 @@
 /// paragraphs, reach it through ordinary `set` rules on its label. The cell's
 /// own surface cannot, because it is a block constructed before those rules
 /// apply, so it is painted by wrapping the labeled block instead. `surface`
-/// returns that standard wrapper, `it => block(width: 100%, height: 100%, ...,
+/// returns that standard wrapper, `it => block(width: 100%, height: auto, ...,
 /// it)`, ready to use as the body of a label rule.
 ///
 /// ```typ
@@ -14,6 +14,7 @@
 ///   fill: luma(240),
 ///   stroke: 0.5pt + gray,
 ///   radius: 6pt,
+///   height: 100%,
 /// )
 /// ```
 ///
@@ -38,11 +39,11 @@
   /// Corner radius of the painted block.
   /// -> relative | dictionary
   radius: 0pt,
-  /// Height of the painted block. Keep `100%` for cells in `1fr` or fixed
-  /// tracks; pass `auto` for a content-sized cell in an `auto` track so the
-  /// paint hugs the content.
+  /// Height of the painted block. `auto` sizes it to the content, which is
+  /// what a cell in an `auto` track wants. Pass `100%` for a cell in a `1fr`
+  /// or fixed track, or for a plane, to fill the region edge to edge.
   /// -> auto | relative
-  height: 100%,
+  height: auto,
 ) = it => block(
   width: 100%,
   height: height,

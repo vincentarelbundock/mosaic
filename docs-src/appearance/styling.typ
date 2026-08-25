@@ -68,7 +68,7 @@ Target a cell by its label. Font, size, color, and alignment are `set text`, `se
 Two kinds of rules cover a cell, split by what they touch. Properties of the content *inside* the cell (text, alignment, paragraphs, lists) pass through the label as ordinary `set` rules. Properties of the cell's *own block* (fill, stroke, corner radius) cannot, because that block is constructed before any rule applies; the only way to paint it is to wrap the labeled block in a new block that carries the paint. `m.surface(..)` builds exactly that wrapper, so it is shorthand for the native transform, not a separate styling system:
 
 ```typ
-#show label("mosaic-cell-body"): m.surface(fill: white)
+#show label("mosaic-cell-body"): m.surface(fill: white, height: 100%)
 // is the same rule as
 #show label("mosaic-cell-body"): it => block(
   width: 100%,
@@ -78,7 +78,7 @@ Two kinds of rules cover a cell, split by what they touch. Properties of the con
 )
 ```
 
-A full-height cell (`1fr` or a fixed track) fills its space with the default `height: 100%`; for a content-sized cell (an `auto` track) pass `height: auto` so the fill hugs the content. The full-slide planes carry the labels `<mosaic-background>` and `<mosaic-foreground>`, so the same two kinds of rules style them as well. The one structural setting that lives on the cell itself is `inset`, because padding affects layout measurement:
+The full-slide planes carry the labels `<mosaic-background>` and `<mosaic-foreground>`, so the same two kinds of rules style them as well. The one structural setting that lives on the cell itself is `inset`, because padding affects layout measurement:
 
 ```typ
 #m.grids.cell("image", inset: 0pt)
@@ -106,7 +106,7 @@ For a slide that shows a picture on a black background, paint the background pla
 
 ```typ
 #[
-  #show label("mosaic-background"): m.surface(fill: black)
+  #show label("mosaic-background"): m.surface(fill: black, height: 100%)
   #m.slide(
     cells: (
       body: [],
@@ -115,6 +115,23 @@ For a slide that shows a picture on a black background, paint the background pla
   )
 ]
 ```
+
+= How tall a surface is
+
+`height:` sets how much of the cell the paint covers. The track decides which value to use:
+
+```typ
+#show label("mosaic-cell-header"): m.surface(fill: ink, height: auto)   // auto track
+#show label("mosaic-cell-body"): m.surface(fill: paper, height: 100%)   // 1fr track
+```
+
+A cell in a `1fr` or fixed track takes `height: 100%` and fills it edge to edge. A cell in an `auto` track is content-sized and takes `height: auto`, so the bar is as tall as its type. The content layout's header and footer are `auto` tracks.
+
+`height: 100%` in an `auto` track resolves against the whole slide instead, so the paint covers the slide and pushes the body off the page.
+
+#calepin.elements.callout(kind: "warning", title: [The default changes in Mosaic 0.0.2])[
+  In the released `0.0.1` this documentation pins, `height:` defaults to `100%`. In 0.0.2 it defaults to `auto`. Pass it explicitly and the rule reads the same under both.
+]
 
 = Styling a whole slide
 

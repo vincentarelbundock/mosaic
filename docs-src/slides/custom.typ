@@ -132,10 +132,10 @@ The grid remains unchanged while the `cells:` dictionary receives ordinary Typst
 Once the cells and content are in place, target each cell by its label. `m.surface` paints the cell, while `set align` positions its content.
 
 ```typ
-#show label("mosaic-cell-main"): m.surface(fill: rgb("#7fa8cc"))
+#show label("mosaic-cell-main"): m.surface(fill: rgb("#7fa8cc"), height: 100%)
 #show label("mosaic-cell-main"): set align(left + horizon)
-#show label("mosaic-cell-notes"): m.surface(fill: rgb("#85b892"))
-#show label("mosaic-cell-source"): m.surface(fill: rgb("#c9a75e"))
+#show label("mosaic-cell-notes"): m.surface(fill: rgb("#85b892"), height: 100%)
+#show label("mosaic-cell-source"): m.surface(fill: rgb("#c9a75e"), height: 100%)
 ```
 
 See #link("../appearance/styling.html#content-rules-and-surface-rules")[Styling cells] for the full styling model.

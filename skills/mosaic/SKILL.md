@@ -363,12 +363,12 @@ Two kinds of rules cover a cell, split by what they touch:
 ```typ
 #show label("mosaic-cell-copy"): set align(left + horizon)
 #show label("mosaic-cell-copy"): set text(fill: black, size: 1.1em)
-#show label("mosaic-cell-copy"): m.surface(fill: white)
+#show label("mosaic-cell-copy"): m.surface(fill: white, height: 100%)
 // m.surface(fill: white) is the same rule as:
-// it => block(width: 100%, height: 100%, fill: white, it)
+// it => block(width: 100%, height: auto, fill: white, it)
 ```
 
-For a content-sized cell (an `auto` track), pass `height: auto` to `m.surface` so the fill hugs the content. The planes carry `<mosaic-background>` and `<mosaic-foreground>` and take the same rules.
+`height:` defaults to `auto`, which sizes the paint to the content and is what a cell in an `auto` track wants. Pass `height: 100%` for a cell in a `1fr` or fixed track, or for a plane. `height: 100%` in an `auto` track resolves against the whole slide and pushes the other cells off the page. The planes carry `<mosaic-background>` and `<mosaic-foreground>` and take the same rules.
 
 Rules after `#show: m.setup` apply deck-wide. Scope a rule and slide inside a block to change only that slide:
 

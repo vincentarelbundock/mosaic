@@ -79,7 +79,7 @@
 ///
 /// ```typ
 /// #show label("mosaic-cell-body"): set text(size: 0.9em)
-/// #show label("mosaic-cell-body"): mosaic.surface(fill: luma(240))
+/// #show label("mosaic-cell-body"): mosaic.surface(fill: luma(240), height: 100%)
 /// ```
 ///
 /// -> dictionary

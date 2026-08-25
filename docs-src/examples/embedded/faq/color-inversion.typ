@@ -14,7 +14,7 @@
     let cell = label("mosaic-cell-" + id)
     out = {
       show cell: set text(fill: pair.text)
-      show cell: m.surface(fill: pair.fill)
+      show cell: m.surface(fill: pair.fill, height: 100%)
       out
     }
   }
