@@ -76,17 +76,25 @@
     },
   ),
   options: (
-    // Every family a theme names is a preference, not a requirement: each
-    // chain ends in a family Typst always has, so a machine without the
-    // designed typeface still renders the deck.
+    // Designed face first, then the best slide sans each platform ships by
+    // default, then the Linux workhorse, ending in Libertinus Serif. Typst
+    // embeds no sans at all, so the terminal is a serif and some name here
+    // is always unknown: it warns once per unknown family even when a later
+    // one resolves, which is the price of rendering as designed anywhere.
     font: (
       "Inter",
       "Source Sans 3",
-      "Liberation Sans",
+      "Avenir Next",
+      "Segoe UI",
       "DejaVu Sans",
       "Libertinus Serif",
     ),
-    font-display: ("Source Serif 4", "Libertinus Serif"),
+    font-display: (
+      "Source Serif 4",
+      "Charter",
+      "Constantia",
+      "Libertinus Serif",
+    ),
     base-size: 20pt,
   ),
   layouts: (

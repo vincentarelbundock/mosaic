@@ -78,10 +78,8 @@
     },
   ),
   options: (
-    // Families that ship with essentially every system, so the theme renders
-    // as designed without asking anyone to install a typeface. Typst warns
-    // once per unknown family even when a later one resolves, so naming a
-    // font that is merely likely would make every build of this deck noisy.
+    // The one chain that needs no platform names: Typst embeds DejaVu Sans
+    // Mono, so the designed face always resolves and no build ever warns.
     // A deck that has a favorite mono passes it through `setup(font: ..)`.
     font: ("DejaVu Sans Mono", "Liberation Mono"),
     base-size: 19pt,

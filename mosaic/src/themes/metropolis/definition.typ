@@ -74,13 +74,17 @@
     },
   ),
   options: (
-    // See the note in the mono theme: only families that are present
-    // everywhere are named, because Typst warns once per unknown family even
-    // when a later one resolves. The beamer original sets Fira; a deck that
-    // wants it passes `setup(font: "Fira Sans", font-mono: "Fira Mono")`.
+    // Designed face first, then the best slide sans each platform ships by
+    // default, then the Linux workhorse, ending in Libertinus Serif. Typst
+    // embeds no sans at all, so the terminal is a serif and some name here
+    // is always unknown: it warns once per unknown family even when a later
+    // one resolves, which is the price of rendering as designed anywhere.
+    // The beamer original sets Fira; a deck that wants it passes
+    // `setup(font: "Fira Sans", font-mono: "Fira Mono")`.
     font: (
       "Source Sans 3",
-      "Liberation Sans",
+      "Avenir Next",
+      "Segoe UI",
       "DejaVu Sans",
       "Libertinus Serif",
     ),

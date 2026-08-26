@@ -66,10 +66,17 @@
     },
   ),
   options: (
-    // The poster serif is a preference, not a requirement: the chain ends in
-    // a family Typst always has, so the deck still renders where Source Serif
-    // is not installed.
-    font: ("Source Serif 4", "Libertinus Serif"),
+    // Designed face first, then the display serif each platform ships by
+    // default, ending in Libertinus Serif, which Typst embeds and so always
+    // resolves. Typst warns once per unknown family even when a later one
+    // resolves, which is the price of the poster reading as designed on a
+    // machine with nothing installed.
+    font: (
+      "Source Serif 4",
+      "Charter",
+      "Constantia",
+      "Libertinus Serif",
+    ),
     base-size: 16pt,
   ),
   layouts: (

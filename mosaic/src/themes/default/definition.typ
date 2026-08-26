@@ -63,10 +63,16 @@
     },
   ),
   options: (
+    // Designed face first, then the best slide sans each platform ships by
+    // default, then the Linux workhorse, ending in Libertinus Serif. Typst
+    // embeds no sans at all, so the terminal is a serif and some name here
+    // is always unknown: it warns once per unknown family even when a later
+    // one resolves, which is the price of rendering as designed anywhere.
     font: (
       "Inter",
       "Source Sans 3",
-      "Liberation Sans",
+      "Avenir Next",
+      "Segoe UI",
       "DejaVu Sans",
       "Libertinus Serif",
     ),
