@@ -17,6 +17,7 @@ bare-track-wrapper|slide layout must be a Mosaic grid tree or layout
 cell-id-both|cell id must be passed positionally or through id:, not both
 cell-surface-ownership|cell accepts only a cell id, optional fixed content, and inset
 components-progress-count|progress count must be "slides" or "sections"
+components-progress-quiet|progress quiet must be auto, true, or false
 duplicate-cell-id|duplicate cell id "same" in grid at root
 empty-split|columns must contain at least one child
 figure-args-uncaptioned|figure arguments apply to the native figure, so they need a caption

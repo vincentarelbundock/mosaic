@@ -107,6 +107,9 @@ title = "Styles & Themes"
   target = "appearance/colors.typ"
 
   [[sidebar.section.item]]
+  target = "appearance/fonts.typ"
+
+  [[sidebar.section.item]]
   target = "appearance/themes.typ"
 
 [[sidebar.section]]

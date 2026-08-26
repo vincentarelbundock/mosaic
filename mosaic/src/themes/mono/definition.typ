@@ -11,7 +11,6 @@
 #import "layouts.typ" as layouts
 #import "tokens.typ" as tokens
 #import "../polarity.typ": is-dark-canvas, dark-code-theme
-#import "../../deck-state.typ": slide-numbered
 
 #let apply(body, colors: (:), options: (:)) = {
   let base-size = options.base-size
@@ -65,17 +64,15 @@
   defaults: (
     // The statusline: a right-aligned slide counter at the bottom of every
     // numbered slide. It resolves its colors from the deck record, so a
-    // palette swap recolors it too, and it quiets itself on unnumbered pages
-    // such as titles.
-    foreground: context if slide-numbered.get() {
-      place(bottom + right, block(
-        inset: (right: 24pt, bottom: 12pt),
-        text(
-          size: 0.55em,
-          components.progress(variant: "1/1"),
-        ),
-      ))
-    },
+    // palette swap recolors it too, and the component quiets itself on
+    // unnumbered pages such as titles.
+    foreground: place(bottom + right, block(
+      inset: (right: 24pt, bottom: 12pt),
+      text(
+        size: 0.55em,
+        components.progress(variant: "1/1"),
+      ),
+    )),
   ),
   options: (
     // The one chain that needs no platform names: Typst embeds DejaVu Sans

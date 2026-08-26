@@ -170,6 +170,23 @@ def run_core(typst: str, sources: list[str]) -> None:
         "SETUP LOGO",
     )
 
+    # components.progress() quiets itself where its counter has no meaningful
+    # reading: the slides count on unnumbered pages, the sections count before
+    # the first section slide. quiet: false always displays, and quiet: true
+    # silences every unnumbered page even for the sections count.
+    quiet_title = pdf_page_text("progress-quiet", 1)
+    require_contains(quiet_title, "ALW0/2")
+    for marker in ("SEC1", "NUM0", "ALL1"):
+        require_contains(quiet_title, marker, absent=True)
+    quiet_section = pdf_page_text("progress-quiet", 2)
+    require_contains(quiet_section, "SEC1/1")
+    require_contains(quiet_section, "ALW0/2")
+    for marker in ("NUM0", "NUM1", "ALL1"):
+        require_contains(quiet_section, marker, absent=True)
+    quiet_content = pdf_page_text("progress-quiet", 3)
+    for marker in ("SEC1/1", "NUM1/2", "ALW1/2", "ALL1/1"):
+        require_contains(quiet_content, marker)
+
     typst_compile(typst, "image.typ", TMP / "mosaic-image-{0p}.svg", "--format", "svg")
     image = TMP / "mosaic-image-1.svg"
     require_contains(image, "#00000059")

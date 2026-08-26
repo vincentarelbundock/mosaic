@@ -39,6 +39,7 @@
     "pause-nested.typ",
     "pause-streams.typ",
     "pause.typ",
+    "progress-quiet.typ",
     "public-api-minimal.typ",
     "section-counter.typ",
     "sections.typ",

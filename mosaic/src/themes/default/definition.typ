@@ -12,7 +12,6 @@
 // asset that cannot (the syntax highlighting theme) branches on the canvas.
 #import "../../palettes.typ": light
 #import "../../component/api.typ" as components
-#import "../../deck-state.typ": slide-numbered
 #import "../polarity.typ": is-dark-canvas, dark-code-theme
 #import "layouts.typ" as layouts
 
@@ -53,14 +52,12 @@
   defaults: (
     // The progress ring in the corner of every numbered slide, the one piece
     // of furniture the quiet theme carries. It resolves its colors from the
-    // deck record, so a palette swap recolors it too, and it quiets itself on
-    // unnumbered pages such as titles.
-    foreground: context if slide-numbered.get() {
-      place(bottom + right, block(
-        inset: (right: 18pt, bottom: 14pt),
-        text(size: 0.55em, components.progress(variant: "circle")),
-      ))
-    },
+    // deck record, so a palette swap recolors it too, and the component
+    // quiets itself on unnumbered pages such as titles.
+    foreground: place(bottom + right, block(
+      inset: (right: 18pt, bottom: 14pt),
+      text(size: 0.55em, components.progress(variant: "circle")),
+    )),
   ),
   options: (
     // Designed face first, then the best slide sans each platform ships by

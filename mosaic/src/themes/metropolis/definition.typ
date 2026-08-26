@@ -9,7 +9,6 @@
 #import "layouts.typ" as layouts
 #import "tokens.typ" as tokens
 #import "../polarity.typ": is-dark-canvas, dark-code-theme
-#import "../../deck-state.typ": slide-numbered
 
 #let apply(body, colors: (:), options: (:)) = {
   let base-size = options.base-size
@@ -37,7 +36,6 @@
   show heading.where(depth: 2): set text(size: 1.15em, weight: "regular")
   show heading: set block(below: 0.75em)
   show figure.caption: set text(size: 0.72em, fill: colors.muted)
-  show raw: set text(font: options.font-mono)
   show raw.where(block: false): set text(size: 1.125em)
   show raw.where(block: true): set text(size: 0.8em)
   // Both halves are show-set rules on purpose: a user rule on the same label,
@@ -64,14 +62,12 @@
   defaults: (
     // The signature progress line at the bottom edge of every numbered slide,
     // filling as the deck advances. It resolves its colors from the deck
-    // record, so a palette swap recolors it too, and it quiets itself on
-    // unnumbered pages: the title keeps its clean edge and section slides
-    // already carry the big section bar.
-    foreground: context if slide-numbered.get() {
-      place(bottom, components.progress(
-        variant: "line", count: "slides", width: 100%, thickness: 3pt,
-      ))
-    },
+    // record, so a palette swap recolors it too, and the component quiets
+    // itself on unnumbered pages: the title keeps its clean edge and section
+    // slides already carry the big section bar.
+    foreground: place(bottom, components.progress(
+      variant: "line", count: "slides", width: 100%, thickness: 3pt,
+    )),
   ),
   options: (
     // Designed face first, then the best slide sans each platform ships by
@@ -80,7 +76,10 @@
     // is always unknown: it warns once per unknown family even when a later
     // one resolves, which is the price of rendering as designed anywhere.
     // The beamer original sets Fira; a deck that wants it passes
-    // `setup(font: "Fira Sans", font-mono: "Fira Mono")`.
+    // `setup(font: "Fira Sans")`. Code needs no option of its own: Typst
+    // pins `raw` to its embedded DejaVu Sans Mono and a document-wide text
+    // font never reaches it, so a deck with a favorite mono writes the one
+    // rule `show raw: set text(font: ..)`, as it would under any theme.
     font: (
       "Source Sans 3",
       "Avenir Next",
@@ -88,7 +87,6 @@
       "DejaVu Sans",
       "Libertinus Serif",
     ),
-    font-mono: ("DejaVu Sans Mono", "Liberation Mono"),
     base-size: 21.5pt,
   ),
   layouts: (

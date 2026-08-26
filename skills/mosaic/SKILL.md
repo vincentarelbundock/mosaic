@@ -410,7 +410,7 @@ Keep three concerns distinct:
 
 A logo is ordinary setup foreground content: `place(top + right, dx: .., dy: ..)[#image(..)]` inside `m.setup(foreground: ...)`. A photographic background is a slide-sized `m.components.image` (with `scrim:` for contrast) passed to `background:`.
 
-`m.components.progress()` follows the logical slide counter (all frames of one slide share a number). Its `variant:` is `"1/1"` (default), `"1"`, `"circle"`, or `"line"`. `count:` selects the `"slides"` (default) or `"sections"` counter; `current:` and `total:` override the counter explicitly. Appearance goes through `role:` (default `"accent"`), `accent:` (the completed portion), `fill:` (the inactive remainder), `width:` (line length or circle diameter), and `thickness:`.
+`m.components.progress()` follows the logical slide counter (all frames of one slide share a number). Its `variant:` is `"1/1"` (default), `"1"`, `"circle"`, or `"line"`. `count:` selects the `"slides"` (default) or `"sections"` counter. The indicator quiets itself on pages where its counter has no meaningful reading — the slides count on unnumbered slides (titles and sections), the sections count before the first section slide — so a bare `progress()` in a deck foreground is already correct page-number chrome, with no guard to write. `quiet:` overrides the rule: `false` always displays, `true` silences every unnumbered page even for the sections count. Hand-built footlines that read `m.info()` directly still guard with `slide.numbered` themselves. Appearance goes through `role:` (default `"accent"`), `accent:` (the completed portion), `fill:` (the inactive remainder), `width:` (line length or circle diameter), and `thickness:`.
 
 Navigation stays native because headings stay native:
 

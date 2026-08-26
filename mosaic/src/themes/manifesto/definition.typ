@@ -6,7 +6,6 @@
 // warm white, serif type set large, uppercase tracked headings, a bordered
 // title plate, and rule sections carried by a heavy bar.
 #import "../../component/api.typ" as components
-#import "../../deck-state.typ": slide-numbered
 #import "layouts.typ" as layouts
 #import "tokens.typ" as tokens
 #import "../polarity.typ": is-dark-canvas, dark-code-theme
@@ -56,14 +55,12 @@
     spacing: (inset: 45pt),
     // The progress ring in the corner of every numbered slide, drawn in the
     // poster's red. It resolves its colors from the deck record, so a palette
-    // swap recolors it too, and it quiets itself on unnumbered pages such as
-    // titles.
-    foreground: context if slide-numbered.get() {
-      place(bottom + right, block(
-        inset: (right: 18pt, bottom: 14pt),
-        components.progress(variant: "circle"),
-      ))
-    },
+    // swap recolors it too, and the component quiets itself on unnumbered
+    // pages such as titles.
+    foreground: place(bottom + right, block(
+      inset: (right: 18pt, bottom: 14pt),
+      components.progress(variant: "circle"),
+    )),
   ),
   options: (
     // Designed face first, then the display serif each platform ships by

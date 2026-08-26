@@ -145,6 +145,19 @@
     "translations": {}
   },
   {
+    "excerpt": "Every built-in theme names its typeface as a list of families rather than a single one, and that list is why a first compile usually prints a few warnings. This page explains where they come from, why they are harmless, and how to choose your own type instead.",
+    "href": "appearance/fonts.html",
+    "language": null,
+    "meta": {
+      "title": "Fonts"
+    },
+    "path": "appearance/fonts.typ",
+    "pdf": null,
+    "title": "Fonts",
+    "translation_key": "appearance/fonts",
+    "translations": {}
+  },
+  {
     "excerpt": "As the anatomy page shows, every part of a slide is a native Typst layer carrying a label, and you style all of it with ordinary set and show rules. Every rule a slide renders with comes from its theme: Mosaic's engine contributes page geometry, deck information, and colors, but…",
     "href": "appearance/styling.html",
     "language": null,

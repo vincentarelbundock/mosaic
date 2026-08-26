@@ -36,6 +36,15 @@
 /// or the section's title rather than its number, reads that instead of
 /// composing several of these.
 ///
+/// *Quieting*
+///
+/// The indicator is deck furniture, so it quiets itself on pages where its
+/// counter has no meaningful reading: a `slides` count on unnumbered slides
+/// (titles and sections, by default), and a `sections` count before the
+/// first section slide. A `sections` count does display on section slides,
+/// where the counter reads the section being opened. `quiet:` overrides the
+/// rule in either direction.
+///
 /// -> content
 #let progress(
   /// Visual treatment: `"1/1"`, `"1"`, `"circle"`, `"line"`, or a function
@@ -59,6 +68,11 @@
   /// Which automatic counter to read: `"slides"` or `"sections"`.
   /// -> str
   count: "slides",
+  /// Whether the indicator quiets itself. `auto` silences a `slides` count on
+  /// unnumbered slides and a `sections` count before the first section slide;
+  /// `true` silences every unnumbered slide; `false` always displays.
+  /// -> auto | bool
+  quiet: auto,
   /// Semantic role supplying the default colors: `accent`, `neutral`,
   /// `warning`, or `error`. The role's own color paints the
   /// completed portion and its tinted fill paints the remainder.
@@ -90,13 +104,32 @@
   if type(count) != str or count not in ("slides", "sections") {
     fail("progress count must be \"slides\" or \"sections\"")
   }
+  if quiet != auto and type(quiet) != bool {
+    fail("progress quiet must be auto, true, or false")
+  }
   // The same position `info()` publishes, read from the same place, so the
   // indicator and a hand-built footline can never print different numbers.
+  let slide = slide-position()
   let position = if count == "slides" {
-    slide-position()
+    slide
   } else {
     section-position()
   }
+  // Furniture quiets itself where its counter has no meaningful reading: a
+  // slides count on unnumbered pages, where the number is zero or stale, and
+  // a sections count before the first section slide, where it is zero. On a
+  // section slide the sections counter has already stepped, so that reading
+  // is live and displays.
+  let silenced = if quiet == false {
+    false
+  } else if quiet == true {
+    not slide.numbered
+  } else if count == "slides" {
+    not slide.numbered
+  } else {
+    position.number == 0
+  }
+  if silenced { return }
   let current = position.number
   // A deck with no section slides legitimately totals zero; the ratio below
   // guards against dividing by it.
