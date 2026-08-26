@@ -148,6 +148,19 @@ Because the cell's own block obeys `set block` rules, a fill, stroke, or corner 
 
 The few surfaces a layout variant paints itself — the `panel` title variant's ink panel, for instance — are that variant's design and sit above label rules; when the arrangement is wrong for your content, pick another variant or draw the slide as an ordinary grid of cells.
 
+= Properties an element pins on itself
+
+A label rule styles a region, and its `set` values flow inward to everything the region contains — until an element inside restates the property. A `==` header title is a real `heading`, and heading typography is restated at the heading element: Typst's own defaults make headings bold, and a theme's `show heading` rules adjust that (Metropolis sets depth-2 headings to `weight: "regular"`). Both sit closer to the glyphs than any rule on the surrounding cell label, so for those properties the label's value never lands. This is ordinary Typst rather than a Mosaic rule — no label rule can un-bold a heading in any document — and it is why one half of a label rule can work while the other half is silently overridden: properties nothing inside restates, such as the header's text fill, flow through untouched.
+
+Restyle a pinned property at the element's own altitude, with a rule placed after `m.setup` so it lands later than the theme's:
+
+```typ
+#show label("mosaic-cell-header"): set text(fill: white)      // fill flows in through the label
+#show heading.where(depth: 2): set text(weight: "extrabold")  // weight is pinned at the heading
+```
+
+The same split covers everything a theme pins on an element rather than a label — `raw` fonts and sizes, `figure.caption` color: override those with a rule on that element, not on the cell label around it.
+
 = Styling a whole slide
 
 The grid of every slide also carries the label `<mosaic-slide>`, so one rule

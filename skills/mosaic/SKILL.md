@@ -368,6 +368,12 @@ Two kinds of rules cover a cell, split by what they touch:
 
 There is no height to manage: the engine sizes the cell's block to its track, so a `1fr` or fixed-track cell paints edge to edge and an `auto`-track cell paints as tall as its content. The planes carry `<mosaic-background>` and `<mosaic-foreground>` and take the same rules. Because these are `set` rules, a rule scoped inside a block overrides a deck-wide one for exactly the slides in that block.
 
+One boundary is native Typst, not Mosaic: properties an element pins on itself (heading weight and size, `raw` font, `figure.caption` color) resist label rules, because the element's own rule sits closer to the glyphs. A label rule's unpinned properties (a text fill, say) still flow in — only the pinned ones are overridden, which is why half a rule can work. Restyle pinned properties with an element rule after setup:
+
+```typ
+#show heading.where(depth: 2): set text(weight: "extrabold")
+```
+
 Rules after `#show: m.setup` apply deck-wide. Scope a rule and slide inside a block to change only that slide:
 
 ```typ
