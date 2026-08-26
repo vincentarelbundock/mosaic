@@ -62,6 +62,9 @@ fold = true
   target = "index.typ"
 
   [[sidebar.section.item]]
+  target = "start/install.typ"
+
+  [[sidebar.section.item]]
   target = "start/first-deck.typ"
 
   [[sidebar.section.item]]

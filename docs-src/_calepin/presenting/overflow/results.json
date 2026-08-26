@@ -1,8 +1,8 @@
 {
   "schema": 2,
-  "calepin_version": "0.0.54",
+  "calepin_version": "0.0.56",
   "input": "presenting/overflow.typ",
-  "generation": "52a42e93d1a62930-1349cde127705c16",
+  "generation": "050b8d409fda1a12-1349cde127705c16",
   "store": {},
   "chunks": {
     "chunk-1": {

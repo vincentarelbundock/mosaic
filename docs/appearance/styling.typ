@@ -39,13 +39,13 @@ Everything about the deck's palette, overriding entries, the bundled palette col
 Target a cell by its label. Font, size, color, and alignment are `set text`, `set par`, and `set align`; the cell's own fill, stroke, and corner radius are `set block` on the same label. The #link("../api/labels.html")[label reference] lists every label a slide emits:
 
 #calepin.elements.callout(kind: "warning", title: [Requires Mosaic 0.0.2])[
-  Painting a cell's own block with `set block` rules is new in 0.0.2, which is not on Typst Universe yet, so the snippets and examples on this page pin the development version. To use them, clone #link("https://github.com/vincentarelbundock/mosaic")[the repository], run `make install`, and import it:
+  Painting a cell's own block with `set block` rules is new in 0.0.2, which is not on Typst Universe yet, so the snippets and examples on this page pin the development version. One command installs it — `curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh` — and then it imports as:
 
   ```typ
   #import "@local/mosaic:0.0.2" as m
   ```
 
-  See #link("https://github.com/vincentarelbundock/mosaic#install")[Install] for the full instructions.
+  See #link("../start/install.html")[Install] for the full instructions.
 ]
 
 ```typ

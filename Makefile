@@ -13,18 +13,9 @@ PYTHON ?= uv run python
 PACKAGE_DIR := mosaic
 # Single source of truth: the manifest the package ships with.
 PACKAGE_VERSION := $(shell awk -F'"' '/^version[[:space:]]*=/{print $$2; exit}' $(PACKAGE_DIR)/typst.toml)
-TYPST_PACKAGE_PATH ?= $(or \
-  $(strip $(shell $(TYPST) info 2>/dev/null | awk '/Package path/{print $$3; exit}')), \
-  $(or $(XDG_DATA_HOME),$(HOME)/.local/share)/typst/packages)
-# The development version installs into the `local` namespace, Typst's namespace
-# for packages that come from somewhere other than Universe, and the tests import
-# it as @local/mosaic. The two namespaces keep the two versions apart with no
-# shadowing: @preview/mosaic resolves the released package from Universe, which
-# is what every website example imports, and @local/mosaic resolves this working
-# tree. Installing an unpublished version under `preview` instead would claim a
-# Universe version that does not exist, and would silently mask the real one
-# once it did.
-LOCAL_PACKAGE_DIR := $(TYPST_PACKAGE_PATH)/local/$(PACKAGE_DIR)/$(PACKAGE_VERSION)
+# Where the working tree installs, why it uses the `local` namespace, and how
+# the destination directory is resolved all live in install.sh, which also
+# serves curl-pipe installs of the development version from GitHub.
 # The website has two halves. DOCS_SRC is everything authored by hand plus the
 # example artifacts the rules below render: pages, calepin.toml, the theme, the
 # assets, the example projects. SITE_DIR is what Calepin writes from it. Nothing
@@ -145,14 +136,10 @@ doctor: ## Check mandatory, documentation, and optional build prerequisites
 # ==============================================================================
 
 install: ## Copy Mosaic into Typst's package index as @local/mosaic
-	rm -rf "$(LOCAL_PACKAGE_DIR)"
-	mkdir -p "$(LOCAL_PACKAGE_DIR)"
-	cp -R "$(PACKAGE_DIR)/." "$(LOCAL_PACKAGE_DIR)/"
-	@echo "Installed @local/$(PACKAGE_DIR):$(PACKAGE_VERSION) in $(LOCAL_PACKAGE_DIR)"
+	@TYPST="$(TYPST)" sh install.sh
 
 uninstall: ## Remove the working-tree copy, leaving only the released @preview/mosaic
-	rm -rf "$(LOCAL_PACKAGE_DIR)"
-	@echo "Removed $(LOCAL_PACKAGE_DIR)"
+	@TYPST="$(TYPST)" sh install.sh --uninstall
 
 # ==============================================================================
 # Tests

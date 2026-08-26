@@ -1,8 +1,8 @@
 {
   "schema": 2,
-  "calepin_version": "0.0.54",
+  "calepin_version": "0.0.56",
   "input": "acknowledgments.typ",
-  "generation": "c5701dedf50226b1-1349cde127705c16",
+  "generation": "80849d73607d2f05-1349cde127705c16",
   "store": {},
   "chunks": {}
 }

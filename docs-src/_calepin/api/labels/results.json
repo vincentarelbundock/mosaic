@@ -1,8 +1,8 @@
 {
   "schema": 2,
-  "calepin_version": "0.0.54",
+  "calepin_version": "0.0.56",
   "input": "api/labels.typ",
-  "generation": "2dd495938855b121-1349cde127705c16",
+  "generation": "ef36a1f165d621a9-1349cde127705c16",
   "store": {},
   "chunks": {}
 }

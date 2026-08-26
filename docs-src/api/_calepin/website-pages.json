@@ -490,5 +490,18 @@
     "title": "Get started",
     "translation_key": "start/first-deck",
     "translations": {}
+  },
+  {
+    "excerpt": "Mosaic requires Typst 0.15 or newer. The released version, 0.0.1, is published on Typst Universe, so using it needs no installation step: the first compile downloads the package.",
+    "href": "start/install.html",
+    "language": null,
+    "meta": {
+      "title": "Install"
+    },
+    "path": "start/install.typ",
+    "pdf": null,
+    "title": "Install",
+    "translation_key": "start/install",
+    "translations": {}
   }
 ]

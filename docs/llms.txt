@@ -41,3 +41,4 @@
 - [Section](/slides/section.html): A section slide divides a talk into parts. It announces where the audience has arrived, carries no body content, and usually shows a number so the deck's shape stays legible.
 - [Title](/slides/title.html): A title slide takes its content from the deck rather than from the slide, and its arrangement from a variant.
 - [Get started](/start/first-deck.html): First, import Mosaic and apply its setup rule:
+- [Install](/start/install.html): Mosaic requires Typst 0.15 or newer. The released version, 0.0.1, is published on Typst Universe, so using it needs no installation step: the first compile downloads the package.

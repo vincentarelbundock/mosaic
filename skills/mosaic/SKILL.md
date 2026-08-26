@@ -13,12 +13,10 @@ Prefer the smallest authoring surface that fits the request: headings for ordina
 
 1. Inspect the existing deck and preserve its import spelling and theme. Do not replace a themed facade with the root facade unless asked.
 2. Check that Typst is available with `typst --version`.
-3. Mosaic is published on Typst Universe, so `#import "@local/mosaic:0.0.2"` downloads it on first compile and needs no installation step. To work against unreleased sources instead, clone the repository and install the working tree over that same import:
+3. The released package, `#import "@preview/mosaic:0.0.1"`, downloads from Typst Universe on first compile and needs no installation step. The development version, `#import "@local/mosaic:0.0.2"`, must be installed before it resolves — either as a snapshot of the repository via the one-liner below, or with `make install` from a clone to use the working tree:
 
    ```sh
-   git clone https://github.com/vincentarelbundock/mosaic.git
-   cd mosaic
-   make install
+   curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh
    ```
 
 4. Compile from the project root when the deck uses repository-relative assets:

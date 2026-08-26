@@ -54,13 +54,13 @@ The note outputs are independent of `handout:`, so a deck can print a #link("../
 = On a second screen
 
 #calepin.elements.callout(kind: "warning", title: [Requires Mosaic 0.0.2])[
-  Everything below is new in 0.0.2, which is not on Typst Universe yet, so the rest of this documentation pins the released `0.0.1`. To use these outputs, clone #link("https://github.com/vincentarelbundock/mosaic")[the repository], run `make install`, and import the development version:
+  Everything below is new in 0.0.2, which is not on Typst Universe yet, so the rest of this documentation pins the released `0.0.1`. One command installs the development version — `curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh` — and then it imports as:
 
   ```typ
   #import "@local/mosaic:0.0.2" as m
   ```
 
-  See #link("https://github.com/vincentarelbundock/mosaic#install")[Install] for the full instructions. Everything above works with the package as published.
+  See #link("../start/install.html")[Install] for the full instructions. Everything above works with the package as published.
 ]
 
 A presenter console drives two displays: the projector shows the slide, your laptop shows the same slide with its notes, the next slide, and a clock. Typst produces a PDF, so the console is a separate program. Several free ones exist — #link("https://pympress.xyz/")[pympress], #link("https://pdfpc.github.io/")[pdfpc], #link("https://github.com/beamerpresenter/BeamerPresenter")[BeamerPresenter] — and they run on Linux, macOS, and Windows.
