@@ -150,6 +150,28 @@ Content repeated across frames advances a Typst counter or state once per frame.
 
 Counters and states left off that list keep their normal Typst behavior.
 
+= Accessibility
+
+Can Mosaic produce an accessible PDF?
+
+Yes. Compile against Typst's tagged-PDF standard:
+
+```sh
+typst compile --pdf-standard ua-1 main.typ
+```
+
+Three authoring requirements follow from the standard. First, PDF/UA-1 requires a properly nested outline whose first heading is level one, so the deck must open with a `=` section heading before any `==` content slides; a deck made only of `==` headings fails the export. Second, the document needs a title, which `setup(title: ..)` provides. Third, figures and math carry no description on their own: pass an `alt` string to `image` (or `m.components.image`) and to `math.equation` so a screen reader can voice them.
+
+```typ
+#image("plot.png", alt: "Estimates rise steadily from 2010 to 2020.")
+
+#math.equation(
+  alt: "a squared plus b squared equals c squared",
+  block: true,
+  $ a^2 + b^2 = c^2 $,
+)
+```
+
 = Touying
 
 How does Mosaic differ from Touying?

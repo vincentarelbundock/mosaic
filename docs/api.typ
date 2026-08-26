@@ -1,5 +1,3 @@
-#import "@preview/tidy:0.4.3"
-
 #set document(title: [API reference])
 #metadata((
   title: "API reference",
@@ -13,82 +11,31 @@ links to its full documentation: signature, parameter types, defaults, and
 descriptions.
 
 #let pages = (
-  (
-    title: "Document setup",
-    href: "api/setup.html",
-    sources: ("/api/modules/setup.typ",),
-  ),
-  (
-    title: "Theme authoring",
-    href: "api/theme.html",
-    sources: ("/api/modules/theme-extension.typ",),
-  ),
-  (
-    title: "Slides",
-    href: "api/slides.html",
-    sources: (
-      "/api/modules/slide-command.typ",
-      "/api/modules/note-command.typ",
-      "/api/modules/surface.typ",
-      "/api/modules/fit.typ",
-    ),
-  ),
-  (
-    title: "Incremental steps",
-    href: "api/steps.html",
-    sources: (
-      "/api/modules/incremental-command.typ",
-      "/api/modules/pause-command.typ",
-    ),
-  ),
-  (
-    title: "mosaic.grids constructors",
-    href: "api/grids.html",
-    sources: ("/api/modules/grid-constructors.typ",),
-  ),
-  (
-    title: "Semantic layouts",
-    href: "api/layouts.html",
-    sources: (
-      "/api/modules/author.typ",
-      "/api/modules/layout-content.typ",
-      "/api/modules/layout-image.typ",
-      "/api/modules/layout-title.typ",
-      "/api/modules/layout-section.typ",
-    ),
-  ),
-  (
-    title: "Components and furniture",
-    href: "api/components.html",
-    sources: (
-      "/api/modules/component-card.typ",
-      "/api/modules/component-callout.typ",
-      "/api/modules/component-badge.typ",
-      "/api/modules/component-quote.typ",
-      "/api/modules/component-divider.typ",
-      "/api/modules/component-progress.typ",
-      "/api/modules/image.typ",
-      "/api/modules/component-figure.typ",
-    ),
-  ),
+  (title: "Document setup", group: "setup"),
+  (title: "Theme authoring", group: "theme"),
+  (title: "Slides", group: "slides"),
+  (title: "Incremental steps", group: "steps"),
+  (title: "mosaic.grids constructors", group: "grids"),
+  (title: "Semantic layouts", group: "layouts"),
+  (title: "Components and furniture", group: "components"),
 )
 
+// Each group's manual labels every entry heading with the entry's name, and
+// the build step that generates the manual queries those labels into
+// entries.json. That query, not a second manifest, is what keeps this summary
+// exhaustive: a function documented in a package source appears here as soon as
+// its page has it, and the name is also the anchor, because typst-doc names the
+// heading label after the topic.
 #let page-entries(page) = {
-  let module = tidy.parse-module(page.sources.map(read).join("\n"))
-  let entries = ()
-  for fn in module.functions {
-    if fn.name.starts-with("_") { continue }
-    entries.push(link(page.href + "#" + fn.name, raw(fn.name + "()", lang: none)))
-  }
-  for variable in module.variables {
-    if variable.name.starts-with("_") { continue }
-    entries.push(link(page.href + "#" + variable.name, raw(variable.name, lang: none)))
-  }
-  entries
+  let href = "api/" + page.group + ".html"
+  json("/api/generated/" + page.group + "/entries.json").map(name => link(
+    href + "#" + name,
+    raw(name + "()", lang: none),
+  ))
 }
 
 #list(..pages.map(page => [
-  #link(page.href)[*#page.title*]
+  #link("api/" + page.group + ".html")[*#page.title*]
   #list(..page-entries(page))
 ]))
 

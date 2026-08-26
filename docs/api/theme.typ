@@ -1,3 +1,5 @@
-#import "/api/_module.typ": api-module
+#import "/api/_page.typ": api-page
 
-#api-module("Theme authoring", "/api/modules/theme-extension.typ")
+#show: api-page.with("Theme authoring")
+
+#include "/api/generated/theme/index.typ"

@@ -107,6 +107,14 @@
   --calepin-color-border: #d8dee6;
   --calepin-color-accent: #1c9bad;
   --calepin-color-accent-hover: #16808f;
+  /* Accent as a filled background behind `--calepin-color-accent-contrast`
+     text. Darker than the accent used for links and borders, so white label
+     text clears the WCAG AA 4.5:1 ratio. Derived from the accent so a theme
+     that sets only `--calepin-color-accent` keeps its buttons in family. */
+  --calepin-color-accent-strong: #167987;
+  --calepin-color-accent-strong: color-mix(in srgb, var(--calepin-color-accent) 78%, #000000);
+  --calepin-color-accent-strong-hover: #11606b;
+  --calepin-color-accent-strong-hover: color-mix(in srgb, var(--calepin-color-accent) 62%, #000000);
   --calepin-color-accent-soft: rgba(28, 155, 173, 0.12);
   --calepin-color-accent-soft: color-mix(in srgb, var(--calepin-color-accent) 12%, transparent);
   --calepin-color-accent-contrast: #ffffff;
@@ -205,6 +213,8 @@ html[data-theme="dark"] {
   --calepin-color-border: #344252;
   --calepin-color-accent: #67d4df;
   --calepin-color-accent-hover: #8be4ec;
+  --calepin-color-accent-strong: var(--calepin-color-accent);
+  --calepin-color-accent-strong-hover: var(--calepin-color-accent-hover);
   --calepin-color-accent-contrast: #071316;
   --calepin-color-link: var(--calepin-color-accent);
   --calepin-color-link-hover: var(--calepin-color-accent-hover);
@@ -238,6 +248,8 @@ html[data-theme="dark"] {
     --calepin-color-border: #344252;
     --calepin-color-accent: #67d4df;
     --calepin-color-accent-hover: #8be4ec;
+    --calepin-color-accent-strong: var(--calepin-color-accent);
+    --calepin-color-accent-strong-hover: var(--calepin-color-accent-hover);
     --calepin-color-accent-contrast: #071316;
     --calepin-color-link: var(--calepin-color-accent);
     --calepin-color-link-hover: var(--calepin-color-accent-hover);
@@ -257,7 +269,11 @@ html[data-theme="dark"] {
   }
 }
 
-:root,
+/* `:root:root` matches the specificity Pico uses for its own light palette
+   (`:root:not([data-theme=dark])`), which otherwise wins over a plain `:root`
+   and leaves a visitor who has not picked a theme with stock Pico colors
+   instead of the theme's. */
+:root:root,
 html[data-theme="light"],
 html[data-theme="dark"] {
   --pico-background-color: var(--calepin-color-background);
@@ -269,12 +285,12 @@ html[data-theme="dark"] {
   --pico-code-background-color: var(--calepin-surface-code);
   --pico-code-color: var(--calepin-color-text);
   --pico-primary: var(--calepin-color-accent);
-  --pico-primary-background: var(--calepin-color-accent);
-  --pico-primary-border: var(--calepin-color-accent);
+  --pico-primary-background: var(--calepin-color-accent-strong);
+  --pico-primary-border: var(--calepin-color-accent-strong);
   --pico-primary-underline: transparent;
   --pico-primary-hover: var(--calepin-color-accent-hover);
-  --pico-primary-hover-background: var(--calepin-color-accent-hover);
-  --pico-primary-hover-border: var(--calepin-color-accent-hover);
+  --pico-primary-hover-background: var(--calepin-color-accent-strong-hover);
+  --pico-primary-hover-border: var(--calepin-color-accent-strong-hover);
   --pico-primary-hover-underline: transparent;
   --pico-primary-focus: color-mix(in srgb, var(--calepin-color-focus) 40%, transparent);
   --pico-primary-inverse: var(--calepin-color-accent-contrast);
@@ -470,15 +486,15 @@ figure > img {
 
 .landing-button-primary,
 .landing-button-primary:visited {
-  border-color: var(--calepin-color-accent);
-  background: var(--calepin-color-accent);
+  border-color: var(--calepin-color-accent-strong);
+  background: var(--calepin-color-accent-strong);
   color: var(--calepin-color-accent-contrast);
 }
 
 .landing-button-primary:hover,
 .landing-button-primary:focus-visible {
-  border-color: var(--calepin-color-accent-hover);
-  background: var(--calepin-color-accent-hover);
+  border-color: var(--calepin-color-accent-strong-hover);
+  background: var(--calepin-color-accent-strong-hover);
   color: var(--calepin-color-accent-contrast);
 }
 
@@ -558,26 +574,44 @@ figure > img {
   --calepin-syntax-foreground: #003b4f;
   --calepin-syntax-background: #f7f7f5;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #003b4f;
-  --scope-2-foreground: #003b4f;
-  --scope-3-foreground: #8f5902;
-  --scope-4-foreground: #003b4f;
-  --scope-5-foreground: #003b4f;
-  --scope-6-foreground: #003b4f;
+  --scope-1-foreground: #5e5e5e;
+  --scope-2-foreground: #5e5e5e;
+  --scope-3-foreground: #20794d;
+  --scope-4-foreground: #20794d;
+  --scope-5-foreground: #8f5902;
+  --scope-6-foreground: #8b41b1;
   --scope-7-foreground: #8b41b1;
-  --scope-8-foreground: #003b4f;
-  --scope-9-foreground: #ad0000;
+  --scope-8-foreground: #8b41b1;
+  --scope-9-foreground: #8b41b1;
   --scope-10-foreground: #8b41b1;
-  --scope-11-foreground: #003b4f;
-  --scope-12-foreground: #003b4f;
-  --scope-13-foreground: #003b4f;
-  --scope-13-font-weight: 700;
-  --fallback-14-foreground: #5e5e5e;
-  --fallback-15-foreground: #20794d;
-  --fallback-16-foreground: #ad0000;
-  --fallback-17-foreground: #0b6e79;
-  --fallback-18-foreground: #8b41b1;
-  --fallback-19-foreground: #667321;
+  --scope-11-foreground: #8f5902;
+  --scope-12-foreground: #8f5902;
+  --scope-13-foreground: #8f5902;
+  --scope-14-foreground: #0b6e79;
+  --scope-15-foreground: #0b6e79;
+  --scope-16-foreground: #0b6e79;
+  --scope-17-foreground: #0b6e79;
+  --scope-18-foreground: #0b6e79;
+  --scope-19-foreground: #8b41b1;
+  --scope-20-foreground: #4759ab;
+  --scope-21-foreground: #4759ab;
+  --scope-22-foreground: #4759ab;
+  --scope-23-foreground: #ad0000;
+  --scope-24-foreground: #5e5e5e;
+  --scope-25-foreground: #5e5e5e;
+  --scope-26-foreground: #5e5e5e;
+  --scope-27-foreground: #003b4f;
+  --scope-28-foreground: #667321;
+  --scope-29-foreground: #667321;
+  --scope-30-foreground: #667321;
+  --scope-31-foreground: #003b4f;
+  --scope-31-font-weight: 700;
+  --fallback-32-foreground: #5e5e5e;
+  --fallback-33-foreground: #20794d;
+  --fallback-34-foreground: #ad0000;
+  --fallback-35-foreground: #0b6e79;
+  --fallback-36-foreground: #8b41b1;
+  --fallback-37-foreground: #667321;
 
 }
 
@@ -667,37 +701,127 @@ pre code .calepin-syntax-scope-12 {
 .sourceCode .calepin-syntax-scope-13,
 pre code .calepin-syntax-scope-13 {
   color: var(--scope-13-foreground);
-  font-weight: var(--scope-13-font-weight);
 }
 
-.sourceCode .calepin-syntax-fallback-14,
-pre code .calepin-syntax-fallback-14 {
-  color: var(--fallback-14-foreground);
+.sourceCode .calepin-syntax-scope-14,
+pre code .calepin-syntax-scope-14 {
+  color: var(--scope-14-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-15,
-pre code .calepin-syntax-fallback-15 {
-  color: var(--fallback-15-foreground);
+.sourceCode .calepin-syntax-scope-15,
+pre code .calepin-syntax-scope-15 {
+  color: var(--scope-15-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-16,
-pre code .calepin-syntax-fallback-16 {
-  color: var(--fallback-16-foreground);
+.sourceCode .calepin-syntax-scope-16,
+pre code .calepin-syntax-scope-16 {
+  color: var(--scope-16-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-17,
-pre code .calepin-syntax-fallback-17 {
-  color: var(--fallback-17-foreground);
+.sourceCode .calepin-syntax-scope-17,
+pre code .calepin-syntax-scope-17 {
+  color: var(--scope-17-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-18,
-pre code .calepin-syntax-fallback-18 {
-  color: var(--fallback-18-foreground);
+.sourceCode .calepin-syntax-scope-18,
+pre code .calepin-syntax-scope-18 {
+  color: var(--scope-18-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-19,
-pre code .calepin-syntax-fallback-19 {
-  color: var(--fallback-19-foreground);
+.sourceCode .calepin-syntax-scope-19,
+pre code .calepin-syntax-scope-19 {
+  color: var(--scope-19-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-20,
+pre code .calepin-syntax-scope-20 {
+  color: var(--scope-20-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-21,
+pre code .calepin-syntax-scope-21 {
+  color: var(--scope-21-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-22,
+pre code .calepin-syntax-scope-22 {
+  color: var(--scope-22-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-23,
+pre code .calepin-syntax-scope-23 {
+  color: var(--scope-23-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-24,
+pre code .calepin-syntax-scope-24 {
+  color: var(--scope-24-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-25,
+pre code .calepin-syntax-scope-25 {
+  color: var(--scope-25-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-26,
+pre code .calepin-syntax-scope-26 {
+  color: var(--scope-26-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-27,
+pre code .calepin-syntax-scope-27 {
+  color: var(--scope-27-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-28,
+pre code .calepin-syntax-scope-28 {
+  color: var(--scope-28-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-29,
+pre code .calepin-syntax-scope-29 {
+  color: var(--scope-29-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-30,
+pre code .calepin-syntax-scope-30 {
+  color: var(--scope-30-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-31,
+pre code .calepin-syntax-scope-31 {
+  color: var(--scope-31-foreground);
+  font-weight: var(--scope-31-font-weight);
+}
+
+.sourceCode .calepin-syntax-fallback-32,
+pre code .calepin-syntax-fallback-32 {
+  color: var(--fallback-32-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-33,
+pre code .calepin-syntax-fallback-33 {
+  color: var(--fallback-33-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-34,
+pre code .calepin-syntax-fallback-34 {
+  color: var(--fallback-34-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-35,
+pre code .calepin-syntax-fallback-35 {
+  color: var(--fallback-35-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-36,
+pre code .calepin-syntax-fallback-36 {
+  color: var(--fallback-36-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-37,
+pre code .calepin-syntax-fallback-37 {
+  color: var(--fallback-37-foreground);
 }
 
 
@@ -758,26 +882,44 @@ html[data-theme="dark"] {
   --calepin-syntax-foreground: #d8e7ef;
   --calepin-syntax-background: #161b22;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #d8e7ef;
-  --scope-2-foreground: #d8e7ef;
-  --scope-3-foreground: #ffcc9c;
-  --scope-4-foreground: #d8e7ef;
-  --scope-5-foreground: #d8e7ef;
-  --scope-6-foreground: #d8e7ef;
+  --scope-1-foreground: #8b949e;
+  --scope-2-foreground: #8b949e;
+  --scope-3-foreground: #8fd694;
+  --scope-4-foreground: #8fd694;
+  --scope-5-foreground: #ffcc9c;
+  --scope-6-foreground: #c8a2f0;
   --scope-7-foreground: #c8a2f0;
-  --scope-8-foreground: #d8e7ef;
-  --scope-9-foreground: #ffb3a7;
+  --scope-8-foreground: #c8a2f0;
+  --scope-9-foreground: #c8a2f0;
   --scope-10-foreground: #c8a2f0;
-  --scope-11-foreground: #d8e7ef;
-  --scope-12-foreground: #d8e7ef;
-  --scope-13-foreground: #d8e7ef;
-  --scope-13-font-weight: 700;
-  --fallback-14-foreground: #8b949e;
-  --fallback-15-foreground: #8fd694;
-  --fallback-16-foreground: #ffb3a7;
-  --fallback-17-foreground: #7fd1de;
-  --fallback-18-foreground: #c8a2f0;
-  --fallback-19-foreground: #c3d86c;
+  --scope-11-foreground: #ffcc9c;
+  --scope-12-foreground: #ffcc9c;
+  --scope-13-foreground: #ffcc9c;
+  --scope-14-foreground: #7fd1de;
+  --scope-15-foreground: #7fd1de;
+  --scope-16-foreground: #7fd1de;
+  --scope-17-foreground: #7fd1de;
+  --scope-18-foreground: #7fd1de;
+  --scope-19-foreground: #c8a2f0;
+  --scope-20-foreground: #9db8ff;
+  --scope-21-foreground: #9db8ff;
+  --scope-22-foreground: #9db8ff;
+  --scope-23-foreground: #ffb3a7;
+  --scope-24-foreground: #b5bdc9;
+  --scope-25-foreground: #b5bdc9;
+  --scope-26-foreground: #b5bdc9;
+  --scope-27-foreground: #d8e7ef;
+  --scope-28-foreground: #c3d86c;
+  --scope-29-foreground: #c3d86c;
+  --scope-30-foreground: #c3d86c;
+  --scope-31-foreground: #d8e7ef;
+  --scope-31-font-weight: 700;
+  --fallback-32-foreground: #8b949e;
+  --fallback-33-foreground: #8fd694;
+  --fallback-34-foreground: #ffb3a7;
+  --fallback-35-foreground: #7fd1de;
+  --fallback-36-foreground: #c8a2f0;
+  --fallback-37-foreground: #c3d86c;
 
 }
 
@@ -800,26 +942,44 @@ html[data-theme="dark"] .calepin-copy-code:focus-visible {
   --calepin-syntax-foreground: #d8e7ef;
   --calepin-syntax-background: #161b22;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #d8e7ef;
-  --scope-2-foreground: #d8e7ef;
-  --scope-3-foreground: #ffcc9c;
-  --scope-4-foreground: #d8e7ef;
-  --scope-5-foreground: #d8e7ef;
-  --scope-6-foreground: #d8e7ef;
+  --scope-1-foreground: #8b949e;
+  --scope-2-foreground: #8b949e;
+  --scope-3-foreground: #8fd694;
+  --scope-4-foreground: #8fd694;
+  --scope-5-foreground: #ffcc9c;
+  --scope-6-foreground: #c8a2f0;
   --scope-7-foreground: #c8a2f0;
-  --scope-8-foreground: #d8e7ef;
-  --scope-9-foreground: #ffb3a7;
+  --scope-8-foreground: #c8a2f0;
+  --scope-9-foreground: #c8a2f0;
   --scope-10-foreground: #c8a2f0;
-  --scope-11-foreground: #d8e7ef;
-  --scope-12-foreground: #d8e7ef;
-  --scope-13-foreground: #d8e7ef;
-  --scope-13-font-weight: 700;
-  --fallback-14-foreground: #8b949e;
-  --fallback-15-foreground: #8fd694;
-  --fallback-16-foreground: #ffb3a7;
-  --fallback-17-foreground: #7fd1de;
-  --fallback-18-foreground: #c8a2f0;
-  --fallback-19-foreground: #c3d86c;
+  --scope-11-foreground: #ffcc9c;
+  --scope-12-foreground: #ffcc9c;
+  --scope-13-foreground: #ffcc9c;
+  --scope-14-foreground: #7fd1de;
+  --scope-15-foreground: #7fd1de;
+  --scope-16-foreground: #7fd1de;
+  --scope-17-foreground: #7fd1de;
+  --scope-18-foreground: #7fd1de;
+  --scope-19-foreground: #c8a2f0;
+  --scope-20-foreground: #9db8ff;
+  --scope-21-foreground: #9db8ff;
+  --scope-22-foreground: #9db8ff;
+  --scope-23-foreground: #ffb3a7;
+  --scope-24-foreground: #b5bdc9;
+  --scope-25-foreground: #b5bdc9;
+  --scope-26-foreground: #b5bdc9;
+  --scope-27-foreground: #d8e7ef;
+  --scope-28-foreground: #c3d86c;
+  --scope-29-foreground: #c3d86c;
+  --scope-30-foreground: #c3d86c;
+  --scope-31-foreground: #d8e7ef;
+  --scope-31-font-weight: 700;
+  --fallback-32-foreground: #8b949e;
+  --fallback-33-foreground: #8fd694;
+  --fallback-34-foreground: #ffb3a7;
+  --fallback-35-foreground: #7fd1de;
+  --fallback-36-foreground: #c8a2f0;
+  --fallback-37-foreground: #c3d86c;
 
   }
 
@@ -1738,7 +1898,7 @@ a:has(.calepin-nav-icon) {
   align-items: center;
   padding: 0.35rem 0.6rem;
   border-radius: var(--calepin-radius-sm);
-  background: var(--calepin-color-accent);
+  background: var(--calepin-color-accent-strong);
   color: var(--calepin-color-accent-contrast);
   font-size: 0.78rem;
   text-decoration: none;
@@ -2076,6 +2236,30 @@ html:not([data-theme]) {
 
 .calepin-website-sidebar nav details > ul {
   margin-bottom: 0;
+}
+
+/* Nested foldable subsections: indented under their parent, with a rule
+   marking the nesting level. Titles stay sentence-case so they read as page
+   groups rather than as another top-level section. */
+.calepin-website-sidebar-subsection {
+  margin-inline-start: 0.45rem;
+  padding-inline-start: 0.5rem;
+  border-inline-start: 1px solid var(--calepin-color-border);
+}
+
+.calepin-website-sidebar-subsection > summary,
+.calepin-website-sidebar-subsection-title {
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 600;
+}
+
+/* Unfolded subsections have no <details> to indent, so the title carries the
+   nesting instead. */
+.calepin-website-sidebar nav p.calepin-website-sidebar-subsection-title {
+  margin: 0.5rem 0 0.35rem;
+  padding-inline-start: 0.5rem;
 }
 
 .calepin-site-footer {
@@ -3553,28 +3737,28 @@ html[data-theme="dark"] .mosaic-diagram {
             </nav>
         </aside>
         <main class="calepin-website-main calepin-content" data-pagefind-body>
-            <h1 id="steps-and-pauses">Steps and pauses</h1><p>You write one slide; Mosaic can reveal, replace, or remove parts of it over a sequence of <strong>frames</strong>. Each frame is one page of the compiled document, and all frames of one slide share its slide number.</p><p>The features and API described in this section were heavily influenced by the <a href="https://touying-typ.github.io/docs/intro">Touying package</a>.</p><h2 id="commands">Commands</h2><p>Every slide starts at step 1. Mosaic adds frames until the last timed command has run. Hidden content keeps its space by default, so the rest of the slide stays still. Use <code>before: "removed"</code> when surrounding content should expand into that space.</p><p>Choose the smallest command for the timing you need:</p><ul><li><code>m.steps.pause</code> advances subsequent source-order content to the next frame.</li><li><code>m.steps.on(range)[content]</code> shows content over an exact step range.</li><li><code>m.steps.reveal[...]</code> accumulates a list or sequence one item at a time.</li><li><code>m.steps.replace[first][second]</code> swaps alternatives in one stable slot.</li><li><code>m.steps.drawing</code> connects the same timing model to custom structures.</li></ul><p>The <a href="reveals.html">Reveal and replace</a> page shows each of these on real slides.</p><h2 id="pause-between-blocks">Pause between blocks</h2><p>Use <code>m.steps.pause</code> when source order already expresses the reveal order:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#m.<span class="calepin-syntax-scope-8">slide</span>[
+            <h1 id="steps-and-pauses">Steps and pauses</h1><p>You write one slide; Mosaic can reveal, replace, or remove parts of it over a sequence of <strong>frames</strong>. Each frame is one page of the compiled document, and all frames of one slide share its slide number.</p><p>The features and API described in this section were heavily influenced by the <a href="https://touying-typ.github.io/docs/intro">Touying package</a>.</p><h2 id="commands">Commands</h2><p>Every slide starts at step 1. Mosaic adds frames until the last timed command has run. Hidden content keeps its space by default, so the rest of the slide stays still. Use <code>before: "removed"</code> when surrounding content should expand into that space.</p><p>Choose the smallest command for the timing you need:</p><ul><li><code>m.steps.pause</code> advances subsequent source-order content to the next frame.</li><li><code>m.steps.on(range)[content]</code> shows content over an exact step range.</li><li><code>m.steps.reveal[...]</code> accumulates a list or sequence one item at a time.</li><li><code>m.steps.replace[first][second]</code> swaps alternatives in one stable slot.</li><li><code>m.steps.drawing</code> connects the same timing model to custom structures.</li></ul><p>The <a href="reveals.html">Reveal and replace</a> page shows each of these on real slides.</p><h2 id="pause-between-blocks">Pause between blocks</h2><p>Use <code>m.steps.pause</code> when source order already expresses the reveal order:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#m.<span class="calepin-syntax-scope-20">slide</span>[
   The estimate is positive.
 
   #m.steps.pause
 
   The interval excludes zero.
-]</code></pre></div><p>The first frame contains only the estimate. The second retains the estimate and adds the interval. Pauses are scoped to their containing content stream, so they also work inside blocks, fixed grid cells, and background or foreground planes. If a segment contains <code>m.steps.reveal</code>, <code>m.steps.replace</code>, or another explicit timing command, that segment completes before the following segment starts. Empty leading, trailing, or consecutive pause markers never create blank frames.</p><p>A pause inside one column of a two-column slide therefore delays that column’s content without disturbing the other:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#m.<span class="calepin-syntax-scope-8">slide</span>(layout: <span class="calepin-syntax-scope-2">"content"</span>, columns: <span class="calepin-syntax-scope-9">2</span>)[== The categorical imperative][
-  #m.components.<span class="calepin-syntax-scope-8">quote</span>(
+]</code></pre></div><p>The first frame contains only the estimate. The second retains the estimate and adds the interval. Pauses are scoped to their containing content stream, so they also work inside blocks, fixed grid cells, and background or foreground planes. If a segment contains <code>m.steps.reveal</code>, <code>m.steps.replace</code>, or another explicit timing command, that segment completes before the following segment starts. Empty leading, trailing, or consecutive pause markers never create blank frames.</p><p>A pause inside one column of a two-column slide therefore delays that column’s content without disturbing the other:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#m.<span class="calepin-syntax-scope-20">slide</span>(layout: <span class="calepin-syntax-scope-3">"content"</span>, columns: <span class="calepin-syntax-scope-23">2</span>)[== The categorical imperative][
+  #m.components.<span class="calepin-syntax-scope-20">quote</span>(
     [Act as if the maxim of your action were to become a universal law.],
     attribution: [Kant],
   )
 ][
   #m.steps.pause
-  #m.components.<span class="calepin-syntax-scope-8">quote</span>([Kant touch this.], attribution: [MC Hammer])
+  #m.components.<span class="calepin-syntax-scope-20">quote</span>([Kant touch this.], attribution: [MC Hammer])
 ]</code></pre></div><h2 id="hold-back-a-whole-block">Hold back a whole block</h2><p>To open a slide on its title alone, or on one column alone, hold the rest back with <code>m.steps.on("2-")</code>. A leading <code>m.steps.pause</code> does not work here: a pause with nothing before it in its content stream is collapsed, so the content would appear on frame 1. An explicit range forces the second frame, and because <code>before</code> defaults to <code>"hidden"</code>, the space is kept and the slide does not jump when the content arrives:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">== Consequences and remedies
 
 What could be done about each of these?
 
-#m.steps.<span class="calepin-syntax-scope-8">on</span>(<span class="calepin-syntax-scope-2">"2-"</span>)[
-  <span class="calepin-syntax-scope-10">-</span> Subsidies for pro-social behavior
-  <span class="calepin-syntax-scope-10">-</span> Pigouvian taxes
-  <span class="calepin-syntax-scope-10">-</span> Quotas
+#m.steps.<span class="calepin-syntax-scope-20">on</span>(<span class="calepin-syntax-scope-3">"2-"</span>)[
+  <span class="calepin-syntax-scope-25">-</span> Subsidies for pro-social behavior
+  <span class="calepin-syntax-scope-25">-</span> Pigouvian taxes
+  <span class="calepin-syntax-scope-25">-</span> Quotas
 ]</code></pre></div><p>The first frame shows the title and the question. The second frame reveals the list. The same command holds back one full column of a two-column slide while the other stays visible from the first frame.</p>
         </main>
 
@@ -4879,6 +5063,9 @@ What could be done about each of these?
 
   // ------------------------------------------------------ sidebar sections
 
+  // Only one section is open at a time, but "section" means siblings: opening a
+  // nested subsection must not fold the parent it lives in, and must only fold
+  // its own siblings.
   function initSidebarSections() {
     const sections = Array.from(
       document.querySelectorAll(".calepin-website-sidebar-section"),
@@ -4889,7 +5076,9 @@ What could be done about each of these?
       section.addEventListener("toggle", () => {
         if (!section.open) return;
         sections.forEach((other) => {
-          if (other !== section) other.removeAttribute("open");
+          if (other === section) return;
+          if (other.parentElement !== section.parentElement) return;
+          other.removeAttribute("open");
         });
       });
     });

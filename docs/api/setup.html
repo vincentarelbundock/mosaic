@@ -107,6 +107,14 @@
   --calepin-color-border: #d8dee6;
   --calepin-color-accent: #1c9bad;
   --calepin-color-accent-hover: #16808f;
+  /* Accent as a filled background behind `--calepin-color-accent-contrast`
+     text. Darker than the accent used for links and borders, so white label
+     text clears the WCAG AA 4.5:1 ratio. Derived from the accent so a theme
+     that sets only `--calepin-color-accent` keeps its buttons in family. */
+  --calepin-color-accent-strong: #167987;
+  --calepin-color-accent-strong: color-mix(in srgb, var(--calepin-color-accent) 78%, #000000);
+  --calepin-color-accent-strong-hover: #11606b;
+  --calepin-color-accent-strong-hover: color-mix(in srgb, var(--calepin-color-accent) 62%, #000000);
   --calepin-color-accent-soft: rgba(28, 155, 173, 0.12);
   --calepin-color-accent-soft: color-mix(in srgb, var(--calepin-color-accent) 12%, transparent);
   --calepin-color-accent-contrast: #ffffff;
@@ -205,6 +213,8 @@ html[data-theme="dark"] {
   --calepin-color-border: #344252;
   --calepin-color-accent: #67d4df;
   --calepin-color-accent-hover: #8be4ec;
+  --calepin-color-accent-strong: var(--calepin-color-accent);
+  --calepin-color-accent-strong-hover: var(--calepin-color-accent-hover);
   --calepin-color-accent-contrast: #071316;
   --calepin-color-link: var(--calepin-color-accent);
   --calepin-color-link-hover: var(--calepin-color-accent-hover);
@@ -238,6 +248,8 @@ html[data-theme="dark"] {
     --calepin-color-border: #344252;
     --calepin-color-accent: #67d4df;
     --calepin-color-accent-hover: #8be4ec;
+    --calepin-color-accent-strong: var(--calepin-color-accent);
+    --calepin-color-accent-strong-hover: var(--calepin-color-accent-hover);
     --calepin-color-accent-contrast: #071316;
     --calepin-color-link: var(--calepin-color-accent);
     --calepin-color-link-hover: var(--calepin-color-accent-hover);
@@ -257,7 +269,11 @@ html[data-theme="dark"] {
   }
 }
 
-:root,
+/* `:root:root` matches the specificity Pico uses for its own light palette
+   (`:root:not([data-theme=dark])`), which otherwise wins over a plain `:root`
+   and leaves a visitor who has not picked a theme with stock Pico colors
+   instead of the theme's. */
+:root:root,
 html[data-theme="light"],
 html[data-theme="dark"] {
   --pico-background-color: var(--calepin-color-background);
@@ -269,12 +285,12 @@ html[data-theme="dark"] {
   --pico-code-background-color: var(--calepin-surface-code);
   --pico-code-color: var(--calepin-color-text);
   --pico-primary: var(--calepin-color-accent);
-  --pico-primary-background: var(--calepin-color-accent);
-  --pico-primary-border: var(--calepin-color-accent);
+  --pico-primary-background: var(--calepin-color-accent-strong);
+  --pico-primary-border: var(--calepin-color-accent-strong);
   --pico-primary-underline: transparent;
   --pico-primary-hover: var(--calepin-color-accent-hover);
-  --pico-primary-hover-background: var(--calepin-color-accent-hover);
-  --pico-primary-hover-border: var(--calepin-color-accent-hover);
+  --pico-primary-hover-background: var(--calepin-color-accent-strong-hover);
+  --pico-primary-hover-border: var(--calepin-color-accent-strong-hover);
   --pico-primary-hover-underline: transparent;
   --pico-primary-focus: color-mix(in srgb, var(--calepin-color-focus) 40%, transparent);
   --pico-primary-inverse: var(--calepin-color-accent-contrast);
@@ -470,15 +486,15 @@ figure > img {
 
 .landing-button-primary,
 .landing-button-primary:visited {
-  border-color: var(--calepin-color-accent);
-  background: var(--calepin-color-accent);
+  border-color: var(--calepin-color-accent-strong);
+  background: var(--calepin-color-accent-strong);
   color: var(--calepin-color-accent-contrast);
 }
 
 .landing-button-primary:hover,
 .landing-button-primary:focus-visible {
-  border-color: var(--calepin-color-accent-hover);
-  background: var(--calepin-color-accent-hover);
+  border-color: var(--calepin-color-accent-strong-hover);
+  background: var(--calepin-color-accent-strong-hover);
   color: var(--calepin-color-accent-contrast);
 }
 
@@ -558,26 +574,44 @@ figure > img {
   --calepin-syntax-foreground: #003b4f;
   --calepin-syntax-background: #f7f7f5;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #003b4f;
-  --scope-2-foreground: #003b4f;
-  --scope-3-foreground: #8f5902;
-  --scope-4-foreground: #003b4f;
-  --scope-5-foreground: #003b4f;
-  --scope-6-foreground: #003b4f;
+  --scope-1-foreground: #5e5e5e;
+  --scope-2-foreground: #5e5e5e;
+  --scope-3-foreground: #20794d;
+  --scope-4-foreground: #20794d;
+  --scope-5-foreground: #8f5902;
+  --scope-6-foreground: #8b41b1;
   --scope-7-foreground: #8b41b1;
-  --scope-8-foreground: #003b4f;
-  --scope-9-foreground: #ad0000;
+  --scope-8-foreground: #8b41b1;
+  --scope-9-foreground: #8b41b1;
   --scope-10-foreground: #8b41b1;
-  --scope-11-foreground: #003b4f;
-  --scope-12-foreground: #003b4f;
-  --scope-13-foreground: #003b4f;
-  --scope-13-font-weight: 700;
-  --fallback-14-foreground: #5e5e5e;
-  --fallback-15-foreground: #20794d;
-  --fallback-16-foreground: #ad0000;
-  --fallback-17-foreground: #0b6e79;
-  --fallback-18-foreground: #8b41b1;
-  --fallback-19-foreground: #667321;
+  --scope-11-foreground: #8f5902;
+  --scope-12-foreground: #8f5902;
+  --scope-13-foreground: #8f5902;
+  --scope-14-foreground: #0b6e79;
+  --scope-15-foreground: #0b6e79;
+  --scope-16-foreground: #0b6e79;
+  --scope-17-foreground: #0b6e79;
+  --scope-18-foreground: #0b6e79;
+  --scope-19-foreground: #8b41b1;
+  --scope-20-foreground: #4759ab;
+  --scope-21-foreground: #4759ab;
+  --scope-22-foreground: #4759ab;
+  --scope-23-foreground: #ad0000;
+  --scope-24-foreground: #5e5e5e;
+  --scope-25-foreground: #5e5e5e;
+  --scope-26-foreground: #5e5e5e;
+  --scope-27-foreground: #003b4f;
+  --scope-28-foreground: #667321;
+  --scope-29-foreground: #667321;
+  --scope-30-foreground: #667321;
+  --scope-31-foreground: #003b4f;
+  --scope-31-font-weight: 700;
+  --fallback-32-foreground: #5e5e5e;
+  --fallback-33-foreground: #20794d;
+  --fallback-34-foreground: #ad0000;
+  --fallback-35-foreground: #0b6e79;
+  --fallback-36-foreground: #8b41b1;
+  --fallback-37-foreground: #667321;
 
 }
 
@@ -667,37 +701,127 @@ pre code .calepin-syntax-scope-12 {
 .sourceCode .calepin-syntax-scope-13,
 pre code .calepin-syntax-scope-13 {
   color: var(--scope-13-foreground);
-  font-weight: var(--scope-13-font-weight);
 }
 
-.sourceCode .calepin-syntax-fallback-14,
-pre code .calepin-syntax-fallback-14 {
-  color: var(--fallback-14-foreground);
+.sourceCode .calepin-syntax-scope-14,
+pre code .calepin-syntax-scope-14 {
+  color: var(--scope-14-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-15,
-pre code .calepin-syntax-fallback-15 {
-  color: var(--fallback-15-foreground);
+.sourceCode .calepin-syntax-scope-15,
+pre code .calepin-syntax-scope-15 {
+  color: var(--scope-15-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-16,
-pre code .calepin-syntax-fallback-16 {
-  color: var(--fallback-16-foreground);
+.sourceCode .calepin-syntax-scope-16,
+pre code .calepin-syntax-scope-16 {
+  color: var(--scope-16-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-17,
-pre code .calepin-syntax-fallback-17 {
-  color: var(--fallback-17-foreground);
+.sourceCode .calepin-syntax-scope-17,
+pre code .calepin-syntax-scope-17 {
+  color: var(--scope-17-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-18,
-pre code .calepin-syntax-fallback-18 {
-  color: var(--fallback-18-foreground);
+.sourceCode .calepin-syntax-scope-18,
+pre code .calepin-syntax-scope-18 {
+  color: var(--scope-18-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-19,
-pre code .calepin-syntax-fallback-19 {
-  color: var(--fallback-19-foreground);
+.sourceCode .calepin-syntax-scope-19,
+pre code .calepin-syntax-scope-19 {
+  color: var(--scope-19-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-20,
+pre code .calepin-syntax-scope-20 {
+  color: var(--scope-20-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-21,
+pre code .calepin-syntax-scope-21 {
+  color: var(--scope-21-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-22,
+pre code .calepin-syntax-scope-22 {
+  color: var(--scope-22-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-23,
+pre code .calepin-syntax-scope-23 {
+  color: var(--scope-23-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-24,
+pre code .calepin-syntax-scope-24 {
+  color: var(--scope-24-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-25,
+pre code .calepin-syntax-scope-25 {
+  color: var(--scope-25-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-26,
+pre code .calepin-syntax-scope-26 {
+  color: var(--scope-26-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-27,
+pre code .calepin-syntax-scope-27 {
+  color: var(--scope-27-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-28,
+pre code .calepin-syntax-scope-28 {
+  color: var(--scope-28-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-29,
+pre code .calepin-syntax-scope-29 {
+  color: var(--scope-29-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-30,
+pre code .calepin-syntax-scope-30 {
+  color: var(--scope-30-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-31,
+pre code .calepin-syntax-scope-31 {
+  color: var(--scope-31-foreground);
+  font-weight: var(--scope-31-font-weight);
+}
+
+.sourceCode .calepin-syntax-fallback-32,
+pre code .calepin-syntax-fallback-32 {
+  color: var(--fallback-32-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-33,
+pre code .calepin-syntax-fallback-33 {
+  color: var(--fallback-33-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-34,
+pre code .calepin-syntax-fallback-34 {
+  color: var(--fallback-34-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-35,
+pre code .calepin-syntax-fallback-35 {
+  color: var(--fallback-35-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-36,
+pre code .calepin-syntax-fallback-36 {
+  color: var(--fallback-36-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-37,
+pre code .calepin-syntax-fallback-37 {
+  color: var(--fallback-37-foreground);
 }
 
 
@@ -758,26 +882,44 @@ html[data-theme="dark"] {
   --calepin-syntax-foreground: #d8e7ef;
   --calepin-syntax-background: #161b22;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #d8e7ef;
-  --scope-2-foreground: #d8e7ef;
-  --scope-3-foreground: #ffcc9c;
-  --scope-4-foreground: #d8e7ef;
-  --scope-5-foreground: #d8e7ef;
-  --scope-6-foreground: #d8e7ef;
+  --scope-1-foreground: #8b949e;
+  --scope-2-foreground: #8b949e;
+  --scope-3-foreground: #8fd694;
+  --scope-4-foreground: #8fd694;
+  --scope-5-foreground: #ffcc9c;
+  --scope-6-foreground: #c8a2f0;
   --scope-7-foreground: #c8a2f0;
-  --scope-8-foreground: #d8e7ef;
-  --scope-9-foreground: #ffb3a7;
+  --scope-8-foreground: #c8a2f0;
+  --scope-9-foreground: #c8a2f0;
   --scope-10-foreground: #c8a2f0;
-  --scope-11-foreground: #d8e7ef;
-  --scope-12-foreground: #d8e7ef;
-  --scope-13-foreground: #d8e7ef;
-  --scope-13-font-weight: 700;
-  --fallback-14-foreground: #8b949e;
-  --fallback-15-foreground: #8fd694;
-  --fallback-16-foreground: #ffb3a7;
-  --fallback-17-foreground: #7fd1de;
-  --fallback-18-foreground: #c8a2f0;
-  --fallback-19-foreground: #c3d86c;
+  --scope-11-foreground: #ffcc9c;
+  --scope-12-foreground: #ffcc9c;
+  --scope-13-foreground: #ffcc9c;
+  --scope-14-foreground: #7fd1de;
+  --scope-15-foreground: #7fd1de;
+  --scope-16-foreground: #7fd1de;
+  --scope-17-foreground: #7fd1de;
+  --scope-18-foreground: #7fd1de;
+  --scope-19-foreground: #c8a2f0;
+  --scope-20-foreground: #9db8ff;
+  --scope-21-foreground: #9db8ff;
+  --scope-22-foreground: #9db8ff;
+  --scope-23-foreground: #ffb3a7;
+  --scope-24-foreground: #b5bdc9;
+  --scope-25-foreground: #b5bdc9;
+  --scope-26-foreground: #b5bdc9;
+  --scope-27-foreground: #d8e7ef;
+  --scope-28-foreground: #c3d86c;
+  --scope-29-foreground: #c3d86c;
+  --scope-30-foreground: #c3d86c;
+  --scope-31-foreground: #d8e7ef;
+  --scope-31-font-weight: 700;
+  --fallback-32-foreground: #8b949e;
+  --fallback-33-foreground: #8fd694;
+  --fallback-34-foreground: #ffb3a7;
+  --fallback-35-foreground: #7fd1de;
+  --fallback-36-foreground: #c8a2f0;
+  --fallback-37-foreground: #c3d86c;
 
 }
 
@@ -800,26 +942,44 @@ html[data-theme="dark"] .calepin-copy-code:focus-visible {
   --calepin-syntax-foreground: #d8e7ef;
   --calepin-syntax-background: #161b22;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #d8e7ef;
-  --scope-2-foreground: #d8e7ef;
-  --scope-3-foreground: #ffcc9c;
-  --scope-4-foreground: #d8e7ef;
-  --scope-5-foreground: #d8e7ef;
-  --scope-6-foreground: #d8e7ef;
+  --scope-1-foreground: #8b949e;
+  --scope-2-foreground: #8b949e;
+  --scope-3-foreground: #8fd694;
+  --scope-4-foreground: #8fd694;
+  --scope-5-foreground: #ffcc9c;
+  --scope-6-foreground: #c8a2f0;
   --scope-7-foreground: #c8a2f0;
-  --scope-8-foreground: #d8e7ef;
-  --scope-9-foreground: #ffb3a7;
+  --scope-8-foreground: #c8a2f0;
+  --scope-9-foreground: #c8a2f0;
   --scope-10-foreground: #c8a2f0;
-  --scope-11-foreground: #d8e7ef;
-  --scope-12-foreground: #d8e7ef;
-  --scope-13-foreground: #d8e7ef;
-  --scope-13-font-weight: 700;
-  --fallback-14-foreground: #8b949e;
-  --fallback-15-foreground: #8fd694;
-  --fallback-16-foreground: #ffb3a7;
-  --fallback-17-foreground: #7fd1de;
-  --fallback-18-foreground: #c8a2f0;
-  --fallback-19-foreground: #c3d86c;
+  --scope-11-foreground: #ffcc9c;
+  --scope-12-foreground: #ffcc9c;
+  --scope-13-foreground: #ffcc9c;
+  --scope-14-foreground: #7fd1de;
+  --scope-15-foreground: #7fd1de;
+  --scope-16-foreground: #7fd1de;
+  --scope-17-foreground: #7fd1de;
+  --scope-18-foreground: #7fd1de;
+  --scope-19-foreground: #c8a2f0;
+  --scope-20-foreground: #9db8ff;
+  --scope-21-foreground: #9db8ff;
+  --scope-22-foreground: #9db8ff;
+  --scope-23-foreground: #ffb3a7;
+  --scope-24-foreground: #b5bdc9;
+  --scope-25-foreground: #b5bdc9;
+  --scope-26-foreground: #b5bdc9;
+  --scope-27-foreground: #d8e7ef;
+  --scope-28-foreground: #c3d86c;
+  --scope-29-foreground: #c3d86c;
+  --scope-30-foreground: #c3d86c;
+  --scope-31-foreground: #d8e7ef;
+  --scope-31-font-weight: 700;
+  --fallback-32-foreground: #8b949e;
+  --fallback-33-foreground: #8fd694;
+  --fallback-34-foreground: #ffb3a7;
+  --fallback-35-foreground: #7fd1de;
+  --fallback-36-foreground: #c8a2f0;
+  --fallback-37-foreground: #c3d86c;
 
   }
 
@@ -1738,7 +1898,7 @@ a:has(.calepin-nav-icon) {
   align-items: center;
   padding: 0.35rem 0.6rem;
   border-radius: var(--calepin-radius-sm);
-  background: var(--calepin-color-accent);
+  background: var(--calepin-color-accent-strong);
   color: var(--calepin-color-accent-contrast);
   font-size: 0.78rem;
   text-decoration: none;
@@ -2076,6 +2236,30 @@ html:not([data-theme]) {
 
 .calepin-website-sidebar nav details > ul {
   margin-bottom: 0;
+}
+
+/* Nested foldable subsections: indented under their parent, with a rule
+   marking the nesting level. Titles stay sentence-case so they read as page
+   groups rather than as another top-level section. */
+.calepin-website-sidebar-subsection {
+  margin-inline-start: 0.45rem;
+  padding-inline-start: 0.5rem;
+  border-inline-start: 1px solid var(--calepin-color-border);
+}
+
+.calepin-website-sidebar-subsection > summary,
+.calepin-website-sidebar-subsection-title {
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 600;
+}
+
+/* Unfolded subsections have no <details> to indent, so the title carries the
+   nesting instead. */
+.calepin-website-sidebar nav p.calepin-website-sidebar-subsection-title {
+  margin: 0.5rem 0 0.35rem;
+  padding-inline-start: 0.5rem;
 }
 
 .calepin-site-footer {
@@ -3233,7 +3417,7 @@ html[data-theme="dark"] .mosaic-diagram {
     <script src="../pagefind/pagefind-component-ui.js" type="module"></script>
 
 
-<script id="calepin-website-source-data" type="application/json">"#import \"/api/_module.typ\": api-module\n\n#api-module(\"Document setup\", \"/api/modules/setup.typ\")\n"</script>
+<script id="calepin-website-source-data" type="application/json">"#import \"/api/_page.typ\": api-page\n\n#show: api-page.with(\"Document setup\")\n\n#include \"/api/generated/setup/index.typ\"\n"</script>
 </head><body>
 
     <header class="calepin-website-topbar calepin-site-topbar">
@@ -3553,35 +3737,35 @@ html[data-theme="dark"] .mosaic-diagram {
             </nav>
         </aside>
         <main class="calepin-website-main calepin-content" data-pagefind-body>
-            <h1 id="document-setup">Document setup</h1><p>The overview below links to each definition. Function definitions show signatures with parameter and return types; variables show their declared types. Descriptions and defaults follow.</p><div><ul><li><a href="#setup"><code>setup()</code></a></li></ul><h2 id="setup">setup</h2><p>Applies Mosaic’s presentation defaults and compiles headings and slide commands into pages.</p><p>Install it as a document-wide show rule. Everything after it is presentation source: level-two headings become slides, and <code>mosaic.slide</code> commands become slides.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">import</span> <span class="calepin-syntax-scope-2">"@preview/mosaic:0.0.1"</span> <span class="calepin-syntax-scope-4">as</span> mosaic
-<span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">show</span>: mosaic.setup.<span class="calepin-syntax-scope-8">with</span>(
+            <h1 id="document-setup">Document setup</h1><p>The contents below link to each definition. Function entries show the signature, then a description, then the parameters with their types and defaults; variable entries show the declared type.</p><nav role="doc-toc"><h2 id="contents">Contents</h2><ol style="list-style-type: none"><li><a href="#setup">Applies Mosaic’s presentation defaults and compiles headings and slide commands into pages.</a></li></ol></nav><h2 id="setup">Applies Mosaic’s presentation defaults and compiles headings and slide commands into pages.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">setup(
+  body,
+  paper: "16-9",
+  title: none,
+  subtitle: none,
+  authors: (),
+  date: none,
+  colors: (:),
+  cells: (:),
+  background: none,
+  foreground: none,
+  spacing: (:),
+  overflow: "off",
+  layouts: (:),
+  handout: false,
+  output: "slides",
+  frozen-counters: (),
+  frozen-states: ()
+) -> content</code></pre></div><strong style="display: block">Description</strong><p>Install it as a document-wide show rule. Everything after it is presentation source: level-two headings become slides, and <code>mosaic.slide</code> commands become slides.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">import</span> <span class="calepin-syntax-scope-3">"@preview/mosaic:0.0.1"</span> <span class="calepin-syntax-scope-6">as</span> mosaic
+<span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">show</span>: mosaic.setup.<span class="calepin-syntax-scope-20">with</span>(
   title: [Tree-based slide grids],
   authors: [Ada Lovelace],
   date: [2026-08-03],
 )
 
-#mosaic.<span class="calepin-syntax-scope-8">slide</span>(layout: <span class="calepin-syntax-scope-2">"title"</span>)
+#mosaic.<span class="calepin-syntax-scope-20">slide</span>(layout: <span class="calepin-syntax-scope-3">"title"</span>)
 
 == First slide
-Body content.</code></pre></div><p><strong>Deck metadata</strong></p><p><code>title</code>, <code>subtitle</code>, <code>authors</code>, and <code>date</code> are the deck’s canonical identity. They are written to Typst’s standard document metadata, stored in Mosaic’s rendering settings, and emitted as one queryable <code>&lt;mosaic-deck-metadata></code> record. Setup never creates a title slide by itself; <code>mosaic.slide(layout: "title")</code> inherits these values wherever the title layout’s own field is <code>auto</code>.</p><p><strong>Partial overrides</strong></p><p><code>colors</code>, <code>cells</code>, <code>spacing</code>, and <code>layouts</code> are all partial: keys you omit keep the active theme’s value rather than reverting to a bare default. That is what lets a deck adjust one accent color or one layout without restating the theme.</p><p><strong>Themes</strong></p><p>This is the Default facade’s setup. A themed facade such as <code>mosaic.themes.metropolis</code> exposes the same signature with different defaults, and may add its own options on top. See <code>theme.setup</code> for binding a custom theme definition.</p><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">setup(
-  body: content,
-  paper: str = "16-9",
-  title: content | str | none = none,
-  subtitle: content | str | none = none,
-  authors: content | str | array = (),
-  date: content | str | none = none,
-  colors: dictionary = (:),
-  cells: dictionary = (:),
-  background: content | str | none = none,
-  foreground: content | str | none = none,
-  spacing: dictionary = (:),
-  overflow: str = "off",
-  layouts: dictionary = (:),
-  handout: bool = false,
-  output: str = "slides",
-  frozen-counters: array = (),
-  frozen-states: array = ()
-) -> content</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>body</code></p><ul><li>Type: <code>content</code></li><li>The document body captured by the show rule.</li></ul></li><li><p><code>paper</code></p><ul><li>Type: <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"16-9"</span></code></li><li><p>Slide aspect ratio.</p><ul><li><code>"16-9"</code>: widescreen, the default.</li><li><code>"4-3"</code>: traditional projector.</li></ul></li></ul></li><li><p><code>title</code></p><ul><li>Type: <code>content</code> or <code>str</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>Canonical deck title. Title layouts inherit it when their <code>title</code> is <code>auto</code>.</li></ul></li><li><p><code>subtitle</code></p><ul><li>Type: <code>content</code> or <code>str</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>Canonical deck subtitle. Title layouts inherit it when their <code>subtitle</code> is <code>auto</code>.</li></ul></li><li><p><code>authors</code></p><ul><li>Type: <code>content</code> or <code>str</code> or <code>array</code></li><li>Default: <code data-lang="typc">()</code></li><li><p>Canonical deck authorship. Title layouts inherit it when their own <code>authors</code> is <code>auto</code>. A name on its own is enough, so this reads like <code>title</code> and <code>subtitle</code> in the common case:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">authors: [Ada Lovelace]
+Body content.</code></pre></div><p><strong>Deck metadata</strong></p><p><code>title</code>, <code>subtitle</code>, <code>authors</code>, and <code>date</code> are the deck’s canonical identity. They are written to Typst’s standard document metadata, stored in Mosaic’s rendering settings, and emitted as one queryable <code>&lt;mosaic-deck-metadata></code> record. Setup never creates a title slide by itself; <code>mosaic.slide(layout: "title")</code> inherits these values wherever the title layout’s own field is <code>auto</code>.</p><p><strong>Partial overrides</strong></p><p><code>colors</code>, <code>cells</code>, <code>spacing</code>, and <code>layouts</code> are all partial: keys you omit keep the active theme’s value rather than reverting to a bare default. That is what lets a deck adjust one accent color or one layout without restating the theme.</p><p><strong>Themes</strong></p><p>This is the Default facade’s setup. A themed facade such as <code>mosaic.themes.metropolis</code> exposes the same signature with different defaults, and may add its own options on top. See <code>theme.setup</code> for binding a custom theme definition.</p><strong style="display: block">Arguments</strong><table><tr><td><code>body</code></td><td><code>content</code><br>The document body captured by the show rule.</td></tr><tr><td><code>paper</code></td><td><p><code>str</code><br>Slide aspect ratio.</p><ul><li><code>"16-9"</code>: widescreen, the default.</li><li><code>"4-3"</code>: traditional projector.</li></ul></td></tr><tr><td><code>title</code></td><td><code>content | str | none</code><br>Canonical deck title. Title layouts inherit it when their <code>title</code> is <code>auto</code>.</td></tr><tr><td><code>subtitle</code></td><td><code>content | str | none</code><br>Canonical deck subtitle. Title layouts inherit it when their <code>subtitle</code> is <code>auto</code>.</td></tr><tr><td><code>authors</code></td><td><p><code>content | str | array</code><br>Canonical deck authorship. Title layouts inherit it when their own <code>authors</code> is <code>auto</code>. A name on its own is enough, so this reads like <code>title</code> and <code>subtitle</code> in the common case:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">authors: [Ada Lovelace]
 authors: ([Ada Lovelace], [Charles Babbage])</code></pre></div><p>Wrap a name in <code>layouts.author</code> when it carries affiliations, an ORCID iD, or a contact address. Names and records mix in one array:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">authors: (
   mosaic.layouts.author(
     [Ada Lovelace],
@@ -3590,9 +3774,9 @@ authors: ([Ada Lovelace], [Charles Babbage])</code></pre></div><p>Wrap a name in
     corresponding: true,
   ),
   [Charles Babbage],
-)</code></pre></div></li></ul></li><li><p><code>date</code></p><ul><li>Type: <code>content</code> or <code>str</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>Canonical display date. Title layouts inherit it when their <code>date</code> is <code>auto</code>.</li></ul></li><li><p><code>colors</code></p><ul><li>Type: <code>dictionary</code></li><li>Default: <code data-lang="typc">(:)</code></li><li><p>Partial semantic color overrides layered over the active theme. Omitted roles keep the theme’s value.</p><ul><li><code>canvas</code>: the slide page behind everything else.</li><li><code>surface</code>: raised panels, such as component frames and callouts.</li><li><code>text</code>: ordinary body text.</li><li><code>muted</code>: subtitles, captions, and other fine print.</li><li><code>line</code>: rules, borders, and other drawn separators.</li><li><code>accent</code>: the deck’s one emphatic color.</li></ul><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">colors: (accent: rgb("#0072B2"))</code></pre></div></li></ul></li><li><p><code>cells</code></p><ul><li>Type: <code>dictionary</code></li><li>Default: <code data-lang="typc">(:)</code></li><li><p>Partial fallback content keyed by cell ID, used whenever a slide leaves that cell empty. Every key names a grid cell, for example <code>footer</code> or <code>body</code>; the full-slide planes have their own options below.</p><p>A slide’s explicit content overrides these values, and <code>none</code> on the slide suppresses a configured default. Defaults targeting cells absent from a resolved grid are ignored, so one footer default is safe across layouts that have no footer.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">cells: (footer: align(right, mosaic.components.progress()))</code></pre></div></li></ul></li><li><p><code>background</code></p><ul><li>Type: <code>content</code> or <code>str</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li><p>The deck’s background plane, drawn behind the grid on every slide. A slide inherits it unless it passes its own <code>background:</code>, or <code>none</code> to suppress it. The plane takes no space away from the grid.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">background: mosaic.components.image(path("paper.webp"))</code></pre></div></li></ul></li><li><p><code>foreground</code></p><ul><li>Type: <code>content</code> or <code>str</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li><p>The deck’s foreground plane, drawn over the grid on every slide. Ordinary home for a logo, a slide number, or a progress indicator.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">foreground: place(bottom + right, mosaic.components.progress())</code></pre></div></li></ul></li><li><p><code>spacing</code></p><ul><li>Type: <code>dictionary</code></li><li>Default: <code data-lang="typc">(:)</code></li><li><p>Partial overrides for the grid geometry the layouts measure with. Omitted keys keep the theme’s value.</p><ul><li><code>inset</code>: padding inside a cell, default <code>1.25em</code>.</li><li><code>gap</code>: space between grid regions, default <code>0.7em</code>.</li><li><code>compact-gap</code>: the tighter space inside stacked metadata, default <code>0.35em</code>.</li></ul><p>Typographic rhythm is not here. Heading spacing and list spacing are ordinary <code>show</code> and <code>set</code> rules owned by the theme, so change them with native rules after <code>setup</code> or in your own theme’s <code>apply</code>.</p></li></ul></li><li><p><code>overflow</code></p><ul><li>Type: <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"off"</span></code></li><li><p>What to do when a cell’s content is taller than the cell.</p><p>Observation measures every cell on every frame, which roughly doubles the layout work a deck does, so it is off by default and switched on for a deliberate checking pass rather than left on while you write.</p><ul><li><code>"off"</code>: observe nothing. The default.</li><li><code>"record"</code>: emit queryable <code>&lt;mosaic-overflow-warning></code> metadata and keep compiling. Typst gives a package no warning channel, so nothing is printed; this mode is for tooling that reads the records itself.</li><li><code>"error"</code>: emit the same metadata and fail the compile, naming every offending cell. Run this before presenting, so a build stops rather than shipping a clipped slide.</li></ul></li></ul></li><li><p><code>layouts</code></p><ul><li>Type: <code>dictionary</code></li><li>Default: <code data-lang="typc">(:)</code></li><li><p>Partial named-layout overrides. Omitted names keep the active theme’s layout.</p><ul><li><code>content</code>: the ordinary slide layout, also used by automatic level-two-heading slides.</li><li><code>title</code>: used by <code>slide(layout: "title")</code>.</li><li><code>section</code>: used by <code>slide(layout: "section")</code> and by automatic level-one heading slides.</li></ul><p>Each value is either a deferred <code>mosaic.layouts.*</code> value or a low-level <code>mosaic.grids.*</code> tree. Note that this option is distinct from the <code>cells:</code> option above, which supplies inherited cell content rather than structure.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">layouts: (
+)</code></pre></div></td></tr><tr><td><code>date</code></td><td><code>content | str | none</code><br>Canonical display date. Title layouts inherit it when their <code>date</code> is <code>auto</code>.</td></tr><tr><td><code>colors</code></td><td><p><code>dictionary</code><br>Partial semantic color overrides layered over the active theme. Omitted roles keep the theme’s value.</p><ul><li><code>canvas</code>: the slide page behind everything else.</li><li><code>surface</code>: raised panels, such as component frames and callouts.</li><li><code>text</code>: ordinary body text.</li><li><code>muted</code>: subtitles, captions, and other fine print.</li><li><code>line</code>: rules, borders, and other drawn separators.</li><li><code>accent</code>: the deck’s one emphatic color.</li></ul><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">colors: (accent: rgb("#0072B2"))</code></pre></div></td></tr><tr><td><code>cells</code></td><td><p><code>dictionary</code><br>Partial fallback content keyed by cell ID, used whenever a slide leaves that cell empty. Every key names a grid cell, for example <code>footer</code> or <code>body</code>; the full-slide planes have their own options below.</p><p>A slide’s explicit content overrides these values, and <code>none</code> on the slide suppresses a configured default. Defaults targeting cells absent from a resolved grid are ignored, so one footer default is safe across layouts that have no footer.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">cells: (footer: align(right, mosaic.components.progress()))</code></pre></div></td></tr><tr><td><code>background</code></td><td><p><code>content | str | none</code><br>The deck’s background plane, drawn behind the grid on every slide. A slide inherits it unless it passes its own <code>background:</code>, or <code>none</code> to suppress it. The plane takes no space away from the grid.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">background: mosaic.components.image(path("paper.webp"))</code></pre></div></td></tr><tr><td><code>foreground</code></td><td><p><code>content | str | none</code><br>The deck’s foreground plane, drawn over the grid on every slide. Ordinary home for a logo, a slide number, or a progress indicator.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">foreground: place(bottom + right, mosaic.components.progress())</code></pre></div></td></tr><tr><td><code>spacing</code></td><td><p><code>dictionary</code><br>Partial overrides for the grid geometry the layouts measure with. Omitted keys keep the theme’s value.</p><ul><li><code>inset</code>: padding inside a cell, default <code>1.25em</code>.</li><li><code>gap</code>: space between grid regions, default <code>0.7em</code>.</li><li><code>compact-gap</code>: the tighter space inside stacked metadata, default <code>0.35em</code>.</li></ul><p>Typographic rhythm is not here. Heading spacing and list spacing are ordinary <code>show</code> and <code>set</code> rules owned by the theme, so change them with native rules after <code>setup</code> or in your own theme’s <code>apply</code>.</p></td></tr><tr><td><code>overflow</code></td><td><p><code>str</code><br>What to do when a cell’s content is taller than the cell.</p><p>Observation measures every cell on every frame, which roughly doubles the layout work a deck does, so it is off by default and switched on for a deliberate checking pass rather than left on while you write.</p><ul><li><code>"off"</code>: observe nothing. The default.</li><li><code>"record"</code>: emit queryable <code>&lt;mosaic-overflow-warning></code> metadata and keep compiling. Typst gives a package no warning channel, so nothing is printed; this mode is for tooling that reads the records itself.</li><li><code>"error"</code>: emit the same metadata and fail the compile, naming every offending cell. Run this before presenting, so a build stops rather than shipping a clipped slide.</li></ul></td></tr><tr><td><code>layouts</code></td><td><p><code>dictionary</code><br>Partial named-layout overrides. Omitted names keep the active theme’s layout.</p><ul><li><code>content</code>: the ordinary slide layout, also used by automatic level-two-heading slides.</li><li><code>title</code>: used by <code>slide(layout: "title")</code>.</li><li><code>section</code>: used by <code>slide(layout: "section")</code> and by automatic level-one heading slides.</li></ul><p>Each value is either a deferred <code>mosaic.layouts.*</code> value or a low-level <code>mosaic.grids.*</code> tree. Note that this option is distinct from the <code>cells:</code> option above, which supplies inherited cell content rather than structure.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">layouts: (
   content: mosaic.layouts.content(variant: "header-body", columns: 2),
-)</code></pre></div></li></ul></li><li><p><code>handout</code></p><ul><li>Type: <code>bool</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">false</span></code></li><li>Whether to emit only the final frame of each logical slide, collapsing every incremental reveal into one page for printing.</li></ul></li><li><p><code>output</code></p><ul><li>Type: <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"slides"</span></code></li><li><p>Which document to render.</p><ul><li><code>"slides"</code>: the presentation itself.</li><li><code>"speaker"</code>: each frame above the notes that apply to it.</li><li><code>"notes"</code>: the notes alone, without the slide image.</li><li><code>"split"</code>: each frame beside its notes on a double-width page, the layout pympress and pdfpc cut in half to drive two screens.</li></ul></li></ul></li><li><p><code>frozen-counters</code></p><ul><li>Type: <code>array</code></li><li>Default: <code data-lang="typc">()</code></li><li><p>Counters restored to their pre-slide values before each continuation frame, so content repeated across the frames of one logical slide advances them once rather than once per frame.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">frozen-counters: (counter(figure.where(kind: image)),)</code></pre></div></li></ul></li><li><p><code>frozen-states</code></p><ul><li>Type: <code>array</code></li><li>Default: <code data-lang="typc">()</code></li><li>States restored to their pre-slide values before each continuation frame, the <code>state</code> counterpart of <code>frozen-counters</code>.</li></ul></li></ul></div>
+)</code></pre></div></td></tr><tr><td><code>handout</code></td><td><code>bool</code><br>Whether to emit only the final frame of each logical slide, collapsing every incremental reveal into one page for printing.</td></tr><tr><td><code>output</code></td><td><p><code>str</code><br>Which document to render.</p><ul><li><code>"slides"</code>: the presentation itself.</li><li><code>"speaker"</code>: each frame above the notes that apply to it.</li><li><code>"notes"</code>: the notes alone, without the slide image.</li><li><code>"split"</code>: each frame beside its notes on a double-width page, the layout pympress and pdfpc cut in half to drive two screens.</li></ul></td></tr><tr><td><code>frozen-counters</code></td><td><p><code>array</code><br>Counters restored to their pre-slide values before each continuation frame, so content repeated across the frames of one logical slide advances them once rather than once per frame.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">frozen-counters: (counter(figure.where(kind: image)),)</code></pre></div></td></tr><tr><td><code>frozen-states</code></td><td><code>array</code><br>States restored to their pre-slide values before each continuation frame, the <code>state</code> counterpart of <code>frozen-counters</code>.</td></tr></table>
         </main>
 
         <aside class="calepin-website-toc is-floating">
@@ -3600,7 +3784,9 @@ authors: ([Ada Lovelace], [Charles Babbage])</code></pre></div><p>Wrap a name in
             <nav aria-label="On this page">
                 <ul>
 
-                    <li class="level-2"><a href="#setup">setup</a></li>
+                    <li class="level-2"><a href="#contents">Contents</a></li>
+
+                    <li class="level-2"><a href="#setup">Applies Mosaic’s presentation defaults and compiles headings and slide commands into pages.</a></li>
 
                 </ul>
             </nav>
@@ -4892,6 +5078,9 @@ authors: ([Ada Lovelace], [Charles Babbage])</code></pre></div><p>Wrap a name in
 
   // ------------------------------------------------------ sidebar sections
 
+  // Only one section is open at a time, but "section" means siblings: opening a
+  // nested subsection must not fold the parent it lives in, and must only fold
+  // its own siblings.
   function initSidebarSections() {
     const sections = Array.from(
       document.querySelectorAll(".calepin-website-sidebar-section"),
@@ -4902,7 +5091,9 @@ authors: ([Ada Lovelace], [Charles Babbage])</code></pre></div><p>Wrap a name in
       section.addEventListener("toggle", () => {
         if (!section.open) return;
         sections.forEach((other) => {
-          if (other !== section) other.removeAttribute("open");
+          if (other === section) return;
+          if (other.parentElement !== section.parentElement) return;
+          other.removeAttribute("open");
         });
       });
     });

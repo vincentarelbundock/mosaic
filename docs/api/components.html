@@ -107,6 +107,14 @@
   --calepin-color-border: #d8dee6;
   --calepin-color-accent: #1c9bad;
   --calepin-color-accent-hover: #16808f;
+  /* Accent as a filled background behind `--calepin-color-accent-contrast`
+     text. Darker than the accent used for links and borders, so white label
+     text clears the WCAG AA 4.5:1 ratio. Derived from the accent so a theme
+     that sets only `--calepin-color-accent` keeps its buttons in family. */
+  --calepin-color-accent-strong: #167987;
+  --calepin-color-accent-strong: color-mix(in srgb, var(--calepin-color-accent) 78%, #000000);
+  --calepin-color-accent-strong-hover: #11606b;
+  --calepin-color-accent-strong-hover: color-mix(in srgb, var(--calepin-color-accent) 62%, #000000);
   --calepin-color-accent-soft: rgba(28, 155, 173, 0.12);
   --calepin-color-accent-soft: color-mix(in srgb, var(--calepin-color-accent) 12%, transparent);
   --calepin-color-accent-contrast: #ffffff;
@@ -205,6 +213,8 @@ html[data-theme="dark"] {
   --calepin-color-border: #344252;
   --calepin-color-accent: #67d4df;
   --calepin-color-accent-hover: #8be4ec;
+  --calepin-color-accent-strong: var(--calepin-color-accent);
+  --calepin-color-accent-strong-hover: var(--calepin-color-accent-hover);
   --calepin-color-accent-contrast: #071316;
   --calepin-color-link: var(--calepin-color-accent);
   --calepin-color-link-hover: var(--calepin-color-accent-hover);
@@ -238,6 +248,8 @@ html[data-theme="dark"] {
     --calepin-color-border: #344252;
     --calepin-color-accent: #67d4df;
     --calepin-color-accent-hover: #8be4ec;
+    --calepin-color-accent-strong: var(--calepin-color-accent);
+    --calepin-color-accent-strong-hover: var(--calepin-color-accent-hover);
     --calepin-color-accent-contrast: #071316;
     --calepin-color-link: var(--calepin-color-accent);
     --calepin-color-link-hover: var(--calepin-color-accent-hover);
@@ -257,7 +269,11 @@ html[data-theme="dark"] {
   }
 }
 
-:root,
+/* `:root:root` matches the specificity Pico uses for its own light palette
+   (`:root:not([data-theme=dark])`), which otherwise wins over a plain `:root`
+   and leaves a visitor who has not picked a theme with stock Pico colors
+   instead of the theme's. */
+:root:root,
 html[data-theme="light"],
 html[data-theme="dark"] {
   --pico-background-color: var(--calepin-color-background);
@@ -269,12 +285,12 @@ html[data-theme="dark"] {
   --pico-code-background-color: var(--calepin-surface-code);
   --pico-code-color: var(--calepin-color-text);
   --pico-primary: var(--calepin-color-accent);
-  --pico-primary-background: var(--calepin-color-accent);
-  --pico-primary-border: var(--calepin-color-accent);
+  --pico-primary-background: var(--calepin-color-accent-strong);
+  --pico-primary-border: var(--calepin-color-accent-strong);
   --pico-primary-underline: transparent;
   --pico-primary-hover: var(--calepin-color-accent-hover);
-  --pico-primary-hover-background: var(--calepin-color-accent-hover);
-  --pico-primary-hover-border: var(--calepin-color-accent-hover);
+  --pico-primary-hover-background: var(--calepin-color-accent-strong-hover);
+  --pico-primary-hover-border: var(--calepin-color-accent-strong-hover);
   --pico-primary-hover-underline: transparent;
   --pico-primary-focus: color-mix(in srgb, var(--calepin-color-focus) 40%, transparent);
   --pico-primary-inverse: var(--calepin-color-accent-contrast);
@@ -470,15 +486,15 @@ figure > img {
 
 .landing-button-primary,
 .landing-button-primary:visited {
-  border-color: var(--calepin-color-accent);
-  background: var(--calepin-color-accent);
+  border-color: var(--calepin-color-accent-strong);
+  background: var(--calepin-color-accent-strong);
   color: var(--calepin-color-accent-contrast);
 }
 
 .landing-button-primary:hover,
 .landing-button-primary:focus-visible {
-  border-color: var(--calepin-color-accent-hover);
-  background: var(--calepin-color-accent-hover);
+  border-color: var(--calepin-color-accent-strong-hover);
+  background: var(--calepin-color-accent-strong-hover);
   color: var(--calepin-color-accent-contrast);
 }
 
@@ -558,26 +574,44 @@ figure > img {
   --calepin-syntax-foreground: #003b4f;
   --calepin-syntax-background: #f7f7f5;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #003b4f;
-  --scope-2-foreground: #003b4f;
-  --scope-3-foreground: #8f5902;
-  --scope-4-foreground: #003b4f;
-  --scope-5-foreground: #003b4f;
-  --scope-6-foreground: #003b4f;
+  --scope-1-foreground: #5e5e5e;
+  --scope-2-foreground: #5e5e5e;
+  --scope-3-foreground: #20794d;
+  --scope-4-foreground: #20794d;
+  --scope-5-foreground: #8f5902;
+  --scope-6-foreground: #8b41b1;
   --scope-7-foreground: #8b41b1;
-  --scope-8-foreground: #003b4f;
-  --scope-9-foreground: #ad0000;
+  --scope-8-foreground: #8b41b1;
+  --scope-9-foreground: #8b41b1;
   --scope-10-foreground: #8b41b1;
-  --scope-11-foreground: #003b4f;
-  --scope-12-foreground: #003b4f;
-  --scope-13-foreground: #003b4f;
-  --scope-13-font-weight: 700;
-  --fallback-14-foreground: #5e5e5e;
-  --fallback-15-foreground: #20794d;
-  --fallback-16-foreground: #ad0000;
-  --fallback-17-foreground: #0b6e79;
-  --fallback-18-foreground: #8b41b1;
-  --fallback-19-foreground: #667321;
+  --scope-11-foreground: #8f5902;
+  --scope-12-foreground: #8f5902;
+  --scope-13-foreground: #8f5902;
+  --scope-14-foreground: #0b6e79;
+  --scope-15-foreground: #0b6e79;
+  --scope-16-foreground: #0b6e79;
+  --scope-17-foreground: #0b6e79;
+  --scope-18-foreground: #0b6e79;
+  --scope-19-foreground: #8b41b1;
+  --scope-20-foreground: #4759ab;
+  --scope-21-foreground: #4759ab;
+  --scope-22-foreground: #4759ab;
+  --scope-23-foreground: #ad0000;
+  --scope-24-foreground: #5e5e5e;
+  --scope-25-foreground: #5e5e5e;
+  --scope-26-foreground: #5e5e5e;
+  --scope-27-foreground: #003b4f;
+  --scope-28-foreground: #667321;
+  --scope-29-foreground: #667321;
+  --scope-30-foreground: #667321;
+  --scope-31-foreground: #003b4f;
+  --scope-31-font-weight: 700;
+  --fallback-32-foreground: #5e5e5e;
+  --fallback-33-foreground: #20794d;
+  --fallback-34-foreground: #ad0000;
+  --fallback-35-foreground: #0b6e79;
+  --fallback-36-foreground: #8b41b1;
+  --fallback-37-foreground: #667321;
 
 }
 
@@ -667,37 +701,127 @@ pre code .calepin-syntax-scope-12 {
 .sourceCode .calepin-syntax-scope-13,
 pre code .calepin-syntax-scope-13 {
   color: var(--scope-13-foreground);
-  font-weight: var(--scope-13-font-weight);
 }
 
-.sourceCode .calepin-syntax-fallback-14,
-pre code .calepin-syntax-fallback-14 {
-  color: var(--fallback-14-foreground);
+.sourceCode .calepin-syntax-scope-14,
+pre code .calepin-syntax-scope-14 {
+  color: var(--scope-14-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-15,
-pre code .calepin-syntax-fallback-15 {
-  color: var(--fallback-15-foreground);
+.sourceCode .calepin-syntax-scope-15,
+pre code .calepin-syntax-scope-15 {
+  color: var(--scope-15-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-16,
-pre code .calepin-syntax-fallback-16 {
-  color: var(--fallback-16-foreground);
+.sourceCode .calepin-syntax-scope-16,
+pre code .calepin-syntax-scope-16 {
+  color: var(--scope-16-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-17,
-pre code .calepin-syntax-fallback-17 {
-  color: var(--fallback-17-foreground);
+.sourceCode .calepin-syntax-scope-17,
+pre code .calepin-syntax-scope-17 {
+  color: var(--scope-17-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-18,
-pre code .calepin-syntax-fallback-18 {
-  color: var(--fallback-18-foreground);
+.sourceCode .calepin-syntax-scope-18,
+pre code .calepin-syntax-scope-18 {
+  color: var(--scope-18-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-19,
-pre code .calepin-syntax-fallback-19 {
-  color: var(--fallback-19-foreground);
+.sourceCode .calepin-syntax-scope-19,
+pre code .calepin-syntax-scope-19 {
+  color: var(--scope-19-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-20,
+pre code .calepin-syntax-scope-20 {
+  color: var(--scope-20-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-21,
+pre code .calepin-syntax-scope-21 {
+  color: var(--scope-21-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-22,
+pre code .calepin-syntax-scope-22 {
+  color: var(--scope-22-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-23,
+pre code .calepin-syntax-scope-23 {
+  color: var(--scope-23-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-24,
+pre code .calepin-syntax-scope-24 {
+  color: var(--scope-24-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-25,
+pre code .calepin-syntax-scope-25 {
+  color: var(--scope-25-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-26,
+pre code .calepin-syntax-scope-26 {
+  color: var(--scope-26-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-27,
+pre code .calepin-syntax-scope-27 {
+  color: var(--scope-27-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-28,
+pre code .calepin-syntax-scope-28 {
+  color: var(--scope-28-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-29,
+pre code .calepin-syntax-scope-29 {
+  color: var(--scope-29-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-30,
+pre code .calepin-syntax-scope-30 {
+  color: var(--scope-30-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-31,
+pre code .calepin-syntax-scope-31 {
+  color: var(--scope-31-foreground);
+  font-weight: var(--scope-31-font-weight);
+}
+
+.sourceCode .calepin-syntax-fallback-32,
+pre code .calepin-syntax-fallback-32 {
+  color: var(--fallback-32-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-33,
+pre code .calepin-syntax-fallback-33 {
+  color: var(--fallback-33-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-34,
+pre code .calepin-syntax-fallback-34 {
+  color: var(--fallback-34-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-35,
+pre code .calepin-syntax-fallback-35 {
+  color: var(--fallback-35-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-36,
+pre code .calepin-syntax-fallback-36 {
+  color: var(--fallback-36-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-37,
+pre code .calepin-syntax-fallback-37 {
+  color: var(--fallback-37-foreground);
 }
 
 
@@ -758,26 +882,44 @@ html[data-theme="dark"] {
   --calepin-syntax-foreground: #d8e7ef;
   --calepin-syntax-background: #161b22;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #d8e7ef;
-  --scope-2-foreground: #d8e7ef;
-  --scope-3-foreground: #ffcc9c;
-  --scope-4-foreground: #d8e7ef;
-  --scope-5-foreground: #d8e7ef;
-  --scope-6-foreground: #d8e7ef;
+  --scope-1-foreground: #8b949e;
+  --scope-2-foreground: #8b949e;
+  --scope-3-foreground: #8fd694;
+  --scope-4-foreground: #8fd694;
+  --scope-5-foreground: #ffcc9c;
+  --scope-6-foreground: #c8a2f0;
   --scope-7-foreground: #c8a2f0;
-  --scope-8-foreground: #d8e7ef;
-  --scope-9-foreground: #ffb3a7;
+  --scope-8-foreground: #c8a2f0;
+  --scope-9-foreground: #c8a2f0;
   --scope-10-foreground: #c8a2f0;
-  --scope-11-foreground: #d8e7ef;
-  --scope-12-foreground: #d8e7ef;
-  --scope-13-foreground: #d8e7ef;
-  --scope-13-font-weight: 700;
-  --fallback-14-foreground: #8b949e;
-  --fallback-15-foreground: #8fd694;
-  --fallback-16-foreground: #ffb3a7;
-  --fallback-17-foreground: #7fd1de;
-  --fallback-18-foreground: #c8a2f0;
-  --fallback-19-foreground: #c3d86c;
+  --scope-11-foreground: #ffcc9c;
+  --scope-12-foreground: #ffcc9c;
+  --scope-13-foreground: #ffcc9c;
+  --scope-14-foreground: #7fd1de;
+  --scope-15-foreground: #7fd1de;
+  --scope-16-foreground: #7fd1de;
+  --scope-17-foreground: #7fd1de;
+  --scope-18-foreground: #7fd1de;
+  --scope-19-foreground: #c8a2f0;
+  --scope-20-foreground: #9db8ff;
+  --scope-21-foreground: #9db8ff;
+  --scope-22-foreground: #9db8ff;
+  --scope-23-foreground: #ffb3a7;
+  --scope-24-foreground: #b5bdc9;
+  --scope-25-foreground: #b5bdc9;
+  --scope-26-foreground: #b5bdc9;
+  --scope-27-foreground: #d8e7ef;
+  --scope-28-foreground: #c3d86c;
+  --scope-29-foreground: #c3d86c;
+  --scope-30-foreground: #c3d86c;
+  --scope-31-foreground: #d8e7ef;
+  --scope-31-font-weight: 700;
+  --fallback-32-foreground: #8b949e;
+  --fallback-33-foreground: #8fd694;
+  --fallback-34-foreground: #ffb3a7;
+  --fallback-35-foreground: #7fd1de;
+  --fallback-36-foreground: #c8a2f0;
+  --fallback-37-foreground: #c3d86c;
 
 }
 
@@ -800,26 +942,44 @@ html[data-theme="dark"] .calepin-copy-code:focus-visible {
   --calepin-syntax-foreground: #d8e7ef;
   --calepin-syntax-background: #161b22;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #d8e7ef;
-  --scope-2-foreground: #d8e7ef;
-  --scope-3-foreground: #ffcc9c;
-  --scope-4-foreground: #d8e7ef;
-  --scope-5-foreground: #d8e7ef;
-  --scope-6-foreground: #d8e7ef;
+  --scope-1-foreground: #8b949e;
+  --scope-2-foreground: #8b949e;
+  --scope-3-foreground: #8fd694;
+  --scope-4-foreground: #8fd694;
+  --scope-5-foreground: #ffcc9c;
+  --scope-6-foreground: #c8a2f0;
   --scope-7-foreground: #c8a2f0;
-  --scope-8-foreground: #d8e7ef;
-  --scope-9-foreground: #ffb3a7;
+  --scope-8-foreground: #c8a2f0;
+  --scope-9-foreground: #c8a2f0;
   --scope-10-foreground: #c8a2f0;
-  --scope-11-foreground: #d8e7ef;
-  --scope-12-foreground: #d8e7ef;
-  --scope-13-foreground: #d8e7ef;
-  --scope-13-font-weight: 700;
-  --fallback-14-foreground: #8b949e;
-  --fallback-15-foreground: #8fd694;
-  --fallback-16-foreground: #ffb3a7;
-  --fallback-17-foreground: #7fd1de;
-  --fallback-18-foreground: #c8a2f0;
-  --fallback-19-foreground: #c3d86c;
+  --scope-11-foreground: #ffcc9c;
+  --scope-12-foreground: #ffcc9c;
+  --scope-13-foreground: #ffcc9c;
+  --scope-14-foreground: #7fd1de;
+  --scope-15-foreground: #7fd1de;
+  --scope-16-foreground: #7fd1de;
+  --scope-17-foreground: #7fd1de;
+  --scope-18-foreground: #7fd1de;
+  --scope-19-foreground: #c8a2f0;
+  --scope-20-foreground: #9db8ff;
+  --scope-21-foreground: #9db8ff;
+  --scope-22-foreground: #9db8ff;
+  --scope-23-foreground: #ffb3a7;
+  --scope-24-foreground: #b5bdc9;
+  --scope-25-foreground: #b5bdc9;
+  --scope-26-foreground: #b5bdc9;
+  --scope-27-foreground: #d8e7ef;
+  --scope-28-foreground: #c3d86c;
+  --scope-29-foreground: #c3d86c;
+  --scope-30-foreground: #c3d86c;
+  --scope-31-foreground: #d8e7ef;
+  --scope-31-font-weight: 700;
+  --fallback-32-foreground: #8b949e;
+  --fallback-33-foreground: #8fd694;
+  --fallback-34-foreground: #ffb3a7;
+  --fallback-35-foreground: #7fd1de;
+  --fallback-36-foreground: #c8a2f0;
+  --fallback-37-foreground: #c3d86c;
 
   }
 
@@ -1738,7 +1898,7 @@ a:has(.calepin-nav-icon) {
   align-items: center;
   padding: 0.35rem 0.6rem;
   border-radius: var(--calepin-radius-sm);
-  background: var(--calepin-color-accent);
+  background: var(--calepin-color-accent-strong);
   color: var(--calepin-color-accent-contrast);
   font-size: 0.78rem;
   text-decoration: none;
@@ -2076,6 +2236,30 @@ html:not([data-theme]) {
 
 .calepin-website-sidebar nav details > ul {
   margin-bottom: 0;
+}
+
+/* Nested foldable subsections: indented under their parent, with a rule
+   marking the nesting level. Titles stay sentence-case so they read as page
+   groups rather than as another top-level section. */
+.calepin-website-sidebar-subsection {
+  margin-inline-start: 0.45rem;
+  padding-inline-start: 0.5rem;
+  border-inline-start: 1px solid var(--calepin-color-border);
+}
+
+.calepin-website-sidebar-subsection > summary,
+.calepin-website-sidebar-subsection-title {
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 600;
+}
+
+/* Unfolded subsections have no <details> to indent, so the title carries the
+   nesting instead. */
+.calepin-website-sidebar nav p.calepin-website-sidebar-subsection-title {
+  margin: 0.5rem 0 0.35rem;
+  padding-inline-start: 0.5rem;
 }
 
 .calepin-site-footer {
@@ -3233,7 +3417,7 @@ html[data-theme="dark"] .mosaic-diagram {
     <script src="../pagefind/pagefind-component-ui.js" type="module"></script>
 
 
-<script id="calepin-website-source-data" type="application/json">"#import \"/api/_module.typ\": api-module\n\n#api-module(\n  \"Components and furniture\",\n  (\n    \"/api/modules/component-card.typ\",\n    \"/api/modules/component-callout.typ\",\n    \"/api/modules/component-badge.typ\",\n    \"/api/modules/component-quote.typ\",\n    \"/api/modules/component-divider.typ\",\n    \"/api/modules/component-progress.typ\",\n    \"/api/modules/image.typ\",\n    \"/api/modules/component-figure.typ\",\n  ),\n)\n"</script>
+<script id="calepin-website-source-data" type="application/json">"#import \"/api/_page.typ\": api-page\n\n#show: api-page.with(\"Components and furniture\")\n\n#include \"/api/generated/components/index.typ\"\n"</script>
 </head><body>
 
     <header class="calepin-website-topbar calepin-site-topbar">
@@ -3553,150 +3737,150 @@ html[data-theme="dark"] .mosaic-diagram {
             </nav>
         </aside>
         <main class="calepin-website-main calepin-content" data-pagefind-body>
-            <h1 id="components-and-furniture">Components and furniture</h1><p>The overview below links to each definition. Function definitions show signatures with parameter and return types; variables show their declared types. Descriptions and defaults follow.</p><div><ul><li><a href="#card"><code>card()</code></a></li><li><a href="#callout"><code>callout()</code></a></li><li><a href="#badge"><code>badge()</code></a></li><li><a href="#quote"><code>quote()</code></a></li><li><a href="#divider"><code>divider()</code></a></li><li><a href="#progress"><code>progress()</code></a></li><li><a href="#image"><code>image()</code></a></li><li><a href="#figure"><code>figure()</code></a></li></ul><h2 id="card">card</h2><p>Wraps content in a clipped, semantically styled block.</p><p>This is the base the other components are built on, and the one to reach for when you want a panel that follows the deck’s colors without spelling them out.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-8">card</span>(role: <span class="calepin-syntax-scope-2">"warning"</span>)[
+            <h1 id="components-and-furniture">Components and furniture</h1><p>The contents below link to each definition. Function entries show the signature, then a description, then the parameters with their types and defaults; variable entries show the declared type.</p><nav role="doc-toc"><h2 id="contents">Contents</h2><ol style="list-style-type: none"><li><a href="#card">Wraps content in a clipped, semantically styled block.</a></li><li><a href="#callout">Creates a callout with a semantic side stripe.</a></li><li><a href="#badge">Creates a compact inline badge.</a></li><li><a href="#quote">Creates a quotation treatment with optional attribution.</a></li><li><a href="#divider">Creates a horizontal divider, optionally split around a title.</a></li><li><a href="#progress">Displays progress through logical slides or semantic sections in the deck.</a></li><li><a href="#image">Creates a slide-sized native Typst image with an optional scrim.</a></li><li><a href="#figure">Creates a centered, captioned figure sized to its cell.</a></li></ol></nav><h2 id="card">Wraps content in a clipped, semantically styled block.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">card(
+  body,
+  role: "neutral",
+  fill: auto,
+  accent: auto,
+  stroke: auto,
+  radius: auto,
+  inset: auto,
+  align: auto,
+  text: (:),
+  width: auto,
+  height: auto
+) -> content</code></pre></div><strong style="display: block">Description</strong><p>This is the base the other components are built on, and the one to reach for when you want a panel that follows the deck’s colors without spelling them out.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-20">card</span>(role: <span class="calepin-syntax-scope-3">"warning"</span>)[
   The interval covers zero.
-]</code></pre></div><p><strong>Roles</strong></p><p>A role names one color in the deck palette. The component paints its border and rails with that color, its text with the deck’s text color, and its panel with the color tinted into the deck’s canvas, so a component tracks the active theme instead of hard-coding paint.</p><ul><li><code>neutral</code>: the deck’s own surface, outlined in its line color. The default.</li><li><code>accent</code>: the deck’s accent.</li><li><code>warning</code>, <code>error</code>: the status colors.</li></ul><p>Every one of them is a palette entry a theme or a deck can restate, so a deck that wants a different warning sets <code>colors: (warning: ..)</code> at <code>setup</code> once rather than restyling each component.</p><p><strong>Overrides</strong></p><p><code>fill</code>, <code>accent</code>, <code>stroke</code>, <code>radius</code>, <code>inset</code>, <code>align</code>, and <code>text</code> each default to <code>auto</code>, meaning “take it from the role”. Pass one to override just that part. <code>text</code> is a dictionary of native <code>text</code> arguments and is merged into the role’s text color rather than replacing it.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-8">card</span>(
-  radius: <span class="calepin-syntax-scope-9">0pt</span>,
-  stroke: <span class="calepin-syntax-scope-4">none</span>,
-  text: (size: <span class="calepin-syntax-scope-9">0.8em</span>),
-)[Quiet panel]</code></pre></div><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">card(
-  body: content,
-  role: str = "neutral",
-  fill: auto | color | gradient | tiling | none = auto,
-  accent: auto | color = auto,
-  stroke: auto | stroke | dictionary | none = auto,
-  radius: auto | length | dictionary = auto,
-  inset: auto | length | relative | dictionary = auto,
-  align: auto | alignment = auto,
-  text: dictionary = (:),
-  width: auto | length | relative | fraction = auto,
-  height: auto | length | relative | fraction = auto
-) -> content</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>body</code></p><ul><li>Type: <code>content</code></li><li>Content inside the card.</li></ul></li><li><p><code>role</code></p><ul><li>Type: <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"neutral"</span></code></li><li>Semantic role name: <code>neutral</code>, <code>accent</code>, <code>warning</code>, or <code>error</code>.</li></ul></li><li><p><code>fill</code></p><ul><li>Type: <code>auto</code> or <code>color</code> or <code>gradient</code> or <code>tiling</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Panel fill. <code>auto</code> uses the role’s color tinted into the deck canvas.</li></ul></li><li><p><code>accent</code></p><ul><li>Type: <code>auto</code> or <code>color</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Border and rail color. <code>auto</code> uses the role’s own color.</li></ul></li><li><p><code>stroke</code></p><ul><li>Type: <code>auto</code> or <code>stroke</code> or <code>dictionary</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Border stroke. <code>auto</code> draws the standard thickness in <code>accent</code>.</li></ul></li><li><p><code>radius</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>dictionary</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Corner radius. <code>auto</code> uses the shared component radius.</li></ul></li><li><p><code>inset</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>relative</code> or <code>dictionary</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Padding inside the panel. <code>auto</code> uses the shared component inset.</li></ul></li><li><p><code>align</code></p><ul><li>Type: <code>auto</code> or <code>alignment</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Horizontal alignment of the body. <code>auto</code> is <code>left</code>.</li></ul></li><li><p><code>text</code></p><ul><li>Type: <code>dictionary</code></li><li>Default: <code data-lang="typc">(:)</code></li><li>Native <code>text</code> arguments merged over the role’s text color.</li></ul></li><li><p><code>width</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>relative</code> or <code>fraction</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Native block width. <code>auto</code> hugs the content.</li></ul></li><li><p><code>height</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>relative</code> or <code>fraction</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Native block height. <code>auto</code> hugs the content.</li></ul></li></ul><h2 id="callout">callout</h2><p>Creates a callout with a semantic side stripe.</p><p>A callout is a <code>card</code> with two additions: a colored stripe down its left edge, and an optional bold title in the same color. Where <code>card</code> is a neutral panel, this one announces what kind of remark it holds.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-8">callout</span>(role: <span class="calepin-syntax-scope-2">"warning"</span>, title: [Caveat])[
+]</code></pre></div><p><strong>Roles</strong></p><p>A role names one color in the deck palette. The component paints its border and rails with that color, its text with the deck’s text color, and its panel with the color tinted into the deck’s canvas, so a component tracks the active theme instead of hard-coding paint.</p><ul><li><code>neutral</code>: the deck’s own surface, outlined in its line color. The default.</li><li><code>accent</code>: the deck’s accent.</li><li><code>warning</code>, <code>error</code>: the status colors.</li></ul><p>Every one of them is a palette entry a theme or a deck can restate, so a deck that wants a different warning sets <code>colors: (warning: ..)</code> at <code>setup</code> once rather than restyling each component.</p><p><strong>Overrides</strong></p><p><code>fill</code>, <code>accent</code>, <code>stroke</code>, <code>radius</code>, <code>inset</code>, <code>align</code>, and <code>text</code> each default to <code>auto</code>, meaning “take it from the role”. Pass one to override just that part. <code>text</code> is a dictionary of native <code>text</code> arguments and is merged into the role’s text color rather than replacing it.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-20">card</span>(
+  radius: <span class="calepin-syntax-scope-23">0pt</span>,
+  stroke: <span class="calepin-syntax-scope-6">none</span>,
+  text: (size: <span class="calepin-syntax-scope-23">0.8em</span>),
+)[Quiet panel]</code></pre></div><strong style="display: block">Arguments</strong><table><tr><td><code>body</code></td><td><code>content</code><br>Content inside the card.</td></tr><tr><td><code>role</code></td><td><code>str</code><br>Semantic role name: <code>neutral</code>, <code>accent</code>, <code>warning</code>, or <code>error</code>.</td></tr><tr><td><code>fill</code></td><td><code>auto | color | gradient | tiling | none</code><br>Panel fill. <code>auto</code> uses the role’s color tinted into the deck canvas.</td></tr><tr><td><code>accent</code></td><td><code>auto | color</code><br>Border and rail color. <code>auto</code> uses the role’s own color.</td></tr><tr><td><code>stroke</code></td><td><code>auto | stroke | dictionary | none</code><br>Border stroke. <code>auto</code> draws the standard thickness in <code>accent</code>.</td></tr><tr><td><code>radius</code></td><td><code>auto | length | dictionary</code><br>Corner radius. <code>auto</code> uses the shared component radius.</td></tr><tr><td><code>inset</code></td><td><code>auto | length | relative | dictionary</code><br>Padding inside the panel. <code>auto</code> uses the shared component inset.</td></tr><tr><td><code>align</code></td><td><code>auto | alignment</code><br>Horizontal alignment of the body. <code>auto</code> is <code>left</code>.</td></tr><tr><td><code>text</code></td><td><code>dictionary</code><br>Native <code>text</code> arguments merged over the role’s text color.</td></tr><tr><td><code>width</code></td><td><code>auto | length | relative | fraction</code><br>Native block width. <code>auto</code> hugs the content.</td></tr><tr><td><code>height</code></td><td><code>auto | length | relative | fraction</code><br>Native block height. <code>auto</code> hugs the content.</td></tr></table><h2 id="callout">Creates a callout with a semantic side stripe.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">callout(
+  body,
+  role: "accent",
+  title: none,
+  fill: auto,
+  accent: auto,
+  stroke: auto,
+  radius: auto,
+  inset: auto,
+  align: auto,
+  text: (:),
+  width: 100%
+) -> content</code></pre></div><strong style="display: block">Description</strong><p>A callout is a <code>card</code> with two additions: a colored stripe down its left edge, and an optional bold title in the same color. Where <code>card</code> is a neutral panel, this one announces what kind of remark it holds.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-20">callout</span>(role: <span class="calepin-syntax-scope-3">"warning"</span>, title: [Caveat])[
   The estimate assumes independent errors.
-]</code></pre></div><p><strong>Roles</strong></p><ul><li><code>accent</code>: the deck’s accent. The default.</li><li><code>warning</code>, <code>error</code>: the status colors.</li><li><code>neutral</code>: the deck’s own surface.</li></ul><p><strong>Custom colors</strong></p><p>A role is the portable spelling, and it stays correct when the deck changes theme. When a callout needs a color the palette does not name, pass <code>accent</code> directly: it paints the stripe and the title. The panel keeps the role’s own fill, so a callout that should be tinted to match states <code>fill</code> as well.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-8">callout</span>(
-  accent: <span class="calepin-syntax-scope-8">rgb</span>(<span class="calepin-syntax-scope-2">"#7c3aed"</span>),
-  fill: <span class="calepin-syntax-scope-8">rgb</span>(<span class="calepin-syntax-scope-2">"#f1ebfd"</span>),
+]</code></pre></div><p><strong>Roles</strong></p><ul><li><code>accent</code>: the deck’s accent. The default.</li><li><code>warning</code>, <code>error</code>: the status colors.</li><li><code>neutral</code>: the deck’s own surface.</li></ul><p><strong>Custom colors</strong></p><p>A role is the portable spelling, and it stays correct when the deck changes theme. When a callout needs a color the palette does not name, pass <code>accent</code> directly: it paints the stripe and the title. The panel keeps the role’s own fill, so a callout that should be tinted to match states <code>fill</code> as well.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-20">callout</span>(
+  accent: <span class="calepin-syntax-scope-20">rgb</span>(<span class="calepin-syntax-scope-3">"#7c3aed"</span>),
+  fill: <span class="calepin-syntax-scope-20">rgb</span>(<span class="calepin-syntax-scope-3">"#f1ebfd"</span>),
   title: [Takeaway],
 )[
   Bounded work beats unbounded intent.
-]</code></pre></div><p>See <code>card</code> for the full list of overrides.</p><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">callout(
-  body: content,
-  role: str = "accent",
-  title: content | none = none,
-  fill: auto | color | gradient | tiling | none = auto,
-  accent: auto | color = auto,
-  stroke: auto | stroke | dictionary | none = auto,
-  radius: auto | length | dictionary = auto,
-  inset: auto | length | relative | dictionary = auto,
-  align: auto | alignment = auto,
-  text: dictionary = (:),
-  width: auto | length | relative | fraction = 100%
-) -> content</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>body</code></p><ul><li>Type: <code>content</code></li><li>Callout content.</li></ul></li><li><p><code>role</code></p><ul><li>Type: <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"accent"</span></code></li><li>Semantic role name: <code>accent</code>, <code>warning</code>, <code>error</code>, or <code>neutral</code>.</li></ul></li><li><p><code>title</code></p><ul><li>Type: <code>content</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>Bold title set above the body in the stripe color.</li></ul></li><li><p><code>fill</code></p><ul><li>Type: <code>auto</code> or <code>color</code> or <code>gradient</code> or <code>tiling</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Panel fill. <code>auto</code> uses the role’s color tinted into the deck canvas.</li></ul></li><li><p><code>accent</code></p><ul><li>Type: <code>auto</code> or <code>color</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Stripe and title color. <code>auto</code> uses the role’s own color.</li></ul></li><li><p><code>stroke</code></p><ul><li>Type: <code>auto</code> or <code>stroke</code> or <code>dictionary</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Border stroke. <code>auto</code> draws the left stripe and no other edge.</li></ul></li><li><p><code>radius</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>dictionary</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Corner radius. <code>auto</code> uses the shared component radius.</li></ul></li><li><p><code>inset</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>relative</code> or <code>dictionary</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Padding inside the panel. <code>auto</code> uses the shared component inset.</li></ul></li><li><p><code>align</code></p><ul><li>Type: <code>auto</code> or <code>alignment</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Horizontal alignment of the body. <code>auto</code> is <code>left</code>.</li></ul></li><li><p><code>text</code></p><ul><li>Type: <code>dictionary</code></li><li>Default: <code data-lang="typc">(:)</code></li><li>Native <code>text</code> arguments merged over the role’s text color.</li></ul></li><li><p><code>width</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>relative</code> or <code>fraction</code></li><li>Default: <code data-lang="typc"><span style="color: #b60157">100%</span></code></li><li>Native block width. Full width by default, so a column of callouts rules to one edge; <code>auto</code> hugs the content the way <code>card</code> does.</li></ul></li></ul><h2 id="badge">badge</h2><p>Creates a compact inline badge.</p><p>A badge is a small pill that sits in the text flow rather than breaking it, which suits a status marker, a version marker, or a keyword beside a heading.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">== Estimator #mosaic.components.<span class="calepin-syntax-scope-8">badge</span>(role: <span class="calepin-syntax-scope-2">"accent"</span>)[stable]</code></pre></div><p>Any radius at least half the badge’s height rounds its ends completely, so an oversized value such as <code>999pt</code> gives fully rounded pill ends. Restyle the body through <code>text</code>.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-8">badge</span>(
-  role: <span class="calepin-syntax-scope-2">"warning"</span>,
-  radius: <span class="calepin-syntax-scope-9">999pt</span>,
-  text: (weight: <span class="calepin-syntax-scope-2">"bold"</span>, size: <span class="calepin-syntax-scope-9">0.7em</span>),
-)[draft]</code></pre></div><p>See <code>card</code> for the list of roles, how they resolve against the active theme, and the full list of overrides.</p><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">badge(
-  body: content,
-  role: str = "neutral",
-  radius: length | dictionary = component-tokens.badge-radius,
-  fill: auto | color | gradient | tiling | none = auto,
-  accent: auto | color = auto,
-  stroke: auto | stroke | dictionary | none = auto,
-  inset: auto | length | relative | dictionary = auto,
-  text: dictionary = (:)
-) -> content</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>body</code></p><ul><li>Type: <code>content</code></li><li>Badge content, usually a word or two.</li></ul></li><li><p><code>role</code></p><ul><li>Type: <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"neutral"</span></code></li><li>Semantic role name: <code>neutral</code>, <code>accent</code>, <code>warning</code>, or <code>error</code>.</li></ul></li><li><p><code>radius</code></p><ul><li>Type: <code>length</code> or <code>dictionary</code></li><li>Default: <code data-lang="typc">component-tokens.badge-radius</code></li><li>Corner radius. Oversize it (<code>999pt</code>) for fully rounded pill ends.</li></ul></li><li><p><code>fill</code></p><ul><li>Type: <code>auto</code> or <code>color</code> or <code>gradient</code> or <code>tiling</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Pill fill. <code>auto</code> uses the role’s color tinted into the deck canvas.</li></ul></li><li><p><code>accent</code></p><ul><li>Type: <code>auto</code> or <code>color</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Border color. <code>auto</code> uses the role’s own color.</li></ul></li><li><p><code>stroke</code></p><ul><li>Type: <code>auto</code> or <code>stroke</code> or <code>dictionary</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Border stroke. <code>auto</code> draws the standard thickness in <code>accent</code>.</li></ul></li><li><p><code>inset</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>relative</code> or <code>dictionary</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Padding inside the pill. <code>auto</code> uses the compact badge inset.</li></ul></li><li><p><code>text</code></p><ul><li>Type: <code>dictionary</code></li><li>Default: <code data-lang="typc">(:)</code></li><li>Native <code>text</code> arguments merged over the role’s text color, such as <code>size</code> and <code>weight</code>.</li></ul></li></ul><h2 id="quote">quote</h2><p>Creates a quotation treatment with optional attribution.</p><p>The quotation sits in a lightly tinted <code>card</code>; attribution and source share one right-aligned line beneath it, joined by a comma when both are present.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-8">quote</span>(
+]</code></pre></div><p>See <code>card</code> for the full list of overrides.</p><strong style="display: block">Arguments</strong><table><tr><td><code>body</code></td><td><code>content</code><br>Callout content.</td></tr><tr><td><code>role</code></td><td><code>str</code><br>Semantic role name: <code>accent</code>, <code>warning</code>, <code>error</code>, or <code>neutral</code>.</td></tr><tr><td><code>title</code></td><td><code>content | none</code><br>Bold title set above the body in the stripe color.</td></tr><tr><td><code>fill</code></td><td><code>auto | color | gradient | tiling | none</code><br>Panel fill. <code>auto</code> uses the role’s color tinted into the deck canvas.</td></tr><tr><td><code>accent</code></td><td><code>auto | color</code><br>Stripe and title color. <code>auto</code> uses the role’s own color.</td></tr><tr><td><code>stroke</code></td><td><code>auto | stroke | dictionary | none</code><br>Border stroke. <code>auto</code> draws the left stripe and no other edge.</td></tr><tr><td><code>radius</code></td><td><code>auto | length | dictionary</code><br>Corner radius. <code>auto</code> uses the shared component radius.</td></tr><tr><td><code>inset</code></td><td><code>auto | length | relative | dictionary</code><br>Padding inside the panel. <code>auto</code> uses the shared component inset.</td></tr><tr><td><code>align</code></td><td><code>auto | alignment</code><br>Horizontal alignment of the body. <code>auto</code> is <code>left</code>.</td></tr><tr><td><code>text</code></td><td><code>dictionary</code><br>Native <code>text</code> arguments merged over the role’s text color.</td></tr><tr><td><code>width</code></td><td><code>auto | length | relative | fraction</code><br>Native block width. Full width by default, so a column of callouts rules to one edge; <code>auto</code> hugs the content the way <code>card</code> does.</td></tr></table><h2 id="badge">Creates a compact inline badge.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">badge(
+  body,
+  role: "neutral",
+  radius: component-tokens.badge-radius,
+  fill: auto,
+  accent: auto,
+  stroke: auto,
+  inset: auto,
+  text: (:)
+) -> content</code></pre></div><strong style="display: block">Description</strong><p>A badge is a small pill that sits in the text flow rather than breaking it, which suits a status marker, a version marker, or a keyword beside a heading.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">== Estimator #mosaic.components.<span class="calepin-syntax-scope-20">badge</span>(role: <span class="calepin-syntax-scope-3">"accent"</span>)[stable]</code></pre></div><p>Any radius at least half the badge’s height rounds its ends completely, so an oversized value such as <code>999pt</code> gives fully rounded pill ends. Restyle the body through <code>text</code>.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-20">badge</span>(
+  role: <span class="calepin-syntax-scope-3">"warning"</span>,
+  radius: <span class="calepin-syntax-scope-23">999pt</span>,
+  text: (weight: <span class="calepin-syntax-scope-3">"bold"</span>, size: <span class="calepin-syntax-scope-23">0.7em</span>),
+)[draft]</code></pre></div><p>See <code>card</code> for the list of roles, how they resolve against the active theme, and the full list of overrides.</p><strong style="display: block">Arguments</strong><table><tr><td><code>body</code></td><td><code>content</code><br>Badge content, usually a word or two.</td></tr><tr><td><code>role</code></td><td><code>str</code><br>Semantic role name: <code>neutral</code>, <code>accent</code>, <code>warning</code>, or <code>error</code>.</td></tr><tr><td><code>radius</code></td><td><code>length | dictionary</code><br>Corner radius. Oversize it (<code>999pt</code>) for fully rounded pill ends.</td></tr><tr><td><code>fill</code></td><td><code>auto | color | gradient | tiling | none</code><br>Pill fill. <code>auto</code> uses the role’s color tinted into the deck canvas.</td></tr><tr><td><code>accent</code></td><td><code>auto | color</code><br>Border color. <code>auto</code> uses the role’s own color.</td></tr><tr><td><code>stroke</code></td><td><code>auto | stroke | dictionary | none</code><br>Border stroke. <code>auto</code> draws the standard thickness in <code>accent</code>.</td></tr><tr><td><code>inset</code></td><td><code>auto | length | relative | dictionary</code><br>Padding inside the pill. <code>auto</code> uses the compact badge inset.</td></tr><tr><td><code>text</code></td><td><code>dictionary</code><br>Native <code>text</code> arguments merged over the role’s text color, such as <code>size</code> and <code>weight</code>.</td></tr></table><h2 id="quote">Creates a quotation treatment with optional attribution.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">quote(
+  body,
+  attribution: none,
+  source: none,
+  role: "neutral",
+  fill: auto,
+  accent: auto,
+  stroke: auto,
+  radius: auto,
+  inset: auto,
+  align: auto,
+  text: (:)
+) -> content</code></pre></div><strong style="display: block">Description</strong><p>The quotation sits in a lightly tinted <code>card</code>; attribution and source share one right-aligned line beneath it, joined by a comma when both are present.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-20">quote</span>(
   attribution: [Ada Lovelace],
   source: [Notes on the Analytical Engine, 1843],
 )[
   The Analytical Engine weaves algebraic patterns.
-]</code></pre></div><p>To set a portrait beside the quotation, compose one natively:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-8">#</span><span class="calepin-syntax-scope-8">grid</span>(
-  columns: (<span class="calepin-syntax-scope-4">auto</span>, <span class="calepin-syntax-scope-9">1fr</span>),
-  gutter: <span class="calepin-syntax-scope-9">0.6em</span>,
-  mosaic.components.<span class="calepin-syntax-scope-8">image</span>(<span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"ada.webp"</span>), width: <span class="calepin-syntax-scope-9">4em</span>, height: <span class="calepin-syntax-scope-9">4em</span>),
-  mosaic.components.<span class="calepin-syntax-scope-8">quote</span>(attribution: [Ada Lovelace])[<span class="calepin-syntax-scope-3">...</span>],
-)</code></pre></div><p>See <code>card</code> for the list of roles and the full list of overrides.</p><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">quote(
-  body: content,
-  attribution: content | none = none,
-  source: content | none = none,
-  role: str = "neutral",
-  fill: auto | color | gradient | tiling | none = auto,
-  accent: auto | color = auto,
-  stroke: auto | stroke | dictionary | none = auto,
-  radius: auto | length | dictionary = auto,
-  inset: auto | length | relative | dictionary = auto,
-  align: auto | alignment = auto,
-  text: dictionary = (:)
-) -> content</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>body</code></p><ul><li>Type: <code>content</code></li><li>The quoted text.</li></ul></li><li><p><code>attribution</code></p><ul><li>Type: <code>content</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>Who is being quoted, set on the fine-print line below the quotation.</li></ul></li><li><p><code>source</code></p><ul><li>Type: <code>content</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>Where the quotation comes from, appended after the attribution.</li></ul></li><li><p><code>role</code></p><ul><li>Type: <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"neutral"</span></code></li><li>Semantic role name: <code>neutral</code>, <code>accent</code>, <code>warning</code>, or <code>error</code>.</li></ul></li><li><p><code>fill</code></p><ul><li>Type: <code>auto</code> or <code>color</code> or <code>gradient</code> or <code>tiling</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Panel fill. <code>auto</code> is a faint wash of the deck’s text color.</li></ul></li><li><p><code>accent</code></p><ul><li>Type: <code>auto</code> or <code>color</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Rail color. <code>auto</code> uses the role’s own color.</li></ul></li><li><p><code>stroke</code></p><ul><li>Type: <code>auto</code> or <code>stroke</code> or <code>dictionary</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Border stroke. <code>auto</code> draws none.</li></ul></li><li><p><code>radius</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>dictionary</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Corner radius. <code>auto</code> uses the shared component radius.</li></ul></li><li><p><code>inset</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>relative</code> or <code>dictionary</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Padding inside the panel. <code>auto</code> uses the shared component inset.</li></ul></li><li><p><code>align</code></p><ul><li>Type: <code>auto</code> or <code>alignment</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Horizontal alignment of the body. <code>auto</code> is <code>left</code>.</li></ul></li><li><p><code>text</code></p><ul><li>Type: <code>dictionary</code></li><li>Default: <code data-lang="typc">(:)</code></li><li>Native <code>text</code> arguments merged over the role’s text color.</li></ul></li></ul><h2 id="divider">divider</h2><p>Creates a horizontal divider, optionally split around a title.</p><p>Without a title it is one full-width rule. With one, it becomes two rules with the title centered between them, which is how a slide marks a change of name without spending a heading on it.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-8">divider</span>()
+]</code></pre></div><p>To set a portrait beside the quotation, compose one natively:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-20">#</span><span class="calepin-syntax-scope-20">grid</span>(
+  columns: (<span class="calepin-syntax-scope-6">auto</span>, <span class="calepin-syntax-scope-23">1fr</span>),
+  gutter: <span class="calepin-syntax-scope-23">0.6em</span>,
+  mosaic.components.<span class="calepin-syntax-scope-20">image</span>(<span class="calepin-syntax-scope-20">path</span>(<span class="calepin-syntax-scope-3">"ada.webp"</span>), width: <span class="calepin-syntax-scope-23">4em</span>, height: <span class="calepin-syntax-scope-23">4em</span>),
+  mosaic.components.<span class="calepin-syntax-scope-20">quote</span>(attribution: [Ada Lovelace])[<span class="calepin-syntax-scope-5">...</span>],
+)</code></pre></div><p>See <code>card</code> for the list of roles and the full list of overrides.</p><strong style="display: block">Arguments</strong><table><tr><td><code>body</code></td><td><code>content</code><br>The quoted text.</td></tr><tr><td><code>attribution</code></td><td><code>content | none</code><br>Who is being quoted, set on the fine-print line below the quotation.</td></tr><tr><td><code>source</code></td><td><code>content | none</code><br>Where the quotation comes from, appended after the attribution.</td></tr><tr><td><code>role</code></td><td><code>str</code><br>Semantic role name: <code>neutral</code>, <code>accent</code>, <code>warning</code>, or <code>error</code>.</td></tr><tr><td><code>fill</code></td><td><code>auto | color | gradient | tiling | none</code><br>Panel fill. <code>auto</code> is a faint wash of the deck’s text color.</td></tr><tr><td><code>accent</code></td><td><code>auto | color</code><br>Rail color. <code>auto</code> uses the role’s own color.</td></tr><tr><td><code>stroke</code></td><td><code>auto | stroke | dictionary | none</code><br>Border stroke. <code>auto</code> draws none.</td></tr><tr><td><code>radius</code></td><td><code>auto | length | dictionary</code><br>Corner radius. <code>auto</code> uses the shared component radius.</td></tr><tr><td><code>inset</code></td><td><code>auto | length | relative | dictionary</code><br>Padding inside the panel. <code>auto</code> uses the shared component inset.</td></tr><tr><td><code>align</code></td><td><code>auto | alignment</code><br>Horizontal alignment of the body. <code>auto</code> is <code>left</code>.</td></tr><tr><td><code>text</code></td><td><code>dictionary</code><br>Native <code>text</code> arguments merged over the role’s text color.</td></tr></table><h2 id="divider">Creates a horizontal divider, optionally split around a title.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">divider(title: none, stroke: auto) -> content</code></pre></div><strong style="display: block">Description</strong><p>Without a title it is one full-width rule. With one, it becomes two rules with the title centered between them, which is how a slide marks a change of name without spending a heading on it.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-20">divider</span>()
 
-#mosaic.components.<span class="calepin-syntax-scope-8">divider</span>(
-  title: <span class="calepin-syntax-scope-8">text</span>(size: <span class="calepin-syntax-scope-9">0.7em</span>)[Robustness checks],
-  stroke: <span class="calepin-syntax-scope-9">0.5pt</span> <span class="calepin-syntax-scope-10">+</span> <span class="calepin-syntax-scope-8">luma</span>(<span class="calepin-syntax-scope-9">70%</span>),
-)</code></pre></div><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">divider(title: content | none = none, stroke: auto | stroke = auto) -> content</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>title</code></p><ul><li>Type: <code>content</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>Content centered between the two line segments. <code>none</code> draws one unbroken rule instead.</li></ul></li><li><p><code>stroke</code></p><ul><li>Type: <code>auto</code> or <code>stroke</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Native Typst stroke used for both line segments. <code>auto</code> draws the deck’s line color at the shared component thickness.</li></ul></li></ul><h2 id="progress">progress</h2><p>Displays progress through logical slides or semantic sections in the deck.</p><p>It reads the deck’s own counters, so it needs no arguments in the ordinary case. The usual home for it is a setup-level footer default, which puts one indicator on every slide that has a footer.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">show</span>: mosaic.setup.<span class="calepin-syntax-scope-8">with</span>(
+#mosaic.components.<span class="calepin-syntax-scope-20">divider</span>(
+  title: <span class="calepin-syntax-scope-20">text</span>(size: <span class="calepin-syntax-scope-23">0.7em</span>)[Robustness checks],
+  stroke: <span class="calepin-syntax-scope-23">0.5pt</span> <span class="calepin-syntax-scope-24">+</span> <span class="calepin-syntax-scope-20">luma</span>(<span class="calepin-syntax-scope-23">70%</span>),
+)</code></pre></div><strong style="display: block">Arguments</strong><table><tr><td><code>title</code></td><td><code>content | none</code><br>Content centered between the two line segments. <code>none</code> draws one unbroken rule instead.</td></tr><tr><td><code>stroke</code></td><td><code>auto | stroke</code><br>Native Typst stroke used for both line segments. <code>auto</code> draws the deck’s line color at the shared component thickness.</td></tr></table><h2 id="progress">Displays progress through logical slides or semantic sections in the deck.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">progress(
+  variant: "1/1",
+  count: "slides",
+  role: "accent",
+  width: auto,
+  thickness: component-tokens.rule-thickness,
+  fill: auto,
+  accent: auto
+) -> content</code></pre></div><strong style="display: block">Description</strong><p>It reads the deck’s own counters, so it needs no arguments in the ordinary case. The usual home for it is a setup-level footer default, which puts one indicator on every slide that has a footer.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">show</span>: mosaic.setup.<span class="calepin-syntax-scope-20">with</span>(
   content: (
-    footer: <span class="calepin-syntax-scope-8">align</span>(right, mosaic.components.<span class="calepin-syntax-scope-8">progress</span>()),
+    footer: <span class="calepin-syntax-scope-20">align</span>(right, mosaic.components.<span class="calepin-syntax-scope-20">progress</span>()),
   ),
-)</code></pre></div><p><strong>Variants</strong></p><ul><li><code>1/1</code>: the current and final values, as text. The default.</li><li><code>1</code>: the current value alone.</li><li><code>circle</code>: a compact ring filling clockwise, sized by <code>width</code> and <code>thickness</code>.</li><li><code>line</code>: a horizontal bar filling left to right, sized by <code>width</code> and <code>thickness</code>.</li></ul><p><strong>What it counts</strong></p><p><code>count</code> selects the automatic counter: <code>slides</code> counts logical slides, and <code>sections</code> counts slides with <code>layout: "section"</code>.</p><p>Both readings come from <code>info()</code>, which publishes the same position as <code>slide</code> and <code>section</code> records. Chrome that needs more than one indicator, or the section’s title rather than its number, reads that instead of composing several of these.</p><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">progress(
-  variant: str | function = "1/1",
-  count: str = "slides",
-  role: str = "accent",
-  width: auto | length | relative | fraction = auto,
-  thickness: length = component-tokens.rule-thickness,
-  fill: auto | color | gradient | tiling = auto,
-  accent: auto | color = auto
-) -> content</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>variant</code></p><ul><li>Type: <code>str</code> or <code>function</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"1/1"</span></code></li><li><p>Visual treatment: <code>"1/1"</code>, <code>"1"</code>, <code>"circle"</code>, <code>"line"</code>, or a function drawing one. A renderer is called with a dictionary holding <code>current</code>, <code>total</code>, <code>amount</code>, <code>accent</code>, <code>fill</code>, <code>width</code>, and <code>thickness</code>, and returns the content to place.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-8">progress</span>(
-  variant: state <span class="calepin-syntax-scope-10">=></span> <span class="calepin-syntax-scope-8">grid</span>(
+)</code></pre></div><p><strong>Variants</strong></p><ul><li><code>1/1</code>: the current and final values, as text. The default.</li><li><code>1</code>: the current value alone.</li><li><code>circle</code>: a compact ring filling clockwise, sized by <code>width</code> and <code>thickness</code>.</li><li><code>line</code>: a horizontal bar filling left to right, sized by <code>width</code> and <code>thickness</code>.</li></ul><p><strong>What it counts</strong></p><p><code>count</code> selects the automatic counter: <code>slides</code> counts logical slides, and <code>sections</code> counts slides with <code>layout: "section"</code>.</p><p>Both readings come from <code>info()</code>, which publishes the same position as <code>slide</code> and <code>section</code> records. Chrome that needs more than one indicator, or the section’s title rather than its number, reads that instead of composing several of these.</p><strong style="display: block">Arguments</strong><table><tr><td><code>variant</code></td><td><p><code>str | function</code><br>Visual treatment: <code>"1/1"</code>, <code>"1"</code>, <code>"circle"</code>, <code>"line"</code>, or a function drawing one. A renderer is called with a dictionary holding <code>current</code>, <code>total</code>, <code>amount</code>, <code>accent</code>, <code>fill</code>, <code>width</code>, and <code>thickness</code>, and returns the content to place.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-20">progress</span>(
+  variant: state <span class="calepin-syntax-scope-24">=></span> <span class="calepin-syntax-scope-20">grid</span>(
     columns: state.total,
-    <span class="calepin-syntax-scope-10">..</span><span class="calepin-syntax-scope-8">range</span>(state.total).<span class="calepin-syntax-scope-8">map</span>(i <span class="calepin-syntax-scope-10">=></span> <span class="calepin-syntax-scope-8">rect</span>(
+    <span class="calepin-syntax-scope-24">..</span><span class="calepin-syntax-scope-20">range</span>(state.total).<span class="calepin-syntax-scope-20">map</span>(i <span class="calepin-syntax-scope-24">=></span> <span class="calepin-syntax-scope-20">rect</span>(
       height: state.thickness,
-      fill: <span class="calepin-syntax-scope-4">if</span> i <span class="calepin-syntax-scope-10">&lt;</span> state.current { state.accent } <span class="calepin-syntax-scope-4">else</span> { state.fill },
+      fill: <span class="calepin-syntax-scope-6">if</span> i <span class="calepin-syntax-scope-24">&lt;</span> state.current { state.accent } <span class="calepin-syntax-scope-6">else</span> { state.fill },
     )),
   ),
-)</code></pre></div></li></ul></li><li><p><code>count</code></p><ul><li>Type: <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"slides"</span></code></li><li>Which automatic counter to read: <code>"slides"</code> or <code>"sections"</code>.</li></ul></li><li><p><code>role</code></p><ul><li>Type: <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"accent"</span></code></li><li>Semantic role supplying the default colors: <code>accent</code>, <code>neutral</code>, <code>warning</code>, or <code>error</code>. The role’s own color paints the completed portion and its tinted fill paints the remainder.</li></ul></li><li><p><code>width</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>relative</code> or <code>fraction</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Length of the <code>line</code> variant, or diameter of the <code>circle</code> variant. <code>auto</code> is the full width for <code>line</code> and a compact fixed diameter for <code>circle</code>.</li></ul></li><li><p><code>thickness</code></p><ul><li>Type: <code>length</code></li><li>Default: <code data-lang="typc">component-tokens.rule-thickness</code></li><li>Stroke thickness of the <code>circle</code> and <code>line</code> variants.</li></ul></li><li><p><code>fill</code></p><ul><li>Type: <code>auto</code> or <code>color</code> or <code>gradient</code> or <code>tiling</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Paint of the inactive remainder. <code>auto</code> uses the role’s fill.</li></ul></li><li><p><code>accent</code></p><ul><li>Type: <code>auto</code> or <code>color</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Paint of the completed portion, and of the text variants. <code>auto</code> uses the role’s accent.</li></ul></li></ul><h2 id="image">image</h2><p>Creates a slide-sized native Typst image with an optional scrim.</p><p>This is Typst’s own <code>image</code> with presentation defaults: it fills its container instead of hugging its natural size, and it can carry a scrim. Everything else is forwarded unchanged, so <code>alt</code>, <code>format</code>, <code>page</code>, and <code>scaling</code> all work as usual.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-8">slide</span>(content: (
-  background: mosaic.components.<span class="calepin-syntax-scope-8">image</span>(<span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"cover.webp"</span>)),
+)</code></pre></div></td></tr><tr><td><code>count</code></td><td><code>str</code><br>Which automatic counter to read: <code>"slides"</code> or <code>"sections"</code>.</td></tr><tr><td><code>role</code></td><td><code>str</code><br>Semantic role supplying the default colors: <code>accent</code>, <code>neutral</code>, <code>warning</code>, or <code>error</code>. The role’s own color paints the completed portion and its tinted fill paints the remainder.</td></tr><tr><td><code>width</code></td><td><code>auto | length | relative | fraction</code><br>Length of the <code>line</code> variant, or diameter of the <code>circle</code> variant. <code>auto</code> is the full width for <code>line</code> and a compact fixed diameter for <code>circle</code>.</td></tr><tr><td><code>thickness</code></td><td><code>length</code><br>Stroke thickness of the <code>circle</code> and <code>line</code> variants.</td></tr><tr><td><code>fill</code></td><td><code>auto | color | gradient | tiling</code><br>Paint of the inactive remainder. <code>auto</code> uses the role’s fill.</td></tr><tr><td><code>accent</code></td><td><code>auto | color</code><br>Paint of the completed portion, and of the text variants. <code>auto</code> uses the role’s accent.</td></tr></table><h2 id="image">Creates a slide-sized native Typst image with an optional scrim.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">image(
+  source,
+  width: 100%,
+  height: 100%,
+  fit: "cover",
+  scrim: none,
+  ..native
+) -> content</code></pre></div><strong style="display: block">Description</strong><p>This is Typst’s own <code>image</code> with presentation defaults: it fills its container instead of hugging its natural size, and it can carry a scrim. Everything else is forwarded unchanged, so <code>alt</code>, <code>format</code>, <code>page</code>, and <code>scaling</code> all work as usual.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-20">slide</span>(content: (
+  background: mosaic.components.<span class="calepin-syntax-scope-20">image</span>(<span class="calepin-syntax-scope-20">path</span>(<span class="calepin-syntax-scope-3">"cover.webp"</span>)),
   body: [Text over the photograph],
 ))</code></pre></div><p>When Mosaic is imported as a package, wrap an asset of the calling project in a native <code>path</code> value, as above. A bare string would resolve relative to the package instead.</p><p><strong>Scrims</strong></p><p>A <code>scrim</code> paints a layer over the picture and under whatever text is composed on top of it, which is how a photograph is quieted enough to read against. It takes an ordinary Typst paint, so it accepts exactly what a <code>fill</code> accepts.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-1">// Darken the whole picture evenly.</span>
-#mosaic.components.<span class="calepin-syntax-scope-8">image</span>(
-  <span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"cover.webp"</span>),
-  scrim: black.<span class="calepin-syntax-scope-8">transparentize</span>(<span class="calepin-syntax-scope-9">55%</span>),
+#mosaic.components.<span class="calepin-syntax-scope-20">image</span>(
+  <span class="calepin-syntax-scope-20">path</span>(<span class="calepin-syntax-scope-3">"cover.webp"</span>),
+  scrim: black.<span class="calepin-syntax-scope-20">transparentize</span>(<span class="calepin-syntax-scope-23">55%</span>),
 )
 
 <span class="calepin-syntax-scope-1">// Darken only the band the text occupies.</span>
-#mosaic.components.<span class="calepin-syntax-scope-8">image</span>(
-  <span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"cover.webp"</span>),
-  scrim: gradient.<span class="calepin-syntax-scope-8">linear</span>(
-    black.<span class="calepin-syntax-scope-8">transparentize</span>(<span class="calepin-syntax-scope-9">20%</span>), black.<span class="calepin-syntax-scope-8">transparentize</span>(<span class="calepin-syntax-scope-9">100%</span>),
-    angle: <span class="calepin-syntax-scope-9">90deg</span>,
+#mosaic.components.<span class="calepin-syntax-scope-20">image</span>(
+  <span class="calepin-syntax-scope-20">path</span>(<span class="calepin-syntax-scope-3">"cover.webp"</span>),
+  scrim: gradient.<span class="calepin-syntax-scope-20">linear</span>(
+    black.<span class="calepin-syntax-scope-20">transparentize</span>(<span class="calepin-syntax-scope-23">20%</span>), black.<span class="calepin-syntax-scope-20">transparentize</span>(<span class="calepin-syntax-scope-23">100%</span>),
+    angle: <span class="calepin-syntax-scope-23">90deg</span>,
   ),
-)</code></pre></div><p>Without a scrim this returns the native image element directly, unwrapped.</p><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">image(
-  source: str | path | bytes,
-  width: auto | length | relative = 100%,
-  height: auto | length | relative | fraction = 100%,
-  fit: str = "cover",
-  scrim: none | color | gradient | tiling = none,
-  ..native: arguments
-) -> content</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>source</code></p><ul><li>Type: <code>str</code> or <code>path</code> or <code>bytes</code></li><li>Native image source. Use <code>path(...)</code> for an asset in the calling project.</li></ul></li><li><p><code>width</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>relative</code></li><li>Default: <code data-lang="typc"><span style="color: #b60157">100%</span></code></li><li>Width of the image area. Defaults to filling the container.</li></ul></li><li><p><code>height</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>relative</code> or <code>fraction</code></li><li>Default: <code data-lang="typc"><span style="color: #b60157">100%</span></code></li><li>Height of the image area. Defaults to filling the container.</li></ul></li><li><p><code>fit</code></p><ul><li>Type: <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"cover"</span></code></li><li>Native Typst fitting mode: <code>"cover"</code> fills and crops, <code>"contain"</code> fits the whole picture inside.</li></ul></li><li><p><code>scrim</code></p><ul><li>Type: <code>none</code> or <code>color</code> or <code>gradient</code> or <code>tiling</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>Paint layered over the picture and under any text composed on top of it. Accepts whatever a native <code>fill</code> accepts.</li></ul></li><li><p><code>..native</code></p><ul><li>Type: <code>arguments</code></li><li>Further arguments forwarded unchanged to native Typst <code>image</code>, such as <code>alt</code>, <code>format</code>, <code>page</code>, and <code>scaling</code>.</li></ul></li></ul><h2 id="figure">figure</h2><p>Creates a centered, captioned figure sized to its cell.</p><p>This is the in-cell counterpart to the <a href="../slides/image.html">image layout</a>. Use the layout when one picture is the whole point of a slide; use this when a figure shares the slide with other content, most often as one of two side by side.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-8">slide</span>(layout: <span class="calepin-syntax-scope-2">"content"</span>, columns: <span class="calepin-syntax-scope-9">2</span>)[== Before and after][
-  #mosaic.components.<span class="calepin-syntax-scope-8">figure</span>(<span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"before.png"</span>), caption: [Baseline])
+)</code></pre></div><p>Without a scrim this returns the native image element directly, unwrapped.</p><strong style="display: block">Arguments</strong><table><tr><td><code>source</code></td><td><code>str | path | bytes</code><br>Native image source. Use <code>path(...)</code> for an asset in the calling project.</td></tr><tr><td><code>width</code></td><td><code>auto | length | relative</code><br>Width of the image area. Defaults to filling the container.</td></tr><tr><td><code>height</code></td><td><code>auto | length | relative | fraction</code><br>Height of the image area. Defaults to filling the container.</td></tr><tr><td><code>fit</code></td><td><code>str</code><br>Native Typst fitting mode: <code>"cover"</code> fills and crops, <code>"contain"</code> fits the whole picture inside.</td></tr><tr><td><code>scrim</code></td><td><code>none | color | gradient | tiling</code><br>Paint layered over the picture and under any text composed on top of it. Accepts whatever a native <code>fill</code> accepts.</td></tr><tr><td><code>..native</code></td><td><code>arguments</code><br>Further arguments forwarded unchanged to native Typst <code>image</code>, such as <code>alt</code>, <code>format</code>, <code>page</code>, and <code>scaling</code>.</td></tr></table><h2 id="figure">Creates a centered, captioned figure sized to its cell.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">figure(
+  body,
+  caption: none,
+  fit: "contain",
+  width: 100%,
+  height: auto,
+  scrim: none,
+  ..native
+) -> content</code></pre></div><strong style="display: block">Description</strong><p>This is the in-cell counterpart to the <a href="../slides/image.html">image layout</a>. Use the layout when one picture is the whole point of a slide; use this when a figure shares the slide with other content, most often as one of two side by side.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-20">slide</span>(layout: <span class="calepin-syntax-scope-3">"content"</span>, columns: <span class="calepin-syntax-scope-23">2</span>)[== Before and after][
+  #mosaic.components.<span class="calepin-syntax-scope-20">figure</span>(<span class="calepin-syntax-scope-20">path</span>(<span class="calepin-syntax-scope-3">"before.png"</span>), caption: [Baseline])
 ][
-  #mosaic.components.<span class="calepin-syntax-scope-8">figure</span>(<span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"after.png"</span>), caption: [After the reform])
-]</code></pre></div><p><strong>Pictures</strong></p><p>Given an image source, this differs from <code>mosaic.components.image</code> in its defaults, which are the ones a chart or a photograph in a cell wants rather than the ones a full-bleed background wants: <code>fit</code> is <code>"contain"</code>, so the picture is never cropped, and the result is centered in its cell.</p><p>The default <code>height: auto</code> gives the picture the cell’s full height, less whatever the caption and its gap consume. Nothing has to be measured by hand, and adjacent cells agree: each picture is as large as its own aspect ratio allows, and the captions share one baseline at the foot of the cells.</p><p><strong>Other content</strong></p><p>A table, a chart drawn in code, or a diagram is passed as content instead of a source. Such a body cannot be re-fitted the way a picture can, so it is laid out at the cell’s width and then scaled as a whole if it is still too tall, exactly as <code>mosaic.fit</code> does. Its own arrangement is preserved, the caption keeps the size the deck gave it, and a body that already fits is left alone. It is never magnified past its natural size.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-8">figure</span>(
-  <span class="calepin-syntax-scope-8">table</span>(columns: <span class="calepin-syntax-scope-9">3</span>, <span class="calepin-syntax-scope-10">..</span>cells),
+  #mosaic.components.<span class="calepin-syntax-scope-20">figure</span>(<span class="calepin-syntax-scope-20">path</span>(<span class="calepin-syntax-scope-3">"after.png"</span>), caption: [After the reform])
+]</code></pre></div><p><strong>Pictures</strong></p><p>Given an image source, this differs from <code>mosaic.components.image</code> in its defaults, which are the ones a chart or a photograph in a cell wants rather than the ones a full-bleed background wants: <code>fit</code> is <code>"contain"</code>, so the picture is never cropped, and the result is centered in its cell.</p><p>The default <code>height: auto</code> gives the picture the cell’s full height, less whatever the caption and its gap consume. Nothing has to be measured by hand, and adjacent cells agree: each picture is as large as its own aspect ratio allows, and the captions share one baseline at the foot of the cells.</p><p><strong>Other content</strong></p><p>A table, a chart drawn in code, or a diagram is passed as content instead of a source. Such a body cannot be re-fitted the way a picture can, so it is laid out at the cell’s width and then scaled as a whole if it is still too tall, exactly as <code>mosaic.fit</code> does. Its own arrangement is preserved, the caption keeps the size the deck gave it, and a body that already fits is left alone. It is never magnified past its natural size.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-20">figure</span>(
+  <span class="calepin-syntax-scope-20">table</span>(columns: <span class="calepin-syntax-scope-23">3</span>, <span class="calepin-syntax-scope-24">..</span>cells),
   caption: [Estimates by specification],
   kind: table,
-)</code></pre></div><p>A content body that does not fill its cell sits at the top of it and is captioned directly beneath itself, rather than stretching and captioning at the foot of the cell as a picture does.</p><p>Scaling a table also costs it the automatic <code>kind</code> a native <code>figure</code> would have detected, so state <code>kind: table</code> for the table numbering and the “Table” supplement. Further arguments go to the native <code>figure</code> here, and to the native <code>image</code> for a picture source.</p><p><strong>Height</strong></p><p><code>auto</code> reads the size of the cell, not the space left over inside it, so a figure that follows prose in the same cell needs an explicit height:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-8">slide</span>(layout: <span class="calepin-syntax-scope-2">"content"</span>, columns: <span class="calepin-syntax-scope-9">2</span>)[== Two revenues][
-  <span class="calepin-syntax-scope-10">-</span> Payroll taxes carry the system
-  <span class="calepin-syntax-scope-10">-</span> Consumption taxes are regressive
-  #mosaic.components.<span class="calepin-syntax-scope-8">figure</span>(<span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"photo.jpg"</span>), height: <span class="calepin-syntax-scope-9">50%</span>)
+)</code></pre></div><p>A content body that does not fill its cell sits at the top of it and is captioned directly beneath itself, rather than stretching and captioning at the foot of the cell as a picture does.</p><p>Scaling a table also costs it the automatic <code>kind</code> a native <code>figure</code> would have detected, so state <code>kind: table</code> for the table numbering and the “Table” supplement. Further arguments go to the native <code>figure</code> here, and to the native <code>image</code> for a picture source.</p><p><strong>Height</strong></p><p><code>auto</code> reads the size of the cell, not the space left over inside it, so a figure that follows prose in the same cell needs an explicit height:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-20">slide</span>(layout: <span class="calepin-syntax-scope-3">"content"</span>, columns: <span class="calepin-syntax-scope-23">2</span>)[== Two revenues][
+  <span class="calepin-syntax-scope-25">-</span> Payroll taxes carry the system
+  <span class="calepin-syntax-scope-25">-</span> Consumption taxes are regressive
+  #mosaic.components.<span class="calepin-syntax-scope-20">figure</span>(<span class="calepin-syntax-scope-20">path</span>(<span class="calepin-syntax-scope-3">"photo.jpg"</span>), height: <span class="calepin-syntax-scope-23">50%</span>)
 ][
-  #mosaic.components.<span class="calepin-syntax-scope-8">figure</span>(<span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"chart.png"</span>), caption: [Shares since 1980])
-]</code></pre></div><p>An explicit height sizes the picture area, and the caption follows directly beneath it rather than sitting at the foot of the cell. Such a figure takes only the height it was given, so it leaves whatever shares its cell where it was.</p><p><strong>Captions</strong></p><p>A <code>caption</code> composes a native Typst <code>figure</code>, so it takes the deck’s own <code>show figure.caption</code> styling, figure numbering, and references. Switch the numbering off with an ordinary <code>set figure(numbering: none)</code>. Without a caption no <code>figure</code> is involved: the body is centered and sized, nothing more.</p><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">figure(
-  body: content | str | path | bytes,
-  caption: content | none = none,
-  fit: str = "contain",
-  width: auto | length | relative = 100%,
-  height: auto | length | relative | fraction = auto,
-  scrim: none | color | gradient | tiling = none,
-  ..native: arguments
-) -> content</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>body</code></p><ul><li>Type: <code>content</code> or <code>str</code> or <code>path</code> or <code>bytes</code></li><li>The figure’s body: an image source, or finished content such as a table or a diagram. Use <code>path(...)</code> for an image asset in the calling project.</li></ul></li><li><p><code>caption</code></p><ul><li>Type: <code>content</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>Caption composed beneath the body.</li></ul></li><li><p><code>fit</code></p><ul><li>Type: <code>str</code></li><li>Default: <code data-lang="typc"><span style="color: #198810">"contain"</span></code></li><li>How a picture fills its area. <code>"contain"</code> fits the whole picture inside it, which is what a chart or a screenshot needs; <code>"cover"</code> fills the area and crops the overhang. Rejected for a content body, which is scaled rather than fitted.</li></ul></li><li><p><code>width</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>relative</code></li><li>Default: <code data-lang="typc"><span style="color: #b60157">100%</span></code></li><li>Width of the figure’s body.</li></ul></li><li><p><code>height</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>relative</code> or <code>fraction</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Height of the figure’s body. <code>auto</code> takes the cell’s height less the caption, which requires the figure to be the cell’s own content.</li></ul></li><li><p><code>scrim</code></p><ul><li>Type: <code>none</code> or <code>color</code> or <code>gradient</code> or <code>tiling</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>Paint layered over a picture. Accepts whatever a native <code>fill</code> accepts, and is rejected for a content body.</li></ul></li><li><p><code>..native</code></p><ul><li>Type: <code>arguments</code></li><li>Further arguments forwarded unchanged to the native element this is built from: <code>image</code> for a picture source, taking <code>alt</code>, <code>format</code>, <code>page</code>, and <code>scaling</code>; <code>figure</code> for a content body, taking <code>kind</code>, <code>supplement</code>, and <code>numbering</code>.</li></ul></li></ul></div>
+  #mosaic.components.<span class="calepin-syntax-scope-20">figure</span>(<span class="calepin-syntax-scope-20">path</span>(<span class="calepin-syntax-scope-3">"chart.png"</span>), caption: [Shares since 1980])
+]</code></pre></div><p>An explicit height sizes the picture area, and the caption follows directly beneath it rather than sitting at the foot of the cell. Such a figure takes only the height it was given, so it leaves whatever shares its cell where it was.</p><p><strong>Captions</strong></p><p>A <code>caption</code> composes a native Typst <code>figure</code>, so it takes the deck’s own <code>show figure.caption</code> styling, figure numbering, and references. Switch the numbering off with an ordinary <code>set figure(numbering: none)</code>. Without a caption no <code>figure</code> is involved: the body is centered and sized, nothing more.</p><strong style="display: block">Arguments</strong><table><tr><td><code>body</code></td><td><code>content | str | path | bytes</code><br>The figure’s body: an image source, or finished content such as a table or a diagram. Use <code>path(...)</code> for an image asset in the calling project.</td></tr><tr><td><code>caption</code></td><td><code>content | none</code><br>Caption composed beneath the body.</td></tr><tr><td><code>fit</code></td><td><code>str</code><br>How a picture fills its area. <code>"contain"</code> fits the whole picture inside it, which is what a chart or a screenshot needs; <code>"cover"</code> fills the area and crops the overhang. Rejected for a content body, which is scaled rather than fitted.</td></tr><tr><td><code>width</code></td><td><code>auto | length | relative</code><br>Width of the figure’s body.</td></tr><tr><td><code>height</code></td><td><code>auto | length | relative | fraction</code><br>Height of the figure’s body. <code>auto</code> takes the cell’s height less the caption, which requires the figure to be the cell’s own content.</td></tr><tr><td><code>scrim</code></td><td><code>none | color | gradient | tiling</code><br>Paint layered over a picture. Accepts whatever a native <code>fill</code> accepts, and is rejected for a content body.</td></tr><tr><td><code>..native</code></td><td><code>arguments</code><br>Further arguments forwarded unchanged to the native element this is built from: <code>image</code> for a picture source, taking <code>alt</code>, <code>format</code>, <code>page</code>, and <code>scaling</code>; <code>figure</code> for a content body, taking <code>kind</code>, <code>supplement</code>, and <code>numbering</code>.</td></tr></table>
         </main>
 
         <aside class="calepin-website-toc is-floating">
@@ -3704,21 +3888,23 @@ html[data-theme="dark"] .mosaic-diagram {
             <nav aria-label="On this page">
                 <ul>
 
-                    <li class="level-2"><a href="#card">card</a></li>
+                    <li class="level-2"><a href="#contents">Contents</a></li>
 
-                    <li class="level-2"><a href="#callout">callout</a></li>
+                    <li class="level-2"><a href="#card">Wraps content in a clipped, semantically styled block.</a></li>
 
-                    <li class="level-2"><a href="#badge">badge</a></li>
+                    <li class="level-2"><a href="#callout">Creates a callout with a semantic side stripe.</a></li>
 
-                    <li class="level-2"><a href="#quote">quote</a></li>
+                    <li class="level-2"><a href="#badge">Creates a compact inline badge.</a></li>
 
-                    <li class="level-2"><a href="#divider">divider</a></li>
+                    <li class="level-2"><a href="#quote">Creates a quotation treatment with optional attribution.</a></li>
 
-                    <li class="level-2"><a href="#progress">progress</a></li>
+                    <li class="level-2"><a href="#divider">Creates a horizontal divider, optionally split around a title.</a></li>
 
-                    <li class="level-2"><a href="#image">image</a></li>
+                    <li class="level-2"><a href="#progress">Displays progress through logical slides or semantic sections in the deck.</a></li>
 
-                    <li class="level-2"><a href="#figure">figure</a></li>
+                    <li class="level-2"><a href="#image">Creates a slide-sized native Typst image with an optional scrim.</a></li>
+
+                    <li class="level-2"><a href="#figure">Creates a centered, captioned figure sized to its cell.</a></li>
 
                 </ul>
             </nav>
@@ -5010,6 +5196,9 @@ html[data-theme="dark"] .mosaic-diagram {
 
   // ------------------------------------------------------ sidebar sections
 
+  // Only one section is open at a time, but "section" means siblings: opening a
+  // nested subsection must not fold the parent it lives in, and must only fold
+  // its own siblings.
   function initSidebarSections() {
     const sections = Array.from(
       document.querySelectorAll(".calepin-website-sidebar-section"),
@@ -5020,7 +5209,9 @@ html[data-theme="dark"] .mosaic-diagram {
       section.addEventListener("toggle", () => {
         if (!section.open) return;
         sections.forEach((other) => {
-          if (other !== section) other.removeAttribute("open");
+          if (other === section) return;
+          if (other.parentElement !== section.parentElement) return;
+          other.removeAttribute("open");
         });
       });
     });

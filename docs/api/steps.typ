@@ -1,9 +1,5 @@
-#import "/api/_module.typ": api-module
+#import "/api/_page.typ": api-page
 
-#api-module(
-  "Incremental steps",
-  (
-    "/api/modules/incremental-command.typ",
-    "/api/modules/pause-command.typ",
-  ),
-)
+#show: api-page.with("Incremental steps")
+
+#include "/api/generated/steps/index.typ"

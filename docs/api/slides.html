@@ -107,6 +107,14 @@
   --calepin-color-border: #d8dee6;
   --calepin-color-accent: #1c9bad;
   --calepin-color-accent-hover: #16808f;
+  /* Accent as a filled background behind `--calepin-color-accent-contrast`
+     text. Darker than the accent used for links and borders, so white label
+     text clears the WCAG AA 4.5:1 ratio. Derived from the accent so a theme
+     that sets only `--calepin-color-accent` keeps its buttons in family. */
+  --calepin-color-accent-strong: #167987;
+  --calepin-color-accent-strong: color-mix(in srgb, var(--calepin-color-accent) 78%, #000000);
+  --calepin-color-accent-strong-hover: #11606b;
+  --calepin-color-accent-strong-hover: color-mix(in srgb, var(--calepin-color-accent) 62%, #000000);
   --calepin-color-accent-soft: rgba(28, 155, 173, 0.12);
   --calepin-color-accent-soft: color-mix(in srgb, var(--calepin-color-accent) 12%, transparent);
   --calepin-color-accent-contrast: #ffffff;
@@ -205,6 +213,8 @@ html[data-theme="dark"] {
   --calepin-color-border: #344252;
   --calepin-color-accent: #67d4df;
   --calepin-color-accent-hover: #8be4ec;
+  --calepin-color-accent-strong: var(--calepin-color-accent);
+  --calepin-color-accent-strong-hover: var(--calepin-color-accent-hover);
   --calepin-color-accent-contrast: #071316;
   --calepin-color-link: var(--calepin-color-accent);
   --calepin-color-link-hover: var(--calepin-color-accent-hover);
@@ -238,6 +248,8 @@ html[data-theme="dark"] {
     --calepin-color-border: #344252;
     --calepin-color-accent: #67d4df;
     --calepin-color-accent-hover: #8be4ec;
+    --calepin-color-accent-strong: var(--calepin-color-accent);
+    --calepin-color-accent-strong-hover: var(--calepin-color-accent-hover);
     --calepin-color-accent-contrast: #071316;
     --calepin-color-link: var(--calepin-color-accent);
     --calepin-color-link-hover: var(--calepin-color-accent-hover);
@@ -257,7 +269,11 @@ html[data-theme="dark"] {
   }
 }
 
-:root,
+/* `:root:root` matches the specificity Pico uses for its own light palette
+   (`:root:not([data-theme=dark])`), which otherwise wins over a plain `:root`
+   and leaves a visitor who has not picked a theme with stock Pico colors
+   instead of the theme's. */
+:root:root,
 html[data-theme="light"],
 html[data-theme="dark"] {
   --pico-background-color: var(--calepin-color-background);
@@ -269,12 +285,12 @@ html[data-theme="dark"] {
   --pico-code-background-color: var(--calepin-surface-code);
   --pico-code-color: var(--calepin-color-text);
   --pico-primary: var(--calepin-color-accent);
-  --pico-primary-background: var(--calepin-color-accent);
-  --pico-primary-border: var(--calepin-color-accent);
+  --pico-primary-background: var(--calepin-color-accent-strong);
+  --pico-primary-border: var(--calepin-color-accent-strong);
   --pico-primary-underline: transparent;
   --pico-primary-hover: var(--calepin-color-accent-hover);
-  --pico-primary-hover-background: var(--calepin-color-accent-hover);
-  --pico-primary-hover-border: var(--calepin-color-accent-hover);
+  --pico-primary-hover-background: var(--calepin-color-accent-strong-hover);
+  --pico-primary-hover-border: var(--calepin-color-accent-strong-hover);
   --pico-primary-hover-underline: transparent;
   --pico-primary-focus: color-mix(in srgb, var(--calepin-color-focus) 40%, transparent);
   --pico-primary-inverse: var(--calepin-color-accent-contrast);
@@ -470,15 +486,15 @@ figure > img {
 
 .landing-button-primary,
 .landing-button-primary:visited {
-  border-color: var(--calepin-color-accent);
-  background: var(--calepin-color-accent);
+  border-color: var(--calepin-color-accent-strong);
+  background: var(--calepin-color-accent-strong);
   color: var(--calepin-color-accent-contrast);
 }
 
 .landing-button-primary:hover,
 .landing-button-primary:focus-visible {
-  border-color: var(--calepin-color-accent-hover);
-  background: var(--calepin-color-accent-hover);
+  border-color: var(--calepin-color-accent-strong-hover);
+  background: var(--calepin-color-accent-strong-hover);
   color: var(--calepin-color-accent-contrast);
 }
 
@@ -558,26 +574,44 @@ figure > img {
   --calepin-syntax-foreground: #003b4f;
   --calepin-syntax-background: #f7f7f5;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #003b4f;
-  --scope-2-foreground: #003b4f;
-  --scope-3-foreground: #8f5902;
-  --scope-4-foreground: #003b4f;
-  --scope-5-foreground: #003b4f;
-  --scope-6-foreground: #003b4f;
+  --scope-1-foreground: #5e5e5e;
+  --scope-2-foreground: #5e5e5e;
+  --scope-3-foreground: #20794d;
+  --scope-4-foreground: #20794d;
+  --scope-5-foreground: #8f5902;
+  --scope-6-foreground: #8b41b1;
   --scope-7-foreground: #8b41b1;
-  --scope-8-foreground: #003b4f;
-  --scope-9-foreground: #ad0000;
+  --scope-8-foreground: #8b41b1;
+  --scope-9-foreground: #8b41b1;
   --scope-10-foreground: #8b41b1;
-  --scope-11-foreground: #003b4f;
-  --scope-12-foreground: #003b4f;
-  --scope-13-foreground: #003b4f;
-  --scope-13-font-weight: 700;
-  --fallback-14-foreground: #5e5e5e;
-  --fallback-15-foreground: #20794d;
-  --fallback-16-foreground: #ad0000;
-  --fallback-17-foreground: #0b6e79;
-  --fallback-18-foreground: #8b41b1;
-  --fallback-19-foreground: #667321;
+  --scope-11-foreground: #8f5902;
+  --scope-12-foreground: #8f5902;
+  --scope-13-foreground: #8f5902;
+  --scope-14-foreground: #0b6e79;
+  --scope-15-foreground: #0b6e79;
+  --scope-16-foreground: #0b6e79;
+  --scope-17-foreground: #0b6e79;
+  --scope-18-foreground: #0b6e79;
+  --scope-19-foreground: #8b41b1;
+  --scope-20-foreground: #4759ab;
+  --scope-21-foreground: #4759ab;
+  --scope-22-foreground: #4759ab;
+  --scope-23-foreground: #ad0000;
+  --scope-24-foreground: #5e5e5e;
+  --scope-25-foreground: #5e5e5e;
+  --scope-26-foreground: #5e5e5e;
+  --scope-27-foreground: #003b4f;
+  --scope-28-foreground: #667321;
+  --scope-29-foreground: #667321;
+  --scope-30-foreground: #667321;
+  --scope-31-foreground: #003b4f;
+  --scope-31-font-weight: 700;
+  --fallback-32-foreground: #5e5e5e;
+  --fallback-33-foreground: #20794d;
+  --fallback-34-foreground: #ad0000;
+  --fallback-35-foreground: #0b6e79;
+  --fallback-36-foreground: #8b41b1;
+  --fallback-37-foreground: #667321;
 
 }
 
@@ -667,37 +701,127 @@ pre code .calepin-syntax-scope-12 {
 .sourceCode .calepin-syntax-scope-13,
 pre code .calepin-syntax-scope-13 {
   color: var(--scope-13-foreground);
-  font-weight: var(--scope-13-font-weight);
 }
 
-.sourceCode .calepin-syntax-fallback-14,
-pre code .calepin-syntax-fallback-14 {
-  color: var(--fallback-14-foreground);
+.sourceCode .calepin-syntax-scope-14,
+pre code .calepin-syntax-scope-14 {
+  color: var(--scope-14-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-15,
-pre code .calepin-syntax-fallback-15 {
-  color: var(--fallback-15-foreground);
+.sourceCode .calepin-syntax-scope-15,
+pre code .calepin-syntax-scope-15 {
+  color: var(--scope-15-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-16,
-pre code .calepin-syntax-fallback-16 {
-  color: var(--fallback-16-foreground);
+.sourceCode .calepin-syntax-scope-16,
+pre code .calepin-syntax-scope-16 {
+  color: var(--scope-16-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-17,
-pre code .calepin-syntax-fallback-17 {
-  color: var(--fallback-17-foreground);
+.sourceCode .calepin-syntax-scope-17,
+pre code .calepin-syntax-scope-17 {
+  color: var(--scope-17-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-18,
-pre code .calepin-syntax-fallback-18 {
-  color: var(--fallback-18-foreground);
+.sourceCode .calepin-syntax-scope-18,
+pre code .calepin-syntax-scope-18 {
+  color: var(--scope-18-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-19,
-pre code .calepin-syntax-fallback-19 {
-  color: var(--fallback-19-foreground);
+.sourceCode .calepin-syntax-scope-19,
+pre code .calepin-syntax-scope-19 {
+  color: var(--scope-19-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-20,
+pre code .calepin-syntax-scope-20 {
+  color: var(--scope-20-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-21,
+pre code .calepin-syntax-scope-21 {
+  color: var(--scope-21-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-22,
+pre code .calepin-syntax-scope-22 {
+  color: var(--scope-22-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-23,
+pre code .calepin-syntax-scope-23 {
+  color: var(--scope-23-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-24,
+pre code .calepin-syntax-scope-24 {
+  color: var(--scope-24-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-25,
+pre code .calepin-syntax-scope-25 {
+  color: var(--scope-25-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-26,
+pre code .calepin-syntax-scope-26 {
+  color: var(--scope-26-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-27,
+pre code .calepin-syntax-scope-27 {
+  color: var(--scope-27-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-28,
+pre code .calepin-syntax-scope-28 {
+  color: var(--scope-28-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-29,
+pre code .calepin-syntax-scope-29 {
+  color: var(--scope-29-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-30,
+pre code .calepin-syntax-scope-30 {
+  color: var(--scope-30-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-31,
+pre code .calepin-syntax-scope-31 {
+  color: var(--scope-31-foreground);
+  font-weight: var(--scope-31-font-weight);
+}
+
+.sourceCode .calepin-syntax-fallback-32,
+pre code .calepin-syntax-fallback-32 {
+  color: var(--fallback-32-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-33,
+pre code .calepin-syntax-fallback-33 {
+  color: var(--fallback-33-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-34,
+pre code .calepin-syntax-fallback-34 {
+  color: var(--fallback-34-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-35,
+pre code .calepin-syntax-fallback-35 {
+  color: var(--fallback-35-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-36,
+pre code .calepin-syntax-fallback-36 {
+  color: var(--fallback-36-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-37,
+pre code .calepin-syntax-fallback-37 {
+  color: var(--fallback-37-foreground);
 }
 
 
@@ -758,26 +882,44 @@ html[data-theme="dark"] {
   --calepin-syntax-foreground: #d8e7ef;
   --calepin-syntax-background: #161b22;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #d8e7ef;
-  --scope-2-foreground: #d8e7ef;
-  --scope-3-foreground: #ffcc9c;
-  --scope-4-foreground: #d8e7ef;
-  --scope-5-foreground: #d8e7ef;
-  --scope-6-foreground: #d8e7ef;
+  --scope-1-foreground: #8b949e;
+  --scope-2-foreground: #8b949e;
+  --scope-3-foreground: #8fd694;
+  --scope-4-foreground: #8fd694;
+  --scope-5-foreground: #ffcc9c;
+  --scope-6-foreground: #c8a2f0;
   --scope-7-foreground: #c8a2f0;
-  --scope-8-foreground: #d8e7ef;
-  --scope-9-foreground: #ffb3a7;
+  --scope-8-foreground: #c8a2f0;
+  --scope-9-foreground: #c8a2f0;
   --scope-10-foreground: #c8a2f0;
-  --scope-11-foreground: #d8e7ef;
-  --scope-12-foreground: #d8e7ef;
-  --scope-13-foreground: #d8e7ef;
-  --scope-13-font-weight: 700;
-  --fallback-14-foreground: #8b949e;
-  --fallback-15-foreground: #8fd694;
-  --fallback-16-foreground: #ffb3a7;
-  --fallback-17-foreground: #7fd1de;
-  --fallback-18-foreground: #c8a2f0;
-  --fallback-19-foreground: #c3d86c;
+  --scope-11-foreground: #ffcc9c;
+  --scope-12-foreground: #ffcc9c;
+  --scope-13-foreground: #ffcc9c;
+  --scope-14-foreground: #7fd1de;
+  --scope-15-foreground: #7fd1de;
+  --scope-16-foreground: #7fd1de;
+  --scope-17-foreground: #7fd1de;
+  --scope-18-foreground: #7fd1de;
+  --scope-19-foreground: #c8a2f0;
+  --scope-20-foreground: #9db8ff;
+  --scope-21-foreground: #9db8ff;
+  --scope-22-foreground: #9db8ff;
+  --scope-23-foreground: #ffb3a7;
+  --scope-24-foreground: #b5bdc9;
+  --scope-25-foreground: #b5bdc9;
+  --scope-26-foreground: #b5bdc9;
+  --scope-27-foreground: #d8e7ef;
+  --scope-28-foreground: #c3d86c;
+  --scope-29-foreground: #c3d86c;
+  --scope-30-foreground: #c3d86c;
+  --scope-31-foreground: #d8e7ef;
+  --scope-31-font-weight: 700;
+  --fallback-32-foreground: #8b949e;
+  --fallback-33-foreground: #8fd694;
+  --fallback-34-foreground: #ffb3a7;
+  --fallback-35-foreground: #7fd1de;
+  --fallback-36-foreground: #c8a2f0;
+  --fallback-37-foreground: #c3d86c;
 
 }
 
@@ -800,26 +942,44 @@ html[data-theme="dark"] .calepin-copy-code:focus-visible {
   --calepin-syntax-foreground: #d8e7ef;
   --calepin-syntax-background: #161b22;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #d8e7ef;
-  --scope-2-foreground: #d8e7ef;
-  --scope-3-foreground: #ffcc9c;
-  --scope-4-foreground: #d8e7ef;
-  --scope-5-foreground: #d8e7ef;
-  --scope-6-foreground: #d8e7ef;
+  --scope-1-foreground: #8b949e;
+  --scope-2-foreground: #8b949e;
+  --scope-3-foreground: #8fd694;
+  --scope-4-foreground: #8fd694;
+  --scope-5-foreground: #ffcc9c;
+  --scope-6-foreground: #c8a2f0;
   --scope-7-foreground: #c8a2f0;
-  --scope-8-foreground: #d8e7ef;
-  --scope-9-foreground: #ffb3a7;
+  --scope-8-foreground: #c8a2f0;
+  --scope-9-foreground: #c8a2f0;
   --scope-10-foreground: #c8a2f0;
-  --scope-11-foreground: #d8e7ef;
-  --scope-12-foreground: #d8e7ef;
-  --scope-13-foreground: #d8e7ef;
-  --scope-13-font-weight: 700;
-  --fallback-14-foreground: #8b949e;
-  --fallback-15-foreground: #8fd694;
-  --fallback-16-foreground: #ffb3a7;
-  --fallback-17-foreground: #7fd1de;
-  --fallback-18-foreground: #c8a2f0;
-  --fallback-19-foreground: #c3d86c;
+  --scope-11-foreground: #ffcc9c;
+  --scope-12-foreground: #ffcc9c;
+  --scope-13-foreground: #ffcc9c;
+  --scope-14-foreground: #7fd1de;
+  --scope-15-foreground: #7fd1de;
+  --scope-16-foreground: #7fd1de;
+  --scope-17-foreground: #7fd1de;
+  --scope-18-foreground: #7fd1de;
+  --scope-19-foreground: #c8a2f0;
+  --scope-20-foreground: #9db8ff;
+  --scope-21-foreground: #9db8ff;
+  --scope-22-foreground: #9db8ff;
+  --scope-23-foreground: #ffb3a7;
+  --scope-24-foreground: #b5bdc9;
+  --scope-25-foreground: #b5bdc9;
+  --scope-26-foreground: #b5bdc9;
+  --scope-27-foreground: #d8e7ef;
+  --scope-28-foreground: #c3d86c;
+  --scope-29-foreground: #c3d86c;
+  --scope-30-foreground: #c3d86c;
+  --scope-31-foreground: #d8e7ef;
+  --scope-31-font-weight: 700;
+  --fallback-32-foreground: #8b949e;
+  --fallback-33-foreground: #8fd694;
+  --fallback-34-foreground: #ffb3a7;
+  --fallback-35-foreground: #7fd1de;
+  --fallback-36-foreground: #c8a2f0;
+  --fallback-37-foreground: #c3d86c;
 
   }
 
@@ -1738,7 +1898,7 @@ a:has(.calepin-nav-icon) {
   align-items: center;
   padding: 0.35rem 0.6rem;
   border-radius: var(--calepin-radius-sm);
-  background: var(--calepin-color-accent);
+  background: var(--calepin-color-accent-strong);
   color: var(--calepin-color-accent-contrast);
   font-size: 0.78rem;
   text-decoration: none;
@@ -2076,6 +2236,30 @@ html:not([data-theme]) {
 
 .calepin-website-sidebar nav details > ul {
   margin-bottom: 0;
+}
+
+/* Nested foldable subsections: indented under their parent, with a rule
+   marking the nesting level. Titles stay sentence-case so they read as page
+   groups rather than as another top-level section. */
+.calepin-website-sidebar-subsection {
+  margin-inline-start: 0.45rem;
+  padding-inline-start: 0.5rem;
+  border-inline-start: 1px solid var(--calepin-color-border);
+}
+
+.calepin-website-sidebar-subsection > summary,
+.calepin-website-sidebar-subsection-title {
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 600;
+}
+
+/* Unfolded subsections have no <details> to indent, so the title carries the
+   nesting instead. */
+.calepin-website-sidebar nav p.calepin-website-sidebar-subsection-title {
+  margin: 0.5rem 0 0.35rem;
+  padding-inline-start: 0.5rem;
 }
 
 .calepin-site-footer {
@@ -3233,7 +3417,7 @@ html[data-theme="dark"] .mosaic-diagram {
     <script src="../pagefind/pagefind-component-ui.js" type="module"></script>
 
 
-<script id="calepin-website-source-data" type="application/json">"#import \"/api/_module.typ\": api-module\n\n#api-module(\n  \"Slides\",\n  (\n    \"/api/modules/slide-command.typ\",\n    \"/api/modules/info.typ\",\n    \"/api/modules/note-command.typ\",\n    \"/api/modules/surface.typ\",\n    \"/api/modules/fit.typ\",\n  ),\n)\n"</script>
+<script id="calepin-website-source-data" type="application/json">"#import \"/api/_page.typ\": api-page\n\n#show: api-page.with(\"Slides\")\n\n#include \"/api/generated/slides/index.typ\"\n"</script>
 </head><body>
 
     <header class="calepin-website-topbar calepin-site-topbar">
@@ -3553,64 +3737,55 @@ html[data-theme="dark"] .mosaic-diagram {
             </nav>
         </aside>
         <main class="calepin-website-main calepin-content" data-pagefind-body>
-            <h1 id="slides">Slides</h1><p>The overview below links to each definition. Function definitions show signatures with parameter and return types; variables show their declared types. Descriptions and defaults follow.</p><div><ul><li><a href="#slide"><code>slide()</code></a></li><li><a href="#info"><code>info()</code></a></li><li><a href="#note"><code>note()</code></a></li><li><a href="#surface"><code>surface()</code></a></li><li><a href="#fit"><code>fit()</code></a></li></ul><h2 id="slide">slide</h2><p>Creates one logical slide command.</p><p>A logical slide is one unit of content, which may render as several physical frames once incremental steps are applied.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-8">slide</span>[
+            <h1 id="slides">Slides</h1><p>The contents below link to each definition. Function entries show the signature, then a description, then the parameters with their types and defaults; variable entries show the declared type.</p><nav role="doc-toc"><h2 id="contents">Contents</h2><ol style="list-style-type: none"><li><a href="#slide">Creates one logical slide command.</a></li><li><a href="#info">Reads what the deck knows about itself: the metadata declared on <code>setup</code>, and the position of the slide being rendered. This is what a custom composition reads instead of restating the deck, and what deck chrome reads instead of counting for itself.</a></li><li><a href="#note">Attaches non-rendering speaker notes to a logical slide.</a></li><li><a href="#fit">Scales one block of content to the space it is given.</a></li></ol></nav><h2 id="slide">Creates one logical slide command.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">slide(
+  layout: auto,
+  numbered: auto,
+  invert: false,
+  cells: (:),
+  background: auto,
+  foreground: auto,
+  ..bodies
+) -> content</code></pre></div><strong style="display: block">Description</strong><p>A logical slide is one unit of content, which may render as several physical frames once incremental steps are applied.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-20">slide</span>[
   == Structure
   Every slide resolves to a grid tree.
-]</code></pre></div><p><strong>Choosing a layout</strong></p><p>The selection is the one positional subject, so <code>slide("content", variant: "body")[...]</code> and <code>slide(layout: "content", variant: "body")[...]</code> are the same slide.</p><ul><li><code>auto</code>: the configured <code>content</code> layout. The default.</li><li><code>"content"</code>, <code>"title"</code>, <code>"section"</code>: the matching entry in <code>setup(layouts:)</code>. The name also determines numbering and the section lifecycle.</li><li>A <code>mosaic.layouts.*</code> value: used directly, carrying its own semantic name.</li><li>A raw <code>mosaic.grids.*</code> tree: used directly and treated as a content layout.</li></ul><p><strong>Supplying content</strong></p><p>Use one of the two forms, never both on the same slide:</p><ul><li>Positional bodies, filling cells in depth-first layout order.</li><li>A <code>cells:</code> dictionary keyed by cell id, which is order-independent and lets a slide skip cells.</li></ul><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-8">slide</span>(cells: (
+]</code></pre></div><p><strong>Choosing a layout</strong></p><p>The selection is the one positional subject, so <code>slide("content", variant: "body")[...]</code> and <code>slide(layout: "content", variant: "body")[...]</code> are the same slide.</p><ul><li><code>auto</code>: the configured <code>content</code> layout. The default.</li><li><code>"content"</code>, <code>"title"</code>, <code>"section"</code>: the matching entry in <code>setup(layouts:)</code>. The name also determines numbering and the section lifecycle.</li><li>A <code>mosaic.layouts.*</code> value: used directly, carrying its own semantic name.</li><li>A raw <code>mosaic.grids.*</code> tree: used directly and treated as a content layout.</li></ul><p><strong>Supplying content</strong></p><p>Use one of the two forms, never both on the same slide:</p><ul><li>Positional bodies, filling cells in depth-first layout order.</li><li>A <code>cells:</code> dictionary keyed by cell id, which is order-independent and lets a slide skip cells.</li></ul><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-20">slide</span>(cells: (
   header: [== Named cells],
   body: [Order does not matter here.],
-))</code></pre></div><p><strong>Planes</strong></p><p><code>background:</code> and <code>foreground:</code> are full-slide layers rather than grid cells, so they have parameters of their own. <code>auto</code> inherits the plane declared on <code>setup</code>, <code>none</code> suppresses it for this slide, and content overrides it.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-8">slide</span>(
+))</code></pre></div><p><strong>Planes</strong></p><p><code>background:</code> and <code>foreground:</code> are full-slide layers rather than grid cells, so they have parameters of their own. <code>auto</code> inherits the plane declared on <code>setup</code>, <code>none</code> suppresses it for this slide, and content overrides it.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-20">slide</span>(
   cells: (body: [Over a photograph.]),
-  background: mosaic.components.<span class="calepin-syntax-scope-8">image</span>(<span class="calepin-syntax-scope-2">"cover.webp"</span>),
-)</code></pre></div><p><strong>Layout fields</strong></p><p>Any other named argument is a field of the selected layout, so the slide refines the configured layout rather than replacing it, and fields the theme set survive:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-8">slide</span>(layout: <span class="calepin-syntax-scope-2">"title"</span>, variant: <span class="calepin-syntax-scope-2">"academic"</span>)</code></pre></div><p>This requires <code>layout: auto</code> or a layout name. With an explicit <code>mosaic.layouts.*</code> value the constructor is already at hand, so pass the fields to it instead.</p><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">slide(
-  layout: auto | str | dictionary = auto,
-  numbered: auto | bool = auto,
-  invert: bool = false,
-  cells: dictionary = (:),
-  background: auto | content | none = auto,
-  foreground: auto | content | none = auto,
-  ..bodies: arguments
-) -> content</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>layout</code></p><ul><li>Type: <code>auto</code> or <code>str</code> or <code>dictionary</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Which layout resolves this slide: <code>auto</code> for the configured content layout, one of the names <code>"content"</code>, <code>"title"</code>, <code>"section"</code>, or <code>"image"</code>, a <code>mosaic.layouts.*</code> value, or a raw <code>mosaic.grids.*</code> tree. Also accepted as the leading positional argument.</li></ul></li><li><p><code>numbered</code></p><ul><li>Type: <code>auto</code> or <code>bool</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Whether the slide contributes to logical slide numbering. <code>auto</code> numbers content layouts and leaves title and section layouts unnumbered; an explicit boolean always wins.</li></ul></li><li><p><code>invert</code></p><ul><li>Type: <code>bool</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">false</span></code></li><li>Whether to invert this slide’s polarity: the slide ground takes the deck’s text color, type is knocked out in the canvas color, and the muted and line colors are derived to match. Works with any layout, so an inverted title, section plate, or big-number slide are all one flag. Theme rules that pin an explicit fill other than the deck text color are not rewritten; override those on their own labels where needed.</li></ul></li><li><p><code>cells</code></p><ul><li>Type: <code>dictionary</code></li><li>Default: <code data-lang="typc">(:)</code></li><li>Cell bodies keyed by cell id. Mutually exclusive with positional bodies.</li></ul></li><li><p><code>background</code></p><ul><li>Type: <code>auto</code> or <code>content</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Full-slide layer drawn behind the grid. <code>auto</code> inherits the deck background from <code>setup</code>, <code>none</code> suppresses it.</li></ul></li><li><p><code>foreground</code></p><ul><li>Type: <code>auto</code> or <code>content</code> or <code>none</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Full-slide layer drawn over the grid. <code>auto</code> inherits the deck foreground from <code>setup</code>, <code>none</code> suppresses it.</li></ul></li><li><p><code>..bodies</code></p><ul><li>Type: <code>arguments</code></li><li>Positional cell bodies in depth-first layout order, plus any named arguments forwarded as fields of the selected layout.</li></ul></li></ul><h2 id="info">info</h2><p>Reads what the deck knows about itself: the metadata declared on <code>setup</code>, and the position of the slide being rendered. This is what a custom composition reads instead of restating the deck, and what deck chrome reads instead of counting for itself.</p><p>Returns a dictionary with six fields. Four are the deck metadata, exactly as <code>setup</code> received it:</p><ul><li><code>title</code>: the deck title.</li><li><code>subtitle</code>: the deck subtitle.</li><li><code>authors</code>: always an array of resolved author records, whether the deck wrote a bare name or a full <code>layouts.author</code> record. Every entry carries <code>name</code>, <code>affiliations</code>, <code>email</code>, <code>orcid</code>, and <code>corresponding</code>.</li><li><code>date</code>: the deck date.</li></ul><p>Two are the position of the slide being rendered, which is what makes the reader contextual:</p><ul><li><code>slide</code>: a dictionary of <code>number</code>, <code>total</code>, and <code>numbered</code>. The count is of logical slides rather than pages, so one incremental slide is one number however many frames it prints. Unnumbered slides (titles and sections, by default) are passed over by the count and report <code>numbered: false</code>, which is the signal deck furniture uses to quiet itself on those pages.</li><li><code>section</code>: a dictionary of <code>number</code>, <code>total</code>, and <code>title</code>. The number is the current section’s, counting slides that use the <code>section</code> layout, and the title is that section’s own text with any heading stripped. Before the deck’s first section slide the number is <code>0</code> and the title is <code>none</code>.</li></ul><p>Call it inside a <code>context</code> block (slide bodies, planes, and show rules already are one):</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-8">slide</span>(
-  background: mosaic.components.<span class="calepin-syntax-scope-8">image</span>(<span class="calepin-syntax-scope-2">"cover.webp"</span>, scrim: black.<span class="calepin-syntax-scope-8">transparentize</span>(<span class="calepin-syntax-scope-9">45%</span>)),
+  background: mosaic.components.<span class="calepin-syntax-scope-20">image</span>(<span class="calepin-syntax-scope-3">"cover.webp"</span>),
+)</code></pre></div><p><strong>Layout fields</strong></p><p>Any other named argument is a field of the selected layout, so the slide refines the configured layout rather than replacing it, and fields the theme set survive:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-20">slide</span>(layout: <span class="calepin-syntax-scope-3">"title"</span>, variant: <span class="calepin-syntax-scope-3">"academic"</span>)</code></pre></div><p>This requires <code>layout: auto</code> or a layout name. With an explicit <code>mosaic.layouts.*</code> value the constructor is already at hand, so pass the fields to it instead.</p><strong style="display: block">Arguments</strong><table><tr><td><code>layout</code></td><td><code>auto | str | dictionary</code><br>Which layout resolves this slide: <code>auto</code> for the configured content layout, one of the names <code>"content"</code>, <code>"title"</code>, <code>"section"</code>, or <code>"image"</code>, a <code>mosaic.layouts.*</code> value, or a raw <code>mosaic.grids.*</code> tree. Also accepted as the leading positional argument.</td></tr><tr><td><code>numbered</code></td><td><code>auto | bool</code><br>Whether the slide contributes to logical slide numbering. <code>auto</code> numbers every layout except title and section, which are deck chrome; an explicit boolean always wins.</td></tr><tr><td><code>invert</code></td><td><code>bool</code><br>Whether to invert this slide’s polarity: the slide ground takes the deck’s text color, type is knocked out in the canvas color, and the muted and line colors are derived to match. Works with any layout, so an inverted title, section plate, or big-number slide are all one flag. Cell text and components follow the inverted palette, including fills a theme pins on <code>&lt;mosaic-cell-*></code> labels; colors applied inside the content itself, such as an explicit <code>text(fill: ..)</code>, keep their own values.</td></tr><tr><td><code>cells</code></td><td><code>dictionary</code><br>Cell bodies keyed by cell id. Mutually exclusive with positional bodies.</td></tr><tr><td><code>background</code></td><td><code>auto | content | none</code><br>Full-slide layer drawn behind the grid. <code>auto</code> inherits the deck background from <code>setup</code>, <code>none</code> suppresses it.</td></tr><tr><td><code>foreground</code></td><td><code>auto | content | none</code><br>Full-slide layer drawn over the grid. <code>auto</code> inherits the deck foreground from <code>setup</code>, <code>none</code> suppresses it.</td></tr><tr><td><code>..bodies</code></td><td><code>arguments</code><br>Positional cell bodies in depth-first layout order, plus any named arguments forwarded as fields of the selected layout.</td></tr></table><h2 id="info">Reads what the deck knows about itself: the metadata declared on <code>setup</code>, and the position of the slide being rendered. This is what a custom composition reads instead of restating the deck, and what deck chrome reads instead of counting for itself.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">info() -> dictionary</code></pre></div><strong style="display: block">Description</strong><p>Returns a dictionary with six fields. Four are the deck metadata, exactly as <code>setup</code> received it:</p><ul><li><code>title</code>: the deck title.</li><li><code>subtitle</code>: the deck subtitle.</li><li><code>authors</code>: always an array of resolved author records, whether the deck wrote a bare name or a full <code>layouts.author</code> record. Every entry carries <code>name</code>, <code>affiliations</code>, <code>email</code>, <code>orcid</code>, and <code>corresponding</code>.</li><li><code>date</code>: the deck date.</li></ul><p>Two are the position of the slide being rendered, which is what makes the reader contextual:</p><ul><li><code>slide</code>: a dictionary of <code>number</code>, <code>total</code>, and <code>numbered</code>. The count is of logical slides rather than pages, so one incremental slide is one number however many frames it prints. Unnumbered slides (titles and sections, by default) are passed over by the count and report <code>numbered: false</code>, which is the signal deck furniture uses to quiet itself on those pages.</li><li><code>section</code>: a dictionary of <code>number</code>, <code>total</code>, and <code>title</code>. The number is the current section’s, counting slides that use the <code>section</code> layout, and the title is that section’s own text with any heading stripped. Before the deck’s first section slide the number is <code>0</code> and the title is <code>none</code>.</li></ul><p>Call it inside a <code>context</code> block (slide bodies, planes, and show rules already are one):</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-20">slide</span>(
+  background: mosaic.components.<span class="calepin-syntax-scope-20">image</span>(<span class="calepin-syntax-scope-3">"cover.webp"</span>, scrim: black.<span class="calepin-syntax-scope-20">transparentize</span>(<span class="calepin-syntax-scope-23">45%</span>)),
 )[
-  <span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">context</span> {
-    <span class="calepin-syntax-scope-4">let</span> deck <span class="calepin-syntax-scope-10">=</span> mosaic.<span class="calepin-syntax-scope-8">info</span>()
-    <span class="calepin-syntax-scope-8">place</span>(top <span class="calepin-syntax-scope-10">+</span> left, <span class="calepin-syntax-scope-8">text</span>(size: <span class="calepin-syntax-scope-9">2.2em</span>, weight: <span class="calepin-syntax-scope-2">"bold"</span>, deck.title))
-    <span class="calepin-syntax-scope-8">place</span>(bottom <span class="calepin-syntax-scope-10">+</span> left, deck.authors.<span class="calepin-syntax-scope-8">map</span>(author <span class="calepin-syntax-scope-10">=></span> author.name).<span class="calepin-syntax-scope-8">join</span>([, ]))
+  <span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">context</span> {
+    <span class="calepin-syntax-scope-6">let</span> deck <span class="calepin-syntax-scope-24">=</span> mosaic.<span class="calepin-syntax-scope-20">info</span>()
+    <span class="calepin-syntax-scope-20">place</span>(top <span class="calepin-syntax-scope-24">+</span> left, <span class="calepin-syntax-scope-20">text</span>(size: <span class="calepin-syntax-scope-23">2.2em</span>, weight: <span class="calepin-syntax-scope-3">"bold"</span>, deck.title))
+    <span class="calepin-syntax-scope-20">place</span>(bottom <span class="calepin-syntax-scope-24">+</span> left, deck.authors.<span class="calepin-syntax-scope-20">map</span>(author <span class="calepin-syntax-scope-24">=></span> author.name).<span class="calepin-syntax-scope-20">join</span>([, ]))
   }
-]</code></pre></div><p>The metadata half is the escape hatch for title pages the built-in variants do not draw: declare the information once on <code>setup</code>, and a hand-built cover reads it back instead of duplicating it. The position half is what a footline or a headline is made of, and it is the same reading <code>components.progress</code> does, so a theme drawing its own chrome keeps no counters of its own:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">let</span> footline <span class="calepin-syntax-scope-10">=</span> <span class="calepin-syntax-scope-4">context</span> {
-  <span class="calepin-syntax-scope-4">let</span> deck <span class="calepin-syntax-scope-10">=</span> mosaic.<span class="calepin-syntax-scope-8">info</span>()
-  <span class="calepin-syntax-scope-8">grid</span>(
-    columns: (<span class="calepin-syntax-scope-9">1fr</span>, <span class="calepin-syntax-scope-9">1fr</span>),
+]</code></pre></div><p>The metadata half is the escape hatch for title pages the built-in variants do not draw: declare the information once on <code>setup</code>, and a hand-built cover reads it back instead of duplicating it. The position half is what a footline or a headline is made of, and it is the same reading <code>components.progress</code> does, so a theme drawing its own chrome keeps no counters of its own:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">let</span> footline <span class="calepin-syntax-scope-24">=</span> <span class="calepin-syntax-scope-6">context</span> {
+  <span class="calepin-syntax-scope-6">let</span> deck <span class="calepin-syntax-scope-24">=</span> mosaic.<span class="calepin-syntax-scope-20">info</span>()
+  <span class="calepin-syntax-scope-20">grid</span>(
+    columns: (<span class="calepin-syntax-scope-23">1fr</span>, <span class="calepin-syntax-scope-23">1fr</span>),
     deck.section.title,
-    <span class="calepin-syntax-scope-8">align</span>(right)[#deck.slide.number<span class="calepin-syntax-scope-3">\/</span>#deck.slide.total],
+    <span class="calepin-syntax-scope-20">align</span>(right)[#deck.slide.number<span class="calepin-syntax-scope-5">\/</span>#deck.slide.total],
   )
-}</code></pre></div><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">info() -> dictionary</code></pre></div><strong style="display: block">Parameters</strong></div><h2 id="note">note</h2><p>Attaches non-rendering speaker notes to a logical slide.</p><p>Notes never appear in the slides themselves. They are collected and shown by the <code>"speaker"</code> and <code>"notes"</code> outputs of <code>setup</code>.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">show</span>: mosaic.setup.<span class="calepin-syntax-scope-8">with</span>(output: <span class="calepin-syntax-scope-2">"speaker"</span>)
+}</code></pre></div><h2 id="note">Attaches non-rendering speaker notes to a logical slide.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">note(body) -> content</code></pre></div><strong style="display: block">Description</strong><p>Notes never appear in the slides themselves. They are collected and shown by the <code>"speaker"</code> and <code>"notes"</code> outputs of <code>setup</code>.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">show</span>: mosaic.setup.<span class="calepin-syntax-scope-20">with</span>(output: <span class="calepin-syntax-scope-3">"speaker"</span>)
 
-#mosaic.<span class="calepin-syntax-scope-8">slide</span>[
+#mosaic.<span class="calepin-syntax-scope-20">slide</span>[
   == Results
-  #mosaic.<span class="calepin-syntax-scope-8">note</span>[Mention the confidence interval before the table.]
+  #mosaic.<span class="calepin-syntax-scope-20">note</span>[Mention the confidence interval before the table.]
   The estimate holds under both specifications.
-]</code></pre></div><p>Multiple note blocks on one slide accumulate in source order. Wrap a note in <code>steps.on</code>, <code>steps.reveal</code>, or <code>steps.replace</code> to tie it to the same physical frames as the incremental content it belongs with, so the speaker view shows it beside the frame it describes.</p><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">note(body: content) -> content</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>body</code></p><ul><li>Type: <code>content</code></li><li>The note text. Ordinary content, so lists and emphasis work as usual.</li></ul></li></ul><h2 id="surface">surface</h2><p>Builds the transforming rule that paints a cell’s or plane’s own block.</p><p>Properties of the content inside a cell, such as text, alignment, and paragraphs, reach it through ordinary <code>set</code> rules on its label. The cell’s own surface cannot, because it is a block constructed before those rules apply, so it is painted by wrapping the labeled block instead. <code>surface</code> returns that standard wrapper, <code>it => block(width: 100%, height: 100%, ...,<br><span style="white-space: pre-wrap">&#x20;</span>it)</code>, ready to use as the body of a label rule.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">show</span> <span class="calepin-syntax-scope-8">label</span>(<span class="calepin-syntax-scope-2">"mosaic-cell-body"</span>): mosaic.<span class="calepin-syntax-scope-8">surface</span>(
-  fill: <span class="calepin-syntax-scope-8">luma</span>(<span class="calepin-syntax-scope-9">240</span>),
-  stroke: <span class="calepin-syntax-scope-9">0.5pt</span> <span class="calepin-syntax-scope-10">+</span> gray,
-  radius: <span class="calepin-syntax-scope-9">6pt</span>,
-)</code></pre></div><p><strong>What it applies to</strong></p><ul><li>Any grid cell, through its <code>&lt;mosaic-cell-ID></code> label.</li><li>The full-slide planes, which carry <code>&lt;mosaic-background></code> and <code>&lt;mosaic-foreground></code>.</li></ul><p>Both kinds of rule may be combined with ordinary <code>set</code> rules on the same label; the <code>set</code> rule styles the content and this one paints the block around it.</p><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">surface(
-  fill: none | color | gradient | tiling = none,
-  stroke: none | length | color | gradient | stroke | tiling | dictionary = none,
-  radius: relative | dictionary = 0pt,
-  height: auto | relative = 100%
-) -> function</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>fill</code></p><ul><li>Type: <code>none</code> or <code>color</code> or <code>gradient</code> or <code>tiling</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>Paint behind the content, or <code>none</code>.</li></ul></li><li><p><code>stroke</code></p><ul><li>Type: <code>none</code> or <code>length</code> or <code>color</code> or <code>gradient</code> or <code>stroke</code> or <code>tiling</code> or <code>dictionary</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">none</span></code></li><li>Border drawn around the painted block, or <code>none</code>.</li></ul></li><li><p><code>radius</code></p><ul><li>Type: <code>relative</code> or <code>dictionary</code></li><li>Default: <code data-lang="typc"><span style="color: #b60157">0pt</span></code></li><li>Corner radius of the painted block.</li></ul></li><li><p><code>height</code></p><ul><li>Type: <code>auto</code> or <code>relative</code></li><li>Default: <code data-lang="typc"><span style="color: #b60157">100%</span></code></li><li>Height of the painted block. Keep <code>100%</code> for cells in <code>1fr</code> or fixed tracks; pass <code>auto</code> for a content-sized cell in an <code>auto</code> track so the paint hugs the content.</li></ul></li></ul><h2 id="fit">fit</h2><p>Scales one block of content to the space it is given.</p><p>Mosaic never resizes body content on its own, so a slide holding more than it can show reports an overflow rather than shrinking. <code>fit</code> is the explicit per-block exception, for content whose size the author does not control: a wide table, a chart, a generated list, a number meant to fill the slide.</p><p>It measures the content against the region the call sits in and scales it geometrically, so proportions are preserved and the surrounding layout accounts for the new size. With no <code>width</code> or <code>height</code> it fits the whole region.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-8">slide</span>[
+]</code></pre></div><p>Multiple note blocks on one slide accumulate in source order. Wrap a note in <code>steps.on</code>, <code>steps.reveal</code>, or <code>steps.replace</code> to tie it to the same physical frames as the incremental content it belongs with, so the speaker view shows it beside the frame it describes.</p><strong style="display: block">Arguments</strong><table><tr><td><code>body</code></td><td><code>content</code><br>The note text. Ordinary content, so lists and emphasis work as usual.</td></tr></table><h2 id="fit">Scales one block of content to the space it is given.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">fit(
+  body,
+  width: auto,
+  height: auto,
+  wrap: true,
+  grow: false,
+  shrink: true
+) -> content</code></pre></div><strong style="display: block">Description</strong><p>Mosaic never resizes body content on its own, so a slide holding more than it can show reports an overflow rather than shrinking. <code>fit</code> is the explicit per-block exception, for content whose size the author does not control: a wide table, a chart, a generated list, a number meant to fill the slide.</p><p>It measures the content against the region the call sits in and scales it geometrically, so proportions are preserved and the surrounding layout accounts for the new size. With no <code>width</code> or <code>height</code> it fits the whole region.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-20">slide</span>[
   == A long argument
-  #mosaic.<span class="calepin-syntax-scope-8">fit</span>(generated-list)
-]</code></pre></div><p>Fitting works in cells, in the <code>background</code> and <code>foreground</code> planes, and in ordinary content. Pass <code>grow: true</code> for display type that should fill its cell rather than merely avoid overflowing it:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-8">fit</span>(grow: <span class="calepin-syntax-scope-4">true</span>)[42%]</code></pre></div><p><strong>Content that must not be re-laid out</strong></p><p>By default the content is offered the region’s width first, so text and lists wrap into the cell and are scaled only if they are still too tall. A table, chart, or diagram would rearrange its own columns instead, which changes the composition rather than its size. Pass <code>wrap: false</code> to scale such a block exactly as it stands:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-8">fit</span>(wrap: <span class="calepin-syntax-scope-4">false</span>, my-wide-table)</code></pre></div><p><strong>Overflow</strong></p><p>A fitted block cannot overflow, so it emits no <code>&lt;mosaic-overflow-warning></code> record and never fails an <code>overflow: "error"</code> compile. A cell that fits its content therefore stops reporting how full it is.</p><p><strong>Incremental content and speaker notes</strong></p><p>Fitting measures its body, which means holding it inside a closure that the slide runtime cannot look into. Incremental markers and speaker notes are found by walking the slide’s content, so anything inside a fitted block would be invisible to that walk: the reveals would collapse into one frame and the notes would vanish. <code>fit</code> rejects such a body rather than dropping it silently. Keep <code>pause</code>, <code>steps</code>, and <code>note</code> outside the fitted block, or fit each revealed part on its own.</p><div><strong style="display: block">Signature</strong><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">fit(
-  body: content,
-  width: auto | length | relative | fraction = auto,
-  height: auto | length | relative | fraction = auto,
-  wrap: bool = true,
-  grow: bool = false,
-  shrink: bool = true
-) -> content</code></pre></div><strong style="display: block">Parameters</strong></div><ul><li><p><code>body</code></p><ul><li>Type: <code>content</code></li><li>The content to scale.</li></ul></li><li><p><code>width</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>relative</code> or <code>fraction</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Width to fit into. <code>auto</code> uses the full width of the region.</li></ul></li><li><p><code>height</code></p><ul><li>Type: <code>auto</code> or <code>length</code> or <code>relative</code> or <code>fraction</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">auto</span></code></li><li>Height to fit into. <code>auto</code> uses the full height of the region.</li></ul></li><li><p><code>wrap</code></p><ul><li>Type: <code>bool</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">true</span></code></li><li>Let the content re-lay out at the available width before it is measured. Pass <code>false</code> for a block whose own arrangement must be preserved.</li></ul></li><li><p><code>grow</code></p><ul><li>Type: <code>bool</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">false</span></code></li><li>Scale content up when it is smaller than the space available.</li></ul></li><li><p><code>shrink</code></p><ul><li>Type: <code>bool</code></li><li>Default: <code data-lang="typc"><span style="color: #d73948">true</span></code></li><li>Scale content down when it is larger than the space available.</li></ul></li></ul></div>
+  #mosaic.<span class="calepin-syntax-scope-20">fit</span>(generated-list)
+]</code></pre></div><p>Fitting works in cells, in the <code>background</code> and <code>foreground</code> planes, and in ordinary content. Pass <code>grow: true</code> for display type that should fill its cell rather than merely avoid overflowing it:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-20">fit</span>(grow: <span class="calepin-syntax-scope-6">true</span>)[42%]</code></pre></div><p><strong>Content that must not be re-laid out</strong></p><p>By default the content is offered the region’s width first, so text and lists wrap into the cell and are scaled only if they are still too tall. A table, chart, or diagram would rearrange its own columns instead, which changes the composition rather than its size. Pass <code>wrap: false</code> to scale such a block exactly as it stands:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-20">fit</span>(wrap: <span class="calepin-syntax-scope-6">false</span>, my-wide-table)</code></pre></div><p><strong>Overflow</strong></p><p>A fitted block cannot overflow, so it emits no <code>&lt;mosaic-overflow-warning></code> record and never fails an <code>overflow: "error"</code> compile. A cell that fits its content therefore stops reporting how full it is.</p><p><strong>Incremental content and speaker notes</strong></p><p>Fitting measures its body, which means holding it inside a closure that the slide runtime cannot look into. Incremental markers and speaker notes are found by walking the slide’s content, so anything inside a fitted block would be invisible to that walk: the reveals would collapse into one frame and the notes would vanish. <code>fit</code> rejects such a body rather than dropping it silently. Keep <code>pause</code>, <code>steps</code>, and <code>note</code> outside the fitted block, or fit each revealed part on its own.</p><strong style="display: block">Arguments</strong><table><tr><td><code>body</code></td><td><code>content</code><br>The content to scale.</td></tr><tr><td><code>width</code></td><td><code>auto | length | relative | fraction</code><br>Width to fit into. <code>auto</code> uses the full width of the region.</td></tr><tr><td><code>height</code></td><td><code>auto | length | relative | fraction</code><br>Height to fit into. <code>auto</code> uses the full height of the region.</td></tr><tr><td><code>wrap</code></td><td><code>bool</code><br>Let the content re-lay out at the available width before it is measured. Pass <code>false</code> for a block whose own arrangement must be preserved.</td></tr><tr><td><code>grow</code></td><td><code>bool</code><br>Scale content up when it is smaller than the space available.</td></tr><tr><td><code>shrink</code></td><td><code>bool</code><br>Scale content down when it is larger than the space available.</td></tr></table>
         </main>
 
         <aside class="calepin-website-toc is-floating">
@@ -3618,15 +3793,15 @@ html[data-theme="dark"] .mosaic-diagram {
             <nav aria-label="On this page">
                 <ul>
 
-                    <li class="level-2"><a href="#slide">slide</a></li>
+                    <li class="level-2"><a href="#contents">Contents</a></li>
 
-                    <li class="level-2"><a href="#info">info</a></li>
+                    <li class="level-2"><a href="#slide">Creates one logical slide command.</a></li>
 
-                    <li class="level-2"><a href="#note">note</a></li>
+                    <li class="level-2"><a href="#info">Reads what the deck knows about itself: the metadata declared on setup, and the position of the slide being rendered. This is what a custom composition reads instead of restating the deck, and what deck chrome reads instead of counting for itself.</a></li>
 
-                    <li class="level-2"><a href="#surface">surface</a></li>
+                    <li class="level-2"><a href="#note">Attaches non-rendering speaker notes to a logical slide.</a></li>
 
-                    <li class="level-2"><a href="#fit">fit</a></li>
+                    <li class="level-2"><a href="#fit">Scales one block of content to the space it is given.</a></li>
 
                 </ul>
             </nav>
@@ -4918,6 +5093,9 @@ html[data-theme="dark"] .mosaic-diagram {
 
   // ------------------------------------------------------ sidebar sections
 
+  // Only one section is open at a time, but "section" means siblings: opening a
+  // nested subsection must not fold the parent it lives in, and must only fold
+  // its own siblings.
   function initSidebarSections() {
     const sections = Array.from(
       document.querySelectorAll(".calepin-website-sidebar-section"),
@@ -4928,7 +5106,9 @@ html[data-theme="dark"] .mosaic-diagram {
       section.addEventListener("toggle", () => {
         if (!section.open) return;
         sections.forEach((other) => {
-          if (other !== section) other.removeAttribute("open");
+          if (other === section) return;
+          if (other.parentElement !== section.parentElement) return;
+          other.removeAttribute("open");
         });
       });
     });

@@ -1,12 +1,5 @@
-#import "/api/_module.typ": api-module
+#import "/api/_page.typ": api-page
 
-#api-module(
-  "Slides",
-  (
-    "/api/modules/slide-command.typ",
-    "/api/modules/info.typ",
-    "/api/modules/note-command.typ",
-    "/api/modules/surface.typ",
-    "/api/modules/fit.typ",
-  ),
-)
+#show: api-page.with("Slides")
+
+#include "/api/generated/slides/index.typ"

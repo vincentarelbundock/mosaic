@@ -107,6 +107,14 @@
   --calepin-color-border: #d8dee6;
   --calepin-color-accent: #1c9bad;
   --calepin-color-accent-hover: #16808f;
+  /* Accent as a filled background behind `--calepin-color-accent-contrast`
+     text. Darker than the accent used for links and borders, so white label
+     text clears the WCAG AA 4.5:1 ratio. Derived from the accent so a theme
+     that sets only `--calepin-color-accent` keeps its buttons in family. */
+  --calepin-color-accent-strong: #167987;
+  --calepin-color-accent-strong: color-mix(in srgb, var(--calepin-color-accent) 78%, #000000);
+  --calepin-color-accent-strong-hover: #11606b;
+  --calepin-color-accent-strong-hover: color-mix(in srgb, var(--calepin-color-accent) 62%, #000000);
   --calepin-color-accent-soft: rgba(28, 155, 173, 0.12);
   --calepin-color-accent-soft: color-mix(in srgb, var(--calepin-color-accent) 12%, transparent);
   --calepin-color-accent-contrast: #ffffff;
@@ -205,6 +213,8 @@ html[data-theme="dark"] {
   --calepin-color-border: #344252;
   --calepin-color-accent: #67d4df;
   --calepin-color-accent-hover: #8be4ec;
+  --calepin-color-accent-strong: var(--calepin-color-accent);
+  --calepin-color-accent-strong-hover: var(--calepin-color-accent-hover);
   --calepin-color-accent-contrast: #071316;
   --calepin-color-link: var(--calepin-color-accent);
   --calepin-color-link-hover: var(--calepin-color-accent-hover);
@@ -238,6 +248,8 @@ html[data-theme="dark"] {
     --calepin-color-border: #344252;
     --calepin-color-accent: #67d4df;
     --calepin-color-accent-hover: #8be4ec;
+    --calepin-color-accent-strong: var(--calepin-color-accent);
+    --calepin-color-accent-strong-hover: var(--calepin-color-accent-hover);
     --calepin-color-accent-contrast: #071316;
     --calepin-color-link: var(--calepin-color-accent);
     --calepin-color-link-hover: var(--calepin-color-accent-hover);
@@ -257,7 +269,11 @@ html[data-theme="dark"] {
   }
 }
 
-:root,
+/* `:root:root` matches the specificity Pico uses for its own light palette
+   (`:root:not([data-theme=dark])`), which otherwise wins over a plain `:root`
+   and leaves a visitor who has not picked a theme with stock Pico colors
+   instead of the theme's. */
+:root:root,
 html[data-theme="light"],
 html[data-theme="dark"] {
   --pico-background-color: var(--calepin-color-background);
@@ -269,12 +285,12 @@ html[data-theme="dark"] {
   --pico-code-background-color: var(--calepin-surface-code);
   --pico-code-color: var(--calepin-color-text);
   --pico-primary: var(--calepin-color-accent);
-  --pico-primary-background: var(--calepin-color-accent);
-  --pico-primary-border: var(--calepin-color-accent);
+  --pico-primary-background: var(--calepin-color-accent-strong);
+  --pico-primary-border: var(--calepin-color-accent-strong);
   --pico-primary-underline: transparent;
   --pico-primary-hover: var(--calepin-color-accent-hover);
-  --pico-primary-hover-background: var(--calepin-color-accent-hover);
-  --pico-primary-hover-border: var(--calepin-color-accent-hover);
+  --pico-primary-hover-background: var(--calepin-color-accent-strong-hover);
+  --pico-primary-hover-border: var(--calepin-color-accent-strong-hover);
   --pico-primary-hover-underline: transparent;
   --pico-primary-focus: color-mix(in srgb, var(--calepin-color-focus) 40%, transparent);
   --pico-primary-inverse: var(--calepin-color-accent-contrast);
@@ -470,15 +486,15 @@ figure > img {
 
 .landing-button-primary,
 .landing-button-primary:visited {
-  border-color: var(--calepin-color-accent);
-  background: var(--calepin-color-accent);
+  border-color: var(--calepin-color-accent-strong);
+  background: var(--calepin-color-accent-strong);
   color: var(--calepin-color-accent-contrast);
 }
 
 .landing-button-primary:hover,
 .landing-button-primary:focus-visible {
-  border-color: var(--calepin-color-accent-hover);
-  background: var(--calepin-color-accent-hover);
+  border-color: var(--calepin-color-accent-strong-hover);
+  background: var(--calepin-color-accent-strong-hover);
   color: var(--calepin-color-accent-contrast);
 }
 
@@ -558,26 +574,44 @@ figure > img {
   --calepin-syntax-foreground: #003b4f;
   --calepin-syntax-background: #f7f7f5;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #003b4f;
-  --scope-2-foreground: #003b4f;
-  --scope-3-foreground: #8f5902;
-  --scope-4-foreground: #003b4f;
-  --scope-5-foreground: #003b4f;
-  --scope-6-foreground: #003b4f;
+  --scope-1-foreground: #5e5e5e;
+  --scope-2-foreground: #5e5e5e;
+  --scope-3-foreground: #20794d;
+  --scope-4-foreground: #20794d;
+  --scope-5-foreground: #8f5902;
+  --scope-6-foreground: #8b41b1;
   --scope-7-foreground: #8b41b1;
-  --scope-8-foreground: #003b4f;
-  --scope-9-foreground: #ad0000;
+  --scope-8-foreground: #8b41b1;
+  --scope-9-foreground: #8b41b1;
   --scope-10-foreground: #8b41b1;
-  --scope-11-foreground: #003b4f;
-  --scope-12-foreground: #003b4f;
-  --scope-13-foreground: #003b4f;
-  --scope-13-font-weight: 700;
-  --fallback-14-foreground: #5e5e5e;
-  --fallback-15-foreground: #20794d;
-  --fallback-16-foreground: #ad0000;
-  --fallback-17-foreground: #0b6e79;
-  --fallback-18-foreground: #8b41b1;
-  --fallback-19-foreground: #667321;
+  --scope-11-foreground: #8f5902;
+  --scope-12-foreground: #8f5902;
+  --scope-13-foreground: #8f5902;
+  --scope-14-foreground: #0b6e79;
+  --scope-15-foreground: #0b6e79;
+  --scope-16-foreground: #0b6e79;
+  --scope-17-foreground: #0b6e79;
+  --scope-18-foreground: #0b6e79;
+  --scope-19-foreground: #8b41b1;
+  --scope-20-foreground: #4759ab;
+  --scope-21-foreground: #4759ab;
+  --scope-22-foreground: #4759ab;
+  --scope-23-foreground: #ad0000;
+  --scope-24-foreground: #5e5e5e;
+  --scope-25-foreground: #5e5e5e;
+  --scope-26-foreground: #5e5e5e;
+  --scope-27-foreground: #003b4f;
+  --scope-28-foreground: #667321;
+  --scope-29-foreground: #667321;
+  --scope-30-foreground: #667321;
+  --scope-31-foreground: #003b4f;
+  --scope-31-font-weight: 700;
+  --fallback-32-foreground: #5e5e5e;
+  --fallback-33-foreground: #20794d;
+  --fallback-34-foreground: #ad0000;
+  --fallback-35-foreground: #0b6e79;
+  --fallback-36-foreground: #8b41b1;
+  --fallback-37-foreground: #667321;
 
 }
 
@@ -667,37 +701,127 @@ pre code .calepin-syntax-scope-12 {
 .sourceCode .calepin-syntax-scope-13,
 pre code .calepin-syntax-scope-13 {
   color: var(--scope-13-foreground);
-  font-weight: var(--scope-13-font-weight);
 }
 
-.sourceCode .calepin-syntax-fallback-14,
-pre code .calepin-syntax-fallback-14 {
-  color: var(--fallback-14-foreground);
+.sourceCode .calepin-syntax-scope-14,
+pre code .calepin-syntax-scope-14 {
+  color: var(--scope-14-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-15,
-pre code .calepin-syntax-fallback-15 {
-  color: var(--fallback-15-foreground);
+.sourceCode .calepin-syntax-scope-15,
+pre code .calepin-syntax-scope-15 {
+  color: var(--scope-15-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-16,
-pre code .calepin-syntax-fallback-16 {
-  color: var(--fallback-16-foreground);
+.sourceCode .calepin-syntax-scope-16,
+pre code .calepin-syntax-scope-16 {
+  color: var(--scope-16-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-17,
-pre code .calepin-syntax-fallback-17 {
-  color: var(--fallback-17-foreground);
+.sourceCode .calepin-syntax-scope-17,
+pre code .calepin-syntax-scope-17 {
+  color: var(--scope-17-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-18,
-pre code .calepin-syntax-fallback-18 {
-  color: var(--fallback-18-foreground);
+.sourceCode .calepin-syntax-scope-18,
+pre code .calepin-syntax-scope-18 {
+  color: var(--scope-18-foreground);
 }
 
-.sourceCode .calepin-syntax-fallback-19,
-pre code .calepin-syntax-fallback-19 {
-  color: var(--fallback-19-foreground);
+.sourceCode .calepin-syntax-scope-19,
+pre code .calepin-syntax-scope-19 {
+  color: var(--scope-19-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-20,
+pre code .calepin-syntax-scope-20 {
+  color: var(--scope-20-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-21,
+pre code .calepin-syntax-scope-21 {
+  color: var(--scope-21-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-22,
+pre code .calepin-syntax-scope-22 {
+  color: var(--scope-22-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-23,
+pre code .calepin-syntax-scope-23 {
+  color: var(--scope-23-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-24,
+pre code .calepin-syntax-scope-24 {
+  color: var(--scope-24-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-25,
+pre code .calepin-syntax-scope-25 {
+  color: var(--scope-25-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-26,
+pre code .calepin-syntax-scope-26 {
+  color: var(--scope-26-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-27,
+pre code .calepin-syntax-scope-27 {
+  color: var(--scope-27-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-28,
+pre code .calepin-syntax-scope-28 {
+  color: var(--scope-28-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-29,
+pre code .calepin-syntax-scope-29 {
+  color: var(--scope-29-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-30,
+pre code .calepin-syntax-scope-30 {
+  color: var(--scope-30-foreground);
+}
+
+.sourceCode .calepin-syntax-scope-31,
+pre code .calepin-syntax-scope-31 {
+  color: var(--scope-31-foreground);
+  font-weight: var(--scope-31-font-weight);
+}
+
+.sourceCode .calepin-syntax-fallback-32,
+pre code .calepin-syntax-fallback-32 {
+  color: var(--fallback-32-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-33,
+pre code .calepin-syntax-fallback-33 {
+  color: var(--fallback-33-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-34,
+pre code .calepin-syntax-fallback-34 {
+  color: var(--fallback-34-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-35,
+pre code .calepin-syntax-fallback-35 {
+  color: var(--fallback-35-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-36,
+pre code .calepin-syntax-fallback-36 {
+  color: var(--fallback-36-foreground);
+}
+
+.sourceCode .calepin-syntax-fallback-37,
+pre code .calepin-syntax-fallback-37 {
+  color: var(--fallback-37-foreground);
 }
 
 
@@ -758,26 +882,44 @@ html[data-theme="dark"] {
   --calepin-syntax-foreground: #d8e7ef;
   --calepin-syntax-background: #161b22;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #d8e7ef;
-  --scope-2-foreground: #d8e7ef;
-  --scope-3-foreground: #ffcc9c;
-  --scope-4-foreground: #d8e7ef;
-  --scope-5-foreground: #d8e7ef;
-  --scope-6-foreground: #d8e7ef;
+  --scope-1-foreground: #8b949e;
+  --scope-2-foreground: #8b949e;
+  --scope-3-foreground: #8fd694;
+  --scope-4-foreground: #8fd694;
+  --scope-5-foreground: #ffcc9c;
+  --scope-6-foreground: #c8a2f0;
   --scope-7-foreground: #c8a2f0;
-  --scope-8-foreground: #d8e7ef;
-  --scope-9-foreground: #ffb3a7;
+  --scope-8-foreground: #c8a2f0;
+  --scope-9-foreground: #c8a2f0;
   --scope-10-foreground: #c8a2f0;
-  --scope-11-foreground: #d8e7ef;
-  --scope-12-foreground: #d8e7ef;
-  --scope-13-foreground: #d8e7ef;
-  --scope-13-font-weight: 700;
-  --fallback-14-foreground: #8b949e;
-  --fallback-15-foreground: #8fd694;
-  --fallback-16-foreground: #ffb3a7;
-  --fallback-17-foreground: #7fd1de;
-  --fallback-18-foreground: #c8a2f0;
-  --fallback-19-foreground: #c3d86c;
+  --scope-11-foreground: #ffcc9c;
+  --scope-12-foreground: #ffcc9c;
+  --scope-13-foreground: #ffcc9c;
+  --scope-14-foreground: #7fd1de;
+  --scope-15-foreground: #7fd1de;
+  --scope-16-foreground: #7fd1de;
+  --scope-17-foreground: #7fd1de;
+  --scope-18-foreground: #7fd1de;
+  --scope-19-foreground: #c8a2f0;
+  --scope-20-foreground: #9db8ff;
+  --scope-21-foreground: #9db8ff;
+  --scope-22-foreground: #9db8ff;
+  --scope-23-foreground: #ffb3a7;
+  --scope-24-foreground: #b5bdc9;
+  --scope-25-foreground: #b5bdc9;
+  --scope-26-foreground: #b5bdc9;
+  --scope-27-foreground: #d8e7ef;
+  --scope-28-foreground: #c3d86c;
+  --scope-29-foreground: #c3d86c;
+  --scope-30-foreground: #c3d86c;
+  --scope-31-foreground: #d8e7ef;
+  --scope-31-font-weight: 700;
+  --fallback-32-foreground: #8b949e;
+  --fallback-33-foreground: #8fd694;
+  --fallback-34-foreground: #ffb3a7;
+  --fallback-35-foreground: #7fd1de;
+  --fallback-36-foreground: #c8a2f0;
+  --fallback-37-foreground: #c3d86c;
 
 }
 
@@ -800,26 +942,44 @@ html[data-theme="dark"] .calepin-copy-code:focus-visible {
   --calepin-syntax-foreground: #d8e7ef;
   --calepin-syntax-background: #161b22;
   --calepin-syntax-border: color-mix(in srgb, var(--calepin-syntax-foreground) 18%, var(--calepin-syntax-background));
-  --scope-1-foreground: #d8e7ef;
-  --scope-2-foreground: #d8e7ef;
-  --scope-3-foreground: #ffcc9c;
-  --scope-4-foreground: #d8e7ef;
-  --scope-5-foreground: #d8e7ef;
-  --scope-6-foreground: #d8e7ef;
+  --scope-1-foreground: #8b949e;
+  --scope-2-foreground: #8b949e;
+  --scope-3-foreground: #8fd694;
+  --scope-4-foreground: #8fd694;
+  --scope-5-foreground: #ffcc9c;
+  --scope-6-foreground: #c8a2f0;
   --scope-7-foreground: #c8a2f0;
-  --scope-8-foreground: #d8e7ef;
-  --scope-9-foreground: #ffb3a7;
+  --scope-8-foreground: #c8a2f0;
+  --scope-9-foreground: #c8a2f0;
   --scope-10-foreground: #c8a2f0;
-  --scope-11-foreground: #d8e7ef;
-  --scope-12-foreground: #d8e7ef;
-  --scope-13-foreground: #d8e7ef;
-  --scope-13-font-weight: 700;
-  --fallback-14-foreground: #8b949e;
-  --fallback-15-foreground: #8fd694;
-  --fallback-16-foreground: #ffb3a7;
-  --fallback-17-foreground: #7fd1de;
-  --fallback-18-foreground: #c8a2f0;
-  --fallback-19-foreground: #c3d86c;
+  --scope-11-foreground: #ffcc9c;
+  --scope-12-foreground: #ffcc9c;
+  --scope-13-foreground: #ffcc9c;
+  --scope-14-foreground: #7fd1de;
+  --scope-15-foreground: #7fd1de;
+  --scope-16-foreground: #7fd1de;
+  --scope-17-foreground: #7fd1de;
+  --scope-18-foreground: #7fd1de;
+  --scope-19-foreground: #c8a2f0;
+  --scope-20-foreground: #9db8ff;
+  --scope-21-foreground: #9db8ff;
+  --scope-22-foreground: #9db8ff;
+  --scope-23-foreground: #ffb3a7;
+  --scope-24-foreground: #b5bdc9;
+  --scope-25-foreground: #b5bdc9;
+  --scope-26-foreground: #b5bdc9;
+  --scope-27-foreground: #d8e7ef;
+  --scope-28-foreground: #c3d86c;
+  --scope-29-foreground: #c3d86c;
+  --scope-30-foreground: #c3d86c;
+  --scope-31-foreground: #d8e7ef;
+  --scope-31-font-weight: 700;
+  --fallback-32-foreground: #8b949e;
+  --fallback-33-foreground: #8fd694;
+  --fallback-34-foreground: #ffb3a7;
+  --fallback-35-foreground: #7fd1de;
+  --fallback-36-foreground: #c8a2f0;
+  --fallback-37-foreground: #c3d86c;
 
   }
 
@@ -1738,7 +1898,7 @@ a:has(.calepin-nav-icon) {
   align-items: center;
   padding: 0.35rem 0.6rem;
   border-radius: var(--calepin-radius-sm);
-  background: var(--calepin-color-accent);
+  background: var(--calepin-color-accent-strong);
   color: var(--calepin-color-accent-contrast);
   font-size: 0.78rem;
   text-decoration: none;
@@ -2076,6 +2236,30 @@ html:not([data-theme]) {
 
 .calepin-website-sidebar nav details > ul {
   margin-bottom: 0;
+}
+
+/* Nested foldable subsections: indented under their parent, with a rule
+   marking the nesting level. Titles stay sentence-case so they read as page
+   groups rather than as another top-level section. */
+.calepin-website-sidebar-subsection {
+  margin-inline-start: 0.45rem;
+  padding-inline-start: 0.5rem;
+  border-inline-start: 1px solid var(--calepin-color-border);
+}
+
+.calepin-website-sidebar-subsection > summary,
+.calepin-website-sidebar-subsection-title {
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 600;
+}
+
+/* Unfolded subsections have no <details> to indent, so the title carries the
+   nesting instead. */
+.calepin-website-sidebar nav p.calepin-website-sidebar-subsection-title {
+  margin: 0.5rem 0 0.35rem;
+  padding-inline-start: 0.5rem;
 }
 
 .calepin-site-footer {
@@ -3553,17 +3737,17 @@ html[data-theme="dark"] .mosaic-diagram {
             </nav>
         </aside>
         <main class="calepin-website-main calepin-content" data-pagefind-body>
-            <h1 id="background">Background</h1><p>Cells occupy the main slide body. The background plane sits behind them, covering the slide without changing the grid. Put recurring background content in <code>m.setup(background:)</code>, and set it for one slide with the same argument on <code>m.slide</code>. A plane is not a cell, so it never appears in <code>cells:</code>. Use <code>background: none</code> on a slide to hide inherited content. The <a href="foreground.html">Foreground</a> page covers the plane above the body.</p><h2 id="placed-content">Placed content</h2><p>Native <code>place</code> positions images, shapes, and other Typst content independently of the grid.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">import</span> <span class="calepin-syntax-scope-2">"@preview/mosaic:0.0.1"</span> <span class="calepin-syntax-scope-4">as</span> m
+            <h1 id="background">Background</h1><p>Cells occupy the main slide body. The background plane sits behind them, covering the slide without changing the grid. Put recurring background content in <code>m.setup(background:)</code>, and set it for one slide with the same argument on <code>m.slide</code>. A plane is not a cell, so it never appears in <code>cells:</code>. Use <code>background: none</code> on a slide to hide inherited content. The <a href="foreground.html">Foreground</a> page covers the plane above the body.</p><h2 id="placed-content">Placed content</h2><p>Native <code>place</code> positions images, shapes, and other Typst content independently of the grid.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">import</span> <span class="calepin-syntax-scope-3">"@preview/mosaic:0.0.1"</span> <span class="calepin-syntax-scope-6">as</span> m
 
-<span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">show</span>: <span class="calepin-syntax-scope-8">m</span>.<span class="calepin-syntax-scope-8">setup</span>
-<span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">set</span> <span class="calepin-syntax-scope-8">text</span>(size: <span class="calepin-syntax-scope-9">22pt</span>)
+<span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">show</span>: <span class="calepin-syntax-scope-20">m</span>.<span class="calepin-syntax-scope-20">setup</span>
+<span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">set</span> <span class="calepin-syntax-scope-20">text</span>(size: <span class="calepin-syntax-scope-23">22pt</span>)
 
-#m.<span class="calepin-syntax-scope-8">slide</span>(
-  <span class="calepin-syntax-scope-2">"content"</span>,
-  variant: <span class="calepin-syntax-scope-2">"body"</span>,
+#m.<span class="calepin-syntax-scope-20">slide</span>(
+  <span class="calepin-syntax-scope-3">"content"</span>,
+  variant: <span class="calepin-syntax-scope-3">"body"</span>,
   background: [
-    <span class="calepin-syntax-scope-8">#</span><span class="calepin-syntax-scope-8">place</span>(center)[
-      <span class="calepin-syntax-scope-8">#</span><span class="calepin-syntax-scope-8">circle</span>(width: <span class="calepin-syntax-scope-9">410pt</span>, fill: blue.<span class="calepin-syntax-scope-8">lighten</span>(<span class="calepin-syntax-scope-9">88%</span>), stroke: <span class="calepin-syntax-scope-4">none</span>)
+    <span class="calepin-syntax-scope-20">#</span><span class="calepin-syntax-scope-20">place</span>(center)[
+      <span class="calepin-syntax-scope-20">#</span><span class="calepin-syntax-scope-20">circle</span>(width: <span class="calepin-syntax-scope-23">410pt</span>, fill: blue.<span class="calepin-syntax-scope-20">lighten</span>(<span class="calepin-syntax-scope-23">88%</span>), stroke: <span class="calepin-syntax-scope-6">none</span>)
     ]
   ],
 )[
@@ -3571,25 +3755,25 @@ html[data-theme="dark"] .mosaic-diagram {
 
   The circle is behind the grid.
 ]
-</code></pre></div><div class="pdf-slideshow" data-frames="1"><a class="pdf-slideshow-preview" href="../assets/examples/furniture/background-content.pdf" data-pdf-slideshow-trigger data-pdf-dialog="pdf-slideshow-furniture-background-content" aria-haspopup="dialog" aria-controls="pdf-slideshow-furniture-background-content" aria-label="Open slideshow: Placed background content" style="max-width: 42em;"><img class="pdf-slideshow-preview__image" src="data:image/webp;base64,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JkyZMmTJkyZMmTGg2dW3Tp06dOnTp06dOnTp06dOnTp0Jbp+LFixYsWLFixYsWLFixYsWLGka4cOHDhw4cOHDhw4cOHDhw4cO9dx0Tp06dOnTp06dOnTp06dN//OHCBYsWLFixYsWLFixYsWLFixYsaRrhw4cOHDhw4cOHDhw4cOHDi+WuOidOnTp06dOnTp06dOnTp03QHZKOBAgQIECBAgQIECBAgQIECBHu6dOnTp06dOnTp06dOnTp06dOaDVUGCBAgQIECBAgQIECBAgQIEBU21aKJkyZMmTJkyZMmTJkyZMmTJkyYOAeMWOidOnTp06dOnTp06dOnTpxYikd/v379+/fv379+/fv379+/fv34OodxbK0ePHjx48ePHjx48ePHjx48VKXr9Tp06dOnTp06dOnTp06dOnTp05tZNPkECBAgQIECBAgQIECBAgQH9mofa0JEiRIkSJEiRIkSJEiRIkSJEiMdime3U6dOnTp06dOnTp06dOnTpzBIL2xWXLly5cuXLly5cuXLly5cuXLlysowxY61atWrVq1atWrVq1atWrVeadm/FMHDhw4cOHDhw4cOHDhw4cOHDhxKvGoyPYAIECBAgQIECBAgQIECBAYvQuBEhvXr169evXr169evXr169evXr163EaYusyZMmTJkyZMmTJkyZMmTCC0DfezZs2bNmzZs2bNmzZs2bNmzZs2aoZTb9hBw4cOHDhw4cOHDhw4cN86/eOn20FixYsWLFixYsWLFixYsWLFixYsPhtNhaZ/fv379+/fv379+/fv3651Mr2L+uOidOnTp06dOnTp06dOnTp06dOn8M1C0QzNmzZs2bNmzZs2bNmzW4Eaobffv379+/fv379+/fv379+/fv379+/c7G4yAlX0ZMmTJkyZMmTJkyZMjOFcXGvbVq1atWrVq1atWrVq1atWrVq1atWrVdC+4q/t5EmTJkyZMmTJkyZMl/TTeaxsFixYsWLFixYsWLFixYsWLFixYsWLFht27N6//qhQoUKFChQoUKFBasqJEiRIkSJEiRIkSJEiRIkSJEiRIkSJEh02v9yldFv69evXr169evXquTzT2HfnROnTp06dOnTp06dOnTp06dOnTp06dOnfpYtAo/lOoRHjx48ePHjx0KSyoLZAgQIECBAgQIECBAgQIECBAgQIECBAgQIEB/AL4mTyUCYIcOHDhw4brw5yooiWChQoUKFChQoUKFChQoUKFChQoUKFChQoUKFCeXzjPFHfs2R9+/fv33m84t+dqqaBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgS/NMlUQ6qx78NiDC34pbU2G7yU0Li4E3Ptxh+tf/ReEF69evXr169evXr169evXr169evXr169evXr169evXr2BgmsBBXMdE6dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOm4jhzEYOsmulqTrjonTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnRHAwwlHT08TQ5nmtubSEhIkSJEiRIkSJEiRIkSJEiRIkSJEiRIkSJEiRIkSJEiRIkSI+t5kv1Pr169evXr169evXr169evXr169evXr169evXr169evXr169evXeAAP7/7d6BPlejHL2y0ggO63SRl5x5Bk6LyN6k5EX4Bcbe82v+QMz4ChiNQsmnDdY81tkLDXtM/B0qGcIqls71XAI8EVJUamU0P2tkjUtqL05l7+adAn536fnEmhVLHUE3hI27HzHObRURbs8Z5GsfO2FPzmAABpoIB1UaN2H3z9LxQIGsEVUVAOFTWAnauGMqW28GAAA2CSkOrk6zIfTZwxeLFVxQgDEtiBRtovOTqdd9FDpdFSIr0n3EyKB8Sz8lb+f+jsoRJ6RSpKI6YPhKN7ax6SUh2UW/EuHkDw5UeBEveOgWx83Vcwk3Q6DWIpCrVbOiC2lPP5FgID9/0Cae5nilaPfSUaPivnUA7xb1ob0ggSt9o/IpovxlMV53LGSpE5g+mt78sGkieULbQfb30FRzsfX3rFzGjxJ+QwCG8mheuLHyrgizUS/JslMrarAFtBDPnsrpBMq0wtcA+AP7S2GJh1FpLAqwsq5SuuMsO1zzsdOPXo93fcW4VydUMTop0igsYOdzPGPS9cVeSQz6JfTLmzvu9IEPyyL5VnatcBWmD22Xu/skqPmynbNTj5Yfsu0YHGU5uLss/4Gjafa6oIKsHDaq1mWSLcYT/0+W9ACkDDYJ40mF8+suOS98HlMnas7VX81hL4SayTRuoVtVX2Xew+vY5NhVyWJSvKzL9QeB6Bb9N2k7XOL05T8iQj7kphY5vxA8YdXt0hneOtPBy9qud2Tfi3Zv5lA8CAmNfDr7QJ5k4o6v/zGYP8nSVLmMe52Nox1iyWmPPJvmiXLmv+r1GkVh97+KF0eviaLdIDmdVpLceWut9ickbQjAL0smYY77v2vjqVUxQ3WP2cqWNvpnzTtqyeHiHfCIoER8oAqkQpB/rBKOMA48NzqrQjqo7U5xSiYLd1YUsntOkFtKkj3jX/gDmYWaXr9PX4YOgGIug01tlUBxQ2bSWVxRhxRfEN3DBLtA3PeKJNk2PCH67j5VkiVzL47sNd2FQyYmMZo8ceO7NzSGcw+g0Agfa8fiZhMggTRdr8kUoeVtRss5+ve+P4TnZWp4FUiVJcvBnRQvScnBmwty01EWQVZPcErQzID0/54LacMlaYfomUgYIcZGxEmGrSrCgEcPWj/C3OmjUM6/RhoosW220VFfisd/nfHU3HecBRPKUW8aqgq4KpdW5Qp6dys+C9aFoww+t5lNS1amQfPwGXQhmkcEulkRVz5Xmxqve/7rajxxXdDb1cCaWBBdxLsJoQAejqruYFPRLjS/jM7I+NblmZYcRn7Fp2H6QhoDJoCgQATkkaYBIEBDbRCZ2IxBO3XNUsPvFv7rzsfqqcLt4Ba1IEk6qSi08NH54mrESwln5n2O4U0t61egQc7IffB8NhQWe9Sj3fK0pRFw8h5GKL6lPEi5WYHvjuGuTVi7J0XESCzRWXVc3OT2/vUy8MC7NdKoauYRLalK24+8+7v3fRTyQOsVyeayMjH+tNCiHzQBRhbUCl4TyIIOex4tVq46dZp5wlB67lJaawHuU1/h84cXSPXbhBAeAapIb+5b8trR5ey/Bg0Fz3gL/AMyYonza6iDrlLD4R15/60GT6YskWEWgrIE3WBeBlkqORuv9P24JIF/ntOtV4y0Rd1S93nNCSoAxrCvpLsbBJnznGe7n3zhSbdAN+dBvOEWypblYHb8pacD//vo2uh8RUNSTUt/5+ZN6z+3C+KR1PRW1b9whkB+exWnA3ozsWUmknqnKZD64SHyqo9Kjj/Egkrrv+pfOxYnvr6aB3Oj04w/sviklbK7iUN9ZIJo2nLXocFkvr+BzPssmsaza1XEHpTdw9OCfe3iqWhxxUB7w7rtJ4gcNhGN+mjZVhJH4QbhemkGCXpnNm2Kjgs4M0/ZXtZWOYdGIWNm3H/RMUxYaqXb79O1D9W9DvfPPJRufifmXIaTiksU9lX9vqxLDR3ACF3yGf0g4vA7ZOWRU56Ax0EWFLlj5lNn2Eib/ISu+zURVIA23/IK4rAKWw3rE8VWjMjEEbKeUHG10fP5cOUFEaG4VbxORrAaNd5kuTIo73uPsW+RVFaGYMgFAnYyMABxOhv0uHf2uAgD1O7ntZUy9OHC5XjFJDDnXY4o7V0DIT17ZslCaBuole20XHaf7lIWe/zaCJ2XFbH+q1Qbp30EjhsSoY7olOkx0yu2jA2S/k7eKyL+UoECIfTPXMcBpA2B2/6/M3+U+c5MacN8CXoGu4l4AZ1pHYe7IF1GYCNB2+NE18qGFiIBApNZeluxFcw8aPmQeu0/vq/4V/6In8OYY5jOlcDTkxjh92AJ2QEQQcJlxH9xD/PAa5u9i7+4oO1zULDxT8bXGM6DLsFJFJ4sXx64Rl0s4juR2K1RnekrsNqBSPnSQks4SzwlNi4w8GST5qdSPyfShWzRZcCoJ2CGFEnMVH4cVJLhN8Cp3uPFrPdjuqBLfJQoG9tnILshYuOm1zM9bFlRMHtwvXPaU8+BBh7IuMIdpfpa+XFATDg+US1ql056e41v03ilYlLP4OvT153ER4zXqberNqPwgtf0OcTiRITNKkrY3EmQmFJVUTEPt24q/tlXlGHh8rZGn3wTxKIrLVJPjPnCJsbhmLuPSsgUeHKWS6DmPDyLN9gbR81XaJoAerM3LEurYAsr6AaAADC1J7hG5MleF1Vaec9cfmnOvKQ42x+ONZJyiCHYpE50Tf2lD9LiazpSDlW96mpYTXhOIW/AHREOytkkJxiFZQ+E82OIgljqSgGpG8FWWsy0zrjSu7kMzUgtGmPUArH46MJIWzAinhZJIY2r77d/RIIFzHfdLDOCCKBMeg3hgxhJ9BF1pn1xvhjNZkcZJ9HbP1nVuIPSFB0iVZ70LCTl5SH/+TvDO7dNOAj1XaSLj9yFCbJqcehcSZDpM4EvG8B10h8oMLQDB61MBQhZZAvC/vD16iQ7Eje/ojWbf9a4MbIoSMQ9KegG72bFeeFwJsQwAg61ZeTWK7Fh8FAMrZc0Jxfvk8nkvlIMQQn8HXEh/Cntpy/sl7ne3T0ykqQTrg0y6jHLJW8zlqUGINuHlllsNC69X/whGLIyYbQ1MQA9B1VrZaMvI9CGfn1ETpWWqxUz4q8WrSlGMuLNyVoyY4ViTrXkGOb8AHzXHlpuqqSE+cWJyHg9Smy4NYi3H6/ZzW5u6jb+Q9FS3QBH2nNUlLcqpWBi08VDU4AcxnIc5QJOx9JHcTcFbBkIfZzyqrXG3N6TdviO0hwC6ONdNPhnhcGc8wx0I3+8vaHzL5k3u06U4epnqBOkLbqyXnxX7+rOSleMwqq++YZyAZvK/28TIUCtIScc96mcKXa3l+vTJKTFiPDHB3vh0Df7aJvSrdbL6YHBHk9yr3f4yHelJX2aVQ+YUS4xIXVlkE/RBoPcJLzOFHBrr0o6JxhfKEetxZ3+lroInv1myXAP7u9TLjL6XnDP/zBIOkhzo8lvstuVOKBoDaMYNxGFTcxFbCFJ/IEaUprcZ+dkl2/InS1YgXovf1OeL33hxGpe4CcDH4AJ8buj/UA/X4tvSEDYp+IsngJpRkLhuCwc2zVTwvhGJNzji1pp19rP5rvz9zl0/dlrgB0CHBhj7jNHLH6MeWfeFObL1S0TiBFSpZ9bYMIaj1wSX4rpyMdQvUTB44c9QOwso4dAofm8zAc7FoYUjdQ12twuNteix7Ed62/qKzx4LVl/iIYnUs4LjWZGj4l+fUbKAQWs6Pxnv8B9eJ6jSDLF650KdVlKn5WHp0/bLut1vVAzFYGiiW2wzNLvsTu2rpu096YAstBGdJrAZmVhGRbDMvHtGDZCjS8sv2FkeSn4aIwNCPMFS2rENty6BF1e5pZeB56zJoFw4pCX6hXHHnd9iJERJssWOp2rolbXec5CrA15g0+jHdoqq+h7MNDxUOA5AJ80Mco4qqroRcwSLvH04H64In97WkwtIPMmYqpI+/TSZ92fyeDlog5HJd1hgbhzKy/VJhm16RK5MlfjdJfhiBeplLwRxiBpf1anhWbW1pNI8hxCihDloll93aq69CcmWYFOri6WN6IUoRnaZigb2gqSjWslKoxQSau3KWec0xoz9QlWMbLSailmv+4cGQ7hU6lPNEIeVRKSLP2Dshzh4gSp9y9qmcdxRfo8CTV66DVQlHAAHk6a3Qx6Z+n8HhMf0SA7v0/Q3c8YBseFqyZYxKAQYG6Rm9Fbl7BEYsKTNI1a6LLAKiIO9Egx+50M3yw/LWimHnSgS6L/awqrh1SpwLv1RsM7Of2ArmjAOMmn48RCPppmh4FDscz6WZDxrQAr5Oy7PBOpy3C1e7KQFXBHE0kNGEscE3t/KtVF+KMd+TzLvW5PeL+en1Zf3NOdEdDPDZGmojkoWywXCebK+eTZCd7FGFJK7cmR2TrqN9jXl82pvXsm83hVcD64oN9K7wdNjVtMcYBQom335Fyw3xyT8A2PC1XVRPfM84egw3g2CvV1gpRkIUucmchLWbBlZ1Fp3qwE+Yjsdd52IfzI1CyTafkBaArKKH8pR23BJtr3Gl5Kw27k+vV9qVFUgXo6/cQ9XQC7xjdAnaID9VKkGz/trnc/MDK+yiyj7V4afLPDtg+4Ohw1Z5kY+JVpN5PRtgPgMcdRmK6+Yj03pH3AQP0Ie+0z3ds7u1kxYdcdHs+Iv/5/60R/SLwb2TDWcBfNp7pVxXCfMQz5eKzEQLLVW+q1J8HjY5B4Yy0lnd3utenhHOXOmbSDqD4uS/mPPrNDUr4kCOjmnZ9ajO6k0l6Nhfa9WN0wFdsqLHogEp+bgqgTAv7Bd8hmHeZwLkCXyRcfuI6QBJtFfzGCJZ0bLt3OUzWPI/dd85uV4ypC1LFl7W67LhCYXJD46ekO+LB/oOrlR5/oJwYsbGbb7X8qslJfh6rT/I4vGtUlrw6Fs83I1mUY8btkXiYuK1D1Upw+O5lNpa8wlNEcXgUXndn3NJ4GiWgI/jQbBGzIKbJxI/QE4drwQvH5i9ytqLBZ5i0wo3iWXg2ttFdL7l/9nCE47CTDbs80Bcv9XYO1PLvEVLyvhkAc/RgeT0dPVo0E9o2C853bXM4500p2LHoQONrn2dENsyBFuyhhbSdnDrFj07j18mnVYHAJdctNAQXoWRbDiMHm2/WOb+qXs0l7URyebMKdc07SAUz+vVveyV/3Jom5WOnVc8ph/sdV0JMvh1QcNRUoqE+yhB56hjatTEzwa/64T5Pg3bAjN7YQKJAwO8r2jdWoKcxxT6UimNJ6txBs3ecQ1QnQv6vdhApQvvWqOpOzb0Gz+ktEeDE64UecGS1WxB/uUfMM5FxZw/6SfZtXueIfF6N+M2w0kjADNld5hV6QXmdrbYoXTu92HPDsFEcXTHTbltUyTS8mB9bztM/H0+3K5EC+zmDNjhMt/5D8j/zKen1QwiXQMUQ1MmRlqJCzyV5gon0H49QXv0v3IYFMiVQy65Sh1rrrlFJA6NDTCWE4F0wEKSuSfhoyjodg0nQLoJDuL7OfJ8nGQdV6a//feOk2KU+QAUUYa2EOy98vHbXk+2REU6VMxbCTR/Sr6xMHpsSxH45MiK1FtXN54a/vCc3hRoBZMhCUAWyIAABUZT7edvswamAIpBk67+9op5yt77/9VwABfz0je4+cNZhgtDEk7QmRxx2jbvkbxWTKUnhdY6BJh7/reCifs1e88usD/YhaZkFqynmnkghPdmHr8zMZa9HN6iljinwFXf3aZnbjhCGfUKbf9uSXbRAun3EvOG73G5UP1iGzhNwxXmrDN+AVWqxa4Dt+Ikk+psATCAMUVTCROcakCaLWsluNnI8iw7kL+xEShw6EJXb9hkIiNm3DYgl9EGisB2lZW95LVZYAptSG1D+GVwf/XQwDilpPinB4jxtmnDovAtOAES20TbilBz9qGF0Jf/HA1s1klggNHNKi6+n/IidncZwPrLQN5Pv6j6teAs6Z04MSnFV/NIlHa+w8ggaHPkn30bN/Lg1kBjwLlkQb2yuJhTzL4DgzkWt3tjWtaRiO1DrAJ9U3DIKqAM16OB/xC9LmBSY4rfnAFQmVtxkpoNrvtNq7kvzvaUgtr3rAWeZSdh0keiH1gVDk0G0lMp1tqRRZIn16NXVp+pl5a0qVfrqcxeZrAdk24ojTcE7rfYJREprK5xVRdr2i2b+gyZSfjNvJpbMM06dkMIuY1rofsbCdcOvbbROPK7osAFfruvBd3HyIOakqtmXGX+ee9VguhAhcf1fTyXCQMnJDbL2YfsQ3JJN8UVNGnlvqlgt+bmGGCgYeo1WPm6DUWbOhRVqdNEAveGD8p7uxv/lZuqclaqXStQiqD2nkpNx+Q/m4e22mB8hMlYTrK8OpQhw2ASwY+ee8t5NqqEqRW6gY6ejFQb/d4mTrEj6AtMM/p6+UptCqqgGDOwsCKrhrwn+DLFuAn1JniMJVePnHcMGzpbe0verQTaadohAmnFwd2g7l3Ohi5EE9JL/UlXy1ge50KT03kSmrVC+ydSCGRIGLY2RYimumBHakc1PjPTRd+npvEkiEcqTVL/wbjTNuZBUJ3xR86U6M9jsILWEJ4vTB9y994iuYXdgz+RID3TspQNcmhRv6r2Q2Zlvjmla11k6aMd4q6FoLT6gacxQ9IXC/A90z177OQbwCAJn8M/GMuWxu3AsbO7lxsqLALVlKXlFbIxnj2D8MreOggxrNHourKnqduEYuGWBTl0re+zuRu7GDZ/ijlrEAVEYl1+dogu5W4uOh7/DjGrsDkbZ40WnVeJR3+uIGJRoHqKv/ZNL77l0Lv2iSd7DhzhbY4tmVv0VSesZflM7UfS10ET3600dgOuzzN3HKqhZ9xKgotGYReSMNn7twwPqt3ow5f2fY4+IulTFJx0HilK1EvP4sf+XHNx99u3UrOoyUdUtOjQdzB7xrw6/X+x5V5wywKuqSaIIfEb45mMsxq616pD5vKcozF1Qrn+PHf3KcF5iQTOltJbgyIBrVNLML1njUK4XscRIEuPK6nQByxB0aym9YuHdaww6jKxkLn2HvRdkIVzDVGocMM9s70nmw0BdLXEV1e9hSul/t8mrmS3+4V5a50QpGslQcF0bcU73fb1Z3oy1ihXkPG76cWmf5CYxPbI8bEIZ9iZJ9pCmxVQSfVm8VRGkTuw1FSoPTCKWflvzjw6eGcnb6oJn1Tm4nDmtpnyMvyTdSt5JXeOUYjX/JCJB7TwcEFhAp2uj5qys3n+auWGTA07oEUY0w+8YJrrS5xLy0c/3TSfFix69oYL2tIeAyyu04KcvCqkNkCf3KsbT2Ls7jOK5tEHFOredrvPP2/0kUoJ3xysfVG+wCJ/4Z2h3+5ozLtrLE3OM34TX7plvbEhqLvlofa8EUobbqO2jAhgcjdrrkAHOqv4iH1FU3EcSIvdKkabyQoxfaCPYoIVpIAUpleurmpPTQWg0EItuk7MIcBpOIWQq0QmnnbYjrTuuSL6pqUzrMirGl5Ly8MLnjpZZmMFIHRStzcum9DIv/7N0b/8+StfJDh/9K9RpEsYCBzvQFbYmEkC2tIoF8yAd3yfpNQIx+no8RYl3+XuA3yBRbMNREcFkzatqRfiNxWq9e3vnaHWLMPEpJgCLKIxmecHutdmJHQ3qY3UqyaueJtqO+QBTN//CaUwc0BmiaSb6RWRSa4729pqPlFnoT3zS2GyW8TxxlnM5Rf5knZvsEX54o2rvBh7D1h4BBMJF+8OJ6pVoLpWxJJeF7VWMUZ88giJzfc9TM0MeYsRhlBpsMmQU6osfPWArqHgwfhoAUhyMjzLfyXGKGp42Gqy0C9S3Ezm752MZgb4+lCCDho1G9vJFP68g9NBa67m/aC8sAzCVNHkiu61l7CKAxueEyLFisxXrAMIrTDrW/Vmpp1Of5u7qzFOiY/Rg2e7Xc/bPEDaSUU9Rbjd4+wiiU3jl9ljPh5r5PYGSNDNgSC604+Qd23GgxvBHqWZZYSiyEG4nrfpvgYmHSupG+YyqvxM9rhsApxx+SYIszORtLZrPbJzfEg+UYfnbTvMYH6VaUGWSrT09x+7dqDLVRHODfzsRz+KHDXOJxEnGbK9Dw8n1MsnSSNyYoLlsm9djgKF1ir7TEb4DDjyI1LbNfXrVHVuBIYuk1QHD2Cj55/s+qmKPrE6gviuJHutr2yb/0AijdaxmOeEvEzEttm8P82RrknfFOgr303olDds0Q63WQUZde8SRKUJJV+lBS49Ig24Qsdo9AcGJIpc69xmKkUZBz/gWdFiqOG3/0zjwZreFisaH/274/yS20NtfHbR3Lgl5rzoOUUMUZ4038DbJEsSOGjwF+yfGTsJI3i0XEa4jZDTD3AUBniGQrdyJCdMSFQROgCDUm0I7L/KuZOEAi631ztqwliI5KhEjf6mlyUkJkh0zl0v9YKa89p/lqtfAIKbxwIv1R3B1Asmk3ZII2OTz/acB0vXeQz48w0OLSMhWTZfht+0CubilNNDFXO7lJKYvxn919/BSnVYNvex3Xq4Es//TaA+u8V83oJrEDzuqDQth145xm6qiL5fsnKO9AB3TwgJ2WfrwJD+h3LY5EKXIsxNwN9aTt5+IYsOon7Sf7M/7lbke3r//2vN/TuAv+J3VAkeXW2XJP//N4///m+3FUIiZUcHlbXjyfaqp8nB3KizIw66mUrF4mQAyB+uvp1uD8aPO/GGR870c7bsXPuI7Wm35pYBAWu+PXx+Wtf1Vupo8RFTqSEQ7O+ZMTgdEmkZHfcfb/k8MV/EBjEB/NzBhlz0zNoVA1TBNGl112yJHkdns83+OfJ57AMTCpx9rp3OXSfHnAL/CKOq3ztGSjilJcHl2Z7gB1WEubuE4+iUKzHjkDoSb2g+dF8leXMtbFQe6Lu6LVsCjYTMlNmL4pSCubdseVgxSBagjIErA9sA5AUxmGCrSGS3gDct6Z5IrUxd5WYgX/GeURx3/Ty/yQU+GGfb8lsVuE3+jcIKuDL9mIk0k+s2H4tiiMIszIuJ1PL2OIITPfvNCylgal2IZ92CJCN76Z0o4M/VCoFKcrm739MCqCLCaYHTIamxJ5Nef34mqs8wPVNEUAaEe8jIbQ3xvX3ufHSeNGdlFBxo5ghB7BMR1A43AaVGYJxHUJDjPupdeyuGSJ72kMenxd0Q7wNw9l0Nxccppc9cHybP+FngHBiTW4r/SoNk3qCLchmDjJSHCZKhcRvf3DKVIp4M6x+PrDkpOnC+yAhLxMHw7WzWkjQVzKi7E9dGUIF7KYk9iyEHOy3oJUCJQ4IA0N913Y36NAowHztbcSfZ6HbGcpggUgYSa33SzQb3sjH3rOHlfq/SmOoww1wUGzsKPARXVme4woyUGObWYxbnVWjiRgk3K9RDqj7wBD6NePZaw4AAsr0RkbZKlXxt+m0AUT+/liaFn+VTn/wU6m+QJK22ZGP7ksPOSKrIHMJpMZWJjPYYSuiYAAyOId/h5c+AAdeHDF5FIeIwAhyII7Mb0eAAuNskn+JSIIAMZUEewASvMHxwenu/PcgAAmMIlIfGH3QBnvcTMpfeWTDIgAMEB76244AHXlk3EszY0jHNUCJSWvgBacUfeSxN+Wa4ASZxyOjkpcBoxdhzEAAdBCSl2+toAFw+dNAllNQBCqipubQFghQrerB5AHl2NZdF38iCS5RLgLsfJlYAxDY6BuLrjDgsbjLnoQQAH4+Ix/tZGwOytARJ8ytI9WANAviJBKywHX/AEQBjcBLE/IpPgAjJLP35kbOoD3douMxP6QBf1ledlHQKfkVSVAAD8eZcru8gCibobimvg4gAG7GAY2EPIHhx4PnnkTwNx7GeEAAfrkvASIwBKKnfRR8GoAAAquqQDt0gXOSW8tVgm70yE0xwA5YMj7sarA8AKMnBM5atjbD3K1AAASUuWKAZVPOzQFzy2D9Pzi5vY+HMAAGYOdDUEu77rP4gchNCE/LaW+SwZm4eQADxl9Yh/0nbgVMDI/oIFl5arFFg+0no7CsaAAASPLjg41X9NdV4FTBKCGc7V3CLyPy2luLnf13rIpGmcuqFflT/j3T7Izo8ZygAAFoFDAZbKAvppYeblLTT6pc77SiPp4v2ZTsuF+/jUM7raPRgAAAvug6vg0iSlYz7rAUcwW/XWxko9KZA7qsqvlje504t5Cpd5HxrkAAAGBUvv/tuDsa+SIHATTSr/iYukG/YI3Yoy+9wF2/MXi1tHMlB0AACjq1sImtBbKXHqiiFEN0Sh+/StOnrEfxTEtDTZXUxUJ+Me/QS7w3bp1DYlpxUMUAAANEN1+FmtXvcDxKjZQDbYpxxQ5/CSrA596Acsbp1UxfQXLB17c1AdefmsOr/lt0keixxP3Wb0iMTEizlU1H1dudWB6rsfpRWv4yesNKWSs83LUMhiCSRW+RYAAAAAAAAAAAAAAAAAAAAARigS4nf/IvLLlANmqavuio3M3XCDoavI8AjKI9eS0Nhqkw5UfLCurbx/dS0f6t5ZyiRiVlAhYPB+fii8EcwgtP8Jx3UNX8kZBLqLmJVi5RsWI1sTFBLEdlfehgAAOHD7ogJFOOtscuvyQsmOjdUDuJo3k47UJ3izvWCDYHac+rMnq94NyvpbJ9nZk1NAEqiZhrH9EOlnVkP5nirDwMJk8ZFWopr40KG66UP9Zoe41urYBlCgDdQICqet4uEbCNlK/uecPA2RnaTtynHlMPCYdJ4FC0x++w5/SwAAI9OOscAAAAAAAAAA=" alt="Placed background content, first frame of 1" loading="lazy" decoding="async"> <span class="pdf-slideshow-preview__caption">Open slideshow · 1 frame</span></a><dialog id="pdf-slideshow-furniture-background-content" class="pdf-slideshow-dialog" data-pdf-slideshow data-pdf-src="../assets/examples/furniture/background-content.pdf" data-pdf-title="Placed background content" data-pdf-pages="1" aria-labelledby="pdf-slideshow-furniture-background-content-label"><div class="pdf-slideshow-dialog__shell"><header class="pdf-slideshow-dialog__header"><div id="pdf-slideshow-furniture-background-content-label" class="pdf-slideshow-dialog__title">Placed background content</div><button class="pdf-slideshow-dialog__close" type="button" data-pdf-close aria-label="Close slideshow">×</button></header><div class="pdf-slideshow-dialog__stage" data-pdf-stage><canvas class="pdf-slideshow-dialog__canvas" data-pdf-canvas role="img" aria-label="Placed background content"></canvas><p class="pdf-slideshow-dialog__message" data-pdf-message aria-live="polite">Loading slideshow…</p></div><footer class="pdf-slideshow-dialog__controls"><div class="pdf-slideshow-dialog__group"><button type="button" data-pdf-previous aria-label="Previous frame">← Previous</button> <span class="pdf-slideshow-dialog__status" data-pdf-status aria-live="polite">Page 1 of 1</span> <button type="button" data-pdf-next aria-label="Next frame">Next →</button></div><div class="pdf-slideshow-dialog__group"><button type="button" data-pdf-zoom-out aria-label="Zoom out">−</button> <button type="button" data-pdf-zoom-reset aria-label="Reset zoom">100%</button> <button type="button" data-pdf-zoom-in aria-label="Zoom in">+</button> <a class="pdf-slideshow-dialog__open" href="../assets/examples/furniture/background-content.pdf" target="_blank" rel="noopener">Open PDF</a></div></footer></div></dialog></div><h2 id="photographic-backgrounds">Photographic backgrounds</h2><p>Pass a slide-sized image through the reserved <code>background</code> entry. The optional <code>scrim</code> of <code>m.components.image()</code> paints a translucent layer over the photograph so the text in front stays readable. The <a href="../content/images.html#scrims">Scrims</a> section covers the flat, gradient, and light options.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">import</span> <span class="calepin-syntax-scope-2">"@preview/mosaic:0.0.1"</span> <span class="calepin-syntax-scope-4">as</span> m
+</code></pre></div><div class="pdf-slideshow" data-frames="1"><a class="pdf-slideshow-preview" href="../assets/examples/furniture/background-content.pdf" data-pdf-slideshow-trigger data-pdf-dialog="pdf-slideshow-furniture-background-content" aria-haspopup="dialog" aria-controls="pdf-slideshow-furniture-background-content" aria-label="Open slideshow: Placed background content" style="max-width: 42em;"><img class="pdf-slideshow-preview__image" src="data:image/webp;base64,UklGRnorAABXRUJQVlA4IG4rAAAwgwGdASpBBfQCPmEwlUikIqIhIFFoUIAMCWlu/BrWgZVcX54O+8sX3tK3uf7H8//DL0sd/86nqO/f7An/Lv9n/FfzLfpf9o/tP7i+Jr6H+1/lX/dv+h0V+s/NX+NfYn8T/bv28/v/7a/JX+k/Jn8mfav5Qf5nqC/jv8j/xX5Qf4P9quU72D8cvYI9ifo3+y/xP9x/9v+g9O7+p9Evzv+8/8P3Af5d/Wf9p+cXrh+Dt6p7AP82/vH/F/vn5ZfS5/Of97/Pf7H9i/bR+X/47/zf5j4CP5p/W/+j/f/bE///uk/bz//+59+53//BCTJkyZMmTJkyZMmTJkyZLP10UZ2uws/y7mBTr4aZ2a579duR4qs+9aDCw0hje8M2bNmzZs2bNmzZs2bNmzZs2bNmzZs2bNmzZs2bNmmZA//bLcWbvcs37+XE5b66XoEJtgwM06dOnTp06dOnTp06dOnSpAQVTPMKuQZkpENOY5BAOg1VdCjm2J5dkFmUYHDdHr50KCwv/9GceGIxkfGCxYsWqHURmsiOLKYOa9evXr169evXr169evVZYH5FwskaLbDK/AgaJbYpieL6zxGm6Q16A1R+R5QDMYPiO89cK5H9CReRvPH89XanrrvOq06W48j5Mpa4PP8Ya/8K/YZhcn7GV/lwqtcCcGu2q3RlOODc1Zr/+U69HRCeAtDLRznf2ZqKSyNgZKa3gr9zWhFGHAc3FxP4Jhf6UyTxKEU8Hpb0NS1BEEPOEl/+ZEliTsCaQHDhw8jUiqwb2kDLimrVq1atWrVq1atWrVqbyWY+dprLm9bsagYrB7jIe5X55qssSWJJrsRYRm59Pc6pJApcg6mciV9jM6w9eXVsVrcbUMob28laqWJe1kZ4fWJodUq5VQGVWiA5Djs7vo2G5L8vHXTHRiinrXtY7/xPo950d3TS1CGRI3WNp9WgK2gcda0mrSDNFLwHWU4W+zyTCF7HWKqRRyuHgLCBk50mkKxIg+rGlOqHhDzntVfLc+/+Tr6dGMJAat8VWviyuZGYsizjAQ5cRXZVnHvlatWrVqON5TVzCdBw4cOHDhw4cOHDhw4VoR0jHYAqTAT9T2ew3qX35cW6X9A5ZoJ5pI0ukQs/GTVTAoyECY3xubR7nTvXp5TBAVC+4gKeI+ra5UBlyW9A8vfxq4Z2aUTU9yk8ZSSNWNzz1jaQ6wOLGM1nbUzdkX53ojIFcADmncf8FflwyMurNmVY02z9WXOgtPFSb/1aoU5ICRNlO7vm29llYEx+NuLQJ+ojsnlKgjSlGz2FQB4G0InhNzqaEzk1atWrVqqFvqt+myISJEiRIkSJEiRIkSJEiRIkSJEiRMvj3GV8gT11KxCTrq8X2UBz16yo50Tp06dObA8su3btHjx48ePHjx48ePHjx48ePHjx48ePHNaJVJKhbNmzZs2bNmzZs2bPlcRhx6DSH2yZMmTJkyZMmTJkyWUBbsB6k86XfU0s0P7U17B4zW4uKhfs+ehzUpNUZpGJyc/sZFt+YJc8y+P50ufgZ+Yz0tynFRlICpx3DP8LhVQ+lKi9/CLTqYWpPTghL7vkFY4XzMIwio3I/tmKL041oHp5GQOw7egBVjtDDTJb8CQv7wUlJpx47FMkBOBYddPD2EqzWifBdNEsnSLrmuOidOnTp06dOnThdlLOv4kSJEiRIkSJEiRIkLxzrtB3G36RfnXgXrmtcGb3Zr3hcACwoLLHhu+T08DopVp8j8Na4IlmItt94O7iPHi6f6OL0wzYVgwO+7AXAcoywwpakf8L1wuBlmrvXhdAfryGXTRXp5EGl5TkQVMl4Q5uApZyIGhh7h3Btf8qoUXI3hu3WsWEwAuHnh+tpidEW2ZFqAPoRtrXGU5ButU/oudDFZNWy68COkII77eHDhw4cOHDhw4cOG3MZsGYJMmTJkyZMmTJkyZMmTJlALZr17EPWZqT+4taMyPaTHkGYjJWTJkyZMmTJkyZMmQbwOBqtrhw4cOHDhw4cOHDhw4cOHDhw4cNC/j19DonTp06dOnTp06dOnTp05JchVuceuOidOnTp06dOnTp06dOnTp06cqgmQkJEiRIkSJEiRIkSJEiRIiQkHOgWXLly5cuXLly5cuXLly5cuXLly4Ln/UFixYsWLFixYsWLFixYsWGxPsherVq1atWrVq1atWrVq1atWrVq1ZYq29YjFAgQIECBAgQIECBAgQID/0ubagkmTJkyZMmTJkyZMmTJkyZMmTJkonkUbZMmTJkyZMmTJkyZMmTJkyXMvm7/r169evXr169evXr169evXr16zODXdHjx48ePHjx48ePHjx48ePHcKaOmggQIECBAgQIECBAgQIECBAgQG6aw95OzJkyZMmTJkyZMmTJkyZMmTGg2dW3Tp06dOnTp06dOnTp06dOnTp0Jbp+LFixYsWLFixYsWLFixYsWLGka4cOHDhw4cOHDhw4cOHDhw4cO9dx0Tp06dOnTp06dOnTp06dN//OHCBYsWLFixYsWLFixYsWLFixYsaRrhw4cOHDhw4cOHDhw4cOHDi+WuOidOnTp06dOnTp06dOnTp03QHZKOBAgQIECBAgQIECBAgQIECBHu6dOnTp06dOnTp06dOnTp06dOaDVUGCBAgQIECBAgQIECBAgQIEBU21aKJkyZMmTJkyZMmTJkyZMmTJkyYOAeMWOidOnTp06dOnTp06dOnTpxYikd/v379+/fv379+/fv379+/fv34OodxbK0ePHjx48ePHjx48ePHjx48VKXr9Tp06dOnTp06dOnTp06dOnTp05tZNPkECBAgQIECBAgQIECBAgQH9mofa0JEiRIkSJEiRIkSJEiRIkSJEiMdime3U6dOnTp06dOnTp06dOnTpzBIL2xWXLly5cuXLly5cuXLly5cuXLlysowxY61atWrVq1atWrVq1atWrVeadm/FMHDhw4cOHDhw4cOHDhw4cOHDhxKvGoyPYAIECBAgQIECBAgQIECBAYvQuBEhvXr169evXr169evXr169evXr163EaYusyZMmTJkyZMmTJkyZMmTCC0DfezZs2bNmzZs2bNmzZs2bNmzZs2aoZTb9hBw4cOHDhw4cOHDhw4cN86/eOn20FixYsWLFixYsWLFixYsWLFixYsPhtNhaZ/fv379+/fv379+/fv3651Mr2L+uOidOnTp06dOnTp06dOnTp06dOn8M1C0QzNmzZs2bNmzZs2bNmzW4Eaobffv379+/fv379+/fv379+/fv379+/c7G4yAlX0ZMmTJkyZMmTJkyZMjOFcXGvbVq1atWrVq1atWrVq1atWrVq1atWrVdC+4q/t5EmTJkyZMmTJkyZMl/TTeaxsFixYsWLFixYsWLFixYsWLFixYsWLFht27N6//qhQoUKFChQoUKFBasqJEiRIkSJEiRIkSJEiRIkSJEiRIkSJEh02v9yldFv69evXr169evXquTzT2HfnROnTp06dOnTp06dOnTp06dOnTp06dOnfpYtAo/lOoRHjx48ePHjx0KSyoLZAgQIECBAgQIECBAgQIECBAgQIECBAgQIEB/AL4mTyUCYIcOHDhw4brw5yooiWChQoUKFChQoUKFChQoUKFChQoUKFChQoUKFCeXzjPFHfs2R9+/fv33m84t+dqqaBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgS/NMlUQ6qx78NiDC34pbU2G7yU0Li4E3Ptxh+tf/ReEF69evXr169evXr169evXr169evXr169evXr169evXr2BgmsBBXMdE6dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOm4jhzEYOsmulqTrjonTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnTp06dOnRHAwwlHT08TQ5nmtubSEhIkSJEiRIkSJEiRIkSJEiRIkSJEiRIkSJEiRIkSJEiRIkSI+t5kv1Pr169evXr169evXr169evXr169evXr169evXr169evXr169evXeAAP7/7d6BPlejHL2y0ggO63SRl5x5Bk6LyN6k5EX4Bcbe82v+QMz4ChiNQsmnDdY81tkLDXtM/B0qGcIqls71XAI8EVJUamU0P2tkjUtqL05l7+adAn536fnEmhVLHUE3hI27HzHObRURbs8Z5GsfO2FPzmAABpoIB1UaN2H3z9LxQIGsEVUVAOFTWAnauGMqW28GAAA2CSkOrk6zIfTZwxeLFVxQgDEtiBRtovOTqdd9FDpdFSIr0n3EyKB8Sz8lb+f+jsoRJ6RSpKI6YPhKN7ax6SUh2UW/EuHkDw5UeBEveOgWx83Vcwk3Q6DWIpCrVbOiC2lPP5FgID9/0Cae5nilaPfSUaPivnUA7xb1ob0ggSt9o/IpovxlMV53LGSpE5g+mt78sGkieULbQfb30FRzsfX3rFzGjxJ+QwCG8mheuLHyrgizUS/JslMrarAFtBDPnsrpBMq0wtcA+AP7S2GJh1FpLAqwsq5SuuMsO1zzsdOPXo93fcW4VydUMTop0igsYOdzPGPS9cVeSQz6JfTLmzvu9IEPyyL5VnatcBWmD22Xu/skqPmynbNTj5Yfsu0YHGU5uLss/4Gjafa6oIKsHDaq1mWSLcYT/0+W9ACkDDYJ40mF8+su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" alt="Placed background content, first frame of 1" loading="lazy" decoding="async"> <span class="pdf-slideshow-preview__caption">Open slideshow · 1 frame</span></a><dialog id="pdf-slideshow-furniture-background-content" class="pdf-slideshow-dialog" data-pdf-slideshow data-pdf-src="../assets/examples/furniture/background-content.pdf" data-pdf-title="Placed background content" data-pdf-pages="1" aria-labelledby="pdf-slideshow-furniture-background-content-label"><div class="pdf-slideshow-dialog__shell"><header class="pdf-slideshow-dialog__header"><div id="pdf-slideshow-furniture-background-content-label" class="pdf-slideshow-dialog__title">Placed background content</div><button class="pdf-slideshow-dialog__close" type="button" data-pdf-close aria-label="Close slideshow">×</button></header><div class="pdf-slideshow-dialog__stage" data-pdf-stage><canvas class="pdf-slideshow-dialog__canvas" data-pdf-canvas role="img" aria-label="Placed background content"></canvas><p class="pdf-slideshow-dialog__message" data-pdf-message aria-live="polite">Loading slideshow…</p></div><footer class="pdf-slideshow-dialog__controls"><div class="pdf-slideshow-dialog__group"><button type="button" data-pdf-previous aria-label="Previous frame">← Previous</button> <span class="pdf-slideshow-dialog__status" data-pdf-status aria-live="polite">Page 1 of 1</span> <button type="button" data-pdf-next aria-label="Next frame">Next →</button></div><div class="pdf-slideshow-dialog__group"><button type="button" data-pdf-zoom-out aria-label="Zoom out">−</button> <button type="button" data-pdf-zoom-reset aria-label="Reset zoom">100%</button> <button type="button" data-pdf-zoom-in aria-label="Zoom in">+</button> <a class="pdf-slideshow-dialog__open" href="../assets/examples/furniture/background-content.pdf" target="_blank" rel="noopener">Open PDF</a></div></footer></div></dialog></div><h2 id="photographic-backgrounds">Photographic backgrounds</h2><p>Pass a slide-sized image through the reserved <code>background</code> entry. The optional <code>scrim</code> of <code>m.components.image()</code> paints a translucent layer over the photograph so the text in front stays readable. The <a href="../content/images.html#scrims">Scrims</a> section covers the flat, gradient, and light options.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">import</span> <span class="calepin-syntax-scope-3">"@preview/mosaic:0.0.1"</span> <span class="calepin-syntax-scope-6">as</span> m
 
-<span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">show</span>: <span class="calepin-syntax-scope-8">m</span>.<span class="calepin-syntax-scope-8">setup</span>
-<span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">set</span> <span class="calepin-syntax-scope-8">page</span>(fill: <span class="calepin-syntax-scope-8">rgb</span>(<span class="calepin-syntax-scope-2">"#f4f1ea"</span>))
-<span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">set</span> <span class="calepin-syntax-scope-8">text</span>(size: <span class="calepin-syntax-scope-9">22pt</span>, fill: <span class="calepin-syntax-scope-8">rgb</span>(<span class="calepin-syntax-scope-2">"#172033"</span>))
+<span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">show</span>: <span class="calepin-syntax-scope-20">m</span>.<span class="calepin-syntax-scope-20">setup</span>
+<span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">set</span> <span class="calepin-syntax-scope-20">page</span>(fill: <span class="calepin-syntax-scope-20">rgb</span>(<span class="calepin-syntax-scope-3">"#f4f1ea"</span>))
+<span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">set</span> <span class="calepin-syntax-scope-20">text</span>(size: <span class="calepin-syntax-scope-23">22pt</span>, fill: <span class="calepin-syntax-scope-20">rgb</span>(<span class="calepin-syntax-scope-3">"#172033"</span>))
 
 <span class="calepin-syntax-scope-1">// Anchor the body content to the right, past the image, through its label.</span>
-<span class="calepin-syntax-scope-4">#</span><span class="calepin-syntax-scope-4">show</span> <span class="calepin-syntax-scope-8">label</span>(<span class="calepin-syntax-scope-2">"mosaic-cell-body"</span>): <span class="calepin-syntax-scope-4">set</span> <span class="calepin-syntax-scope-8">align</span>(right <span class="calepin-syntax-scope-10">+</span> horizon)
+<span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">show</span> <span class="calepin-syntax-scope-20">label</span>(<span class="calepin-syntax-scope-3">"mosaic-cell-body"</span>): <span class="calepin-syntax-scope-6">set</span> <span class="calepin-syntax-scope-20">align</span>(right <span class="calepin-syntax-scope-24">+</span> horizon)
 
-#m.<span class="calepin-syntax-scope-8">slide</span>(
-  <span class="calepin-syntax-scope-2">"content"</span>,
-  variant: <span class="calepin-syntax-scope-2">"body"</span>,
-  background: m.components.<span class="calepin-syntax-scope-8">image</span>(
-  <span class="calepin-syntax-scope-8">path</span>(<span class="calepin-syntax-scope-2">"/docs-src/assets/images/bonsai.webp"</span>),
-  scrim: white.<span class="calepin-syntax-scope-8">transparentize</span>(<span class="calepin-syntax-scope-9">65%</span>),
-  alt: <span class="calepin-syntax-scope-2">"A pine bonsai"</span>,
+#m.<span class="calepin-syntax-scope-20">slide</span>(
+  <span class="calepin-syntax-scope-3">"content"</span>,
+  variant: <span class="calepin-syntax-scope-3">"body"</span>,
+  background: m.components.<span class="calepin-syntax-scope-20">image</span>(
+  <span class="calepin-syntax-scope-20">path</span>(<span class="calepin-syntax-scope-3">"/docs-src/assets/images/bonsai.webp"</span>),
+  scrim: white.<span class="calepin-syntax-scope-20">transparentize</span>(<span class="calepin-syntax-scope-23">65%</span>),
+  alt: <span class="calepin-syntax-scope-3">"A pine bonsai"</span>,
 ),
 )[
-  <span class="calepin-syntax-scope-8">#</span><span class="calepin-syntax-scope-8">block</span>(width: <span class="calepin-syntax-scope-9">38%</span>)[
+  <span class="calepin-syntax-scope-20">#</span><span class="calepin-syntax-scope-20">block</span>(width: <span class="calepin-syntax-scope-23">38%</span>)[
     == A background image
 
     Pass `m.components.image()` content through the `background` entry.
@@ -4897,6 +5081,9 @@ html[data-theme="dark"] .mosaic-diagram {
 
   // ------------------------------------------------------ sidebar sections
 
+  // Only one section is open at a time, but "section" means siblings: opening a
+  // nested subsection must not fold the parent it lives in, and must only fold
+  // its own siblings.
   function initSidebarSections() {
     const sections = Array.from(
       document.querySelectorAll(".calepin-website-sidebar-section"),
@@ -4907,7 +5094,9 @@ html[data-theme="dark"] .mosaic-diagram {
       section.addEventListener("toggle", () => {
         if (!section.open) return;
         sections.forEach((other) => {
-          if (other !== section) other.removeAttribute("open");
+          if (other === section) return;
+          if (other.parentElement !== section.parentElement) return;
+          other.removeAttribute("open");
         });
       });
     });
