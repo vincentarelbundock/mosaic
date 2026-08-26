@@ -238,7 +238,7 @@
   // labeled <mosaic-cell-ID>. Native rules target it directly:
   //   show label("mosaic-cell-" + id): set text(...)
   //   show label("mosaic-cell-" + id): set align(horizon)
-  //   show label("mosaic-cell-" + id): it => block(fill: ..., it)
+  //   show label("mosaic-cell-" + id): set block(fill: ...)
   // The inset lives inside the label so wrapping rules paint edge to edge,
   // but em insets are resolved against the text size just outside the label,
   // so cell typography rules do not scale cell geometry.
@@ -259,14 +259,24 @@
         content
       }
     }
+    // Paint is passed only when the style declares it. An undeclared property
+    // is left to native `set block` rules on the cell label, which follow
+    // ordinary set precedence: a scoped rule overrides a deck-wide one instead
+    // of stacking behind it the way a wrapping transform does. A declared
+    // paint is the variant's design and stays constructor-strength.
     let body = block(
       width: 100%,
       height: region-height,
-      fill: fill,
-      stroke: stroke,
-      radius: radius,
+      ..if fill == none { (:) } else { (fill: fill) },
+      ..if stroke == none { (:) } else { (stroke: stroke) },
+      ..if radius == 0pt { (:) } else { (radius: radius) },
       clip: background != none,
     )[
+      // A show-set on the cell label applies to everything inside the label,
+      // not just the cell's own block; without a reset it would also paint
+      // every block in the cell's content. Restating the defaults here
+      // confines the rule to the surface it targets.
+      #set block(fill: none, stroke: none, radius: 0pt)
       #if background != none {
         place(top + left, block(width: 100%, height: 100%, background))
       }

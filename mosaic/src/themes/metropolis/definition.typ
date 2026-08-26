@@ -40,10 +40,11 @@
   show raw: set text(font: options.font-mono)
   show raw.where(block: false): set text(size: 1.125em)
   show raw.where(block: true): set text(size: 0.8em)
-  show label("mosaic-cell-header"): it => block(
-    width: 100%, fill: colors.text,
-    text(fill: colors.canvas, weight: "medium", it),
-  )
+  // Both halves are show-set rules on purpose: a user rule on the same label,
+  // written after setup or scoped to one slide, overrides either half instead
+  // of fighting a wrapping transform or a constructor-strength ink.
+  show label("mosaic-cell-header"): set block(fill: colors.text)
+  show label("mosaic-cell-header"): set text(fill: colors.canvas, weight: "medium")
   show label("mosaic-cell-title"): set text(fill: colors.text)
   show label("mosaic-title-display"): set text(
     size: 2em, weight: "semibold", tracking: -0.015em,
