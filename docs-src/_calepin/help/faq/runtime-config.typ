@@ -6,5 +6,5 @@
   "image-meta": path("image-meta.json"),
   "source-dir": "help",
   source: "help/faq.typ",
-  "raw-langs": ("d2", "dot", "mermaid", "python", "r", "tikz"),
+  "raw-langs": ("d2", "dot", "mermaid", "python", "r", "sh", "tikz"),
 )

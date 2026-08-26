@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as m
+#import "@local/mosaic:0.0.2" as m
 #show: m.setup
 #set page(fill: rgb("#f4f0e8"))
 #set text(fill: rgb("#20262d"))
@@ -10,9 +10,9 @@
 #let paper = white
 
 #show label("mosaic-cell-header"): set text(fill: paper)
-#show label("mosaic-cell-header"): m.surface(fill: ink, height: auto)
+#show label("mosaic-cell-header"): set block(fill: ink)
 #show label("mosaic-cell-footer"): set text(fill: paper)
-#show label("mosaic-cell-footer"): m.surface(fill: ink, height: auto)
+#show label("mosaic-cell-footer"): set block(fill: ink)
 
 #let myslide = m.slide.with(
   layout: m.layouts.content(),

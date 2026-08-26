@@ -234,19 +234,24 @@
 
 // A plane renders as one full-slide block labeled <mosaic-ID> (ID is
 // "background" or "foreground"), so native label rules can style it without
-// conflating planes with grid cells.
+// conflating planes with grid cells. As in render-cell, a `set block` show-set
+// on the label paints this block itself, and the reset just inside confines
+// it to the plane's own surface rather than every block in the plane content.
 #let render-plane(body, step, heading-scope) = if body == none {
   []
 } else {
   let body = block(
     width: 100%,
     height: 100%,
-    transform(
-      body,
-      step,
-      headings: "visual",
-      heading-scope: heading-scope,
-    ),
+    {
+      set block(fill: none, stroke: none, radius: 0pt)
+      transform(
+        body,
+        step,
+        headings: "visual",
+        heading-scope: heading-scope,
+      )
+    },
   )
   [#body#label("mosaic-" + heading-scope)]
 }

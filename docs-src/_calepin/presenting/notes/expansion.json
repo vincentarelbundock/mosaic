@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "fingerprint": 9331855984608625561,
-  "generation": "8181699361b34399-1349cde127705c16",
+  "fingerprint": 8463428899253667252,
+  "generation": "757423be21ca45b4-1349cde127705c16",
   "completed_store": {},
   "stabilized_chunks": [
     {
@@ -24,6 +24,7 @@
         "echo": true,
         "output": true,
         "results": "render",
+        "results-location": "statement",
         "warning": true,
         "message": true,
         "placeholder": true,
@@ -65,6 +66,7 @@
         "echo": true,
         "output": true,
         "results": "render",
+        "results-location": "statement",
         "warning": true,
         "message": true,
         "placeholder": true,

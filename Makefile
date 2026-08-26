@@ -75,7 +75,7 @@ API_STAMP_DIR := .build/api
 API_GROUP_setup := $(API_DIR)/sources/setup.typ
 API_GROUP_theme := $(PACKAGE_DIR)/src/themes/extension.typ
 API_GROUP_slides := $(addprefix $(PACKAGE_DIR)/src/,\
-  slide/command.typ info.typ note/command.typ surface.typ fit.typ)
+  slide/command.typ info.typ note/command.typ fit.typ)
 API_GROUP_steps := $(addprefix $(PACKAGE_DIR)/src/incremental/,command.typ pause.typ)
 API_GROUP_grids := $(PACKAGE_DIR)/src/grid/constructors.typ
 API_GROUP_layouts := $(addprefix $(PACKAGE_DIR)/src/,\

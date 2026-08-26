@@ -73,13 +73,13 @@
 /// *Styling*
 ///
 /// Cells are structural only. Every rendered cell is labeled
-/// `<mosaic-cell-ID>`, so appearance comes from native Typst rules. Use a `set`
-/// rule for properties of the content and `mosaic.surface` for the cell's own
+/// `<mosaic-cell-ID>`, so appearance comes from native Typst rules: `set text`
+/// and friends for properties of the content, `set block` for the cell's own
 /// block.
 ///
 /// ```typ
 /// #show label("mosaic-cell-body"): set text(size: 0.9em)
-/// #show label("mosaic-cell-body"): mosaic.surface(fill: luma(240), height: 100%)
+/// #show label("mosaic-cell-body"): set block(fill: luma(240))
 /// ```
 ///
 /// -> dictionary

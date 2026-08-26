@@ -5,7 +5,7 @@
 
 Every part of a rendered slide carries a Typst label, and those labels are the whole styling surface. A deck reaches them with ordinary `show` rules, and a theme's `apply` reaches the same ones. This page is the complete inventory.
 
-Two kinds of rules cover a labeled region, split by what they touch. Properties of the content *inside* it pass through as ordinary `set` rules. Properties of its own block, its fill, stroke, and corner radius, go through `m.surface`, which wraps the labeled block in one that carries the paint. The #link("../appearance/styling.html")[styling] page explains that split in full.
+Two kinds of rules cover a labeled region, split by what they touch. Properties of the content *inside* it pass through as ordinary `set` rules. Properties of its own block, its fill, stroke, and corner radius, are `set block` rules on the same label. The #link("../appearance/styling.html")[styling] page explains that split in full.
 
 = Cells
 

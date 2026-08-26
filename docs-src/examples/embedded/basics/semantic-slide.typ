@@ -1,17 +1,17 @@
-#import "@preview/mosaic:0.0.1" as m
+#import "@local/mosaic:0.0.2" as m
 
 #show: m.setup
 
 // Tint every named cell used below ahead of time, one native show rule per
 // cell label, so each step's grid structure is visible from the start.
-// m.surface paints the cell's own block; set rules style the content inside.
-#show label("mosaic-cell-main"): m.surface(fill: rgb("#7fa8cc"), height: 100%)
+// set block paints the cell's own block; set rules style the content inside.
+#show label("mosaic-cell-main"): set block(fill: rgb("#7fa8cc"))
 #show label("mosaic-cell-main"): set align(left + horizon)
-#show label("mosaic-cell-aside"): m.surface(fill: rgb("#c9a75e"), height: 100%)
+#show label("mosaic-cell-aside"): set block(fill: rgb("#c9a75e"))
 #show label("mosaic-cell-aside"): set align(left + horizon)
-#show label("mosaic-cell-notes"): m.surface(fill: rgb("#85b892"), height: 100%)
+#show label("mosaic-cell-notes"): set block(fill: rgb("#85b892"))
 #show label("mosaic-cell-notes"): set align(left + horizon)
-#show label("mosaic-cell-source"): m.surface(fill: rgb("#c9a75e"), height: 100%)
+#show label("mosaic-cell-source"): set block(fill: rgb("#c9a75e"))
 #show label("mosaic-cell-source"): set align(left + horizon)
 
 // Start with one named cell.

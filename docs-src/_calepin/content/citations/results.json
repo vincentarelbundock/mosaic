@@ -1,8 +1,8 @@
 {
   "schema": 2,
-  "calepin_version": "0.0.51",
+  "calepin_version": "0.0.54",
   "input": "content/citations.typ",
-  "generation": "0b23504e553cd5a6-1349cde127705c16",
+  "generation": "92d10b15173a8d1e-1349cde127705c16",
   "store": {},
   "chunks": {}
 }

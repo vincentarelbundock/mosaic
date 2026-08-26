@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as m
+#import "@local/mosaic:0.0.2" as m
 
 #show: m.setup
 #set text(size: 22pt)
@@ -8,7 +8,7 @@
 #let panel(id) = it => {
   show label("mosaic-cell-" + id): set align(center + horizon)
   show label("mosaic-cell-" + id): set text(size: 1.5em, weight: "bold")
-  show label("mosaic-cell-" + id): m.surface(stroke: 1pt + black, height: 100%)
+  show label("mosaic-cell-" + id): set block(stroke: 1pt + black)
   it
 }
 

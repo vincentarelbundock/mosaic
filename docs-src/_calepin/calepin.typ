@@ -15,6 +15,7 @@
 #import "runtime/elements/mod.typ" as elementmod
 
 #let pages = pagesmod.pages
+#let url = pagesmod.url
 #let setup = options.setup
 #let chunk = chunks.chunk
 #let inline = chunks.inline

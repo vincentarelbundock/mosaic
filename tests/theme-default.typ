@@ -2,7 +2,7 @@
 #import mosaic.themes.default as default-theme
 
 #let shared = (
-  "setup", "slide", "note", "surface",
+  "setup", "slide", "note",
   "grids", "layouts", "steps", "components",
 )
 #assert(shared.all(name => name in mosaic and name in default-theme))
@@ -10,7 +10,6 @@
 #assert(mosaic.slide == default-theme.slide)
 #assert(mosaic.note == default-theme.note)
 #assert(mosaic.steps.pause == default-theme.steps.pause)
-#assert(mosaic.surface == default-theme.surface)
 #assert(mosaic.grids == default-theme.grids)
 #assert(mosaic.layouts == default-theme.layouts)
 #assert(mosaic.steps == default-theme.steps)

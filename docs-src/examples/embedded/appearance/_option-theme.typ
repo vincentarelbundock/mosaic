@@ -1,6 +1,6 @@
 // A theme with one option of its own, in the importable shape a deck expects.
 #import "@preview/mosaic:0.0.1": (
-  slide, note, fit, surface, grids, steps, components, themes, layouts,
+  slide, note, fit, grids, steps, components, themes, layouts,
 )
 #import "@preview/mosaic:0.0.1" as mosaic
 

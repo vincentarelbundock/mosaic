@@ -55,7 +55,7 @@ class ThemeArchitectureTests(unittest.TestCase):
         self.assertFalse((STARTER / "_starter-layouts-impl.typ").exists())
         self.assertFalse((STARTER / "_starter-tokens.typ").exists())
         self.assertIn("themes.setup(definition)", facade)
-        for name in ("slide", "note", "fit", "surface", "grids", "steps", "components"):
+        for name in ("slide", "note", "fit", "grids", "steps", "components"):
             self.assertIn(name, facade)
 
     def test_portfolio_vendors_no_theme(self) -> None:

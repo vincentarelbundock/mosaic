@@ -129,16 +129,16 @@ The grid remains unchanged while the `cells:` dictionary receives ordinary Typst
 
 == Style the cells
 
-Once the cells and content are in place, target each cell by its label. `m.surface` paints the cell, while `set align` positions its content.
+Once the cells and content are in place, target each cell by its label. A `set block` rule paints the cell, while `set align` positions its content.
 
 ```typ
-#show label("mosaic-cell-main"): m.surface(fill: rgb("#7fa8cc"), height: 100%)
+#show label("mosaic-cell-main"): set block(fill: rgb("#7fa8cc"))
 #show label("mosaic-cell-main"): set align(left + horizon)
-#show label("mosaic-cell-notes"): m.surface(fill: rgb("#85b892"), height: 100%)
-#show label("mosaic-cell-source"): m.surface(fill: rgb("#c9a75e"), height: 100%)
+#show label("mosaic-cell-notes"): set block(fill: rgb("#85b892"))
+#show label("mosaic-cell-source"): set block(fill: rgb("#c9a75e"))
 ```
 
-See #link("../appearance/styling.html#content-rules-and-surface-rules")[Styling cells] for the full styling model.
+See #link("../appearance/styling.html#content-rules-and-block-rules")[Styling cells] for the full styling model.
 
 == Built-in layouts are grids too
 

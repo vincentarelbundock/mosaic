@@ -1,8 +1,8 @@
 {
   "schema": 2,
-  "calepin_version": "0.0.51",
+  "calepin_version": "0.0.54",
   "input": "start/first-deck.typ",
-  "generation": "cee83f235d483879-1349cde127705c16",
+  "generation": "e9623fb1912d12de-1349cde127705c16",
   "store": {},
   "chunks": {}
 }

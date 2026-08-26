@@ -244,7 +244,7 @@ Once a theme is worth reusing, give it a file of its own. That file re-exports t
 
 ```typ
 // mytheme.typ
-#import "@preview/mosaic:0.0.1": slide, note, fit, surface, grids, steps, components, themes
+#import "@preview/mosaic:0.0.1": slide, note, fit, grids, steps, components, themes
 #import "definition.typ": definition
 #import "layouts.typ" as layouts
 #let setup = themes.setup(definition)

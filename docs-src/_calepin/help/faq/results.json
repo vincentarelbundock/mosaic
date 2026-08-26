@@ -1,8 +1,39 @@
 {
   "schema": 2,
-  "calepin_version": "0.0.51",
+  "calepin_version": "0.0.54",
   "input": "help/faq.typ",
-  "generation": "1fb5a7bc676259fc-1349cde127705c16",
+  "generation": "e05737ec8f9773a5-1349cde127705c16",
   "store": {},
-  "chunks": {}
+  "chunks": {
+    "chunk-1": {
+      "label": "chunk-1",
+      "engine": "sh",
+      "source": "typst compile --pdf-standard ua-1 main.typ\n",
+      "status": "skipped",
+      "options": {
+        "echo": true,
+        "output": true,
+        "results": "render",
+        "results-location": "statement",
+        "warning": true,
+        "message": true,
+        "placeholder": true,
+        "fig-width": "70%",
+        "fig-height": null,
+        "fig-align": "center",
+        "fig-responsive": true,
+        "fig-link": null,
+        "fig-caption": null,
+        "fig-cap-location": null,
+        "fig-alt-text": null,
+        "fig-subcaptions": null,
+        "fig-layout-columns": null,
+        "fig-layout-rows": null,
+        "tbl-caption": null,
+        "lst-caption": null,
+        "kind": null
+      },
+      "items": []
+    }
+  }
 }

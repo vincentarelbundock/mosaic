@@ -11,6 +11,65 @@
 #let _input-block = codemod._input-block
 #let _output-block = codemod._output-block
 
+// Typst steps a figure's counter for every figure element it sees, captioned or
+// not, so a Calepin wrapper placed around output that is already a figure (a
+// `tinytable` table, say) costs the kind's counter two steps and numbers the
+// inner caption one ahead of the reference. The two helpers below let a chunk
+// see that case coming: `_trails-in-figure` recognises evaluated markup whose
+// last element is a figure the code produced itself, which the chunk can label
+// directly instead of wrapping it again.
+
+#let _is-blank-element(item) = {
+  let kind = item.func()
+  kind == [ ].func() or kind == parbreak or kind == linebreak
+}
+
+// Only the wrappers Typst puts around an evaluated markup body (`sequence`,
+// `styled`) are traversed. A figure nested deeper belongs to whatever content
+// holds it, not to the chunk.
+#let _trails-in-figure(content) = {
+  if type(content) != type([]) {
+    return false
+  }
+  if content.func() == figure {
+    return true
+  }
+  let fields = content.fields()
+  if "child" in fields {
+    return _trails-in-figure(fields.child)
+  }
+  if "children" in fields {
+    let children = fields.children.filter(child => not _is-blank-element(child))
+    if children.len() == 0 {
+      return false
+    }
+    return _trails-in-figure(children.last())
+  }
+  false
+}
+
+// Evaluate Typst markup a chunk printed.
+//
+// `typst-labels` hands the chunk's cross-reference identity to the figure the
+// markup itself produced: appending the labels to the source attaches them to
+// that figure, where an enclosing Calepin figure would have taken the number
+// the reference resolves to. `typst-demote-figures` covers the case where
+// Calepin still has to wrap (it owns a caption of its own): nested figures keep
+// their caption text but stop consuming counter steps.
+#let _eval-typst(source, opts) = {
+  let labels = opts.at("typst-labels", default: ())
+  if labels.len() > 0 {
+    let suffix = labels.map(name => "<" + name + ">").join(" ")
+    return eval(source + "\n" + suffix, mode: "markup")
+  }
+  if opts.at("typst-demote-figures", default: false) {
+    set figure(numbering: none)
+    eval(source, mode: "markup")
+  } else {
+    eval(source, mode: "markup")
+  }
+}
+
 #let _figure-caption(fig-caption, fig-cap-location) = {
   if fig-caption == none {
     none
@@ -218,36 +277,43 @@
   if value.ends-with("in") {
     return float(value.slice(0, value.len() - 2).trim()) * 1in
   }
+  if value.ends-with("fr") {
+    return float(value.slice(0, value.len() - 2).trim()) * 1fr
+  }
   value
 }
 
-#let _paged-result-options(options) = {
-  let out = (:)
-  if "fig-width" in options and options.at("fig-width") != none {
-    out.insert("fig-width", _paged-layout-size(options.at("fig-width")))
+// Grid track lists serialize as arrays of size strings, so each entry needs
+// the same string-to-length conversion a scalar size gets.
+#let _paged-layout-tracks(value) = {
+  if type(value) == array {
+    value.map(_paged-layout-size)
+  } else {
+    _paged-layout-size(value)
   }
-  if "fig-height" in options and options.at("fig-height") != none {
-    out.insert("fig-height", _paged-layout-size(options.at("fig-height")))
-  }
-  if "fig-align" in options and options.at("fig-align") != none {
-    out.insert("fig-align", options.at("fig-align"))
-  }
-  // Panel captions come from the stored options for a `#|` header chunk: Typst
-  // reads only `label` out of the header, so a `fig-subcap` written there never
-  // reaches the call options this render started from.
-  if "fig-subcaptions" in options and options.at("fig-subcaptions") != none {
-    out.insert("fig-subcaptions", options.at("fig-subcaptions"))
-  }
-  out
 }
 
+// Display options declared in a fenced `#|` chunk header exist only in the
+// serialized result options: Typst reads nothing but `label` out of the
+// header, so a caption, alt text, or layout written there never reaches the
+// call options this render started from. Restore every stored option that was
+// actually set (unset ones serialize as `none` and must not clobber call-site
+// values); paged output needs size strings converted to lengths, HTML
+// consumes them directly.
 #let _merge-result-options(opts, chunk) = {
-  let options = chunk.at("options", default: (:))
-  if _is-html() {
-    opts + options
-  } else {
-    opts + _paged-result-options(options)
+  let out = opts
+  for (key, value) in chunk.at("options", default: (:)) {
+    if value == none {
+      continue
+    }
+    if not _is-html() and key in ("fig-width", "fig-height") {
+      value = _paged-layout-size(value)
+    } else if not _is-html() and key in ("fig-layout-columns", "fig-layout-rows") {
+      value = _paged-layout-tracks(value)
+    }
+    out.insert(key, value)
   }
+  out
 }
 
 // Sizes written by a relocation call go through the same string-to-length
@@ -298,6 +364,14 @@
 #let _display-selection(item) = {
   let data = item.at("data", default: (:))
   _select-representation(data)
+}
+
+#let _typst-source-value(value) = {
+  if type(value) == dictionary and value.at("path", default: none) != none {
+    read(_artifact-path(value), encoding: "utf8")
+  } else {
+    value
+  }
 }
 
 #let _is-image-mime(mime) = mime == "image/svg+xml" or mime == "image/png"
@@ -631,11 +705,7 @@
     }
     _finalize-figure-content(img, label, fig-labels, figure-opts, anchor)
   } else if mime == "text/x-typst" {
-    if type(value) == dictionary and value.at("path", default: none) != none {
-      eval(read(_artifact-path(value), encoding: "utf8"), mode: "markup")
-    } else {
-      eval(value, mode: "markup")
-    }
+    _eval-typst(_typst-source-value(value), opts)
   } else if mime == "application/json" {
     _output-block(repr(value), kind: "result")
   } else {
@@ -643,19 +713,25 @@
   }
 }
 
-#let _render-item(item, label, opts, fig-labels, anchor: true) = {
+#let _render-item(item, label, opts, fig-labels, anchor: true, source-block: none) = {
   let results-mode = opts.at("results")
   let inline-output = opts.at("inline-output")
   let warning = opts.at("warning")
   let message = opts.at("message")
 
   let item-type = item.at("type", default: "")
-  if item-type == "stream" {
+  if item-type == "source" {
+    // Source segments reach this point only when the chunk interleaves; every
+    // other path strips them before rendering.
+    if source-block != none {
+      source-block(item.at("text", default: ""))
+    }
+  } else if item-type == "stream" {
     let text = item.at("text", default: "")
     if _results-hidden(results-mode) {
       none
     } else if results-mode == "typst" {
-      eval(text, mode: "markup")
+      _eval-typst(text, opts)
     } else if inline-output {
       text
     } else {
@@ -688,6 +764,42 @@
   }
 }
 
+// The Typst markup an item hands to the document, or `none` when the item is
+// not Typst markup: printed output the chunk asked to pass through
+// (`results: "typst"`), or a display item the engine tagged as Typst.
+#let _typst-item-source(item, opts) = {
+  let item-type = item.at("type", default: "")
+  if item-type == "stream" {
+    if opts.at("results", default: "render") == "typst" {
+      item.at("text", default: "")
+    } else {
+      none
+    }
+  } else if item-type == "display" or item-type == "result" {
+    let selected = _display-selection(item)
+    if selected != none and selected.mime == "text/x-typst" {
+      _typst-source-value(selected.value)
+    } else {
+      none
+    }
+  } else {
+    none
+  }
+}
+
+// How many of the chunk's items print Typst markup that ends in a figure of
+// their own.
+#let _own-figure-count(items, opts) = {
+  let count = 0
+  for item in items {
+    let source = _typst-item-source(item, opts)
+    if source != none and _trails-in-figure(eval(source, mode: "markup")) {
+      count += 1
+    }
+  }
+  count
+}
+
 // How many runs of consecutive image items the chunk's output contains. Output
 // between two plots (R flushes `cat()` between plot calls; Python buffers its
 // stdout ahead of them) starts a new run.
@@ -710,7 +822,7 @@
 // Render a chunk's items in order, batching consecutive images into one figure
 // each. `fig-labels` and the caption carried by `opts` are attached by every
 // batch, so callers pass them only when a single batch will result.
-#let _render-item-sequence(items, label, opts, anchor, fig-labels: ()) = {
+#let _render-item-sequence(items, label, opts, anchor, fig-labels: (), source-block: none) = {
   let image-group = ()
   for result-item in items {
     if _is-image-display-item(result-item) {
@@ -720,7 +832,7 @@
         _render-image-group(image-group, label, opts, fig-labels, anchor)
         image-group = ()
       }
-      _render-item(result-item, label, opts, fig-labels, anchor: anchor)
+      _render-item(result-item, label, opts, fig-labels, anchor: anchor, source-block: source-block)
     }
   }
   _render-image-group(image-group, label, opts, fig-labels, anchor)
@@ -732,25 +844,100 @@
 // output splits the images into several batches, letting each batch attach them
 // defines the label twice (Typst rejects the reference) and numbers the caption
 // twice. Wrap the whole chunk in a single figure instead.
-#let _render-figure-sequence(items, label, opts, fig-labels, anchor) = {
+#let _render-figure-sequence(items, label, opts, fig-labels, anchor, source-block: none) = {
   let is-figure = fig-labels.len() > 0 or opts.at("fig-caption", default: none) != none
   if is-figure and _image-group-count(items) > 1 {
     // Batches render without a caption or labels of their own, so none of them
     // becomes a figure and the outer figure is the only one.
-    let body = _render-item-sequence(items, label, opts + ("fig-caption": none), anchor)
+    let body = _render-item-sequence(
+      items,
+      label,
+      opts + ("fig-caption": none),
+      anchor,
+      source-block: source-block,
+    )
     _finalize-figure-content(body, label, fig-labels, _figure-options(opts), anchor)
   } else {
-    _render-item-sequence(items, label, opts, anchor, fig-labels: fig-labels)
+    _render-item-sequence(
+      items,
+      label,
+      opts,
+      anchor,
+      fig-labels: fig-labels,
+      source-block: source-block,
+    )
   }
+}
+
+#let _is-source-item(item) = item.at("type", default: "") == "source"
+
+#let _without-source-items(items) = items.filter(item => not _is-source-item(item))
+
+// Whether the chunk's own render splits its source, showing each segment above
+// the output it produced, rather than echoing the source once and following it
+// with everything the chunk printed.
+//
+// `results-location: "chunk"` asks for the latter outright. So do several cases
+// where interleaving would break an identity the chunk carries:
+//
+// - fewer than two source segments: the engine did not split the source (Julia,
+//   `sh`, and the diagram engines never do), so there is nothing to interleave
+//   and the single segment renders as an ordinary echo;
+// - an `lst-` identity, which names the echoed source as one listing;
+// - a `tbl-` identity, whose figure would end up enclosing the source;
+// - a `fig-` identity whose images arrive in more than one batch, since the
+//   chunk is then wrapped in a single outer figure that would enclose the
+//   source too.
+#let _interleaves-source(items, opts, chunk) = {
+  if opts.at("results-location", default: "statement") != "statement" {
+    return false
+  }
+  let segments = items.filter(_is-source-item)
+  if segments.len() < 2 {
+    return false
+  }
+  // Every line of the chunk has to appear in some segment, or interleaving
+  // would echo less code than the chunk holds. An engine stops reporting source
+  // once a statement raises, so a tolerated error (`error: true`) truncates the
+  // segments; fall back to echoing the stored source whole.
+  let source = chunk.at("source", default: "")
+  if source != "" and segments.map(item => item.at("text", default: "")).join("\n").trim() != source.trim() {
+    return false
+  }
+  if (
+    _crossref-labels-for(chunk, "lst").len() > 0
+      or opts.at("lst-caption", default: none) != none
+  ) {
+    return false
+  }
+  if (
+    _crossref-labels-for(chunk, "tbl").len() > 0
+      or opts.at("tbl-caption", default: none) != none
+  ) {
+    return false
+  }
+  let is-figure = (
+    _crossref-labels-for(chunk, "fig").len() > 0
+      or opts.at("fig-caption", default: none) != none
+  )
+  if is-figure and _image-group-count(items) > 1 {
+    return false
+  }
+  true
 }
 
 // Wrap rendered output as a table figure, so `@tbl-name` resolves and the
 // caption is numbered from Typst's table counter rather than the figure one.
 #let _table-figure(content, caption, tbl-labels, opts, anchor) = {
+  // A table figure whose body is printed output rather than a real `table`
+  // element carries no implicit description, so strict PDF/UA renders demand
+  // one. Reuse the chunk's `fig-alt-text` when the author set it.
+  let alt = opts.at("fig-alt-text", default: none)
   let rendered = figure(
     content,
     kind: table,
     caption: _figure-caption(caption, opts.at("fig-cap-location", default: auto)),
+    ..if alt == none or alt == "" { (:) } else { (alt: alt) },
   )
   if tbl-labels.len() > 0 {
     _attach-labels(rendered, tbl-labels)
@@ -763,7 +950,19 @@
 // label) are attached. The inline render owns the anchor; a relocated copy that
 // does not own it passes `anchor: false` so the same output can appear more than
 // once without defining a Typst label twice.
-#let _render-results(label, opts, anchor: true, overrides: (:), config: none) = {
+// `source-block` is how the chunk's own render hands over its echo: a function
+// from one source segment to the rendered code block. Given one, this call owns
+// the echo, either splitting it across the chunk's output or emitting it once
+// ahead of everything. A relocation passes none and never echoes.
+#let _render-results(
+  label,
+  opts,
+  anchor: true,
+  overrides: (:),
+  config: none,
+  source-block: none,
+  source-code: none,
+) = {
   let runtime-config = _runtime-config(bound: config)
   let results-path = runtime-config.at("results", default: none)
   if results-path == none or results-path == "" {
@@ -773,9 +972,8 @@
   if chunk == none {
     panic("calepin results do not contain label `" + label + "`")
   }
-  // Relocation-specific choices must win over the serialized chunk options,
-  // especially for HTML where `_merge-result-options` restores every stored
-  // display option.
+  // Relocation-specific choices must win over the serialized chunk options
+  // that `_merge-result-options` restores.
   let opts = _merge-result-options(opts, chunk) + _relocation-override-values(overrides)
   // `results: "hide"` only suppresses a chunk's own inline render. Reaching
   // `_render-results` at all (e.g. through a `#calepin.results` relocation)
@@ -788,14 +986,78 @@
   let items = chunk.at("items", default: ())
   let tbl-caption = opts.at("tbl-caption", default: none)
 
+  // Output that is already a figure decides how the chunk's identity is
+  // attached. Wrapping it a second time would take a counter step of its own,
+  // numbering the reference and the printed caption one apart, so the chunk
+  // hands its labels to that figure and adds no wrapper. When Calepin owns a
+  // caption too there is no way around a wrapper, and the inner figures are
+  // demoted to unnumbered instead.
+  let own-figures = _own-figure-count(items, opts)
+  let fig-caption = opts.at("fig-caption", default: none)
+  let captioned = tbl-caption != none or fig-caption != none
+  let identity-labels = tbl-labels + fig-labels
+  let self-labels = (
+    own-figures == 1
+      and identity-labels.len() > 0
+      and not captioned
+      and _image-group-count(items) == 0
+  )
+  // A chunk that neither carries a `tbl-` identity nor splits its images across
+  // several batches adds no figure of its own, so whatever the code printed
+  // keeps its own numbering.
+  let wraps-output = (
+    tbl-labels.len() > 0
+      or tbl-caption != none
+      or (
+        (fig-labels.len() > 0 or fig-caption != none) and _image-group-count(items) > 1
+      )
+  )
+  let opts = if self-labels {
+    opts + ("typst-labels": identity-labels)
+  } else if own-figures > 0 and wraps-output {
+    opts + ("typst-demote-figures": true)
+  } else {
+    opts
+  }
+
+  let interleave = source-block != none and _interleaves-source(items, opts, chunk)
+  let items = if interleave { items } else { _without-source-items(items) }
+  // Without interleaving, the echo is one block ahead of the output, which is
+  // where a chunk has always put it.
+  let echoed = if source-block != none and not interleave {
+    let code = if source-code != none { source-code } else { chunk.at("source", default: "") }
+    source-block(code)
+  }
+  let segment-source = if interleave { source-block } else { none }
+
+  // The chunk's own figure already carries the labels, so no wrapper is added
+  // and no batch claims them a second time.
+  if self-labels {
+    return {
+      echoed
+      _render-item-sequence(items, label, opts, anchor, source-block: segment-source)
+    }
+  }
+
   // A `tbl-` label names the chunk's non-image output as a table. Wrap the
   // whole rendered sequence once, the same way a split figure is wrapped: the
   // inner batches keep their own figure handling for any images the chunk also
   // produced, and the table figure encloses the result.
   if tbl-labels.len() > 0 or tbl-caption != none {
-    let body = _render-figure-sequence(items, label, opts, fig-labels, anchor)
-    return _table-figure(body, tbl-caption, tbl-labels, opts, anchor)
+    let body = _render-figure-sequence(
+      items,
+      label,
+      opts,
+      fig-labels,
+      anchor,
+      source-block: segment-source,
+    )
+    return {
+      echoed
+      _table-figure(body, tbl-caption, tbl-labels, opts, anchor)
+    }
   }
 
-  _render-figure-sequence(items, label, opts, fig-labels, anchor)
+  echoed
+  _render-figure-sequence(items, label, opts, fig-labels, anchor, source-block: segment-source)
 }

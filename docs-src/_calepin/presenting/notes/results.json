@@ -1,8 +1,8 @@
 {
   "schema": 2,
-  "calepin_version": "0.0.51",
+  "calepin_version": "0.0.54",
   "input": "presenting/notes.typ",
-  "generation": "8181699361b34399-1349cde127705c16",
+  "generation": "757423be21ca45b4-1349cde127705c16",
   "store": {},
   "chunks": {
     "chunk-1": {
@@ -14,6 +14,7 @@
         "echo": true,
         "output": true,
         "results": "render",
+        "results-location": "statement",
         "warning": true,
         "message": true,
         "placeholder": true,
@@ -43,6 +44,7 @@
         "echo": true,
         "output": true,
         "results": "render",
+        "results-location": "statement",
         "warning": true,
         "message": true,
         "placeholder": true,

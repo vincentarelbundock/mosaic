@@ -358,17 +358,15 @@ Useful content values:
 Two kinds of rules cover a cell, split by what they touch:
 
 - **Content rules** (text, alignment, paragraphs, lists) pass through the label as ordinary `set` rules.
-- **Surface rules** (the cell's own fill, stroke, corner radius) need a wrapper block, because the cell block is constructed before rules apply. `m.surface(..)` builds exactly that wrapper:
+- **Block rules** (the cell's own fill, stroke, corner radius) are `set block` rules on the same label. Mosaic confines them to the cell's own block, so blocks inside the content keep their own paint:
 
 ```typ
 #show label("mosaic-cell-copy"): set align(left + horizon)
 #show label("mosaic-cell-copy"): set text(fill: black, size: 1.1em)
-#show label("mosaic-cell-copy"): m.surface(fill: white, height: 100%)
-// m.surface(fill: white) is the same rule as:
-// it => block(width: 100%, height: auto, fill: white, it)
+#show label("mosaic-cell-copy"): set block(fill: white)
 ```
 
-`height:` defaults to `auto`, which sizes the paint to the content and is what a cell in an `auto` track wants. Pass `height: 100%` for a cell in a `1fr` or fixed track, or for a plane. `height: 100%` in an `auto` track resolves against the whole slide and pushes the other cells off the page. The planes carry `<mosaic-background>` and `<mosaic-foreground>` and take the same rules.
+There is no height to manage: the engine sizes the cell's block to its track, so a `1fr` or fixed-track cell paints edge to edge and an `auto`-track cell paints as tall as its content. The planes carry `<mosaic-background>` and `<mosaic-foreground>` and take the same rules. Because these are `set` rules, a rule scoped inside a block overrides a deck-wide one for exactly the slides in that block.
 
 Rules after `#show: m.setup` apply deck-wide. Scope a rule and slide inside a block to change only that slide:
 
@@ -396,7 +394,7 @@ Typography is native rules after setup:
 #show heading.where(depth: 1): set text(font: "Inter", weight: "black")
 ```
 
-A semantic heading feeds outlines and bookmarks; use `text(...)` directly for display type that should not appear in navigation, or `heading(outlined: false, bookmarked: false)[...]`. Do not invent a separate Mosaic styling API or put decorative styling into the grid tree. Use `m.surface` and `m.components` when their documented semantic treatments fit; otherwise use native Typst.
+A semantic heading feeds outlines and bookmarks; use `text(...)` directly for display type that should not appear in navigation, or `heading(outlined: false, bookmarked: false)[...]`. Do not invent a separate Mosaic styling API or put decorative styling into the grid tree. Use `m.components` when their documented semantic treatments fit; otherwise use native Typst.
 
 ## 10. Furniture: footers, planes, navigation
 

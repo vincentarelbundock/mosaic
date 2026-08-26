@@ -1,6 +1,27 @@
 {
   "schema": 1,
   "images": {
+    "/assets/examples/appearance/cell-fill-scope-1.svg": {
+      "path": "assets/examples/appearance/cell-fill-scope-1.svg",
+      "xxh3": "520e321d3657c93c",
+      "bytes": 200289,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/appearance/cell-fill-scope-2.svg": {
+      "path": "assets/examples/appearance/cell-fill-scope-2.svg",
+      "xxh3": "34e655e74d6be22c",
+      "bytes": 203595,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/appearance/cell-fill-scope-3.svg": {
+      "path": "assets/examples/appearance/cell-fill-scope-3.svg",
+      "xxh3": "d33836506cb6e5d8",
+      "bytes": 198363,
+      "width": 842,
+      "height": 474
+    },
     "/assets/examples/appearance/layout-default-cover.webp": {
       "path": "assets/examples/appearance/layout-default-cover.webp",
       "xxh3": "6d6f3f3035acb754",
@@ -255,29 +276,29 @@
     },
     "/assets/examples/basics/semantic-slide-1.svg": {
       "path": "assets/examples/basics/semantic-slide-1.svg",
-      "xxh3": "46f0dca57f61ce31",
-      "bytes": 184534,
+      "xxh3": "3cb6f3c42b48cb5a",
+      "bytes": 184527,
       "width": 842,
       "height": 474
     },
     "/assets/examples/basics/semantic-slide-2.svg": {
       "path": "assets/examples/basics/semantic-slide-2.svg",
-      "xxh3": "b14f2dac454c2c5b",
-      "bytes": 187040,
+      "xxh3": "db252f1c43086129",
+      "bytes": 187026,
       "width": 842,
       "height": 474
     },
     "/assets/examples/basics/semantic-slide-3.svg": {
       "path": "assets/examples/basics/semantic-slide-3.svg",
-      "xxh3": "7ef5d01fdda8ffa0",
-      "bytes": 188383,
+      "xxh3": "356c54efedd7c12e",
+      "bytes": 188362,
       "width": 842,
       "height": 474
     },
     "/assets/examples/basics/semantic-slide-4.svg": {
       "path": "assets/examples/basics/semantic-slide-4.svg",
-      "xxh3": "5709cc98248dc77d",
-      "bytes": 234161,
+      "xxh3": "bf6ffb3a3570c2ab",
+      "bytes": 234140,
       "width": 842,
       "height": 474
     },
@@ -444,15 +465,15 @@
     },
     "/assets/examples/faq/color-inversion-1.svg": {
       "path": "assets/examples/faq/color-inversion-1.svg",
-      "xxh3": "73e250bf3be68323",
-      "bytes": 207549,
+      "xxh3": "ea2cf14cc744d1c6",
+      "bytes": 207535,
       "width": 842,
       "height": 474
     },
     "/assets/examples/faq/color-inversion-2.svg": {
       "path": "assets/examples/faq/color-inversion-2.svg",
-      "xxh3": "b4453bb1dcf081fa",
-      "bytes": 202763,
+      "xxh3": "28c1e3c73114a0a8",
+      "bytes": 202749,
       "width": 842,
       "height": 474
     },
@@ -591,8 +612,8 @@
     },
     "/assets/examples/structure/content-layout-inverted-1.svg": {
       "path": "assets/examples/structure/content-layout-inverted-1.svg",
-      "xxh3": "881b0940d5f00df5",
-      "bytes": 250727,
+      "xxh3": "35e665b4d895437e",
+      "bytes": 250713,
       "width": 842,
       "height": 474
     },
@@ -605,57 +626,57 @@
     },
     "/assets/examples/structure/grid-columns-1.svg": {
       "path": "assets/examples/structure/grid-columns-1.svg",
-      "xxh3": "728b91fdca356c78",
-      "bytes": 170310,
+      "xxh3": "d992c2867329cbc7",
+      "bytes": 170289,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/grid-dashboard-1.svg": {
       "path": "assets/examples/structure/grid-dashboard-1.svg",
-      "xxh3": "e8cb4984be774b1a",
-      "bytes": 186575,
+      "xxh3": "cbfe8076fb9f3ec2",
+      "bytes": 186533,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/grid-nested-1.svg": {
       "path": "assets/examples/structure/grid-nested-1.svg",
-      "xxh3": "fb43bd8e784f2cc4",
-      "bytes": 170321,
+      "xxh3": "1db94c8978907b32",
+      "bytes": 170300,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/grid-quadrants-1.svg": {
       "path": "assets/examples/structure/grid-quadrants-1.svg",
-      "xxh3": "3f4338ce318ae4fa",
-      "bytes": 172138,
+      "xxh3": "426a4a733a0e409a",
+      "bytes": 172110,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/grid-rows-1.svg": {
       "path": "assets/examples/structure/grid-rows-1.svg",
-      "xxh3": "503a6084813941a1",
-      "bytes": 170313,
+      "xxh3": "6744fb563028df1f",
+      "bytes": 170292,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/grid-track-banner-1.svg": {
       "path": "assets/examples/structure/grid-track-banner-1.svg",
-      "xxh3": "ed18aa8ec4b231d1",
-      "bytes": 168360,
+      "xxh3": "b1dda75ac0e18134",
+      "bytes": 168346,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/grid-track-center-1.svg": {
       "path": "assets/examples/structure/grid-track-center-1.svg",
-      "xxh3": "dc206df300dadb5a",
-      "bytes": 170313,
+      "xxh3": "a212bf87f05a4cc5",
+      "bytes": 170292,
       "width": 842,
       "height": 474
     },
     "/assets/examples/structure/grid-track-fraction-1.svg": {
       "path": "assets/examples/structure/grid-track-fraction-1.svg",
-      "xxh3": "5d29148099a8f337",
-      "bytes": 168358,
+      "xxh3": "6ff6f29f3b16146a",
+      "bytes": 168344,
       "width": 842,
       "height": 474
     },
@@ -1436,6 +1457,27 @@
       "width": 1200,
       "height": 675
     },
+    "assets/examples/appearance/cell-fill-scope-1.svg": {
+      "path": "assets/examples/appearance/cell-fill-scope-1.svg",
+      "xxh3": "520e321d3657c93c",
+      "bytes": 200289,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/appearance/cell-fill-scope-2.svg": {
+      "path": "assets/examples/appearance/cell-fill-scope-2.svg",
+      "xxh3": "34e655e74d6be22c",
+      "bytes": 203595,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/appearance/cell-fill-scope-3.svg": {
+      "path": "assets/examples/appearance/cell-fill-scope-3.svg",
+      "xxh3": "d33836506cb6e5d8",
+      "bytes": 198363,
+      "width": 842,
+      "height": 474
+    },
     "assets/examples/appearance/layout-default-cover.webp": {
       "path": "assets/examples/appearance/layout-default-cover.webp",
       "xxh3": "6d6f3f3035acb754",
@@ -1690,29 +1732,29 @@
     },
     "assets/examples/basics/semantic-slide-1.svg": {
       "path": "assets/examples/basics/semantic-slide-1.svg",
-      "xxh3": "46f0dca57f61ce31",
-      "bytes": 184534,
+      "xxh3": "3cb6f3c42b48cb5a",
+      "bytes": 184527,
       "width": 842,
       "height": 474
     },
     "assets/examples/basics/semantic-slide-2.svg": {
       "path": "assets/examples/basics/semantic-slide-2.svg",
-      "xxh3": "b14f2dac454c2c5b",
-      "bytes": 187040,
+      "xxh3": "db252f1c43086129",
+      "bytes": 187026,
       "width": 842,
       "height": 474
     },
     "assets/examples/basics/semantic-slide-3.svg": {
       "path": "assets/examples/basics/semantic-slide-3.svg",
-      "xxh3": "7ef5d01fdda8ffa0",
-      "bytes": 188383,
+      "xxh3": "356c54efedd7c12e",
+      "bytes": 188362,
       "width": 842,
       "height": 474
     },
     "assets/examples/basics/semantic-slide-4.svg": {
       "path": "assets/examples/basics/semantic-slide-4.svg",
-      "xxh3": "5709cc98248dc77d",
-      "bytes": 234161,
+      "xxh3": "bf6ffb3a3570c2ab",
+      "bytes": 234140,
       "width": 842,
       "height": 474
     },
@@ -1879,15 +1921,15 @@
     },
     "assets/examples/faq/color-inversion-1.svg": {
       "path": "assets/examples/faq/color-inversion-1.svg",
-      "xxh3": "73e250bf3be68323",
-      "bytes": 207549,
+      "xxh3": "ea2cf14cc744d1c6",
+      "bytes": 207535,
       "width": 842,
       "height": 474
     },
     "assets/examples/faq/color-inversion-2.svg": {
       "path": "assets/examples/faq/color-inversion-2.svg",
-      "xxh3": "b4453bb1dcf081fa",
-      "bytes": 202763,
+      "xxh3": "28c1e3c73114a0a8",
+      "bytes": 202749,
       "width": 842,
       "height": 474
     },
@@ -2026,8 +2068,8 @@
     },
     "assets/examples/structure/content-layout-inverted-1.svg": {
       "path": "assets/examples/structure/content-layout-inverted-1.svg",
-      "xxh3": "881b0940d5f00df5",
-      "bytes": 250727,
+      "xxh3": "35e665b4d895437e",
+      "bytes": 250713,
       "width": 842,
       "height": 474
     },
@@ -2040,57 +2082,57 @@
     },
     "assets/examples/structure/grid-columns-1.svg": {
       "path": "assets/examples/structure/grid-columns-1.svg",
-      "xxh3": "728b91fdca356c78",
-      "bytes": 170310,
+      "xxh3": "d992c2867329cbc7",
+      "bytes": 170289,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/grid-dashboard-1.svg": {
       "path": "assets/examples/structure/grid-dashboard-1.svg",
-      "xxh3": "e8cb4984be774b1a",
-      "bytes": 186575,
+      "xxh3": "cbfe8076fb9f3ec2",
+      "bytes": 186533,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/grid-nested-1.svg": {
       "path": "assets/examples/structure/grid-nested-1.svg",
-      "xxh3": "fb43bd8e784f2cc4",
-      "bytes": 170321,
+      "xxh3": "1db94c8978907b32",
+      "bytes": 170300,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/grid-quadrants-1.svg": {
       "path": "assets/examples/structure/grid-quadrants-1.svg",
-      "xxh3": "3f4338ce318ae4fa",
-      "bytes": 172138,
+      "xxh3": "426a4a733a0e409a",
+      "bytes": 172110,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/grid-rows-1.svg": {
       "path": "assets/examples/structure/grid-rows-1.svg",
-      "xxh3": "503a6084813941a1",
-      "bytes": 170313,
+      "xxh3": "6744fb563028df1f",
+      "bytes": 170292,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/grid-track-banner-1.svg": {
       "path": "assets/examples/structure/grid-track-banner-1.svg",
-      "xxh3": "ed18aa8ec4b231d1",
-      "bytes": 168360,
+      "xxh3": "b1dda75ac0e18134",
+      "bytes": 168346,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/grid-track-center-1.svg": {
       "path": "assets/examples/structure/grid-track-center-1.svg",
-      "xxh3": "dc206df300dadb5a",
-      "bytes": 170313,
+      "xxh3": "a212bf87f05a4cc5",
+      "bytes": 170292,
       "width": 842,
       "height": 474
     },
     "assets/examples/structure/grid-track-fraction-1.svg": {
       "path": "assets/examples/structure/grid-track-fraction-1.svg",
-      "xxh3": "5d29148099a8f337",
-      "bytes": 168358,
+      "xxh3": "6ff6f29f3b16146a",
+      "bytes": 168344,
       "width": 842,
       "height": 474
     },

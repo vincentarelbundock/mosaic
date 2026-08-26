@@ -6,7 +6,7 @@
 #import mosaic.themes.mono as mono
 
 #let expected = (
-  "setup", "slide", "note", "surface", "grids", "layouts", "steps", "components",
+  "setup", "slide", "note", "grids", "layouts", "steps", "components",
 )
 
 #for theme in (default-theme, editorial, manifesto, metropolis, mono) {

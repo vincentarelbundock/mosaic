@@ -9,8 +9,8 @@
 // components. What is left here is only what beamer has and Mosaic does not.
 // There are no slide helpers: every beamer construction this deck needs is a
 // Mosaic layout variant or a Mosaic component, and the theme states the rest.
-#import "@preview/mosaic:0.0.1" as mosaic
-#import mosaic: slide, note, fit, surface, grids, layouts, steps, components, info
+#import "@local/mosaic:0.0.2" as mosaic
+#import mosaic: slide, note, fit, grids, layouts, steps, components, info
 
 // Beamer's wolverine color theme, resolved from its LaTeX mixes. `darkblue`
 // there is rgb(0, 0, 0.8) and `orange` is rgb(1, 0.5, 0), so every `!` mix
@@ -153,10 +153,10 @@
     inset: 0.8em,
   )
 
-  // The frametitle: the header cell painted edge to edge. `surface` is the
-  // native spelling of a painted cell, and the cell's own inset (0.55 of the
-  // deck inset) is what holds the title clear of the headline above it.
-  show label("mosaic-cell-header"): surface(fill: frametitle-fill, height: auto)
+  // The frametitle: the header cell painted edge to edge. `set block` on the
+  // cell label is the native spelling of a painted cell, and the cell's own
+  // inset (0.55 of the deck inset) holds the title clear of the headline above.
+  show label("mosaic-cell-header"): set block(fill: frametitle-fill)
 
   // Beamer's `titlelike` panel, on the display line of the title stack rather
   // than on the whole cell, so it hugs the title instead of the slide.

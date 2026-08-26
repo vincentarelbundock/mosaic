@@ -12,7 +12,7 @@
 // Default's exported definition and overrides four things: the two accents,
 // the type, two layouts, and the handful of rules Clean owns.
 #import "@preview/mosaic:0.0.1" as mosaic
-#import mosaic: slide, note, fit, surface, grids, layouts, steps, components
+#import mosaic: slide, note, fit, grids, layouts, steps, components
 
 #let base = mosaic.themes.default.definition
 

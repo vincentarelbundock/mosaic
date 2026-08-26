@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as m
+#import "@local/mosaic:0.0.2" as m
 #show: m.setup
 
 // A fill and the text that reads against it are one decision, so bind each
@@ -6,15 +6,15 @@
 #let paper = (fill: rgb("#f4f0e8"), text: rgb("#20262d"))
 #let ink = (fill: rgb("#20262d"), text: rgb("#f4f0e8"))
 
-// Paint the named cells with a pair: `m.surface` fills the cell's own block,
-// and the `set text` rule beside it colors the content inside.
+// Paint the named cells with a pair: the `set block` rule fills the cell's
+// own block, and the `set text` rule beside it colors the content inside.
 #let painted(pair, ..ids) = body => {
   let out = body
   for id in ids.pos() {
     let cell = label("mosaic-cell-" + id)
     out = {
       show cell: set text(fill: pair.text)
-      show cell: m.surface(fill: pair.fill, height: 100%)
+      show cell: set block(fill: pair.fill)
       out
     }
   }

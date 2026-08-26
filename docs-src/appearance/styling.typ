@@ -36,15 +36,25 @@ Everything about the deck's palette, overriding entries, the bundled palette col
 
 = Styling cells
 
-Target a cell by its label. Font, size, color, and alignment are `set text`, `set par`, and `set align`; the cell's own fill, stroke, and corner radius go through `m.surface`. The #link("../api/labels.html")[label reference] lists every label a slide emits:
+Target a cell by its label. Font, size, color, and alignment are `set text`, `set par`, and `set align`; the cell's own fill, stroke, and corner radius are `set block` on the same label. The #link("../api/labels.html")[label reference] lists every label a slide emits:
+
+#calepin.elements.callout(kind: "warning", title: [Requires Mosaic 0.0.2])[
+  Painting a cell's own block with `set block` rules is new in 0.0.2, which is not on Typst Universe yet, so the snippets and examples on this page pin the development version. To use them, clone #link("https://github.com/vincentarelbundock/mosaic")[the repository], run `make install`, and import it:
+
+  ```typ
+  #import "@local/mosaic:0.0.2" as m
+  ```
+
+  See #link("https://github.com/vincentarelbundock/mosaic#install")[Install] for the full instructions.
+]
 
 ```typ
 #let ink = rgb("#20262d")
 
 #show label("mosaic-cell-header"): set text(fill: white)
-#show label("mosaic-cell-header"): m.surface(fill: ink, height: auto)
+#show label("mosaic-cell-header"): set block(fill: ink)
 #show label("mosaic-cell-footer"): set text(fill: white)
-#show label("mosaic-cell-footer"): m.surface(fill: ink, height: auto)
+#show label("mosaic-cell-footer"): set block(fill: ink)
 
 #m.slide(layout: m.layouts.content())[
   == Inverted header and footer
@@ -63,20 +73,16 @@ Target a cell by its label. Font, size, color, and alignment are `set text`, `se
   renderer: thumbnail-gallery,
 )
 
-= Content rules and surface rules
+= Content rules and block rules
 
-Two kinds of rules cover a cell, split by what they touch. Properties of the content *inside* the cell (text, alignment, paragraphs, lists) pass through the label as ordinary `set` rules. Properties of the cell's *own block* (fill, stroke, corner radius) cannot, because that block is constructed before any rule applies; the only way to paint it is to wrap the labeled block in a new block that carries the paint. `m.surface(..)` builds exactly that wrapper, so it is shorthand for the native transform, not a separate styling system:
+Two kinds of rules cover a cell, split by what they touch. Properties of the content *inside* the cell (text, alignment, paragraphs, lists) pass through the label as ordinary `set` rules. Properties of the cell's *own block* (fill, stroke, corner radius) are `set block` rules on the same label, and Mosaic confines them to the cell's own surface, so blocks inside the content — code listings, cards, quotes — keep their own paint:
 
 ```typ
-#show label("mosaic-cell-body"): m.surface(fill: white, height: 100%)
-// is the same rule as
-#show label("mosaic-cell-body"): it => block(
-  width: 100%,
-  height: 100%,
-  fill: white,
-  it,
-)
+#show label("mosaic-cell-body"): set text(size: 0.9em)
+#show label("mosaic-cell-body"): set block(fill: white)
 ```
+
+There is no height to manage: the engine sizes the cell's block to its track, so a cell in a `1fr` or fixed track paints edge to edge and a cell in an `auto` track paints as tall as its content. The content layout's header and footer are `auto` tracks.
 
 The full-slide planes carry the labels `<mosaic-background>` and `<mosaic-foreground>`, so the same two kinds of rules style them as well. The one structural setting that lives on the cell itself is `inset`, because padding affects layout measurement:
 
@@ -84,7 +90,7 @@ The full-slide planes carry the labels `<mosaic-background>` and `<mosaic-foregr
 #m.grids.cell("image", inset: 0pt)
 ```
 
-Rules after `#show: m.setup` override the baseline deck-wide. Scope a rule and slide inside a block to change only that slide:
+Rules after `#show: m.setup` override the baseline deck-wide. Scope a `set` rule and slide inside a block to change only that slide:
 
 ```typ
 #[
@@ -106,7 +112,7 @@ For a slide that shows a picture on a black background, paint the background pla
 
 ```typ
 #[
-  #show label("mosaic-background"): m.surface(fill: black, height: 100%)
+  #show label("mosaic-background"): set block(fill: black)
   #m.slide(
     cells: (
       body: [],
@@ -116,22 +122,31 @@ For a slide that shows a picture on a black background, paint the background pla
 ]
 ```
 
-= How tall a surface is
+= Scoping a fill to one slide
 
-`height:` sets how much of the cell the paint covers. The track decides which value to use:
+Because the cell's own block obeys `set block` rules, a fill, stroke, or corner radius follows the same precedence as every other `set` rule: declare the deck-wide baseline once, and scope an override inside a block to change exactly one slide.
 
 ```typ
-#show label("mosaic-cell-header"): m.surface(fill: ink, height: auto)   // auto track
-#show label("mosaic-cell-body"): m.surface(fill: paper, height: 100%)   // 1fr track
+#show label("mosaic-cell-header"): set block(fill: rgb("#13294b"))
+#show label("mosaic-cell-header"): set text(fill: white)
+
+#m.slide[== A deck-wide fill][Every header takes the baseline rule.]
+
+#[
+  #show label("mosaic-cell-header"): set block(fill: rgb("#e84a27"))
+  #m.slide[== A one-slide override][Only this slide changes.]
+]
 ```
 
-A cell in a `1fr` or fixed track takes `height: 100%` and fills it edge to edge. A cell in an `auto` track is content-sized and takes `height: auto`, so the bar is as tall as its type. The content layout's header and footer are `auto` tracks.
+#embedded-example(
+  calepin.elements.gallery,
+  "appearance/cell-fill-scope",
+  frames: 3,
+  title: "A deck-wide header fill and a one-slide scoped override",
+  renderer: thumbnail-gallery,
+)
 
-`height: 100%` in an `auto` track resolves against the whole slide instead, so the paint covers the slide and pushes the body off the page.
-
-#calepin.elements.callout(kind: "warning", title: [The default changes in Mosaic 0.0.2])[
-  In the released `0.0.1` this documentation pins, `height:` defaults to `100%`. In 0.0.2 it defaults to `auto`. Pass it explicitly and the rule reads the same under both.
-]
+The few surfaces a layout variant paints itself — the `panel` title variant's ink panel, for instance — are that variant's design and sit above label rules; when the arrangement is wrong for your content, pick another variant or draw the slide as an ordinary grid of cells.
 
 = Styling a whole slide
 
@@ -208,7 +223,7 @@ A #link("themes.html")[theme] packages this pattern for a whole deck, and writin
 
 = Inverting cells by hand
 
-`slide(invert: true)`, described under #link("colors.html#inverting-one-slide")[Inverting one slide], swaps a whole slide's canvas and text within the palette. When you want finer control, invert selected cells with the same label rules as above. Pair each fill with the text color that reads against it, and apply both halves in the same rule: `m.surface` fills the cell's own block and a neighboring `set text` colors the content inside it, so a helper that takes a `(fill, text)` pair can repaint any set of cells:
+`slide(invert: true)`, described under #link("colors.html#inverting-one-slide")[Inverting one slide], swaps a whole slide's canvas and text within the palette. When you want finer control, invert selected cells with the same label rules as above. Pair each fill with the text color that reads against it, and apply both halves in the same rule: a `set block` rule fills the cell's own block and a neighboring `set text` colors the content inside it, so a helper that takes a `(fill, text)` pair can repaint any set of cells:
 
 #embedded-example(
   calepin.elements.gallery,

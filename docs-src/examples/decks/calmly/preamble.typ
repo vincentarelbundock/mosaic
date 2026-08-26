@@ -10,7 +10,7 @@
 // structural gestures that make Calmly recognizable, and leaves everything
 // else to Mosaic's defaults.
 #import "@preview/mosaic:0.0.1" as mosaic
-#import mosaic: slide, note, fit, surface, grids, layouts, steps, components
+#import mosaic: slide, note, fit, grids, layouts, steps, components
 
 // Calmly's "tomorrow" palette, light variant. Six names are the deck's own
 // chrome and two are the status colors components paint with.

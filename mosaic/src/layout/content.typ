@@ -82,7 +82,7 @@
 /// labels.
 ///
 /// ```typ
-/// #show label("mosaic-cell-header"): mosaic.surface(fill: luma(240))
+/// #show label("mosaic-cell-header"): set block(fill: luma(240))
 /// ```
 ///
 /// The header cell carries no special typography of its own. Put a native

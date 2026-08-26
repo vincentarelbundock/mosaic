@@ -1,7 +1,7 @@
 #import "@local/mosaic:0.0.2" as m
 
 #let expected = (
-  "setup", "slide", "note", "fit", "surface", "grids", "layouts", "steps", "components", "themes",
+  "setup", "slide", "note", "fit", "grids", "layouts", "steps", "components", "themes",
 )
 
 #assert(expected.all(name => name in m))

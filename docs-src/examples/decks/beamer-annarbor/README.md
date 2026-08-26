@@ -8,7 +8,7 @@ Like the Calmly deck, and unlike the decks built on Mosaic's bundled themes, thi
 | --- | --- |
 | `\usecolortheme{wolverine}` | the theme's `colors` palette plus the banding colors above it |
 | `infolines` headline and footline | one `foreground` plane holding both bars, so every layout is banded alike |
-| `frametitle` bar | `show label("mosaic-cell-header"): surface(fill: ..)` |
+| `frametitle` bar | `show label("mosaic-cell-header"): set block(fill: ..)` |
 | `\titlepage` | `layouts.title(variant: "centered")`, with the `titlelike` panel painted on `<mosaic-title-display>` |
 | `\AtBeginSection` outline | `layouts.section(variant: "toc")`: the whole outline, the section you are entering alive and the rest ghosted |
 | content frames | `layouts.content(variant: "header-body")`, including `columns: 2` for a two-column frame |

@@ -1,8 +1,51 @@
 {
   "schema": 1,
-  "fingerprint": 2284916813590583804,
-  "generation": "1fb5a7bc676259fc-1349cde127705c16",
+  "fingerprint": 16165450876630561701,
+  "generation": "e05737ec8f9773a5-1349cde127705c16",
   "completed_store": {},
-  "stabilized_chunks": [],
+  "stabilized_chunks": [
+    {
+      "label": "chunk-1",
+      "engine": "sh",
+      "code": "typst compile --pdf-standard ua-1 main.typ\n",
+      "script": true,
+      "exec_options": {
+        "eval": true,
+        "error": false,
+        "store-get": [],
+        "store-set": [],
+        "fig_device_format": "svg",
+        "fig_device_dpi": 150,
+        "fig_device_width": 6.0,
+        "fig_device_height": null,
+        "fig_device_aspect": 0.618
+      },
+      "display_options": {
+        "echo": true,
+        "output": true,
+        "results": "render",
+        "results-location": "statement",
+        "warning": true,
+        "message": true,
+        "placeholder": true,
+        "fig-width": "70%",
+        "fig-height": null,
+        "fig-align": "center",
+        "fig-responsive": true,
+        "fig-link": null,
+        "fig-caption": null,
+        "fig-cap-location": null,
+        "fig-alt-text": null,
+        "fig-subcaptions": null,
+        "fig-layout-columns": null,
+        "fig-layout-rows": null,
+        "tbl-caption": null,
+        "lst-caption": null,
+        "kind": null
+      },
+      "ordinal": 16,
+      "crossref_labels": []
+    }
+  ],
   "writers": {}
 }
