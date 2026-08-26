@@ -65,7 +65,13 @@
       ))
     },
   ),
-  options: (font: "Source Serif 4", base-size: 16pt),
+  options: (
+    // The poster serif is a preference, not a requirement: the chain ends in
+    // a family Typst always has, so the deck still renders where Source Serif
+    // is not installed.
+    font: ("Source Serif 4", "Libertinus Serif"),
+    base-size: 16pt,
+  ),
   layouts: (
     content: layouts.content(),
     title: layouts.title(),

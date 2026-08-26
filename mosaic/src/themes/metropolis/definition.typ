@@ -78,7 +78,12 @@
     // everywhere are named, because Typst warns once per unknown family even
     // when a later one resolves. The beamer original sets Fira; a deck that
     // wants it passes `setup(font: "Fira Sans", font-mono: "Fira Mono")`.
-    font: ("Source Sans 3", "Liberation Sans", "DejaVu Sans"),
+    font: (
+      "Source Sans 3",
+      "Liberation Sans",
+      "DejaVu Sans",
+      "Libertinus Serif",
+    ),
     font-mono: ("DejaVu Sans Mono", "Liberation Mono"),
     base-size: 21.5pt,
   ),

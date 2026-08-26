@@ -76,8 +76,17 @@
     },
   ),
   options: (
-    font: "Inter",
-    font-display: "Source Serif 4",
+    // Every family a theme names is a preference, not a requirement: each
+    // chain ends in a family Typst always has, so a machine without the
+    // designed typeface still renders the deck.
+    font: (
+      "Inter",
+      "Source Sans 3",
+      "Liberation Sans",
+      "DejaVu Sans",
+      "Libertinus Serif",
+    ),
+    font-display: ("Source Serif 4", "Libertinus Serif"),
     base-size: 20pt,
   ),
   layouts: (
