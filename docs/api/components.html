@@ -3593,6 +3593,10 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
+<li class="calepin-website-sidebar-link"><a href="../appearance/fonts.html" aria-label="Fonts">Fonts</a></li>
+
+
+
 <li class="calepin-website-sidebar-link"><a href="../appearance/themes.html" aria-label="Themes">Themes</a></li>
 
 
@@ -3822,6 +3826,7 @@ html[data-theme="dark"] .mosaic-diagram {
 )</code></pre></div><strong style="display: block">Arguments</strong><table><tr><td><code>title</code></td><td><code>content | none</code><br>Content centered between the two line segments. <code>none</code> draws one unbroken rule instead.</td></tr><tr><td><code>stroke</code></td><td><code>auto | stroke</code><br>Native Typst stroke used for both line segments. <code>auto</code> draws the deck’s line color at the shared component thickness.</td></tr></table><h2 id="progress">Displays progress through logical slides or semantic sections in the deck.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">progress(
   variant: "1/1",
   count: "slides",
+  quiet: auto,
   role: "accent",
   width: auto,
   thickness: component-tokens.rule-thickness,
@@ -3831,7 +3836,7 @@ html[data-theme="dark"] .mosaic-diagram {
   content: (
     footer: <span class="calepin-syntax-scope-20">align</span>(right, mosaic.components.<span class="calepin-syntax-scope-20">progress</span>()),
   ),
-)</code></pre></div><p><strong>Variants</strong></p><ul><li><code>1/1</code>: the current and final values, as text. The default.</li><li><code>1</code>: the current value alone.</li><li><code>circle</code>: a compact ring filling clockwise, sized by <code>width</code> and <code>thickness</code>.</li><li><code>line</code>: a horizontal bar filling left to right, sized by <code>width</code> and <code>thickness</code>.</li></ul><p><strong>What it counts</strong></p><p><code>count</code> selects the automatic counter: <code>slides</code> counts logical slides, and <code>sections</code> counts slides with <code>layout: "section"</code>.</p><p>Both readings come from <code>info()</code>, which publishes the same position as <code>slide</code> and <code>section</code> records. Chrome that needs more than one indicator, or the section’s title rather than its number, reads that instead of composing several of these.</p><strong style="display: block">Arguments</strong><table><tr><td><code>variant</code></td><td><p><code>str | function</code><br>Visual treatment: <code>"1/1"</code>, <code>"1"</code>, <code>"circle"</code>, <code>"line"</code>, or a function drawing one. A renderer is called with a dictionary holding <code>current</code>, <code>total</code>, <code>amount</code>, <code>accent</code>, <code>fill</code>, <code>width</code>, and <code>thickness</code>, and returns the content to place.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-20">progress</span>(
+)</code></pre></div><p><strong>Variants</strong></p><ul><li><code>1/1</code>: the current and final values, as text. The default.</li><li><code>1</code>: the current value alone.</li><li><code>circle</code>: a compact ring filling clockwise, sized by <code>width</code> and <code>thickness</code>.</li><li><code>line</code>: a horizontal bar filling left to right, sized by <code>width</code> and <code>thickness</code>.</li></ul><p><strong>What it counts</strong></p><p><code>count</code> selects the automatic counter: <code>slides</code> counts logical slides, and <code>sections</code> counts slides with <code>layout: "section"</code>.</p><p>Both readings come from <code>info()</code>, which publishes the same position as <code>slide</code> and <code>section</code> records. Chrome that needs more than one indicator, or the section’s title rather than its number, reads that instead of composing several of these.</p><p><strong>Quieting</strong></p><p>The indicator is deck furniture, so it quiets itself on pages where its counter has no meaningful reading: a <code>slides</code> count on unnumbered slides (titles and sections, by default), and a <code>sections</code> count before the first section slide. A <code>sections</code> count does display on section slides, where the counter reads the section being opened. <code>quiet:</code> overrides the rule in either direction.</p><strong style="display: block">Arguments</strong><table><tr><td><code>variant</code></td><td><p><code>str | function</code><br>Visual treatment: <code>"1/1"</code>, <code>"1"</code>, <code>"circle"</code>, <code>"line"</code>, or a function drawing one. A renderer is called with a dictionary holding <code>current</code>, <code>total</code>, <code>amount</code>, <code>accent</code>, <code>fill</code>, <code>width</code>, and <code>thickness</code>, and returns the content to place.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.components.<span class="calepin-syntax-scope-20">progress</span>(
   variant: state <span class="calepin-syntax-scope-24">=></span> <span class="calepin-syntax-scope-20">grid</span>(
     columns: state.total,
     <span class="calepin-syntax-scope-24">..</span><span class="calepin-syntax-scope-20">range</span>(state.total).<span class="calepin-syntax-scope-20">map</span>(i <span class="calepin-syntax-scope-24">=></span> <span class="calepin-syntax-scope-20">rect</span>(
@@ -3839,7 +3844,7 @@ html[data-theme="dark"] .mosaic-diagram {
       fill: <span class="calepin-syntax-scope-6">if</span> i <span class="calepin-syntax-scope-24">&lt;</span> state.current { state.accent } <span class="calepin-syntax-scope-6">else</span> { state.fill },
     )),
   ),
-)</code></pre></div></td></tr><tr><td><code>count</code></td><td><code>str</code><br>Which automatic counter to read: <code>"slides"</code> or <code>"sections"</code>.</td></tr><tr><td><code>role</code></td><td><code>str</code><br>Semantic role supplying the default colors: <code>accent</code>, <code>neutral</code>, <code>warning</code>, or <code>error</code>. The role’s own color paints the completed portion and its tinted fill paints the remainder.</td></tr><tr><td><code>width</code></td><td><code>auto | length | relative | fraction</code><br>Length of the <code>line</code> variant, or diameter of the <code>circle</code> variant. <code>auto</code> is the full width for <code>line</code> and a compact fixed diameter for <code>circle</code>.</td></tr><tr><td><code>thickness</code></td><td><code>length</code><br>Stroke thickness of the <code>circle</code> and <code>line</code> variants.</td></tr><tr><td><code>fill</code></td><td><code>auto | color | gradient | tiling</code><br>Paint of the inactive remainder. <code>auto</code> uses the role’s fill.</td></tr><tr><td><code>accent</code></td><td><code>auto | color</code><br>Paint of the completed portion, and of the text variants. <code>auto</code> uses the role’s accent.</td></tr></table><h2 id="image">Creates a slide-sized native Typst image with an optional scrim.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">image(
+)</code></pre></div></td></tr><tr><td><code>count</code></td><td><code>str</code><br>Which automatic counter to read: <code>"slides"</code> or <code>"sections"</code>.</td></tr><tr><td><code>quiet</code></td><td><code>auto | bool</code><br>Whether the indicator quiets itself. <code>auto</code> silences a <code>slides</code> count on unnumbered slides and a <code>sections</code> count before the first section slide; <code>true</code> silences every unnumbered slide; <code>false</code> always displays.</td></tr><tr><td><code>role</code></td><td><code>str</code><br>Semantic role supplying the default colors: <code>accent</code>, <code>neutral</code>, <code>warning</code>, or <code>error</code>. The role’s own color paints the completed portion and its tinted fill paints the remainder.</td></tr><tr><td><code>width</code></td><td><code>auto | length | relative | fraction</code><br>Length of the <code>line</code> variant, or diameter of the <code>circle</code> variant. <code>auto</code> is the full width for <code>line</code> and a compact fixed diameter for <code>circle</code>.</td></tr><tr><td><code>thickness</code></td><td><code>length</code><br>Stroke thickness of the <code>circle</code> and <code>line</code> variants.</td></tr><tr><td><code>fill</code></td><td><code>auto | color | gradient | tiling</code><br>Paint of the inactive remainder. <code>auto</code> uses the role’s fill.</td></tr><tr><td><code>accent</code></td><td><code>auto | color</code><br>Paint of the completed portion, and of the text variants. <code>auto</code> uses the role’s accent.</td></tr></table><h2 id="image">Creates a slide-sized native Typst image with an optional scrim.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">image(
   source,
   width: 100%,
   height: 100%,
@@ -3915,6 +3920,13 @@ html[data-theme="dark"] .mosaic-diagram {
         </aside>
 
     </div>
+
+
+
+
+
+
+
 
 
 
