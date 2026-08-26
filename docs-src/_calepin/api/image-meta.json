@@ -519,6 +519,34 @@
       "width": 1345,
       "height": 756
     },
+    "/assets/examples/furniture/quiet-footline-1.svg": {
+      "path": "assets/examples/furniture/quiet-footline-1.svg",
+      "xxh3": "4d61d3f47505ba29",
+      "bytes": 32915,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/furniture/quiet-footline-2.svg": {
+      "path": "assets/examples/furniture/quiet-footline-2.svg",
+      "xxh3": "d68c43c204eaef0a",
+      "bytes": 9782,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/furniture/quiet-footline-3.svg": {
+      "path": "assets/examples/furniture/quiet-footline-3.svg",
+      "xxh3": "520f746c68b4b799",
+      "bytes": 26550,
+      "width": 842,
+      "height": 474
+    },
+    "/assets/examples/furniture/quiet-footline-4.svg": {
+      "path": "assets/examples/furniture/quiet-footline-4.svg",
+      "xxh3": "040466c0fc9d9e09",
+      "bytes": 34463,
+      "width": 842,
+      "height": 474
+    },
     "/assets/examples/furniture/section-links-cover.webp": {
       "path": "assets/examples/furniture/section-links-cover.webp",
       "xxh3": "4bb5d9d512f58c4e",
@@ -1974,6 +2002,34 @@
       "bytes": 7156,
       "width": 1345,
       "height": 756
+    },
+    "assets/examples/furniture/quiet-footline-1.svg": {
+      "path": "assets/examples/furniture/quiet-footline-1.svg",
+      "xxh3": "4d61d3f47505ba29",
+      "bytes": 32915,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/furniture/quiet-footline-2.svg": {
+      "path": "assets/examples/furniture/quiet-footline-2.svg",
+      "xxh3": "d68c43c204eaef0a",
+      "bytes": 9782,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/furniture/quiet-footline-3.svg": {
+      "path": "assets/examples/furniture/quiet-footline-3.svg",
+      "xxh3": "520f746c68b4b799",
+      "bytes": 26550,
+      "width": 842,
+      "height": 474
+    },
+    "assets/examples/furniture/quiet-footline-4.svg": {
+      "path": "assets/examples/furniture/quiet-footline-4.svg",
+      "xxh3": "040466c0fc9d9e09",
+      "bytes": 34463,
+      "width": 842,
+      "height": 474
     },
     "assets/examples/furniture/section-links-cover.webp": {
       "path": "assets/examples/furniture/section-links-cover.webp",

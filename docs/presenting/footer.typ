@@ -61,6 +61,16 @@ A complete positional body list remains valid and overrides every corresponding 
   From 0.0.2, which is not on Typst Universe yet, the component quiets itself on pages where its counter has no meaningful reading: a slides count on unnumbered slides (titles and sections), and a sections count before the first section slide. A bare `progress()` in a deck foreground is therefore already correct page-number chrome, and a `quiet:` argument overrides the rule (`false` always displays, `true` silences every unnumbered page). In the released `0.0.1` the component always displays, so a foreground indicator needs the `slide.numbered` guard shown at the bottom of this page.
 ]
 
+The deck below puts a bare counter in the setup foreground and nothing else. The counter appears on the two content slides and stays quiet on the title and section pages, with no guard written anywhere; sizing comes from an ordinary `text` rule around the component, and a one-off color would go through its `accent:` argument rather than a text rule, because the component paints its own ink from the theme role:
+
+#embedded-example(
+  calepin.elements.gallery,
+  "furniture/quiet-footline",
+  frames: 4,
+  title: "A bare foreground counter, quiet on the title and section pages",
+  renderer: thumbnail-gallery,
+)
+
 A recurring progress line along the bottom edge is one foreground entry in setup. The foreground plane is already a full-slide block, so `align` alone places the bar, and because the plane takes no space from the grid, the line does not shrink the slide body:
 
 ```typ
