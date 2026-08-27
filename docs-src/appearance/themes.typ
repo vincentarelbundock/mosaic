@@ -283,3 +283,61 @@ The #link("../api/theme.html")[theme authoring API] documents every definition k
   #slideshow(calepin.elements.gallery, "appearance/theme-options-airy", 8, "The seminar theme at its default density", caption: [Default])
   #slideshow(calepin.elements.gallery, "appearance/theme-options-dense", 8, "The seminar theme at its dense setting", caption: [density: dense])
 ]
+
+= Case study
+
+In this case study, we modify the content slides of an existing theme, by creating our own custom layout.
+
+Mosaic takes advantage of the fact that every slide is composed of a grid of cells. You control how those cells are filled, which colors are used, and so on. You assemble a mosaic by splitting rows and columns, not unlike a tree structure; the Mosaic logo highlights that core aspect.
+
+Because every slide is a grid, Mosaic ships with a number of built-in grids. That alleviates the need to start from scratch and addresses common formatting and style preferences. Those built-in grids are the *layouts*, and there are defaults for the common elements of a presentation: a title slide, a section slide, and a content slide.
+
+A theme, in this context, is a dictionary containing standard color tokens (`canvas` for the background, `accent` for highlighted aspects, `text`, etc.) alongside the rules and layouts described above.
+
+In this example, we create a new "content" slide with a custom footer. The code is shown first, with commentary after.
+
+```typ
+// a slide is composed of a grid
+#let footered = m.grids.rows(         
+  // 1st row cell is called "header" and its height is automatic based on content (auto)
+  m.grids.track(auto, "header"),      
+  // 2nd row cell is called "body" and its height takes all the available space (1fr)
+  m.grids.track(1fr, "body"),
+  // 3rd row cell is called "footer" and its height is automatic based on content (auto)
+  m.grids.track(auto, m.grids.cell(
+    "footer",
+    // the footer cell has default content that will appear on every slide using that layout
+    content: [
+      Mosaic                     // text
+      #h(1fr)                    // space
+      #m.components.progress()   // slide number
+    ],
+  )),
+)
+```
+
+That defines a variant of the content layout, bound to the name `footered`. It sets up a grid of rows: first the usual `header` cell at automatic height, then the `body` cell with an instruction to fill the available space, which is what pushes the footer to the bottom edge. Naming a track with `grids.track` gives the cell a name you can later style with a `show` rule, and sets its size.
+
+The footer track comes last, again at automatic height, and carries a cell named `footer`. Because it is declared with `grids.cell` rather than a bare name, that cell can hold default content, which then appears on every slide built from this layout without being written into a single one of them. The content opens with the text "Mosaic"; a conference abbreviation, a course name, a logo, or whatever else suits would go here. An expanding `h(1fr)` then flushes the final element right. The default display of the `progress` component is exactly what we want there: a pair `N / M` denoting the Nth slide out of M.
+
+We then hand that layout to `setup` under the name `content`:
+
+```typ
+#show: m.setup.with(
+  title: [Slides with a footer],
+  subtitle: [A variant of metropolis],
+  authors: [Vincent Arel-Bundock],
+  layouts: (content: footered),
+  // Metropolis puts a progress line in the foreground of every numbered
+  // slide. The footer counter now says the same thing, so drop the line.
+  foreground: none,
+)
+```
+
+`title`, `subtitle`, and `authors` are the constant text the default title layout renders. The title and section layouts are unchanged, but `content` now resolves to `footered`, the variant from above.
+
+For completeness, the whole deck:
+
+#example-source("appearance/metropolis-footer")
+
+#slideshow(calepin.elements.gallery, "appearance/metropolis-footer", 6, "Metropolis with a custom footer layout", caption: [Metropolis with a footer])

@@ -36,6 +36,13 @@
       "width": 1345,
       "height": 756
     },
+    "/assets/examples/appearance/metropolis-footer-cover.webp": {
+      "path": "assets/examples/appearance/metropolis-footer-cover.webp",
+      "xxh3": "a5d38533a39f134a",
+      "bytes": 10468,
+      "width": 1345,
+      "height": 756
+    },
     "/assets/examples/appearance/palette-dark-cover.webp": {
       "path": "assets/examples/appearance/palette-dark-cover.webp",
       "xxh3": "ddd0ae6ffedd170b",
@@ -1517,6 +1524,13 @@
       "path": "assets/examples/appearance/layout-override-cover.webp",
       "xxh3": "e7e1462f6772281b",
       "bytes": 24254,
+      "width": 1345,
+      "height": 756
+    },
+    "assets/examples/appearance/metropolis-footer-cover.webp": {
+      "path": "assets/examples/appearance/metropolis-footer-cover.webp",
+      "xxh3": "a5d38533a39f134a",
+      "bytes": 10468,
       "width": 1345,
       "height": 756
     },
