@@ -121,7 +121,11 @@ Inline code such as `variant: "dark"` keeps the ink color.
 == Mathematics
 
 #align(center)[
-  $ alpha^* = arg min_(alpha in cal(A)) cal(L)_"val" (w^*(alpha), alpha) $
+  #math.equation(
+    block: true,
+    alt: "alpha star equals the arg min over alpha in A of the validation loss at w star of alpha, alpha",
+    $ alpha^* = arg min_(alpha in cal(A)) cal(L)_"val" (w^*(alpha), alpha) $,
+  )
 ]
 
 #v(0.4em)
@@ -130,9 +134,9 @@ Inline code such as `variant: "dark"` keeps the ink color.
   columns: (auto, 1fr),
   stroke: none,
   row-gutter: 0.45em,
-  [$alpha$], [An architecture drawn from the search space $cal(A)$],
-  [$w^*(alpha)$], [The weights that minimize training loss for $alpha$],
-  [$cal(L)_"val"$], [Validation loss, the outer objective],
+  [#math.equation(alt: "alpha", $alpha$)], [An architecture drawn from the search space #math.equation(alt: "A", $cal(A)$)],
+  [#math.equation(alt: "w star of alpha", $w^*(alpha)$)], [The weights that minimize training loss for #math.equation(alt: "alpha", $alpha$)],
+  [#math.equation(alt: "validation loss", $cal(L)_"val"$)], [Validation loss, the outer objective],
 )
 
 // 12. Focus

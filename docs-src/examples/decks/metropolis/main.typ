@@ -47,12 +47,12 @@
 We consider an agent that repeatedly observes a state, chooses an action,
 and receives a reward.
 #v(18pt)
-- *State:* $s in cal(S)$ summarizes the information available now.
-- *Action:* $a in cal(A)$ changes both reward and the next-state distribution.
+- *State:* #math.equation(alt: "s in the state space S", $s in cal(S)$) summarizes the information available now.
+- *Action:* #math.equation(alt: "a in the action space A", $a in cal(A)$) changes both reward and the next-state distribution.
 - *Objective:* maximize expected discounted return over an indefinite horizon.
 #v(18pt)
 #m.components.callout(title: [Modeling assumption])[
-  The current state is sufficient: conditional on $s_t$ and $a_t$, the
+  The current state is sufficient: conditional on #math.equation(alt: "s sub t", $s_t$) and #math.equation(alt: "a sub t", $a_t$), the
   future is independent of the earlier history.
 ]
 
@@ -149,11 +149,11 @@ subsequent decisions #cite(<bellman1957>).
       m.steps.on("2-", (
         line((0, 0), (-rad / 5 * 1.2, -rad / 3 * 1.2),
           mark: mark, name: "x1"),
-        content("x1.end", [$x_1$], anchor: "north"),
+        content("x1.end", math.equation(alt: "x one", $x_1$), anchor: "north"),
         line((0, 0), (1.15 * rad, 0), mark: mark, name: "x2"),
-        content("x2.end", [$x_2$], anchor: "west"),
+        content("x2.end", math.equation(alt: "x two", $x_2$), anchor: "west"),
         line((0, 0), (0, 1.15 * rad), mark: mark, name: "x3"),
-        content("x3.end", [$x_3$], anchor: "south"),
+        content("x3.end", math.equation(alt: "x three", $x_3$), anchor: "south"),
       )),
     )
 
@@ -162,7 +162,7 @@ subsequent decisions #cite(<bellman1957>).
         line((0, 0), vec-a,
           mark: (start: "circle", end: "circle", fill: ink,
             scale: 0.5, anchor: "center")),
-        content((rel: (0.08, 0.08), to: vec-a), $arrow(a)$,
+        content((rel: (0.08, 0.08), to: vec-a), math.equation(alt: "vector a", $arrow(a)$),
           anchor: "south-west"),
         line((0, 0), phi-point, style: "dashed"),
         line(phi-point, vec-a, style: "dashed"),
@@ -172,11 +172,11 @@ subsequent decisions #cite(<bellman1957>).
     (
       m.steps.on("4-", (
         cetz.angle.angle((0, 0), (-1, -calc.tan(60deg)),
-          (1, -calc.tan(30deg)), label: [$phi$],
+          (1, -calc.tan(30deg)), label: math.equation(alt: "phi", $phi$),
           stroke: (paint: gray, thickness: 0.5pt),
           mark: (end: "stealth", fill: gray, scale: 0.7)),
         cetz.angle.angle((0, 0), (1, calc.tan(60deg)),
-          (1, calc.tan(90deg)), label: [$theta$],
+          (1, calc.tan(90deg)), label: math.equation(alt: "theta", $theta$),
           stroke: (paint: gray, thickness: 0.5pt),
           mark: (start: "stealth", fill: gray, scale: 0.7),
           label-radius: 0.75),

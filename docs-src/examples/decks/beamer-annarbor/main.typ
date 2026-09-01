@@ -19,13 +19,18 @@
 
 // 02. Outline. Beamer's `\tableofcontents` frame is native Typst here: the
 // heading keeps itself out of the outline it prints, and the entry rule drops
-// the page numbers a deck has no use for.
+// the page numbers a deck has no use for. The entry stays a link to its
+// section: a tagged PDF export requires each outline entry to reference its
+// target, which plain text of the section title would not.
 #slide(cells: (
   header: heading(level: 2, outlined: false)[Outline],
   body: {
     show outline.entry: entry => block(
       above: 0.8em,
-      text(fill: structure, weight: "bold", entry.element.body),
+      link(
+        entry.element.location(),
+        text(fill: structure, weight: "bold", entry.body()),
+      ),
     )
     outline(title: none, depth: 1)
   },
@@ -161,7 +166,11 @@ def annarbor(base="Boadilla", colors="wolverine"):
 == Mathematics
 
 #align(center)[
-  $ hat(beta) = (X^top X)^(-1) X^top y $
+  #math.equation(
+    block: true,
+    alt: "beta hat equals the inverse of X transpose X, times X transpose y",
+    $ hat(beta) = (X^top X)^(-1) X^top y $,
+  )
 ]
 
 #v(0.5em)
@@ -170,9 +179,9 @@ def annarbor(base="Boadilla", colors="wolverine"):
   columns: (auto, 1fr),
   stroke: none,
   row-gutter: 0.4em,
-  [$X$], [The design matrix, one row per observation],
-  [$y$], [The outcome vector],
-  [$hat(beta)$], [The least-squares coefficients],
+  [#math.equation(alt: "X", $X$)], [The design matrix, one row per observation],
+  [#math.equation(alt: "y", $y$)], [The outcome vector],
+  [#math.equation(alt: "beta hat", $hat(beta)$)], [The least-squares coefficients],
 )
 
 // 14. Incremental reveal

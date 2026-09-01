@@ -62,7 +62,7 @@ Clean ships four inline helpers. Under Mosaic each one is native Typst or a stoc
   columns: 4,
   align: (left, right, right, right),
   inset: (x: 0.8em, y: 0.5em),
-  table.header([Specification], [Estimate], [Std. error], [$N$]),
+  table.header([Specification], [Estimate], [Std. error], [#math.equation(alt: "N", $N$)]),
   [Pooled], [0.42], [0.11], [4 812],
   [With controls], [0.38], [0.12], [4 812],
   [Region fixed effects], [0.35], [0.14], [4 780],
