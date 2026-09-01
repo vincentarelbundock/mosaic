@@ -6,9 +6,11 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
+import zlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -115,8 +117,58 @@ def pdf_attachment(stem: str, name: str) -> str:
     return target.read_text(encoding="utf-8")
 
 
+def pdf_tags(path: Path) -> dict[str, object]:
+    """What the tagged-PDF export says about a deck, read from the bytes.
+
+    Structure elements are plain objects, so `/S/H1` counts directly, in the
+    style of the suite's other output greps. Marked-content operators live in
+    the Flate content streams, which stdlib `zlib` inflates, so the suite
+    needs no new prerequisite to tell a tagged span from an artifact. Typst
+    writes one content stream per page in page order, so `pages` indexes by
+    page: each entry counts the `/Span` and `/Artifact` marked-content
+    sequences opened on that page.
+    """
+    data = path.read_bytes()
+    pages: list[tuple[int, int]] = []
+    for match in re.finditer(rb"stream\r?\n(.*?)\r?\nendstream", data, re.S):
+        try:
+            inflated = zlib.decompress(match.group(1))
+        except zlib.error:
+            continue
+        ops = re.findall(rb"/(Span|Artifact)\s*(?:<<|BMC|BDC)", inflated)
+        if ops:
+            pages.append((ops.count(b"Span"), ops.count(b"Artifact")))
+    return {
+        "h1": len(re.findall(rb"/S\s*/H1\b", data)),
+        "h2": len(re.findall(rb"/S\s*/H2\b", data)),
+        "ua": b"pdfuaid:part" in data and b"/DisplayDocTitle true" in data,
+        "pages": pages,
+    }
+
+
 def run_core(typst: str, sources: list[str]) -> None:
     compile_group(typst, sources)
+
+    # The exporter contract, guarded rather than owned: a default export is
+    # tagged but carries no PDF/UA identification, a ua-1 export carries it.
+    # Then Mosaic's part: the title slide is the H1, no theme's chrome is
+    # announced, and mono's prompt stays out of its heading.
+    plain = pdf_tags(TMP / "mosaic-accessibility.pdf")
+    if plain["ua"]:
+        raise TestFailure("a default export must not claim PDF/UA conformance")
+    for theme in ("default", "editorial", "metropolis", "manifesto", "mono"):
+        output = TMP / f"mosaic-accessibility-{theme}.pdf"
+        typst_compile(typst, "accessibility.typ", output, "--pdf-standard", "ua-1", "--input", f"theme={theme}")
+        tags = pdf_tags(output)
+        if not tags["ua"]:
+            raise TestFailure(f"{output} lacks the PDF/UA identification")
+        if tags["h1"] != 1 or tags["h2"] != 2:
+            raise TestFailure(f"{output} tags {tags['h1']} H1 and {tags['h2']} H2 elements, expected 1 and 2")
+        if len(tags["pages"]) != 3:
+            raise TestFailure(f"{output} has {len(tags['pages'])} tagged pages, expected 3")
+        spans, _ = tags["pages"][1]
+        if spans != 1:
+            raise TestFailure(f"{output} page 2 tags {spans} spans, expected the heading alone")
 
     typst_compile(typst, "setup-native-defaults.typ", TMP / "mosaic-setup-native-defaults-{0p}.svg", "--format", "svg")
     native = TMP / "mosaic-setup-native-defaults-1.svg"

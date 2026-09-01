@@ -371,8 +371,42 @@
 // the display size, and one native `set text(size: ..)` on
 // <mosaic-cell-title> scales title, subtitle, and details alike instead of
 // moving the display line past its own subtitle.
+//
+// The display line is a level-one heading, so a tagged PDF opens its heading
+// tree at H1 on the cover and a deck of `==` slides never skips a level.
+// `outlined: false` keeps it out of the outline and the bookmarks, so no
+// deck's navigation changes. Every theme states level-one heading typography
+// through show-set rules, and Typst's native heading scale sits inside those;
+// both would compound with the display size the label rule states on the
+// block around them. The scoped rule below therefore replaces the heading
+// with its body at the text style captured just outside it, which is the
+// style the label rule resolved to. The heading stays realized exactly once,
+// keeping its structure tag; see title-text in section.typ for the same
+// treatment on section slides.
 #let title-display(body) = {
-  let display = block(width: 100%, above: 0pt, below: 0pt, body)
+  let display = block(width: 100%, above: 0pt, below: 0pt, {
+    if body == none or body == [] {
+      body
+    } else {
+      // Captured outside the heading: inside it, the theme's heading rules
+      // have already applied.
+      context {
+        let style = (
+          font: text.font,
+          fallback: text.fallback,
+          style: text.style,
+          weight: text.weight,
+          stretch: text.stretch,
+          size: text.size,
+          fill: text.fill,
+          tracking: text.tracking,
+          spacing: text.spacing,
+        )
+        show heading: it => text(..style, it.body)
+        heading(level: 1, outlined: false, body)
+      }
+    }
+  })
   [#display#label("mosaic-title-display")]
 }
 

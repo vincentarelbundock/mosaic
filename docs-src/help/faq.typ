@@ -160,7 +160,11 @@ Yes. Compile against Typst's tagged-PDF standard:
 typst compile --pdf-standard ua-1 main.typ
 ```
 
-Three authoring requirements follow from the standard. First, PDF/UA-1 requires a properly nested outline whose first heading is level one, so the deck must open with a `=` section heading before any `==` content slides; a deck made only of `==` headings fails the export. Second, the document needs a title, which `setup(title: ..)` provides. Third, figures and math carry no description on their own: pass an `alt` string to `image` (or `m.components.image`) and to `math.equation` so a screen reader can voice them.
+Three authoring requirements follow from the standard. First, PDF/UA-1 requires a properly nested heading tree whose first heading is level one. On the released 0.0.1 the deck must open with a `=` section heading before any `==` content slides, and a deck made only of `==` headings fails the export. Second, the document needs a title, which `setup(title: ..)` provides. Third, figures and math carry no description on their own: pass an `alt` string to `image` (or `m.components.image`) and to `math.equation` so a screen reader can voice them.
+
+#calepin.elements.callout(kind: "warning", title: [Changed in Mosaic 0.0.2])[
+  The development version, which is not on Typst Universe yet, tags the title slide as the level-one heading, so a deck of `==` slides exports without a filler section. It also marks theme chrome such as the slide number as decoration, so a screen reader no longer announces it on every slide. The README's install instructions fetch it; it imports as `@local/mosaic:0.0.2`.
+]
 
 ```typ
 #image("plot.png", alt: "Estimates rise steadily from 2010 to 2020.")

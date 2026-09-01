@@ -9,6 +9,8 @@ PACKAGE_SOURCES := $(shell find ../../../../mosaic -type f 2>/dev/null | sort)
 
 all: $(DECK).pdf
 
+# For an accessible deck, export against Typst's tagged-PDF standard instead:
+#	typst compile --root ../../.. --pdf-standard ua-1 main.typ $@
 $(DECK).pdf: $(SOURCES) $(DECK_DEPS) $(PACKAGE_SOURCES)
 	typst compile --root ../../.. main.typ $@
 

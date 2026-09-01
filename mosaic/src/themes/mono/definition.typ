@@ -36,7 +36,9 @@
     columns: (auto, 1fr),
     column-gutter: 0.5em,
     align: (left + top, left + top),
-    text(fill: colors.accent)[\$],
+    // Decoration, not part of the heading's text: the artifact wrapper keeps
+    // it out of the tagged PDF's structure tree.
+    pdf.artifact(text(fill: colors.accent)[\$]),
     it,
   )
   show figure.caption: set text(size: 0.72em, fill: colors.muted)
@@ -66,13 +68,15 @@
     // numbered slide. It resolves its colors from the deck record, so a
     // palette swap recolors it too, and the component quiets itself on
     // unnumbered pages such as titles.
-    foreground: place(bottom + right, block(
+    // Chrome, not content: the artifact wrapper keeps it out of the tagged
+    // PDF's structure tree, so a screen reader never announces it.
+    foreground: pdf.artifact(place(bottom + right, block(
       inset: (right: 24pt, bottom: 12pt),
       text(
         size: 0.55em,
         components.progress(variant: "1/1"),
       ),
-    )),
+    ))),
   ),
   options: (
     // The one chain that needs no platform names: Typst embeds DejaVu Sans

@@ -65,9 +65,11 @@
     // record, so a palette swap recolors it too, and the component quiets
     // itself on unnumbered pages: the title keeps its clean edge and section
     // slides already carry the big section bar.
-    foreground: place(bottom, components.progress(
+    // Chrome, not content: the artifact wrapper keeps it out of the tagged
+    // PDF's structure tree, so a screen reader never announces it.
+    foreground: pdf.artifact(place(bottom, components.progress(
       variant: "line", count: "slides", width: 100%, thickness: 3pt,
-    )),
+    ))),
   ),
   options: (
     // Designed face first, then the best slide sans each platform ships by

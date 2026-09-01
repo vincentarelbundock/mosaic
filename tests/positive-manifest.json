@@ -1,5 +1,6 @@
 {
   "core": [
+    "accessibility.typ",
     "author.typ",
     "cell-inset-settings.typ",
     "components.typ",

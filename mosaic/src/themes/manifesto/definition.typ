@@ -57,10 +57,12 @@
     // poster's red. It resolves its colors from the deck record, so a palette
     // swap recolors it too, and the component quiets itself on unnumbered
     // pages such as titles.
-    foreground: place(bottom + right, block(
+    // Chrome, not content: the artifact wrapper keeps it out of the tagged
+    // PDF's structure tree, so a screen reader never announces it.
+    foreground: pdf.artifact(place(bottom + right, block(
       inset: (right: 18pt, bottom: 14pt),
       components.progress(variant: "circle"),
-    )),
+    ))),
   ),
   options: (
     // Designed face first, then the display serif each platform ships by
