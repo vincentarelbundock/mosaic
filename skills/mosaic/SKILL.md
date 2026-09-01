@@ -139,12 +139,12 @@ To replace a named layout deck-wide, configure it once in setup; to reuse one fo
 
 Most decks are built from a handful of recurring shapes. Reach for the named form below before composing a grid by hand; each one is one line and stays correct when the deck's font size, paper, or theme changes.
 
-**Title slide.** `#m.slide(layout: "title")` with nothing else: it inherits `title`, `subtitle`, `authors`, and `date` from setup. Choose a stock variant when the preset suits the deck. When the deck wants type much quieter or more idiosyncratic than any preset, use the image layout's `full` variant as the escape hatch and write the title as ordinary text:
+**Title slide.** `#m.slide(layout: "title")` with nothing else: it inherits `title`, `subtitle`, `authors`, and `date` from setup. Choose a stock variant when the preset suits the deck. When the deck wants type much quieter or more idiosyncratic than any preset, use the image layout's `full` variant as the escape hatch and write the title yourself. Write it as a level-one heading rather than plain text (`#heading(level: 1, outlined: false)[..]` keeps it out of the bookmarks): inside a slide body a heading renders in place and opens no slide, it takes the theme's level-one heading size (a scoped `show heading: set text(size: ..)` in the body adjusts it), and it gives an accessible export the H1 that the built-in title layout supplies on its own:
 
 ```typ
 #m.slide(layout: "image", variant: "full", image: path("fig/cover.jpg"))[
   #set text(fill: white)
-  #text(size: 1.5em)[Économie et Politique]
+  #heading(level: 1, outlined: false)[Économie et Politique]
 
   POL1025
 

@@ -389,11 +389,12 @@
       body
     } else {
       // Captured outside the heading: inside it, the theme's heading rules
-      // have already applied.
+      // have already applied. The family is not restated: Typst warns per
+      // source span that names an unknown family, so repeating the chain
+      // here would report a missing designed face a second time, and no
+      // bundled theme gives headings a face the display line lacks.
       context {
         let style = (
-          font: text.font,
-          fallback: text.fallback,
           style: text.style,
           weight: text.weight,
           stretch: text.stretch,

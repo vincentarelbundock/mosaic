@@ -160,10 +160,12 @@ Yes. Compile against Typst's tagged-PDF standard:
 typst compile --pdf-standard ua-1 main.typ
 ```
 
-Three authoring requirements follow from the standard. First, PDF/UA-1 requires a properly nested heading tree whose first heading is level one. On the released 0.0.1 the deck must open with a `=` section heading before any `==` content slides, and a deck made only of `==` headings fails the export. Second, the document needs a title, which `setup(title: ..)` provides. Third, figures and math carry no description on their own: pass an `alt` string to `image` (or `m.components.image`) and to `math.equation` so a screen reader can voice them.
+Three authoring requirements follow from the standard. First, PDF/UA-1 requires a properly nested heading tree that opens at level one. The built-in title layout tags the deck title as that level-one heading (kept out of the outline and the bookmarks, so navigation is unchanged), so a deck of `m.slide(layout: "title")` followed by `==` content slides exports as is. A hand-built cover, such as the image layout's `full` variant with the type written by hand, carries no heading of its own, so write its title as one rather than as plain text: `#heading(level: 1, outlined: false)[My talk]`, or `= My talk` to bookmark it too. Inside a slide body a heading renders in place and opens no slide; only headings at the top level of the document do that. Second, the document needs a title, which `setup(title: ..)` provides. Third, figures and math carry no description on their own: pass an `alt` string to `image` (or `m.components.image`) and to `math.equation` so a screen reader can voice them.
 
-#calepin.elements.callout(kind: "warning", title: [Changed in Mosaic 0.0.2])[
-  The development version, which is not on Typst Universe yet, tags the title slide as the level-one heading, so a deck of `==` slides exports without a filler section. It also marks theme chrome such as the slide number as decoration, so a screen reader no longer announces it on every slide. The README's install instructions fetch it; it imports as `@local/mosaic:0.0.2`.
+Theme chrome takes care of itself. Every built-in theme marks its progress ring, line, folio, or statusline as decoration, and Mono does the same for the `$` prompt before each slide heading, so a screen reader reads the slide's content and never the furniture. A `foreground:` or `background:` plane the deck supplies is content by default; wrap it in `pdf.artifact(..)` when it is decoration, and leave it alone when it carries meaning, such as a cover photograph with an `alt` string.
+
+#calepin.elements.callout(kind: "warning", title: [Requires Mosaic 0.0.2])[
+  The tagged title slide and the artifacted chrome are new in 0.0.2, which is not on Typst Universe yet. On the released 0.0.1 the title slide contributes no heading, so the deck must open with a `=` section heading before any `==` content slides, and the theme's slide number is announced on every slide. The README's install instructions fetch the development version; it imports as `@local/mosaic:0.0.2`.
 ]
 
 ```typ
