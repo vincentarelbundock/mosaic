@@ -172,6 +172,8 @@ Three authoring requirements follow from the standard. First, PDF/UA-1 requires 
 )
 ```
 
+Check the result with a validator: #link("https://pdf4wcag.com/")[PDF4WCAG] takes an upload and reports each rule the file breaks. Two of its checks answer for the export flag rather than for the deck: a file compiled without `--pdf-standard ua-1` is tagged, but carries neither the PDF/UA identification in its metadata nor the viewer preference that shows the title in the window bar, so it fails as "not of the type PDF/UA" however well the deck is written.
+
 = Touying
 
 How does Mosaic differ from Touying?
