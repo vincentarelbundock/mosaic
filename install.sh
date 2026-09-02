@@ -138,6 +138,8 @@ else
   stage_cleanup() { [ -z "$STAGE_DIR" ] || rm -rf "$STAGE_DIR"; }
   trap 'stage_cleanup; cleanup' EXIT INT TERM
   cp -R "$SOURCE_DIR/." "$STAGE_DIR/"
+  # mktemp creates the stage with mode 700; the package is world-readable.
+  chmod 755 "$STAGE_DIR"
   rm -rf "$TARGET_DIR"
   mv "$STAGE_DIR" "$TARGET_DIR"
   STAGE_DIR=""
