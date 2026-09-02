@@ -24,5 +24,4 @@ dist/
 .syncthing.*.tmp
 *.sync-conflict-*
 *.tmp.[0-9]*.*
-uv.lock
 .claude

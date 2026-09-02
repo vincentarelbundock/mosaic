@@ -52,7 +52,7 @@ Documentation prose is never hard-wrapped. Write each paragraph as one long line
 **Theme engine.** Themes are passive definition dictionaries (`name`, `colors`, `roles`, `defaults`, `layouts`, `options`, `apply`) consumed by the private engine in `src/themes/engine.typ`, which validates them and wires them into `setup-core`. `src/themes/extension.typ` is the public theme-extension API.
 
 **Major subsystems under `mosaic/src/`:**
-- `grid/` — the named-cell layout tree: `model` (node/cell/track dicts), `constructors` (`h`, `v`, `cell`, `t`), `validation`, `traversal`, `render`.
+- `grid/` — the named-cell layout tree: `model` (node/cell/track dicts), `constructors` (`cell`, `columns`, `rows`, `track`), `validation`, `traversal`, `render`.
 - `layout/` — the named layouts (`title`, `section`, `content`, `image`) plus `config`/`resolver` for per-deck layout configuration.
 - `incremental/` — pauses and reveal steps (`pause`, `analysis`, `transform`).
 - `component/` — user-facing components (card, callout, badge, quote, divider, progress, figure, image).

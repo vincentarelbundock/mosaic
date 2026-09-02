@@ -614,17 +614,18 @@ def run_core(typst: str, sources: list[str]) -> None:
 
 def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
     compile_group(typst, sources)
-    source = responsive[0]
-    for paper in ("16-9", "4-3"):
-        for appearance in ("light", "dark"):
-            output = TMP / f"mosaic-layouts-title-responsive-{appearance}-{paper}.pdf"
-            typst_compile(typst, source, output, "--input", f"paper={paper}", "--input", f"appearance={appearance}")
-            result = command(
-                [typst, "eval", "--root", ".", "--input", f"paper={paper}", "--input", f"appearance={appearance}", "query(<mosaic-overflow-warning>).len()", "--in", f"tests/{source}"],
-                capture=True,
-            )
-            if result.stdout.strip() != "0":
-                raise TestFailure(f"responsive title emitted overflow warnings for {appearance}/{paper}")
+    for source in responsive:
+        stem = Path(source).stem
+        for paper in ("16-9", "4-3"):
+            for appearance in ("light", "dark"):
+                output = TMP / f"mosaic-{stem}-{appearance}-{paper}.pdf"
+                typst_compile(typst, source, output, "--input", f"paper={paper}", "--input", f"appearance={appearance}")
+                result = command(
+                    [typst, "eval", "--root", ".", "--input", f"paper={paper}", "--input", f"appearance={appearance}", "query(<mosaic-overflow-warning>).len()", "--in", f"tests/{source}"],
+                    capture=True,
+                )
+                if result.stdout.strip() != "0":
+                    raise TestFailure(f"{stem} emitted overflow warnings for {appearance}/{paper}")
 
     # The title layout's field contract: every variant page of the coverage
     # fixture must carry every deck and author field. Text is compared with

@@ -9,7 +9,7 @@
 #show label("mosaic-cell-a"): set block(stroke: outline)
 #show label("mosaic-cell-b"): set block(stroke: outline)
 
-// t() sizes one child: "a" takes two thirds of the width, "b" keeps the
+// track() sizes one child: "a" takes two thirds of the width, "b" keeps the
 // default 1fr and receives the rest.
 #let two-thirds = m.grids.columns(m.grids.track(2fr, "a"), "b")
 
