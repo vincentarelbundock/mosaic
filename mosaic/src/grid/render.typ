@@ -346,9 +346,7 @@
   }
   if node.kind == "cell" {
     let style = node.style
-    if node.id != none {
-      style.insert("_id", node.id)
-    }
+    style.insert("_id", node.id)
     let style = if style.len() == 0 { none } else { style }
     let body = if node.content == none { contents.at(node.id) } else { node.content }
     (transform(body, step, heading-scope: path), false, style)

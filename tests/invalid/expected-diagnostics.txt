@@ -73,6 +73,7 @@ overflow-error|content overflows cell "body" on slide 2 frame 1
 overflow-policy|setup overflow must be "off", "record", or "error"
 pause-record|invalid pause record
 reserved-cell-id|cell id "background" is reserved for the background plane
+reserved-cell-id-foreground|cell id "foreground" is reserved for the foreground plane
 setup-authors-type|setup author 1 must be a name or created with author()
 setup-auto-slide-removed|setup does not accept "auto-slide"
 setup-cells-empty-id|setup cells cell id must be non-empty
@@ -115,6 +116,8 @@ speaker-note-overflow|speaker output notes overflow on frame 1
 speaker-note-record|invalid speaker note record
 split-note-overflow|split output notes overflow on frame 1
 split-stroke-type|columns stroke must be none or a native Typst stroke
+split-unknown-argument-columns|columns has no field "guter"; expected one of ("gutter", "stroke")
+split-unknown-argument-rows|rows has no field "guter"; expected one of ("gutter", "stroke")
 temporal-heading-grid|headings cannot be placed in incremental grid nodes; keep semantic headings structurally stable across frames
 temporal-heading|headings cannot be wrapped in on, reveal, replace, or drawing; keep semantic headings structurally stable across frames
 theme-definition-option-conflict|theme option "paper" conflicts with setup

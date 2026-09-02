@@ -6,7 +6,7 @@
 )
 #import "validation.typ": validate
 
-#let resolve-cell-id(identifier, id, name) = {
+#let validate-cell-id(identifier, id, name) = {
   if identifier.named().len() > 0 {
     fail(name + " accepts only a cell id and optional fixed content")
   }
@@ -38,7 +38,7 @@
   style: (:),
   id: none,
 ) = {
-  let id = resolve-cell-id(identifier, id, "styled-cell")
+  let id = validate-cell-id(identifier, id, "styled-cell")
   if type(style) != dictionary {
     fail("styled-cell style must be a dictionary")
   }
@@ -103,7 +103,7 @@
   if identifier.named().len() > 0 {
     fail("cell accepts only a cell id, optional fixed content, and inset")
   }
-  let id = resolve-cell-id(identifier, id, "cell")
+  let id = validate-cell-id(identifier, id, "cell")
   styled-cell(
     id: id,
     content: content,
@@ -136,7 +136,8 @@
   /// -> auto | length | ratio | relative | fraction
   size,
   /// The child to size: a string cell id, or a canonical Mosaic grid node built
-  /// with `cell`, `columns`, or `rows`.
+  /// with `cell`, `columns`, or `rows`. A node wrapped in `steps.on` is also
+  /// accepted, so an incrementally revealed child can carry its own size.
   /// -> str | dictionary
   child,
 ) = {
@@ -152,6 +153,16 @@
     size: size,
     child: child,
   )
+}
+
+#let validate-split-arguments(name, named) = {
+  if named.len() > 0 {
+    let key = named.keys().sorted().first()
+    fail(
+      name + " has no field " + repr(key)
+        + "; expected one of " + repr(("gutter", "stroke")),
+    )
+  }
 }
 
 #let validate-split-child(value) = {
@@ -208,6 +219,9 @@
 ///   depth.
 /// - Any of those wrapped in `track` to give it an explicit track size.
 ///
+/// A node may also be wrapped in `steps.on` so its visibility changes across
+/// incremental reveal steps.
+///
 /// Each unwrapped child receives a `1fr` column, so an unadorned `columns`
 /// divides the width evenly.
 ///
@@ -233,13 +247,16 @@
   /// `track`. At least one is required.
   /// -> arguments
   ..children,
-) = make-split("width", gutter, stroke, children.pos())
+) = {
+  validate-split-arguments("columns", children.named())
+  make-split("width", gutter, stroke, children.pos())
+}
 
 /// Splits the available height, arranging its children as rows.
 ///
-/// Children take the same three forms as in `columns`: a string cell id, a
-/// Mosaic grid node, or either wrapped in `track`. Each unwrapped child
-/// receives a `1fr` row.
+/// Children take the same forms as in `columns`: a string cell id, a Mosaic
+/// grid node, either wrapped in `track`, or a node wrapped in `steps.on` for
+/// incremental reveal. Each unwrapped child receives a `1fr` row.
 ///
 /// ```typ
 /// #mosaic.grids.rows(
@@ -262,6 +279,9 @@
   /// `track`. At least one is required.
   /// -> arguments
   ..children,
-) = make-split("height", gutter, stroke, children.pos())
+) = {
+  validate-split-arguments("rows", children.named())
+  make-split("height", gutter, stroke, children.pos())
+}
 
 
