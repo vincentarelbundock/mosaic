@@ -1,5 +1,5 @@
 // Public and internal constructors for canonical grid nodes.
-#import "../shared.typ": tag, fail
+#import "../shared.typ": tag, fail, validate-keys
 #import "model.typ": (
   plane-ids, is-node, is-track, axis-name,
   is-stroke, is-track-size,
@@ -155,15 +155,9 @@
   )
 }
 
-#let validate-split-arguments(name, named) = {
-  if named.len() > 0 {
-    let key = named.keys().sorted().first()
-    fail(
-      name + " has no field " + repr(key)
-        + "; expected one of " + repr(("gutter", "stroke")),
-    )
-  }
-}
+// The only named options a split accepts; anything else in the sink is a
+// misspelling, and `validate-keys` names it.
+#let split-options = ("gutter", "stroke")
 
 #let validate-split-child(value) = {
   let size = 1fr
@@ -248,7 +242,7 @@
   /// -> arguments
   ..children,
 ) = {
-  validate-split-arguments("columns", children.named())
+  _ = validate-keys(children.named(), split-options, "columns")
   make-split("width", gutter, stroke, children.pos())
 }
 
@@ -280,7 +274,7 @@
   /// -> arguments
   ..children,
 ) = {
-  validate-split-arguments("rows", children.named())
+  _ = validate-keys(children.named(), split-options, "rows")
   make-split("height", gutter, stroke, children.pos())
 }
 
