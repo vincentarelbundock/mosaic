@@ -128,8 +128,19 @@ if [ "$MODE" = "uninstall" ]; then
   rm -rf "$TARGET_DIR"
   echo "Removed $TARGET_DIR"
 else
+  # Copy into a temporary sibling directory first and swap it into place with
+  # a single rm+mv, so a failed or interrupted copy never leaves a truncated
+  # package at $TARGET_DIR: either the old install stays intact, or the new
+  # one lands whole.
+  PARENT_DIR=$(dirname -- "$TARGET_DIR")
+  mkdir -p "$PARENT_DIR"
+  STAGE_DIR=$(mktemp -d "$PARENT_DIR/.mosaic-install.XXXXXX")
+  stage_cleanup() { [ -z "$STAGE_DIR" ] || rm -rf "$STAGE_DIR"; }
+  trap 'stage_cleanup; cleanup' EXIT INT TERM
+  cp -R "$SOURCE_DIR/." "$STAGE_DIR/"
   rm -rf "$TARGET_DIR"
-  mkdir -p "$TARGET_DIR"
-  cp -R "$SOURCE_DIR/." "$TARGET_DIR/"
+  mv "$STAGE_DIR" "$TARGET_DIR"
+  STAGE_DIR=""
+  trap cleanup EXIT INT TERM
   echo "Installed @local/$PACKAGE_NAME:$VERSION in $TARGET_DIR"
 fi

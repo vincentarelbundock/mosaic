@@ -11,7 +11,7 @@
 #show label("mosaic-cell-c"): set block(stroke: outline)
 #show label("mosaic-cell-d"): set block(stroke: outline)
 
-// Two stacked h() splits make a 2 x 2 arrangement.
+// Two stacked columns() splits make a 2 x 2 arrangement.
 #let quadrants = m.grids.rows(
   m.grids.columns("a", "b"),
   m.grids.columns("c", "d"),

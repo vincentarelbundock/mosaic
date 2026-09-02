@@ -1,7 +1,8 @@
 # Mosaic is a Typst package; this file exists only so `uv run python` has a
 # declared environment for the repository's Python build tooling (scripts/,
-# tests/). Pillow is required by the docs build (scripts/check-doc-assets.py
-# and scripts/encode-cover.py); make doctor lists it as a prerequisite.
+# tests/). Pillow is required by scripts/check-doc-assets.py (which `make
+# check` runs) and scripts/encode-cover.py (docs build); make doctor lists it
+# as a prerequisite of both the check and docs groups.
 [project]
 name = "mosaic-tooling"
 version = "0"
