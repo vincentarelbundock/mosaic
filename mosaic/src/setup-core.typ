@@ -69,6 +69,9 @@
   _ = validate-keys(options, defaults, "setup")
   let options = defaults + options
   let paper = options.paper
+  // Validated whatever the output, so a bad value fails even on the outputs
+  // that ignore it.
+  let margin = validate-margin(options.margin)
   let spacing = options.spacing
   let notes = options.notes
   let overflow = options.overflow
@@ -107,7 +110,7 @@
     (
       width: paper-size.width,
       height: paper-size.height,
-      margin: validate-margin(options.margin),
+      margin: margin,
       fill: colors.canvas,
     )
   } else if output == "split" {

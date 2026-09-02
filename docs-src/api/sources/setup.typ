@@ -63,8 +63,8 @@
   /// edge by default, so this is `0pt` and the deck's `spacing.inset` does the
   /// spacing instead; set it to reclaim a real page margin around a custom
   /// canvas. The `speaker`, `notes`, and `split` outputs ignore this option
-  /// and use their own fixed geometry.
-  /// -> length
+  /// and use their own fixed geometry. Accepts what native `page.margin` does.
+  /// -> auto | length | relative | dictionary
   margin: 0pt,
   /// Canonical deck title. Title layouts inherit it when their `title` is
   /// `auto`.
