@@ -269,7 +269,7 @@ Import one facade as `m` and keep the rest of the deck unchanged:
 
 Bundled facades are `default`, `editorial`, `metropolis`, `manifesto`, and `mono`. The root package is exactly the bundled default facade. There is no dark theme: flip any theme to dark by passing the bundled dark palette through `colors:`, as in `#show: m.setup.with(colors: mosaic.palettes.dark)`. Every theme adapts on its own, syntax highlighting included.
 
-Every facade exports the same `slide`, `note`, `pause`, `surface`, `grid`, `steps`, `components`, and `theme`, so those parts of a deck are theme-portable. Each facade also exports its own `definition`, the dictionary its `setup` is bound to. Each theme also exports `m.layouts`: the base layout constructors, rebound with that theme's defaults (for example, Editorial's `content` defaults to `variant: "header-body"`). Every base argument remains available under every theme; for example, Metropolis binds `title` to `variant: "ruled"` and an explicit variant overrides it.
+Every facade exports the same `slide`, `info`, `note`, `fit`, `grids`, `steps`, `components`, and `palettes`, so those parts of a deck are theme-portable (`pause` lives on `steps.pause`, not as a top-level export). Each facade also exports its own `definition`, the dictionary its `setup` is bound to. Each theme also exports `m.layouts`: the base layout constructors, rebound with that theme's defaults (for example, Editorial's `content` defaults to `variant: "header-body"`). Every base argument remains available under every theme; for example, Metropolis binds `title` to `variant: "ruled"` and an explicit variant overrides it.
 
 To develop a theme, start locally: define the complete semantic palette and bind the dictionary directly:
 
