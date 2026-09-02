@@ -28,7 +28,14 @@
   // follows) rather than being dropped from the schedule.
   let pending = ()
   for segment in pause-segments(children) {
-    let span = duration(segment)
+    // A segment with no children of its own spans no step, regardless of what
+    // `duration` would say about an empty array in isolation: `array-max(())`
+    // returns 1 so a slide with no incremental content still gets one frame,
+    // but that top-level fallback must not leak into a genuinely empty
+    // segment between two pauses. Folding it here, before `duration` runs,
+    // keeps the fallback intact while still collapsing empty leading,
+    // trailing, or consecutive pauses.
+    let span = if segment.len() == 0 { 0 } else { duration(segment) }
     if span > 0 {
       result.push((children: pending + segment, start: start, duration: span))
       pending = ()

@@ -423,6 +423,15 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(empty_markers, "pause", absent=True)
     require_contains(pdf_info("pause-empty-markers"), "Pages:           1")
 
+    # A leading pause (the very first token in the slide) and pauses adjacent
+    # on one line, with no intervening whitespace node, must fold exactly like
+    # the line-separated markers above: one page per slide, not one extra
+    # blank frame per empty segment.
+    empty_markers_inline = pdf_text("pause-empty-markers-inline")
+    require_contains(empty_markers_inline, "LEAD")
+    require_contains(empty_markers_inline, "ADJ")
+    require_contains(pdf_info("pause-empty-markers-inline"), "Pages:           2")
+
     # Whitespace-normalized: the phrases are one wrapped paragraph, so a line
     # break may fall inside any of them depending on the theme's tokens.
     pause_handout_text = " ".join(
