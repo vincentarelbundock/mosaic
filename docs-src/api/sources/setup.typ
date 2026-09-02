@@ -55,8 +55,17 @@
   ///
   /// - `"16-9"`: widescreen, the default.
   /// - `"4-3"`: traditional projector.
-  /// -> str
+  /// - a `(width:, height:)` dictionary of lengths, for a custom size Typst's
+  ///   named papers do not cover.
+  /// -> str | dictionary
   paper: "16-9",
+  /// Page margin for the `slides` output. A presentation canvas is edge to
+  /// edge by default, so this is `0pt` and the deck's `spacing.inset` does the
+  /// spacing instead; set it to reclaim a real page margin around a custom
+  /// canvas. The `speaker`, `notes`, and `split` outputs ignore this option
+  /// and use their own fixed geometry.
+  /// -> length
+  margin: 0pt,
   /// Canonical deck title. Title layouts inherit it when their `title` is
   /// `auto`.
   /// -> content | str | none
@@ -103,6 +112,9 @@
   /// - `muted`: subtitles, captions, and other fine print.
   /// - `line`: rules, borders, and other drawn separators.
   /// - `accent`: the deck's one emphatic color.
+  /// - `warning`: the status color a component's `role: "warning"` paints
+  ///   with.
+  /// - `error`: the status color a component's `role: "error"` paints with.
   ///
   /// ```typ
   /// colors: (accent: rgb("#0072B2"))
@@ -153,6 +165,28 @@
   /// native rules after `setup` or in your own theme's `apply`.
   /// -> dictionary
   spacing: (:),
+  /// Partial geometry overrides for the printed `speaker`, `notes`, and
+  /// `split` outputs. Omitted keys keep the theme's value. These pages are
+  /// paper, not slide canvas, so this is layout geometry only; their heading
+  /// and note typography are ordinary `show` rules, changeable after `setup`.
+  ///
+  /// - `margin`: the A4 page margin, default `15mm`.
+  /// - `split-inset`: the same inset for the `split` output's notes half,
+  ///   whose page carries no margin of its own so the two halves meet exactly
+  ///   at the midpoint, default `12mm`.
+  /// - `thumbnail-stroke`: the border drawn around the slide thumbnail,
+  ///   default `0.6pt` in the theme's line color.
+  /// - `note-gap`: space between successive notes, default `3mm`.
+  /// - `thumbnail-gap`: space below the slide thumbnail, default `7mm`.
+  /// - `heading-gap`: space below the notes heading, default `4mm`.
+  /// - `bottom-gap`: slack held back below the notes block so a full page
+  ///   does not butt against the bottom margin, default `2mm`.
+  ///
+  /// ```typ
+  /// notes: (margin: 20mm)
+  /// ```
+  /// -> dictionary
+  notes: (:),
   /// What to do when a cell's content is taller than the cell.
   ///
   /// Observation measures every cell on every frame, which roughly doubles the
