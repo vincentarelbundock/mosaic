@@ -388,12 +388,12 @@
   /// Draws the frame. Called as `render(..named, commands)` with the named
   /// arguments given here and the array of commands this frame keeps. Usually
   /// the library's own top-level renderer.
-  /// -> function
+  /// -> function | none
   render: none,
   /// Turns one command into its invisible counterpart, so it still reserves
   /// space and the drawing does not shift between frames. Usually the library's
   /// own `hide`.
-  /// -> function
+  /// -> function | none
   hide: none,
   /// Turns one command into its muted counterpart. Required only if some step
   /// range uses the `"dimmed"` state; omitting it makes that an error.

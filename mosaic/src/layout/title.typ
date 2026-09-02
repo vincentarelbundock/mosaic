@@ -70,16 +70,16 @@
   // The image variant's whole field family, validated in one place: the
   // picture is required exactly when the variant uses one, `position` selects
   // the composition, and `tracks` sizes the split.
-  if fields.position != auto and fields.position not in image-positions {
-    fail(
-      "layout \"title\" position must be auto or one of " + repr(image-positions),
-    )
-  }
   if variant == "image" {
     if fields.image == none {
       fail("layout \"title\" variant \"image\" requires image")
     }
     _ = validate-image(fields.image, "layout \"title\" image", allow-size: false)
+    if fields.position != auto and fields.position not in image-positions {
+      fail(
+        "layout \"title\" position must be auto or one of " + repr(image-positions),
+      )
+    }
   } else {
     if fields.image != none {
       fail("layout \"title\" variant " + repr(variant) + " does not use image")
@@ -123,7 +123,8 @@
 /// takes the value configured on `setup`. To override an inherited value:
 ///
 /// - Pass explicit content or a string to replace it.
-/// - Pass `none` to suppress an inherited `title`, `subtitle`, or `date`.
+/// - Pass `none` to suppress an inherited `subtitle` or `date`; `title` is
+///   required and cannot be suppressed.
 /// - Pass `()` to suppress inherited `authors`.
 ///
 /// *Variants*
@@ -264,13 +265,15 @@
   /// Whether to draw the variant's structural mark: the `ruled` full-width
   /// rule, the `bordered` border, or the `kicker` opening rule. On the
   /// `image` variant it draws the short accent rule of the compact stack
-  /// instead. `auto` draws the structural marks and omits the accent rule on
-  /// the `image` variant, where the photograph already does that work.
+  /// instead. Ignored by the `panel` variant, whose accent rule always draws.
+  /// `auto` draws the structural marks and omits the accent rule on the
+  /// `image` variant, where the photograph already does that work.
   /// -> auto | bool
   rule: auto,
   /// Color of the variant's structural mark. `auto` uses the deck's text
-  /// color for the marked text variants (`bordered`, `kicker`) and
-  /// the semantic accent for the `image` variant's short rule.
+  /// color for the marked text variants (`bordered`, `kicker`) and the
+  /// semantic accent for `ruled`, `panel`, and the `image` variant's short
+  /// rule.
   /// -> color | auto
   accent: auto,
 ) = {

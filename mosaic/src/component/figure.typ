@@ -123,15 +123,19 @@
   // only be measured and scaled, which is a different fitting problem.
   let is-image = type(body) != content
 
+  // Applies to both bodies: a stray positional forwarded to a picture source
+  // would otherwise reach `image()` and fail with a raw arity error instead
+  // of a `mosaic:` diagnostic.
+  if native.pos().len() != 0 {
+    fail("figure takes one body; further arguments must be named")
+  }
+
   if not is-image {
     if fit != "contain" {
       fail("figure fit applies only to a picture source")
     }
     if scrim != none {
       fail("figure scrim applies only to a picture source")
-    }
-    if native.pos().len() != 0 {
-      fail("figure takes one body; further arguments must be named")
     }
     if caption == none and native.named().len() != 0 {
       fail("figure arguments apply to the native figure, so they need a caption")
