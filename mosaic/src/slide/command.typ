@@ -118,7 +118,7 @@
 /// `slide(layout: "content", variant: "body")[...]` are the same slide.
 ///
 /// - `auto`: the configured `content` layout. The default.
-/// - `"content"`, `"title"`, `"section"`: the matching entry in
+/// - `"content"`, `"title"`, `"section"`, `"image"`: the matching entry in
 ///   `setup(layouts:)`. The name also determines numbering and the section
 ///   lifecycle.
 /// - A `mosaic.layouts.*` value: used directly, carrying its own semantic name.

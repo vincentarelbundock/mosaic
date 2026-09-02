@@ -23,6 +23,7 @@ empty-split|columns must contain at least one child
 figure-args-uncaptioned|figure arguments apply to the native figure, so they need a caption
 figure-fit-content|figure fit applies only to a picture source
 figure-positional-content|figure takes one body; further arguments must be named
+figure-positional-image|figure takes one body; further arguments must be named
 figure-scrim-content|figure scrim applies only to a picture source
 fit-incremental|fit cannot hold incremental steps or speaker notes
 fit-note|fit cannot hold incremental steps or speaker notes
@@ -86,10 +87,13 @@ setup-layout-invalid|setup layouts "content" must be a Mosaic grid tree or layou
 setup-layouts-image-not-configurable|setup layouts does not accept "image"
 setup-layouts-type|setup layouts must be a dictionary
 setup-layouts-unknown|setup layouts does not accept "aside"
+setup-margin-type|setup margin must be auto, a length, or a dictionary of margin sides
+setup-notes-type|setup notes margin must be a length
 setup-output|setup output must be "slides", "speaker", "notes", or "split"
 setup-paper|setup paper must be "16-9", "4-3", or a dictionary with width and height
 setup-plane-value|setup background must be content, a string, or none
 setup-section-grid-removed|setup does not accept "section-grid"
+setup-spacing-type|setup spacing inset must be a length
 setup-title-type|setup title must be content, a string, or none
 slide-cells-fixed|slide cells cannot supply fixed-content cell "logo"
 slide-cells-mixed|slide cannot combine named and positional cell content

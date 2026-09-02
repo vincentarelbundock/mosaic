@@ -20,6 +20,20 @@
 // screens.
 #let output-modes = ("slides", "speaker", "notes", "split")
 
+// Permissive by design: `margin:` is forwarded straight to native `set page`,
+// which accepts far more shape than this checks (per-side keys, `x`/`y`
+// shorthand, `rest`). The goal is a `mosaic:` diagnostic for an obviously
+// wrong type, such as a string, not a reimplementation of Typst's margin
+// grammar.
+#let validate-margin(value) = {
+  if value != auto and type(value) not in (length, relative, dictionary) {
+    fail(
+      "setup margin must be auto, a length, or a dictionary of margin sides",
+    )
+  }
+  value
+}
+
 // Every option `setup` accepts, with its default. This is the single list:
 // `theme-engine` derives the set of theme-neutral option names from these keys
 // rather than restating them.
@@ -93,7 +107,7 @@
     (
       width: paper-size.width,
       height: paper-size.height,
-      margin: options.margin,
+      margin: validate-margin(options.margin),
       fill: colors.canvas,
     )
   } else if output == "split" {

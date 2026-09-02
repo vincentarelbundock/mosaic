@@ -15,11 +15,41 @@
 #import "shared.typ": fail, validate-choice, validate-dictionary, validate-keys
 #import "palettes.typ": light
 #import "author.typ": resolve-authors
+#import "grid/model.typ": is-stroke
 
 #let merge-record(base, override, name) = {
   _ = validate-dictionary(override, name)
   _ = validate-keys(override, base, name)
   base + override
+}
+
+// Every `spacing:` field is a length the layout modules resolve against, and
+// several are also multiplied by a bare number (see title-tokens' `-gap`
+// fields), which a percentage or fractional length cannot do the way a plain
+// length can. `relative` stays accepted alongside `length` because the fields
+// are used as native `inset`/`above` values too, which take either.
+#let validate-spacing(value) = {
+  for (name, item) in value {
+    if type(item) not in (length, relative) {
+      fail("setup spacing " + name + " must be a length")
+    }
+  }
+  value
+}
+
+// Every `notes:` field is a length except `thumbnail-stroke`, which paints the
+// thumbnail's border and so takes whatever a native stroke accepts.
+#let validate-notes(value) = {
+  for (name, item) in value {
+    if name == "thumbnail-stroke" {
+      if not is-stroke(item) {
+        fail("setup notes thumbnail-stroke must be a stroke or none")
+      }
+    } else if type(item) not in (length, relative) {
+      fail("setup notes " + name + " must be a length")
+    }
+  }
+  value
 }
 
 // Geometry the layout modules measure with. Typography is not here: every
@@ -177,8 +207,8 @@
   let background = validate-plane-default(background, "background")
   let foreground = validate-plane-default(foreground, "foreground")
   let deck = make-deck(..deck)
-  let spacing = merge-record(default-spacing, spacing, "spacing")
-  let notes = merge-record(default-notes, notes, "notes")
+  let spacing = validate-spacing(merge-record(default-spacing, spacing, "spacing"))
+  let notes = validate-notes(merge-record(default-notes, notes, "notes"))
   _ = validate-choice(overflow, overflow-modes, "setup overflow")
   (
     colors: colors,
