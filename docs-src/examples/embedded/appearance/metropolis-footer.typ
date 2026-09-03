@@ -12,9 +12,9 @@
     "footer",
     // the footer cell has default content that will appear on every slide using that layout
     content: [
-      Mosaic                     // text
-      #h(1fr)                    // space
-      #m.components.progress()   // slide number
+      #text(fill: orange, "Mosaic")	// text in orange accent color
+      #h(1fr)                    	// space
+      #m.components.progress()   	// slide number
     ],
   )),
 )
