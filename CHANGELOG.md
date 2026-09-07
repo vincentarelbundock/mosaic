@@ -4,6 +4,10 @@ Notable changes to Mosaic. The development version in `mosaic/typst.toml` moves 
 
 ## Unreleased (0.0.2)
 
+### Added
+
+- Anonymous grid cells. `grids.columns` and `grids.rows` accept `auto` for a cell that nothing refers to by name. Mosaic names it by its one-based path from the root of the grid, so the third cell of the second row is `2-3`, which is a label (`<mosaic-cell-2-3>`) and a `cells:` key like any authored id. Ids made only of digits and dashes are reserved for these paths, so an authored id of that shape is now an error.
+
 ### Fixed
 
 - Accessible export. The title slide is now tagged as the level-one heading, so a deck of `==` content slides compiles under `--pdf-standard ua-1` without a filler `=` section; the title stays out of the outline and the bookmarks. Every theme's chrome (the progress ring, line, folio, and statusline) and mono's `$` heading prompt are marked as decoration, so a screen reader no longer announces the slide number on every slide or reads the prompt as part of the heading. Thanks to [@eddelbuettel](https://github.com/eddelbuettel) for the report ([#7](https://github.com/vincentarelbundock/mosaic/issues/7)).
