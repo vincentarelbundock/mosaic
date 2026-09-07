@@ -1,7 +1,7 @@
 // Public and internal constructors for canonical grid nodes.
 #import "../shared.typ": tag, fail, validate-keys
 #import "model.typ": (
-  plane-ids, is-node, is-track, axis-name,
+  plane-ids, is-anonymous-id, is-node, is-track, axis-name,
   is-stroke, is-track-size,
 )
 #import "validation.typ": validate
@@ -28,7 +28,42 @@
   if resolved in plane-ids {
     fail("cell id " + repr(resolved) + " is reserved for the " + resolved + " plane")
   }
+  if is-anonymous-id(resolved) {
+    fail(
+      "cell id " + repr(resolved)
+        + " is reserved for anonymous cells; an authored id needs a letter",
+    )
+  }
   resolved
+}
+
+// The cell an `auto` child of a split becomes. It is built directly rather
+// than through `styled-cell`, because its id is exactly the spelling
+// `validate-cell-id` reserves.
+#let anonymous-cell(index) = (
+  mosaic: tag,
+  kind: "cell",
+  content: none,
+  style: (inset: auto),
+  id: str(index),
+)
+
+// Grows the anonymous ids of a subtree into paths. A split that receives a
+// node as its `index`-th child prefixes every anonymous id below it with that
+// index, so an `auto` cell that started as `2` inside a `columns` becomes
+// `3-2` once that `columns` is the third child of a `rows`. Authored ids and
+// fixed-content cells are left alone; only the reserved spelling moves.
+#let resolve-anonymous-ids(node, index) = {
+  if node.kind == "cell" {
+    if is-anonymous-id(node.id) {
+      node.id = str(index) + "-" + node.id
+    }
+  } else if node.kind == "split" {
+    node.children = node.children.map(child => resolve-anonymous-ids(child, index))
+  } else if node.kind == "on" {
+    node.child = resolve-anonymous-ids(node.child, index)
+  }
+  node
 }
 
 // Internal cell constructor used by layout resolvers and setup defaults.
@@ -60,8 +95,9 @@
 ///
 /// A cell is where slide content lands. Its id must be a non-empty string,
 /// unique within the tree, and may not be one of the reserved plane ids
-/// `background` or `foreground`. Pass it positionally or through `id:`, but
-/// not both.
+/// `background` or `foreground`, nor consist only of digits and dashes, the
+/// spelling that names anonymous cells (see `columns`). Pass it positionally
+/// or through `id:`, but not both.
 ///
 /// ```typ
 /// #mosaic.grids.rows(
@@ -159,17 +195,26 @@
 // misspelling, and `validate-keys` names it.
 #let split-options = ("gutter", "stroke")
 
-#let validate-split-child(value) = {
+#let validate-split-child(value, index) = {
   let size = 1fr
   let child = value
   if is-track(value) {
     size = value.size
     child = value.child
   }
-  if type(child) == str {
+  // One-based, so the ids read as people count children: the first cell of
+  // the second row is `2-1`.
+  let position = index + 1
+  if child == auto {
+    child = anonymous-cell(position)
+  } else if type(child) == str {
     child = cell(id: child)
-  } else if not is-node(child) {
-    fail("columns/rows children must be string cell IDs or Mosaic grid nodes")
+  } else if is-node(child) {
+    child = resolve-anonymous-ids(child, position)
+  } else {
+    fail(
+      "columns/rows children must be string cell IDs, auto, or Mosaic grid nodes",
+    )
   }
   (size, child)
 }
@@ -190,7 +235,9 @@
   if not is-stroke(stroke) {
     fail(name + " stroke must be none or a native Typst stroke")
   }
-  let parts = children.map(validate-split-child)
+  let parts = children.enumerate().map(((index, value)) => (
+    validate-split-child(value, index)
+  ))
   let result = (
     mosaic: tag,
     kind: "split",
@@ -206,9 +253,10 @@
 
 /// Splits the available width, arranging its children as columns.
 ///
-/// Children may be given in three forms, freely mixed:
+/// Children may be given in four forms, freely mixed:
 ///
 /// - A string, which is shorthand for `cell(id)`.
+/// - `auto`, an anonymous cell.
 /// - A node built with `cell`, `columns`, or `rows`, so splits nest to any
 ///   depth.
 /// - Any of those wrapped in `track` to give it an explicit track size.
@@ -227,6 +275,23 @@
 ///   "right",
 /// )
 /// ```
+///
+/// *Anonymous cells*
+///
+/// A cell that nothing refers to by name can be `auto`. It is named by its
+/// one-based path from the root of the grid, so in
+///
+/// ```typ
+/// #mosaic.grids.rows(
+///   mosaic.grids.columns(auto, auto),
+///   mosaic.grids.columns(auto, "aside", auto),
+/// )
+/// ```
+///
+/// the cells are `1-1`, `1-2`, `2-1`, `aside`, and `2-3`. A path is an id
+/// like any other: `<mosaic-cell-2-3>` styles that cell and
+/// `cells: ("2-3": ..)` fills it. Ids made only of digits and dashes are
+/// reserved for these paths, so an authored id needs a letter.
 ///
 /// -> dictionary
 #let columns(
@@ -248,9 +313,10 @@
 
 /// Splits the available height, arranging its children as rows.
 ///
-/// Children take the same forms as in `columns`: a string cell id, a Mosaic
-/// grid node, either wrapped in `track`, or a node wrapped in `steps.on` for
-/// incremental reveal. Each unwrapped child receives a `1fr` row.
+/// Children take the same forms as in `columns`: a string cell id, `auto`
+/// for an anonymous cell, a Mosaic grid node, either wrapped in `track`, or a
+/// node wrapped in `steps.on` for incremental reveal. Each unwrapped child
+/// receives a `1fr` row.
 ///
 /// ```typ
 /// #mosaic.grids.rows(

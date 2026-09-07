@@ -318,7 +318,7 @@ Build custom structure only when headings and layout factories are insufficient.
 )
 ```
 
-- `m.grids.columns(...)` places children side by side; `m.grids.rows(...)` stacks them. Each string is a cell ID. Children may be nested grids. Both accept `gutter:` (a native track size between adjacent children, default `0pt`) and `stroke:` (a stroke drawn along each interior boundary, centered in the gutter, default `none`).
+- `m.grids.columns(...)` places children side by side; `m.grids.rows(...)` stacks them. Each string is a cell ID; `auto` is an anonymous cell, named by its one-based path from the root (`2-1` is the first cell of the second child), and ids made only of digits and dashes are reserved for those paths. Children may be nested grids. Both accept `gutter:` (a native track size between adjacent children, default `0pt`) and `stroke:` (a stroke drawn along each interior boundary, centered in the gutter, default `none`).
 - Every direct child gets a `1fr` track by default. Wrap a child in `m.grids.track(size, child)` for another size; tracks accept `auto`, fixed lengths, percentages, and `fr` values.
 - `m.grids.cell(id, ...)` creates an explicitly configured cell: `inset:` (padding, affects layout measurement), fixed `content:` (an image or logo owned by the grid, needing no body or `cells:` entry). Cells do not fit or scale their content: they are structural only.
 - Read a grid from the outside inward: largest split first, then replace children with nested splits. Keep descriptive IDs and indentation.

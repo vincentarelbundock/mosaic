@@ -3,6 +3,11 @@
 
 #let plane-ids = ("background", "foreground")
 
+// Anonymous cells are named by their path from the root of the grid: the
+// second child of the third child is `3-2`. The spelling is reserved, so an
+// authored id can never collide with a path.
+#let is-anonymous-id(id) = id.match(regex("^[0-9]+(-[0-9]+)*$")) != none
+
 // Fitting is internal: the section layouts scale content they generate
 // themselves, whose size no author can predict. Authors scale an oversized
 // block of their own with native `scale(.., reflow: true)`.

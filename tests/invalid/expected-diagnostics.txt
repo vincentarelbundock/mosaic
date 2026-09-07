@@ -1,4 +1,3 @@
-anonymous-cell|cell id must be a non-empty string
 author-affiliations|author affiliations must be an array
 author-affiliation|author affiliation 1 must be content or a non-empty string
 author-corresponding|author corresponding requires email or orcid
@@ -9,12 +8,13 @@ author-orcid|author orcid must be a valid ORCID iD
 author-raw|author 1 must be a name or created with author()
 author-sparse|author 1 must be a name or created with author()
 bad-range|step range starts after it ends: "3-2"
-bad-split-child|columns/rows children must be string cell IDs or Mosaic grid nodes
+bad-split-child|columns/rows children must be string cell IDs, auto, or Mosaic grid nodes
 bad-split-gutter|columns gutter must be a native Typst track size
 bad-split-track-size|track size must be auto, a fixed or relative length, or a fractional length
 bad-state|before must be one of "visible", "hidden", "dimmed", "removed", received "ghosted"
 bare-track-wrapper|slide layout must be a Mosaic grid tree or layout
 cell-id-both|cell id must be passed positionally or through id:, not both
+cell-id-missing|cell id must be a non-empty string
 cell-surface-ownership|cell accepts only a cell id, optional fixed content, and inset
 components-progress-count|progress count must be "slides" or "sections"
 components-progress-quiet|progress quiet must be auto, true, or false
@@ -73,6 +73,7 @@ notes-output-overflow|notes output notes overflow on frame 1
 overflow-error|content overflows cell "body" on slide 2 frame 1
 overflow-policy|setup overflow must be "off", "record", or "error"
 pause-record|invalid pause record
+reserved-anonymous-cell-id|cell id "1-2" is reserved for anonymous cells; an authored id needs a letter
 reserved-cell-id|cell id "background" is reserved for the background plane
 reserved-cell-id-foreground|cell id "foreground" is reserved for the foreground plane
 setup-authors-type|setup author 1 must be a name or created with author()

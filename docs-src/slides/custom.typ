@@ -235,6 +235,24 @@ Splits nest to any depth. Read a grid from the outside inward: choose the larges
   show-captions: false,
 )
 
+= Anonymous cells
+
+A cell that nothing will ever refer to by name can be `auto`. Mosaic names it by its one-based path from the root of the grid, so in the grid below the last cell of the second row is `2-3`, and that path is a label and a `cells:` key like any authored id:
+
+```typ
+#let two-then-three = m.grids.rows(
+  m.grids.columns(auto, auto),
+  m.grids.columns(auto, auto, auto),
+)
+
+#m.slide(layout: two-then-three)[a][b][c][d][e]
+
+#show label("mosaic-cell-2-3"): set text(size: 0.8em)
+#m.slide(layout: two-then-three, cells: ("1-1": [first], "2-3": [last]))
+```
+
+Anonymous and named cells mix freely in one grid. A path moves with the grid: insert a row above and `2-3` becomes `3-3`, exactly as positional bodies shift. Name a cell when a rule or a `cells:` entry should survive such an edit. Ids made only of digits and dashes are reserved for these paths, so an authored id needs a letter.
+
 = Grid sizes (tracks)
 
 By default, every direct child of `m.grids.columns` or `m.grids.rows` receives a `1fr` track. Wrap a child with `m.grids.track` when it needs another size:
