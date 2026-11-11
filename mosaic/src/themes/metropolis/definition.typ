@@ -18,8 +18,21 @@
     fill: colors.text,
     fallback: true,
   )
-  show list.where(tight: true): it => list(tight: false, ..it.children)
-  show enum.where(tight: true): it => enum(tight: false, ..it.children)
+  // Tight lists become wide. A list nested in an item is then a block that
+  // would take the paragraph spacing above it, a gap wider than the item
+  // rhythm, so each item body pins nested lists to the item spacing. The
+  // rule lives in the body, not on the list, so the space above a top-level
+  // list is left alone.
+  let widen(item) = {
+    let fields = item.fields()
+    let body = fields.remove("body")
+    (item.func())(..fields, {
+      show selector(list).or(enum): set block(above: 0.9em)
+      body
+    })
+  }
+  show list.where(tight: true): it => list(tight: false, ..it.children.map(widen))
+  show enum.where(tight: true): it => enum(tight: false, ..it.children.map(widen))
   set list(spacing: 0.9em)
   set enum(spacing: 0.9em)
   set terms(spacing: 0.9em)
@@ -34,7 +47,7 @@
   let section-size = base-size * 1.5
   show heading.where(depth: 1): set text(size: section-size, weight: "semibold")
   show heading.where(depth: 2): set text(size: 1.15em, weight: "regular")
-  show heading: set block(below: 0.75em)
+  show heading: set block(below: 1em)
   show figure.caption: set text(size: 0.72em, fill: colors.muted)
   show raw.where(block: false): set text(size: 1.125em)
   show raw.where(block: true): set text(size: 0.8em)

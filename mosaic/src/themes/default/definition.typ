@@ -24,7 +24,7 @@
   )
   show heading.where(depth: 1): set text(size: 2em, weight: "semibold")
   show heading.where(depth: 2): set text(size: 1.4em, weight: "semibold")
-  show heading: set block(below: 0.75em)
+  show heading: set block(below: 1em)
   show figure.caption: set text(size: 0.72em, fill: colors.muted)
   // The accent stays functional: links, list markers, and the section
   // baseline rule carry it, and nothing decorative does.
