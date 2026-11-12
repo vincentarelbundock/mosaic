@@ -259,6 +259,8 @@ Tracks accept native `auto`, fixed lengths, percentages, and `fr` values:
   show-captions: false,
 )
 
+A cell directly in an `auto` row hugs its content; Mosaic calls it a *compact cell*. From 0.0.3 (not on Typst Universe yet) a compact cell is padded like the header and footer of the built-in layouts: the full `inset` left and right, `compact-inset` above and below. A hand-built header therefore matches the built-in one; see #link("../appearance/styling.html#header-depth")[Header depth] to change how deep both are. Pass `inset:` to `m.grids.cell` to pad a cell differently.
+
 Fractions compose, so three tracks can center a double-width column:
 
 #embedded-example(

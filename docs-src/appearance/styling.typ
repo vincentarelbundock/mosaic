@@ -148,6 +148,22 @@ Because the cell's own block obeys `set block` rules, a fill, stroke, or corner 
 
 The few surfaces a layout variant paints itself — the `panel` title variant's ink panel, for instance — are that variant's design and sit above label rules; when the arrangement is wrong for your content, pick another variant or draw the slide as an ordinary grid of cells.
 
+= Header depth
+
+A cell that sits directly in an `auto` row hugs its content: the row is exactly as tall as the cell's text plus its padding. Mosaic calls these *compact cells*; headers and footers are the usual examples. A compact cell keeps the full `inset` on its left and right, so its text lines up with the body below it, and takes `compact-inset` above and below, which by default is shallower, so a painted header is not much deeper than the single line it carries. Set `compact-inset` in `setup` to change the depth of every compact cell at once:
+
+```typ
+#show: m.setup.with(spacing: (compact-inset: 1.25em))
+#show label("mosaic-cell-header"): set block(fill: rgb("#13294b"))
+#show label("mosaic-cell-header"): set text(fill: white)
+```
+
+The default, `auto`, is 55% of `inset`. Setting it equal to `inset` gives a deep band with the same padding on all four sides, which leaves room for a logo placed in the foreground beside the title. The value applies to the compact cells of the built-in layouts and of your own grids alike, so a content slide built from a custom layout and an image slide in the same deck draw the same band. A cell that passes its own `inset:` keeps it.
+
+#calepin.elements.callout(kind: "warning", title: [Requires Mosaic 0.0.3])[
+  `compact-inset` is new in 0.0.3, which is not on Typst Universe yet. One command installs the development version — `curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh` — and then it imports as `#import "@local/mosaic:0.0.3" as m`. In earlier versions the built-in headers always take the shallow padding, and a compact cell in your own grid takes the full `inset` on every side. See #link("../start/install.html")[Install] for the full instructions.
+]
+
 = Properties an element pins on itself
 
 A label rule styles a region, and its `set` values flow inward to everything the region contains — until an element inside restates the property. A `==` header title is a real `heading`, and heading typography is restated at the heading element: Typst's own defaults make headings bold, and a theme's `show heading` rules adjust that (Metropolis sets depth-2 headings to `weight: "regular"`). Both sit closer to the glyphs than any rule on the surrounding cell label, so for those properties the label's value never lands. This is ordinary Typst rather than a Mosaic rule — no label rule can un-bold a heading in any document — and it is why one half of a label rule can work while the other half is silently overridden: properties nothing inside restates, such as the header's text fill, flow through untouched.

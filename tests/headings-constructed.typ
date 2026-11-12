@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.2" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 
 // A heading built with `heading(level: ..)` carries `level` rather than
 // `depth`; the compiler must classify it like its markup twin instead of

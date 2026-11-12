@@ -3,6 +3,7 @@
     "accessibility.typ",
     "author.typ",
     "cell-inset-settings.typ",
+    "compact-inset-grid.typ",
     "components.typ",
     "content-sized-radius.typ",
     "figure.typ",
@@ -77,6 +78,7 @@
     "theme-definition.typ",
     "theme-facade-metropolis.typ",
     "theme-facades.typ",
+    "theme-spacing-merge.typ",
     "theme-default.typ"
   ],
   "layout": [

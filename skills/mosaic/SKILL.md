@@ -13,7 +13,7 @@ Prefer the smallest authoring surface that fits the request: headings for ordina
 
 1. Inspect the existing deck and preserve its import spelling and theme. Do not replace a themed facade with the root facade unless asked.
 2. Check that Typst is available with `typst --version`.
-3. The released package, `#import "@preview/mosaic:0.0.1"`, downloads from Typst Universe on first compile and needs no installation step. The development version, `#import "@local/mosaic:0.0.2"`, must be installed before it resolves — either as a snapshot of the repository via the one-liner below, or with `make install` from a clone to use the working tree:
+3. The released package, `#import "@preview/mosaic:0.0.1"`, downloads from Typst Universe on first compile and needs no installation step. The development version, `#import "@local/mosaic:0.0.3"`, must be installed before it resolves — either as a snapshot of the repository via the one-liner below, or with `make install` from a clone to use the working tree:
 
    ```sh
    curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh
@@ -32,7 +32,7 @@ Do not claim success until Typst has compiled the edited deck.
 Import Mosaic and apply its setup rule. After `#show: m.setup`, headings create slides automatically:
 
 ```typ
-#import "@local/mosaic:0.0.2" as m
+#import "@local/mosaic:0.0.3" as m
 
 #show: m.setup.with(title: [A short title])
 
@@ -261,7 +261,7 @@ Do not introduce a separate footer, logo, background, or foreground feature API:
 Import one facade as `m` and keep the rest of the deck unchanged:
 
 ```typ
-#import "@local/mosaic:0.0.2" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 #import mosaic.themes.metropolis as m
 
 #show: m.setup
@@ -323,7 +323,7 @@ Build custom structure only when headings and layout factories are insufficient.
 - `m.grids.cell(id, ...)` creates an explicitly configured cell: `inset:` (padding, affects layout measurement), fixed `content:` (an image or logo owned by the grid, needing no body or `cells:` entry). Cells do not fit or scale their content: they are structural only.
 - Read a grid from the outside inward: largest split first, then replace children with nested splits. Keep descriptive IDs and indentation.
 
-Cell insets provide slide margins (`setup` uses a zero page margin). Adjacent cells each contribute their own inset; a grid `gutter` separates cell surfaces and defaults to `0pt`. Use a layout factory instead of rebuilding a standard title, section, header/body, or footer structure as a raw grid.
+Cell insets provide slide margins (`setup` uses a zero page margin). Adjacent cells each contribute their own inset; a grid `gutter` separates cell surfaces and defaults to `0pt`. A compact cell, one directly in an `auto` row (a header, a footer, a one-line strip), keeps `inset` left and right but takes `spacing.compact-inset` above and below, exactly like the built-in headers; raise `setup(spacing: (compact-inset: ..))` for a deeper painted header on every slide. Use a layout factory instead of rebuilding a standard title, section, header/body, or footer structure as a raw grid.
 
 ## 8. Fill cells with content
 

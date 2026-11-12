@@ -3,7 +3,7 @@
 // selecting each variant by name. The trailing assertion guards against the
 // heading being realized more than once by the variant treatment, which would
 // duplicate outline entries.
-#import "@local/mosaic:0.0.2" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 
 #show: mosaic.setup.with(
   title: [Section variants],

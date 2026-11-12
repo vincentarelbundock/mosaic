@@ -28,8 +28,15 @@
 // fields), which a percentage or fractional length cannot do the way a plain
 // length can. `relative` stays accepted alongside `length` because the fields
 // are used as native `inset`/`above` values too, which take either.
+//
+// `compact-inset` alone also takes `auto`, which `resolve-spacing` turns into a
+// length derived from `inset`, so a deck that changes only `inset` keeps the
+// proportion between the two.
 #let validate-spacing(value) = {
   for (name, item) in value {
+    if name == "compact-inset" and item == auto {
+      continue
+    }
     if type(item) not in (length, relative) {
       fail("setup spacing " + name + " must be a length")
     }
@@ -57,10 +64,37 @@
 // type scale of its own. Layouts that need the deck's resolved text size read
 // it from `settings.base-size`, which `render-slide` captures from the live
 // context rather than from any stored default.
+//
+// `compact-inset` is the vertical inset of a compact cell: one in an `auto`
+// row track, which hugs its content (a header, a footer, a one-line
+// strip). Such a cell keeps the full `inset` horizontally, so its text lines
+// up with the cells above and below it, but full inset above and below a
+// single line makes a recolored strip deeper than the text it carries. `auto`
+// derives it from `inset` (see `resolve-spacing`).
 #let default-spacing = (
   inset: 1.25em,
   gap: 0.7em,
   compact-gap: 0.35em,
+  compact-inset: auto,
+)
+
+// The share of `inset` an `auto` compact inset takes.
+#let compact-inset-ratio = 0.55
+
+// Resolves `compact-inset: auto` once, so every reader of a settings record
+// sees concrete lengths.
+#let resolve-spacing(spacing) = if spacing.compact-inset == auto {
+  spacing + (compact-inset: compact-inset-ratio * spacing.inset)
+} else {
+  spacing
+}
+
+// The inset a compact cell takes when it states none of its own. Built-in
+// headers and footers and user cells in `auto` row tracks both resolve through
+// here, so a hand-built grid draws the same strip as the built-in layout.
+#let compact-cell-inset(spacing) = (
+  x: spacing.inset,
+  y: spacing.compact-inset,
 )
 
 // Geometry for the `speaker`, `notes`, and `split` outputs. Geometry only: the
@@ -207,7 +241,9 @@
   let background = validate-plane-default(background, "background")
   let foreground = validate-plane-default(foreground, "foreground")
   let deck = make-deck(..deck)
-  let spacing = validate-spacing(merge-record(default-spacing, spacing, "spacing"))
+  let spacing = resolve-spacing(
+    validate-spacing(merge-record(default-spacing, spacing, "spacing")),
+  )
   let notes = validate-notes(merge-record(default-notes, notes, "notes"))
   _ = validate-choice(overflow, overflow-modes, "setup overflow")
   (

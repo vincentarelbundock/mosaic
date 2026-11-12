@@ -2,6 +2,7 @@
 #import "../grid/constructors.typ": styled-cell, track
 #import "../component/image.typ": image as mosaic-image
 #import "core.typ": validate-image
+#import "../settings.typ": compact-cell-inset
 
 // Subordinate tiers composed inside a single cell (title subtitle, title
 // metadata, section subtitle) pin a muted `fill` so they read as secondary on
@@ -42,19 +43,6 @@
 }
 
 #let content-or-empty(value) = if value == none { [] } else { as-content(value) }
-
-// Edge cells — headers, footers, captions — hug their own content vertically
-// and take the deck's inset horizontally, exactly like every other cell. The
-// vertical padding stays equal above and below, so a recolored header still
-// reads as a balanced band, but it is a fraction of the horizontal inset: a
-// heading is one line tall, and full inset on both sides makes the band deeper
-// than the text it carries. A single asymmetric gap is what would look
-// unconsidered, not a shallower symmetric one. The cell also sits close to
-// the body it introduces because the gutter between them is zero.
-#let edge-inset(settings) = (
-  x: settings.spacing.inset,
-  y: 0.55 * settings.spacing.inset,
-)
 
 #let track-children(nodes, tracks) = if tracks == auto {
   nodes
@@ -132,7 +120,12 @@
 )
 
 // Structural slide-filled cell: the slide supplies its content, and `auto`
-// takes the deck's own inset.
+// takes the deck's own inset. A compact cell (a header, a footer, marked
+// content-sized) hugs its content vertically, so `auto` gives it the compact
+// inset instead: full
+// inset left and right, `compact-inset` above and below. A user cell in an
+// `auto` row track resolves the same way at render time, so a hand-built grid
+// draws the same strip as the built-in layout.
 #let inset-cell(
   id,
   settings,
@@ -142,6 +135,12 @@
   id: id,
   style: (
     content-sized: content-sized,
-    inset: if inset == auto { settings.spacing.inset } else { inset },
+    inset: if inset != auto {
+      inset
+    } else if content-sized {
+      compact-cell-inset(settings.spacing)
+    } else {
+      settings.spacing.inset
+    },
   ),
 )

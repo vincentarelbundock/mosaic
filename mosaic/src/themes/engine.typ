@@ -102,8 +102,24 @@
     color-overrides = named.remove("colors")
   }
   let colors = resolve-colors(theme.colors, color-overrides)
+  // Spacing and notes are partial records: a deck that overrides one key keeps
+  // the theme's value for the others, so they merge one level deep rather than
+  // replacing the theme's whole dictionary.
+  let setup-options = theme.defaults
+  for (key, value) in named {
+    let preset = setup-options.at(key, default: none)
+    if (
+      key in ("spacing", "notes")
+        and type(preset) == dictionary
+        and type(value) == dictionary
+    ) {
+      setup-options.insert(key, preset + value)
+    } else {
+      setup-options.insert(key, value)
+    }
+  }
   show: setup-core.with(
-    theme.defaults + named + (layouts: layouts),
+    setup-options + (layouts: layouts),
     colors: colors,
   )
   show: (theme.apply).with(colors: colors, options: theme-options)

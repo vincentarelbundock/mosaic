@@ -3,7 +3,7 @@
 #import "../grid/constructors.typ": columns, rows, track
 #import "../grid/model.typ": is-track-size
 #import "core.typ": make-layout, validate-variant
-#import "support.typ": track-children, edge-inset, inset-cell
+#import "support.typ": track-children, inset-cell
 
 #let variants = (
   "body",
@@ -125,7 +125,6 @@
         "header",
         settings,
         content-sized: true,
-        inset: edge-inset(settings),
       ),
     ))
   }
@@ -137,7 +136,6 @@
         "footer",
         settings,
         content-sized: true,
-        inset: edge-inset(settings),
       ),
     ))
   }

@@ -9,7 +9,7 @@
 // Aliased: `fit` is the local variable name for a cell's fit mode throughout
 // this module, and the helper must not shadow it.
 #import "../fit.typ": fit as fit-helper
-#import "../settings.typ": default-spacing
+#import "../settings.typ": compact-cell-inset, default-spacing, resolve-spacing
 #import "../deck-state.typ": deck-settings, inverted-slide-colors
 
 // Records one queryable warning per overflowing cell.
@@ -142,16 +142,21 @@
 // each other.
 #let initial-slide = 0
 
-// A cell that states no inset of its own takes the deck's configured token.
+// A cell that states no inset of its own takes the deck's configured spacing.
 // Read inside the render context, where the deck record is live; a component
-// rendered outside `setup` falls back to the library default.
-#let configured-inset() = {
+// rendered outside `setup` falls back to the library default. A compact cell
+// (one in an `auto` row track, or one a layout marks content-sized) takes the
+// compact inset, exactly as the
+// built-in headers and footers do, so a hand-built grid cannot drift from
+// them.
+#let configured-inset(content-sized: false) = {
   let settings = deck-settings()
-  if settings == none {
-    default-spacing.inset
+  let spacing = if settings == none {
+    resolve-spacing(default-spacing)
   } else {
-    settings.spacing.inset
+    settings.spacing
   }
+  if content-sized { compact-cell-inset(spacing) } else { spacing.inset }
 }
 
 #let resolve-inset(inset, base) = if type(inset) == dictionary {
@@ -244,7 +249,11 @@
   // so cell typography rules do not scale cell geometry.
   grid.cell(inset: 0pt, context {
     let base = text.size
-    let inset = if inset == auto { configured-inset() } else { inset }
+    let inset = if inset == auto {
+      configured-inset(content-sized: region-height == auto)
+    } else {
+      inset
+    }
     // On an inverted slide the ink is restated here, inside the cell label:
     // theme rules pin text fills through <mosaic-cell-*> show-set rules, which
     // sit outside this block and would otherwise keep the un-inverted color.

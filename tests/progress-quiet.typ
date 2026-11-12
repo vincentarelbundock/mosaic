@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.2" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 
 // Every quieting mode of components.progress() on one footline: SEC and NUM
 // take the per-count auto rule, ALW always displays, ALL extends the silence

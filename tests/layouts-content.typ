@@ -1,8 +1,8 @@
-#import "@local/mosaic:0.0.2" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 #import "support/grid.typ" as grid-test
 #import "../mosaic/src/layout/resolver.typ": resolve-layout
 #import "../mosaic/src/settings.typ": make-settings
-#import "../mosaic/src/layout/support.typ": edge-inset
+#import "../mosaic/src/settings.typ": compact-cell-inset
 
 #let settings = make-settings()
 
@@ -35,12 +35,12 @@
 #assert(grid-test.count(resolved-structured) == 4)
 #assert(grid-test.info(resolved-structured, "header").cell.content == none)
 #assert(grid-test.info(resolved-structured, "header").cell.style.content-sized)
-// An edge cell keeps the deck inset horizontally and equal, shallower padding
+// A content-sized cell keeps the deck inset horizontally and equal, shallower padding
 // above and below, so a recolored header or footer reads as a balanced band
 // that is no deeper than the single line it carries.
 #assert(
   grid-test.info(resolved-structured, "header").cell.style.inset
-    == edge-inset(settings),
+    == compact-cell-inset(settings.spacing),
 )
 #assert(
   grid-test.info(resolved-structured, "header").cell.style.inset.x
@@ -52,7 +52,7 @@
 )
 #assert(
   grid-test.info(resolved-structured, "footer").cell.style.inset
-    == edge-inset(settings),
+    == compact-cell-inset(settings.spacing),
 )
 #assert(
   grid-test.info(resolved-structured, "footer").cell.style.inset.x
@@ -61,6 +61,18 @@
 #assert(
   grid-test.info(resolved-structured, "footer").cell.style.inset.y
     < settings.spacing.inset,
+)
+// `compact-inset` sets the vertical half; `auto` derives it from `inset`.
+#assert(
+  settings.spacing.compact-inset == 0.55 * settings.spacing.inset,
+)
+#let deep-settings = make-settings(spacing: (compact-inset: 1em))
+#assert(
+  grid-test.info(
+    resolve-layout(structured-grid, deep-settings),
+    "header",
+  ).cell.style.inset
+    == (x: deep-settings.spacing.inset, y: 1em),
 )
 #assert(grid-test.info(resolved-structured, "body-1").cell.content == none)
 #assert(grid-test.info(resolved-structured, "body-2").cell.content == none)

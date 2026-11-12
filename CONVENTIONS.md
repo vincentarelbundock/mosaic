@@ -69,6 +69,11 @@ exists.
   other free-space measure, `spacing` only for native `par`/`block` spacing and
   the user-facing `settings.spacing` dict, `inset` for interior space,
   `margin` for page margins. Typst has no `padding`; neither does Mosaic.
+- A *compact cell* is one that hugs its content vertically: a cell directly in
+  an `auto` row track, or one a layout marks `content-sized`. `compact`
+  qualifies the cell, not the amount, so `compact-inset` is the inset of
+  compact cells even when a deck sets it larger than `inset`. Never call these
+  bands, edge cells, or strips in names.
 - Color: `fill` is the parameter, `paint` the value type, `muted` de-emphasis,
   `scrim` a translucent layer over a picture, `tint` a lightening amount,
   `canvas` the page background token, `surface` the raised block token.

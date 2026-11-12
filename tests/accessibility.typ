@@ -5,7 +5,7 @@
 // cleanly. The test runner compiles this fixture under `--pdf-standard ua-1`
 // for every theme and reads the structure elements and marked-content
 // operators straight out of the PDF bytes.
-#import "@local/mosaic:0.0.2" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 
 #let theme = sys.inputs.at("theme", default: "default")
 #let m = (

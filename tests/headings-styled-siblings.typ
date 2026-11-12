@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.2" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 
 // A styled block after a styled heading keeps its own styles: wrapper
 // prefixes are matched by identity, so the body's blue is not swapped for the

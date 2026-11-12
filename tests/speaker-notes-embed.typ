@@ -1,6 +1,6 @@
 // The embedded pdfpc payload: notes travel inside the PDF on the `slides`
 // output, keyed by the physical page each note is visible on.
-#import "@local/mosaic:0.0.2" as m
+#import "@local/mosaic:0.0.3" as m
 
 #show: m.setup
 

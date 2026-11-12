@@ -20,3 +20,12 @@
 #context assert(configured-inset() == 33pt)
 
 Cell inset follows setup spacing.
+
+// A content-sized cell (one in an `auto` row track) keeps the full inset left
+// and right and takes `compact-inset` above and below, which `auto` derives
+// from `inset`.
+#context assert(configured-inset(content-sized: true) == (x: 33pt, y: 0.55 * 33pt))
+#assert(
+  make-settings(spacing: (inset: 33pt, compact-inset: 7pt)).spacing.compact-inset
+    == 7pt,
+)

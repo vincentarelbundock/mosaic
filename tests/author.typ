@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.2" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 #import "../mosaic/src/author.typ": analyze-authors, plain-name, resolve-authors
 
 #let udem = [Université de Montréal]

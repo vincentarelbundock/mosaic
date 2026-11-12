@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.2" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 
 // A heading inside a speaker note never renders on a slide, so a note tied to
 // a frame through `steps.on` may carry one without tripping the

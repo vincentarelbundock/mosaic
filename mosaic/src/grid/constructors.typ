@@ -96,7 +96,10 @@
   /// -> str | none
   id: none,
   /// Native Typst inset applied inside the cell's labeled block. `auto` uses
-  /// the `spacing.inset` configured on `setup`.
+  /// the `spacing.inset` configured on `setup`, except for a compact cell, one
+  /// directly in an `auto` row track, which hugs its content: it keeps
+  /// `spacing.inset` left and right and takes `spacing.compact-inset` above
+  /// and below, exactly like the header and footer of the built-in layouts.
   /// -> auto | length | relative | dictionary
   inset: auto,
 ) = {

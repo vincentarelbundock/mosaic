@@ -23,20 +23,20 @@ Mosaic requires Typst 0.15 or newer. The released version is 0.0.1, published on
 #import "@preview/mosaic:0.0.1" as m
 ```
 
-This repository is the development version, 0.0.2. It carries features the released package does not have, and the documentation marks each of them where it describes them. One command installs a snapshot of it, on macOS, Linux, or a Unix shell on Windows (Git Bash, WSL):
+This repository is the development version, 0.0.3. It carries features the released package does not have, and the documentation marks each of them where it describes them. One command installs a snapshot of it, on macOS, Linux, or a Unix shell on Windows (Git Bash, WSL):
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh
 ```
 
-Decks then import `@local/mosaic:0.0.2`. Note that the snapshot tracks `main`, so running the command again after a version bump installs the new version alongside the old. Passing `--ref` (`| sh -s -- --ref <tag-or-commit>`) pins a specific revision, and `--uninstall` removes what the script installed, after which only the published 0.0.1 resolves.
+Decks then import `@local/mosaic:0.0.3`. Note that the snapshot tracks `main`, so running the command again after a version bump installs the new version alongside the old. Passing `--ref` (`| sh -s -- --ref <tag-or-commit>`) pins a specific revision, and `--uninstall` removes what the script installed, after which only the published 0.0.1 resolves.
 
 The same script serves development: clone the repository and run `make install` (or `sh install.sh`), which copies the working tree instead of fetching a snapshot; this is how the tests resolve the package. `make uninstall` removes it.
 
 ## A complete deck
 
 ```typ
-#import "@local/mosaic:0.0.2" as m
+#import "@local/mosaic:0.0.3" as m
 
 #show: m.setup.with(title: [A short talk])
 

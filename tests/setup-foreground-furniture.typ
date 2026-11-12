@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.2" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 #let furniture = [
   #place(bottom + right, dx: -1em, dy: -0.5em)[
     #mosaic.components.progress(variant: "1/1")

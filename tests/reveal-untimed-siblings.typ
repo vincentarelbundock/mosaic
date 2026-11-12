@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.2" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 
 // A single reveal body holding list items reveals one item per step, and its
 // untimed siblings ride along on every frame. The marker-grid path must keep

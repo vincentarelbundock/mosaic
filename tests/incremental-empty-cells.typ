@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.2" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 
 // An `on(..)`-wrapped spacer cell — empty fixed content, no paint of its own —
 // changes nothing visually, so it must not mint extra frames on which every

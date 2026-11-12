@@ -8,7 +8,7 @@
 #import "../caption-fit.typ": captioned-image
 #import "../grid/constructors.typ": styled-cell, rows, track
 #import "core.typ": image-fit-modes, make-layout, validate-image, validate-variant
-#import "support.typ": image-content, edge-inset, inset-cell
+#import "support.typ": image-content, inset-cell
 #import "image-support.typ": (
   directional-image-layout,
   image-background-cell,
@@ -155,14 +155,13 @@
 
 // Header above, body filling the rest: the arrangement that sits beside a
 // directional image and over a full-bleed one. The header is one line tall,
-// so it takes the shallower edge padding; the body keeps the deck inset on
+// so it takes the compact inset; the body keeps the deck inset on
 // all four sides.
 #let text-column(settings) = rows(
   track(auto, inset-cell(
     "header",
     settings,
     content-sized: true,
-    inset: edge-inset(settings),
   )),
   track(1fr, inset-cell("body", settings)),
 )
@@ -202,7 +201,6 @@
         "header",
         settings,
         content-sized: true,
-        inset: edge-inset(settings),
       )),
       // The picture owns a fixed cell, so the slide supplies no block for it.
       track(1fr, styled-cell(

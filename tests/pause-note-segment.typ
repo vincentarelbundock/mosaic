@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.2" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 
 // A pause segment holding only a speaker note spans no step of its own, but
 // its note must still reach the notes output rather than being dropped from

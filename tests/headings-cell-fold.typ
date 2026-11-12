@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.2" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 
 // An automatic `==` slide addresses the cells the standard layouts carry
 // ("header" and "body"). A configured content layout without a header cell

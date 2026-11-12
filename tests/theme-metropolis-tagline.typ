@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.2" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 
 // The Metropolis section layout is a raw grid, so the automatic section
 // tagline has no subtitle field to land in. It renders in the section cell

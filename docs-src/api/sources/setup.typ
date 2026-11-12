@@ -159,6 +159,11 @@
   /// - `gap`: space between grid regions, default `0.7em`.
   /// - `compact-gap`: the tighter space inside stacked metadata, default
   ///   `0.35em`.
+  /// - `compact-inset`: the padding above and below a compact cell, one in
+  ///   an `auto` row that hugs its content, such as a header or footer.
+  ///   Compact cells keep `inset` left and right. Built-in layouts and
+  ///   hand-built grids both use it. `auto`, the default, takes 55% of
+  ///   `inset`; set it to the `inset` value for a deeper painted header.
   ///
   /// Typographic rhythm is not here. Heading spacing and list spacing are
   /// ordinary `show` and `set` rules owned by the theme, so change them with
