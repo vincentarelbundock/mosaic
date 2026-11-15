@@ -52,10 +52,11 @@
 /// rules (`show heading: set text(..)`) are captured and replayed
 /// automatically. A rule that rebuilds the heading (`show heading: it => ..`)
 /// cannot be, because nothing on a continuation frame matches it. Declare such
-/// a rule through this function instead and it is applied on every frame:
+/// a rule through this function instead and it is applied on every frame. It
+/// is used as a show rule, in a deck or in a theme's `apply`:
 ///
 /// ```typ
-/// #show: decorate-heading.with(level: 2, it => block(width: 100%)[
+/// #show: mosaic.themes.decorate-heading.with(depth: 2, it => block(width: 100%)[
 ///   #it
 ///   #line(length: 2em)
 /// ])
@@ -64,6 +65,15 @@
 /// `decorate` receives the heading on the canonical frame and a block standing
 /// in for it on the others, so it must treat its argument as opaque content to
 /// place, not as an element whose fields it reads.
+///
+/// *Which headings*
+///
+/// With neither `depth` nor `level` the rule applies to every heading. `depth`
+/// is the number of `=` signs the heading was written with, which is what
+/// decides whether it opens a slide; `level` is the native level it resolves
+/// to, which differs from the depth under `set heading(offset: ..)`. Give
+/// `depth: 2` for the heading that titles a content slide. Several rules nest
+/// as native show rules do, the one declared last outermost.
 ///
 /// -> content
 #let decorate-heading(

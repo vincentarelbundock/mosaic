@@ -5,4 +5,4 @@
 #import "manifesto.typ"
 #import "mono.typ"
 #import "default.typ"
-#import "extension.typ": setup
+#import "extension.typ": setup, decorate-heading

@@ -70,5 +70,26 @@ class ExportScannerTests(unittest.TestCase):
         self.assertEqual(actual, {"public"})
 
 
+class ThemeExtensionContractTests(unittest.TestCase):
+    """The theme-extension surface, pinned against the package itself."""
+
+    EXTENSION = "mosaic/src/themes/extension.typ"
+    NAMESPACE = "mosaic/src/themes/api.typ"
+
+    def test_extension_api_is_setup_and_decorate_heading(self) -> None:
+        self.assertEqual(
+            CHECKER.EXPECTED[self.EXTENSION], {"setup", "decorate-heading"}
+        )
+        self.assertEqual(
+            CHECKER.exports(CHECKER.ROOT / self.EXTENSION),
+            CHECKER.EXPECTED[self.EXTENSION],
+        )
+
+    def test_themes_namespace_carries_the_extension_api(self) -> None:
+        actual = CHECKER.exports(CHECKER.ROOT / self.NAMESPACE)
+        self.assertEqual(actual, CHECKER.EXPECTED[self.NAMESPACE])
+        self.assertLessEqual(CHECKER.EXPECTED[self.EXTENSION], actual)
+
+
 if __name__ == "__main__":
     unittest.main()
