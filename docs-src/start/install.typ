@@ -25,7 +25,7 @@ Decks then import the `local` namespace, Typst's namespace for packages that com
 #import "@local/mosaic:0.0.3" as m
 ```
 
-The snapshot tracks the repository's `main` branch, so running the command again after a version bump installs the new version alongside the old. Passing `--ref` pins a tag or commit instead, and `--uninstall` removes the installed version, after which only the published release resolves:
+The snapshot tracks the repository's `main` branch, so running the command again after a version bump replaces the old development version with the new one. Passing `--ref` pins a tag or commit instead, and `--uninstall` removes every installed development version, after which only the published release resolves:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh -s -- --uninstall

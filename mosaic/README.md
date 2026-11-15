@@ -29,7 +29,7 @@ This repository is the development version, 0.0.3. It carries features the relea
 curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh
 ```
 
-Decks then import `@local/mosaic:0.0.3`. Note that the snapshot tracks `main`, so running the command again after a version bump installs the new version alongside the old. Passing `--ref` (`| sh -s -- --ref <tag-or-commit>`) pins a specific revision, and `--uninstall` removes what the script installed, after which only the published 0.0.1 resolves.
+Decks then import `@local/mosaic:0.0.3`. Note that the snapshot tracks `main`, so running the command again after a version bump replaces the old development version with the new one. Passing `--ref` (`| sh -s -- --ref <tag-or-commit>`) pins a specific revision, and `--uninstall` removes what the script installed, after which only the published 0.0.1 resolves.
 
 The same script serves development: clone the repository and run `make install` (or `sh install.sh`), which copies the working tree instead of fetching a snapshot; this is how the tests resolve the package. `make uninstall` removes it.
 
