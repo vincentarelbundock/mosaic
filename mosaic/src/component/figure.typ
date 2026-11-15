@@ -106,7 +106,7 @@
   width: 100%,
   /// Height of the figure's body. `auto` takes the cell's height less the
   /// caption, which requires the figure to be the cell's own content.
-  /// -> auto | length | relative | fraction
+  /// -> auto | length | relative
   height: auto,
   /// Paint layered over a picture. Accepts whatever a native `fill` accepts, and
   /// is rejected for a content body.

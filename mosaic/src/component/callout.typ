@@ -48,7 +48,9 @@
   /// Semantic role name: `accent`, `warning`, `error`, or `neutral`.
   /// -> str
   role: "accent",
-  /// Bold title set above the body in the stripe color.
+  /// Bold title set above the body in the stripe color. Under the `neutral`
+  /// role the stripe is the deck's line color, too faint to read as type, so
+  /// the title takes the text color instead unless `accent` is passed.
   /// -> content | none
   title: none,
   /// Panel fill. `auto` uses the role's color tinted into the deck canvas.
@@ -74,7 +76,7 @@
   text: (:),
   /// Native block width. Full width by default, so a column of callouts rules
   /// to one edge; `auto` hugs the content the way `card` does.
-  /// -> auto | length | relative | fraction
+  /// -> auto | length | relative
   width: 100%,
 ) = context {
   let it = resolve-style(
@@ -85,7 +87,6 @@
     inset: inset,
     align: align,
     text: text,
-    contextual: true,
   )
   // The stripe is this component's whole border, so an explicit `stroke`
   // replaces it rather than adding to it.
@@ -94,10 +95,15 @@
   } else {
     stroke
   }
+  let title-fill = if role == "neutral" and accent == auto {
+    it.text.fill
+  } else {
+    it.accent
+  }
   card(
     [
       #if title != none {
-        std.text(weight: "bold", fill: it.accent)[#title]
+        std.text(weight: "bold", fill: title-fill)[#title]
         parbreak()
       }
       #body

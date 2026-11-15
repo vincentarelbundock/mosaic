@@ -55,17 +55,17 @@
   if settings == none { light } else { settings.colors }
 }
 
-// Resolves a role name to the three paints a component draws with. All three
-// come from the deck palette: the accent is the named color itself, the text is
+// Resolves a role name to the three paints a component draws with. Call
+// inside `context`. All three come from the deck palette: the accent is the named color itself, the text is
 // the deck's text color, and the fill is the accent tinted into the canvas.
-#let role-colors(name, contextual: false) = {
+#let role-colors(name) = {
   if type(name) != str or name not in role-names {
     fail(
       "unknown semantic role " + repr(name) + "; expected "
         + role-names.map(repr).join(", "),
     )
   }
-  let colors = if contextual { deck-colors() } else { light }
+  let colors = deck-colors()
   if name == "neutral" {
     return (fill: colors.surface, accent: colors.line, text: colors.text)
   }
@@ -100,10 +100,9 @@
   align: auto,
   text: (:),
   defaults: (:),
-  contextual: false,
 ) = {
   _ = validate-dictionary(text, "component text")
-  let colors = role-colors(role, contextual: contextual)
+  let colors = role-colors(role)
   let base = (
     fill: colors.fill,
     accent: colors.accent,

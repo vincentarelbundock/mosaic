@@ -11,7 +11,7 @@
 ///
 /// ```typ
 /// #show: mosaic.setup.with(
-///   content: (
+///   cells: (
 ///     footer: align(right, mosaic.components.progress()),
 ///   ),
 /// )
@@ -80,12 +80,14 @@
   role: "accent",
   /// Length of the `line` variant, or diameter of the `circle` variant. `auto`
   /// is the full width for `line` and a compact fixed diameter for `circle`.
-  /// -> auto | length | relative | fraction
+  /// -> auto | length | relative
   width: auto,
   /// Stroke thickness of the `circle` and `line` variants.
   /// -> length
   thickness: component-tokens.rule-thickness,
-  /// Paint of the inactive remainder. `auto` uses the role's fill.
+  /// Paint of the inactive remainder. `auto` uses the role's fill. The
+  /// `circle` variant draws both portions as stops of one gradient, so there
+  /// it must be a color.
   /// -> auto | color | gradient | tiling
   fill: auto,
   /// Paint of the completed portion, and of the text variants. `auto` uses the
@@ -134,13 +136,16 @@
   // A deck with no section slides legitimately totals zero; the ratio below
   // guards against dividing by it.
   let total = calc.max(position.total, 1)
-  let colors = role-colors(role, contextual: true)
+  let colors = role-colors(role)
   let fill = if fill == auto { colors.fill } else { fill }
   let accent = if accent == auto { colors.accent } else { accent }
   let width = if width == auto {
     if variant == "circle" { component-tokens.progress-size } else { 100% }
   } else {
     width
+  }
+  if variant == "circle" and (type(fill) != color or type(accent) != color) {
+    fail("progress variant \"circle\" requires fill and accent to be colors")
   }
   let amount = 100% * current / total
 

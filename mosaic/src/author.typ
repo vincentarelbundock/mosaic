@@ -146,23 +146,39 @@
 // way every other deck field is written would silently ship a PDF with no
 // author. Names are ordinary words, so the cases below cover them: a bare name
 // is one `text` element, and markup inside one is a sequence or a wrapper
-// around further content. Anything else (a box, an image, a formula) has no
-// plain reading, and `none` is what says so.
-#let plain-name(value) = {
+// around further content. The punctuation markup turns into elements of its
+// own is read back as the character it sets: an apostrophe or a quotation
+// mark is a `smartquote`, and `~` or `--` is a `symbol` carrying its text.
+// Anything else (a box, an image, a formula) has no plain reading, and `none`
+// is what says so.
+#let plain-name-parts(value) = {
   if type(value) == str { return value }
   if type(value) != content { return none }
   let func = value.func()
-  if func == text { return value.text }
   if func == [ ].func() { return " " }
   if func == linebreak { return " " }
+  if func == smartquote {
+    return if value.at("double", default: true) { "\"" } else { "'" }
+  }
+  let own = value.at("text", default: none)
+  if type(own) == str { return own }
   let children = value.at("children", default: none)
   if children != none {
-    let parts = children.map(plain-name)
+    let parts = children.map(plain-name-parts)
     return if none in parts { none } else { parts.join("") }
   }
   let body = value.at("body", default: none)
-  if body != none { return plain-name(body) }
+  if body != none { return plain-name-parts(body) }
   none
+}
+
+// Runs of whitespace collapse to one space and a no-break space becomes an
+// ordinary one, so a name broken across lines or tied with `~` reads in the
+// metadata the way it reads on the slide.
+#let plain-name(value) = {
+  let name = plain-name-parts(value)
+  if name == none { return none }
+  name.replace(regex("\\s+"), " ").trim()
 }
 
 // Normalizes every spelling an author list is allowed to take into an array of
