@@ -1,6 +1,6 @@
 // Compilation of top-level Typst content into explicit and automatic slides.
 #import "shared.typ": fail, typst-sequence, typst-space, typst-styled
-#import "slide/command.typ": is-slide-command, slide-command
+#import "slide/command.typ": is-slide-command, setup-guard, slide-command
 #import "slide/runtime.typ": render-slide
 #import "incremental/heading.typ": resolve-heading-depth
 
@@ -8,36 +8,33 @@
 
 // Which heading depths open an automatic slide, and what each one opens.
 //
-// The default reads a deck the way its outline does: `=` starts a section,
-// `==` starts a content slide, and anything deeper is ordinary content inside
-// the current slide. A document with a different hierarchy (chapters at `=`,
-// sections at `==`, slides at `===`) passes its own map instead, so the
-// compiler is not the thing that decides what a heading level means.
-// Keyed by the depth written as a string, because Typst dictionary keys are
-// strings; `heading-role` below does the conversion in one place.
-#let default-heading-policy = ("1": "section", "2": "slide")
+// The policy is an array indexed by heading level: its first item says what
+// `=` opens, its second what `==` opens, and so on. The default reads a deck
+// the way its outline does: `=` starts a section, `==` starts a content slide,
+// and anything deeper is ordinary content inside the current slide. A document
+// with a different hierarchy (chapters at `=`, sections at `==`, slides at
+// `===`) passes its own array instead, so the compiler is not the thing that
+// decides what a heading level means. `none` in a position, like a level past
+// the end of the array, leaves that level as ordinary content.
+#let default-heading-policy = ("section", "slide")
+
+#let heading-roles = ("section", "slide")
 
 #let validate-heading-policy(value) = {
   let name = "setup headings"
-  if type(value) != dictionary {
+  if type(value) != array {
     fail(
-      name + " must be a dictionary mapping heading level to \"section\" or "
-        + "\"slide\"",
+      name + " must be an array indexed by heading level, such as "
+        + "(\"section\", \"slide\"), with none for a level that opens no "
+        + "slide",
     )
   }
-  for (level, role) in value {
-    // Checked as a canonical decimal spelling rather than through `int()`: a
-    // non-numeric key would abort with a raw conversion error, and a
-    // zero-padded key would never match the `str(level)` lookup in
-    // `heading-role` below.
-    if level.match(regex("^[1-9][0-9]*$")) == none {
+  for (index, role) in value.enumerate() {
+    if role != none and role not in heading-roles {
       fail(
-        name + " levels must be positive integers written without leading "
-          + "zeros",
+        name + " level " + str(index + 1)
+          + " must be \"section\", \"slide\", or none",
       )
-    }
-    if role not in ("section", "slide") {
-      fail(name + " " + repr(level) + " must be \"section\" or \"slide\"")
     }
   }
   value
@@ -46,8 +43,13 @@
 #let heading-role(policy, level) = if level == none {
   none
 } else {
-  policy.at(str(level), default: none)
+  policy.at(level - 1, default: none)
 }
+
+// The heading levels a policy opens slides on, in order.
+#let mapped-heading-levels(policy) = (
+  policy.enumerate().filter(((index, role)) => role != none).map(((index, role)) => index + 1)
+)
 #let is-heading-space(value) = (
   value == []
     or (
@@ -143,9 +145,8 @@
 }
 
 // Names the levels the deck actually compiles on, which the heading policy
-// may have moved. Ordered as numbers without converting them, so a level too
-// large for an integer cannot abort the diagnostic that reports it.
-#let stray-content-error(headings) = if headings.len() == 0 {
+// may have moved.
+#let stray-content-error(headings) = if mapped-heading-levels(headings).len() == 0 {
   (
     "content appears outside a slide; setup headings maps no heading level, "
       + "so every slide must be an explicit slide command"
@@ -154,7 +155,7 @@
   (
     "content appears before the first heading handled by setup; expected "
       + "one of heading levels "
-      + headings.keys().sorted(key: level => (level.len(), level)).join(", ")
+      + mapped-heading-levels(headings).map(str).join(", ")
   )
 }
 // Automatic and explicit pages use the same layout-based slide command.
@@ -254,6 +255,10 @@
     }
     let role = heading-role(headings, level)
 
+    if value == setup-guard {
+      // Consumed with the slide command it follows; see `setup-guard`.
+      continue
+    }
     if is-deck-marker(value) {
       // A second `setup` wraps the first one's whole output, so the nested
       // deck arrives here as body content before its state write can report

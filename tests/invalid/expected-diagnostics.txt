@@ -11,9 +11,9 @@ author-sparse|author 1 must be a name or created with author()
 bad-range|step range starts after it ends: "3-2"
 bad-split-child|columns/rows children must be string cell IDs or Mosaic grid nodes
 bad-split-gutter|columns gutter must be a native Typst track size
-bad-split-track-size|track size must be auto, a fixed or relative length, or a fractional length
+bad-split-track-size|columns tracks must be auto or an array with one track size per child (1 here): auto, a length, a ratio, or a fraction
 bad-state|before must be one of "visible", "hidden", "dimmed", "removed", received "ghosted"
-bare-track-wrapper|slide layout must be a Mosaic grid tree or layout
+bare-track-wrapper|native:module `api` does not contain `track`
 cell-id-both|cell id must be passed positionally or through id:, not both
 cell-surface-ownership|cell accepts only a cell id, optional fixed content, and inset
 components-progress-count|progress count must be "slides" or "sections"
@@ -30,7 +30,7 @@ fit-note|fit cannot hold incremental steps or speaker notes
 frozen-counters-type|frozen-counters must contain only counter values
 frozen-states-type|frozen-states must contain only state values
 handout-type|setup handout must be a boolean
-headings-policy-key|setup headings levels must be positive integers written without leading zeros
+headings-policy-key|setup headings must be an array indexed by heading level, such as ("section", "slide"), with none for a level that opens no slide
 headings-preamble|content appears before the first heading handled by setup; expected one of heading levels 1, 2
 image-scrim-type|image scrim must be a color, gradient, or tiling
 image-tracks-invalid|layout "image" tracks must be auto, one native Typst track size for the image, or an array of 2 native Typst track sizes in visual order
@@ -166,3 +166,7 @@ theme-option-font-moved|theme option "font" is a setup option; state the theme's
 theme-option-base-size-moved|theme option "base-size" is a setup option; state the theme's default through defaults: (base-size: ..)
 setup-base-size-type|setup base-size must be a length
 setup-font-type|setup font must be auto, a font family, or an array of font families
+headings-policy-role|setup headings level 2 must be "section", "slide", or none
+split-tracks-count|rows tracks must be auto or an array with one track size per child (2 here): auto, a length, a ratio, or a fraction
+split-tracks-single|columns tracks must be auto or an array with one track size per child (2 here): auto, a length, a ratio, or a fraction
+slide-without-setup|slide requires a deck; apply setup with a show rule, such as `#show: mosaic.setup`, before the first slide

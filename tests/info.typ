@@ -19,7 +19,7 @@
 #let fields = ("authors", "date", "section", "slide", "subtitle", "title")
 
 // An unnumbered slide before every section: the counts are the deck's finals,
-// but this slide's own numbers are zero.
+// the section number is zero, and the slide has no number of its own.
 #mosaic.slide(numbered: false)[
   #context {
     let info = mosaic.info()
@@ -28,7 +28,7 @@
     assert(info.subtitle == [DECK SUBTITLE])
     assert(info.authors == authors)
     assert(info.date == [DECK DATE])
-    assert(info.slide == (number: 0, total: 2, numbered: false))
+    assert(info.slide == (number: none, total: 2, numbered: false))
     assert(info.section == (number: 0, total: 2, title: none))
   }
 ]
@@ -43,6 +43,7 @@
     assert(info.section.number == 1)
     assert(info.section.title == [Methods])
     assert(info.slide.numbered == false)
+    assert(info.slide.number == none)
   },
 )[Methods]
 
@@ -69,8 +70,12 @@
 ]
 
 // The same numbers the progress component prints, which reads the same
-// position records.
+// position records. This slide is unnumbered after two numbered ones, so it
+// reports no number rather than the previous slide's.
 #mosaic.slide(numbered: false)[
+  #context assert(
+    mosaic.info().slide == (number: none, total: 2, numbered: false),
+  )
   #mosaic.components.progress(variant: "1/1")
   #mosaic.components.progress(variant: "1/1", count: "sections")
 ]

@@ -103,7 +103,8 @@
     "list-timed-twin.typ",
     "replace-wrap.typ",
     "speaker-notes-embed-text.typ",
-    "theme-typography.typ"
+    "theme-typography.typ",
+    "slide-invert-raw-own.typ"
   ],
   "layout": [
     "fit.typ",

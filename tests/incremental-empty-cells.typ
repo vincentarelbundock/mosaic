@@ -9,7 +9,8 @@
 
 #mosaic.slide(
   layout: mosaic.grids.rows(
-    mosaic.grids.track(1fr, "body"),
+    tracks: (1fr, 1fr),
+    "body",
     mosaic.steps.on("2-", mosaic.grids.cell("spacer", content: [])),
   ),
 )[ONLY VISIBLE THING]

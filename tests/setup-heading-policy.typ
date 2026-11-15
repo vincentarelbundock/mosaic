@@ -2,7 +2,7 @@
 // compiles on its own heading levels rather than on Mosaic's default two.
 #import "@local/mosaic:0.0.3" as mosaic
 
-#show: mosaic.setup.with(headings: ("2": "section", "3": "slide"))
+#show: mosaic.setup.with(headings: (none, "section", "slide"))
 
 == Methods
 

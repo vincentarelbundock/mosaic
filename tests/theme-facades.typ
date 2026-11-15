@@ -11,7 +11,8 @@
 
 #for theme in (default-theme, editorial, manifesto, metropolis, mono) {
   assert(expected.all(name => name in theme))
-  assert(("cell", "columns", "rows", "track").all(name => name in theme.grids))
+  assert(("cell", "columns", "rows").all(name => name in theme.grids))
+  assert("track" not in dictionary(theme.grids))
   assert(("author", "content", "section", "title").all(name => name in theme.layouts))
   assert(("drawing", "on", "pause", "replace", "reveal").all(name => name in theme.steps))
   assert((

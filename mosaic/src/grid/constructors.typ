@@ -65,7 +65,8 @@
 ///
 /// ```typ
 /// #mosaic.grids.rows(
-///   mosaic.grids.track(auto, mosaic.grids.cell("header")),
+///   tracks: (auto, 1fr),
+///   mosaic.grids.cell("header"),
 ///   mosaic.grids.cell("body"),
 /// )
 /// ```
@@ -123,36 +124,12 @@
   )
 }
 
-/// Associates an explicit native track size with one child of `columns` or
-/// `rows`.
-///
-/// Unwrapped children of a split take `1fr` and therefore share the space
-/// evenly. Wrap one in `track` to give it a size of its own.
-///
-/// ```typ
-/// #mosaic.grids.rows(
-///   mosaic.grids.track(auto, "header"),  // as tall as its content
-///   "body",                              // 1fr, taking the rest
-///   mosaic.grids.track(2em, "footer"),   // a fixed strip
-/// )
-/// ```
-///
-/// The wrapper is temporary: `columns` or `rows` unwraps it while constructing
-/// the split, so a `track` value never appears in a resolved tree.
-///
-/// -> dictionary
-#let track(
-  /// Native Typst grid track size. `auto` sizes to the child's content, a
-  /// length or ratio fixes it, and a fraction such as `2fr` takes a share of
-  /// what remains.
-  /// -> auto | length | ratio | relative | fraction
-  size,
-  /// The child to size: a string cell id, or a canonical Mosaic grid node built
-  /// with `cell`, `columns`, or `rows`. A node wrapped in `steps.on` is also
-  /// accepted, so an incrementally revealed child can carry its own size.
-  /// -> str | dictionary
-  child,
-) = {
+// Internal: pairs one child of a split with its track size. The layout
+// resolvers size their children this way; a deck sizes a split through the
+// `tracks:` argument of `columns` and `rows`, the one public spelling. The
+// wrapper is temporary: the split constructor unwraps it, so a track value
+// never appears in a resolved tree.
+#let track(size, child) = {
   if not is-track-size(size) {
     fail(
       "track size must be auto, a fixed or relative length, or a"
@@ -169,7 +146,7 @@
 
 // The only named options a split accepts; anything else in the sink is a
 // misspelling, and `validate-keys` names it.
-#let split-options = ("gutter", "stroke")
+#let split-options = ("gutter", "stroke", "tracks")
 
 #let validate-split-child(value) = {
   let size = 1fr
@@ -186,12 +163,37 @@
   (size, child)
 }
 
+// `tracks:` means one thing across the package, here and on the layout
+// constructors: `auto` for the default sizing, or an array holding exactly one
+// native track size per child. A general split has no child that a lone size
+// could belong to, so a single value is not a shorthand here.
+#let validate-split-tracks(tracks, children, name) = {
+  if tracks == auto {
+    return tracks
+  }
+  if (
+    type(tracks) != array
+      or tracks.len() != children.len()
+      or not tracks.all(is-track-size)
+  ) {
+    fail(
+      name + " tracks must be auto or an array with one track size per "
+        + "child (" + str(children.len()) + " here): auto, a length, a "
+        + "ratio, or a fraction",
+    )
+  }
+  if children.any(is-track) {
+    fail(name + " cannot combine tracks: with track-wrapped children")
+  }
+  tracks
+}
+
 // Canonical branch constructor. Public callers use mosaic.grids.columns()
 // and mosaic.grids.rows(), which pass a literal axis. Child normalization
 // guarantees node children and a per-child track, so the trailing `validate`
-// owns the structural checks; only the gutter and stroke values are validated
-// here.
-#let make-split(axis, gutter, stroke, children) = {
+// owns the structural checks; only the gutter, stroke, and tracks values are
+// validated here.
+#let make-split(axis, children, gutter: 0pt, stroke: none, tracks: auto) = {
   let name = axis-name(axis)
   if children.len() == 0 {
     fail(name + " must contain at least one child")
@@ -202,12 +204,13 @@
   if not is-stroke(stroke) {
     fail(name + " stroke must be none or a native Typst stroke")
   }
+  let tracks = validate-split-tracks(tracks, children, name)
   let parts = children.map(validate-split-child)
   let result = (
     mosaic: tag,
     kind: "split",
     axis: axis,
-    tracks: parts.map(part => part.at(0)),
+    tracks: if tracks == auto { parts.map(part => part.at(0)) } else { tracks },
     gutter: gutter,
     stroke: stroke,
     children: parts.map(part => part.at(1)),
@@ -217,30 +220,37 @@
 
 /// Splits the available width, arranging its children as columns.
 ///
-/// Children may be given in three forms, freely mixed:
+/// Children may be given in two forms, freely mixed:
 ///
 /// - A string, which is shorthand for `cell(id)`.
 /// - A node built with `cell`, `columns`, or `rows`, so splits nest to any
 ///   depth.
-/// - Any of those wrapped in `track` to give it an explicit track size.
 ///
 /// A node may also be wrapped in `steps.on` so its visibility changes across
 /// incremental reveal steps.
 ///
-/// Each unwrapped child receives a `1fr` column, so an unadorned `columns`
-/// divides the width evenly.
+/// Every column takes `1fr` unless `tracks:` says otherwise, so an unadorned
+/// `columns` divides the width evenly.
 ///
 /// ```typ
 /// #mosaic.grids.columns(
+///   tracks: (2fr, 1fr),
 ///   gutter: 1em,
 ///   stroke: 0.5pt + gray,
-///   mosaic.grids.track(2fr, "left"),
+///   "left",
 ///   "right",
 /// )
 /// ```
 ///
 /// -> dictionary
 #let columns(
+  /// The width of each column: `auto` for equal `1fr` columns, or an array
+  /// with exactly one native track size per child, in order. A size is `auto`
+  /// (as wide as the child's content), a length or ratio, or a fraction such
+  /// as `2fr`, which takes a share of what remains. This is the same `tracks:`
+  /// the layout constructors take.
+  /// -> auto | array
+  tracks: auto,
   /// Native Typst track size used between adjacent columns.
   /// -> auto | length | ratio | relative | fraction
   gutter: 0pt,
@@ -248,45 +258,65 @@
   /// A gutter of `0pt` leaves the stroke sitting directly between the columns.
   /// -> none | length | color | gradient | tiling | stroke | dictionary
   stroke: none,
-  /// The columns: string cell ids, Mosaic grid nodes, or values wrapped with
-  /// `track`. At least one is required.
+  /// The columns: string cell ids or Mosaic grid nodes. At least one is
+  /// required.
   /// -> arguments
   ..children,
 ) = {
   _ = validate-keys(children.named(), split-options, "columns")
-  make-split("width", gutter, stroke, children.pos())
+  make-split(
+    "width",
+    children.pos(),
+    gutter: gutter,
+    stroke: stroke,
+    tracks: tracks,
+  )
 }
 
 /// Splits the available height, arranging its children as rows.
 ///
-/// Children take the same forms as in `columns`: a string cell id, a Mosaic
-/// grid node, either wrapped in `track`, or a node wrapped in `steps.on` for
-/// incremental reveal. Each unwrapped child receives a `1fr` row.
+/// Children take the same forms as in `columns`: a string cell id or a Mosaic
+/// grid node, either of which may be a node wrapped in `steps.on` for
+/// incremental reveal. Every row takes `1fr` unless `tracks:` says otherwise.
 ///
 /// ```typ
 /// #mosaic.grids.rows(
+///   tracks: (auto, 1fr, 2em),
 ///   gutter: 0.7em,
-///   mosaic.grids.track(auto, "header"),
-///   mosaic.grids.columns(gutter: 1em, "left", "right"),
-///   mosaic.grids.track(auto, "footer"),
+///   "header",                                    // as tall as its content
+///   mosaic.grids.columns(gutter: 1em, "left", "right"),  // the rest
+///   "footer",                                    // a fixed strip
 /// )
 /// ```
 ///
+/// A cell directly in an `auto` row hugs its content; see the `inset`
+/// parameter of `cell`.
+///
 /// -> dictionary
 #let rows(
+  /// The height of each row: `auto` for equal `1fr` rows, or an array with
+  /// exactly one native track size per child, in order. A size is `auto` (as
+  /// tall as the child's content), a length or ratio, or a fraction such as
+  /// `2fr`, which takes a share of what remains.
+  /// -> auto | array
+  tracks: auto,
   /// Native Typst track size used between adjacent rows.
   /// -> auto | length | ratio | relative | fraction
   gutter: 0pt,
   /// Stroke drawn along each interior row boundary, centered in the gutter.
   /// -> none | length | color | gradient | tiling | stroke | dictionary
   stroke: none,
-  /// The rows: string cell ids, Mosaic grid nodes, or values wrapped with
-  /// `track`. At least one is required.
+  /// The rows: string cell ids or Mosaic grid nodes. At least one is
+  /// required.
   /// -> arguments
   ..children,
 ) = {
   _ = validate-keys(children.named(), split-options, "rows")
-  make-split("height", gutter, stroke, children.pos())
+  make-split(
+    "height",
+    children.pos(),
+    gutter: gutter,
+    stroke: stroke,
+    tracks: tracks,
+  )
 }
-
-

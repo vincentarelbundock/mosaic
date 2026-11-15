@@ -26,12 +26,13 @@
 #assert(named == (heading: [Heading], left: [Left], right: [Right]))
 #assert(named == positional)
 
-// The slide command carries the content dictionary.
+// The slide command carries the content dictionary. `slide` returns the
+// command record followed by the guard that fails outside a deck.
 #let command = mosaic.slide(layout: comparison, cells: (
   heading: [H],
   left: [L],
   right: [R],
-)).value
+)).children.first().value
 #assert(command.cells.keys().sorted() == ("heading", "left", "right"))
 #assert(command.bodies == ())
 
