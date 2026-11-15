@@ -4,7 +4,7 @@
 
 #let photo = mosaic.components.image(path("/docs-src/assets/images/dog.webp"))
 
-// The figure variant owns its picture and caption, so the slide supplies only
+// The `body` position owns its picture and caption, so the slide supplies only
 // the header cell.
 #mosaic.slide(
   layout: mosaic.layouts.image(photo),
@@ -16,48 +16,49 @@
   cells: (header: [== Figure with caption]),
 )
 
-// Every directional variant pairs a full-bleed picture with header and body.
+// Every directional position pairs a full-bleed picture with header and body.
 #for side in ("left", "right", "top", "bottom") {
   mosaic.slide(
-    layout: mosaic.layouts.image(photo, variant: side),
+    layout: mosaic.layouts.image(photo, position: side),
     cells: (header: [== Image #side], body: [Body beside the picture.]),
   )
 }
 
 // Directional tracks are two native sizes in visual order.
 #mosaic.slide(
-  layout: mosaic.layouts.image(photo, variant: "left", tracks: (2fr, 1fr)),
+  layout: mosaic.layouts.image(photo, position: "left", tracks: (2fr, 1fr)),
   cells: (header: [== Weighted tracks], body: [Narrow text column.]),
 )
 
-// `full` composes into a single body cell with the picture behind it.
+// `background` composes into a single body cell with the picture behind it.
+// A scrim belongs to the picture, so it is stated on `components.image`.
 #mosaic.slide(
   layout: mosaic.layouts.image(
-    (
-      path: path("/docs-src/assets/images/dog.webp"),
+    mosaic.components.image(
+      path("/docs-src/assets/images/dog.webp"),
       scrim: black.transparentize(55%),
     ),
-    variant: "full",
+    position: "background",
   ),
   cells: (body: [== Over the picture]),
 )
 
 // An omitted body gives a bare full-bleed slide.
 #mosaic.slide(
-  layout: mosaic.layouts.image(photo, variant: "full"),
+  layout: mosaic.layouts.image(photo, position: "background"),
 )
 
-// `fit` overrides the per-variant default. It rebuilds the picture, so it
+// `fit` overrides the per-position default. It rebuilds the picture, so it
 // needs a path; ready-made content states its own fit and is rejected
 // (tests/invalid/layouts-image-fit-content.typ).
 #let dog = path("/docs-src/assets/images/dog.webp")
 #mosaic.slide(
-  layout: mosaic.layouts.image(dog, variant: "left", fit: "contain"),
+  layout: mosaic.layouts.image(dog, position: "left", fit: "contain"),
   cells: (header: [== Contained], body: [Uncropped picture.]),
 )
 
-// The argument outranks a `fit` key carried by the picture dictionary, and the
-// key applies when the argument is left at `auto`.
+// `fit:` is the shorthand for a bare path: `auto` takes the position's
+// default, and an explicit value replaces it.
 #import "../mosaic/src/layout/resolver.typ": resolve-layout
 #import "../mosaic/src/settings.typ": make-settings
 #import "support/grid.typ" as grid-test
@@ -66,16 +67,17 @@
   let picture = grid-test.info(resolved, "image").cell.content
   picture.fit
 }
-#assert(picture-fit(mosaic.layouts.image(dog, variant: "left")) == "cover")
-#assert(picture-fit(mosaic.layouts.image(dog, variant: "left", fit: "contain")) == "contain")
-#assert(picture-fit(mosaic.layouts.image((path: dog, fit: "contain"), variant: "left")) == "contain")
-#assert(
-  picture-fit(mosaic.layouts.image(
-    (path: dog, fit: "cover"),
-    variant: "left",
-    fit: "contain",
-  )) == "contain",
-  message: "an explicit fit: must win over the picture dictionary's fit key",
+#assert(picture-fit(mosaic.layouts.image(dog, position: "left")) == "cover")
+#assert(picture-fit(mosaic.layouts.image(dog, position: "left", fit: "contain")) == "contain")
+#assert(picture-fit(mosaic.layouts.image(dog)) == "contain")
+// Ready-made content with a scrim and a caption: the picture has no natural
+// height to hug, so it takes the region above the caption.
+#mosaic.slide(
+  layout: mosaic.layouts.image(
+    mosaic.components.image(dog, fit: "contain", scrim: black.transparentize(55%)),
+    caption: [Scrimmed and captioned],
+  ),
+  cells: (header: [== Scrimmed figure]),
 )
 // A string caption is accepted like any other optional content field.
 #mosaic.slide(
@@ -101,17 +103,17 @@
 
 #mosaic.slide(
   layout: "image",
-  variant: "full",
+  position: "background",
   image: photo,
   cells: (body: [== Named selection, full bleed]),
 )
 
 // A scalar track sizes the picture and is side-independent: the same value
-// mirrors cleanly across variants, with the companion region taking 1fr.
+// mirrors cleanly across positions, with the companion region taking 1fr.
 #for side in ("left", "right", "top", "bottom") {
   mosaic.slide(
     layout: "image",
-    variant: side,
+    position: side,
     image: photo,
     tracks: 2fr,
     cells: (header: [== Scalar track #side], body: [Companion takes 1fr.]),

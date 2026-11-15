@@ -25,9 +25,9 @@
 #mosaic.slide(layout: mosaic.layouts.title(title: [Panel title], variant: "panel", subtitle: [Workshop]))
 #mosaic.slide(layout: mosaic.layouts.title(title: [Bordered title], variant: "bordered", subtitle: [Colloquium]))
 #mosaic.slide(layout: mosaic.layouts.title(title: [Image-right title], variant: "image", position: "right", image: path("/docs-src/assets/images/title-river.webp")))
-#mosaic.slide(layout: mosaic.layouts.title(title: [Image-top title], variant: "image", position: "top", image: (path: path("/docs-src/assets/images/title-river.webp"), alt: "Wetlands")))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Image-top title], variant: "image", position: "top", image: mosaic.components.image(path("/docs-src/assets/images/title-river.webp"), alt: "Wetlands")))
 
 #mosaic.slide(layout: mosaic.layouts.section())[Plain section]
 #mosaic.slide(layout: mosaic.layouts.section(number: [01]))[Numbered section]
-#mosaic.slide(layout: mosaic.layouts.section(variant: "image-bottom", image: path("/docs-src/assets/images/dog.webp")))[Image-bottom section]
-#mosaic.slide(layout: mosaic.layouts.section(variant: "image-background", image: dog))[Image-background section]
+#mosaic.slide(layout: mosaic.layouts.section(variant: "image", position: "bottom", image: path("/docs-src/assets/images/dog.webp")))[Image-bottom section]
+#mosaic.slide(layout: mosaic.layouts.section(variant: "image", position: "background", image: dog))[Image-background section]

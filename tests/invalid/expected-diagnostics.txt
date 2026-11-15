@@ -40,27 +40,24 @@ layouts-content-progress-removed|native:unexpected argument: progress
 layouts-content-tracks|tracks must be auto or an array of 2 native Typst track sizes
 layouts-content-variant|layout "content" has unsupported variant "sidebar"; expected one of (
 layouts-default-removed|native:module `layouts` does not contain `default`
-layouts-image-scrim-type|layout "image" image scrim must be a color, gradient, or tiling
 layouts-section-accent|layout "section" accent must be a color
 layouts-section-image-unused|variant "plain" does not use image
-layouts-section-mutated-command|variant "image-bottom" requires image
-layouts-section-tracks-scope|tracks apply only to directional image variants
+layouts-section-mutated-command|variant "image" requires image
+layouts-section-tracks-scope|tracks apply only to variant "image"
 layouts-section-tracks|"section" tracks must be auto, one native Typst track size for the image, or an array of 2 native Typst track sizes in visual order
 layouts-title-accent|layout "title" accent must be a color
 layouts-title-authors-empty|variant "academic" requires at least one author
 layouts-title-authors|layout "title" author 1 must be a name or created with author()
 layouts-title-content|requires title content through title:
-layouts-title-image-path|image path must be a native path; write path("cover.webp")
 layouts-title-image-required|variant "image" requires image
-layouts-title-image-size|image does not accept "width"
-layouts-title-image-type|image must be content, a native path, or a path dictionary
+layouts-title-image-type|image must be a native path or content
 layouts-title-image-unused|variant "centered" does not use image
 layouts-title-mutated-command|variant "image" requires image
 layouts-title-ordinary-authors|author 1 must be a name or created with author()
 layouts-title-position-scope|position applies only to variant "image"
 layouts-title-position|position must be auto or one of
 layouts-title-rule|rule must be auto, true, or false
-layouts-title-tracks-scope|tracks apply only to the image variant
+layouts-title-tracks-scope|tracks apply only to variant "image"
 layouts-title-tracks|"title" tracks must be auto, one native Typst track size for the image, or an array of 2 native Typst track sizes in visual order
 layouts-title-variant|unsupported variant "unknown"
 noncanonical-cell-record|invalid grid node at root
@@ -144,7 +141,7 @@ theme-layouts-bind|theme layouts "content" must be a Mosaic grid tree or layout
 setup-theme-override|setup does not accept "theme"
 components-progress-circle-fill|progress variant "circle" requires fill and accent to be colors
 layouts-image-string-path|layout "image" image must be a native path, not a string; write path("cover.webp")
-layouts-section-image-string-path|layout "section" image path must be a native path; write path("cover.webp")
+layouts-section-image-string-path|layout "section" image must be a native path, not a string; write path("cover.webp")
 layouts-section-subtitle-type|layout "section" subtitle must be content, a string, or none
 layouts-section-number-type|layout "section" number must be content, a string, or none
 layouts-image-caption-type|layout "image" caption must be content, a string, or none
@@ -162,3 +159,10 @@ steps-in-context|pause and steps cannot be used inside a Mosaic component, a sec
 pause-in-tagline|pause and steps cannot be used inside a Mosaic component, a section tagline or other layout field
 steps-unsupported-container|pause, steps, and note cannot be used inside binom, which the slide runtime cannot rebuild
 slide-in-container|slide cannot be nested inside another slide or a container
+layouts-title-image-dictionary|layout "title" image no longer takes a dictionary; build the picture with components.image(path("cover.webp"), scrim: ..) and pass that
+layouts-section-variant-removed|layout "section" variant "image-left" was removed; write variant: "image", position: "left"
+layouts-image-variant-removed|layout "image" variant was removed; write position: "background"
+layouts-image-position|layout "image" position must be one of
+layouts-title-background-tracks|layout "title" tracks size a split, so they apply only to positions
+layouts-section-position-scope|layout "section" position applies only to variant "image"
+layouts-title-auto-missing|layout "title" requires title content through title: or setup(title: ..); pass title: none to compose the slide without one

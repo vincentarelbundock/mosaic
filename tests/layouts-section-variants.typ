@@ -28,10 +28,10 @@ Tagline under the rule
       message: "expected exactly one realized section heading, found "
         + str(headings.len()),
     )
-    let sections = query(label("mosaic-section-title"))
+    let sections = query(label("mosaic-section-record"))
     assert(
       sections.len() == 4,
-      message: "expected four section-title records, found "
+      message: "expected four section records, found "
         + str(sections.len()),
     )
   }

@@ -983,6 +983,32 @@ def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
     for page, color in ((2, "#a1b2c3"), (3, "#654321"), (4, "#fedcba")):
         require_contains(TMP / f"mosaic-layouts-section-fields-{page}.svg", color)
 
+    # Positions: the title stack over a background picture follows a recolored
+    # cell; suppressed fields leave the page without them; the panel rule is a
+    # mark `rule: false` removes; an explicit accent replaces the semantic one
+    # on the baseline hairline; and <mosaic-section-title> reaches the visible
+    # title in every section variant.
+    typst_compile(typst, "layouts-positions.typ", TMP / "mosaic-layouts-positions-{p}.svg", "--format", "svg")
+    require_contains(TMP / "mosaic-layouts-positions-1.svg", "#fedcba")
+    require_contains(pdf_page_text("layouts-positions", 1), "ZQDECK")
+    suppressed = {
+        2: (("ZQDECK",), ("ZQSUB", "ZQAUTHOR", "ZQDATE")),
+        3: (("ZQAUTHOR",), ("ZQDECK", "ZQSUB", "ZQDATE")),
+        4: (("ZQDECK", "ZQSUB", "ZQAUTHOR", "ZQDATE"), ()),
+        5: (("ZQDECK", "ZQSUB", "ZQAUTHOR", "ZQDATE"), ()),
+    }
+    for page, (absent, present) in suppressed.items():
+        text = pdf_page_text("layouts-positions", page)
+        for token in absent:
+            require_contains(text, token, absent=True)
+        for token in present:
+            require_contains(text, token)
+    require_contains(TMP / "mosaic-layouts-positions-6.svg", "#13579b")
+    require_contains(TMP / "mosaic-layouts-positions-7.svg", "#13579b", absent=True)
+    require_contains(TMP / "mosaic-layouts-positions-8.svg", 'stroke="#a1b2c3"')
+    for page in (9, 10, 11, 12):
+        require_contains(TMP / f"mosaic-layouts-positions-{page}.svg", "#12ab34")
+
 def negative_expectations() -> dict[str, str]:
     expectations: dict[str, str] = {}
     path = TESTS / "invalid/expected-diagnostics.txt"
