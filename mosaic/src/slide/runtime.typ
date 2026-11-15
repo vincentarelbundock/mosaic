@@ -9,7 +9,11 @@
   validate-stable-temporal-headings,
   validate-frame-metadata,
 )
-#import "../incremental/heading.typ": canonical-frame, strip-headings
+#import "../incremental/heading.typ": (
+  canonical-frame,
+  rendered-frame,
+  strip-headings,
+)
 #import "../note/analysis.typ": (
   notes-at,
   fixed-grid-notes-at,
@@ -514,6 +518,7 @@
     // happens to produce, and a change of variant silently leaves a cell
     // behind. Per-cell labels still apply, and sit inside this one, so a
     // <mosaic-cell-*> rule refines what this sets.
+    rendered-frame.update(_ => step)
     let frame-grid = if live-fields and step != 1 {
       resolve-layout(layout-at(requested-layout, field-content, step), settings)
     } else {
