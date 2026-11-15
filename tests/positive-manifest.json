@@ -89,7 +89,8 @@
     "theme-text-fill.typ",
     "slide-invert-raw.typ",
     "components-roles.typ",
-    "author-plain-name.typ"
+    "author-plain-name.typ",
+    "incremental-cell-surface.typ"
   ],
   "layout": [
     "fit.typ",

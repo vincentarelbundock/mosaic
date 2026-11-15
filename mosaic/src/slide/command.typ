@@ -205,8 +205,8 @@
   /// from `setup`, `none` suppresses it.
   /// -> auto | content | none
   foreground: auto,
-  /// Positional cell bodies in depth-first layout order, each one content,
-  /// plus any named arguments forwarded as fields of the selected layout.
+  /// Positional cell bodies in depth-first layout order, each one content or
+  /// `none` for an empty cell, plus any named arguments forwarded as fields of the selected layout.
   /// -> arguments
   ..bodies
 ) = {
@@ -221,9 +221,11 @@
     layout = bodies.first()
     bodies = bodies.slice(1)
   }
-  // Checked here, where the author wrote them: an untyped body would
-  // otherwise surface as a raw join error deep in the frame transform, and
-  // `none` would compile to a silently blank cell.
+  // `none` is an empty body: it is what a conditional yields when its branch
+  // is not taken (`slide(if draft { [..] })`), and an empty cell is the
+  // harmless reading. Anything else is checked here, where the author wrote
+  // it, rather than surfacing as a raw join error deep in the frame transform.
+  let bodies = bodies.map(body => if body == none { [] } else { body })
   for body in bodies {
     if type(body) != content {
       fail(
