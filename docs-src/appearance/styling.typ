@@ -13,7 +13,7 @@ Behind that, the engine keeps exactly one record of its own: the deck record, wr
 
 = Deck typography
 
-The deck's typeface and base size are options of `m.setup`, under every theme. Everything else is a native Typst rule placed after `m.setup`, so that it applies across the deck:
+The deck's typeface and base size are options of `m.setup` under every bundled theme. Everything else is a native Typst rule placed after `m.setup`, so that it applies across the deck:
 
 ```typ
 #show: m.setup.with(font: "EB Garamond", base-size: 26pt)
@@ -40,7 +40,7 @@ Everything about the deck's palette, overriding entries, the bundled palette col
 
 Target a cell by its label. Font, size, color, and alignment are `set text`, `set par`, and `set align`; the cell's own fill, stroke, and corner radius are `set block` on the same label. The #link("../api/labels.html")[label reference] lists every label a slide emits:
 
-#unreleased(calepin.elements.callout)[Painting a cell's own block with `set block` rules, the `compact-inset` spacing, and `font` and `base-size` as deck options under every theme are new.]
+#unreleased(calepin.elements.callout)[Painting a cell's own block with `set block` rules and the `compact-inset` spacing are new.]
 
 ```typ
 #let ink = rgb("#20262d")

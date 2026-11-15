@@ -250,8 +250,9 @@
   /// -> array
   headings: ("section", "slide"),
   /// The deck's typeface, as a family name or a list of families in order of
-  /// preference. A deck option under every theme, bundled or custom; the
-  /// value shown is the Default theme's, and each theme presets its own. It
+  /// preference. A theme option every theme has, declared or not, so `setup`
+  /// takes it under any theme; the value shown is the Default theme's, and
+  /// each theme declares its own under `options`. It
   /// accepts whatever native `text(font: ..)` does.
   ///
   /// ```typ
@@ -267,8 +268,8 @@
     "Libertinus Serif",
   ),
   /// The deck's base text size, which a theme's headings, captions, and
-  /// other tiers are stated as multiples of. Like `font`, a deck option under
-  /// every theme; the value shown is the Default theme's. A `set text(size:
+  /// other tiers are stated as multiples of. Like `font`, a theme option every
+  /// theme has; the value shown is the Default theme's. A `set text(size:
   /// ..)` after `setup` changes the body text alone.
   /// -> length
   base-size: 28pt,

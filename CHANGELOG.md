@@ -14,7 +14,6 @@ This version tightens the public API and breaks several older spellings to get t
 - Positional slide bodies follow one rule: a slide's opening heading is its header, and everything else fills the cells in order. `slide[== Title][Body]` is unchanged, and a heading that opens the first body is now lifted into the header, so the first body's destination no longer depends on how many bodies there are. `slide[Plain][Body]` on a layout with a header is an error; write `slide(cells: (header: [Plain], body: [Body]))`. A cell with a deck default from `setup(cells:)` is reached only through `cells:`; positional bodies pass over it.
 - `slide` without `#show: m.setup` is an error. It used to compile to nothing.
 - `info().slide.number` is `none` on an unnumbered slide. It used to carry the previous slide's number, which read as this slide's; test `slide.numbered`.
-- Theme definitions state `font` and `base-size` under `defaults`, not `options`: `options: (font: "Inter", base-size: 20pt)` becomes `defaults: (font: "Inter", base-size: 20pt)`. They are deck options every theme accepts, so a custom theme no longer has to declare them for `setup(font: ..)` to work.
 - `steps.on` with a body that is not content is a drawing command, valid only inside `steps.drawing`; anywhere else it fails instead of printing a dictionary. Write text as content: `on(2)[text]`.
 - The label `<mosaic-section-title>` now marks the visible title text of a section slide, like every other tier label. The queryable record of each section, which carried that label, is `<mosaic-section-record>`. `<mosaic-section-subtitle>` now labels the subtitle in the `plain` and `image-*` variants too.
 - A compact cell in a hand-built grid, one directly in an `auto` row, now pads like the built-in header and footer: full `inset` left and right, `compact-inset` above and below. Before, a custom header was deeper than the header of an image slide in the same deck. Pass `inset:` on the cell to keep the old padding. Thanks to [@eddelbuettel](https://github.com/eddelbuettel) for the report.
@@ -27,7 +26,7 @@ This version tightens the public API and breaks several older spellings to get t
 
 ### New
 
-- `setup(font: .., base-size: ..)` works under every theme, custom themes included. A theme's headings are multiples of the base size, so the deck scales with it.
+- `setup(font: .., base-size: ..)` works under every theme. A custom theme that declares neither option gets `font: auto` and `base-size: 24pt`, so it still accepts both; a theme states its own values under `options`, as before. A theme's headings are multiples of the base size, so the deck scales with it.
 - `themes.decorate-heading` declares a heading rule that rebuilds the heading (`show heading: it => ..`) so that it holds on every frame of an incremental slide.
 - `setup(spacing: (compact-inset: ..))` sets the depth of every compact cell (header, footer, or any cell in an `auto` row), built-in or hand-built. Raise it to `inset` for a deeper painted header.
 - `title(variant: "image-background")` sets the title stack over a full-slide picture.
@@ -46,7 +45,7 @@ This version tightens the public API and breaks several older spellings to get t
 - A list timed with `pause`, `on`, or `reveal` keeps the exact position and shape of the same list untimed, with the deck's own marker, numbering, spacing, and indents.
 - A title too long for its slide is scaled to fit instead of overprinting the byline. A title scaled this way fits, so `overflow:` does not report it.
 - `fit` validates its arguments, resolves relative sizes such as `50% + 1cm`, and offers prose a wider measure before scaling it, so fitted text fills its cell's width.
-- The engine states the base typography before a theme's `apply` runs (text color, font, and base size), so a theme only states what it adds.
+- The engine states the base typography before a theme's `apply` runs (text color, and the resolved `font` and `base-size` options), so a theme only states what it adds.
 - `themes.setup` checks a definition where it is bound: a missing color is named, and unknown `defaults` keys and incomplete `layouts` are reported there.
 - `slide(invert: true)` flips code highlighting with the ground and keeps a `raw` theme the deck set for itself, and the inverted ground reaches the page edge in a deck with a page margin.
 - Heading sizes hold under `set heading(offset: ..)`, and constructed `heading(level: ..)` headings are styled like written ones, under every theme. A `set text(size: ..)` after `setup` changes body text and no longer rescales the Default and Metropolis headings; use `base-size`.

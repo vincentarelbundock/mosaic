@@ -11,7 +11,7 @@
 
 A theme decides how a deck looks: its colors, its type, and the way each slide arranges what you put on it. Every Mosaic deck uses a theme, even one that never mentions the word. Import the package without naming a theme and you get the default theme. Name a different one and the whole deck changes at once, without a single edit to your slides.
 
-#unreleased(calepin.elements.callout)[A theme now states its `font` and `base-size` through `defaults`, and `themes.decorate-heading` is new. The running example and the bundled-theme tours compile under the released version as they stand; the custom-theme examples need the development version.]
+#unreleased(calepin.elements.callout)[`themes.decorate-heading` is new, and `setup(font:, base-size:)` now works under a custom theme that declares neither. Every example on this page compiles under the released version as it stands.]
 
 = Selecting themes
 
@@ -136,13 +136,13 @@ Beyond the polarity pair, the bundled `palettes` collection composes with every 
 
 == Typography
 
-A theme's typography starts from two deck options, `font` and `base-size`, which `setup` takes under every theme. The rest is ordinary `set` and `show` rules. Rules you write after `#show: m.setup` layer on top of the theme's. There is no separate typography system:
+A theme's typography starts from two options every theme has, `font` and `base-size`, which `setup` takes under any theme. The rest is ordinary `set` and `show` rules. Rules you write after `#show: m.setup` layer on top of the theme's. There is no separate typography system:
 
 #example-source("appearance/type-custom")
 
 The #link("styling.html")[styling] page covers those rules in full. The #link("../api/labels.html")[label reference] lists every label a slide emits. A theme writes its own rules against that same list.
 
-Choices written that way stay in the deck that holds them. A theme carries the same ones: the font and base size become its `defaults`, and its `apply` is the same list of rules in a function. Moving them there leaves the result identical. It also makes them portable. Run the base theme's `apply` first to keep the rules it already carries:
+Choices written that way stay in the deck that holds them. A theme carries the same ones: the font and base size become its `options`, and its `apply` is the same list of rules in a function. Moving them there leaves the result identical. It also makes them portable. Run the base theme's `apply` first to keep the rules it already carries:
 
 #example-source("appearance/type-apply")
 
@@ -175,12 +175,12 @@ Everything above lives in the deck that uses it. Move on when you start copying 
 Bind one in the deck itself to see the whole shape at once. A theme needs only `colors`:
 
 ```typ
-#import "@local/mosaic:0.0.3" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 
 #let mine = (
   name: "Mine",
   colors: mosaic.palettes.light + (accent: rgb("#a23b72")),
-  defaults: (font: "EB Garamond", base-size: 26pt),
+  options: (font: "EB Garamond", base-size: 26pt),
   apply: (body, colors: (:), options: (:)) => {
     show heading: set text(
       size: options.base-size * 1.5,
@@ -207,15 +207,15 @@ Three further keys carry the rest of a theme:
 #table(
   columns: (auto, 1fr),
   [`name`], [The theme's display name, which its error messages quote. Defaults to `"Custom"`.],
-  [`defaults`], [Ordinary `setup` options the theme presets: its `font` and `base-size`, and others such as `spacing` or `overflow`. A deck can still override any of them.],
+  [`defaults`], [Ordinary `setup` options the theme presets, such as `spacing` or `overflow`. A deck can still override any of them.],
   [`options`], [The theme's own options and their defaults, covered below.],
 )
 
 == What `apply` owns
 
-Mosaic's engine states the base typography and nothing else: it fills the canvas, and sets the text fill from the palette's `text` color and the font and size from the deck's `font` and `base-size`. Every other rule a slide renders with comes from the active theme. Both values reach `apply` resolved, as `options.font` and `options.base-size`; state heading sizes as multiples of `options.base-size` rather than in `em`, because an em size multiplies with Typst's own per-level heading scale and so changes under `set heading(offset: ..)`. So a theme built from scratch states the rest of its look in `apply`, down to the labels a slide emits. The #link("../api/labels.html")[label reference] is the checklist: a theme that styles `mosaic-cell-title` but forgets `mosaic-cell-section` renders section slides in the engine's bare defaults, and nothing warns about it.
+Mosaic's engine states the base typography and nothing else: it fills the canvas, and sets the text fill from the palette's `text` color and the font and size from the resolved `font` and `base-size` options. Every other rule a slide renders with comes from the active theme. Both values reach `apply` resolved, as `options.font` and `options.base-size`; state heading sizes as multiples of `options.base-size` rather than in `em`, because an em size multiplies with Typst's own per-level heading scale and so changes under `set heading(offset: ..)`. So a theme built from scratch states the rest of its look in `apply`, down to the labels a slide emits. The #link("../api/labels.html")[label reference] is the checklist: a theme that styles `mosaic-cell-title` but forgets `mosaic-cell-section` renders section slides in the engine's bare defaults, and nothing warns about it.
 
-A theme may omit `apply`. It then changes colors, defaults, and layouts only, and every slide renders in the deck's font, base size, and text color with Typst's own defaults for the rest. A theme that states no `font` or `base-size` gets Typst's own font at 24pt. A theme derived from a bundled one inherits that theme's rules and can leave `apply` alone.
+A theme may omit `apply`. It then changes colors, defaults, and layouts only, and every slide renders in the deck's font, base size, and text color with Typst's own defaults for the rest. Every theme has the `font` and `base-size` options, whether or not its definition declares them; a theme that declares neither gets Typst's own font at 24pt. A theme derived from a bundled one inherits that theme's rules and can leave `apply` alone.
 
 The engine keeps two rules of its own, on `<mosaic-note-heading>` and `<mosaic-note-body>`. They style the printed speaker and notes pages. That furniture must read black on white whatever the theme does, so the rules force the color and nothing else: the note text inherits the deck's base size rather than a size of its own. A theme or deck rule on the same label overrides them.
 
@@ -254,7 +254,7 @@ Every bundled theme exports the `definition` behind its own `setup`. Varying a b
 
 Two details decide whether that merge does what you meant.
 
-The merge replaces a key outright. Writing `colors: (accent: ..)` would hand the engine a palette of one color rather than a recolored one. That is why the example merges into `base.definition.colors` instead. The same applies to `defaults`, `layouts`, and `options`.
+The merge replaces a key outright. Writing `colors: (accent: ..)` would hand the engine a palette of one color rather than a recolored one. That is why the example merges into `base.definition.colors` instead. The same applies to `layouts` and `options`.
 
 Replacing `apply` discards the base theme's entire look, since `apply` is the look. To add rules on top of an inherited one, run the base theme's own rules first, as the Typography section does.
 
@@ -295,9 +295,9 @@ Each name in `options` becomes a named argument of the setup the definition prod
 
 #example-source("appearance/theme-options-dense")
 
-Mosaic hands the resolved options to `layouts` as well as `apply`, so `layouts` may be a function of them rather than a fixed dictionary. That is what lets one option offer genuinely different arrangements rather than only a different rhythm.
+Mosaic hands the resolved options to `layouts` as well as `apply`, so `layouts` may be a function of them rather than a fixed dictionary. That is what lets one option offer genuinely different arrangements rather than only a different type size.
 
-An option name that collides with a built-in `setup` option, `font` and `base-size` included, raises an error where you bind the theme. Every other named argument a deck passes falls through to `setup` as usual.
+An option name that collides with a built-in `setup` option raises an error where you bind the theme. `font` and `base-size` are the exception: they are theme options, and a theme declares its own values for them under `options`. Every other named argument a deck passes falls through to `setup` as usual.
 
 The #link("../api/theme.html")[theme authoring API] documents every definition key in full.
 

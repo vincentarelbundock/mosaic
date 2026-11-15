@@ -79,7 +79,7 @@ One theme sets a second face. `editorial` is the magazine voice, serif display t
 )
 ```
 
-Under the released 0.0.1 every bundled theme takes these two options; from the development version they are options of `setup` itself, so a custom theme takes them too.
+Every bundled theme takes these two options. From the development version, a custom theme takes them too even when its definition does not declare them.
 
 Naming families that are all present on the machine doing the compile silences the warnings entirely, because nothing on the list is then unknown.
 
