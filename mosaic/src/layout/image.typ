@@ -25,7 +25,11 @@
   if fields.image == none {
     fail("layout \"image\" requires an image")
   }
-  _ = validate-image(fields.image, "layout \"image\" image")
+  _ = validate-image(
+    fields.image,
+    "layout \"image\" image",
+    allow-size: false,
+  )
   if fields.fit != auto and (
     type(fields.fit) != str or fields.fit not in image-fit-modes
   ) {
@@ -112,17 +116,14 @@
 ///
 /// The layout is purely structural, so its looks come from rules on those
 /// labels. The `full` variant inherits the surrounding native text color, so
-/// quiet the photograph with the `scrim` argument of `components.image` and
-/// override the cell's text fill.
+/// quiet the photograph with the image dictionary's `scrim` key and override
+/// the cell's text fill.
 ///
 /// ```typ
 /// #show label("mosaic-cell-body"): set text(fill: white)
 /// #mosaic.slide(
 ///   layout: mosaic.layouts.image(
-///     mosaic.components.image(
-///       path("photo.webp"),
-///       scrim: black.transparentize(55%),
-///     ),
+///     (path: path("photo.webp"), scrim: black.transparentize(55%)),
 ///     variant: "full",
 ///   ),
 ///   [== Full bleed],
@@ -132,11 +133,12 @@
 /// -> dictionary
 #let image(
   /// The picture the slide is built around, as the sole positional argument.
-  /// Give a native `path(..)` value, which is sized and fitted to its region,
-  /// or ready-made content such as `components.image(path(..), scrim: ..)`,
-  /// which states its own fit and scrim. A bare string is rejected: it would
-  /// resolve inside the package rather than in the deck's project.
-  /// -> content | path
+  /// Give a native `path(..)` value, ready-made content, or a dictionary whose
+  /// `path` key holds one and whose `scrim` key paints a layer over the
+  /// picture and under any text composed on top of it; `alt` and `fit` are
+  /// its other keys. A bare string is rejected: it would resolve inside the
+  /// package rather than in the deck's project.
+  /// -> content | path | dictionary
   image,
   /// Structural arrangement of picture and text: `figure`, `full`, `left`,
   /// `right`, `top`, or `bottom`.
@@ -145,16 +147,17 @@
   /// Caption composed below a `figure` picture. Rejected by the other variants.
   /// -> content | str | none
   caption: none,
-  /// How a picture given as a bare path fills its region.
+  /// How a picture given as a path or a dictionary fills its region.
   ///
   /// - `"contain"`: fit the whole picture inside the region. The `figure`
   ///   default, since a chart must never be cropped.
   /// - `"cover"`: fill the region, cropping the overhang. The default for every
   ///   other variant.
   ///
-  /// `auto` picks the per-variant default above. Rejected beside ready-made
-  /// content, which states its own fit and cannot be rebuilt: pass
-  /// `components.image(path(..), fit: ..)` there instead.
+  /// `auto` picks the per-variant default above, unless the picture is a
+  /// dictionary with a `fit` key of its own, which then applies. An explicit
+  /// value here wins over that key. Rejected beside ready-made content, which
+  /// states its own fit and cannot be rebuilt.
   /// -> auto | str
   fit: auto,
   /// Sizes the split of a directional variant, and is rejected by `figure` and
@@ -193,17 +196,26 @@
   let fields = validate-fields(command.fields)
   let default-fit = if fields.variant == "figure" { "contain" } else { "cover" }
   let fitting = if fields.fit == auto { default-fit } else { fields.fit }
+  // The argument is the more specific statement, so it outranks a `fit` key
+  // carried by the picture dictionary; left at `auto`, the key applies and the
+  // variant default only fills in behind it.
+  let source = if fields.fit != auto and type(fields.image) == dictionary {
+    fields.image + (fit: fields.fit)
+  } else {
+    fields.image
+  }
   // Rebuilds the picture at a given size. A picture supplied as ready-made
   // content cannot be rebuilt, so it is boxed at that size instead.
   let resize(height, width) = if type(fields.image) == content {
     block(width: width, height: height, fields.image)
   } else {
     image-content(
-      fields.image,
+      source,
       "layout \"image\" image",
       width: width,
       height: height,
       fit: fitting,
+      allow-size: false,
     )
   }
   let picture = resize(100%, 100%)

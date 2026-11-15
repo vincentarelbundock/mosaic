@@ -80,7 +80,7 @@
     if fields.image == none {
       fail(name + " variant " + repr(fields.variant) + " requires image")
     }
-    _ = validate-image(fields.image, name + " image")
+    _ = validate-image(fields.image, name + " image", allow-size: false)
   }
   if position in directional-positions {
     _ = validate-directional-tracks(fields.tracks, name + " tracks")
@@ -107,6 +107,7 @@
   width: 100%,
   height: 100%,
   fit: "cover",
+  allow-size: false,
 )
 
 #let optional-fixed-image(value, name) = if value == none {
@@ -148,9 +149,9 @@
   split(..track-children(children, directional-tracks(tracks, image-first)))
 }
 
-// Any tonal adjustment belongs to the picture itself (see the `scrim` argument
-// of `components.image`), so the background is the resolved image and nothing
-// more.
+// Any tonal adjustment belongs to the picture itself (see the image
+// dictionary's `scrim` key and the `scrim` argument of `components.image`), so
+// the background is the resolved image and nothing more.
 #let image-background-cell(body, image) = body + (
   style: body.style + (background: image),
 )
