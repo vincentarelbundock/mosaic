@@ -124,13 +124,17 @@
 #let header-body-grid = resolve-layout(header-body-layout, settings)
 #assert(header-body-grid.tracks == (auto, 1fr))
 #assert(grid-test.count(header-body-grid) == 2)
-#let header-body = mosaic.slide(layout: header-body-layout)[== Header][Body]
+#let header-body = mosaic.slide(layout: header-body-layout)[Header][Body]
 
 #let body-footer-layout = mosaic.layouts.content(variant: "body-footer")
 #let body-footer-grid = resolve-layout(body-footer-layout, settings)
 #assert(body-footer-grid.tracks == (1fr, auto))
 #assert(grid-test.count(body-footer-grid) == 2)
-#let body-footer = mosaic.slide(layout: body-footer-layout)[Body][Footer]
+// The footer is filled by name: positional bodies never reach it.
+#let body-footer = mosaic.slide(layout: body-footer-layout, cells: (
+  body: [Body],
+  footer: [Footer],
+))
 
 #show: mosaic.setup
 #basic

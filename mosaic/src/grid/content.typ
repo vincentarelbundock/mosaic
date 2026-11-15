@@ -1,7 +1,6 @@
 // Slide-content routing for canonical grid trees.
 #import "../shared.typ": fail
 #import "traversal.typ": resolve-cell-ids, fold-grid
-#import "../opening-heading.typ": split-opening-heading
 
 // The IDs of every content-bearing cell (content == none), in the same
 // depth-first declaration order that positional bodies fill. This is the
@@ -13,20 +12,25 @@
   (node, children) => children.flatten(),
 )
 
-// The cell a slide's opening heading fills.
-#let header-id = "header"
+// The one cell positional bodies never fill. A footer is deck furniture that
+// recurs from slide to slide, so it is reached by name: on the slide through
+// `cells: (footer: ..)`, deck-wide through `setup(cells: (footer: ..))`.
+#let footer-id = "footer"
 
 // Resolve a slide's content into one id -> content map, the single internal
 // representation the renderer consumes. Setup defaults are fallbacks for
 // content-bearing cells that exist in this resolved grid. Named slide content
 // overrides those defaults; `none` explicitly suppresses one.
 //
-// Positional bodies follow one rule, whatever their count. A slide's opening
-// heading is its header: when the layout has a `header` cell and the first
-// body opens with a heading, that heading fills the header, as the heading of
-// an automatic slide does. Everything else fills, in layout order, the cells
-// that have no deck default and are not the header; those cells are addressed
-// by name through `cells:`. Any omitted content-bearing cell becomes [].
+// Positional bodies are routed by their count alone; their content is never
+// read. The fillable cells are the content-bearing cells other than the
+// footer, in depth-first layout order. A slide gives either one body for each
+// fillable cell without a deck default, which leaves the defaults in place,
+// or one body for every fillable cell, which overrides them. The `header`
+// cell always carries a default (setup injects one), so on a header-and-body
+// layout one body fills the body and two fill the header and the body. Any
+// other count is an error, except zero: an empty slide is allowed. Any
+// omitted content-bearing cell becomes [].
 //
 // `none` means "suppress", so suppressing a cell this layout does not have is
 // already true and resolves to a no-op. That matches a setup-level default for
@@ -34,6 +38,37 @@
 // `footer: none` across layouts that do not all carry a footer. Any non-`none`
 // value for an unknown id is still an error: there the author is supplying
 // content that would silently vanish.
+// One message for too many and too few: the count received, the cells each
+// accepted count fills, and the way to reach any other cell.
+#let positional-count-error(count, undefaulted, fillable, body-ids) = {
+  let describe(ids) = (
+    str(ids.len()) + " (" + ids.map(repr).join(", ") + ")"
+  )
+  let accepted = if fillable.len() == 0 {
+    "no positional bodies"
+  } else if undefaulted.len() == 0 or undefaulted.len() == fillable.len() {
+    describe(fillable)
+  } else {
+    describe(undefaulted) + " or " + describe(fillable)
+  }
+  let others = body-ids.filter(id => id not in fillable)
+  (
+    "slide received " + str(count) + " positional "
+      + (if count == 1 { "body" } else { "bodies" })
+      + "; this layout takes " + accepted
+      + (
+        if others.len() > 0 {
+          (
+            "; fill other cells such as " + others.map(repr).join(", ")
+              + " by name through cells:"
+          )
+        } else {
+          "; or fill its cells by name through cells:"
+        }
+      )
+  )
+}
+
 #let resolve-content(node, named, bodies, defaults: (:)) = {
   let body-ids = body-cell-ids(node)
   let inherited = (:)
@@ -70,48 +105,25 @@
     }
     resolved
   } else {
-    let destination-ids = body-ids.filter(
-      id => id not in inherited and id != header-id,
-    )
+    let fillable = body-ids.filter(id => id != footer-id)
+    let undefaulted = fillable.filter(id => id not in inherited)
+    let destination-ids = if bodies.len() == 0 {
+      ()
+    } else if bodies.len() == undefaulted.len() {
+      undefaulted
+    } else if bodies.len() == fillable.len() {
+      fillable
+    } else {
+      fail(positional-count-error(bodies.len(), undefaulted, fillable, body-ids))
+    }
     let resolved = inherited
-    let bodies = bodies
-    let lifted = false
-    if header-id in body-ids and bodies.len() > 0 {
-      let opening = split-opening-heading(bodies.first())
-      if opening.heading != none {
-        lifted = true
-        resolved.insert(header-id, opening.heading)
-        bodies = bodies.slice(1)
-        if opening.rest != none {
-          bodies.insert(0, opening.rest)
-        }
-      }
-    }
-    if bodies.len() > destination-ids.len() {
-      fail(
-        "slide received " + str(bodies.len()) + " positional "
-          + (if bodies.len() == 1 { "body" } else { "bodies" })
-          + ", but on this layout they fill "
-          + (
-            if destination-ids.len() == 0 { "no cell" } else {
-              destination-ids.map(repr).join(", ", last: " and ")
-            }
-          )
-          + "; address any other cell by name through cells:"
-          // The likeliest cause on a layout with a header: a first body meant
-          // for it that is not a heading. Say what would have worked.
-          + (
-            if header-id in body-ids and not lifted {
-              (
-                ". A first body that opens with a heading fills the header; "
-                  + "other header content goes through cells: (header: ..)"
-              )
-            } else { "" }
-          ),
-      )
-    }
     for (index, id) in destination-ids.enumerate() {
-      resolved.insert(id, bodies.at(index, default: []))
+      resolved.insert(id, bodies.at(index))
+    }
+    for id in body-ids {
+      if id not in resolved {
+        resolved.insert(id, [])
+      }
     }
     resolved
   }

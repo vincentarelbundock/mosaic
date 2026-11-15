@@ -1,11 +1,8 @@
 // Compilation of top-level Typst content into explicit and automatic slides.
-#import "shared.typ": fail
+#import "shared.typ": fail, typst-sequence, typst-space, typst-styled
 #import "slide/command.typ": is-setup-guard, is-slide-command, slide-command
 #import "slide/runtime.typ": render-slide
 #import "incremental/heading.typ": resolve-heading-depth
-#import "opening-heading.typ": (
-  is-heading-space, top-level-content, wrap-content,
-)
 
 #let typst-context = (context []).func()
 
@@ -53,6 +50,50 @@
 #let mapped-heading-levels(policy) = (
   policy.enumerate().filter(((index, role)) => role != none).map(((index, role)) => index + 1)
 )
+#let is-heading-space(value) = (
+  value == []
+    or (
+      type(value) == content
+        and value.func() in (parbreak, typst-space)
+    )
+)
+
+#let wrap-content(value, wrappers) = {
+  for wrapper in wrappers.rev() {
+    value = (wrapper.func)(value, wrapper.styles)
+  }
+  value
+}
+
+#let top-level-content(body, wrappers: (), path: ()) = if (
+  type(body) == content and body.func() == typst-sequence
+) {
+  body.children.enumerate().map(((index, child)) => top-level-content(
+    child,
+    wrappers: wrappers,
+    path: path + (index,),
+  )).flatten()
+} else if type(body) == content and body.func() == typst-styled {
+  top-level-content(
+    body.child,
+    wrappers: wrappers + ((
+      func: body.func(),
+      styles: body.styles,
+      // The tree position of the styled element this wrapper came from, so
+      // two entries share a wrapper prefix only when they sit inside the very
+      // same styled elements, not merely equally many.
+      id: path,
+    ),),
+    path: path + (0,),
+  )
+} else {
+  ((
+    raw: body,
+    shown: wrap-content(body, wrappers),
+    wrappers: wrappers,
+  ),)
+}
+
 #let wrapper-ids(wrappers) = wrappers.map(wrapper => wrapper.id)
 
 // How many leading styled elements two wrapper stacks share.

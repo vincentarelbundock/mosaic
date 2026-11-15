@@ -31,23 +31,26 @@
   The number is ordinary foreground content.
 ]
 
+// The footer is filled by name: positional bodies never reach it.
 #mosaic.slide(
   layout: mosaic.layouts.content(variant: "header-body-footer"),
   foreground: progress("circle", rgb("#ffffff")),
-)[
-  == White circle
-][
-  The circle is composed with the public progress component.
-][Footer]
+  cells: (
+    header: [== White circle],
+    body: [The circle is composed with the public progress component.],
+    footer: [Footer],
+  ),
+)
 
 #mosaic.slide(
   layout: mosaic.layouts.content(variant: "header-body-footer"),
   foreground: progress("circle", rgb("#fedcba")),
-)[
-  == Styled circle
-][
-  Explicit component color styles progress.
-][Styled footer]
+  cells: (
+    header: [== Styled circle],
+    body: [Explicit component color styles progress.],
+    footer: [Styled footer],
+  ),
+)
 
 #mosaic.slide(
   layout: mosaic.layouts.content(variant: "header-body"),

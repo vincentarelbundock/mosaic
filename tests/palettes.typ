@@ -25,7 +25,7 @@
 #slide(layout: layouts.title())
 
 #slide(layout: layouts.content(variant: "header-body"))[
-  == Rollout plan
+  Rollout plan
 ][
   - Freeze the queue
   - Drain the workers
