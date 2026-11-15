@@ -368,6 +368,13 @@
 //
 // `compact` marks everything below an `auto` row, so cells there take the
 // compact inset in both passes and the measured height is the rendered one.
+//
+// `dimmed` marks everything below an `on` node whose state on this step is
+// "dimmed". Dimming is ink, which a component's own paint does not follow, so
+// the flag reaches each cell's `transform`, which tells the components it
+// redraws to mute themselves. Nested `on` nodes combine, a split hands the
+// flag to every cell below it, and the measuring pass carries it too, so both
+// passes of an `auto` track draw the same thing.
 #let render-node(
   node,
   contents,
@@ -377,6 +384,7 @@
   slide: initial-slide,
   shrink: (width: false, height: false),
   compact: false,
+  dimmed: false,
 ) = {
   if node.kind == "on" {
     let state = status(
@@ -397,6 +405,7 @@
       slide: slide,
       shrink: shrink,
       compact: compact,
+      dimmed: dimmed or state == "dimmed",
     )
     // A split is finished content, so the state wraps it here. A cell is
     // not wrapped yet: the state travels with it to `render-cell`, which
@@ -413,7 +422,7 @@
   if node.kind == "cell" {
     let body = if node.content == none { contents.at(node.id) } else { node.content }
     (
-      transform(body, step, heading-scope: path),
+      transform(body, step, heading-scope: path, dimmed: dimmed),
       false,
       (id: node.id, style: node.style, states: ()),
     )
@@ -442,6 +451,7 @@
           overflow: overflow,
           slide: slide,
           compact: child-compact,
+          dimmed: dimmed,
         )
         let sized = if removed { full } else {
           let probe = render-node(
@@ -452,6 +462,7 @@
             slide: slide,
             shrink: child-shrink,
             compact: child-compact,
+            dimmed: dimmed,
           ).at(0)
           layout(region => {
             let natural = measure(probe, width: region.width)
@@ -469,6 +480,7 @@
           slide: slide,
           shrink: child-shrink,
           compact: child-compact,
+          dimmed: dimmed,
         )
       }
       if not removed {
