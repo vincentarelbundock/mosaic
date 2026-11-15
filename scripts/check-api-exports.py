@@ -24,7 +24,8 @@ THEMED_COMPONENTS = {"card", "callout", "badge", "quote", "divider", "progress",
 EXPECTED = {
     "mosaic/lib.typ": NEUTRAL_API,
     "mosaic/src/shared-api.typ": SHARED_API,
-    "mosaic/src/grid/api.typ": {"cell", "columns", "rows"},
+    # `track` is a signpost: it only fails with a pointer to `tracks:`.
+    "mosaic/src/grid/api.typ": {"cell", "columns", "rows", "track"},
     "mosaic/src/info.typ": {"info"},
     # fit.typ is not listed: it carries the vendored fitting internals beside
     # the one public entry point, and only `fit` is re-exported from the

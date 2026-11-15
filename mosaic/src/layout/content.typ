@@ -1,6 +1,6 @@
 // Construction, validation, and resolution of the content layout.
 #import "../shared.typ": fail
-#import "../grid/constructors.typ": columns, rows, track
+#import "../grid/constructors.typ": columns, rows, make-track
 #import "../grid/model.typ": is-track-size
 #import "core.typ": make-layout, validate-variant
 #import "support.typ": track-children, inset-cell
@@ -128,7 +128,7 @@
 #let content-tree(body, fields, settings) = {
   let children = ()
   if fields.variant in ("header-body", "header-body-footer") {
-    children.push(track(
+    children.push(make-track(
       auto,
       inset-cell(
         "header",
@@ -137,9 +137,9 @@
       ),
     ))
   }
-  children.push(track(1fr, body))
+  children.push(make-track(1fr, body))
   if fields.variant in ("body-footer", "header-body-footer") {
-    children.push(track(
+    children.push(make-track(
       auto,
       inset-cell(
         "footer",

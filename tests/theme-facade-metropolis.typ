@@ -7,7 +7,6 @@
 
 #assert(expected.all(name => name in m))
 #assert(("cell", "columns", "rows").all(name => name in m.grids))
-#assert("track" not in dictionary(m.grids))
 #assert(("author", "content", "section", "title").all(name => name in m.layouts))
 #assert(("drawing", "on", "replace", "reveal").all(name => name in m.steps))
 #assert((

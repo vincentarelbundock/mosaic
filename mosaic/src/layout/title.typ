@@ -2,7 +2,7 @@
 #import "../shared.typ": fail, key
 #import "../deck-state.typ": logical-slide-id
 #import "../author.typ": analyze-authors, resolve-authors
-#import "../grid/constructors.typ": make-cell, columns, rows, track
+#import "../grid/constructors.typ": make-cell, columns, rows, make-track
 #import "core.typ": (
   make-layout,
   validate-accent,
@@ -1154,8 +1154,8 @@
     return heading
   }
   columns(
-    track(settings.title-tokens.panel-track, panel),
-    track(1fr, heading),
+    make-track(settings.title-tokens.panel-track, panel),
+    make-track(1fr, heading),
   )
 }
 
@@ -1209,7 +1209,7 @@
   let children = ()
   // The heading stack takes the flexible track and aligns to its bottom, so
   // the whole composition anchors to the lower edge of the slide.
-  children.push(track(1fr, title-body-cell(
+  children.push(make-track(1fr, title-body-cell(
     settings,
     scale: settings.title-tokens.academic-scale,
     content: title-stack-content(
@@ -1221,7 +1221,7 @@
     cap: settings.title-tokens.stack-cap,
   )))
   if parts.names.len() > 0 {
-    children.push(track(
+    children.push(make-track(
       auto,
       fixed-cell(
         capped-fit(
@@ -1244,7 +1244,7 @@
     ))
   }
   if fine-lines.len() > 0 {
-    children.push(track(
+    children.push(make-track(
       auto,
       academic-small-cell(
         capped-fit(

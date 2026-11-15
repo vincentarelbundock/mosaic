@@ -13,7 +13,7 @@ bad-split-child|columns/rows children must be string cell IDs or Mosaic grid nod
 bad-split-gutter|columns gutter must be a native Typst track size
 bad-split-track-size|columns tracks must be auto or an array with one track size per child (1 here): auto, a length, a ratio, or a fraction
 bad-state|before must be one of "visible", "hidden", "dimmed", "removed", received "ghosted"
-bare-track-wrapper|native:module `api` does not contain `track`
+bare-track-wrapper|grids.track was removed; size the tracks on the split: grids.rows(tracks: (auto, 1fr), "header", "body")
 cell-id-both|cell id must be passed positionally or through id:, not both
 cell-surface-ownership|cell accepts only a cell id, optional fixed content, and inset
 components-progress-count|progress count must be "slides" or "sections"
@@ -124,7 +124,7 @@ temporal-heading|headings cannot be wrapped in on, reveal, replace, or drawing; 
 theme-definition-option-conflict|theme option "paper" conflicts with setup
 theme-definition-unknown|theme does not accept "mystery"
 theme-layouts-incomplete|theme layouts requires "title"
-too-many|slide received 3 positional bodies, but on this layout they fill "body"; address any other cell by name through cells:
+too-many|slide received 3 positional bodies, but on this layout they fill "body"; address any other cell by name through cells:. A first body that opens with a heading fills the header; other header content goes through cells: (header: ..)
 slide-body-type|slide positional bodies must be content, received integer
 cell-inset-type|cell inset must be auto, a length, or a dictionary of sides with length values
 cell-inset-side|cell inset must be auto, a length, or a dictionary of sides with length values

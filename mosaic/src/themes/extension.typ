@@ -1,8 +1,9 @@
 // Stable extension surface for engine-consumed theme definitions.
 #import "engine.typ": theme-setup as _theme-setup, validate-theme as _validate-theme
 // The one rule a theme cannot state natively: a heading rule that rebuilds the
-// heading has to be declared through this to hold on every frame of a slide.
-#import "../incremental/heading.typ": decorate-heading
+// heading has to be declared through `decorate-heading`, below, to hold on
+// every frame of a slide.
+#import "../incremental/heading.typ": decorate-heading as _decorate-heading
 
 /// Turns a passive theme definition into a setup function.
 ///
@@ -115,3 +116,54 @@
   let theme = _validate-theme(theme)
   (body, ..options) => _theme-setup(theme, body, ..options)
 }
+
+/// Decorates headings with a transforming show rule that survives on every
+/// frame of an incremental slide.
+///
+/// A slide's heading is a real `heading` element on one frame only; the other
+/// frames repeat its appearance without the element, so the outline, the
+/// bookmarks, and `query(heading)` see one heading per logical slide. Set
+/// rules (`show heading: set text(..)`) are captured and replayed
+/// automatically. A rule that rebuilds the heading (`show heading: it => ..`)
+/// cannot be, because nothing on a continuation frame matches it. Declare such
+/// a rule through this function instead and it is applied on every frame. It
+/// is used as a show rule, in a deck or in a theme's `apply`:
+///
+/// ```typ
+/// #show: mosaic.themes.decorate-heading.with(depth: 2, it => block(width: 100%)[
+///   #it
+///   #line(length: 2em)
+/// ])
+/// ```
+///
+/// `decorate` receives the heading on the canonical frame and a block standing
+/// in for it on the others, so it must treat its argument as opaque content to
+/// place, not as an element whose fields it reads.
+///
+/// *Which headings*
+///
+/// With neither `depth` nor `level` the rule applies to every heading. `depth`
+/// is the number of `=` signs the heading was written with, which is what
+/// decides whether it opens a slide; `level` is the native level it resolves
+/// to, which differs from the depth under `set heading(offset: ..)`. Give
+/// `depth: 2` for the heading that titles a content slide. Several rules nest
+/// as native show rules do, the one declared last outermost.
+///
+/// -> content
+#let decorate-heading(
+  /// The transformation, called with the heading or its stand-in.
+  /// -> function
+  decorate,
+  /// The native heading level the rule applies to, or `none` for every level.
+  /// -> none | int
+  level: none,
+  /// The source depth the rule applies to (`==` is depth 2), or `none` for
+  /// every depth. This is what the deck compiler classifies slides by, and it
+  /// differs from `level` under `set heading(offset: ..)`, so a rule meant
+  /// for the heading that opens a slide selects by depth.
+  /// -> none | int
+  depth: none,
+  /// The content the rule is in force for; supplied by `show:`.
+  /// -> content
+  body,
+) = _decorate-heading(decorate, level: level, depth: depth, body)
