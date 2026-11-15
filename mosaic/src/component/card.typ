@@ -18,8 +18,10 @@
   text: (:),
   width: auto,
   height: auto,
+  dimmed: false,
 ) = context {
   let it = resolve-style(
+    dimmed: dimmed,
     role: role,
     fill: fill,
     accent: accent,
@@ -99,9 +101,11 @@
 /// ]
 /// ```
 ///
-/// A component dimmed by `steps.on(.., before: "dimmed")` mutes its own paint
+/// A component dimmed by a step (`steps.on(.., before: "dimmed")`,
+/// `steps.reveal(after: "dimmed")`, a dimmed list item) mutes its own paint
 /// along with its text: fill, border, and rail lose their color and most of
-/// their strength.
+/// their strength. Only a step does this. Gray text around a component is
+/// just gray text, and leaves the component's paint alone.
 ///
 /// -> content
 #let card(
@@ -138,8 +142,9 @@
   /// Native block height. `auto` hugs the content.
   /// -> auto | length | relative | fraction
   height: auto,
-) = make-container((body: body), render: parts => card-panel(
+) = make-container((body: body), render: (parts, dimmed: false) => card-panel(
   parts.body,
+  dimmed: dimmed,
   role: role,
   fill: fill,
   accent: accent,

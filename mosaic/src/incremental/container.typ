@@ -35,7 +35,11 @@
 
 // `parts` is a dictionary of the author's content by name; an entry that is
 // not content (an absent title) is carried through untouched. `render` takes
-// the same dictionary and returns the drawing.
+// the same dictionary and returns the drawing. It also takes `dimmed:`, which
+// a walk sets when it redraws the container under a `"dimmed"` state: dimming
+// is ink, and ink reaches text but nothing a container paints, so the
+// container is told and mutes its own paint. The stand-in is never dimmed;
+// nothing that walks is there to dim it.
 //
 // The stand-in draws from inside `context`, which defers the call: a walk
 // that drops the stand-in never runs it. That matters to a container whose

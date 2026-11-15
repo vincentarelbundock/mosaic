@@ -79,8 +79,11 @@
   /// to one edge; `auto` hugs the content the way `card` does.
   /// -> auto | length | relative
   width: 100%,
-) = make-container((body: body, title: title), render: parts => context {
+) = make-container((body: body, title: title), render: (parts, dimmed: false) => context {
+  // Muted here, once, when a step dims the callout: the panel below is handed
+  // the resolved paint and must not mute it a second time.
   let it = resolve-style(
+    dimmed: dimmed,
     role: role,
     fill: fill,
     accent: accent,

@@ -92,10 +92,9 @@
   }
 }
 
-// The ink of dimmed content. It is also how a component learns that it is
-// dimmed: a set rule reaches text and nothing else, so components read this
-// ink in their own context and mute their paint to match (see
-// `component/style.typ`).
+// The ink of dimmed content. A set rule reaches text and nothing else, so a
+// component under a dimmed state is told so by the walk that redraws it (see
+// `container.typ`) and mutes its own paint; it takes this ink for its text.
 #let dim-paint = gray
 
 // Wraps content in the rendering of one state: drawn, hidden but still
