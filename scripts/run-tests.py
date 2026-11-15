@@ -717,6 +717,15 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(TMP / "mosaic-slide-invert-raw-mono-1.svg", "#121821")
     require_contains(TMP / "mosaic-slide-invert-raw-mono-2.svg", "#121821", absent=True)
 
+    # A deck's own `set raw(theme: ..)` survives inversion: its keyword color
+    # is on both pages and neither of Mosaic's two themes replaces it.
+    typst_compile(typst, "slide-invert-raw-own.typ", TMP / "mosaic-slide-invert-raw-own-{p}.svg", "--format", "svg")
+    for page in (1, 2):
+        own_page = TMP / f"mosaic-slide-invert-raw-own-{page}.svg"
+        require_contains(own_page, "#12ab34")
+        require_contains(own_page, light_keyword, absent=True)
+        require_contains(own_page, dark_keyword, absent=True)
+
     # A neutral callout's title is set in the text color, not the line color;
     # a quotation shows its role or accent as a rail and is bare otherwise.
     typst_compile(typst, "components-roles.typ", TMP / "mosaic-components-roles-{p}.svg", "--format", "svg")

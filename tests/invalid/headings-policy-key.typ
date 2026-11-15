@@ -1,7 +1,7 @@
 #import "@local/mosaic:0.0.3" as mosaic
 
-// A heading-policy key that is not a canonical decimal integer must report
-// itself through fail() rather than aborting in a raw int() conversion.
-#show: mosaic.setup.with(headings: ("two": "slide"))
+// The heading policy is an array indexed by level; the dictionary keyed by
+// number strings it replaced reports the new form.
+#show: mosaic.setup.with(headings: ("1": "section", "2": "slide"))
 
 = Section

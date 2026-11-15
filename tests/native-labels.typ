@@ -4,7 +4,7 @@
 #import "@local/mosaic:0.0.3" as mosaic
 
 // The slide command carries no styling fields.
-#let command = mosaic.slide(layout: mosaic.layouts.section())[Section].value
+#let command = mosaic.slide(layout: mosaic.layouts.section())[Section].children.first().value
 #assert("cell-styles" not in command.keys())
 
 // Structural inset is the only visual-adjacent knob on a public cell.

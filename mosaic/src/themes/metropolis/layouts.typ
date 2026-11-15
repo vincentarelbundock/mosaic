@@ -24,16 +24,17 @@
 // the full base signature stays reachable under this theme.
 #let section(..args) = if args.pos().len() == 0 and args.named().len() == 0 {
   _grids.rows(
-    _grids.track(1fr, _grids.cell("section-margin-top", content: [])),
-    _grids.track(auto, "section"),
-    _grids.track(auto, _grids.cell(
+    tracks: (1fr, auto, auto, 1fr),
+    _grids.cell("section-margin-top", content: []),
+    "section",
+    _grids.cell(
       "section-progress",
       inset: 0pt,
       content: _components.progress(
         variant: "line", count: "sections", width: 100%, thickness: 4.5pt,
       ),
-    )),
-    _grids.track(1fr, _grids.cell("section-margin-bottom", content: [])),
+    ),
+    _grids.cell("section-margin-bottom", content: []),
   )
 } else {
   _base.section(..args)

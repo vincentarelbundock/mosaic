@@ -429,7 +429,10 @@
     // `logical-section.at(location)` gives this slide's section number. The
     // state answers "which section am I in"; the records answer "what are all
     // the sections", which is what the toc section variant draws.
-    [#metadata((mosaic: tag, kind: "section-title", title: title)) <mosaic-section-title>]
+    // The record carries its own label, <mosaic-section-record>: the visible
+    // title text is what <mosaic-section-title> names, as every other
+    // `mosaic-*` label a deck styles sits on visible content.
+    [#metadata((mosaic: tag, kind: "section-title", title: title)) <mosaic-section-record>]
   }
   // Heading stability is a property of the slide's structure, not of any one
   // frame, so both checks run here rather than inside the render and transform
@@ -466,6 +469,11 @@
   // The frame that carries the slide's real headings and reference labels is
   // the first one rendered: step 1, or the only step of a handout.
   canonical-frame.update(_ => physical-steps(steps, handout).first())
+  // Whether the syntax highlighting theme in effect is one Mosaic picked for
+  // the canvas, Typst's default or the bundled dark theme, and so follows a
+  // slide's inversion. A deck that set its own `raw` theme chose it
+  // deliberately, and an inverted slide leaves it alone.
+  let follows-polarity = raw.theme == auto or raw.theme == dark-code-theme
   for step in physical-steps(steps, handout) {
     // The whole cell grid carries <mosaic-slide>, so one native rule can reach
     // every cell of a slide at once:
@@ -515,7 +523,8 @@
       // The syntax highlighting theme is the one asset a theme picks from the
       // deck canvas rather than paints from `colors.*`, so it is re-derived
       // here from the inverted canvas: light-ground colors on a slide that
-      // inverted to light, the dark theme on one that inverted to dark.
+      // inverted to light, the dark theme on one that inverted to dark. Only
+      // a theme Mosaic chose is swapped (see `follows-polarity`).
       frame = {
         set text(fill: settings.colors.text)
         show heading: set text(fill: settings.colors.text)
@@ -523,7 +532,7 @@
           dark-code-theme
         } else {
           auto
-        })
+        }) if follows-polarity
         frame
       }
     }

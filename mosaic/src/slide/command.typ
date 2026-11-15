@@ -3,6 +3,7 @@
 #import "../grid/model.typ": plane-ids
 #import "../layout/config.typ": selectable-layout-names, validate-layout-value
 #import "../layout/core.typ": layout-field-keys
+#import "../deck-state.typ": deck-state
 
 // `fields` overlays layout fields onto whichever layout the selection
 // resolves to, refining the configured layout rather than replacing it. The
@@ -45,6 +46,21 @@
 #let is-slide-command(value) = (
   is-record(value, "slide", slide-command-field-keys, "slide command")
 )
+
+// A slide command is a record only the deck compiler understands, so in a
+// document that never applied `setup` it would be realized as inert metadata
+// and the deck would compile to nothing. Every command therefore travels with
+// this guard. The compiler recognizes it and drops it; anywhere else it is
+// realized, and fails when no deck was ever configured. One value, defined
+// once, so the compiler can tell it from a `context` block a deck wrote.
+#let setup-guard = context {
+  if deck-state.final() == none {
+    fail(
+      "slide requires a deck; apply setup with a show rule, such as "
+        + "`#show: mosaic.setup`, before the first slide",
+    )
+  }
+}
 
 // The planes are slide parameters of their own, not entries in `cells:`: a
 // plane is not a grid leaf, takes no space from the grid, and carries its own
@@ -269,4 +285,5 @@
     foreground: foreground,
     fields: fields,
   ))
+  setup-guard
 }
