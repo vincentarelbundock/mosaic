@@ -13,12 +13,6 @@
 
 #let apply(body, colors: (:), options: (:)) = {
   let base-size = options.base-size
-  set text(
-    font: options.font,
-    size: base-size,
-    fill: colors.text,
-    fallback: true,
-  )
   // Tight lists become wide, keeping every argument the list was written with
   // (`start`, `numbering`, `marker`, ..): only `tight` changes.
   let widen(it) = {
@@ -53,12 +47,12 @@
   show heading.where(depth: 2): set text(
     size: base-size * 1.6, weight: "bold", tracking: 0.06em,
   )
+  show heading: set block(below: 1em)
   // Poster headings shout: every slide heading is set in uppercase, and the
   // tracking above keeps the capitals from crowding.
   // Declared through `decorate-heading` so the capitals hold on every frame
   // of an incremental slide, where only one frame holds the heading.
   show: decorate-heading.with(depth: 2, upper)
-  show heading: set block(below: 1em)
   show figure.caption: set text(size: 0.72em, fill: colors.muted)
   show label("mosaic-title-display"): set text(
     size: 2.4em, weight: "bold", tracking: -0.015em,
@@ -78,19 +72,6 @@
   name: "Manifesto",
   colors: tokens.colors,
   defaults: (
-    spacing: (inset: 45pt),
-    // The progress ring in the corner of every numbered slide, drawn in the
-    // poster's red. It resolves its colors from the deck record, so a palette
-    // swap recolors it too, and the component quiets itself on unnumbered
-    // pages such as titles.
-    // Chrome, not content: the artifact wrapper keeps it out of the tagged
-    // PDF's structure tree, so a screen reader never announces it.
-    foreground: pdf.artifact(place(bottom + right, block(
-      inset: (right: 18pt, bottom: 14pt),
-      components.progress(variant: "circle"),
-    ))),
-  ),
-  options: (
     // Designed face first, then the display serif each platform ships by
     // default, ending in Libertinus Serif, which Typst embeds and so always
     // resolves. Typst warns once per unknown family even when a later one
@@ -103,6 +84,17 @@
       "Libertinus Serif",
     ),
     base-size: 16pt,
+    spacing: (inset: 45pt),
+    // The progress ring in the corner of every numbered slide, drawn in the
+    // poster's red. It resolves its colors from the deck record, so a palette
+    // swap recolors it too, and the component quiets itself on unnumbered
+    // pages such as titles.
+    // Chrome, not content: the artifact wrapper keeps it out of the tagged
+    // PDF's structure tree, so a screen reader never announces it.
+    foreground: pdf.artifact(place(bottom + right, block(
+      inset: (right: 18pt, bottom: 14pt),
+      components.progress(variant: "circle"),
+    ))),
   ),
   layouts: (
     content: layouts.content(),

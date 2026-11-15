@@ -730,12 +730,40 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(roles[4], custom)
 
     # Under a heading offset every theme still styles the heading that opens
-    # a slide; the fixture asserts the sizes, once per theme.
+    # a slide; the fixture asserts that, once per theme. Section and slide
+    # heading sizes are also the same with and without the offset: a theme
+    # states them as multiples of the base size, which Typst's native
+    # per-level heading scale does not multiply.
     for theme in ("default", "editorial", "metropolis", "manifesto", "mono"):
+        sizes = {}
+        for offset in ("0", "1"):
+            inputs = ["--input", f"theme={theme}", "--input", f"offset={offset}"]
+            typst_compile(
+                typst, "heading-offset-themes.typ",
+                TMP / f"mosaic-heading-offset-themes-{theme}-{offset}.pdf",
+                *inputs,
+            )
+            sizes[offset] = [
+                command(
+                    [
+                        typst, "query", "--root", ".", *inputs, "--field", "value", "--one",
+                        "tests/heading-offset-themes.typ", f"<{probe}>",
+                    ],
+                    capture=True,
+                ).stdout.strip()
+                for probe in ("section-size", "slide-size")
+            ]
+        if not all(sizes["0"]) or sizes["0"] != sizes["1"]:
+            raise TestFailure(f"{theme} heading sizes change under a heading offset: {sizes}")
+
+    # `font` and `base-size` are setup options under every theme: a custom
+    # theme that states nothing, the same theme with a deck's values, and a
+    # bundled theme with a deck's values. The fixture asserts each case.
+    for case in ("bare", "deck", "bundled"):
         typst_compile(
-            typst, "heading-offset-themes.typ",
-            TMP / f"mosaic-heading-offset-themes-{theme}.pdf",
-            "--input", f"theme={theme}",
+            typst, "theme-typography.typ",
+            TMP / f"mosaic-theme-typography-{case}.pdf",
+            "--input", f"case={case}",
         )
 
     # A theme's transforming heading rule is drawn on every frame: the title's

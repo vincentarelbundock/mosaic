@@ -2,8 +2,8 @@
 
 #let settings = make-settings()
 #assert(settings.keys().sorted() == (
-  "background", "cells", "colors", "deck", "foreground", "notes", "overflow",
-  "spacing",
+  "background", "base-size", "cells", "colors", "deck", "font", "foreground",
+  "notes", "overflow", "spacing",
 ))
 // The header default rides in the settings record itself, so every reader of
 // `settings.cells` sees the same optional-header contract.

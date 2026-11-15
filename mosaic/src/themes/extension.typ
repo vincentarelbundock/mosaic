@@ -37,19 +37,21 @@
 ///     line: rgb("#2a3350"), accent: rgb("#7cc4ff"),
 ///     warning: rgb("#fbbf24"), error: rgb("#f87171"),
 ///   ),
-///   defaults: (overflow: "error"),
+///   defaults: (font: "Inter", base-size: 28pt, overflow: "error"),
 ///   options: (density: "airy"),
 ///   apply: (body, colors: (:), options: (:)) => {
-///     set text(
-///       font: "Inter",
-///       size: if options.density == "airy" { 30pt } else { 26pt },
+///     set par(leading: if options.density == "airy" { 0.9em } else { 0.6em })
+///     show heading: set text(
+///       size: options.base-size * 1.5, fill: colors.accent,
 ///     )
-///     show heading: set text(fill: colors.accent)
 ///     body
 ///   },
 /// )
 ///
-/// #show: mosaic.themes.setup(starlight).with(density: "dense")
+/// #show: mosaic.themes.setup(starlight).with(
+///   density: "dense",
+///   base-size: 24pt,
+/// )
 /// ```
 ///
 /// *Definition keys*
@@ -65,18 +67,31 @@
 /// - `name`: the theme's display name, used in its error messages. Defaults to
 ///   `"Custom"`.
 /// - `defaults`: ordinary `setup` options the theme presets. A deck can still
-///   override any of them. Layouts and colors do not belong here; they have
-///   their own keys.
+///   override any of them. This is where a theme states its `font` and
+///   `base-size`, which are options of `setup` under every theme. Layouts and
+///   colors do not belong here; they have their own keys.
 /// - `options`: the theme's own options and their defaults. See below.
 /// - `layouts`: a complete dictionary of `content`, `title`, and `section`
 ///   layouts, or a function of the resolved options returning one. Explicit and
 ///   automatic slides select from the same dictionary. Defaults to the standard
 ///   layouts.
 /// - `apply`: `(body, colors: , options: ) => body`, holding every native show
-///   and set rule the theme owns: base typography (`set text(font: ..)`),
-///   heading, list, and cell-label rules. The engine has already filled the
-///   canvas and set the text fill from the resolved colors, so `apply` states
-///   only what the theme changes.
+///   and set rule the theme owns: heading, list, and cell-label rules. The
+///   engine has already filled the canvas and stated the base typography
+///   (`set text(fill: .., size: .., font: ..)`) from the resolved colors,
+///   `base-size`, and `font`, so `apply` states only what the theme changes.
+///
+/// *Base typography*
+///
+/// `font` and `base-size` are deck options, not theme options: `setup(font:
+/// .., base-size: ..)` works under every theme, bundled or custom. A theme
+/// supplies its own values through `defaults`; one that states neither gets
+/// Typst's own font and a 24pt base size. Both reach `apply` and a `layouts`
+/// function resolved, as `options.font` and `options.base-size`, next to the
+/// theme's own options. State heading sizes as multiples of
+/// `options.base-size` rather than in `em`: an em size multiplies with Typst's
+/// native per-level heading scale, so the same heading changes size under
+/// `set heading(offset: ..)`.
 ///
 /// *Theme options*
 ///
@@ -84,8 +99,9 @@
 /// function. They are consumed before ordinary setup validation and handed to
 /// `layouts` and `apply` as the `options` dictionary, so a theme can offer
 /// choices Mosaic itself knows nothing about. An option name that collides
-/// with a built-in `setup` option is an error. Every other named argument
-/// passes through as an ordinary `setup` option.
+/// with a built-in `setup` option, `font` and `base-size` included, is an
+/// error. Every other named argument passes through as an ordinary `setup`
+/// option.
 ///
 /// -> function
 #let setup(
