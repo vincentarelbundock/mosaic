@@ -1,18 +1,14 @@
-#import "@local/mosaic:0.0.3" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 #import mosaic.themes.default as m
 #import "_tour-deck.typ": deck
 
-// The same choices, carried by a theme instead of the deck. The typeface and
-// base size become the theme's `defaults`; `apply` runs the default theme's
-// own rules first, then layers the three show rules on top.
+// The same four rules, carried by a theme instead of the deck. `apply` runs the
+// default theme's own rules first, then layers these on top.
 #let serif = m.definition + (
   name: "Serif",
-  defaults: m.definition.defaults + (
-    font: "Libertinus Serif",
-    base-size: 22pt,
-  ),
   apply: (body, colors: (:), options: (:)) => {
     show: (m.definition.apply).with(colors: colors, options: options)
+    set text(font: "Libertinus Serif", size: 22pt)
     show heading: set text(weight: "regular", style: "italic")
     show label("mosaic-cell-section"): set text(weight: "regular")
     show label("mosaic-title-display"): set text(weight: "regular")
