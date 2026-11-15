@@ -179,10 +179,7 @@ The grid of every slide also carries the label `<mosaic-slide>`, so one rule rea
   #m.slide(
     layout: "image",
     variant: "left",
-    image: m.components.image(
-      path("cover.webp"),
-      scrim: black.transparentize(40%),
-    ),
+    image: (path: path("cover.webp"), scrim: black.transparentize(40%)),
   )[== Header][Both cells are white from one rule]
 ]
 ```

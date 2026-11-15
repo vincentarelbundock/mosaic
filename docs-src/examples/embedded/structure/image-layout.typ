@@ -37,8 +37,8 @@
 #m.slide(
   layout: "image",
   variant: "full",
-  image: m.components.image(
-    path("/docs-src/assets/images/title-city.webp"),
+  image: (
+    path: path("/docs-src/assets/images/title-city.webp"),
     scrim: black.transparentize(45%),
   ),
 )[

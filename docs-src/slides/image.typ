@@ -49,14 +49,14 @@ Two arguments control the picture cell:
 
 = A full-bleed picture
 
-The `full` variant puts the picture behind a single body cell that covers the whole slide. The cell inherits the deck's ordinary text color, so text over a photograph needs two things: a #link("../content/images.html#scrims")[scrim] on the picture to darken it, and a text fill override in the body:
+The `full` variant puts the picture behind a single body cell that covers the whole slide. The cell inherits the deck's ordinary text color, so text over a photograph needs two things: a `scrim:` in the image specification to darken the picture, and a text fill override in the body:
 
 ```typ
 #m.slide(
   layout: "image",
   variant: "full",
-  image: m.components.image(
-    path("fig/auditorium.jpg"),
+  image: (
+    path: path("fig/auditorium.jpg"),
     scrim: black.transparentize(45%),
   ),
 )[

@@ -119,7 +119,7 @@ Variants:
 - **Content**: `body`, `header-body`, `body-footer`, `header-body-footer`.
 - **Image**: `figure` (the default), `full`, `left`, `right`, `top`, `bottom`.
 
-**Pictures.** The title, section, and image layouts take the picture itself the same way, as `image:`: a `path(..)` when the file is all there is to say, or content, typically `m.components.image(path(..), fit: .., scrim: .., alt: ..)`, when it needs a fit, a scrim, or a description. There is no dictionary form, and a bare string is rejected. A layout's `variant:` selects its arrangement, a picture's place included: the image layout's `left`/`right`/`top`/`bottom`/`full`, and `image-left` … `image-background` in both the title and section layouts. There is no `position:` argument. `tracks:` sizes a picture on one side, where one size such as `40%` is the picture's share on whichever side.
+**Pictures.** The title, section, and image layouts take the picture itself the same way, as `image:`: a `path(..)` when the file is all there is to say; a dictionary, `(path: path(..), alt: .., fit: .., scrim: ..)`, when the picture needs a scrim, a fit, or alt text; or content, such as `m.components.image(path(..), ..)`, when you already have a picture element. A bare string is rejected. A layout's `variant:` selects its arrangement, a picture's place included: the image layout's `left`/`right`/`top`/`bottom`/`full`, and `image-left` … `image-background` in both the title and section layouts. There is no `position:` argument. `tracks:` sizes a picture on one side, where one size such as `40%` is the picture's share on whichever side.
 
 ```typ
 #m.slide(layout: "image", variant: "right", image: path("fig/book.jpg"))[== Readings]
@@ -127,7 +127,7 @@ Variants:
 #m.slide(
   layout: "title",
   variant: "image-background",
-  image: m.components.image(path("cover.webp"), scrim: black.transparentize(55%)),
+  image: (path: path("cover.webp"), scrim: black.transparentize(55%)),
 )
 ```
 
@@ -210,17 +210,14 @@ Stop after the heading when the picture needs a title but no body. `tracks:` siz
 #m.slide(
   layout: "image",
   variant: "full",
-  image: m.components.image(
-    path("fig/auditorium.png"),
-    scrim: black.transparentize(55%),
-  ),
+  image: (path: path("fig/auditorium.png"), scrim: black.transparentize(55%)),
 )[
   #set text(fill: white)
   == Who are you?
 ]
 ```
 
-The body inherits the deck's ordinary text color, so it needs both halves of the contrast pair: a `scrim:` on the picture to quiet the photograph, and a text fill override in the body. Omit the body entirely for a bare picture slide with no text at all. Prefer this over a title or section layout with a background picture when the composition is free-form rather than a titled preset.
+The body inherits the deck's ordinary text color, so it needs both halves of the contrast pair: a `scrim:` in the picture dictionary to quiet the photograph, and a text fill override in the body. Omit the body entirely for a bare picture slide with no text at all. Prefer this over a title or section layout with a background picture when the composition is free-form rather than a titled preset.
 
 **One big number or phrase.** Scope a centering rule around a single content slide, and let `m.fit(grow: true)` size the type to the cell instead of picking an em value that breaks when the number gains a digit:
 
@@ -372,7 +369,7 @@ The cell ID connects all three layers: `m.grids.cell("body")` defines the cell, 
 
 Useful content values:
 
-- `m.components.image(path("photo.webp"), alt: "...")`: like native `image()` but defaults `width`/`height` to `100%` and `fit` to `"cover"`. `scrim:` paints a layer over the picture and takes any Typst paint, so `scrim: black.transparentize(55%)` darkens the whole picture and a `gradient.linear(..)` darkens only the band the text occupies. The result is content, which is what a layout's `image:` takes when a picture needs a scrim, a fit, or an `alt`. Use Typst's `path()` so the location anchors to the calling document across the package boundary. For a full-bleed image, set the cell's `inset: 0pt`.
+- `m.components.image(path("photo.webp"), alt: "...")`: like native `image()` but defaults `width`/`height` to `100%` and `fit` to `"cover"`. `scrim:` paints a layer over the picture and takes any Typst paint, so `scrim: black.transparentize(55%)` darkens the whole picture and a `gradient.linear(..)` darkens only the band the text occupies. The same `scrim` key is accepted in the picture dictionaries the `title`, `section`, and `image` layouts take, and the component's result is content, which those layouts take too. Use Typst's `path()` so the location anchors to the calling document across the package boundary. For a full-bleed image, set the cell's `inset: 0pt`.
 - `m.components.figure(path("chart.png"), caption: [..])`: the in-cell figure. Defaults `fit` to `"contain"` so nothing is cropped, centres the picture, and with the default `height: auto` hands it the cell's height less whatever the caption consumes. Two of them in adjacent cells caption on one baseline whatever their aspect ratios, so no matching height has to be found by hand. `auto` reads the cell, not the space left inside it, so a figure that follows prose in the same cell needs an explicit `height:` and then captions directly beneath itself. Use `m.components.image` instead for a background plane or a deliberately cropped cell.
   The body can be content rather than a source: `m.components.figure(my-table, caption: [..], kind: table)` captions a table or a code-drawn diagram, keeps its natural size, and scales it as a whole only when it is too large for the cell (never magnifies it). State `kind: table` because scaling costs the automatic detection; further named arguments go to the native `figure` for a content body and to the native `image` for a picture source. `fit:` and `scrim:` are picture-only and are rejected for content.
 - `m.components.card()` (clipped semantic panel), `callout()` (side stripe with optional title), `badge()` (compact inline badge), `quote()` (attribution treatment), `divider()` (horizontal rule), `progress()` (position indicator). All return ordinary content for any cell or plane. A component's `role:` names one color in the theme palette: `accent`, `warning`, or `error`, plus `neutral` for the deck's own surface. The component paints its border and rails in that color and its panel in that color tinted into the deck canvas. The panel components (`card`, `callout`, `quote`) also take flat `fill:`, `accent:`, `stroke:`, `radius:`, `inset:`, and `align:` overrides, each defaulting to `auto` (take it from the role), plus a `text:` dictionary of native `text` arguments, so a one-off color is `callout(accent: rgb("#7c3aed"))` rather than a new role. `badge` takes the same set without `align:`, `divider` takes only `title:` and `stroke:`, and `progress` takes `fill:` and `accent:` beside its own arguments. Components are transparent to Mosaic's own commands: a pause, a step, or a note inside one works as in the cell around it, and a dimmed component mutes its paint. `quote` is a superset of the native `quote` (`block:`, `quotes:`, a label as `attribution:`).
@@ -527,11 +524,11 @@ When compilation fails:
 2. Check for an unknown layout name, a missing named cell, mixed positional and named content, or an invalid layout variant.
    - `mosaic: content appears before the first heading handled by setup` means something after `#show: m.setup` emits content before the first `=`/`==` or `m.slide` — often a tool-setup call (e.g. `calepin.setup(..)`) that looks inert but produces content. Move it inside the first slide's body.
    - `mosaic: content appears after an explicit slide and belongs to no slide` means text or a call follows an `m.slide(..)` at the top level. Open a new slide with a heading, or move the content into the slide.
-   - A diagnostic that names a replacement spelling (a picture dictionary, a title's `variant: "image"` or `position:`, a `headings:` dictionary, a theme's `font` under `options`) gives the current spelling. Apply it as written.
+   - A diagnostic that names a replacement spelling (a title's `variant: "image"` or `position:`, a `headings:` dictionary, a theme's `font` under `options`) gives the current spelling. Apply it as written.
    - `failed to decode image (Format error decoding Jpeg ...)` or `unknown image format` means the file's extension lies about its bytes. Typst chooses its decoder from the extension, so a PNG or WebP named `.jpg` fails. Check with `file -b`, and prefer adding a correctly-named *copy* over renaming when other documents reference the original name. Typst has no AVIF decoder at all — convert those.
 3. Confirm that dictionary-held functions are called with parentheses when needed, for example `(theme.layouts.section)()`.
 4. Confirm that `layouts:` passed to setup is a dictionary and only overrides `content`, `title`, or `section`.
-5. Confirm that image variants receive an image (a `path(..)` or content) and valid tracks.
+5. Confirm that image variants receive an image (a `path(..)`, a path dictionary, or content) and valid tracks.
 6. Change the narrowest source responsible, then recompile the original deck.
 
 Do not add compatibility aliases for removed APIs. In particular, slides use `layout:`, not a separate semantic selector.

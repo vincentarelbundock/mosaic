@@ -17,7 +17,7 @@
   #show: light-text
   #m.slide(
     layout: m.layouts.image(
-      m.components.image(path(river), alt: describe),
+      (path: path(river), alt: describe),
       variant: "full",
     ),
     cells: (body: [
@@ -35,8 +35,8 @@
   #show: light-text
   #m.slide(
     layout: m.layouts.image(
-      m.components.image(
-        path(river),
+      (
+        path: path(river),
         scrim: black.transparentize(45%),
         alt: describe,
       ),
@@ -57,8 +57,8 @@
   #show: light-text
   #m.slide(
     layout: m.layouts.image(
-      m.components.image(
-        path(river),
+      (
+        path: path(river),
         scrim: gradient.linear(
           black.transparentize(100%),
           black.transparentize(10%),
@@ -84,8 +84,8 @@
 // deck's ordinary text color.
 #m.slide(
   layout: m.layouts.image(
-    m.components.image(
-      path(river),
+    (
+      path: path(river),
       scrim: white.transparentize(25%),
       alt: describe,
     ),
