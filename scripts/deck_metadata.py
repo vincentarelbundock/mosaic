@@ -75,11 +75,15 @@ def flatten_pages(pages: list) -> list[int]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=("check", "slugs", "showcase"))
+    parser.add_argument("command", choices=("check", "slugs", "showcase", "showcase-sources"))
     args = parser.parse_args()
     data = load_manifest()
     if args.command == "slugs":
         print(" ".join(entry["slug"] for entry in data["decks"]))
+    elif args.command == "showcase-sources":
+        # The PDFs the reel is cut from, once each: the Makefile maps them to
+        # the stamps the reel depends on.
+        print(" ".join(dict.fromkeys(item["source"] for item in data["showcase"])))
     elif args.command == "showcase":
         # Each line is source|page|kind. A "step" is one frame of an
         # incremental build; a "beat" is a slide the reel rests on.

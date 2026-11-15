@@ -39,6 +39,15 @@ DECK_EXAMPLES_DIR := $(DOCS_SRC)/examples/decks
 DECK_METADATA := scripts/deck_metadata.py
 DECK_MANIFEST := $(DECK_EXAMPLES_DIR)/manifest.json
 DECK_SLUGS := $(shell $(PYTHON) $(DECK_METADATA) slugs)
+# $(shell) discards the exit status, so a manifest that fails validation would
+# otherwise leave an empty list and let these targets succeed having built or
+# removed nothing. Only the targets that iterate the list are guarded: the
+# rest must keep working on a machine that has no uv yet.
+ifneq ($(filter artifacts distclean,$(MAKECMDGOALS)),)
+ifeq ($(strip $(DECK_SLUGS)),)
+$(error $(DECK_METADATA) listed no decks; run '$(PYTHON) $(DECK_METADATA) check' to see why)
+endif
+endif
 DECK_STAMP_DIR := .build/examples
 DECK_STAMPS := $(addprefix $(DECK_STAMP_DIR)/,$(addsuffix .stamp,$(DECK_SLUGS)))
 # Watch each example's hand-authored inputs independently. Generated decks,
@@ -46,6 +55,13 @@ DECK_STAMPS := $(addprefix $(DECK_STAMP_DIR)/,$(addsuffix .stamp,$(DECK_SLUGS)))
 deck_sources = $(shell find $(DECK_EXAMPLES_DIR)/$(1) -type f \
 	! -path '*/.calepin/*' ! -name '*.pdf' ! -name 'cover.jpg' 2>/dev/null | sort)
 $(foreach slug,$(DECK_SLUGS),$(eval $(DECK_STAMP_DIR)/$(slug).stamp: $(call deck_sources,$(slug)) $(DECK_MANIFEST)))
+# The import spelling that resolves to the working tree. Examples pinned to it
+# render what `make install` copies, so the package sources are their inputs;
+# examples pinned to the released @preview package render the same bytes
+# whatever the working tree holds, and must not go stale with it.
+LOCAL_IMPORT := @local/$(PACKAGE_DIR):
+DECK_LOCAL_SLUGS := $(foreach slug,$(DECK_SLUGS),$(if $(shell \
+	grep -l '$(LOCAL_IMPORT)' $(DECK_EXAMPLES_DIR)/$(slug)/*.typ 2>/dev/null),$(slug)))
 
 EMBEDDED_EXAMPLES_DIR := $(DOCS_SRC)/examples/embedded
 EMBEDDED_ASSETS_DIR := $(DOCS_SRC)/assets/examples
@@ -106,6 +122,13 @@ $(foreach source,$(EMBEDDED_EXAMPLE_SOURCES),$(eval \
 # both an input and an output of its own build.
 PACKAGE_SOURCES := $(shell find $(PACKAGE_DIR) -type f \
   ! -path '$(PACKAGE_DIR)/docs/*' ! -name 'README.md' 2>/dev/null | sort)
+# An embedded example follows the working tree when it, or a private module
+# beside it, imports the @local spelling.
+EMBEDDED_LOCAL_SOURCES := $(shell for source in $(EMBEDDED_EXAMPLE_SOURCES); do \
+	grep -q '$(LOCAL_IMPORT)' "$$source" "$$(dirname "$$source")"/_*.typ 2>/dev/null \
+	  && echo "$$source"; done)
+$(patsubst $(EMBEDDED_EXAMPLES_DIR)/%.typ,$(EMBEDDED_STAMP_DIR)/%.stamp,$(EMBEDDED_LOCAL_SOURCES)) \
+  $(addprefix $(DECK_STAMP_DIR)/,$(addsuffix .stamp,$(DECK_LOCAL_SLUGS))): $(PACKAGE_SOURCES)
 SHOWCASE_VIDEOS := $(WEB_IMAGE_DIR)/showcase.webm $(WEB_IMAGE_DIR)/showcase.mp4
 SHOWCASE_POSTER := $(WEB_IMAGE_DIR)/showcase-poster.webp
 # One still of every slide the reel visits, three across.
@@ -116,20 +139,24 @@ SHOWCASE_SHEET := $(WEB_IMAGE_DIR)/showcase-contact-sheet.webp
 SHOWCASE_FINGERPRINT := $(WEB_IMAGE_DIR)/showcase.fingerprint
 # The reel's opening frame. No page embeds it, so it is not an embedded example.
 SHOWCASE_OPENING := $(DOCS_SRC)/examples/showcase/opening.pdf
-# The reel draws on every complete deck plus a few structural examples, so any
-# of them can make it stale.
-SHOWCASE_STAMPS := $(DECK_STAMPS) $(SHOWCASE_OPENING) \
-	$(EMBEDDED_STAMP_DIR)/getting-started/first-slideshow.stamp \
-	$(EMBEDDED_STAMP_DIR)/structure/grid-dashboard.stamp \
-	$(EMBEDDED_STAMP_DIR)/structure/title-image-bottom.stamp \
-	$(EMBEDDED_STAMP_DIR)/structure/section-layout.stamp
+# The reel is stale when any PDF the manifest draws it from is. The manifest is
+# the list: each source maps to the stamp of the rule that renders it (an
+# embedded example, a complete deck), and anything else, the opening frame, is
+# its own target.
+SHOWCASE_SOURCES := $(shell $(PYTHON) $(DECK_METADATA) showcase-sources)
+SHOWCASE_STAMPS := \
+	$(patsubst $(EMBEDDED_ASSETS_DIR)/%.pdf,$(EMBEDDED_STAMP_DIR)/%.stamp,\
+	  $(filter $(EMBEDDED_ASSETS_DIR)/%,$(SHOWCASE_SOURCES))) \
+	$(foreach source,$(filter $(DECK_EXAMPLES_DIR)/%,$(SHOWCASE_SOURCES)),\
+	  $(DECK_STAMP_DIR)/$(basename $(notdir $(source))).stamp) \
+	$(filter-out $(EMBEDDED_ASSETS_DIR)/% $(DECK_EXAMPLES_DIR)/%,$(SHOWCASE_SOURCES))
 
 help: ## Display this help screen
-	@echo -e "\033[1mAvailable commands:\033[0m\n"
+	@printf '\033[1mAvailable commands:\033[0m\n\n'
 	@grep -E '^[a-z.A-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-22s\033[0m %s\n", $$1, $$2}' | sort
 
 doctor: ## Check mandatory, documentation, and optional build prerequisites
-	$(PYTHON) scripts/doctor.py all
+	MAKE="$(MAKE)" TYPST="$(TYPST)" CALEPIN="$(CALEPIN)" TYPSTDOC="$(TYPSTDOC)" $(PYTHON) scripts/doctor.py all
 
 # ==============================================================================
 # The package
@@ -145,14 +172,15 @@ uninstall: ## Remove the working-tree copy, leaving only the released @preview/m
 # Tests
 # ==============================================================================
 
-# Five groups, in cheapest-first order so a broken facade fails before minutes of
-# compiling: the exact export contract, the classified positive fixtures, the
-# negative fixtures and their exact diagnostics, and the documentation's sources,
-# artifacts, and frame counts. To run one group by hand, call it directly:
+# Six groups, in cheapest-first order so a broken facade fails before minutes of
+# compiling: the exact export contract, the version pins, the classified
+# positive fixtures, the negative fixtures and their diagnostics, and the
+# documentation's sources, artifacts, and frame counts. To run one group by hand, call it directly:
 #   uv run python scripts/run-tests.py core|layout|negative --typst typst
 check: install $(WEB_IMAGES) ## Run package, fixture, and documentation integrity tests
 	cd tests && $(PYTHON) -m unittest test_check_api_exports test_theme_architecture test_palettes
 	$(PYTHON) scripts/check-api-exports.py
+	$(PYTHON) scripts/check-versions.py
 	$(PYTHON) scripts/run-tests.py core --typst "$(TYPST)"
 	$(PYTHON) scripts/run-tests.py layout --typst "$(TYPST)"
 	$(PYTHON) scripts/run-tests.py negative --typst "$(TYPST)"
@@ -176,10 +204,13 @@ COVER_PPI := 115
 $(EMBEDDED_SLIDESHOW_STAMPS): EMBEDDED_PREVIEW = cover
 $(EMBEDDED_IMAGE_STAMPS): EMBEDDED_PREVIEW = frames
 
-$(EMBEDDED_STAMPS): $(EMBEDDED_STAMP_DIR)/%.stamp: $(EMBEDDED_EXAMPLES_DIR)/%.typ $(PACKAGE_SOURCES) $(WEB_IMAGES) $(EMBEDDED_SLIDESHOW_INDEXER) scripts/embedded_examples.py scripts/encode-cover.py Makefile | install
+$(EMBEDDED_STAMPS): $(EMBEDDED_STAMP_DIR)/%.stamp: $(EMBEDDED_EXAMPLES_DIR)/%.typ $(WEB_IMAGES) $(EMBEDDED_SLIDESHOW_INDEXER) scripts/embedded_examples.py scripts/encode-cover.py Makefile | install
 	@mkdir -p "$(dir $(EMBEDDED_ASSETS_DIR)/$*)" "$(@D)"
 	@echo "typst compile $< $(EMBEDDED_ASSETS_DIR)/$*.pdf ($(EMBEDDED_PREVIEW))"
-	@find "$(dir $(EMBEDDED_ASSETS_DIR)/$*)" -maxdepth 1 -type f -name "$(notdir $*)-*.svg" -delete
+# Only this example's own frames, `<name>-<digits>.svg`: a bare `<name>-*`
+# would also take the frames of a sibling whose name merely starts the same.
+	@find "$(dir $(EMBEDDED_ASSETS_DIR)/$*)" -maxdepth 1 -type f \
+		-name "$(notdir $*)-*.svg" ! -name "$(notdir $*)-*[!0-9]*.svg" -delete
 	@$(TYPST) compile --root . "$<" "$(EMBEDDED_ASSETS_DIR)/$*.pdf"
 	@if [ "$(EMBEDDED_PREVIEW)" = cover ]; then \
 		$(TYPST) compile --root . --format png --ppi $(COVER_PPI) --pages 1 "$<" "$(EMBEDDED_ASSETS_DIR)/$*-cover.png" && \
@@ -189,7 +220,7 @@ $(EMBEDDED_STAMPS): $(EMBEDDED_STAMP_DIR)/%.stamp: $(EMBEDDED_EXAMPLES_DIR)/%.ty
 	fi
 	@touch "$@"
 
-$(SHOWCASE_OPENING): $(DOCS_SRC)/examples/showcase/opening.typ $(PACKAGE_SOURCES) | install
+$(SHOWCASE_OPENING): $(DOCS_SRC)/examples/showcase/opening.typ | install
 	$(TYPST) compile --root . "$<" "$@"
 
 # One run writes the reel, its poster (the reel's first frame), and the contact
@@ -224,10 +255,10 @@ $(API_GROUP_STAMPS): $(API_STAMP_DIR)/%.stamp:
 
 # Build each example deck via its own Makefile (which knows its typst flags and
 # fonts), then render the first page to a JPEG cover for the Examples gallery.
-$(DECK_STAMP_DIR)/%.stamp: $(PACKAGE_SOURCES) $(DECK_METADATA) Makefile | install
+$(DECK_STAMP_DIR)/%.stamp: $(DECK_METADATA) Makefile | install
 	@mkdir -p "$(@D)"
 	@echo "examples: building $*"
-	@$(MAKE) --no-print-directory -C "$(DECK_EXAMPLES_DIR)/$*"
+	@$(MAKE) --no-print-directory -C "$(DECK_EXAMPLES_DIR)/$*" TYPST="$(TYPST)"
 	@pdftoppm -jpeg -jpegopt quality=82 -singlefile -f 1 -l 1 -scale-to 1200 \
 		"$(DECK_EXAMPLES_DIR)/$*/$*.pdf" "$(DECK_EXAMPLES_DIR)/$*/cover"
 	@touch "$@"
@@ -267,31 +298,41 @@ publish-docs: website ## Force-stage the rendered site for a GitHub Pages commit
 # The package ships the repository README verbatim, because that is the text
 # Typst Universe displays. Its illustrations must therefore resolve at the same
 # relative paths inside the package; `exclude` keeps them out of the download.
-release-stage: $(PACKAGE_DIR)/README.md $(PACKAGE_README_ASSETS) install ## Stage the exact file set to copy into a typst/packages fork
+# The package copies keep the README's published `docs/assets/...` spelling, but
+# take their bytes from the authored tree so a stale site cannot leak into a
+# release. They are synced by content here rather than as file targets: a
+# prerequisite on the contact sheet would chain through its rule into every
+# example stamp, and staging a release would re-render the reel.
+#
+# Two guards, because what is staged is what gets published. The README must
+# already name the version being staged as the Universe import, and the package
+# directory must hold nothing git does not track, since the copy takes the
+# directory as it is on disk.
+release-stage: install ## Stage the exact file set to copy into a typst/packages fork
+	@grep -q '@preview/$(PACKAGE_DIR):$(PACKAGE_VERSION)"' README.md || { \
+		echo "release-stage: README.md does not import @preview/$(PACKAGE_DIR):$(PACKAGE_VERSION); update its released-version text before staging" >&2; exit 1; }
+	cmp -s README.md $(PACKAGE_DIR)/README.md || cp README.md $(PACKAGE_DIR)/README.md
+	@for target in $(PACKAGE_README_ASSETS); do \
+		source="$(DOCS_SRC)/$${target#$(PACKAGE_DIR)/docs/}"; \
+		cmp -s "$$source" "$$target" && continue; \
+		mkdir -p "$$(dirname "$$target")" && echo "cp $$source $$target" && cp "$$source" "$$target" || exit 1; \
+	done
+	@stray="$$(git ls-files --others -- $(PACKAGE_DIR))"; [ -z "$$stray" ] || { \
+		echo "release-stage: $(PACKAGE_DIR)/ holds files git does not track; remove them or add them first:" >&2; \
+		echo "$$stray" >&2; exit 1; }
 	rm -rf "$(RELEASE_DIR)"
 	mkdir -p "$(RELEASE_DIR)"
 	cp -R "$(PACKAGE_DIR)/." "$(RELEASE_DIR)/"
 	@echo "Staged $(PACKAGE_DIR) $(PACKAGE_VERSION) in $(RELEASE_DIR)"
 
-$(PACKAGE_DIR)/README.md: README.md
-	cp $< $@
-
-# The package copies keep the README's published `docs/assets/...` spelling, but
-# take their bytes from the authored tree so a stale site cannot leak into a
-# release.
-$(PACKAGE_DIR)/docs/assets/mosaic-slide.svg: $(DOCS_SRC)/assets/mosaic-slide.svg
-$(PACKAGE_DIR)/docs/assets/images/showcase-contact-sheet.webp: $(SHOWCASE_SHEET)
-
-$(PACKAGE_README_ASSETS):
-	@mkdir -p "$(@D)"
-	cp $< $@
-
 build: doctor install check website ## Validate prerequisites, then compile tests and documentation
 
-# Everything this removes is derived and cheap to rebuild, and none of it is
-# committed, so `make clean && make website` is a working sequence: the site
-# rebuilds from the example artifacts, which a clean deliberately leaves alone.
-# Removing those is `distclean`.
+# Everything this removes is derived and cheap to rebuild, so `make clean &&
+# make website` is a working sequence: the site rebuilds from the example
+# artifacts, which a clean deliberately leaves alone. Removing those is
+# `distclean`. Of what goes, only $(SITE_DIR) is in the index, put there by
+# `make publish-docs`, so it shows as deletions in `git status` until the next
+# `make website`; the stamps and the Calepin caches are untracked.
 clean: ## Remove build stamps, generated API manuals, Calepin caches, and the rendered site
 	rm -rf $(API_GENERATED_DIR) $(API_STAMP_DIR)
 	rm -rf $(EMBEDDED_STAMP_DIR) $(DECK_STAMP_DIR) $(SITE_DIR)
@@ -301,7 +342,8 @@ clean: ## Remove build stamps, generated API manuals, Calepin caches, and the re
 # directory never leaves a cache behind that clean does not know about.
 	find $(DOCS_SRC) -type d -name '.calepin' -exec rm -rf {} +
 # The favicon lives inside an otherwise-ignored `_calepin` directory and is
-# force-added to the index, so it is source that a name-based sweep must spare.
+# force-added to the index, the one tracked file there, so it is source that a
+# name-based sweep must spare.
 	find $(DOCS_SRC) -path '*/_calepin/*' ! -name favicon.svg -delete 2>/dev/null || true
 # Emptying by content leaves the `_calepin` directories themselves behind, since
 # the pattern above only ever matches what is inside one. Take every directory
