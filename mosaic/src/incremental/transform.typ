@@ -356,7 +356,12 @@
 // built. It would render as nothing, so the slide runtime installs this as a
 // `show metadata` rule on every frame and the loss becomes a diagnostic. A
 // slide command realized inside a frame is a nested slide.
-#let validate-frame-metadata(it) = {
+//
+// `collected-notes` are the note bodies the runtime already gathered for this
+// frame. A note in a layout field (a section tagline is the `subtitle` field)
+// is rendered inside a `context` block, where the walks cannot reach it, but
+// the runtime reads it from the field itself, so its record is expected here.
+#let validate-frame-metadata(it, collected-notes: ()) = {
   let value = it.value
   if type(value) != dictionary or value.at("mosaic", default: none) != tag {
     return it
@@ -368,10 +373,18 @@
       + "it; move it outside"
   )
   if kind == "note" {
+    if value.body in collected-notes {
+      return it
+    }
     fail("note" + opaque)
   }
   if kind == "pause" or kind in temporal-kinds {
-    fail("pause and steps" + opaque)
+    fail(
+      "pause and steps cannot be used inside a Mosaic component, a section "
+        + "tagline or other layout field, a context block, a layout "
+        + "callback, or show-rule output, where the slide runtime cannot see "
+        + "them; move them into a cell body",
+    )
   }
   if kind == "slide" {
     fail("slide cannot be nested inside another slide or a container")

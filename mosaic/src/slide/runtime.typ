@@ -503,7 +503,7 @@
       )
     }
     let frame = [
-        #show metadata: validate-frame-metadata
+        #show metadata: validate-frame-metadata.with(collected-notes: notes)
         #full-slide-layer(background-content)
         #full-slide-layer(rendered)
         #full-slide-layer(foreground-content)
