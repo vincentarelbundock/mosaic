@@ -1,6 +1,6 @@
-// Where a picture sits, in each layout that carries one. The title layout's
-// `image` variant reads `position`; the section and image layouts name the
-// place through their variants. The same five places exist in all three.
+// Where a picture sits, in each layout that carries one. Every layout names
+// the place through its variant: the title and section layouts share five
+// `image-*` variants, and the image layout has `full` and the four sides.
 // scripts/run-tests.py reads the pages this fixture renders.
 #import "@local/mosaic:0.0.3" as mosaic
 #import "../mosaic/src/layout/resolver.typ": resolve-layout
@@ -21,20 +21,19 @@
   bottom: ("title", "image"),
   background: ("title",),
 ) {
-  assert(cells(mosaic.layouts.title(variant: "image", position: position, image: river)) == expected)
+  assert(cells(mosaic.layouts.title(variant: "image-" + position, image: river)) == expected)
   let section = expected.map(id => if id == "title" { "section" } else { id })
   assert(cells(mosaic.layouts.section(variant: "image-" + position, image: dog)) == section)
 }
-// `auto` is the left position of the title's image variant.
-#assert(cells(mosaic.layouts.title(variant: "image", image: river)) == ("image", "title"))
 #assert(cells(mosaic.layouts.image(dog)) == ("header", "image"))
 #assert(cells(mosaic.layouts.image(dog, variant: "figure")) == ("header", "image"))
 #assert(cells(mosaic.layouts.image(dog, variant: "left")) == ("image", "header", "body"))
 #assert(cells(mosaic.layouts.image(dog, variant: "bottom")) == ("header", "body", "image"))
 #assert(cells(mosaic.layouts.image(dog, variant: "full")) == ("body",))
-// `position` is the title's field alone.
+// No layout has a `position` field.
 #assert("position" not in mosaic.layouts.image(dog).fields)
 #assert("position" not in mosaic.layouts.section().fields)
+#assert("position" not in mosaic.layouts.title().fields)
 
 #show: mosaic.setup.with(
   title: [ZQDECK title],
@@ -49,8 +48,7 @@
   #show label("mosaic-cell-title"): set text(fill: rgb("#fedcba"))
   #mosaic.slide(
     layout: "title",
-    variant: "image",
-    position: "background",
+    variant: "image-background",
     image: mosaic.components.image(river, scrim: black.transparentize(45%)),
   )
 ]
@@ -60,7 +58,7 @@
 #mosaic.slide(layout: "title", title: none)
 #mosaic.slide(layout: "title", variant: "bordered", authors: none)
 #mosaic.slide(layout: "title", variant: "centered", title: none, subtitle: none, authors: none, date: none)
-#mosaic.slide(layout: "title", variant: "image", position: "right", image: river, title: none, subtitle: none, authors: none, date: none)
+#mosaic.slide(layout: "title", variant: "image-right", image: river, title: none, subtitle: none, authors: none, date: none)
 
 // Pages 6 and 7: the panel's accent rule is its mark, so `rule: false`
 // removes it and an explicit accent colors it.

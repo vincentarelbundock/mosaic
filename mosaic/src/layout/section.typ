@@ -17,8 +17,8 @@
   image-background-cell,
   image-cell,
   optional-fixed-image,
-  section-image-positions,
-  validate-section-image-fields,
+  image-variant-positions,
+  validate-image-variant-fields,
 )
 
 #let text-variants = (
@@ -28,7 +28,7 @@
   "baseline",
   "toc",
 )
-#let variants = text-variants + section-image-positions.keys()
+#let variants = text-variants + image-variant-positions.keys()
 
 // The visual recipe for each designed variant, in one place.
 //
@@ -121,7 +121,7 @@
       fail("layout \"section\" " + name + " must be content, a string, or none")
     }
   }
-  validate-section-image-fields(fields, "layout \"section\"")
+  validate-image-variant-fields(fields, "layout \"section\"")
 }
 
 /// Creates a section divider grid.
@@ -566,7 +566,7 @@
       inset: settings.spacing.inset,
     ),
   )
-  let position = section-image-positions.at(fields.variant, default: none)
+  let position = image-variant-positions.at(fields.variant, default: none)
   if position == none {
     return section-cell
   }

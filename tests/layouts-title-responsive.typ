@@ -99,8 +99,7 @@
 
 #mosaic.slide(layout: mosaic.layouts.title(
   title: [Measuring environmental change],
-  variant: "image",
-  position: "right",
+  variant: "image-right",
   image: mosaic.components.image(path("/docs-src/assets/images/title-river.webp"), alt: "Autumn wetlands"),
   subtitle: [Field observations across twelve sites],
   authors: (mosaic.layouts.author([River Systems Group]),),
@@ -108,8 +107,7 @@
 
 #mosaic.slide(layout: mosaic.layouts.title(
   title: [Measuring environmental change],
-  variant: "image",
-  position: "bottom",
+  variant: "image-bottom",
   image: mosaic.components.image(path("/docs-src/assets/images/title-river.webp"), alt: "Autumn wetlands"),
   subtitle: [Field observations from the St. Lawrence wetlands],
   authors: (mosaic.layouts.author([River Systems Group]),),

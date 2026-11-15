@@ -5,6 +5,7 @@
 #import "../grid/constructors.typ": make-cell, columns, rows, track
 #import "core.typ": (
   make-layout,
+  removed-layout-fields,
   validate-accent,
   validate-variant,
 )
@@ -19,22 +20,39 @@
   directional-positions,
   image-background-cell,
   image-cell,
+  image-variant-positions,
   optional-fixed-image,
-  resolve-image-position,
-  validate-image-fields,
+  validate-image-variant-fields,
 )
 #import "../incremental/heading.typ": is-canonical-frame
 #import "../fit.typ": fit-ratio, reflow-scale, is-unsolvable
 
-#let variants = (
+#let text-variants = (
   "academic",
   "centered",
   "bordered",
   "ruled",
   "kicker",
   "panel",
-  "image",
 )
+#let variants = text-variants + image-variant-positions.keys()
+
+// The title layout once had a single `image` variant and a `position` field
+// beside it, where `auto` meant the left. The place is part of the variant
+// now, as in the section layout, so the old pair fails with the one variant
+// that says the same thing.
+#let removed-image-variant(position) = {
+  let side = if type(position) == str and ("image-" + position) in image-variant-positions {
+    position
+  } else {
+    "left"
+  }
+  let given = if position == auto { "" } else { " with position: " + repr(position) }
+  (
+    "layout \"title\" variant \"image\"" + given + " was removed; write variant: "
+      + repr("image-" + side)
+  )
+}
 
 // The message for a title slide with no title to show: `auto` found nothing
 // on `setup`, or the field was written empty. Suppressing the title is a
@@ -46,6 +64,9 @@
 
 #let validate-fields(fields, allow-auto: false) = {
   let fields = validate-accent(fields, "title", allow-auto: allow-auto)
+  if fields.variant == "image" {
+    fail(removed-image-variant(auto))
+  }
   let variant = validate-variant(fields.variant, variants, "layout \"title\"")
   // `none` suppresses a field, the title included. What stays an error is the
   // mistake: something that is neither text nor `none`, or text with nothing
@@ -75,7 +96,7 @@
       name: "layout \"title\" author",
     )
   }
-  let fields = validate-image-fields(fields, "layout \"title\"")
+  let fields = validate-image-variant-fields(fields, "layout \"title\"")
   if variant == "academic" {
     if type(fields.authors) == array and fields.authors.len() == 0 {
       fail("layout \"title\" variant " + repr(variant) + " requires at least one author")
@@ -137,26 +158,22 @@
 ///   numbers over a numbered affiliation legend and a contact line. Requires
 ///   at least one author.
 ///
-/// One variant carries a picture:
+/// Image variants, which set the compact title stack with a picture:
 ///
-/// - `image`: the compact title stack with a picture, placed by `position`.
-///   Requires `image`, and is the only variant that takes one: write
-///   `variant: "image"` together with `image:`.
+/// - `image-left`, `image-right`, `image-top`, `image-bottom`: a full-bleed
+///   picture beside or above the title stack, sized by `tracks`.
+/// - `image-background`: the title stack at the lower left, directly over a
+///   full-slide picture. The type keeps the deck's text color, so quiet the
+///   photograph with a scrim and recolor the cell as shown under *Styling*.
+///
+/// Every image variant requires `image`, and only they take one: write the
+/// variant together with `image:`. They are the same five names the section
+/// layout uses.
 ///
 /// Every variant states its own arrangement, as described above; unlike the
 /// `plain` section, none leaves the placement of its stack to the theme. The
 /// theme decides the type: the display size on `<mosaic-title-display>` and
 /// the typography of the cell.
-///
-/// *Pictures*
-///
-/// The `image` variant reads `position` for the picture's place:
-///
-/// - `"left"`, `"right"`, `"top"`, `"bottom"`: a full-bleed picture beside or
-///   above the title stack, sized by `tracks`. `auto` means `"left"`.
-/// - `"background"`: the title stack at the lower left, directly over a
-///   full-slide picture. The type keeps the deck's text color, so quiet the
-///   photograph with a scrim and recolor the cell as shown under *Styling*.
 ///
 /// *Long titles*
 ///
@@ -194,8 +211,8 @@
 /// - `mosaic-cell-details`: the affiliation and date band, in the `panel` and
 ///   `academic` variants, which set those tiers outside the title cell.
 /// - `mosaic-cell-authors`: the byline, in the `academic` variant.
-/// - `mosaic-cell-image`: the picture, in the `image` variant at the four
-///   directional positions. At `"background"` the picture is the title cell's
+/// - `mosaic-cell-image`: the picture, in the four directional image variants.
+///   The `image-background` variant paints the picture as the title cell's
 ///   background instead, so it has no image cell of its own.
 ///
 /// One further label is not a cell: the display line of the title stack carries
@@ -212,8 +229,7 @@
 /// #show label("mosaic-cell-title"): set text(fill: white)
 /// #mosaic.slide(
 ///   layout: "title",
-///   variant: "image",
-///   position: "background",
+///   variant: "image-background",
 ///   image: mosaic.components.image(
 ///     path("cover.webp"),
 ///     scrim: black.transparentize(55%),
@@ -252,7 +268,7 @@
   /// `setup(date:)`; `none` suppresses it.
   /// -> auto | content | str | none
   date: auto,
-  /// The picture of the `image` variant, required there and rejected by the
+  /// The picture of the image variants, required there and rejected by the
   /// others. Give a native `path(..)` value, which fills its region, or
   /// ready-made content such as
   /// `components.image(path("cover.webp"), scrim: black.transparentize(55%))`,
@@ -262,52 +278,67 @@
   /// -> none | content | path
   image: none,
   /// The text design: `ruled`, `centered`, `bordered`, `kicker`, `panel`,
-  /// `academic`, or `image`.
+  /// `academic`, `image-left`, `image-right`, `image-top`, `image-bottom`, or
+  /// `image-background`.
   /// -> str
   variant: "ruled",
-  /// Where the `image` variant's picture sits, and rejected by the others:
-  /// `"left"`, `"right"`, `"top"`, `"bottom"`, or `"background"`. `auto`
-  /// means `"left"`.
-  /// -> auto | str
-  position: auto,
   /// One name, or an array of names and records created with
   /// `layouts.author`. `auto` inherits `setup(authors:)`; `none` or `()`
   /// suppresses an inherited list.
   /// -> auto | content | str | array | none
   authors: auto,
-  /// Sizes the split of a directional position, and is rejected elsewhere.
-  /// One native Typst track size sizes the picture and is side-independent, so
-  /// the `left` and `right` positions stay mirror images; the title region
-  /// takes the remaining `1fr`. An array of two is in visual order instead,
-  /// and must be mirrored by hand when the position flips. `auto` gives the
-  /// picture the smaller share.
+  /// Sizes the split of a directional image variant, and is rejected by the
+  /// others. One native Typst track size sizes the picture and is
+  /// side-independent, so `image-left` and `image-right` stay mirror images;
+  /// the title region takes the remaining `1fr`. An array of two is in visual
+  /// order instead, and must be mirrored by hand when the variant flips.
+  /// `auto` gives the picture the smaller share.
   /// -> auto | length | ratio | relative | fraction | array
   tracks: auto,
   /// Whether to draw the variant's mark: the `ruled` full-width rule, the
   /// `bordered` border, the `kicker` opening rule, or the short accent rule
-  /// that closes the heading stack of the `academic`, `centered`, and `image`
+  /// that closes the heading stack of the `academic`, `centered`, and image
   /// variants and opens the `panel`. `auto` draws the mark everywhere except
-  /// on `centered` and `image`, which stay bare unless asked: the first is
-  /// the plain composition, and on the second the photograph already does
-  /// that work. `false` removes the mark in every variant.
+  /// on `centered` and the image variants, which stay bare unless asked: the
+  /// first is the plain composition, and on the others the photograph already
+  /// does that work. `false` removes the mark in every variant.
   /// -> auto | bool
   rule: auto,
   /// Color of the variant's mark. `auto` uses the deck's text color for the
   /// `bordered` border and the `kicker` opening rule, and the semantic accent
   /// everywhere else: the `ruled` rule, the `panel` rule, the `kicker`
-  /// eyebrow, and the short rule of `academic`, `centered`, and `image`. The
+  /// eyebrow, and the short rule of `academic`, `centered`, and the image
+  /// variants. The
   /// color belongs to the mark, so where `rule` leaves the mark undrawn there
   /// is nothing for it to reach.
   /// -> color | auto
   accent: auto,
+  /// Catches the removed `position` argument so it fails with the variant
+  /// that replaced it. Accepts nothing.
+  /// -> arguments
+  ..removed,
 ) = {
+  if removed.pos().len() > 0 {
+    fail("layout \"title\" takes named arguments only")
+  }
+  for (name, value) in removed.named() {
+    if name != "position" {
+      fail("layout \"title\" has no argument " + repr(name))
+    }
+    if variant == "image" {
+      fail(removed-image-variant(value))
+    }
+    fail(
+      "layout \"title\" field \"position\" was removed; "
+        + removed-layout-fields.title.position,
+    )
+  }
   let fields = validate-fields((
     title: title,
     subtitle: subtitle,
     date: date,
     image: image,
     variant: variant,
-    position: position,
     authors: authors,
     tracks: tracks,
     rule: rule,
@@ -455,7 +486,7 @@
 // Their muted `fill` survives only while the cell carries the deck's ordinary
 // text color; see `adapt-fill`. That is what lets one rule on
 // <mosaic-cell-title> recolor the whole stack for a light-on-dark
-// composition, which is the case the image variant exists to serve.
+// composition, which is the case the image variants exist to serve.
 #let title-styles(settings) = (
   subtitle: (
     fill: settings.colors.muted,
@@ -759,9 +790,9 @@
     none
   }
   // The auto default gives the looks variety: the accent rule anchors the
-  // text variants, while the image variant stays purely photographic.
+  // text variants, while the image variants stay purely photographic.
   let show-rule = if fields.rule == auto {
-    fields.variant != "image"
+    fields.variant not in image-variant-positions
   } else {
     fields.rule
   }
@@ -1336,7 +1367,7 @@
     resolve-image-title(
       fields,
       image,
-      resolve-image-position(fields),
+      image-variant-positions.at(fields.variant),
       settings,
     )
   }

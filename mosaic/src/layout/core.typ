@@ -5,11 +5,24 @@
   content: ("columns", "tracks", "variant"),
   image: ("caption", "fit", "image", "tracks", "variant"),
   title: (
-    "accent", "authors", "date", "image", "position", "rule", "subtitle",
-    "title", "tracks", "variant",
+    "accent", "authors", "date", "image", "rule", "subtitle", "title",
+    "tracks", "variant",
   ),
   section: (
     "accent", "image", "number", "subtitle", "tracks", "variant",
+  ),
+)
+
+// Fields a layout once had, with the pointer to what replaced each. A slide
+// passes its named arguments to the selected layout as fields, and checks the
+// names against `layout-field-keys` before any layout sees them, so a removed
+// field needs its signpost here to be reachable from `slide(layout: "..", ..)`
+// as well as from the constructor.
+#let removed-layout-fields = (
+  title: (
+    position: "the picture's place is part of the variant now; write variant: "
+      + "\"image-left\", \"image-right\", \"image-top\", \"image-bottom\", or "
+      + "\"image-background\"",
   ),
 )
 

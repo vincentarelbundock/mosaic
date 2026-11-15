@@ -24,8 +24,8 @@
 #mosaic.slide(layout: mosaic.layouts.title(title: [Kicker title], variant: "kicker", subtitle: [Workshop]))
 #mosaic.slide(layout: mosaic.layouts.title(title: [Panel title], variant: "panel", subtitle: [Workshop]))
 #mosaic.slide(layout: mosaic.layouts.title(title: [Bordered title], variant: "bordered", subtitle: [Colloquium]))
-#mosaic.slide(layout: mosaic.layouts.title(title: [Image-right title], variant: "image", position: "right", image: path("/docs-src/assets/images/title-river.webp")))
-#mosaic.slide(layout: mosaic.layouts.title(title: [Image-top title], variant: "image", position: "top", image: mosaic.components.image(path("/docs-src/assets/images/title-river.webp"), alt: "Wetlands")))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Image-right title], variant: "image-right", image: path("/docs-src/assets/images/title-river.webp")))
+#mosaic.slide(layout: mosaic.layouts.title(title: [Image-top title], variant: "image-top", image: mosaic.components.image(path("/docs-src/assets/images/title-river.webp"), alt: "Wetlands")))
 
 #mosaic.slide(layout: mosaic.layouts.section())[Plain section]
 #mosaic.slide(layout: mosaic.layouts.section(number: [01]))[Numbered section]

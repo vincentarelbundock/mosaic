@@ -29,7 +29,7 @@
   m.slide(
     layout: m.layouts.title(
       variant: variant,
-      ..if variant == "image" {
+      ..if variant.starts-with("image") {
         (image: path("/docs-src/assets/images/title-river.webp"))
       },
     ),

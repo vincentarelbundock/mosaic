@@ -130,8 +130,7 @@
 
 #let split-right = resolve-layout(mosaic.layouts.title(
   title: [Measuring environmental change],
-  variant: "image",
-  position: "right",
+  variant: "image-right",
   image: image-path,
 ), settings)
 #assert(split-right.kind == "split")
@@ -141,11 +140,10 @@
 #assert(split-right.children.at(1).id == "image")
 #assert(grid-test.count(split-right) == 2)
 
-// `position` defaults to `left`, so the image variant with no position is the
-// left split.
+// An array of two tracks is in visual order: picture first on the left.
 #let split-left = resolve-layout(mosaic.layouts.title(
   title: [Measuring environmental change],
-  variant: "image",
+  variant: "image-left",
   image: image-path,
   tracks: (3fr, 2fr),
 ), settings)
@@ -155,8 +153,7 @@
 
 #let band = resolve-layout(mosaic.layouts.title(
   title: [Measuring environmental change],
-  variant: "image",
-  position: "top",
+  variant: "image-top",
   image: image-path,
 ), settings)
 #assert(band.kind == "split")

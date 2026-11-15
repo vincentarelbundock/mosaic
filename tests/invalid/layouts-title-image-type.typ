@@ -2,7 +2,6 @@
 
 #mosaic.layouts.title(
   title: [Title],
-  variant: "image",
-  position: "right",
+  variant: "image-right",
   image: 42,
 )
