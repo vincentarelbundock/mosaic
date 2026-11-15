@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.2" as m
+#import "@local/mosaic:0.0.3" as m
 #show: m.setup
 
 // Outline each cell so the grid structure is visible. Cells are structural, so
