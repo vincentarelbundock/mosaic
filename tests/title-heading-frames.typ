@@ -37,16 +37,16 @@
   )
 }
 
-// A second title slide with a single frame has a heading of its own.
-#m.slide(layout: "title", title: [Second])
-
-// In handout mode the slide has a single frame, the last step, and that
+// A second title slide with a single frame has a heading of its own. The
+// checks ride on its foreground: content after the last slide is not part of
+// any slide and is never laid out, so an assertion there would not run. In
+// handout mode the first slide has a single frame, the last step, and that
 // frame is the canonical one: it carries the real heading.
-#context {
+#m.slide(layout: "title", title: [Second], foreground: context {
   assert(counter(page).final().first() == if handout { 2 } else { 3 })
   assert(
     query(heading).len() == 2,
     message: "expected one heading per logical title slide, found "
       + str(query(heading).len()),
   )
-}
+})

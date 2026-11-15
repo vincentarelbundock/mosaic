@@ -13,9 +13,20 @@
 #let variant = sys.inputs.at("variant", default: "theme")
 #show: m.setup
 
+// The checks ride inside a slide: content after the last slide is not part of
+// any slide and is never laid out, so an assertion there would not run.
+#let checks = context {
+  let automatic = variant == "automatic"
+  assert(counter(page).final().first() == if automatic { 3 } else { 2 })
+  assert(
+    query(heading).len() == if automatic { 2 } else { 1 },
+    message: "expected one heading per slide, found " + str(query(heading).len()),
+  )
+}
+
 // The pause lives on the foreground plane, so the section cell itself is the
 // same on both frames and only the heading's two renderings can differ.
-#let frames = [FRAMEONE #m.steps.pause FRAMETWO]
+#let frames = [#checks FRAMEONE #m.steps.pause FRAMETWO]
 
 #if variant == "automatic" {
   // The automatic form: the heading opens the section slide, the tagline
@@ -28,7 +39,7 @@
 
     == Slide
 
-    Body
+    Body #checks
   ]
 } else if variant == "theme" {
   // The theme's own section layout, as an automatic `=` heading selects it.
@@ -43,10 +54,4 @@
     ),
     foreground: frames,
   )[= Sectionword title]
-}
-
-#context {
-  let automatic = variant == "automatic"
-  assert(counter(page).final().first() == if automatic { 3 } else { 2 })
-  assert(query(heading).len() == if automatic { 2 } else { 1 })
 }
