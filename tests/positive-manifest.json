@@ -112,7 +112,9 @@
     "drawing-hide-optional.typ",
     "components-dimmed.typ",
     "components-quote-native.typ",
-    "incremental-cell-dimmed.typ"
+    "incremental-cell-dimmed.typ",
+    "section-heading-frames.typ",
+    "title-heading-frames.typ"
   ],
   "layout": [
     "fit.typ",
