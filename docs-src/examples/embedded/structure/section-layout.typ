@@ -61,8 +61,8 @@
   #show label("mosaic-cell-section"): set text(fill: white)
   #m.slide(layout: m.layouts.section(
     variant: "image-background",
-    image: m.components.image(
-      path("/docs-src/assets/images/dog.webp"),
+    image: (
+      path: path("/docs-src/assets/images/dog.webp"),
       scrim: black.transparentize(55%),
       alt: "Dog",
     ),

@@ -16,8 +16,9 @@
   #m.slide(
     layout: "image",
     variant: "full",
-    image: m.components.image(
-      path("/docs-src/assets/images/bonsai.webp"),
+    image: (
+      path: path("/docs-src/assets/images/bonsai.webp"),
+      fit: "cover",
       alt: "A bonsai pine on a pale grey field",
     ),
   )[
