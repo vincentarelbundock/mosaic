@@ -649,6 +649,59 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(native_styles, "#2ecc40")
     require_contains(native_styles, "#0074d9")
     require_contains(native_styles, "#ff4136", absent=True)
+    # Themes that widen tight lists keep every spelling of an enum and every
+    # argument a list was written with. The fixture asserts the spacing
+    # itself; the numbering is only visible in the rendered text.
+    for theme in ("editorial", "metropolis", "manifesto", "mono"):
+        output = TMP / f"mosaic-theme-lists-{theme}.pdf"
+        typst_compile(typst, "theme-lists.typ", output, "--input", f"theme={theme}")
+        lists = TMP / f"mosaic-theme-lists-{theme}.txt"
+        command(["pdftotext", "-layout", "-f", "1", "-l", "1", str(output), str(lists)])
+        for expected in (
+            "1. PLUS ONE", "2. PLUS TWO", "7. SEVEN", "8. EIGHT",
+            "3. THREE", "4. FOUR", "a) ALPHA", "b) BETA", "ZZ MARKED",
+        ):
+            require_contains(lists, expected)
+
+    # An inverted slide takes the syntax highlighting theme of its own canvas:
+    # the dark theme's keyword red on the inverted slide of a light deck, the
+    # light theme's on the inverted slide of a dark one (Mono), and never the
+    # other polarity's.
+    light_keyword, dark_keyword = "#d73948", "#ff7b72"
+    for theme, plain, inverted in (
+        ("default", light_keyword, dark_keyword),
+        ("mono", dark_keyword, light_keyword),
+    ):
+        typst_compile(
+            typst, "slide-invert-raw.typ",
+            TMP / f"mosaic-slide-invert-raw-{theme}-{{p}}.svg",
+            "--format", "svg", "--input", f"theme={theme}",
+        )
+        plain_page = TMP / f"mosaic-slide-invert-raw-{theme}-1.svg"
+        inverted_page = TMP / f"mosaic-slide-invert-raw-{theme}-2.svg"
+        require_contains(plain_page, plain)
+        require_contains(plain_page, inverted, absent=True)
+        require_contains(inverted_page, inverted)
+        require_contains(inverted_page, plain, absent=True)
+    # Mono's code panel follows the inverted palette instead of keeping the
+    # deck's dark surface under the knocked-out ink.
+    require_contains(TMP / "mosaic-slide-invert-raw-mono-1.svg", "#121821")
+    require_contains(TMP / "mosaic-slide-invert-raw-mono-2.svg", "#121821", absent=True)
+
+    # A neutral callout's title is set in the text color, not the line color;
+    # a quotation shows its role or accent as a rail and is bare otherwise.
+    typst_compile(typst, "components-roles.typ", TMP / "mosaic-components-roles-{p}.svg", "--format", "svg")
+    roles = [TMP / f"mosaic-components-roles-{page}.svg" for page in (1, 2, 3, 4, 5)]
+    line, accent, custom = "#abcdef", "#123456", "#fedcba"
+    require_contains(roles[0], line, absent=True)
+    require_contains(roles[1], custom)
+    for paint in (line, accent, custom):
+        require_contains(roles[2], paint, absent=True)
+    require_contains(roles[3], accent)
+    require_contains(roles[4], custom)
+
+    # Punctuation in a name no longer drops the PDF author field.
+    require_contains(pdf_info("author-plain-name"), "Conan O'Brien, Ada Lovelace")
 
 
 def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:

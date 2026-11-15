@@ -139,4 +139,8 @@ setup-paper-zero|setup paper width and height must be positive absolute lengths
 setup-twice|setup already configured this deck; apply setup exactly once
 headings-empty-policy|content appears outside a slide; setup headings maps no heading level, so every slide must be an explicit slide command
 slide-footnote|footnotes are not supported on slides, where the entry would spill onto an extra page; put the note in a footer cell instead
-theme-colors-missing|theme colors is missing "surface"
+theme-colors-missing|theme colors requires "surface"
+theme-defaults-unknown|theme defaults does not accept "mystery"
+theme-layouts-bind|theme layouts "content" must be a Mosaic grid tree or layout
+setup-theme-override|setup does not accept "theme"
+components-progress-circle-fill|progress variant "circle" requires fill and accent to be colors

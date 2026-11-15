@@ -78,9 +78,9 @@
     base-size: 28pt,
   ),
   layouts: (
-    content: layouts.content(variant: "header-body"),
+    content: layouts.content(),
     title: layouts.title(),
-    section: layouts.section(variant: "baseline"),
+    section: layouts.section(),
   ),
   apply: apply,
 )

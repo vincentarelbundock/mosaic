@@ -10,17 +10,19 @@
 #show: m.setup.with(colors: dark, base-size: 17pt)
 
 #context {
-  assert(role-colors("error", contextual: true).accent == dark.error)
-  assert(role-colors("warning", contextual: true).text == dark.text)
+  assert(role-colors("error").accent == dark.error)
+  assert(role-colors("warning").text == dark.text)
   // `neutral` is the one role that is the deck surface rather than a tint.
-  assert(role-colors("neutral", contextual: true).fill == dark.surface)
+  assert(role-colors("neutral").fill == dark.surface)
   // A tinted fill sits between the role color and the deck canvas, so it is
   // neither of them, and it follows the palette rather than the library
   // default.
-  let warning-fill = role-colors("warning", contextual: true).fill
+  let warning-fill = role-colors("warning").fill
   assert(warning-fill != dark.warning)
   assert(warning-fill != dark.canvas)
-  assert(warning-fill != role-colors("warning").fill)
+  assert(warning-fill == rgb(color.mix(
+    (dark.warning, 15%), (dark.canvas, 85%),
+  )))
 }
 
 #m.slide(layout: m.layouts.content(variant: "header-body"))[

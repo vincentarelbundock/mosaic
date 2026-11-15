@@ -28,9 +28,12 @@
 
 // Outside a deck the roles resolve against the library's light palette, and all
 // three paints come from it rather than from stored per-role values.
-#assert(role-colors("warning").accent == light.warning)
-#assert(role-colors("warning").text == light.text)
-#assert(role-colors("neutral").fill == light.surface)
-#assert(role-colors("neutral").accent == light.line)
+// The resolution is contextual, since it reads the deck record.
+#context {
+  assert(role-colors("warning").accent == light.warning)
+  assert(role-colors("warning").text == light.text)
+  assert(role-colors("neutral").fill == light.surface)
+  assert(role-colors("neutral").accent == light.line)
+}
 
 Theme palettes share one schema.

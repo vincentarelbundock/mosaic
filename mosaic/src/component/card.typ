@@ -31,10 +31,10 @@
 ///
 /// *Overrides*
 ///
-/// `fill`, `accent`, `stroke`, `radius`, `inset`, `align`, and `text` each
-/// default to `auto`, meaning "take it from the role". Pass one to override
-/// just that part. `text` is a dictionary of native `text` arguments and is
-/// merged into the role's text color rather than replacing it.
+/// `fill`, `accent`, `stroke`, `radius`, `inset`, and `align` each default to
+/// `auto`, meaning "take it from the role". Pass one to override just that
+/// part. `text` is a dictionary of native `text` arguments, empty by default,
+/// and is merged into the role's text color rather than replacing it.
 ///
 /// ```typ
 /// #mosaic.components.card(
@@ -74,7 +74,7 @@
   /// -> dictionary
   text: (:),
   /// Native block width. `auto` hugs the content.
-  /// -> auto | length | relative | fraction
+  /// -> auto | length | relative
   width: auto,
   /// Native block height. `auto` hugs the content.
   /// -> auto | length | relative | fraction
@@ -89,7 +89,6 @@
     inset: inset,
     align: align,
     text: text,
-    contextual: true,
   )
   block(
     width: width,

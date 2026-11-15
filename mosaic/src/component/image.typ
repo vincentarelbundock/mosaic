@@ -11,10 +11,9 @@
 /// `scaling` all work as usual.
 ///
 /// ```typ
-/// #mosaic.slide(content: (
+/// #mosaic.slide(
 ///   background: mosaic.components.image(path("cover.webp")),
-///   body: [Text over the photograph],
-/// ))
+/// )[Text over the photograph]
 /// ```
 ///
 /// When Mosaic is imported as a package, wrap an asset of the calling project
@@ -56,7 +55,7 @@
   /// -> auto | length | relative
   width: 100%,
   /// Height of the image area. Defaults to filling the container.
-  /// -> auto | length | relative | fraction
+  /// -> auto | length | relative
   height: 100%,
   /// Native Typst fitting mode: `"cover"` fills and crops, `"contain"` fits
   /// the whole picture inside.

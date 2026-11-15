@@ -1,6 +1,6 @@
 // Quotation treatment with optional attribution.
 #import "card.typ": card
-#import "style.typ": component-tokens, deck-colors
+#import "style.typ": component-tokens, deck-colors, role-colors
 
 /// Creates a quotation treatment with optional attribution.
 ///
@@ -27,6 +27,18 @@
 /// )
 /// ```
 ///
+/// *Roles*
+///
+/// A plain quotation carries no border at all. Naming a role other than
+/// `neutral`, or passing `accent`, hangs the quotation on a rail down its left
+/// edge in that color, the way a pull quote is marked in print.
+///
+/// ```typ
+/// #mosaic.components.quote(role: "accent")[
+///   Bounded work beats unbounded intent.
+/// ]
+/// ```
+///
 /// See `card` for the list of roles and the full list of overrides.
 ///
 /// -> content
@@ -40,16 +52,19 @@
   /// Where the quotation comes from, appended after the attribution.
   /// -> content | none
   source: none,
-  /// Semantic role name: `neutral`, `accent`, `warning`, or `error`.
+  /// Semantic role name: `neutral`, `accent`, `warning`, or `error`. Any role
+  /// but `neutral` draws the left rail in that role's color.
   /// -> str
   role: "neutral",
   /// Panel fill. `auto` is a faint wash of the deck's text color.
   /// -> auto | color | gradient | tiling | none
   fill: auto,
-  /// Rail color. `auto` uses the role's own color.
+  /// Rail color. `auto` uses the role's own color, and draws no rail under
+  /// the `neutral` role.
   /// -> auto | color
   accent: auto,
-  /// Border stroke. `auto` draws none.
+  /// Border stroke. `auto` draws the left rail when a role or an `accent`
+  /// asks for one and nothing otherwise; an explicit stroke replaces the rail.
   /// -> auto | stroke | dictionary | none
   stroke: auto,
   /// Corner radius. `auto` uses the shared component radius.
@@ -70,6 +85,22 @@
   // color reads as the same faint lift in either direction. Pass `fill` to
   // replace it outright.
   let tint = deck-colors().text
+  // The rail is the only place a quotation shows its role, so a neutral
+  // quotation with no accent of its own stays the bare wash it always was.
+  let rail = if accent != auto {
+    accent
+  } else if role != "neutral" {
+    role-colors(role).accent
+  } else {
+    none
+  }
+  let stroke = if stroke != auto {
+    stroke
+  } else if rail == none {
+    none
+  } else {
+    (left: component-tokens.callout-rail + rail, rest: none)
+  }
   card(
     role: role,
     fill: if fill == auto {
@@ -78,7 +109,7 @@
       fill
     },
     accent: accent,
-    stroke: if stroke == auto { none } else { stroke },
+    stroke: stroke,
     radius: radius,
     inset: inset,
     align: align,

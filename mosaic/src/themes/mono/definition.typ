@@ -11,6 +11,7 @@
 #import "layouts.typ" as layouts
 #import "tokens.typ" as tokens
 #import "../polarity.typ": is-dark-canvas, dark-code-theme
+#import "../../component/style.typ": deck-colors
 
 #let apply(body, colors: (:), options: (:)) = {
   let base-size = options.base-size
@@ -20,21 +21,31 @@
     fill: colors.text,
     fallback: true,
   )
-  // Tight lists become wide. A list nested in an item is then a block that
-  // would take the paragraph spacing above it, a gap wider than the item
-  // rhythm, so each item body pins nested lists to the item spacing. The
-  // rule lives in the body, not on the list, so the space above a top-level
-  // list is left alone.
-  let widen(item) = {
-    let fields = item.fields()
-    let body = fields.remove("body")
-    (item.func())(..fields, {
-      show selector(list).or(enum): set block(above: 0.9em)
-      body
-    })
+  // Tight lists become wide, keeping every argument the list was written with
+  // (`start`, `numbering`, `marker`, ..): only `tight` changes.
+  let widen(it) = {
+    let fields = it.fields()
+    let children = fields.remove("children")
+    _ = fields.remove("tight", default: none)
+    (it.func())(..fields, tight: false, ..children)
   }
-  show list.where(tight: true): it => list(tight: false, ..it.children.map(widen))
-  show enum.where(tight: true): it => enum(tight: false, ..it.children.map(widen))
+  show list.where(tight: true): widen
+  show enum.where(tight: true): widen
+  // A list nested in an item of a wide list is a block, which would take the
+  // paragraph spacing above it, a gap wider than the item rhythm. Every list
+  // therefore pins the lists nested in it to its own item spacing, read from
+  // the live `set list(spacing: ..)` or `set enum(spacing: ..)` so a deck
+  // that changes the rhythm keeps it even. The rule is stated inside the
+  // list, so the space above a top-level list is left alone. It is a
+  // show-set rule scoped to the list, which is the limit: a deck-level
+  // `show list: set block(above: ..)` does not reach nested lists.
+  let pin-nested(it) = context {
+    let gap = if it.func() == enum { enum.spacing } else { list.spacing }
+    if type(gap) != length { return it }
+    show selector(list).or(enum): set block(above: gap)
+    it
+  }
+  show selector(list).or(enum): pin-nested
   set list(spacing: 0.9em, marker: text(fill: colors.accent)[--])
   set enum(spacing: 0.9em)
   set terms(spacing: 0.9em)
@@ -58,10 +69,16 @@
   show link: set text(fill: colors.accent)
   show raw.where(block: false): set text(fill: colors.accent)
   show raw.where(block: true): set text(size: 0.78em)
-  show raw.where(block: true): it => block(
-    width: 100%, fill: colors.surface, stroke: 0.8pt + colors.line,
-    radius: 4pt, inset: (x: 14pt, y: 11pt), it,
-  )
+  // The panel reads the palette of the slide it is drawn on rather than the
+  // deck's: on an inverted slide the ink is knocked out, and a panel still
+  // painted in the deck surface would set dark code on a dark ground.
+  show raw.where(block: true): it => context {
+    let live = deck-colors()
+    block(
+      width: 100%, fill: live.surface, stroke: 0.8pt + live.line,
+      radius: 4pt, inset: (x: 14pt, y: 11pt), it,
+    )
+  }
   show label("mosaic-cell-header"): set text(weight: "bold")
   show label("mosaic-title-display"): set text(size: 1.5em, weight: "bold")
   show label("mosaic-cell-title"): set par(leading: 0.5em)

@@ -63,7 +63,6 @@
     inset: inset,
     text: text,
     defaults: (inset: component-tokens.badge-inset),
-    contextual: true,
   )
   box(
     fill: it.fill,

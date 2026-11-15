@@ -32,7 +32,7 @@
 ]
 
 #mosaic.slide(
-  layout: mosaic.layouts.content(),
+  layout: mosaic.layouts.content(variant: "header-body-footer"),
   foreground: progress("circle", rgb("#ffffff")),
 )[
   == White circle
@@ -41,7 +41,7 @@
 ][Footer]
 
 #mosaic.slide(
-  layout: mosaic.layouts.content(),
+  layout: mosaic.layouts.content(variant: "header-body-footer"),
   foreground: progress("circle", rgb("#fedcba")),
 )[
   == Styled circle
