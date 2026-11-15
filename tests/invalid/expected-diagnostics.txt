@@ -180,3 +180,4 @@ quote-source-inline|quote source applies only to a block quotation
 fit-fraction|fit width cannot be a fraction such as 2fr, which is a share of free space that fit does not divide; use a ratio of the region, such as 100%
 slide-image-variant-removed|slide layout "image" variant was removed; write position:
 context-assertion-runs|native:context assertion ran
+content-after-slide|content appears after an explicit slide and belongs to no slide; open a new slide with a heading (levels 1, 2) or put the content in a slide command

@@ -105,10 +105,21 @@
 
 // Names the levels the deck actually compiles on, which the heading policy
 // may have moved.
-#let stray-content-error(headings) = if mapped-heading-levels(headings).len() == 0 {
+//
+// `after-slide` tells the two places stray content turns up apart: ahead of
+// every slide, where the deck has not opened one yet, and after an explicit
+// slide command, which closed the slide before it.
+#let stray-content-error(headings, after-slide: false) = if mapped-heading-levels(headings).len() == 0 {
   (
     "content appears outside a slide; setup headings maps no heading level, "
       + "so every slide must be an explicit slide command"
+  )
+} else if after-slide {
+  (
+    "content appears after an explicit slide and belongs to no slide; open "
+      + "a new slide with a heading (levels "
+      + mapped-heading-levels(headings).map(str).join(", ")
+      + ") or put the content in a slide command"
   )
 } else {
   (
@@ -255,7 +266,7 @@
       if has-slide-command(value) {
         fail("slide cannot be nested inside another slide or a container")
       }
-      fail(stray-content-error(headings))
+      fail(stray-content-error(headings, after-slide: output.len() > 0))
     }
   }
 
