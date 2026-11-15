@@ -47,7 +47,8 @@ Use native Typst labels and links. A label on a content slide becomes the link t
 ```typ
 == Results <results>
 
-See #link(<details>)[the details slide]. ```
+See #link(<details>)[the details slide].
+```
 
 For an explicit slide, put labeled, zero-output metadata at the beginning of its content:
 
@@ -164,8 +165,8 @@ Three authoring requirements follow from the standard. First, PDF/UA-1 requires 
 
 Theme chrome takes care of itself. Every built-in theme marks its progress ring, line, folio, or statusline as decoration, and Mono does the same for the `$` prompt before each slide heading, so a screen reader reads the slide's content and never the furniture. A `foreground:` or `background:` plane the deck supplies is content by default; wrap it in `pdf.artifact(..)` when it is decoration, and leave it alone when it carries meaning, such as a cover photograph with an `alt` string.
 
-#calepin.elements.callout(kind: "warning", title: [Requires Mosaic 0.0.2])[
-  The tagged title slide and the artifacted chrome are new in 0.0.2, which is not on Typst Universe yet. On the released 0.0.1 the title slide contributes no heading, so the deck must open with a `=` section heading before any `==` content slides, and the theme's slide number is announced on every slide. The README's install instructions fetch the development version; it imports as `@local/mosaic:0.0.2`.
+#calepin.elements.callout(kind: "warning", title: [Requires Mosaic 0.0.3])[
+  The tagged title slide and the artifacted chrome are new in the development version, 0.0.3, which is not on Typst Universe yet. On the released 0.0.1 the title slide contributes no heading, so the deck must open with a `=` section heading before any `==` content slides, and the theme's slide number is announced on every slide. The README's install instructions fetch the development version; it imports as `@local/mosaic:0.0.3`.
 ]
 
 ```typ

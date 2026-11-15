@@ -92,23 +92,19 @@
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
           #html.elem("h2")[Layouts and themes]
           #html.elem("p")[
-            Ready-made content, title, section, and image layouts, each with
-            several variants. Beautiful, modern, and easy-to-customize themes.
+            Ready-made content, title, section, and image layouts, each with several variants. Beautiful, modern, and easy-to-customize themes.
           ]
         ]
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
           #html.elem("h2")[Grids]
           #html.elem("p")[
-            Every slide is a grid: cells split horizontally or vertically,
-            nested as deeply as needed.
+            Every slide is a grid: cells split horizontally or vertically, nested as deeply as needed.
           ]
         ]
         #html.elem("article", attrs: (class: "mosaic-feature-card"))[
           #html.elem("h2")[Plain Typst]
           #html.elem("p")[
-            Cells, background, and foreground are native Typst layers, and
-            every cell has a stable label. Style them with ordinary show and
-            set rules, not a separate API.
+            Cells, background, and foreground are native Typst layers, and every cell has a stable label. Style them with ordinary show and set rules, not a separate API.
           ]
         ]
       ]

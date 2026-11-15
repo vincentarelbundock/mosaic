@@ -6,9 +6,7 @@
 
 #title()
 
-Every exported function and variable, grouped by reference page. Each name
-links to its full documentation: signature, parameter types, defaults, and
-descriptions.
+Every exported function, grouped by reference page. Each name links to its full documentation: signature, parameter types, defaults, and descriptions. The `palettes` collection is plain data rather than a function; the #link("appearance/colors.html#bundled-palettes")[Colors] page lists it.
 
 #let pages = (
   (title: "Document setup", group: "setup"),

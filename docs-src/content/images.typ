@@ -6,9 +6,7 @@
 
 #title()
 
-An image can sit in a cell or on a
-#link("../slides/background.html")[background] or #link("../slides/foreground.html")[foreground] plane. Image loading,
-fitting, figures, captions, and references remain native Typst. Full-slide photographic backgrounds are documented on the #link("../slides/background.html")[Background] page.
+An image can sit in a cell or on a #link("../slides/background.html")[background] or #link("../slides/foreground.html")[foreground] plane. Image loading, fitting, figures, captions, and references remain native Typst. Full-slide photographic backgrounds are documented on the #link("../slides/background.html")[Background] page.
 
 = Asset paths <asset-paths>
 
