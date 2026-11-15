@@ -6,40 +6,18 @@
 #import "support.typ": track-children, image-content
 
 
-#let semantic-directional-variants = (
-  "image-left",
-  "image-right",
-  "image-top",
-  "image-bottom",
-)
-#let semantic-image-variants = semantic-directional-variants + ("image-background",)
-
-#let semantic-image-position(variant) = if variant == "image-left" {
-  "left"
-} else if variant == "image-right" {
-  "right"
-} else if variant == "image-top" {
-  "top"
-} else {
-  "bottom"
-}
-
-#let validate-semantic-image-use(fields, name) = {
-  if fields.variant in semantic-image-variants and fields.image == none {
-    fail(name + " variant " + repr(fields.variant) + " requires image")
-  }
-  if fields.variant not in semantic-image-variants and fields.image != none {
-    fail(name + " variant " + repr(fields.variant) + " does not use image")
-  }
-  fields
-}
+// Where a picture sits, in one vocabulary for every layout that carries one.
+// The four directional positions split the slide between a full-bleed picture
+// and the text; `background` paints the picture behind the text instead.
+#let directional-positions = ("left", "right", "top", "bottom")
+#let image-positions = directional-positions + ("background",)
 
 // Two spellings, because authors ask two different questions. An array of 2 is
 // visual order — "what occupies each side" — and must be mirrored by hand when
-// the variant flips. A single track size answers "how much room does the
+// the position flips. A single track size answers "how much room does the
 // picture get", which is side-independent: the companion region takes the
-// remaining `1fr`, so `image-left` and `image-right` stay mirror images of each
-// other without the caller reordering anything.
+// remaining `1fr`, so the `left` and `right` positions stay mirror images of
+// each other without the caller reordering anything.
 // A directional image layout is a two-region composition by definition: an
 // image band and a text band, swapped by position. The pair is the API's shape,
 // not a limit that a more general track list would lift, so the count is named
@@ -61,18 +39,43 @@
   tracks
 }
 
-// The image and tracks checks every semantic image variant shares: the
-// picture is required exactly when the variant uses one, sized by the region
-// rather than the caller, and `tracks` reaches only the directional variants.
-#let validate-semantic-image-fields(fields, name) = {
-  let fields = validate-semantic-image-use(fields, name)
-  if fields.image != none {
-    _ = validate-image(fields.image, name + " image", allow-size: false)
-  }
-  if fields.variant in semantic-directional-variants {
-    _ = validate-directional-tracks(fields.tracks, name + " tracks")
-  } else if fields.tracks != auto {
-    fail(name + " tracks apply only to directional image variants")
+// `auto` is the side-by-side composition every layout with a picture shares.
+#let resolve-image-position(fields) = if fields.position == auto {
+  "left"
+} else {
+  fields.position
+}
+
+// The picture's whole field family, validated in one place for the layouts
+// whose `image` variant composes text beside or over a photograph (title,
+// section). The variant states the text design and nothing about the picture,
+// so the three fields travel together: the picture is required exactly when
+// the variant uses one, `position` places it, and `tracks` sizes the split of
+// a directional position.
+#let validate-image-fields(fields, name) = {
+  if fields.variant == "image" {
+    if fields.image == none {
+      fail(name + " variant \"image\" requires image")
+    }
+    _ = validate-image(fields.image, name + " image")
+    if fields.position != auto and fields.position not in image-positions {
+      fail(name + " position must be auto or one of " + repr(image-positions))
+    }
+    if resolve-image-position(fields) in directional-positions {
+      _ = validate-directional-tracks(fields.tracks, name + " tracks")
+    } else if fields.tracks != auto {
+      fail(name + " tracks size a split, so they apply only to positions " + repr(directional-positions))
+    }
+  } else {
+    if fields.image != none {
+      fail(name + " variant " + repr(fields.variant) + " does not use image")
+    }
+    if fields.position != auto {
+      fail(name + " position applies only to variant \"image\"")
+    }
+    if fields.tracks != auto {
+      fail(name + " tracks apply only to variant \"image\"")
+    }
   }
   fields
 }
@@ -94,7 +97,6 @@
   width: 100%,
   height: 100%,
   fit: "cover",
-  allow-size: false,
 )
 
 #let optional-fixed-image(value, name) = if value == none {
@@ -123,10 +125,8 @@
   body,
   tracks: auto,
 ) = {
-  // Every caller validates `position` first: the section layout derives it
-  // from its variant, the title layout checks its `position` field, and the
-  // image layout passes one of its directional variants. It is therefore one
-  // of left/right/top/bottom by construction.
+  // Every caller validates `position` first and routes `background` to
+  // image-background-cell, so it is one of left/right/top/bottom here.
   _ = validate-directional-tracks(tracks, "directional image layout tracks")
   let image-first = position in ("left", "top")
   let children = if image-first {
@@ -138,8 +138,9 @@
   split(..track-children(children, directional-tracks(tracks, image-first)))
 }
 
-// Any tonal adjustment belongs to the picture itself (see the image dictionary's
-// `scrim` key), so the background is the resolved image and nothing more.
+// Any tonal adjustment belongs to the picture itself (see the `scrim` argument
+// of `components.image`), so the background is the resolved image and nothing
+// more.
 #let image-background-cell(body, image) = body + (
   style: body.style + (background: image),
 )

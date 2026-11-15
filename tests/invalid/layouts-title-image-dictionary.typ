@@ -3,6 +3,5 @@
 #mosaic.layouts.title(
   title: [Title],
   variant: "image",
-  position: "right",
-  image: (alt: "Missing path"),
+  image: (path: path("/docs-src/assets/images/title-river.webp"), scrim: black),
 )

@@ -2,7 +2,7 @@
 #show: mosaic.setup
 #mosaic.slide(
   layout: "image",
-  variant: "left",
+  position: "left",
   image: path("/docs-src/assets/images/dog.webp"),
   tracks: ("wide",),
   cells: (header: [== T], body: [b]),

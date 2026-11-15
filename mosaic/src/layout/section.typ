@@ -8,17 +8,16 @@
   validate-variant,
 )
 
-#import "support.typ": adapt-fill, as-content, subordinate-block
+#import "support.typ": adapt-fill, as-content
 #import "../component/style.typ": component-tokens
 #import "image-support.typ": (
   directional-image-layout,
+  directional-positions,
   image-background-cell,
   image-cell,
   optional-fixed-image,
-  semantic-directional-variants,
-  semantic-image-position,
-  semantic-image-variants,
-  validate-semantic-image-fields,
+  resolve-image-position,
+  validate-image-fields,
 )
 
 #let text-variants = (
@@ -28,7 +27,17 @@
   "baseline",
   "toc",
 )
-#let variants = text-variants + semantic-image-variants
+#let variants = text-variants + ("image",)
+
+// The five variants that named the picture's place before `position` did.
+// Each fails with the spelling that replaced it.
+#let removed-image-variants = (
+  "image-left": "left",
+  "image-right": "right",
+  "image-top": "top",
+  "image-bottom": "bottom",
+  "image-background": "background",
+)
 
 // The visual recipe for each designed variant, in one place.
 //
@@ -106,14 +115,21 @@
   ),
 )
 
-// Image variants compose their text exactly as `plain` does, so they share its
-// entry rather than repeating it.
+// The image variant composes its text exactly as `plain` does, so it shares
+// that entry rather than repeating it.
 #let variant-tokens(variant) = (
   section-tokens.at(variant, default: section-tokens.plain)
 )
 
 #let validate-fields(fields, allow-auto: false) = {
   let fields = validate-accent(fields, "section", allow-auto: allow-auto)
+  if fields.variant in removed-image-variants {
+    fail(
+      "layout \"section\" variant " + repr(fields.variant)
+        + " was removed; write variant: \"image\", position: "
+        + repr(removed-image-variants.at(fields.variant)),
+    )
+  }
   _ = validate-variant(fields.variant, variants, "layout \"section\"")
   for name in ("subtitle", "number") {
     let value = fields.at(name)
@@ -121,7 +137,7 @@
       fail("layout \"section\" " + name + " must be content, a string, or none")
     }
   }
-  validate-semantic-image-fields(fields, "layout \"section\"")
+  validate-image-fields(fields, "layout \"section\"")
 }
 
 /// Creates a section divider grid.
@@ -151,13 +167,23 @@
 ///   baseline, tied together by a full-width hairline.
 /// - `toc`: every section in the deck listed, the current one alive with its
 ///   number, the others ghosted.
-/// - `image-left`, `image-right`, `image-top`, `image-bottom`: that cell beside
-///   or above a full-bleed `image` cell, sized by `tracks`.
-/// - `image-background`: the section text directly over a full-slide picture.
+/// - `image`: the `plain` composition with a picture, placed by `position`.
+///   Requires `image`.
 ///
-/// Every image variant requires `image`. The designed text variants (every
-/// variant but `plain` and the image ones) treat an omitted `number` as the
-/// automatic section counter, so they need no argument in the ordinary case.
+/// The designed text variants (`rule`, `numeral`, `baseline`, `toc`) treat an
+/// omitted `number` as the automatic section counter, so they need no argument
+/// in the ordinary case. They are compositions of type alone and take no
+/// picture.
+///
+/// *Pictures*
+///
+/// `variant` names the text design and `position` names the picture's place,
+/// in the vocabulary every layout with a picture shares:
+///
+/// - `"left"`, `"right"`, `"top"`, `"bottom"`: the section cell beside or
+///   above a full-bleed `image` cell, sized by `tracks`. `auto` means
+///   `"left"`.
+/// - `"background"`: the section text directly over a full-slide picture.
 ///
 /// *Labels*
 ///
@@ -166,24 +192,37 @@
 ///
 /// - `mosaic-cell-section`: the section text, in every variant. The number and
 ///   subtitle are composed inside it, so one rule reaches the whole stack.
-/// - `mosaic-cell-image`: the picture, in the directional image variants. The
-///   `image-background` variant paints the picture as the section cell's
-///   background instead, so it has no image cell of its own.
+/// - `mosaic-cell-image`: the picture, at the four directional positions. At
+///   `"background"` the picture is the section cell's background instead, so
+///   it has no image cell of its own.
+///
+/// Three further labels are not cells. They mark the tiers composed inside
+/// the section cell, so one tier can be restyled without the others:
+/// `mosaic-section-title` on the title text, `mosaic-section-number` on the
+/// number, and `mosaic-section-subtitle` on the subtitle.
+///
+/// ```typ
+/// #show label("mosaic-section-title"): set text(style: "italic")
+/// ```
 ///
 /// *Styling*
 ///
 /// The layout is structural. The centered arrangement and title typography come
 /// from the `<mosaic-cell-section>` label rules `setup` emits. Over a
 /// photograph the text inherits the surrounding native text color, so quiet the
-/// picture with the image dictionary's `scrim` key and override the cell's text
-/// fill.
+/// picture with the `scrim` argument of `components.image` and override the
+/// cell's text fill.
 ///
 /// ```typ
 /// #show label("mosaic-cell-section"): set text(fill: white)
 /// #mosaic.slide(
 ///   layout: "section",
-///   variant: "image-background",
-///   image: (path: path("cover.webp"), scrim: black.transparentize(55%)),
+///   variant: "image",
+///   position: "background",
+///   image: mosaic.components.image(
+///     path("cover.webp"),
+///     scrim: black.transparentize(55%),
+///   ),
 /// )[Structure]
 /// ```
 ///
@@ -192,36 +231,45 @@
   /// Optional subtitle set below the section title.
   /// -> content | str | none
   subtitle: none,
-  /// Optional section number or label. `plain` and the image variants set it
-  /// above the title and omit it when `none`; the designed text variants build
-  /// their composition around it and read the automatic section counter when
-  /// it is `none`.
+  /// Optional section number or label. `plain` and `image` set it above the
+  /// title and omit it when `none`; the designed text variants build their
+  /// composition around it and read the automatic section counter when it is
+  /// `none`.
   /// -> content | str | none
   number: none,
-  /// The picture used by the image variants, and rejected by the others. Give a
-  /// native `path(..)` value, ready-made content, or a dictionary whose `path`
-  /// key holds one and whose `scrim` key quiets the photograph enough to read
-  /// text over it. A bare string is rejected: it would resolve inside the
-  /// package rather than in the deck's project.
-  /// -> none | content | path | dictionary
+  /// The picture of the `image` variant, required there and rejected by the
+  /// others. Give a native `path(..)` value, which fills its region, or
+  /// ready-made content such as `components.image(path(..), scrim: ..)`,
+  /// whose `scrim` quiets the photograph enough to read text over it. A bare
+  /// string is rejected: it would resolve inside the package rather than in
+  /// the deck's project.
+  /// -> none | content | path
   image: none,
-  /// Structural arrangement: `plain`, `rule`, `numeral`, `baseline`, `toc`,
-  /// `image-left`, `image-right`, `image-top`, `image-bottom`, or
-  /// `image-background`.
+  /// The text design: `plain`, `rule`, `numeral`, `baseline`, `toc`, or
+  /// `image`.
   /// -> str
   variant: "plain",
-  /// Color of the section number, in every variant. `auto` keeps the number
-  /// subordinate to the title: the semantic muted color resolved by `setup`,
-  /// or the line color for the `numeral` variant, whose number is texture
-  /// rather than text. Pass a color to override either. The `baseline`
-  /// variant's hairline is not the number and stays in the semantic accent.
+  /// Where the `image` variant's picture sits, and rejected by the others:
+  /// `"left"`, `"right"`, `"top"`, `"bottom"`, or `"background"`. `auto`
+  /// means `"left"`.
+  /// -> auto | str
+  position: auto,
+  /// Color of the section number, in every variant that draws one. `auto`
+  /// keeps the number subordinate to the title: the semantic muted color
+  /// resolved by `setup`, or the line color for the `numeral` variant, whose
+  /// number is texture rather than text. Pass a color to override either. The
+  /// `baseline` variant ties its number to the title with a hairline, which
+  /// takes the same color and defaults to the semantic accent. `plain` and
+  /// `image` draw a number only when `number` is given, so without one there
+  /// is nothing for the color to reach.
   /// -> color | auto
   accent: auto,
-  /// Sizes the split of a directional image variant, and is rejected by the
-  /// others. One native Typst track size sizes the picture and is
-  /// side-independent, so `image-left` and `image-right` stay mirror images;
-  /// the section region takes the remaining `1fr`. An array of two is in visual
-  /// order instead.
+  /// Sizes the split of a directional position, and is rejected elsewhere.
+  /// One native Typst track size sizes the picture and is side-independent, so
+  /// the `left` and `right` positions stay mirror images; the section region
+  /// takes the remaining `1fr`. An array of two is in visual order instead,
+  /// and must be mirrored by hand when the position flips. `auto` splits the
+  /// slide evenly.
   /// -> auto | length | ratio | relative | fraction | array
   tracks: auto,
 ) = {
@@ -230,6 +278,7 @@
     number: number,
     image: image,
     variant: variant,
+    position: position,
     accent: accent,
     tracks: tracks,
   ), allow-auto: true)
@@ -258,13 +307,23 @@
 // captured just outside the heading, which an em-based show-set cannot
 // compound. The heading stays realized exactly once, keeping its outline
 // entry, bookmark, and link target.
-#let title-text(body, styles) = text(..styles, context {
+//
+// The title is a labeled tier like the number and the subtitle, so
+// `show label("mosaic-section-title"): set text(..)` restyles it alone. The
+// label sits on the context element, inside the variant's own treatment: a
+// rule on it is read by the capture below and therefore reaches a heading
+// body and a plain body alike.
+#let title-text(body, styles) = text(..styles, [#context {
   let size = text.size
   let rest = styles
   _ = rest.remove("size", default: none)
   show heading: it => text(size: size, ..rest, it.body)
   body
-})
+}<mosaic-section-title>])
+
+// The same label for the `plain` composition, which states no treatment of
+// its own: the cell's label rules style the body, and this only names it.
+#let plain-title(body) = [#context body<mosaic-section-title>]
 
 // The title treatment every designed variant states from its own tokens. The
 // toc variant styles its entries differently and calls title-text itself.
@@ -388,12 +447,20 @@
         ),
       )
       v(tokens.gap-above-rule)
-      // The tie between title and number takes the semantic accent: it is the
-      // one drawn gesture of the variant, and the number above it already
-      // holds the subordinate muted color.
+      // The tie between title and number takes the semantic accent by
+      // default: it is the one drawn gesture of the variant, and the number
+      // above it already holds the subordinate muted color. An explicit
+      // `accent:` recolors the pair, number and tie together.
       // The tie is drawn at the shared component rule weight, so the section
       // baseline, the progress bars, and the dividers read as one gesture.
-      line(length: 100%, stroke: component-tokens.rule-thickness + settings.colors.accent)
+      line(
+        length: 100%,
+        stroke: component-tokens.rule-thickness + if fields.number-accent == none {
+          settings.colors.accent
+        } else {
+          fields.number-accent
+        },
+      )
       v(tokens.gap-below-rule)
       subtitle-line(fields, settings, size: tokens.subtitle-size)
     },
@@ -402,7 +469,8 @@
 
 // The divider shows the whole deck: every section listed, past and future
 // ones ghosted in the line color, the current one alive with its accent
-// number. Reads the <mosaic-section-title> records the slide runtime emits.
+// number. Reads the <mosaic-section-record> records the slide runtime emits,
+// one per section slide.
 #let resolve-toc-section(fields, settings, tokens) = make-cell(
   id: "section",
   style: (
@@ -412,38 +480,42 @@
     inset: settings.spacing.inset,
     map: body => context {
       let mine = logical-section.get().first()
-      let entries = query(label("mosaic-section-title"))
+      let current = grid(
+        columns: (auto, 1fr),
+        column-gutter: tokens.gutter,
+        align: (left + bottom, left + bottom),
+        number-text(
+          auto-number(fields.number),
+          (
+            size: tokens.item-size,
+            weight: tokens.current-weight,
+            fill: fields.accent,
+          ),
+        ),
+        title-text(body, (
+          size: tokens.item-size,
+          weight: tokens.current-weight,
+        )),
+      )
+      let numbers = query(label("mosaic-section-record"))
+        .map(entry => (
+          number: logical-section.at(entry.location()).first(),
+          title: entry.value.title,
+        ))
+      // The current section is drawn from the slide's own body, never from
+      // its record, so it survives a slide the records do not list and is
+      // realized exactly once.
+      let others(keep) = numbers.filter(entry => keep(entry.number)).map(entry => text(
+        size: tokens.item-size,
+        weight: tokens.other-weight,
+        fill: settings.colors.line,
+        if entry.title == none { [] } else { entry.title },
+      ))
       stack(
         spacing: tokens.item-spacing,
-        ..entries.map(entry => {
-          let n = logical-section.at(entry.location()).first()
-          if n == mine {
-            grid(
-              columns: (auto, 1fr),
-              column-gutter: tokens.gutter,
-              align: (left + bottom, left + bottom),
-              number-text(
-                auto-number(fields.number),
-                (
-                  size: tokens.item-size,
-                  weight: tokens.current-weight,
-                  fill: fields.accent,
-                ),
-              ),
-              title-text(body, (
-                size: tokens.item-size,
-                weight: tokens.current-weight,
-              )),
-            )
-          } else {
-            text(
-              size: tokens.item-size,
-              weight: tokens.other-weight,
-              fill: settings.colors.line,
-              entry.value.title,
-            )
-          }
-        }),
+        ..others(n => n < mine),
+        current,
+        ..others(n => n > mine),
       )
       if fields.subtitle != none {
         v(tokens.gap-above-subtitle)
@@ -453,8 +525,8 @@
   ),
 )
 
-// The designed text variants, dispatched by name; the plain and image
-// variants below share one composition instead.
+// The designed text variants, dispatched by name; `plain` and `image` share
+// the one composition below instead.
 #let designed-section-resolvers = (
   rule: resolve-rule-section,
   numeral: resolve-numeral-section,
@@ -487,12 +559,14 @@
   } else {
     []
   }
-  let after = subordinate-block(
-    as-content(fields.subtitle),
-    (fill: settings.colors.muted, size: tokens.subtitle-size),
-    settings,
-    above: settings.spacing.compact-gap,
-  )
+  let after = if fields.subtitle == none {
+    []
+  } else {
+    block(
+      above: settings.spacing.compact-gap,
+      subtitle-line(fields, settings, size: tokens.subtitle-size),
+    )
+  }
   // Structural only: the section cell's arrangement and title typography come
   // from the <mosaic-cell-section> label rules the active theme emits.
   let section-cell = make-cell(
@@ -500,12 +574,16 @@
     style: (
       before: before,
       after: after,
+      map: plain-title,
       fit: "width",
       inset: settings.spacing.inset,
     ),
   )
-  if fields.variant in semantic-directional-variants {
-    let position = semantic-image-position(fields.variant)
+  if fields.variant != "image" {
+    return section-cell
+  }
+  let position = resolve-image-position(fields)
+  if position in directional-positions {
     // No gutter, as in the title and image layouts: the picture is its own
     // edge, and the section cell already keeps the deck inset, so a recolored
     // cell reaches the picture rather than stopping short of it. The cell
@@ -517,9 +595,7 @@
       section-cell,
       tracks: fields.tracks,
     )
-  } else if fields.variant == "image-background" {
-    image-background-cell(section-cell, image)
   } else {
-    section-cell
+    image-background-cell(section-cell, image)
   }
 }

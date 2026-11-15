@@ -97,8 +97,9 @@
 /// #let bab = mosaic.layouts.author([Charles Babbage], affiliations: (lon,))
 /// ```
 ///
-/// The `academic` title variant renders these as superscript numbers over a
-/// numbered legend. Compact variants list them without numbering.
+/// Every title variant renders these the same way: superscript numbers beside
+/// the names over a numbered legend, exactly when the deck names more than one
+/// institution. A single shared institution needs no markers.
 ///
 /// *Validation*
 ///
@@ -189,8 +190,18 @@
 // name. An array carries several of them, and the two spellings mix freely: a
 // deck writes plain names until one author needs an affiliation or an ORCID iD,
 // and then wraps that one in `author()` and leaves the rest alone.
+//
+// `none` is the empty list. Every other inherited deck field is suppressed
+// with `none`, and an author list that needed `()` instead would be the one
+// field with a spelling of its own.
 #let resolve-authors(value, name: "author") = {
-  let values = if type(value) == array { value } else { (value,) }
+  let values = if value == none {
+    ()
+  } else if type(value) == array {
+    value
+  } else {
+    (value,)
+  }
   values
     .enumerate()
     .map(((index, entry)) => validate-author(

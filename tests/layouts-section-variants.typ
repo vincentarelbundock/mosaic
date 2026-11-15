@@ -31,7 +31,7 @@ Tagline under the rule
     let sections = query(label("mosaic-section-record"))
     assert(
       sections.len() == 4,
-      message: "expected four section-title records, found "
+      message: "expected four section records, found "
         + str(sections.len()),
     )
   }

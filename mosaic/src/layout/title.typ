@@ -5,7 +5,6 @@
 #import "core.typ": (
   make-layout,
   validate-accent,
-  validate-image,
   validate-variant,
 )
 #import "support.typ": (
@@ -16,9 +15,12 @@
 )
 #import "image-support.typ": (
   directional-image-layout,
+  directional-positions,
+  image-background-cell,
   image-cell,
   optional-fixed-image,
-  validate-directional-tracks,
+  resolve-image-position,
+  validate-image-fields,
 )
 #import "../fit.typ": fit-ratio, reflow-scale, is-unsolvable
 
@@ -32,26 +34,26 @@
   "image",
 )
 
-// Where the image variant's picture sits: each position splits the slide
-// between a full-bleed picture band and the title region. A full-slide
-// photographic title is not a variant; compose it with the slide's
-// `background:` plane instead.
-#let image-positions = ("left", "right", "top", "bottom")
-
-#let resolve-image-position(fields) = if fields.position == auto {
-  "left"
-} else {
-  fields.position
-}
+// The message for a title slide with no title to show: `auto` found nothing
+// on `setup`, or the field was written empty. Suppressing the title is a
+// different act with its own spelling, which the message names.
+#let missing-title = (
+  "layout \"title\" requires title content through title: or setup(title: ..); "
+    + "pass title: none to compose the slide without one"
+)
 
 #let validate-fields(fields, allow-auto: false) = {
   let fields = validate-accent(fields, "title", allow-auto: allow-auto)
   let variant = validate-variant(fields.variant, variants, "layout \"title\"")
+  // `none` suppresses a field, the title included. What stays an error is the
+  // mistake: something that is neither text nor `none`, or text with nothing
+  // in it.
   if (
-    (type(fields.title) not in (content, str) or fields.title in ("", []))
+    fields.title != none
+      and (type(fields.title) not in (content, str) or fields.title in ("", []))
       and not (allow-auto and fields.title == auto)
   ) {
-    fail("layout \"title\" requires title content through title:")
+    fail(missing-title)
   }
   for name in ("subtitle", "date") {
     let value = fields.at(name)
@@ -64,38 +66,14 @@
   }
   // Names become records here, so every renderer below reads one shape and the
   // `academic` count below is a count of authors rather than of spellings.
+  // `none` resolves to the empty list, the same suppression as `()`.
   if not (allow-auto and fields.authors == auto) {
     fields.authors = resolve-authors(
       fields.authors,
       name: "layout \"title\" author",
     )
   }
-  // The image variant's whole field family, validated in one place: the
-  // picture is required exactly when the variant uses one, `position` selects
-  // the composition, and `tracks` sizes the split.
-  if variant == "image" {
-    if fields.image == none {
-      fail("layout \"title\" variant \"image\" requires image")
-    }
-    _ = validate-image(fields.image, "layout \"title\" image", allow-size: false)
-    if fields.position != auto and fields.position not in image-positions {
-      fail(
-        "layout \"title\" position must be auto or one of " + repr(image-positions),
-      )
-    }
-  } else {
-    if fields.image != none {
-      fail("layout \"title\" variant " + repr(variant) + " does not use image")
-    }
-    if fields.position != auto {
-      fail("layout \"title\" position applies only to variant \"image\"")
-    }
-  }
-  if variant == "image" {
-    _ = validate-directional-tracks(fields.tracks, "layout \"title\" tracks")
-  } else if fields.tracks != auto {
-    fail("layout \"title\" tracks apply only to the image variant")
-  }
+  let fields = validate-image-fields(fields, "layout \"title\"")
   if variant == "academic" {
     if type(fields.authors) == array and fields.authors.len() == 0 {
       fail("layout \"title\" variant " + repr(variant) + " requires at least one author")
@@ -126,9 +104,13 @@
 /// takes the value configured on `setup`. To override an inherited value:
 ///
 /// - Pass explicit content or a string to replace it.
-/// - Pass `none` to suppress an inherited `subtitle` or `date`; `title` is
-///   required and cannot be suppressed.
-/// - Pass `()` to suppress inherited `authors`.
+/// - Pass `none` to suppress it. This works for all four fields; `authors`
+///   also accepts the empty array `()`, which means the same.
+///
+/// A slide with its title suppressed still composes: the details alone, or
+/// the picture alone. What fails is a title slide with no title to inherit,
+/// that is `title: auto` on a deck whose `setup` declares none, because that
+/// is an omission rather than a choice.
 ///
 /// *Variants*
 ///
@@ -153,15 +135,21 @@
 ///   numbers over a numbered affiliation legend and a contact line. Requires
 ///   at least one author.
 ///
-/// One image variant, which requires `image` and reads `position`:
+/// One variant carries a picture:
 ///
-/// - `image` with `position: "left"`, `"right"`, `"top"`, or `"bottom"` (the
-///   default is `"left"`): a full-bleed picture beside or above the title
-///   stack, sized by `tracks`.
+/// - `image`: the compact title stack with a picture, placed by `position`.
+///   Requires `image`.
 ///
-/// A full-slide photographic title is not a variant: give the slide a
-/// `background:` plane and compose the type yourself, reading the deck's own
-/// metadata back through `info()`.
+/// *Pictures*
+///
+/// `variant` names the text design and `position` names the picture's place,
+/// in the vocabulary every layout with a picture shares:
+///
+/// - `"left"`, `"right"`, `"top"`, `"bottom"`: a full-bleed picture beside or
+///   above the title stack, sized by `tracks`. `auto` means `"left"`.
+/// - `"background"`: the title stack at the lower left, directly over a
+///   full-slide picture. The type keeps the deck's text color, so quiet the
+///   photograph with a scrim and recolor the cell as shown under *Styling*.
 ///
 /// *Long titles*
 ///
@@ -169,9 +157,8 @@
 /// grow to a share of the slide and then scale down to hold it, and the
 /// heading stack scales down in turn once it outgrows the room the details
 /// leave, so a long title over a long author list shrinks rather than
-/// overprinting. With `setup(overflow: ..)` switched on, a title that fits
-/// only because it was scaled down is still reported, so a checking pass
-/// names the slide whose title wants shortening.
+/// overprinting. A stack scaled to fit does fit, so `setup(overflow: ..)`
+/// does not report it.
 ///
 /// To invert any of these, with the slide ground in the deck's text color and
 /// the type knocked out, pass `invert: true` on the slide rather than picking
@@ -200,7 +187,9 @@
 /// - `mosaic-cell-details`: the affiliation and date band, in the `panel` and
 ///   `academic` variants, which set those tiers outside the title cell.
 /// - `mosaic-cell-authors`: the byline, in the `academic` variant.
-/// - `mosaic-cell-image`: the picture, in the `image` variant.
+/// - `mosaic-cell-image`: the picture, in the `image` variant at the four
+///   directional positions. At `"background"` the picture is the title cell's
+///   background instead, so it has no image cell of its own.
 ///
 /// One further label is not a cell: the display line of the title stack carries
 /// `mosaic-title-display`, which is where a theme states the title's display
@@ -216,7 +205,12 @@
 /// #show label("mosaic-cell-title"): set text(fill: white)
 /// #mosaic.slide(
 ///   layout: "title",
-///   background: mosaic.components.image(path("cover.webp"), scrim: black.transparentize(55%)),
+///   variant: "image",
+///   position: "background",
+///   image: mosaic.components.image(
+///     path("cover.webp"),
+///     scrim: black.transparentize(55%),
+///   ),
 /// )
 /// ```
 ///
@@ -239,8 +233,9 @@
 ///
 /// -> dictionary
 #let title(
-  /// Title text. `auto` inherits `setup(title:)`.
-  /// -> auto | content | str
+  /// Title text. `auto` inherits `setup(title:)` and fails when there is
+  /// none to inherit; `none` suppresses the title on this slide.
+  /// -> auto | content | str | none
   title: auto,
   /// Subtitle set tight below the title. `auto` inherits `setup(subtitle:)`;
   /// `none` suppresses it.
@@ -250,50 +245,52 @@
   /// `setup(date:)`; `none` suppresses it.
   /// -> auto | content | str | none
   date: auto,
-  /// The picture used by the `image` variant, and rejected by the others.
-  /// Give a native `path(..)` value, ready-made content, or a dictionary whose
-  /// `path` key holds one and whose `scrim` key quiets the photograph enough
-  /// to read text over it, as in
-  /// `(path: path("cover.webp"), scrim: black.transparentize(55%))`. A bare
+  /// The picture of the `image` variant, required there and rejected by the
+  /// others. Give a native `path(..)` value, which fills its region, or
+  /// ready-made content such as
+  /// `components.image(path("cover.webp"), scrim: black.transparentize(55%))`,
+  /// whose `scrim` quiets the photograph enough to read text over it. A bare
   /// string is rejected: it would resolve inside the package rather than in
   /// the deck's project.
-  /// -> none | content | path | dictionary
+  /// -> none | content | path
   image: none,
-  /// Structural arrangement: `ruled`, `centered`, `bordered`, `kicker`,
-  /// `panel`, `academic`, or `image`.
+  /// The text design: `ruled`, `centered`, `bordered`, `kicker`, `panel`,
+  /// `academic`, or `image`.
   /// -> str
   variant: "ruled",
   /// Where the `image` variant's picture sits, and rejected by the others:
-  /// `left`, `right`, `top`, or `bottom`, for a full-bleed picture beside or
-  /// above the title stack. `auto` means `left`.
+  /// `"left"`, `"right"`, `"top"`, `"bottom"`, or `"background"`. `auto`
+  /// means `"left"`.
   /// -> auto | str
   position: auto,
   /// One name, or an array of names and records created with
-  /// `layouts.author`. `auto` inherits `setup(authors:)`; `()` suppresses an
-  /// inherited list.
-  /// -> auto | content | str | array
+  /// `layouts.author`. `auto` inherits `setup(authors:)`; `none` or `()`
+  /// suppresses an inherited list.
+  /// -> auto | content | str | array | none
   authors: auto,
-  /// Sizes the image variant's split, and is rejected elsewhere. One native Typst track size sizes the picture and is
-  /// side-independent, so the `left` and `right` positions stay mirror images;
-  /// the title region takes the remaining `1fr`. An array of two is in visual
-  /// order instead, and must be mirrored by hand when the position flips.
-  /// `auto` gives the picture the smaller share.
+  /// Sizes the split of a directional position, and is rejected elsewhere.
+  /// One native Typst track size sizes the picture and is side-independent, so
+  /// the `left` and `right` positions stay mirror images; the title region
+  /// takes the remaining `1fr`. An array of two is in visual order instead,
+  /// and must be mirrored by hand when the position flips. `auto` gives the
+  /// picture the smaller share.
   /// -> auto | length | ratio | relative | fraction | array
   tracks: auto,
   /// Whether to draw the variant's mark: the `ruled` full-width rule, the
   /// `bordered` border, the `kicker` opening rule, or the short accent rule
   /// that closes the heading stack of the `academic`, `centered`, and `image`
-  /// variants. `auto` draws the mark everywhere except on `centered` and
-  /// `image`, which stay bare unless asked: the first is the plain
-  /// composition, and on the second the photograph already does that work.
-  /// Ignored by the `panel` variant, whose accent rule is part of the panel
-  /// and always draws.
+  /// variants and opens the `panel`. `auto` draws the mark everywhere except
+  /// on `centered` and `image`, which stay bare unless asked: the first is
+  /// the plain composition, and on the second the photograph already does
+  /// that work. `false` removes the mark in every variant.
   /// -> auto | bool
   rule: auto,
   /// Color of the variant's mark. `auto` uses the deck's text color for the
   /// `bordered` border and the `kicker` opening rule, and the semantic accent
   /// everywhere else: the `ruled` rule, the `panel` rule, the `kicker`
-  /// eyebrow, and the short rule of `academic`, `centered`, and `image`.
+  /// eyebrow, and the short rule of `academic`, `centered`, and `image`. The
+  /// color belongs to the mark, so where `rule` leaves the mark undrawn there
+  /// is nothing for it to reach.
   /// -> color | auto
   accent: auto,
 ) = {
@@ -439,7 +436,7 @@
 // Their muted `fill` survives only while the cell carries the deck's ordinary
 // text color; see `adapt-fill`. That is what lets one rule on
 // <mosaic-cell-title> recolor the whole stack for a light-on-dark
-// composition, which is the case the image-* variants exist to serve.
+// composition, which is the case the image variant exists to serve.
 #let title-styles(settings) = (
   subtitle: (
     fill: settings.colors.muted,
@@ -463,11 +460,19 @@
 // geometrically to hold it, with the same measurement the fitters in fit.typ
 // use. Title metadata is the one slide content an author cannot cut, so its
 // box grows like an auto track up to the cap and then compresses instead of
-// colliding with the tier above it. Under `measure` the region reports
-// unbounded and the body returns untouched, exactly like the fitters.
-#let capped-fit(body, cap) = layout(region => {
+// colliding with the tier above it.
+//
+// Under `measure` the region reports unbounded and there is nothing to fit
+// against. What comes back then depends on who is asking, which `nested`
+// states. A fitter inside another fitter returns its body untouched, exactly
+// like the fitters in fit.typ, so the outer one measures the real stack. The
+// outermost fitter of a cell is measured by one reader only, the overflow
+// observer, and it answers with nothing: content scaled into its allocation
+// fits by construction, so its natural height is not an overflow and must not
+// be reported as one.
+#let capped-fit(body, cap, nested: false) = layout(region => {
   if is-unsolvable(region.width) or is-unsolvable(region.height) {
-    return body
+    return if nested { body } else { [] }
   }
   let natural = measure(body, width: region.width)
   let limit = cap * region.height
@@ -669,8 +674,13 @@
 
 // Title and subtitle only: the heavy block of the page, without the details
 // or the accent rule of the compact stack.
-#let heading-stack(fields, settings) = {
-  title-display(as-content(fields.title))
+//
+// Either tier may be suppressed. The stack is always content, so a caller can
+// scale, align, or measure it without asking whether anything is in it.
+#let heading-stack(fields, settings) = content-or-empty({
+  if fields.title != none {
+    title-display(as-content(fields.title))
+  }
   if fields.subtitle != none {
     block(
       above: settings.title-tokens.subtitle-gap * settings.spacing.gap,
@@ -681,7 +691,7 @@
       },
     )
   }
-}
+})
 
 // The rule and details below the heading stack of the compact composition.
 #let title-stack-tail(
@@ -827,11 +837,9 @@
 // or the title grows. `heading` receives nothing and is laid out in a block of
 // exactly the clear height, so it is the caller's to align and fit.
 //
-// Under `measure` there is no region to divide, so the two tiers come back
-// stacked at their natural size, like the fitters in fit.typ. Overflow
-// observation therefore sees the unfitted composition and reports a title
-// that fits only because it was scaled down, which is the report an author
-// checking a deck wants.
+// Under `measure` there is no region to divide. Both tiers are scaled into
+// their allocations by construction, so the composition answers the overflow
+// observer with nothing, like capped-fit.
 //
 // `pinned` places the heading region at the top edge outright. A theme may
 // align the title cell on the horizon, and that alignment reaches every block
@@ -846,11 +854,7 @@
 ) = layout(region => {
   let details = align(anchor, details-stack(parts, settings))
   if is-unsolvable(region.width) or is-unsolvable(region.height) {
-    return {
-      heading
-      v(settings.spacing.gap)
-      details
-    }
+    return []
   }
   let natural = measure(details, width: region.width)
   let limit = settings.title-tokens.details-cap * region.height
@@ -903,6 +907,7 @@
           capped-fit(
             details-stack(parts, settings),
             settings.title-tokens.details-cap,
+            nested: true,
           ),
         )
       }
@@ -965,7 +970,9 @@
       ),
     )
   }
-  title-display(as-content(fields.title))
+  if fields.title != none {
+    title-display(as-content(fields.title))
+  }
 }
 
 #let kicker-heading(fields, settings) = {
@@ -978,14 +985,16 @@
       )),
     )
   }
-  let masthead = kicker-masthead(fields, settings)
+  let masthead = content-or-empty(kicker-masthead(fields, settings))
   align(left + top, layout(region => {
     let whole = {
       rule
       masthead
     }
+    // Fitted by construction, so there is no overflow to report; see
+    // capped-fit.
     if is-unsolvable(region.width) or is-unsolvable(region.height) {
-      return whole
+      return []
     }
     let natural = measure(whole, width: region.width)
     if natural.height <= region.height {
@@ -1057,7 +1066,9 @@
       show link: set text(fill: pale)
       align(left + bottom, capped-fit(
         {
-          accent-rule(fields.accent, settings)
+          if has-rule(fields) {
+            accent-rule(fields.accent, settings)
+          }
           block(
             above: settings.spacing.gap,
             panel-details(parts, settings, settings.colors.canvas, pale),
@@ -1116,6 +1127,7 @@
             capped-fit(
               details-stack(parts, settings),
               settings.title-tokens.details-cap,
+              nested: true,
             ),
           )
         }
@@ -1178,10 +1190,13 @@
   rows(..children)
 }
 
-#let resolve-directional-image-title(fields, image, position, settings) = {
-  // A side column is a narrow measure; the top and bottom bands run the full
-  // slide width and take the wide arrangement.
-  let text-column = title-stack(
+// image: the compact stack with a picture. A directional position splits the
+// slide between a full-bleed picture and the title region; `background` sets
+// the same stack, at full measure, over a picture that fills the slide.
+#let resolve-image-title(fields, image, position, settings) = {
+  // A side column is a narrow measure; the top and bottom bands and the
+  // background run the full slide width and take the wide arrangement.
+  let stack = title-stack(
     fields,
     settings,
     scale: settings.title-tokens.image-title-scale,
@@ -1190,6 +1205,9 @@
     // shrinks rather than colliding once it outgrows them.
     cap: settings.title-tokens.stack-cap,
   )
+  if position not in directional-positions {
+    return image-background-cell(stack, image)
+  }
   let tracks = if fields.tracks == auto {
     if position in ("left", "top") {
       settings.title-tokens.image-tracks
@@ -1202,13 +1220,18 @@
   directional-image-layout(
     position,
     image-cell(image),
-    text-column,
+    stack,
     tracks: tracks,
   )
 }
 
 #let resolve-title(command, settings) = {
   let inherited = command.fields
+  // `auto` with nothing to inherit is an omission and fails; an explicit
+  // `none` is a choice and composes the slide without a title.
+  if inherited.title == auto and settings.deck.title == none {
+    fail(missing-title)
+  }
   let fields = validate-fields(inherited + (
     title: if inherited.title == auto { settings.deck.title } else { inherited.title },
     subtitle: if inherited.subtitle == auto { settings.deck.subtitle } else { inherited.subtitle },
@@ -1218,7 +1241,7 @@
   ))
   // Marked text variants default their structural rule to the deck's text
   // color; only an explicit accent recolors it. The resolved accent above
-  // still feeds the image variants' short rule.
+  // still feeds the short accent rule of the other variants.
   let fields = fields + (
     mark-accent: if inherited.accent == auto { none } else { inherited.accent },
   )
@@ -1240,7 +1263,7 @@
   } else if fields.variant == "panel" {
     resolve-panel-title(fields, settings)
   } else {
-    resolve-directional-image-title(
+    resolve-image-title(
       fields,
       image,
       resolve-image-position(fields),

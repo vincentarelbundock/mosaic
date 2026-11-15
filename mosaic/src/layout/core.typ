@@ -1,15 +1,15 @@
 // Shared record shape and validation primitives for semantic layouts.
-#import "../shared.typ": tag, fail, validate-keys, validate-scrim
+#import "../shared.typ": tag, fail
 
 #let layout-field-keys = (
   content: ("columns", "tracks", "variant"),
-  image: ("caption", "fit", "image", "tracks", "variant"),
+  image: ("caption", "fit", "image", "position", "tracks"),
   title: (
     "accent", "authors", "date", "image", "position", "rule", "subtitle",
     "title", "tracks", "variant",
   ),
   section: (
-    "accent", "image", "number", "subtitle", "tracks", "variant",
+    "accent", "image", "number", "position", "subtitle", "tracks", "variant",
   ),
 )
 
@@ -56,10 +56,9 @@
 }
 
 
-// The fitting vocabulary Mosaic validates, shared by every place a picture
-// dictionary is checked so the spelling cannot drift. Native `image` also accepts
-// `"stretch"`; a design that truly wants distortion passes ready-made content
-// built on the native element instead.
+// The fitting vocabulary of the image layout's `fit:` shorthand. Native
+// `image` also accepts `"stretch"`; a design that truly wants distortion
+// passes ready-made content built on the native element instead.
 #let image-fit-modes = ("cover", "contain")
 
 // A picture is named by a native `path` value and never by a string. Mosaic
@@ -69,41 +68,23 @@
 // carries the project it was written in.
 #let path-hint = "write path(\"cover.webp\") so the file resolves in your project"
 
-#let validate-image(
-  value,
-  name,
-  allow-size: true,
-) = {
-  if type(value) == content {
+// A picture has two spellings and no third: a bare `path`, which the layout
+// turns into an image filling its region, or ready-made content, which states
+// everything about itself. `components.image` is that content's usual
+// constructor and already owns `fit`, `scrim`, and `alt`, so a dictionary
+// repeating those keys here would be a second way to say the same thing.
+#let validate-image(value, name) = {
+  if type(value) in (content, path) {
     return value
   }
   if type(value) == str {
     fail(name + " must be a native path, not a string; " + path-hint)
   }
-  let value = if type(value) == path {
-    (path: value)
-  } else if type(value) == dictionary {
-    value
-  } else {
-    fail(name + " must be content, a native path, or a path dictionary")
+  if type(value) == dictionary {
+    fail(
+      name + " no longer takes a dictionary; build the picture with "
+        + "components.image(path(\"cover.webp\"), scrim: ..) and pass that",
+    )
   }
-  let allowed = if allow-size {
-    ("path", "alt", "width", "height", "fit", "scrim")
-  } else {
-    ("path", "alt", "fit", "scrim")
-  }
-  _ = validate-keys(value, allowed, name)
-  if "path" not in value or type(value.path) != path {
-    fail(name + " path must be a native path; " + path-hint)
-  }
-  let alt = value.at("alt", default: none)
-  if alt != none and type(alt) != str {
-    fail(name + " alt must be a string or none")
-  }
-  let fit = value.at("fit", default: "cover")
-  if type(fit) != str or fit not in image-fit-modes {
-    fail(name + " fit must be \"cover\" or \"contain\"")
-  }
-  _ = validate-scrim(value.at("scrim", default: none), name)
-  value
+  fail(name + " must be a native path or content")
 }
