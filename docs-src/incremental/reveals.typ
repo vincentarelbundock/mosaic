@@ -32,7 +32,7 @@ Revealed grid cells can start removed, allowing visible cells to use the space u
 
 = Reveal text
 
-Use `m.steps.on` for a word, sentence, or other element that appears only at selected steps. Ranges may be integers, open ranges such as `"3-"`, or closed ranges such as `"2-4"`; `before` and `after` control the surrounding steps.
+Use `m.steps.on` for a word, sentence, or other element that appears only at selected steps. Ranges may be integers, open ranges such as `"3-"`, closed ranges such as `"2-4"`, or everything up to a step, such as `"-2"`; `before` and `after` control the surrounding steps.
 
 #embedded-example(
   calepin.elements.gallery,

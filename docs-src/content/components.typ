@@ -43,7 +43,7 @@ Create a compact inline badge with configurable corners and text styling.
 
 = `quote()`
 
-Typeset a borderless quotation with an optional attribution.
+Typeset a borderless quotation with an optional attribution. A `role:` other than `neutral`, or an explicit `accent:`, draws a rail down its left edge in that color; a plain quotation has none.
 
 #embedded-example(
   calepin.elements.gallery,

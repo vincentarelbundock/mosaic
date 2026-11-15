@@ -65,7 +65,8 @@
   /// - `"16-9"`: widescreen, the default.
   /// - `"4-3"`: traditional projector.
   /// - a `(width:, height:)` dictionary of lengths, for a custom size Typst's
-  ///   named papers do not cover.
+  ///   named papers do not cover. Both must be positive absolute lengths:
+  ///   an `em` has no meaning before the deck's text size exists.
   /// -> str | dictionary
   paper: "16-9",
   /// Page margin for the `slides` output. A presentation canvas is edge to

@@ -208,9 +208,9 @@ Three further keys carry the rest of a theme:
 
 == What `apply` owns
 
-Mosaic's engine emits no slide typography of its own. Every rule a slide renders with comes from the active theme. So a theme built from scratch states its whole look in `apply`, down to the labels a slide emits. The #link("../api/labels.html")[label reference] is the checklist: a theme that styles `mosaic-cell-title` but forgets `mosaic-cell-section` renders section slides in the engine's bare defaults, and nothing warns about it.
+Mosaic's engine fills the canvas and sets the text fill from the palette's `text` color, and emits no other slide typography. Every other rule a slide renders with comes from the active theme. So a theme built from scratch states the rest of its look in `apply`, down to the labels a slide emits. The #link("../api/labels.html")[label reference] is the checklist: a theme that styles `mosaic-cell-title` but forgets `mosaic-cell-section` renders section slides in the engine's bare defaults, and nothing warns about it.
 
-A theme may omit `apply`. It then changes colors and layouts only, and every slide falls back to Typst's own text defaults. A theme derived from a bundled one inherits that theme's rules and can leave `apply` alone.
+A theme may omit `apply`. It then changes colors and layouts only, and every slide falls back to Typst's own text defaults in the palette's text color. A theme derived from a bundled one inherits that theme's rules and can leave `apply` alone.
 
 The engine keeps two rules of its own, on `<mosaic-note-heading>` and `<mosaic-note-body>`. They style the printed speaker and notes pages. That furniture must read black on white whatever the theme does, so the rules force the color and nothing else: the note text inherits the base size the theme's own `apply` set, rather than a size the engine picked (the released 0.0.1 fixes them at 12pt and 10pt instead). A theme or deck rule on the same label overrides them.
 
@@ -250,7 +250,7 @@ Once a theme is worth reusing, give it a file of its own. That file re-exports t
 #let setup = themes.setup(definition)
 ```
 
-Those are the names a deck expects to find: `setup` and `layouts` at least, plus whatever else it uses from `m`. `themes.setup` validates the definition on the spot. A malformed theme therefore fails on that line, rather than somewhere inside a deck that imports it.
+Those are the names a deck expects to find: `setup` and `layouts` at least, plus whatever else it uses from `m`. `themes.setup` validates the definition on the spot: a missing or misspelled color is named, as are unknown `defaults` keys and an incomplete `layouts` dictionary. A malformed theme therefore fails on that line, rather than somewhere inside a deck that imports it.
 
 The deck below imports a complete theme in that shape. Its three files sit beside the deck in the repository: the importable file, the definition dictionary, and the layout functions.
 
