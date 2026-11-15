@@ -50,7 +50,7 @@ Each variant borrows a classic minimalist tradition. The six text variants need 
 - `panel`: an ink side panel carries the details; the heading stack takes the main field.
 - `academic`: the conference poster: superscript affiliation numbers, a numbered legend, a contact line. Requires at least one author.
 
-The seventh variant, `image`, sets a compact title stack with a picture. It requires an `image:`, and `position:` places it: `"left"` (the default), `"right"`, `"top"`, or `"bottom"` for a full-bleed picture beside or above the stack, sized by `tracks:`, or `"background"` for the stack over a full-slide picture. #link("../content/images.html#pictures-in-layouts")[Pictures in layouts] describes both arguments, which the section and image layouts share. Over a background picture the type keeps the deck's text color, so give the picture a #link("../content/images.html#scrims")[scrim] and recolor the title cell:
+The seventh variant, `image`, sets a compact title stack with a picture. A picture needs `variant: "image"`: write it together with `image:`. `position:` and `tracks:` apply only to that variant. `position:` places the picture: `"left"` (the default), `"right"`, `"top"`, or `"bottom"` for a full-bleed picture beside or above the stack, sized by `tracks:`, or `"background"` for the stack over a full-slide picture. #link("../content/images.html#pictures-in-layouts")[Pictures in layouts] describes both arguments, which the section and image layouts share. Over a background picture the type keeps the deck's text color, so give the picture a #link("../content/images.html#scrims")[scrim] and recolor the title cell:
 
 ```typ
 #[

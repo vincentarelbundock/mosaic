@@ -48,15 +48,15 @@ An explicit `number:` overrides the automatic counter for that slide. Omit it an
 
 Each variant borrows a classic minimalist tradition:
 
-- `plain`: the title alone at the slide's vertical center. This is the default of `m.layouts.section()` in the abstract; each theme picks its own, and the default theme's sections are `baseline`.
+- `plain`: the title, with an optional number and subtitle, as a plain stack. The `plain` section states no arrangement of its own; the theme places the stack and sets the title's type through `<mosaic-cell-section>`. Each theme picks its own section variant, and the default theme's is `baseline`.
 - `rule`: the title beneath a heavy full-width rule, the number above it.
 - `numeral`: an enormous ghost number bleeding off the top-right edge behind a lower-left title stack.
 - `baseline`: title and number tied to one baseline by a hairline.
 - `toc`: every section in the deck listed, with the current one alive and the others ghosted.
 
-The designed variants build their composition around the section number, so an omitted `number:` reads the automatic counter. Pass `accent:` to recolor the number, and with it the hairline of the `baseline` variant. A `subtitle:` is set caption-sized beneath the title in every variant.
+The designed variants (`rule`, `numeral`, `baseline`, `toc`) each own their arrangement. They build it around the section number, so an omitted `number:` reads the automatic counter. Pass `accent:` to recolor the number, and with it the hairline of the `baseline` variant. A `subtitle:` is set caption-sized beneath the title in every variant.
 
-The `image` variant is the `plain` composition with a picture. It requires an `image:`, and `position:` places it: `"left"` (the default), `"right"`, `"top"`, or `"bottom"` for the section text beside a full-bleed picture, sized by `tracks:`, or `"background"` for the text directly over one. #link("../content/images.html#pictures-in-layouts")[Pictures in layouts] describes both arguments, which the title and image layouts share:
+The `image` variant is the `plain` composition with a picture. A picture needs `variant: "image"`: write it together with `image:`. `position:` and `tracks:` apply only to that variant. `position:` places the picture: `"left"` (the default), `"right"`, `"top"`, or `"bottom"` for the section text beside a full-bleed picture, sized by `tracks:`, or `"background"` for the text directly over one. #link("../content/images.html#pictures-in-layouts")[Pictures in layouts] describes both arguments, which the title and image layouts share:
 
 ```typ
 #m.slide(

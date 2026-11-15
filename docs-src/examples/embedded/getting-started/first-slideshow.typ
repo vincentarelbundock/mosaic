@@ -1,5 +1,5 @@
 // Configure the deck once: identity, layouts, and a progress line.
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.1" as m
 
 #show: m.setup.with(
   title: [Getting started],
@@ -30,17 +30,15 @@ No `slide` call required
 
 Explicit slides when a heading is not enough
 
-// The image layout takes two blocks: header, then body.
+// The image layout shows one picture under the slide's heading, with an
+// optional caption beneath it.
 #m.slide(
   layout: "image",
-  position: "right",
   image: path("/docs-src/assets/images/dog.webp"),
-)[== A picture beside text][
-  - The picture fills the right band.
-  - The text keeps the left.
-]
+  caption: [The whole picture, never cropped],
+)[== A picture with a caption]
 
-// Three blocks: header, left column, right column.
+// The heading is the header; one block follows for each column.
 #m.slide(layout: "content", columns: 2)[== Two columns][
   First column
 ][

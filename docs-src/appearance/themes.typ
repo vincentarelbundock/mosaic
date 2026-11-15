@@ -234,7 +234,7 @@ apply: (body, colors: (:), options: (:)) => {
 },
 ```
 
-`depth` is the number of `=` signs, so `depth: 2` selects the headings that title content slides. The function receives the heading on one frame and a stand-in on the others, so it places its argument rather than reading its fields. The same helper works in a deck, as an ordinary `#show:` rule after `setup`.
+`depth` is the number of `=` signs, so `depth: 2` selects the headings that title content slides. The function receives the heading on one frame and a stand-in on the others, so it places its argument rather than reading its fields. The same helper works in a deck, as an ordinary `#show:` rule after `setup`. The #link("../api/theme.html#themes.decorate-heading")[theme authoring API] documents its arguments.
 
 == Customize a theme
 
