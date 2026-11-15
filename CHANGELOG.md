@@ -8,6 +8,7 @@ This version tightens the public API and breaks several older spellings to get t
 
 ### Breaking
 
+- The title layout's picture variants are `image-left`, `image-right`, `image-top`, `image-bottom`, and `image-background`, the same names the section layout uses. `variant: "image", position: "right"` becomes `variant: "image-right"`, and a bare `variant: "image"`, which meant left, becomes `variant: "image-left"`. One word, `variant`, now selects a layout's arrangement everywhere; `position:` existed only for this one variant and is removed.
 - A layout's `image:` is a `path(..)` or content. The dictionary form `image: (path: path("a.webp"), scrim: .., fit: .., alt: ..)` becomes `image: components.image(path("a.webp"), scrim: .., fit: .., alt: ..)`, so a picture is built by the one function that already builds pictures everywhere else. A bare string is rejected as well: it could only resolve inside the installed package.
 - `setup(headings:)` is an array indexed by heading level. `headings: ("1": "section", "2": "slide")` becomes `headings: ("section", "slide")`, with `none` for a level that opens no slide, because levels are positions and a dictionary keyed by strings of digits only imitated one.
 - Positional slide bodies follow one rule: a slide's opening heading is its header, and everything else fills the cells in order. `slide[== Title][Body]` is unchanged, and a heading that opens the first body is now lifted into the header, so the first body's destination no longer depends on how many bodies there are. `slide[Plain][Body]` on a layout with a header is an error; write `slide(cells: (header: [Plain], body: [Body]))`. A cell with a deck default from `setup(cells:)` is reached only through `cells:`; positional bodies pass over it.
@@ -30,7 +31,7 @@ This version tightens the public API and breaks several older spellings to get t
 - `setup(font: .., base-size: ..)` works under every theme, custom themes included. A theme's headings are multiples of the base size, so the deck scales with it.
 - `themes.decorate-heading` declares a heading rule that rebuilds the heading (`show heading: it => ..`) so that it holds on every frame of an incremental slide.
 - `setup(spacing: (compact-inset: ..))` sets the depth of every compact cell (header, footer, or any cell in an `auto` row), built-in or hand-built. Raise it to `inset` for a deeper painted header.
-- `title(variant: "image", position: "background")` sets the title stack over a full-slide picture.
+- `title(variant: "image-background")` sets the title stack over a full-slide picture.
 - `none` suppresses any inherited field of a title slide: `title`, `subtitle`, `date`, or `authors`.
 - `components.quote` is a superset of the native `quote`: `block:`, `quotes:`, and a label as `attribution:` keep their native meaning. `quote(role:)` and `quote(accent:)` draw a rail down the left edge; a plain quotation is unchanged.
 - The section layout's `accent:` colors the number in the `baseline` and `numeral` variants, and the `baseline` hairline with it.

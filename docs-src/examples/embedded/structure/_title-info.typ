@@ -1,6 +1,10 @@
 // The title information every variant example on the Title slides page renders.
 // Three authors over two institutions, one of them shared, so the `academic`
 // legend has something to number; every field of `layouts.author` is exercised.
+//
+// This file stays on the released import. What it exports is plain data, author
+// records and a picture, that both versions read, so the wrappers that need the
+// development version (the title picture variants) import it unchanged.
 #import "@preview/mosaic:0.0.1" as m
 
 #let ccp = [Centre for Comparative Politics]

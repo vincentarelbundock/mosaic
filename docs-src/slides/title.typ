@@ -11,7 +11,7 @@
 
 A title slide takes its content from the deck rather than from the slide, and its arrangement from a variant.
 
-#unreleased(calepin.elements.callout)[Two things on this page are new: `position: "background"`, which sets the title over a full-slide picture, and `none` for the title itself. The examples compile under the released version as they stand.]
+#unreleased(calepin.elements.callout)[Three things on this page are new: the five `image-*` variants, where the released version writes `variant: "image"` with a `position:`; `image-background`, which sets the title over a full-slide picture; and `none` for the title itself. The picture examples import the development version; the others compile under the released one as they stand.]
 
 = A simple title slide
 
@@ -41,7 +41,7 @@ Writing `none` drops an inherited field from that slide: the subtitle, the date,
 
 = Variants
 
-Each variant borrows a classic minimalist tradition. The six text variants need nothing beyond the deck's own information:
+Each variant borrows a classic minimalist tradition. Six of them are compositions of type alone, and need nothing beyond the deck's own information:
 
 - `centered`: the heading stack at the slide's center, details at the bottom edge.
 - `bordered`: a thin border closes around a centered stack.
@@ -50,15 +50,14 @@ Each variant borrows a classic minimalist tradition. The six text variants need 
 - `panel`: an ink side panel carries the details; the heading stack takes the main field.
 - `academic`: the conference poster: superscript affiliation numbers, a numbered legend, a contact line. Requires at least one author.
 
-The seventh variant, `image`, sets a compact title stack with a picture. A picture needs `variant: "image"`: write it together with `image:`. `position:` and `tracks:` apply only to that variant. `position:` places the picture: `"left"` (the default), `"right"`, `"top"`, or `"bottom"` for a full-bleed picture beside or above the stack, sized by `tracks:`, or `"background"` for the stack over a full-slide picture. #link("../content/images.html#pictures-in-layouts")[Pictures in layouts] describes what `image:` accepts. `position: "background"` is new in the development version, and `tracks:` does not apply to it. Over a background picture the type keeps the deck's text color, so give the picture a #link("../content/images.html#scrims")[scrim] and recolor the title cell:
+Five more variants set a compact title stack with a picture, and require an `image:`. They are the same five names the #link("section.html")[section layout] uses: `image-left`, `image-right`, `image-top`, and `image-bottom` put a full-bleed picture beside or above the stack, sized by `tracks:`, and `image-background` sets the stack over a full-slide picture. A layout's variant selects its arrangement, a picture's place included, so there is no separate placement argument. #link("../content/images.html#pictures-in-layouts")[Pictures in layouts] describes what `image:` accepts. Over a background picture the type keeps the deck's text color, so give the picture a #link("../content/images.html#scrims")[scrim] and recolor the title cell:
 
 ```typ
 #[
   #show label("mosaic-cell-title"): set text(fill: white)
   #m.slide(
     layout: "title",
-    variant: "image",
-    position: "background",
+    variant: "image-background",
     image: m.components.image(
       path("cover.webp"),
       scrim: black.transparentize(55%),
@@ -109,7 +108,7 @@ Written out in full, one of those decks is this:
 
 An affiliation is the institution itself rather than an identifier for it, so two authors land on one legend number exactly when they name the same institution. Binding `ccp` and `eis` once and reusing the bindings is what makes that happen.
 
-The remaining decks are that same file with a different variant on the last line, and the image decks also pass an `image:` and a `position:`.
+The remaining decks are that same file with a different variant on the last line, and the picture decks also pass an `image:` and import the development version.
 
 In your own deck, write the title information directly in `setup`, as the listing above does. The decks on this page keep it in one shared #repo-file("docs-src/examples/embedded/structure/_title-info.typ")[file] only so the page has a single copy to edit.
 
@@ -122,10 +121,10 @@ Open any thumbnail to see the slide at full size:
   #slideshow(calepin.elements.gallery, "structure/title-kicker", 1, "The shared title information under the kicker variant", caption: [`kicker`])
   #slideshow(calepin.elements.gallery, "structure/title-panel", 1, "The shared title information under the panel variant", caption: [`panel`])
   #slideshow(calepin.elements.gallery, "structure/title-academic", 1, "The shared title information under the academic variant", caption: [`academic`])
-  #slideshow(calepin.elements.gallery, "structure/title-image-left", 1, "The shared title information with the picture on the left", caption: [`image`, `position: "left"`])
-  #slideshow(calepin.elements.gallery, "structure/title-image-right", 1, "The shared title information with the picture on the right", caption: [`image`, `position: "right"`])
-  #slideshow(calepin.elements.gallery, "structure/title-image-top", 1, "The shared title information with the picture above", caption: [`image`, `position: "top"`])
-  #slideshow(calepin.elements.gallery, "structure/title-image-bottom", 1, "The shared title information with the picture below", caption: [`image`, `position: "bottom"`])
+  #slideshow(calepin.elements.gallery, "structure/title-image-left", 1, "The shared title information with the picture on the left", caption: [`image-left`])
+  #slideshow(calepin.elements.gallery, "structure/title-image-right", 1, "The shared title information with the picture on the right", caption: [`image-right`])
+  #slideshow(calepin.elements.gallery, "structure/title-image-top", 1, "The shared title information with the picture above", caption: [`image-top`])
+  #slideshow(calepin.elements.gallery, "structure/title-image-bottom", 1, "The shared title information with the picture below", caption: [`image-bottom`])
 ]
 
 = Inverted
@@ -140,7 +139,7 @@ There is no inverted variant, because inversion is not an arrangement. Pass `inv
 
 = Custom title page <custom-title-page>
 
-When no variant draws the page you want, not even the `image` variant over a background picture, build the slide yourself. `m.info()` returns the `title`, `subtitle`, `authors`, and `date` you declared on `setup`, so the custom slide can use them without repeating them. Each author comes back as a dictionary with `name`, `affiliations`, `email`, `orcid`, and `corresponding` fields. Call `m.info()` inside a `context` block, as the example below does. The same reader also reports where the slide sits in the deck, in its `slide` and `section` fields, which is what hand-built chrome is made of; the #link("../presenting/footer.html")[footer and progress] page covers that side of it.
+When no variant draws the page you want, not even `image-background`, build the slide yourself. `m.info()` returns the `title`, `subtitle`, `authors`, and `date` you declared on `setup`, so the custom slide can use them without repeating them. Each author comes back as a dictionary with `name`, `affiliations`, `email`, `orcid`, and `corresponding` fields. Call `m.info()` inside a `context` block, as the example below does. The same reader also reports where the slide sits in the deck, in its `slide` and `section` fields, which is what hand-built chrome is made of; the #link("../presenting/footer.html")[footer and progress] page covers that side of it.
 
 The deck below composes a full-slide photograph on the slide's `background:` plane, anchors the heading to the top edge, and pins the byline to the bottom, an arrangement no built-in variant draws. The `scrim:` on the background image quiets the photograph exactly as it does on the image variants, and `numbered: false` keeps the cover out of the slide count the way named title layouts stay out of it automatically.
 
