@@ -96,7 +96,12 @@
 #assert(
   "fill" not in grid-test.info(resolved-structured, "header").cell.style,
 )
-#let structured = mosaic.slide(layout: structured-grid)[Structured header][Left body][Right body][Structured footer]
+#let structured = mosaic.slide(layout: structured-grid, cells: (
+  header: [Structured header],
+  body-1: [Left body],
+  body-2: [Right body],
+  footer: [Structured footer],
+))
 
 // Native rules restyle the content layout's canonical cells, deck-wide or
 // scoped to one slide command.
@@ -108,14 +113,18 @@
   )
   #show label("mosaic-cell-body"): set text(fill: rgb("#123456"))
   #show label("mosaic-cell-footer"): set align(right)
-  #mosaic.slide(layout: footer-layout)[Styled header][Body region][Independent footer style]
+  #mosaic.slide(layout: footer-layout, cells: (
+    header: [Styled header],
+    body: [Body region],
+    footer: [Independent footer style],
+  ))
 ]
 
 #let header-body-layout = mosaic.layouts.content(variant: "header-body")
 #let header-body-grid = resolve-layout(header-body-layout, settings)
 #assert(header-body-grid.tracks == (auto, 1fr))
 #assert(grid-test.count(header-body-grid) == 2)
-#let header-body = mosaic.slide(layout: header-body-layout)[Header][Body]
+#let header-body = mosaic.slide(layout: header-body-layout)[== Header][Body]
 
 #let body-footer-layout = mosaic.layouts.content(variant: "body-footer")
 #let body-footer-grid = resolve-layout(body-footer-layout, settings)

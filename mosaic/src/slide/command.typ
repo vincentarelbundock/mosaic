@@ -144,18 +144,39 @@
 ///
 /// Use one of the two forms, never both on the same slide:
 ///
-/// - Positional bodies, filling cells in depth-first layout order. A cell that
-///   already has a deck default from `setup(cells:)` is passed over unless
-///   the slide supplies a body for every cell, and a cell named `header`
-///   always counts as having one. So `slide[A]` on a header-and-body layout
-///   fills the body, and `slide[A][B]` fills the header and then the body.
-/// - A `cells:` dictionary keyed by cell id, which is order-independent and
-///   lets a slide skip cells.
+/// - Positional bodies. A slide's opening heading is its header, and
+///   everything else fills the cells: when the layout has a `header` cell and
+///   the first body opens with a heading, that heading fills the header, just
+///   as `== Title` does on an automatic slide. The bodies then fill, in
+///   depth-first layout order, the cells that are not the header and have no
+///   deck default from `setup(cells:)`. The rule does not depend on how many
+///   bodies there are, so these three are the same slide:
+///
+///   ```typ
+///   == Title
+///   Body.
+///
+///   #mosaic.slide[== Title][Body.]
+///
+///   #mosaic.slide[
+///     == Title
+///     Body.
+///   ]
+///   ```
+///
+///   A layout without a `header` cell lifts nothing, and the heading stays in
+///   the body it was written in. More bodies than there are cells to fill is
+///   an error that lists the cells positional bodies reach.
+/// - A `cells:` dictionary keyed by cell id, which is order-independent, lets
+///   a slide skip cells, and is the way to reach the cells positional bodies
+///   pass over: a header that is not a heading, or a cell with a deck default.
+///   Nothing is lifted from named cells; content stays in the cell it names.
 ///
 /// ```typ
 /// #mosaic.slide(cells: (
-///   header: [== Named cells],
+///   header: [Not a heading],
 ///   body: [Order does not matter here.],
+///   footer: [Replaces the deck footer on this slide.],
 /// ))
 /// ```
 ///
@@ -221,8 +242,9 @@
   /// from `setup`, `none` suppresses it.
   /// -> auto | content | none
   foreground: auto,
-  /// Positional cell bodies in depth-first layout order, each one content or
-  /// `none` for an empty cell, plus any named arguments forwarded as fields of the selected layout.
+  /// Positional cell bodies, each one content or `none` for an empty cell,
+  /// filling cells by the rule under "Supplying content" above, plus any
+  /// named arguments forwarded as fields of the selected layout.
   /// -> arguments
   ..bodies
 ) = {

@@ -127,7 +127,7 @@ temporal-heading|headings cannot be wrapped in on, reveal, replace, or drawing; 
 theme-definition-option-conflict|theme option "paper" conflicts with setup
 theme-definition-unknown|theme does not accept "mystery"
 theme-layouts-incomplete|theme layouts requires "title"
-too-many|grid expects 1 bodies with setup defaults or 2 bodies to override them, received 3
+too-many|slide received 3 positional bodies, but on this layout they fill "body"; address any other cell by name through cells:
 slide-body-type|slide positional bodies must be content, received integer
 cell-inset-type|cell inset must be auto, a length, or a dictionary of sides with length values
 cell-inset-side|cell inset must be auto, a length, or a dictionary of sides with length values
@@ -170,3 +170,4 @@ headings-policy-role|setup headings level 2 must be "section", "slide", or none
 split-tracks-count|rows tracks must be auto or an array with one track size per child (2 here): auto, a length, a ratio, or a fraction
 split-tracks-single|columns tracks must be auto or an array with one track size per child (2 here): auto, a length, a ratio, or a fraction
 slide-without-setup|slide requires a deck; apply setup with a show rule, such as `#show: mosaic.setup`, before the first slide
+slide-bodies-defaulted|slide received 3 positional bodies, but on this layout they fill "body-1" and "body-2"; address any other cell by name through cells:
