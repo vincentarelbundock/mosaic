@@ -40,7 +40,7 @@ The `title` and `section` layouts are compositions rather than bare grids. Each 
   [`mosaic-title-display`], [The display line of a title slide, inside `mosaic-cell-title`. This is where a theme states the title's display size and tracking.],
   [`mosaic-section-title`], [The title text of a section slide, in every variant.],
   [`mosaic-section-number`], [The section numeral of a section slide.],
-  [`mosaic-section-subtitle`], [The section's subtitle, where the variant emits one.],
+  [`mosaic-section-subtitle`], [The section's subtitle, in every variant.],
 )
 
 Typography goes through these labels. Geometry does not: the spacers, rules, and offsets a variant composes itself from are produced during layout and no show rule reaches inside them. A size, weight, or color is always a label rule; an arrangement is the variant's design.

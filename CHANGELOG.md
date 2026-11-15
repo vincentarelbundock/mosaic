@@ -21,7 +21,7 @@ This version settles the vocabulary of the public API, one spelling per concept,
 - Theme definitions state `font` and `base-size` under `defaults`, not `options`: `options: (font: "Inter", base-size: 20pt)` becomes `defaults: (font: "Inter", base-size: 20pt)`. They are deck options every theme accepts, so a custom theme no longer has to declare them for `setup(font: ..)` to work.
 - `fit(width: 2fr)` and a fractional `height:` are refused; use a ratio such as `100%`. A fraction is a share of free space among siblings, which a fitter measuring one block does not divide.
 - `steps.on` with a body that is not content is a drawing command, valid only inside `steps.drawing`; anywhere else it fails instead of printing a dictionary. Write text as content: `on(2)[text]`.
-- The label `<mosaic-section-title>` now marks the visible title text of a section slide, like every other tier label. The queryable record of each section, which carried that label, is `<mosaic-section-record>`.
+- The label `<mosaic-section-title>` now marks the visible title text of a section slide, like every other tier label. The queryable record of each section, which carried that label, is `<mosaic-section-record>`. `<mosaic-section-subtitle>` now labels the subtitle in the `plain` and `image` variants too.
 - A compact cell in a hand-built grid, one directly in an `auto` row, now pads like the built-in header and footer: full `inset` left and right, `compact-inset` above and below. Before, a custom header was deeper than the header of an image slide in the same deck. Pass `inset:` on the cell to keep the old padding. Thanks to [@eddelbuettel](https://github.com/eddelbuettel) for the report.
 - Under the root and default facades, `m.layouts.content()` is now `header-body` and `m.layouts.section()` is `baseline`, the layouts heading slides already used. Pass `variant: "header-body-footer"` or `variant: "plain"` for the old ones.
 - `#footnote` on a slide is a compile error. The entry used to spill onto an extra page; put the note in a footer cell.
@@ -45,7 +45,7 @@ This version settles the vocabulary of the public API, one spelling per concept,
 
 - Everything Mosaic provides is transparent to its own commands. `pause`, `steps`, and `note` work inside `card`, `callout`, `quote`, `badge`, `divider`, and `figure`, and in the content a layout takes as a field, such as a section tagline or a title slide's title and subtitle, as they already did inside tables, term lists, shapes, transforms, `columns`, and math.
 - A note never adds a frame and is never dropped: tied to a step the slide does not reach, it is shown on the last frame.
-- A dimmed component mutes its fill, border, and rail along with its text.
+- A dimmed component mutes its fill, border, and rail along with its text, whether the step is written inside the cell or wraps the grid cell that holds it.
 - `steps.drawing` needs `hide:` only when a command is actually hidden.
 - A list timed with `pause`, `on`, or `reveal` keeps the exact position and shape of the same list untimed, with the deck's own marker, numbering, spacing, and indents.
 - A title too long for its slide is scaled to fit instead of overprinting the byline. A title scaled this way fits, so `overflow:` does not report it.
@@ -63,6 +63,7 @@ This version settles the vocabulary of the public API, one spelling per concept,
 - Numbered lists (`+`, `1.`) compile under Editorial, Metropolis, Manifesto, and Mono, and keep their `start`, `numbering`, and `marker`.
 - `place` without an alignment no longer aborts the slide.
 - A handout keeps its headings, outline entries, and labels.
+- Section and title headings look the same on every frame of a multi-frame slide, and a title slide carries one real heading, so one outline entry, however many frames it has.
 - A hidden list item hides its marker.
 - A labeled figure or equation on a multi-frame slide resolves `@label` instead of reporting a duplicate.
 - `steps.replace` measures its alternatives at the width it is offered and stays inline.

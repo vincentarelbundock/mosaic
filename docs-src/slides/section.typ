@@ -48,7 +48,7 @@ An explicit `number:` overrides the automatic counter for that slide. Omit it an
 
 Each variant borrows a classic minimalist tradition:
 
-- `plain`, the default: the title alone at the slide's center.
+- `plain`: the title alone at the slide's vertical center. This is the default of `m.layouts.section()` in the abstract; each theme picks its own, and the default theme's sections are `baseline`.
 - `rule`: the title beneath a heavy full-width rule, the number above it.
 - `numeral`: an enormous ghost number bleeding off the top-right edge behind a lower-left title stack.
 - `baseline`: title and number tied to one baseline by a hairline.

@@ -5,10 +5,14 @@
   path("/docs-src/assets/images/dog.webp"),
   alt: "Dog",
 )
-#let myslide = m.slide.with("section")
+// The default theme's own section layout is `baseline`, so the plain variant
+// is named here.
+#let myslide = m.slide.with(layout: m.layouts.section(variant: "plain"))
 #myslide[Plain section]
 
-#let myslide = m.slide.with(layout: m.layouts.section(number: [01]))
+#let myslide = m.slide.with(
+  layout: m.layouts.section(variant: "plain", number: [01]),
+)
 #myslide[Numbered section]
 
 // The designed text variants read the automatic section counter when no
