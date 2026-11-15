@@ -6,7 +6,7 @@
 #import "../incremental/analysis.typ": max-step
 #import "../incremental/transform.typ": (
   transform,
-  require-stable-temporal-headings,
+  validate-stable-temporal-headings,
   validate-frame-metadata,
 )
 #import "../incremental/heading.typ": canonical-frame, strip-headings
@@ -436,10 +436,10 @@
   // walks that the frame loop repeats.
   _ = validate-stable-grid-headings(resolved-grid, contents)
   for value in contents.values() {
-    require-stable-temporal-headings(value)
+    _ = validate-stable-temporal-headings(value)
   }
-  require-stable-temporal-headings(planes.background)
-  require-stable-temporal-headings(planes.foreground)
+  _ = validate-stable-temporal-headings(planes.background)
+  _ = validate-stable-temporal-headings(planes.foreground)
   // Whether this slide holds any note at all, asked once rather than once per
   // frame. Note extraction is four content walks per frame, and a deck with no
   // notes would otherwise pay all of them on every page.

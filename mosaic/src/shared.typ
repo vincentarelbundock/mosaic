@@ -14,10 +14,6 @@
 #let typst-styled = text(red)[].func()
 #let typst-space = [ ].func()
 
-#let is-path(value) = type(value) == path or (
-  type(value) == str and value != ""
-)
-
 // A canonical Mosaic record is a metadata element whose value is a dictionary
 // tagged with `mosaic` and a `kind` and carrying exactly the declared keys.
 // A foreign or differently-kinded value is merely not a record; a tagged

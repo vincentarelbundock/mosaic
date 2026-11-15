@@ -1,6 +1,6 @@
 // Construction, validation, and resolution of the section layout.
 #import "../shared.typ": fail
-#import "../grid/constructors.typ": styled-cell
+#import "../grid/constructors.typ": make-cell
 #import "../deck-state.typ": logical-section
 #import "core.typ": (
   make-layout,
@@ -294,7 +294,7 @@
 // A heavy full-width rule with the heading stack hanging beneath it, everything
 // flush left. The rule carries the design; the number sits above it like a
 // running head.
-#let resolve-rule-section(fields, settings, tokens) = styled-cell(
+#let resolve-rule-section(fields, settings, tokens) = make-cell(
   id: "section",
   style: (
     align: left + horizon,
@@ -322,7 +322,7 @@
 // The section number set enormous in the line color, bleeding off the
 // top-right edge. It reads as texture rather than text and counterweights the
 // lower-left title stack.
-#let resolve-numeral-section(fields, settings, tokens) = styled-cell(
+#let resolve-numeral-section(fields, settings, tokens) = make-cell(
   id: "section",
   style: (
     align: left,
@@ -363,7 +363,7 @@
 // Title and number share one baseline, tied together by a full-width
 // hairline: title flush left in bold, number flush right in a thin weight of
 // the same size. The subtitle hangs under the rule like a caption.
-#let resolve-baseline-section(fields, settings, tokens) = styled-cell(
+#let resolve-baseline-section(fields, settings, tokens) = make-cell(
   id: "section",
   style: (
     align: left + horizon,
@@ -403,7 +403,7 @@
 // The divider shows the whole deck: every section listed, past and future
 // ones ghosted in the line color, the current one alive with its accent
 // number. Reads the <mosaic-section-title> records the slide runtime emits.
-#let resolve-toc-section(fields, settings, tokens) = styled-cell(
+#let resolve-toc-section(fields, settings, tokens) = make-cell(
   id: "section",
   style: (
     align: left + horizon,
@@ -495,7 +495,7 @@
   )
   // Structural only: the section cell's arrangement and title typography come
   // from the <mosaic-cell-section> label rules the active theme emits.
-  let section-cell = styled-cell(
+  let section-cell = make-cell(
     id: "section",
     style: (
       before: before,

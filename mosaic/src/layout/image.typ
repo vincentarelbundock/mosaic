@@ -6,7 +6,7 @@
 // title and section layouts already use.
 #import "../shared.typ": fail
 #import "../caption-fit.typ": captioned-image
-#import "../grid/constructors.typ": styled-cell, rows, track
+#import "../grid/constructors.typ": make-cell, rows, track
 #import "core.typ": image-fit-modes, make-layout, validate-image, validate-variant
 #import "support.typ": as-content, image-content, inset-cell
 #import "image-support.typ": (
@@ -228,7 +228,7 @@
         content-sized: true,
       )),
       // The picture owns a fixed cell, so the slide supplies no block for it.
-      track(1fr, styled-cell(
+      track(1fr, make-cell(
         id: "image",
         content: content,
         style: (content-sized: false, inset: settings.spacing.inset),

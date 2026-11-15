@@ -39,7 +39,7 @@
 ///
 /// ```typ
 /// #mosaic.slide(
-///   background: mosaic.components.image("cover.webp", scrim: black.transparentize(45%)),
+///   background: mosaic.components.image(path("cover.webp"), scrim: black.transparentize(45%)),
 /// )[
 ///   #context {
 ///     let deck = mosaic.info()

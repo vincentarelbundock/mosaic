@@ -1,8 +1,24 @@
 // Heading inspection, canonical style capture, and inert continuations.
 #import "../shared.typ": fail, key
 #import "../note/command.typ": is-note
-// Re-exported for `grid/render.typ`, which still imports it from here.
-#import "core.typ": apply-state
+
+// A heading built with `heading(level: ..)` carries no `depth`, so a theme
+// rule written as `heading.where(depth: 2)` would pass over it and style it
+// as the depth-1 default instead. Restating the level as the depth makes the
+// constructed heading match its markup twin, whether it opens an automatic
+// slide or sits in a slide body. The explicit `level` is kept, so the native
+// level it resolves to does not move, and a markup heading, which always
+// carries its depth, is returned untouched.
+#let resolve-heading-depth(value) = {
+  let fields = value.fields()
+  if "depth" in fields or type(fields.at("level", default: auto)) != int {
+    return value
+  }
+  let body = fields.remove("body")
+  let target = fields.remove("label", default: none)
+  let rebuilt = heading(..fields, depth: fields.level, body)
+  if target == none { rebuilt } else { [#rebuilt#target] }
+}
 
 // The physical step that carries a slide's real headings and reference
 // labels. The slide runtime sets it before the frames of each slide: step 1
@@ -149,7 +165,7 @@
   }))
 }
 
-#let contains-heading(value) = {
+#let has-heading(value) = {
   // A speaker note never renders on a slide, so a heading written inside one
   // cannot destabilize outline entries between frames and must not trip the
   // temporal-heading guards.
@@ -160,13 +176,13 @@
     if value.func() == heading {
       return true
     }
-    return value.fields().values().any(contains-heading)
+    return value.fields().values().any(has-heading)
   }
   if type(value) == array {
-    return value.any(contains-heading)
+    return value.any(has-heading)
   }
   if type(value) == dictionary {
-    return value.values().any(contains-heading)
+    return value.values().any(has-heading)
   }
   false
 }

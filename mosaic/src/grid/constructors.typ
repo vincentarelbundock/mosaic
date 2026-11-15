@@ -32,15 +32,15 @@
 }
 
 // Internal cell constructor used by layout resolvers and setup defaults.
-#let styled-cell(
+#let make-cell(
   ..identifier,
   content: none,
   style: (:),
   id: none,
 ) = {
-  let id = validate-cell-id(identifier, id, "styled-cell")
+  let id = validate-cell-id(identifier, id, "make-cell")
   if type(style) != dictionary {
-    fail("styled-cell style must be a dictionary")
+    fail("make-cell style must be a dictionary")
   }
   // `auto` defers the inset to render time, where `settings.spacing.inset` is
   // readable. Injecting a literal here would silently outrank the configured
@@ -116,7 +116,7 @@
         + "length values",
     )
   }
-  styled-cell(
+  make-cell(
     id: id,
     content: content,
     style: if inset == auto { (:) } else { (inset: inset) },

@@ -21,8 +21,9 @@
 #import "heading.typ": (
   canonical-only,
   capture-heading-style,
-  contains-heading,
+  has-heading,
   heading-continuation,
+  resolve-heading-depth,
 )
 #import "../note/command.typ": is-note
 #import "pause.typ": has-pause, is-pause, pause-schedule
@@ -396,12 +397,12 @@
 // thing `transform` cannot reconstruct: a heading that appears and disappears
 // between frames would take its outline entry with it.
 //
-// The `contains-heading` guard prunes: a subtree with no heading anywhere can
+// The `has-heading` guard prunes: a subtree with no heading anywhere can
 // hold no offending temporal either, so a deck whose bodies carry no headings
 // (the common case) costs one walk and stops. The check is structural, so the
 // slide runtime asks it once rather than on every frame.
 #let has-temporal-heading(value) = {
-  if not contains-heading(value) {
+  if not has-heading(value) {
     return false
   }
   if type(value) == array {
@@ -419,11 +420,14 @@
   value.fields().values().any(has-temporal-heading)
 }
 
-#let require-stable-temporal-headings(value) = if has-temporal-heading(value) {
-  fail(
-    "headings cannot be wrapped in on, reveal, replace, or drawing; "
-      + "keep semantic headings structurally stable across frames",
-  )
+#let validate-stable-temporal-headings(value) = {
+  if has-temporal-heading(value) {
+    fail(
+      "headings cannot be wrapped in on, reveal, replace, or drawing; "
+        + "keep semantic headings structurally stable across frames",
+    )
+  }
+  value
 }
 
 // `headings` is `auto` for a cell, where the canonical frame carries the real
@@ -566,9 +570,10 @@
       return []
     }
     if body.func() == heading {
-      if contains-heading(body.body) {
+      if has-heading(body.body) {
         fail("heading bodies cannot contain nested headings")
       }
+      let body = resolve-heading-depth(body)
       let style-state = state(
         key("heading-style:" + heading-scope + ":" + repr(body)),
         none,
@@ -706,7 +711,7 @@
     if body.func() == typst-styled {
       return typst-styled(go(body.child), body.styles)
     }
-    let has-visual-heading = heading-mode == "visual" and contains-heading(body)
+    let has-visual-heading = heading-mode == "visual" and has-heading(body)
     if body.func() in container-funcs {
       let shape = container-shapes.find(shape => shape.func == body.func())
       let fields = body.fields()
@@ -736,7 +741,7 @@
         named.insert(name, go(value))
       }
       let rebuilt = (body.func())(..positional, ..children, ..named)
-      if has-visual-heading and contains-heading(rebuilt) {
+      if has-visual-heading and has-heading(rebuilt) {
         continuation-fail(body.func(), plural: true)
       }
       // Labels on repeated visual containers would create duplicate

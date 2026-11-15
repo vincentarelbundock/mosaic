@@ -1,8 +1,8 @@
 #import "@local/mosaic:0.0.3" as mosaic
-#import "../mosaic/src/grid/constructors.typ": styled-cell
+#import "../mosaic/src/grid/constructors.typ": make-cell
 #show: mosaic.setup
 
-#let compact = styled-cell(
+#let compact = make-cell(
   content: [Compact title],
   id: "compact-radius",
   style: (

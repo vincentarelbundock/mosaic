@@ -2,6 +2,7 @@
 #import "shared.typ": fail, typst-sequence, typst-space, typst-styled
 #import "slide/command.typ": is-slide-command, slide-command
 #import "slide/runtime.typ": render-slide
+#import "incremental/heading.typ": resolve-heading-depth
 
 #let typst-context = (context []).func()
 
@@ -107,22 +108,6 @@
   count
 }
 
-// A heading built with `heading(level: ..)` carries no `depth`, so a theme
-// rule written as `heading.where(depth: 2)` would pass over the very heading
-// that opened the slide. Restating the depth the compiler classified it by
-// makes the constructed heading match its markup twin; an explicit `level`
-// is kept, so the native level it resolves to does not move.
-#let resolve-heading-depth(value, depth) = {
-  let fields = value.fields()
-  if "depth" in fields {
-    return value
-  }
-  let body = fields.remove("body")
-  let target = fields.remove("label", default: none)
-  let rebuilt = heading(..fields, depth: depth, body)
-  if target == none { rebuilt } else { [#rebuilt#target] }
-}
-
 // A slide is one unbreakable full-page block, so the page has no room left
 // for a footnote's entry: Typst would move the entry to a page of its own,
 // and the deck would gain a blank slide carrying one stray line.
@@ -139,6 +124,23 @@
     and value.func() == metadata
     and value.at("label", default: none) == label("mosaic-deck-metadata")
 )
+
+// Whether a slide command sits somewhere inside this content. The compiler
+// only recognizes a slide at the top level of the deck, so one wrapped in a
+// block, a box, or any other container would otherwise be reported as stray
+// content, which names the wrong problem.
+#let has-slide-command(value) = {
+  if type(value) == array {
+    return value.any(has-slide-command)
+  }
+  if type(value) != content {
+    return false
+  }
+  if value.func() == metadata {
+    return is-slide-command(value)
+  }
+  value.fields().values().any(has-slide-command)
+}
 
 // Names the levels the deck actually compiles on, which the heading policy
 // may have moved. Ordered as numbers without converting them, so a level too
@@ -268,7 +270,7 @@
       (flushed, mode, section, current) = flush-current(mode, section, current, slide-wrappers)
       if flushed != none { output.push(flushed) }
       mode = role
-      section = resolve-heading-depth(value, level)
+      section = resolve-heading-depth(value)
       current = ()
       slide-wrappers = entry.wrappers
     } else if is-heading-space(value) {
@@ -286,6 +288,9 @@
     } else if mode in ("slide", "section") {
       current.push(inner)
     } else {
+      if has-slide-command(value) {
+        fail("slide cannot be nested inside another slide or a container")
+      }
       fail(stray-content-error(headings))
     }
   }

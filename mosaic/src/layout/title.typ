@@ -1,7 +1,7 @@
 // Construction, validation, and resolution of the title layout.
 #import "../shared.typ": fail
 #import "../author.typ": analyze-authors, resolve-authors
-#import "../grid/constructors.typ": styled-cell, columns, rows, track
+#import "../grid/constructors.typ": make-cell, columns, rows, track
 #import "core.typ": (
   make-layout,
   validate-accent,
@@ -20,7 +20,7 @@
   optional-fixed-image,
   validate-directional-tracks,
 )
-#import "../fit.typ": fit-ratio, reflow-scale, unsolvable
+#import "../fit.typ": fit-ratio, reflow-scale, is-unsolvable
 
 #let variants = (
   "academic",
@@ -466,7 +466,7 @@
 // colliding with the tier above it. Under `measure` the region reports
 // unbounded and the body returns untouched, exactly like the fitters.
 #let capped-fit(body, cap) = layout(region => {
-  if unsolvable(region.width) or unsolvable(region.height) {
+  if is-unsolvable(region.width) or is-unsolvable(region.height) {
     return body
   }
   let natural = measure(body, width: region.width)
@@ -488,7 +488,7 @@
   content: none,
   bottom-inset: auto,
   cap: none,
-) = styled-cell(
+) = make-cell(
   id: "title",
   content: align(
     left + bottom,
@@ -845,7 +845,7 @@
   pinned: false,
 ) = layout(region => {
   let details = align(anchor, details-stack(parts, settings))
-  if unsolvable(region.width) or unsolvable(region.height) {
+  if is-unsolvable(region.width) or is-unsolvable(region.height) {
     return {
       heading
       v(settings.spacing.gap)
@@ -881,7 +881,7 @@
 // the shape is the classic beamer-metropolis title page.
 #let resolve-ruled-title(fields, settings) = {
   let parts = details-parts(fields, settings)
-  styled-cell(
+  make-cell(
     id: "title",
     // The whole block is one fitted composition: the details cap themselves
     // first, and whatever still outgrows the cell scales as a unit, rule and
@@ -928,7 +928,7 @@
 
 #let resolve-centered-title(fields, settings) = {
   let parts = details-parts(fields, settings)
-  styled-cell(
+  make-cell(
     id: "title",
     // The heading centers in the space the details leave clear rather than
     // in the whole cell; see heading-over-details.
@@ -984,7 +984,7 @@
       rule
       masthead
     }
-    if unsolvable(region.width) or unsolvable(region.height) {
+    if is-unsolvable(region.width) or is-unsolvable(region.height) {
       return whole
     }
     let natural = measure(whole, width: region.width)
@@ -996,7 +996,7 @@
     let scaled = measure(masthead, width: region.width)
     let fixed = natural.height - scaled.height
     let room = region.height - fixed
-    if unsolvable(room) {
+    if is-unsolvable(room) {
       return whole
     }
     rule
@@ -1006,7 +1006,7 @@
 
 #let resolve-kicker-title(fields, settings) = {
   let parts = details-parts(fields, settings)
-  styled-cell(
+  make-cell(
     id: "title",
     content: if not has-details(parts) {
       kicker-heading(fields, settings)
@@ -1048,7 +1048,7 @@
 #let resolve-panel-title(fields, settings) = {
   let parts = details-parts(fields, settings)
   let pale = settings.colors.canvas.transparentize(settings.title-tokens.scrim-opacity)
-  let panel = styled-cell(
+  let panel = make-cell(
     id: "details",
     content: {
       set text(fill: settings.colors.canvas)
@@ -1090,7 +1090,7 @@
 
 #let resolve-bordered-title(fields, settings) = {
   let parts = details-parts(fields, settings)
-  styled-cell(
+  make-cell(
     id: "title",
     content: block(
       width: 100%,
