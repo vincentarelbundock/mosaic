@@ -111,7 +111,11 @@
     "layout-fields-steps.typ",
     "drawing-hide-optional.typ",
     "components-dimmed.typ",
-    "components-quote-native.typ"
+    "components-quote-native.typ",
+    "incremental-cell-dimmed.typ",
+    "section-heading-frames.typ",
+    "title-heading-frames.typ",
+    "context-in-automatic-slide.typ"
   ],
   "layout": [
     "fit.typ",
@@ -135,7 +139,8 @@
     "slide-layout-fields.typ",
     "slide-layout-positional.typ",
     "layouts-positions.typ",
-    "layouts-title-fit-overflow.typ"
+    "layouts-title-fit-overflow.typ",
+    "layouts-title-measure.typ"
   ],
   "responsive": [
     "layouts-title-responsive.typ"

@@ -55,8 +55,9 @@
   /// and `weight`.
   /// -> dictionary
   text: (:),
-) = make-container((body: body), render: parts => context {
+) = make-container((body: body), render: (parts, dimmed: false) => context {
   let it = resolve-style(
+    dimmed: dimmed,
     role: role,
     fill: fill,
     accent: accent,

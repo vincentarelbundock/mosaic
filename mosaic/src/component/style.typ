@@ -85,13 +85,6 @@
   )
 }
 
-// Whether the component is being drawn dimmed. `steps.on(.., before:
-// "dimmed")` dims by setting the ink to `dim-paint`, which is all a set rule
-// can do: it reaches text and nothing a component paints. So a component
-// reads that ink in its own context and mutes its paint to match. Call inside
-// `context`.
-#let is-dimmed() = text.fill == dim-paint
-
 // A paint with its color taken out and most of its strength with it, which is
 // what "dimmed" means for a fill or a rule: still there, no longer speaking.
 // Only a plain color can be muted this way; a gradient or tiling is left as
@@ -150,6 +143,7 @@
   align: auto,
   text: (:),
   defaults: (:),
+  dimmed: false,
 ) = {
   _ = validate-dictionary(text, "component text")
   let colors = role-colors(role)
@@ -180,7 +174,9 @@
     // role's text color.
     text: (fill: colors.text) + text,
   )
-  if is-dimmed() { mute-style(style) } else { style }
+  // `dimmed` comes from the walk that is redrawing the component under a
+  // `"dimmed"` step state, never from the color of the text around it.
+  if dimmed { mute-style(style) } else { style }
 }
 
 #let styled-body(style, body) = {

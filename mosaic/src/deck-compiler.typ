@@ -1,6 +1,6 @@
 // Compilation of top-level Typst content into explicit and automatic slides.
 #import "shared.typ": fail
-#import "slide/command.typ": is-slide-command, setup-guard, slide-command
+#import "slide/command.typ": is-setup-guard, is-slide-command, slide-command
 #import "slide/runtime.typ": render-slide
 #import "incremental/heading.typ": resolve-heading-depth
 #import "opening-heading.typ": (
@@ -214,7 +214,7 @@
     }
     let role = heading-role(headings, level)
 
-    if value == setup-guard {
+    if is-setup-guard(value) {
       // Consumed with the slide command it follows; see `setup-guard`.
       continue
     }

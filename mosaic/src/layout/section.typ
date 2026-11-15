@@ -1,4 +1,5 @@
 // Construction, validation, and resolution of the section layout.
+#import "../incremental/heading.typ": decorate-heading
 #import "../shared.typ": fail
 #import "../grid/constructors.typ": make-cell
 #import "../deck-state.typ": logical-section
@@ -308,6 +309,13 @@
 // compound. The heading stays realized exactly once, keeping its outline
 // entry, bookmark, and link target.
 //
+// The transform is declared through `decorate-heading` rather than as a bare
+// `show heading` rule. A slide with several frames carries its real heading on
+// one of them only, and a bare transforming rule has nothing to match on the
+// others, which would then set the title at the theme's own heading size.
+// A declared decoration is replayed on every frame. It reads `.body`, which
+// the heading and its stand-in block both carry.
+//
 // The title is a labeled tier like the number and the subtitle, so
 // `show label("mosaic-section-title"): set text(..)` restyles it alone. The
 // label sits on the context element, inside the variant's own treatment: a
@@ -317,7 +325,7 @@
   let size = text.size
   let rest = styles
   _ = rest.remove("size", default: none)
-  show heading: it => text(size: size, ..rest, it.body)
+  show: decorate-heading.with(it => text(size: size, ..rest, it.body))
   body
 }<mosaic-section-title>])
 

@@ -459,6 +459,12 @@
   value
 }
 
+// `dimmed` says the content is being drawn under a `"dimmed"` state applied
+// from outside this walk: a grid node the renderer dims passes it, and a
+// nested walk inherits it. Dimming is ink, which only reaches text, so the
+// walk carries the state down to every component it redraws and each one
+// mutes its own paint.
+//
 // `headings` is `auto` for a cell, where the canonical frame carries the real
 // heading and every other frame an inert continuation, or `"visual"` for a
 // plane, which never owns a heading. `as-entries`, `frame`, `promote`, and
@@ -473,6 +479,7 @@
   frame: auto,
   promote: auto,
   list-depth: 0,
+  dimmed: false,
 ) = {
   let heading-mode = if headings == auto {
     if step == 1 { "canonical" } else { "visual" }
@@ -492,8 +499,13 @@
   let frame = if frame == auto { step } else { frame }
   let promote = if promote == auto { headings == auto } else { promote }
 
-  let visit(body, depth: 0, entries: false) = {
-    let go = visit.with(depth: depth)
+  let visit(body, depth: 0, entries: false, dimmed: false) = {
+    let go = visit.with(depth: depth, dimmed: dimmed)
+    // The walk into a body that one state governs.
+    let under(state) = visit.with(
+      depth: depth,
+      dimmed: dimmed or state == "dimmed",
+    )
     if entries {
       // `body` is an array of sibling children; see `render-entries`.
       if has-pause(body) {
@@ -509,6 +521,7 @@
             frame: frame,
             promote: promote,
             list-depth: depth,
+            dimmed: dimmed,
           )
           for entry in nested {
             if entry.kind == "item" {
@@ -539,7 +552,11 @@
           func: child.func(),
           number: fields.at("number", default: auto),
           label: fields.at("label", default: none),
-          body: inner-depth => visit(child.body, depth: inner-depth),
+          body: inner-depth => visit(
+            child.body,
+            depth: inner-depth,
+            dimmed: dimmed or state == "dimmed",
+          ),
           state: state,
         )
       }
@@ -619,7 +636,7 @@
       for (name, part) in body.value.parts {
         parts.insert(name, go(part))
       }
-      return (body.value.render)(parts)
+      return (body.value.render)(parts, dimmed: dimmed)
     }
     if is-stand-in(body) {
       return []
@@ -673,7 +690,7 @@
           value.after,
           step,
         )
-        return apply-state(state, go(value.body))
+        return apply-state(state, under(state)(value.body))
       }
       if value.kind == "temporal-reveal" {
         let (list: list-mode, slots) = reveal-slots(value.items)
@@ -696,25 +713,31 @@
               untimed.push(slot.body)
               continue
             }
-            entries += visit(untimed, depth: depth, entries: true)
+            entries += go(untimed, entries: true)
             untimed = ()
             let fields = slot.body.fields()
+            let state = slot-status(value, slot, step)
             entries.push((
               kind: "item",
               func: slot.body.func(),
               number: fields.at("number", default: auto),
               label: none,
-              body: inner-depth => visit(slot.body.body, depth: inner-depth),
-              state: slot-status(value, slot, step),
+              body: inner-depth => visit(
+                slot.body.body,
+                depth: inner-depth,
+                dimmed: dimmed or state == "dimmed",
+              ),
+              state: state,
             ))
           }
-          entries += visit(untimed, depth: depth, entries: true)
+          entries += go(untimed, entries: true)
           return render-entries(entries, depth: depth)
         }
         return slots.map(slot => if slot.index == none {
           go(slot.body)
         } else {
-          apply-state(slot-status(value, slot, step), go(slot.body))
+          let state = slot-status(value, slot, step)
+          apply-state(state, under(state)(slot.body))
         }).sum(default: [])
       }
       if value.kind == "temporal-replace" {
@@ -758,7 +781,7 @@
     }
     if body.func() == typst-sequence {
       let rebuilt = render-entries(
-        visit(body.children, depth: depth, entries: true),
+        go(body.children, entries: true),
         depth: depth,
       )
       // A label written after a function call lands on the sequence the call
@@ -782,7 +805,11 @@
       let positional = ()
       for name in shape.positional {
         if name in fields {
-          positional.push(visit(fields.remove(name), depth: inner-depth))
+          positional.push(visit(
+            fields.remove(name),
+            depth: inner-depth,
+            dimmed: dimmed,
+          ))
         } else if name in shape.defaults {
           positional.push(shape.defaults.at(name))
         }
@@ -828,7 +855,7 @@
     body
   }
   if as-entries {
-    return visit(body, depth: list-depth, entries: true)
+    return visit(body, depth: list-depth, entries: true, dimmed: dimmed)
   }
-  visit(body, depth: list-depth)
+  visit(body, depth: list-depth, dimmed: dimmed)
 }

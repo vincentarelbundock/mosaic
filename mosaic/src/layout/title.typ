@@ -1,5 +1,6 @@
 // Construction, validation, and resolution of the title layout.
-#import "../shared.typ": fail
+#import "../shared.typ": fail, key
+#import "../deck-state.typ": logical-slide-id
 #import "../author.typ": analyze-authors, resolve-authors
 #import "../grid/constructors.typ": make-cell, columns, rows, track
 #import "core.typ": (
@@ -22,6 +23,7 @@
   resolve-image-position,
   validate-image-fields,
 )
+#import "../incremental/heading.typ": is-canonical-frame
 #import "../fit.typ": fit-ratio, reflow-scale, is-unsolvable
 
 #let variants = (
@@ -400,9 +402,10 @@
 // both would compound with the display size the label rule states on the
 // block around them. The scoped rule below therefore replaces the heading
 // with its body at the text style captured just outside it, which is the
-// style the label rule resolved to. The heading stays realized exactly once,
-// keeping its structure tag; see title-text in section.typ for the same
-// treatment on section slides.
+// style the label rule resolved to. The heading stays realized exactly once
+// per logical slide, keeping its structure tag, and every frame of the slide
+// sets the same text; see title-text in section.typ for the same treatment
+// on section slides.
 #let title-display(body) = {
   let display = block(width: 100%, above: 0pt, below: 0pt, {
     if body == none or body == [] {
@@ -423,8 +426,19 @@
           tracking: text.tracking,
           spacing: text.spacing,
         )
-        show heading: it => text(..style, it.body)
-        heading(level: 1, outlined: false, body)
+        // One real heading per logical slide. A slide with several frames
+        // renders this cell once per frame, and the heading is built here,
+        // inside `context`, where the incremental walk that keeps automatic
+        // headings to their canonical frame cannot see it. So the display
+        // line asks the same question itself: the canonical frame carries
+        // the element, and every other frame sets the same text without it.
+        // Both branches end in `text(..style, ..)`, so the frames match.
+        if is-canonical-frame() {
+          show heading: it => text(..style, it.body)
+          heading(level: 1, outlined: false, body)
+        } else {
+          text(..style, body)
+        }
       }
     }
   })
@@ -455,24 +469,58 @@
   left: settings.spacing.inset,
 )
 
+// The region a title fitter was really given, remembered so that a measurement
+// can be answered truthfully.
+//
+// Every fitter below solves against the region its `layout` callback
+// receives. Under `measure` that region is unbounded in height: Typst hands a
+// measured body no allocation, whatever cell it will be placed in. A fitter
+// that answered with its unfitted body there would make the overflow observer
+// report a slide that renders correctly, and one that answered with nothing
+// would measure as zero for every other reader. The honest answer is the size
+// the content takes once placed, and the only way to know it under `measure`
+// is to have recorded it when it was placed.
+//
+// So the placed pass writes the height it was offered to a state keyed by the
+// logical slide and by `slot`, which names the fitter within the slide, and
+// the measuring pass reads the final value back and fits against it. Content
+// that was never placed has no record and measures at its natural size, which
+// is what an unbounded region means. The record depends on the region alone,
+// never on what a measurement returned, so reading it converges in one extra
+// layout iteration.
+//
+// `render` receives the region to fit against, or `none` when there is none
+// and the natural form is the answer. `slot: none` is a fitter nested inside
+// another: the outer one measures it, wants its natural size, and does the
+// fitting itself.
+#let allocation(slot) = state(
+  key("title-allocation:" + slot + ":" + str(logical-slide-id.get().first())),
+  none,
+)
+
+#let in-allocation(slot, render) = layout(region => {
+  if not is-unsolvable(region.width) and not is-unsolvable(region.height) {
+    if slot != none {
+      allocation(slot).update(_ => region.height)
+    }
+    render(region)
+  } else if slot == none or is-unsolvable(region.width) {
+    render(none)
+  } else {
+    let height = allocation(slot).final()
+    render(if height == none { none } else { (width: region.width, height: height) })
+  }
+})
+
 // Auto-then-fit: the block takes its natural height while that stays within
 // `cap` of the surrounding region, and past the cap it scales down
 // geometrically to hold it, with the same measurement the fitters in fit.typ
 // use. Title metadata is the one slide content an author cannot cut, so its
 // box grows like an auto track up to the cap and then compresses instead of
-// colliding with the tier above it.
-//
-// Under `measure` the region reports unbounded and there is nothing to fit
-// against. What comes back then depends on who is asking, which `nested`
-// states. A fitter inside another fitter returns its body untouched, exactly
-// like the fitters in fit.typ, so the outer one measures the real stack. The
-// outermost fitter of a cell is measured by one reader only, the overflow
-// observer, and it answers with nothing: content scaled into its allocation
-// fits by construction, so its natural height is not an overflow and must not
-// be reported as one.
-#let capped-fit(body, cap, nested: false) = layout(region => {
-  if is-unsolvable(region.width) or is-unsolvable(region.height) {
-    return if nested { body } else { [] }
+// colliding with the tier above it. See in-allocation for `slot`.
+#let capped-fit(body, cap, slot: none) = in-allocation(slot, region => {
+  if region == none {
+    return body
   }
   let natural = measure(body, width: region.width)
   let limit = cap * region.height
@@ -499,7 +547,7 @@
     left + bottom,
     {
       let body = if scale == 1em { content } else { text(size: scale, content) }
-      if cap == none { body } else { capped-fit(body, cap) }
+      if cap == none { body } else { capped-fit(body, cap, slot: "stack") }
     },
   ),
   style: (
@@ -828,7 +876,11 @@
 // whatever sits below it. Ordinary titles are far inside the region and come
 // back untouched, so this costs a measurement and changes nothing; only a
 // title that outgrows the room its variant gives it scales down.
-#let apply-stack-fit(body, settings) = capped-fit(body, settings.title-tokens.stack-cap)
+#let apply-stack-fit(body, settings, slot: "stack") = capped-fit(
+  body,
+  settings.title-tokens.stack-cap,
+  slot: slot,
+)
 
 // The two-tier composition of the variants that anchor their details to the
 // bottom edge (centered, kicker): the details are measured and capped first,
@@ -837,9 +889,9 @@
 // or the title grows. `heading` receives nothing and is laid out in a block of
 // exactly the clear height, so it is the caller's to align and fit.
 //
-// Under `measure` there is no region to divide. Both tiers are scaled into
-// their allocations by construction, so the composition answers the overflow
-// observer with nothing, like capped-fit.
+// Under `measure` the composition divides the region it was placed in (see
+// in-allocation), so it measures as what it occupies. Never placed, it has no
+// region to divide and the two tiers come back stacked at their natural size.
 //
 // `pinned` places the heading region at the top edge outright. A theme may
 // align the title cell on the horizon, and that alignment reaches every block
@@ -851,10 +903,14 @@
   settings,
   anchor: center,
   pinned: false,
-) = layout(region => {
+) = in-allocation("composition", region => {
   let details = align(anchor, details-stack(parts, settings))
-  if is-unsolvable(region.width) or is-unsolvable(region.height) {
-    return []
+  if region == none {
+    return {
+      heading
+      v(settings.spacing.gap)
+      details
+    }
   }
   let natural = measure(details, width: region.width)
   let limit = settings.title-tokens.details-cap * region.height
@@ -907,7 +963,6 @@
           capped-fit(
             details-stack(parts, settings),
             settings.title-tokens.details-cap,
-            nested: true,
           ),
         )
       }
@@ -919,7 +974,7 @@
 // centered: the heading stack at the slide's center, the details anchored to
 // the bottom edge so the composition never reads as top-heavy. The variant is
 // the plain one, so its short accent rule draws only on request.
-#let centered-heading(fields, settings) = align(center + horizon, apply-stack-fit({
+#let centered-heading(fields, settings) = align(center + horizon, apply-stack-fit(slot: "heading", {
   set align(center)
   heading-stack(fields, settings)
   if fields.rule == true {
@@ -986,15 +1041,13 @@
     )
   }
   let masthead = content-or-empty(kicker-masthead(fields, settings))
-  align(left + top, layout(region => {
+  align(left + top, in-allocation("heading", region => {
     let whole = {
       rule
       masthead
     }
-    // Fitted by construction, so there is no overflow to report; see
-    // capped-fit.
-    if is-unsolvable(region.width) or is-unsolvable(region.height) {
-      return []
+    if region == none {
+      return whole
     }
     let natural = measure(whole, width: region.width)
     if natural.height <= region.height {
@@ -1075,6 +1128,7 @@
           )
         },
         settings.title-tokens.panel-details-cap,
+        slot: "panel",
       ))
     },
     style: (
@@ -1103,9 +1157,13 @@
   let parts = details-parts(fields, settings)
   make-cell(
     id: "title",
-    content: block(
+    // The frame takes the height of its region outright rather than `100%`.
+    // The two are the same length once placed, but a relative height has
+    // nothing to resolve against under `measure` and the frame would report
+    // no height at all; see in-allocation.
+    content: in-allocation("frame", region => block(
       width: 100%,
-      height: 100%,
+      height: if region == none { auto } else { region.height },
       stroke: if has-rule(fields) {
         (
           paint: rule-paint(fields, settings),
@@ -1127,12 +1185,11 @@
             capped-fit(
               details-stack(parts, settings),
               settings.title-tokens.details-cap,
-              nested: true,
             ),
           )
         }
       }, settings)),
-    ),
+    )),
     style: (inset: settings.title-tokens.card-outer-inset * settings.spacing.inset),
   )
 }
@@ -1161,7 +1218,11 @@
     children.push(track(
       auto,
       fixed-cell(
-        capped-fit(parts.names.join([, ]), settings.title-tokens.details-cap),
+        capped-fit(
+          parts.names.join([, ]),
+          settings.title-tokens.details-cap,
+          slot: "authors",
+        ),
         "authors",
         settings,
         inset: title-inset(
@@ -1180,7 +1241,11 @@
     children.push(track(
       auto,
       academic-small-cell(
-        capped-fit(fine-lines.join(linebreak()), settings.title-tokens.details-cap),
+        capped-fit(
+          fine-lines.join(linebreak()),
+          settings.title-tokens.details-cap,
+          slot: "details",
+        ),
         "details",
         settings,
         bottom: settings.spacing.inset,

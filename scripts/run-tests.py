@@ -950,12 +950,77 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(quoted, "\u201cPANELQUOTE", absent=True)
     require_contains(quoted, "PANELWHO, PANELSOURCE")
 
-    # A dimmed component mutes its own paint: the fixture's loud fill and accent
-    # are nowhere in the dimmed frame and back in the lit one.
+    # A dimmed component mutes its own paint. The fixture's loud fills and
+    # accents are nowhere on a page where a step dims the component (pages 1
+    # and 5), nested component included, and present where it is lit (pages 2
+    # and 4). Page 3 is a card inside hand-written gray text, which is not a
+    # dimmed step: its paint is untouched.
     typst_compile(typst, "components-dimmed.typ", TMP / "mosaic-components-dimmed-{p}.svg", "--format", "svg")
-    for paint in ("#00ff11", "#ff0011"):
+    dimmed_pages = {1: False, 2: True, 3: True, 4: True, 5: False}
+    for page, lit in dimmed_pages.items():
+        svg = TMP / f"mosaic-components-dimmed-{page}.svg"
+        for paint in ("#00ff11", "#ff0011"):
+            require_contains(svg, paint, absent=not lit)
+    for paint in ("#1100ff", "#ff00ee"):
         require_contains(TMP / "mosaic-components-dimmed-1.svg", paint, absent=True)
         require_contains(TMP / "mosaic-components-dimmed-2.svg", paint)
+
+    # The same muting reaches a component in a cell under a dimmed grid node:
+    # a dimmed cell, a cell below a dimmed split, and a dimmed cell in an
+    # `auto` row's split. Loud fills absent on the dimmed frame, present lit.
+    typst_compile(typst, "incremental-cell-dimmed.typ", TMP / "mosaic-incremental-cell-dimmed-{p}.svg", "--format", "svg")
+    for paint in ("#00ff11", "#ff0011", "#1100ff"):
+        require_contains(TMP / "mosaic-incremental-cell-dimmed-1.svg", paint, absent=True)
+        require_contains(TMP / "mosaic-incremental-cell-dimmed-2.svg", paint)
+    # A section slide and a title slide draw the same title on every frame,
+    # under every theme and variant: the title's words and bounding boxes on
+    # frame 2 equal those on frame 1. "theme" is the theme's own layout on an
+    # explicit slide; for sections, "automatic" is that layout reached through
+    # a `=` heading whose tagline holds the pause.
+    heading_frames = (
+        ("section-heading-frames", "Sectionword", (
+            "theme", "automatic", "plain", "rule", "numeral", "baseline", "toc", "image",
+        )),
+        ("title-heading-frames", "Titleword", (
+            "theme", "centered", "bordered", "ruled", "kicker", "panel", "academic", "image",
+        )),
+    )
+    for stem, token, variants in heading_frames:
+        for theme in ("default", "editorial", "metropolis", "manifesto", "mono"):
+            for variant in variants:
+                output = TMP / f"mosaic-{stem}-{theme}-{variant}.pdf"
+                typst_compile(
+                    typst, f"{stem}.typ", output,
+                    "--input", f"theme={theme}", "--input", f"variant={variant}",
+                )
+                titles = []
+                for page in (1, 2):
+                    boxes = command(
+                        ["pdftotext", "-bbox", "-f", str(page), "-l", str(page), str(output), "-"],
+                        capture=True,
+                    ).stdout
+                    titles.append([
+                        line.strip() for line in boxes.splitlines()
+                        if "<word" in line and (
+                            token in line or ">title<" in line or ">heading<" in line
+                        )
+                    ])
+                if len(titles[0]) < 2 or titles[0] != titles[1]:
+                    raise TestFailure(
+                        f"{stem}: {theme} variant {variant} title differs between frames: {titles}"
+                    )
+    # A handout renders one frame per slide, and that frame carries the real
+    # title heading; the fixture asserts the heading count.
+    for variant in ("theme", "kicker", "image"):
+        typst_compile(
+            typst, "title-heading-frames.typ",
+            TMP / f"mosaic-title-heading-frames-handout-{variant}.pdf",
+            "--input", "handout=true", "--input", f"variant={variant}",
+        )
+    # A deck's own `context` blocks render in automatic and explicit slides.
+    for page, word in ((1, "CONTEXT-ONE"), (2, "CONTEXT-TWO"), (3, "CONTEXT-THREE")):
+        require_contains(pdf_page_text("context-in-automatic-slide", page), word)
+
 
 def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
     compile_group(typst, sources)
@@ -1105,6 +1170,27 @@ def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
     require_contains(TMP / "mosaic-layouts-positions-8.svg", 'stroke="#a1b2c3"')
     for page in (9, 10, 11, 12):
         require_contains(TMP / f"mosaic-layouts-positions-{page}.svg", "#12ab34")
+
+    # A fitted title measures as what it occupies: non-empty and inside the
+    # slide for every placed variant, and at its natural, taller-than-the-slide
+    # size where it was never placed.
+    result = command(
+        [typst, "eval", "--root", ".", "query(<title-measure>).map(it => it.value)", "--in", "tests/layouts-title-measure.typ"],
+        capture=True,
+    )
+    measurements = json.loads(result.stdout)
+    if len(measurements) != 9:
+        raise TestFailure(f"title measure: expected 9 measurements, found {len(measurements)}")
+    for record in measurements:
+        height, region = record["height"], record["region"]
+        if record["placed"] and not 0 < height <= region:
+            raise TestFailure(
+                f"title measure: placed {record['variant']} measures {height}pt in a {region}pt slide"
+            )
+        if not record["placed"] and height <= region:
+            raise TestFailure(
+                f"title measure: unplaced {record['variant']} measures {height}pt, not its natural size"
+            )
 
 def negative_expectations() -> dict[str, str]:
     expectations: dict[str, str] = {}
