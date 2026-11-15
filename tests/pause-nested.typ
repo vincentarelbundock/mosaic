@@ -2,7 +2,7 @@
 
 #show: m.setup
 
-#m.slide[
+#m.slide[][
   NESTED OUTSIDE
   #block[
     NESTED FIRST

@@ -3,7 +3,7 @@
 #show: m.setup
 
 // The pause belongs to the second item, where it splits nothing.
-#m.slide[
+#m.slide[][
   - One
   - Two #m.steps.pause
   - Three

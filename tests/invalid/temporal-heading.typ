@@ -2,7 +2,7 @@
 
 #show: mosaic.setup
 
-#mosaic.slide[
+#mosaic.slide[][
   #mosaic.steps.on("2-")[
     == A heading cannot appear late
   ]

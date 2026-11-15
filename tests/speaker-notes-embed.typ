@@ -4,19 +4,19 @@
 
 #show: m.setup
 
-#m.slide[
+#m.slide[][
   #m.note[EMBED FIRST NOTE]
   FIRST VISUAL
 ]
 
 // No note at all, so this page must not appear in the payload.
-#m.slide[
+#m.slide[][
   SECOND VISUAL
 ]
 
 // A step-scoped note belongs to the frame it describes, which is the fourth
 // page of the deck rather than the third.
-#m.slide[
+#m.slide[][
   #m.steps.reveal(
     [THIRD VISUAL],
     [FOURTH VISUAL #m.note[EMBED FRAME NOTE]],
@@ -24,7 +24,7 @@
 ]
 
 // Two notes on one slide accumulate into that page's single note body.
-#m.slide[
+#m.slide[][
   #m.note[EMBED PAIR ONE]
   #m.note[EMBED PAIR TWO]
   FIFTH VISUAL

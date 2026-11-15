@@ -3,7 +3,7 @@
 #show metadata: it => repr(it.value)
 #show: m.setup
 
-#m.slide[
+#m.slide[][
   #block[#m.note[NESTED SECRET NOTE]]
   VISIBLE CONTENT
 ]

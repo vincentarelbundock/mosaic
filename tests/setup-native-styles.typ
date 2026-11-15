@@ -14,7 +14,7 @@
 // Ordinary Typst rules remain the final, local override layer.
 #show heading.where(level: 2): set text(fill: green)
 
-#mosaic.slide[
+#mosaic.slide[][
   == Native styled heading
 
   #figure(
@@ -23,7 +23,7 @@
   )
 ]
 
-#mosaic.slide[
+#mosaic.slide[][
   - First list item
   - Second list item
 ]

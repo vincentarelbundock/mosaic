@@ -12,26 +12,17 @@
   (node, children) => children.flatten(),
 )
 
-// The one cell positional bodies never fill. A footer is deck furniture that
-// recurs from slide to slide, so it is reached by name: on the slide through
-// `cells: (footer: ..)`, deck-wide through `setup(cells: (footer: ..))`.
-#let footer-id = "footer"
-
 // Resolve a slide's content into one id -> content map, the single internal
 // representation the renderer consumes. Setup defaults are fallbacks for
 // content-bearing cells that exist in this resolved grid. Named slide content
 // overrides those defaults; `none` explicitly suppresses one.
 //
-// Cells named in `cells:` are filled from it first and leave the pool.
-// Positional bodies are then routed by their count alone over the cells that
-// remain; their content is never read. The fillable cells are the remaining
-// content-bearing cells other than the footer, in depth-first layout order. A slide gives either one body for each
-// fillable cell without a deck default, which leaves the defaults in place,
-// or one body for every fillable cell, which overrides them. The `header`
-// cell always carries a default (setup injects one), so on a header-and-body
-// layout one body fills the body and two fill the header and the body. Any
-// other count is an error, except zero: an empty slide is allowed. Any
-// omitted content-bearing cell becomes [].
+// Cells named in `cells:` are filled from it first and leave the pool. The
+// positional bodies then fill the cells that remain, in depth-first layout
+// order, starting with the first: the header, the footer, and cells with a
+// deck default are filled like any other, and a body's content is never
+// read. Fewer bodies than cells leaves the trailing cells to their deck
+// default, or empty; more is an error; none at all is an empty slide.
 //
 // `none` means "suppress", so suppressing a cell this layout does not have is
 // already true and resolves to a no-op. That matches a setup-level default for
@@ -39,41 +30,6 @@
 // `footer: none` across layouts that do not all carry a footer. Any non-`none`
 // value for an unknown id is still an error: there the author is supplying
 // content that would silently vanish.
-// One message for too many and too few: the count received, the cells each
-// accepted count fills, and the way to reach any other cell. `remaining` is
-// what `cells:` left, so the message stays true when the slide named some.
-#let positional-count-error(count, undefaulted, fillable, remaining, named: false) = {
-  let describe(ids) = (
-    str(ids.len()) + " (" + ids.map(repr).join(", ") + ")"
-  )
-  let accepted = if fillable.len() == 0 {
-    "no positional bodies"
-  } else if undefaulted.len() == 0 or undefaulted.len() == fillable.len() {
-    describe(fillable)
-  } else {
-    describe(undefaulted) + " or " + describe(fillable)
-  }
-  let others = remaining.filter(id => id not in fillable)
-  (
-    "slide received " + str(count) + " positional "
-      + (if count == 1 { "body" } else { "bodies" })
-      + (if named { "; the cells not named in cells: take " } else { "; this layout takes " })
-      + accepted
-      + (
-        if others.len() > 0 {
-          (
-            "; fill other cells such as " + others.map(repr).join(", ")
-              + " by name through cells:"
-          )
-        } else if named {
-          "; or name more of them in cells:"
-        } else {
-          "; or fill its cells by name through cells:"
-        }
-      )
-  )
-}
-
 #let resolve-content(node, named, bodies, defaults: (:)) = {
   let body-ids = body-cell-ids(node)
   let inherited = (:)
@@ -103,25 +59,27 @@
     }
     explicit.insert(id, if value == none { [] } else { value })
   }
-  // Then the positional bodies, counted strictly over the cells that remain.
+  // Then the positional bodies, in order, over the cells that remain.
   let remaining = body-ids.filter(id => id not in explicit)
-  let fillable = remaining.filter(id => id != footer-id)
-  let undefaulted = fillable.filter(id => id not in inherited)
-  let destination-ids = if bodies.len() == 0 {
-    ()
-  } else if bodies.len() == undefaulted.len() {
-    undefaulted
-  } else if bodies.len() == fillable.len() {
-    fillable
-  } else {
-    fail(positional-count-error(
-      bodies.len(),
-      undefaulted,
-      fillable,
-      remaining,
-      named: explicit.len() > 0,
-    ))
+  if bodies.len() > remaining.len() {
+    let cells = if remaining.len() == 1 { " cell" } else { " cells" }
+    fail(
+      "slide received " + str(bodies.len()) + " positional "
+        + (if bodies.len() == 1 { "body" } else { "bodies" })
+        + ", but this layout has "
+        + (
+          if remaining.len() == 0 { "no cells" } else { str(remaining.len()) + cells }
+        )
+        + (if explicit.len() > 0 { " not named in cells:" } else { "" })
+        + " to fill"
+        + (
+          if remaining.len() == 0 { "" } else {
+            ": " + remaining.map(repr).join(", ")
+          }
+        ),
+    )
   }
+  let destination-ids = remaining.slice(0, bodies.len())
   let resolved = inherited + explicit
   for (index, id) in destination-ids.enumerate() {
     resolved.insert(id, bodies.at(index))

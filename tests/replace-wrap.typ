@@ -5,14 +5,14 @@
 
 #show: m.setup
 
-#m.slide[
+#m.slide[][
   #m.steps.replace(
     [#lorem(40) #metadata(none) <replace-end>],
     [#lorem(12)],
   )
 ]
 
-#m.slide[
+#m.slide[][
   INLINE-BEFORE #m.steps.replace[short][a longer one] #box(place[#metadata(none) <inline-after>])
 ]
 

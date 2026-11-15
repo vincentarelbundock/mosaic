@@ -3,7 +3,7 @@
 #let output = sys.inputs.at("output", default: "slides")
 #show: m.setup.with(handout: true, output: output)
 
-#m.slide[
+#m.slide[][
   #m.note[GENERAL HANDOUT NOTE]
   #m.steps.reveal(
     [FIRST HANDOUT FRAME #m.note[FIRST HANDOUT NOTE]],

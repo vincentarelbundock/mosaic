@@ -3,4 +3,4 @@
 #show: mosaic.setup
 #mosaic.slide(
   background: 5,
-)[Body]
+)[][Body]

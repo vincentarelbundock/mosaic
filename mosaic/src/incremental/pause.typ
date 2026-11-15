@@ -63,8 +63,7 @@
 /// Everything before it stays on screen, so the slide accumulates.
 ///
 /// ```typ
-/// #mosaic.slide[
-///   == Argument
+/// #mosaic.slide[== Argument][
 ///   The premise.
 ///   #mosaic.steps.pause
 ///   The consequence.

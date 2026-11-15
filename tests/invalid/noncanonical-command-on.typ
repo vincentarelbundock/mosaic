@@ -9,6 +9,6 @@
 )
 
 #show: mosaic.setup
-#mosaic.slide[
+#mosaic.slide[][
   #canvas(("base", command))
 ]

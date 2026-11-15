@@ -18,21 +18,21 @@
   [#name: frozen #context frozen-counter.get().first()/#context frozen-state.get(); native #context native-counter.get().first()/#context native-state.get()]
 }
 
-#mosaic.slide[
+#mosaic.slide[][
   #tick("Reveal")
   #mosaic.steps.reveal[First frame][Second frame]
 ]
 
-#mosaic.slide[
+#mosaic.slide[][
   #tick("On")
   #mosaic.steps.on(2)[Second frame]
 ]
 
-#mosaic.slide[
+#mosaic.slide[][
   #tick("Replace")
   #mosaic.steps.replace([First frame], [Second frame])
 ]
 
-#mosaic.slide[
+#mosaic.slide[][
   Final: frozen #context frozen-counter.get().first()/#context frozen-state.get(); native #context native-counter.get().first()/#context native-state.get().
 ]

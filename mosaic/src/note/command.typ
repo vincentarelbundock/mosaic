@@ -21,8 +21,7 @@
 /// ```typ
 /// #show: mosaic.setup.with(output: "speaker")
 ///
-/// #mosaic.slide[
-///   == Results
+/// #mosaic.slide[== Results][
 ///   #mosaic.note[Mention the confidence interval before the table.]
 ///   The estimate holds under both specifications.
 /// ]

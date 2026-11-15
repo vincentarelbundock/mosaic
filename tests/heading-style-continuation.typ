@@ -12,7 +12,7 @@
 )
 #show heading.where(level: 2): set align(center)
 
-#mosaic.slide[
+#mosaic.slide[][
   == Automatically styled <styled-heading>
 
   #mosaic.steps.reveal[

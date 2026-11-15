@@ -2,7 +2,7 @@
 
 #show: m.setup
 
-#m.slide[
+#m.slide[][
   #m.note[GENERAL NOTE ONE]
   VISIBLE FRAME
   #m.steps.reveal(

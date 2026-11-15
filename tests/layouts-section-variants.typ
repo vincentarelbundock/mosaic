@@ -19,7 +19,7 @@ Tagline under the rule
 
 #mosaic.slide(layout: "section", variant: "toc")[Toc Section]
 
-#mosaic.slide[
+#mosaic.slide[][
   == Closing
   #context {
     let headings = query(heading.where(level: 1, outlined: true))

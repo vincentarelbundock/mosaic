@@ -17,7 +17,7 @@ Body.
 
 // The same holds for a constructed heading written in an explicit slide
 // body, while a markup heading beside it keeps the depth it was written at.
-#mosaic.slide[
+#mosaic.slide[][
   #heading(level: 2)[In a slide body] <in-body>
 
   === Markup subheading

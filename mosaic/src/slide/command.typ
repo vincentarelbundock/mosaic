@@ -138,8 +138,7 @@
 /// frames once incremental steps are applied.
 ///
 /// ```typ
-/// #mosaic.slide[
-///   == Structure
+/// #mosaic.slide[== Structure][
 ///   Every slide resolves to a grid tree.
 /// ]
 /// ```
@@ -161,23 +160,19 @@
 ///
 /// Two forms, which combine:
 ///
-/// - Positional bodies, routed by how many there are and never by what they
-///   contain. They fill the layout's cells in depth-first order, except a
-///   cell named `footer`, which recurring furniture reaches only by name. A
-///   slide gives either one body per cell that has no deck default, or one
-///   body per cell, defaults included, which overrides them. The `header`
-///   cell always counts as having a default, so on the usual header-and-body
-///   layout one body fills the body and two fill the header and the body:
+/// - Positional bodies, which fill the layout's cells in depth-first order,
+///   starting with the first. Every cell counts, the header and the footer
+///   included, and a body's content is never read: the second body always
+///   lands in the second cell. Fewer bodies than cells leaves the trailing
+///   cells to their deck default from `setup(cells:)`, or empty; more is an
+///   error. On the usual header-and-body layout:
 ///
 ///   ```typ
-///   #mosaic.slide[Body only.]
 ///   #mosaic.slide[== Title][Body.]
+///   #mosaic.slide[][Body under no title.]
 ///   ```
-///
-///   Any other count is an error that names both accepted counts and the
-///   cells each fills. No bodies at all is an empty slide.
-/// - A `cells:` dictionary keyed by cell id, which is order-independent, lets
-///   a slide skip cells, and is the way to reach the footer.
+/// - A `cells:` dictionary keyed by cell id, which is order-independent and
+///   lets a slide skip cells.
 ///
 /// ```typ
 /// #mosaic.slide(cells: (
@@ -187,12 +182,11 @@
 /// ))
 /// ```
 ///
-/// Given together, a cell named in `cells:` is filled from it and leaves the
-/// positional count, which then applies to the cells that remain. So a slide
-/// adds a footer without naming its other cells:
+/// Given together, a cell named in `cells:` is filled from it, and the
+/// positional bodies fill the cells that remain, in order:
 ///
 /// ```typ
-/// #mosaic.slide(cells: (footer: [Source: OECD]))[== Title][Body.]
+/// #mosaic.slide(cells: (header: [== Title]))[Body.][Source: OECD]
 /// ```
 ///
 /// *Planes*

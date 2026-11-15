@@ -41,7 +41,7 @@
 /// ```typ
 /// #mosaic.slide(
 ///   background: mosaic.components.image(path("cover.webp"), scrim: black.transparentize(45%)),
-/// )[
+/// )[][
 ///   #context {
 ///     let deck = mosaic.info()
 ///     place(top + left, text(size: 2.2em, weight: "bold", deck.title))

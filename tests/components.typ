@@ -55,7 +55,7 @@
   #mosaic.components.progress(variant: "line")
 ]
 
-#mosaic.slide()[
+#mosaic.slide()[][
   #mosaic.components.progress(variant: "1/1")
   #h(1em)
   #mosaic.components.progress(variant: "circle")
@@ -65,7 +65,7 @@
 
 // A renderer function stands in for the closed variant set, so an extension
 // theme can add a treatment without forking the component.
-#mosaic.slide()[
+#mosaic.slide()[][
   #mosaic.components.progress(
     variant: state => grid(
       columns: (state.thickness,) * state.total,

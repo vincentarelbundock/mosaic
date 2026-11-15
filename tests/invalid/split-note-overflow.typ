@@ -2,7 +2,7 @@
 
 #show: m.setup.with(output: "split")
 
-#m.slide[
+#m.slide[][
   #m.note[#v(300mm)]
   Oversized split note
 ]

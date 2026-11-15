@@ -8,7 +8,7 @@
 )
 #set text(size: 7pt)
 
-#mosaic.slide[
+#mosaic.slide[][
   #mosaic.steps.on(1, after: "visible")[Always after step 1.]
   #mosaic.steps.on("2-3", before: "dimmed", after: "removed")[Middle.]
   #mosaic.steps.on("3-")[Last.]
@@ -22,7 +22,7 @@
 #mosaic.slide(layout: changing-columns)[First cell][Second cell]
 
 // Three pages: list items are recognized inside ordinary list markup.
-#mosaic.slide[
+#mosaic.slide[][
   #mosaic.steps.reveal[
     - One
     - Two
@@ -32,7 +32,7 @@
 
 // Three pages: enum items numbered explicitly, which Typst also produces for a
 // line starting with a literal `1942.`, keep their number through the rebuild.
-#mosaic.slide[
+#mosaic.slide[][
   #mosaic.steps.reveal[
     3. Third
     4. Fourth
@@ -41,12 +41,12 @@
 ]
 
 // Two pages: alternatives share one measured slot.
-#mosaic.slide[
+#mosaic.slide[][
   #mosaic.steps.replace([short], [a longer alternative])
 ]
 
 // Three pages: equation terms use the same structural temporal wrappers.
-#mosaic.slide[
+#mosaic.slide[][
   $
     f(x)
       = #mosaic.steps.on("1-")[$x^2$]
@@ -65,7 +65,7 @@
   render: render-commands,
   hide: preserve-commands,
 )
-#mosaic.slide[
+#mosaic.slide[][
   #command-canvas((
     "base",
     mosaic.steps.on("2-", "later"),
@@ -78,7 +78,7 @@
   render: fletcher.diagram,
   hide: fletcher.hide,
 )
-#mosaic.slide[
+#mosaic.slide[][
   #fletcher-diagram(
     fletcher.node((0, 0), [A]),
     mosaic.steps.reveal(

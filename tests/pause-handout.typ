@@ -2,7 +2,7 @@
 
 #show: m.setup.with(handout: true)
 
-#m.slide[
+#m.slide[][
   PAUSE HANDOUT FIRST
   #m.steps.pause
   PAUSE HANDOUT SECOND

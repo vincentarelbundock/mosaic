@@ -2,6 +2,6 @@
 #import "../../mosaic/src/shared.typ": tag
 
 #show: m.setup
-#m.slide[
+#m.slide[][
   #metadata((mosaic: tag, kind: "pause", extra: true))
 ]

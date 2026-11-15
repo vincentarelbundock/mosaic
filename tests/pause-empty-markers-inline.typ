@@ -2,8 +2,8 @@
 
 #show: m.setup
 
-#m.slide[#m.steps.pause LEAD]
+#m.slide[][#m.steps.pause LEAD]
 
-#m.slide[#m.steps.pause#m.steps.pause ADJ #m.steps.pause#m.steps.pause]
+#m.slide[][#m.steps.pause#m.steps.pause ADJ #m.steps.pause#m.steps.pause]
 
 #context assert(counter(page).final().first() == 2)

@@ -2,4 +2,4 @@
 
 #show: mosaic.setup.with(overflow: "off")
 
-#mosaic.slide[#lorem(180)]
+#mosaic.slide[][#lorem(180)]

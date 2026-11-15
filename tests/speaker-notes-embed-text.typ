@@ -5,7 +5,7 @@
 
 #show: m.setup
 
-#m.slide[
+#m.slide[][
   FLATTEN VISUAL
   #m.note[
     Say #text(fill: red)[THIS] and #strong[that], cost \$5 -- maybe... 50#sym.percent.

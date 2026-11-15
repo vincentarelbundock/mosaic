@@ -8,4 +8,4 @@
 #show heading: set text(size: 1.4em, weight: "bold")
 #show figure.caption: set text(size: 0.7em)
 
-#mosaic.slide[Setup-driven ordinary slide]
+#mosaic.slide[][Setup-driven ordinary slide]

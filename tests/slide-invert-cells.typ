@@ -8,7 +8,7 @@
 
 #mosaic.slide(layout: "title", invert: true)
 
-#mosaic.slide(invert: true)[
+#mosaic.slide(invert: true)[][
   == Inverted Content
   INVERTED BODY INK
   #mosaic.components.quote(attribution: [WHO])[QUOTED LINE]

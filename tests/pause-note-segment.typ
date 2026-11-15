@@ -7,7 +7,7 @@
 #show: mosaic.setup.with(output: "notes", spacing: (inset: 5pt))
 #set text(size: 7pt)
 
-#mosaic.slide[
+#mosaic.slide[][
   == Pauses
   ALPHA
   #mosaic.steps.pause

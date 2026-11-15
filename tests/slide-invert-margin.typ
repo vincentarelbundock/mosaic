@@ -10,6 +10,6 @@
 )
 #set text(size: 7pt)
 
-#mosaic.slide(invert: true)[Inverted to the page edge]
+#mosaic.slide(invert: true)[][Inverted to the page edge]
 
 #context assert(counter(page).final().first() == 1)

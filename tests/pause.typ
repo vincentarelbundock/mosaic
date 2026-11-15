@@ -3,7 +3,7 @@
 
 #show: m.setup
 
-#m.slide[
+#m.slide[][
   PAUSE FIRST
   #pause
   PAUSE SECOND

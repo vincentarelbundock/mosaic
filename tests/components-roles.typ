@@ -10,12 +10,12 @@
 // Page 1: a neutral callout's title is type, so it takes the text color, not
 // the line color its rail is drawn in. The rail is switched off so the line
 // color has no other way onto the page.
-#mosaic.slide[
+#mosaic.slide[][
   #mosaic.components.callout(role: "neutral", stroke: none, title: [NEUTRAL TITLE])[Body]
 ]
 
 // Page 2: an explicit accent still colors the title.
-#mosaic.slide[
+#mosaic.slide[][
   #mosaic.components.callout(
     role: "neutral", stroke: none, accent: rgb("#fedcba"), title: [ACCENT TITLE],
   )[Body]
@@ -23,6 +23,6 @@
 
 // Page 3: a plain quotation draws no rail. Pages 4 and 5: a role or an accent
 // hangs it on one.
-#mosaic.slide[#mosaic.components.quote[Plain]]
-#mosaic.slide[#mosaic.components.quote(role: "accent")[Role]]
-#mosaic.slide[#mosaic.components.quote(accent: rgb("#fedcba"))[Accent]]
+#mosaic.slide[][#mosaic.components.quote[Plain]]
+#mosaic.slide[][#mosaic.components.quote(role: "accent")[Role]]
+#mosaic.slide[][#mosaic.components.quote(accent: rgb("#fedcba"))[Accent]]

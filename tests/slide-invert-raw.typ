@@ -13,5 +13,5 @@
 def f(x): return "s" + 1
 ```
 
-#mosaic.slide(code)
-#mosaic.slide(invert: true, code)
+#mosaic.slide([], code)
+#mosaic.slide(invert: true, [], code)

@@ -19,7 +19,7 @@
 ]
 
 // Ordinary slides retain the active section without incrementing it.
-#mosaic.slide[
+#mosaic.slide[][
   Body
   #mosaic.components.progress(variant: "line", count: "slides")
 ]

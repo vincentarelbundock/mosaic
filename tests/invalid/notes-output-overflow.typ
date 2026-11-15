@@ -2,7 +2,7 @@
 
 #show: m.setup.with(output: "notes")
 
-#m.slide[
+#m.slide[][
   #m.note[#v(300mm)]
   Oversized notes-only note
 ]

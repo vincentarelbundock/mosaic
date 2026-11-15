@@ -8,7 +8,7 @@
 #let canvas = m.steps.drawing.with(render: commands => commands.join(" "))
 
 // Two pages.
-#m.slide[
+#m.slide[][
   #canvas(
     "DRAWBASE",
     m.steps.on("2-", before: "removed", "DRAWLATER"),

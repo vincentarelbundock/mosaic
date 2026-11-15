@@ -2,7 +2,7 @@
 
 #show: mosaic.setup.with(handout: false)
 
-#mosaic.slide[
+#mosaic.slide[][
   #mosaic.steps.replace([ORDINARY FIRST], [ORDINARY FINAL])
 ]
 

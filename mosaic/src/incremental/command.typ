@@ -85,8 +85,7 @@
 /// which frames the body appears on, independent of source order.
 ///
 /// ```typ
-/// #mosaic.slide[
-///   == Findings
+/// #mosaic.slide[== Findings][
 ///   #mosaic.steps.on(1)[First, in isolation.]
 ///   #mosaic.steps.on("2-")[Then, for the rest of the slide.]
 ///   #mosaic.steps.on("2-3", after: "dimmed")[A passing remark.]

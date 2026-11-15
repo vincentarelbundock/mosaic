@@ -9,7 +9,7 @@
 #let m = dictionary(themes).at(sys.inputs.at("theme", default: "default"))
 #show: m.setup
 
-#m.slide(numbered: false)[
+#m.slide(numbered: false)[][
   Intro paragraph.
   - Alpha
   - Beta wraps onto a second line because this item is long enough to need one
@@ -28,7 +28,7 @@
   4. fourth
 ]
 
-#m.slide(numbered: false)[
+#m.slide(numbered: false)[][
   Intro paragraph.
   - Alpha
   #m.steps.pause

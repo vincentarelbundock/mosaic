@@ -2,6 +2,6 @@
 
 #show: m.setup
 
-#m.slide[
+#m.slide[][
   #m.steps.replace(align: "center", [One], [Two])
 ]

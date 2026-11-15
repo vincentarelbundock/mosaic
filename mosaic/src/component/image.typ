@@ -13,7 +13,7 @@
 /// ```typ
 /// #mosaic.slide(
 ///   background: mosaic.components.image(path("cover.webp")),
-/// )[Text over the photograph]
+/// )[][Text over the photograph]
 /// ```
 ///
 /// When Mosaic is imported as a package, wrap an asset of the calling project

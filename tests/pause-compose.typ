@@ -2,7 +2,7 @@
 
 #show: m.setup
 
-#m.slide[
+#m.slide[][
   #m.note[ALWAYS NOTE]
   COMPOSE FIRST
 

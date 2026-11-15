@@ -2,7 +2,7 @@
 
 #show: m.setup
 
-#m.slide[
+#m.slide[][
   Outer
-  #m.slide[Inner]
+  #m.slide[][Inner]
 ]
