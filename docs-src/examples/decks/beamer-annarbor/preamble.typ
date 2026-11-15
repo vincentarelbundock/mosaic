@@ -179,12 +179,14 @@
   defaults: (
     foreground: chrome,
     spacing: (inset: chrome-inset, gap: 0.7em),
+  ),
+  options: (
     // Beamer's default font theme is sans: Computer Modern Sans, which Latin
     // Modern Sans continues.
     font: ("Latin Modern Sans", "CMU Sans Serif", "DejaVu Sans"),
+    font-mono: ("Latin Modern Mono", "DejaVu Sans Mono"),
     base-size: 22pt,
   ),
-  options: (font-mono: ("Latin Modern Mono", "DejaVu Sans Mono")),
   // Three built-in variants, no hand-built grid. The toc divider is beamer's
   // own `\AtBeginSection` habit: the whole outline, the section you are
   // entering alive and the rest ghosted.

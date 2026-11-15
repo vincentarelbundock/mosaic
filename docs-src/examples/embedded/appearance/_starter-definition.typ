@@ -1,25 +1,19 @@
 // Passive starter definition: design values and native rules only.
 //
-// Mosaic's engine states only the base typography: the font and base size
-// from `defaults` below and the text color from the palette. A theme states
-// the rest of its look here, including the canonical <mosaic-cell-*>
-// vocabulary the layouts compose against.
+// Mosaic's engine emits no typography, so a theme states its whole look here,
+// including the canonical <mosaic-cell-*> vocabulary the layouts compose
+// against.
 #import "_starter-layouts.typ" as layouts
 
 #let _navy = rgb("#1f2a44")
 #let _gold = rgb("#d9a441")
 
 #let apply(body, colors: (:), options: (:)) = {
+  set text(font: options.font, size: options.base-size, fill: colors.text)
   show list.where(tight: true): it => list(tight: false, ..it.children)
   show enum.where(tight: true): it => enum(tight: false, ..it.children)
-  // Multiples of the base size rather than em, so a heading keeps its size
-  // under `set heading(offset: ..)`.
-  show heading.where(depth: 1): set text(
-    size: options.base-size * 2.8, weight: "semibold",
-  )
-  show heading.where(depth: 2): set text(
-    size: options.base-size * 1.7, weight: "semibold",
-  )
+  show heading.where(depth: 1): set text(size: 2em, weight: "semibold")
+  show heading.where(depth: 2): set text(size: 1.4em, weight: "semibold")
   show heading: set block(below: 0.75em)
   show figure.caption: set text(size: 0.72em, fill: colors.muted)
   show label("mosaic-title-display"): set text(
@@ -48,7 +42,7 @@
     warning: rgb("#E69F00"),
     error: rgb("#D55E00"),
   ),
-  defaults: (font: "Inter", base-size: 20pt),
+  options: (font: "Inter", base-size: 20pt),
   layouts: (
     content: layouts.content(),
     title: layouts.title(),

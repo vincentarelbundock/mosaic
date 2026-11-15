@@ -39,7 +39,7 @@ It measures the block against the space its cell gives it, scales it geometrical
 
 The block is offered the cell's width first, so text and lists wrap and are then scaled only if they are still too tall. A table or diagram given a narrower width rearranges itself instead of shrinking, so `wrap: false` measures and scales it as written.
 
-`width:` and `height:` fit to part of the region instead of all of it, and take a length or a ratio of the region such as `50%`. A fitted block cannot overflow, so it no longer appears in the overflow records.
+`width:` and `height:` fit to part of the region instead of all of it, and take a length, ratio, or fraction. A fitted block cannot overflow, so it no longer appears in the overflow records.
 
 Measuring a block means holding it inside a closure, which the slide runtime cannot look into. `m.steps.pause`, `m.steps`, and `m.note` are found by walking the slide's content, so inside a fitted block they would be invisible: the reveals would collapse into one frame and the notes would never reach the speaker output. `m.fit` reports that as an error instead. Keep them outside the fitted block, or fit each revealed part on its own. #link("../incremental/steps.html#where-steps-work")[Where steps work] lists the other places the runtime cannot see into.
 
