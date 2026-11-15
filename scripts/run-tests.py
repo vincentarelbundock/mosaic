@@ -1017,6 +1017,10 @@ def run_core(typst: str, sources: list[str]) -> None:
             TMP / f"mosaic-title-heading-frames-handout-{variant}.pdf",
             "--input", "handout=true", "--input", f"variant={variant}",
         )
+    # A deck's own `context` blocks render in automatic and explicit slides.
+    for page, word in ((1, "CONTEXT-ONE"), (2, "CONTEXT-TWO"), (3, "CONTEXT-THREE")):
+        require_contains(pdf_page_text("context-in-automatic-slide", page), word)
+
 
 def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
     compile_group(typst, sources)

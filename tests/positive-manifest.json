@@ -114,7 +114,8 @@
     "components-quote-native.typ",
     "incremental-cell-dimmed.typ",
     "section-heading-frames.typ",
-    "title-heading-frames.typ"
+    "title-heading-frames.typ",
+    "context-in-automatic-slide.typ"
   ],
   "layout": [
     "fit.typ",

@@ -52,15 +52,23 @@
 // and the deck would compile to nothing. Every command therefore travels with
 // this guard. The compiler recognizes it and drops it; anywhere else it is
 // realized, and fails when no deck was ever configured. One value, defined
-// once, so the compiler can tell it from a `context` block a deck wrote.
-#let setup-guard = context {
+// once. It carries a label, and the label is what identifies it: two
+// `context` elements compare equal whatever their bodies, so an equality
+// test against this value would also match, and silently drop, every
+// `context` block a deck writes in an automatic slide.
+#let setup-guard = [#context {
   if deck-state.final() == none {
     fail(
       "slide requires a deck; apply setup with a show rule, such as "
         + "`#show: mosaic.setup`, before the first slide",
     )
   }
-}
+}#label("mosaic-setup-guard")]
+
+#let is-setup-guard(value) = (
+  type(value) == content
+    and value.at("label", default: none) == label("mosaic-setup-guard")
+)
 
 // The planes are slide parameters of their own, not entries in `cells:`: a
 // plane is not a grid leaf, takes no space from the grid, and carries its own
