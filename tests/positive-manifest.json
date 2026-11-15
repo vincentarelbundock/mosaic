@@ -111,7 +111,9 @@
     "layout-fields-steps.typ",
     "drawing-hide-optional.typ",
     "components-dimmed.typ",
-    "components-quote-native.typ"
+    "components-quote-native.typ",
+    "section-heading-frames.typ",
+    "title-heading-frames.typ"
   ],
   "layout": [
     "fit.typ",

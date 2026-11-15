@@ -23,6 +23,7 @@
   resolve-image-position,
   validate-image-fields,
 )
+#import "../incremental/heading.typ": is-canonical-frame
 #import "../fit.typ": fit-ratio, reflow-scale, is-unsolvable
 
 #let variants = (
@@ -401,9 +402,10 @@
 // both would compound with the display size the label rule states on the
 // block around them. The scoped rule below therefore replaces the heading
 // with its body at the text style captured just outside it, which is the
-// style the label rule resolved to. The heading stays realized exactly once,
-// keeping its structure tag; see title-text in section.typ for the same
-// treatment on section slides.
+// style the label rule resolved to. The heading stays realized exactly once
+// per logical slide, keeping its structure tag, and every frame of the slide
+// sets the same text; see title-text in section.typ for the same treatment
+// on section slides.
 #let title-display(body) = {
   let display = block(width: 100%, above: 0pt, below: 0pt, {
     if body == none or body == [] {
@@ -424,8 +426,19 @@
           tracking: text.tracking,
           spacing: text.spacing,
         )
-        show heading: it => text(..style, it.body)
-        heading(level: 1, outlined: false, body)
+        // One real heading per logical slide. A slide with several frames
+        // renders this cell once per frame, and the heading is built here,
+        // inside `context`, where the incremental walk that keeps automatic
+        // headings to their canonical frame cannot see it. So the display
+        // line asks the same question itself: the canonical frame carries
+        // the element, and every other frame sets the same text without it.
+        // Both branches end in `text(..style, ..)`, so the frames match.
+        if is-canonical-frame() {
+          show heading: it => text(..style, it.body)
+          heading(level: 1, outlined: false, body)
+        } else {
+          text(..style, body)
+        }
       }
     }
   })

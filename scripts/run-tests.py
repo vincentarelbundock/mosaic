@@ -965,6 +965,52 @@ def run_core(typst: str, sources: list[str]) -> None:
         require_contains(TMP / "mosaic-components-dimmed-1.svg", paint, absent=True)
         require_contains(TMP / "mosaic-components-dimmed-2.svg", paint)
 
+    # A section slide and a title slide draw the same title on every frame,
+    # under every theme and variant: the title's words and bounding boxes on
+    # frame 2 equal those on frame 1. "theme" is the theme's own layout on an
+    # explicit slide; for sections, "automatic" is that layout reached through
+    # a `=` heading whose tagline holds the pause.
+    heading_frames = (
+        ("section-heading-frames", "Sectionword", (
+            "theme", "automatic", "plain", "rule", "numeral", "baseline", "toc", "image",
+        )),
+        ("title-heading-frames", "Titleword", (
+            "theme", "centered", "bordered", "ruled", "kicker", "panel", "academic", "image",
+        )),
+    )
+    for stem, token, variants in heading_frames:
+        for theme in ("default", "editorial", "metropolis", "manifesto", "mono"):
+            for variant in variants:
+                output = TMP / f"mosaic-{stem}-{theme}-{variant}.pdf"
+                typst_compile(
+                    typst, f"{stem}.typ", output,
+                    "--input", f"theme={theme}", "--input", f"variant={variant}",
+                )
+                titles = []
+                for page in (1, 2):
+                    boxes = command(
+                        ["pdftotext", "-bbox", "-f", str(page), "-l", str(page), str(output), "-"],
+                        capture=True,
+                    ).stdout
+                    titles.append([
+                        line.strip() for line in boxes.splitlines()
+                        if "<word" in line and (
+                            token in line or ">title<" in line or ">heading<" in line
+                        )
+                    ])
+                if len(titles[0]) < 2 or titles[0] != titles[1]:
+                    raise TestFailure(
+                        f"{stem}: {theme} variant {variant} title differs between frames: {titles}"
+                    )
+    # A handout renders one frame per slide, and that frame carries the real
+    # title heading; the fixture asserts the heading count.
+    for variant in ("theme", "kicker", "image"):
+        typst_compile(
+            typst, "title-heading-frames.typ",
+            TMP / f"mosaic-title-heading-frames-handout-{variant}.pdf",
+            "--input", "handout=true", "--input", f"variant={variant}",
+        )
+
 def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
     compile_group(typst, sources)
     for source in responsive:
