@@ -965,6 +965,14 @@ def run_core(typst: str, sources: list[str]) -> None:
         require_contains(TMP / "mosaic-components-dimmed-1.svg", paint, absent=True)
         require_contains(TMP / "mosaic-components-dimmed-2.svg", paint)
 
+    # The same muting reaches a component in a cell under a dimmed grid node:
+    # a dimmed cell, a cell below a dimmed split, and a dimmed cell in an
+    # `auto` row's split. Loud fills absent on the dimmed frame, present lit.
+    typst_compile(typst, "incremental-cell-dimmed.typ", TMP / "mosaic-incremental-cell-dimmed-{p}.svg", "--format", "svg")
+    for paint in ("#00ff11", "#ff0011", "#1100ff"):
+        require_contains(TMP / "mosaic-incremental-cell-dimmed-1.svg", paint, absent=True)
+        require_contains(TMP / "mosaic-incremental-cell-dimmed-2.svg", paint)
+
 def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
     compile_group(typst, sources)
     for source in responsive:
