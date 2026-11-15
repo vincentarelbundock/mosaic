@@ -1,4 +1,5 @@
 // Construction, validation, and resolution of the section layout.
+#import "../shared.typ": fail
 #import "../grid/constructors.typ": styled-cell
 #import "../deck-state.typ": logical-section
 #import "core.typ": (
@@ -49,7 +50,9 @@
 #let section-tokens = (
   plain: (
     number-size: 0.65em,
-    subtitle-size: 1.05em,
+    // An em of the cell's display type, like every other subtitle below: the
+    // subtitle is a caption under the title, never a second title.
+    subtitle-size: 0.44em,
   ),
   rule: (
     paragraph-spacing: 0.06em,
@@ -112,6 +115,12 @@
 #let validate-fields(fields, allow-auto: false) = {
   let fields = validate-accent(fields, "section", allow-auto: allow-auto)
   _ = validate-variant(fields.variant, variants, "layout \"section\"")
+  for name in ("subtitle", "number") {
+    let value = fields.at(name)
+    if value != none and type(value) not in (content, str) {
+      fail("layout \"section\" " + name + " must be content, a string, or none")
+    }
+  }
   validate-semantic-image-fields(fields, "layout \"section\"")
 }
 
@@ -131,7 +140,9 @@
 ///
 /// *Variants*
 ///
-/// - `plain`: one centered `section` cell. The default.
+/// - `plain`: one centered `section` cell. The default of this constructor; a
+///   theme's own `layouts.section` and its automatic headings may select
+///   another.
 /// - `rule`: a heavy full-width rule with the title hanging beneath it, flush
 ///   left, the number above the rule.
 /// - `numeral`: the section number set enormous in the line color, bleeding
@@ -172,7 +183,7 @@
 /// #mosaic.slide(
 ///   layout: "section",
 ///   variant: "image-background",
-///   image: (path: "cover.webp", scrim: black.transparentize(55%)),
+///   image: (path: path("cover.webp"), scrim: black.transparentize(55%)),
 /// )[Structure]
 /// ```
 ///
@@ -188,17 +199,22 @@
   /// -> content | str | none
   number: none,
   /// The picture used by the image variants, and rejected by the others. Give a
-  /// path, ready-made content, or a dictionary whose `scrim` key quiets the
-  /// photograph enough to read text over it.
-  /// -> none | content | str | path | dictionary
+  /// native `path(..)` value, ready-made content, or a dictionary whose `path`
+  /// key holds one and whose `scrim` key quiets the photograph enough to read
+  /// text over it. A bare string is rejected: it would resolve inside the
+  /// package rather than in the deck's project.
+  /// -> none | content | path | dictionary
   image: none,
-  /// Structural arrangement: `plain`, `image-left`, `image-right`, `image-top`,
-  /// `image-bottom`, or `image-background`.
+  /// Structural arrangement: `plain`, `rule`, `numeral`, `baseline`, `toc`,
+  /// `image-left`, `image-right`, `image-top`, `image-bottom`, or
+  /// `image-background`.
   /// -> str
   variant: "plain",
-  /// Color used by the optional section number. `auto` inherits the semantic
-  /// muted color resolved by `setup`, so numbers stay subordinate to the
-  /// title; pass a color to override.
+  /// Color of the section number, in every variant. `auto` keeps the number
+  /// subordinate to the title: the semantic muted color resolved by `setup`,
+  /// or the line color for the `numeral` variant, whose number is texture
+  /// rather than text. Pass a color to override either. The `baseline`
+  /// variant's hairline is not the number and stays in the semantic accent.
   /// -> color | auto
   accent: auto,
   /// Sizes the split of a directional image variant, and is rejected by the
@@ -267,7 +283,7 @@
 } else {
   [#context text(
     ..adapt-fill((fill: settings.colors.muted, size: size), settings),
-    fields.subtitle,
+    as-content(fields.subtitle),
   )<mosaic-section-subtitle>]
 }
 
@@ -321,7 +337,12 @@
           size: tokens.number-size,
           weight: tokens.number-weight,
           tracking: tokens.number-tracking,
-          fill: settings.colors.line,
+          // Texture by default; an explicit accent is the author's choice.
+          fill: if fields.number-accent == none {
+            settings.colors.line
+          } else {
+            fields.number-accent
+          },
         ),
       ),
     ),
@@ -362,7 +383,7 @@
           (
             size: tokens.number-size,
             weight: tokens.number-weight,
-            fill: settings.colors.muted,
+            fill: fields.accent,
           ),
         ),
       )
@@ -447,6 +468,11 @@
     // resolves to the muted color, and an explicit accent stays an override.
     accent: if command.fields.accent == auto { settings.colors.muted } else { command.fields.accent },
   ))
+  // The numeral variant defaults its number to the line color rather than the
+  // muted one, so it needs to know whether the accent was the author's.
+  let fields = fields + (
+    number-accent: if command.fields.accent == auto { none } else { command.fields.accent },
+  )
   let image = optional-fixed-image(fields.image, "layout \"section\" image")
   let tokens = variant-tokens(fields.variant)
   if fields.variant in designed-section-resolvers {
@@ -454,7 +480,7 @@
   }
   let before = if fields.number != none {
     number-text(
-      fields.number,
+      as-content(fields.number),
       (size: tokens.number-size, fill: fields.accent),
     )
     parbreak()
@@ -462,7 +488,7 @@
     []
   }
   let after = subordinate-block(
-    fields.subtitle,
+    as-content(fields.subtitle),
     (fill: settings.colors.muted, size: tokens.subtitle-size),
     settings,
     above: settings.spacing.compact-gap,
@@ -474,7 +500,6 @@
     style: (
       before: before,
       after: after,
-      content-sized: fields.variant in semantic-directional-variants,
       fit: "width",
       inset: settings.spacing.inset,
     ),
@@ -483,7 +508,9 @@
     let position = semantic-image-position(fields.variant)
     // No gutter, as in the title and image layouts: the picture is its own
     // edge, and the section cell already keeps the deck inset, so a recolored
-    // cell reaches the picture rather than stopping short of it.
+    // cell reaches the picture rather than stopping short of it. The cell
+    // fills its region like the plain one, so that same recoloring paints the
+    // whole region and not a strip around the text.
     directional-image-layout(
       position,
       image-cell(image),

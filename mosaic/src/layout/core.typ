@@ -1,7 +1,5 @@
 // Shared record shape and validation primitives for semantic layouts.
-#import "../shared.typ": (
-  tag, fail, validate-keys, is-path, validate-scrim,
-)
+#import "../shared.typ": tag, fail, validate-keys, validate-scrim
 
 #let layout-field-keys = (
   content: ("columns", "tracks", "variant"),
@@ -24,7 +22,10 @@
 
 #let validate-accent(fields, name, allow-auto: false) = {
   if type(fields.accent) != color and not (allow-auto and fields.accent == auto) {
-    fail("layout " + repr(name) + " accent must be a color")
+    fail(
+      "layout " + repr(name) + " accent must be a color"
+        + if allow-auto { " or auto" } else { "" },
+    )
   }
   fields
 }
@@ -61,6 +62,13 @@
 // built on the native element instead.
 #let image-fit-modes = ("cover", "contain")
 
+// A picture is named by a native `path` value and never by a string. Mosaic
+// hands the source to native `image` from inside the package, where a string
+// resolves against the package's own root rather than the deck's project, so
+// a string could only ever find a file the package ships. A `path` value
+// carries the project it was written in.
+#let path-hint = "write path(\"cover.webp\") so the file resolves in your project"
+
 #let validate-image(
   value,
   name,
@@ -69,15 +77,15 @@
   if type(value) == content {
     return value
   }
-  let value = if is-path(value) {
+  if type(value) == str {
+    fail(name + " must be a native path, not a string; " + path-hint)
+  }
+  let value = if type(value) == path {
     (path: value)
   } else if type(value) == dictionary {
     value
   } else {
-    fail(
-      name
-        + " must be content, a non-empty path string, a native path, or a path dictionary",
-    )
+    fail(name + " must be content, a native path, or a path dictionary")
   }
   let allowed = if allow-size {
     ("path", "alt", "width", "height", "fit", "scrim")
@@ -85,8 +93,8 @@
     ("path", "alt", "fit", "scrim")
   }
   _ = validate-keys(value, allowed, name)
-  if "path" not in value or not is-path(value.path) {
-    fail(name + " path must be a non-empty string or native path")
+  if "path" not in value or type(value.path) != path {
+    fail(name + " path must be a native path; " + path-hint)
   }
   let alt = value.at("alt", default: none)
   if alt != none and type(alt) != str {

@@ -55,7 +55,7 @@
 /// - `body`, or `body-1`, `body-2`, and so on when `columns` is above one.
 /// - `footer`, when the variant includes one.
 ///
-/// A setup-level `content: (footer: ...)` default can satisfy the footer, so a
+/// A setup-level `cells: (footer: ...)` default can satisfy the footer, so a
 /// positional slide may omit that final block.
 ///
 /// *Variants*
@@ -63,7 +63,8 @@
 /// - `body`: one region, edge to edge.
 /// - `header-body`: a content-sized header above the body.
 /// - `body-footer`: the body above a content-sized footer.
-/// - `header-body-footer`: both. The default.
+/// - `header-body-footer`: both. The default of this constructor; a theme's
+///   own `layouts.content` and its automatic headings may select another.
 ///
 /// *Labels*
 ///

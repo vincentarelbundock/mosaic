@@ -118,21 +118,23 @@
 // the companion region already carries the deck inset, and a gap would leave a
 // stripe of canvas that a recolored cell or header band cannot cross.
 #let directional-image-layout(
-  variant,
+  position,
   image,
   body,
   tracks: auto,
 ) = {
-  // `variant` is always the output of `semantic-image-position`, so it is one
+  // Every caller validates `position` first: the section layout derives it
+  // from its variant, the title layout checks its `position` field, and the
+  // image layout passes one of its directional variants. It is therefore one
   // of left/right/top/bottom by construction.
   _ = validate-directional-tracks(tracks, "directional image layout tracks")
-  let image-first = variant in ("left", "top")
+  let image-first = position in ("left", "top")
   let children = if image-first {
     (image, body)
   } else {
     (body, image)
   }
-  let split = if variant in ("left", "right") { columns } else { rows }
+  let split = if position in ("left", "right") { columns } else { rows }
   split(..track-children(children, directional-tracks(tracks, image-first)))
 }
 
