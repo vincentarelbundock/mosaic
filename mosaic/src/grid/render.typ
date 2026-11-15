@@ -244,7 +244,7 @@
   // layout that shrinks a cell and a deck that shrinks a block go through the
   // same code and cannot drift apart.
   let content = if fit == "width" {
-    fit-helper(content, width: 100%, grow: false)
+    fit-helper(content, width: 1fr, grow: false)
   } else if fit == "contain" {
     fit-helper(content, grow: false, shrink: true)
   } else {

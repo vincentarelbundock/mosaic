@@ -150,7 +150,7 @@ layouts-title-empty|layout "title" requires title content through title:
 decorate-heading-function|decorate-heading expects a function
 fit-flag-type|fit grow must be a boolean, received 1
 fit-step-one|fit cannot hold incremental steps or speaker notes
-fit-width-type|fit width must be auto, a length, a ratio, or a relative length, received "wide"
+fit-width-type|fit width must be auto, a length, a ratio, a relative length, or a fraction, received "wide"
 pause-item-end|a pause at the end of a list item has no effect
 replace-align|replace align must be an alignment, received "center"
 slide-nested|slide cannot be nested inside another slide or a container
@@ -170,7 +170,6 @@ note-in-context|note cannot be used inside a context block, a layout callback, o
 steps-command-in-markup|steps.on and steps.reveal take a body that is not content only as a drawing command inside steps.drawing
 drawing-hide-needed|a hidden drawing command needs hide: on steps.drawing
 quote-source-inline|quote source applies only to a block quotation
-fit-fraction|fit width cannot be a fraction such as 2fr, which is a share of free space that fit does not divide; use a ratio of the region, such as 100%
 context-assertion-runs|native:context assertion ran
 content-after-slide|content appears after an explicit slide and belongs to no slide; open a new slide with a heading (levels 1, 2) or put the content in a slide command
 layouts-section-image-without-variant|layout "section" variant "baseline" does not use image; pick a picture variant: "image-left", "image-right", "image-top", "image-bottom", or "image-background"
