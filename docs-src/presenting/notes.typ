@@ -10,7 +10,7 @@
 Attach speaker notes with `m.note[...]`. Notes never appear in the presentation and never add a frame:
 
 ```typ
-#m.slide[
+#m.slide[][
   #m.note[Introduce the result.]
 
   #m.steps.reveal(
@@ -94,7 +94,7 @@ This needs no argument and no separate build. An ordinary deck carries it:
 ```typ
 #show: m.setup
 
-#m.slide[
+#m.slide[][
   #m.note[Give the point estimate before the table.]
   The estimate holds under both specifications.
 ]

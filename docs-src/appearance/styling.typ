@@ -89,7 +89,7 @@ Rules after `#show: m.setup` override the baseline deck-wide. Scope a `set` rule
 ```typ
 #[
   #show label("mosaic-cell-body"): set align(center + horizon)
-  #m.slide[Centered for this slide only]
+  #m.slide[][Centered for this slide only]
 ]
 ```
 

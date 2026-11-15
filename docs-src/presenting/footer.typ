@@ -24,7 +24,7 @@ Most decks repeat the same source, event name, or organization in every ordinary
 )
 ```
 
-The default applies whenever the slide's layout contains a cell named `footer`. A title slide has no such cell, so it is unaffected. Positional bodies pass over a cell that has a deck default, so a slide written the ordinary way keeps the footer without mentioning it:
+The default applies whenever the slide's layout contains a cell named `footer`. A title slide has no such cell, so it is unaffected. Positional bodies fill the cells in order, header, body, footer, so a slide that supplies two keeps the deck footer:
 
 ```typ
 #m.slide(
@@ -32,17 +32,13 @@ The default applies whenever the slide's layout contains a cell named `footer`. 
 )[== Results][Main result]
 ```
 
-To change the footer on one slide, address it by name through `cells:`. An explicit value overrides the deck default, while `none` suppresses it:
+A third block would replace the footer on that slide. Named content can likewise omit `footer`, and it combines with positional bodies. An explicit value overrides the deck default, while `none` suppresses it on one slide:
 
 ```typ
 #m.slide(
   layout: m.layouts.content(variant: "header-body-footer"),
-  cells: (
-    header: [APPENDIX],
-    body: [Supporting details],
-    footer: none,
-  ),
-)
+  cells: (footer: none),
+)[== Appendix][Supporting details]
 ```
 
 The footer is an ordinary cell, and there is no separate global footer feature, so footers cannot overlap slide numbers, progress indicators, or the slide body.
@@ -59,7 +55,7 @@ The footer is an ordinary cell, and there is no separate global footer feature, 
 
 `m.components.progress()` shows the current position in a deck. All frames from one incremental slide share the same slide number. Use `"1/1"` or `"1"` for numbers, `"circle"` for a compact indicator, and `"line"` for a full-width bar.
 
-#unreleased(calepin.elements.callout)[The component quiets itself on pages where its counter has no meaningful reading: a slides count on unnumbered slides (titles and sections), and a sections count before the first section slide. A bare `progress()` in a deck foreground is therefore already correct page-number chrome, and a `quiet:` argument overrides the rule (`false` always displays, `true` silences every unnumbered page). In the released `0.0.1` the component always displays, so a foreground indicator needs the `slide.numbered` guard shown at the bottom of this page. Two further things on this page are new: a cell with a deck default is reached only through `cells:`, and `slide.number` is `none` on an unnumbered slide.]
+#unreleased(calepin.elements.callout)[The component quiets itself on pages where its counter has no meaningful reading: a slides count on unnumbered slides (titles and sections), and a sections count before the first section slide. A bare `progress()` in a deck foreground is therefore already correct page-number chrome, and a `quiet:` argument overrides the rule (`false` always displays, `true` silences every unnumbered page). In the released `0.0.1` the component always displays, so a foreground indicator needs the `slide.numbered` guard shown at the bottom of this page. Three further things on this page are new: positional bodies fill every cell in order, `cells:` combines with positional bodies, and `slide.number` is `none` on an unnumbered slide.]
 
 The deck below puts a bare counter in the setup foreground and nothing else. The counter appears on the two content slides and stays quiet on the title and section pages, with no guard written anywhere; sizing comes from an ordinary `text` rule around the component, and a one-off color would go through its `accent:` argument rather than a text rule, because the component paints its own ink from the theme role:
 
