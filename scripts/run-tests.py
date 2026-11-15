@@ -719,6 +719,15 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(roles[3], accent)
     require_contains(roles[4], custom)
 
+    # Under a heading offset every theme still styles the heading that opens
+    # a slide; the fixture asserts the sizes, once per theme.
+    for theme in ("default", "editorial", "metropolis", "manifesto", "mono"):
+        typst_compile(
+            typst, "heading-offset-themes.typ",
+            TMP / f"mosaic-heading-offset-themes-{theme}.pdf",
+            "--input", f"theme={theme}",
+        )
+
     # Punctuation in a name no longer drops the PDF author field.
     require_contains(pdf_info("author-plain-name"), "Conan O'Brien, Ada Lovelace")
 

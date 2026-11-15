@@ -51,12 +51,12 @@
   set terms(spacing: 0.9em)
   set table(stroke: 0.8pt + colors.line)
   set raw(theme: dark-code-theme) if is-dark-canvas(colors)
-  show heading.where(level: 1): set text(size: base-size * 1.7, weight: "bold")
-  show heading.where(level: 2): set text(size: base-size * 1.25, weight: "bold")
+  show heading.where(depth: 1): set text(size: base-size * 1.7, weight: "bold")
+  show heading.where(depth: 2): set text(size: base-size * 1.25, weight: "bold")
   show heading: set block(below: 1em)
   // The slide-header prompt: a shell marker in the accent color before every
   // level-two heading, which is what opens a content slide.
-  show heading.where(level: 2): it => grid(
+  show heading.where(depth: 2): it => grid(
     columns: (auto, 1fr),
     column-gutter: 0.5em,
     align: (left + top, left + top),
