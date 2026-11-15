@@ -64,11 +64,10 @@
 ///
 /// This is the image-first counterpart to `layouts.content`: the picture is the
 /// argument rather than slide content, and the text regions arrange around it.
-/// The surrounding `mosaic.slide` fills only the text cells, by its one rule:
-/// the slide's opening heading is its header, and everything else fills the
-/// cells. The `figure` variant therefore needs nothing but that heading; a
-/// directional variant takes the heading and one body; `full` has no `header`
-/// cell, so a heading stays in its one body.
+/// The surrounding `mosaic.slide` fills only the text cells, by counting its
+/// positional bodies. The `figure` variant has one, the `header`; a
+/// directional variant has a `header` and a `body`, so one body fills the
+/// body and two fill the header and the body; `full` has one, the `body`.
 ///
 /// ```typ
 /// #mosaic.slide(

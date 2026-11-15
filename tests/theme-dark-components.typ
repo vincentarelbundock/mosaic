@@ -26,7 +26,7 @@
 }
 
 #m.slide(layout: m.layouts.content(variant: "header-body"))[
-  == SEMANTIC COMPONENTS
+  SEMANTIC COMPONENTS
 ][
   #grid(
     columns: (1fr, 1fr),

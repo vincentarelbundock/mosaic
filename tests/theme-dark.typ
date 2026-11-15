@@ -25,7 +25,7 @@
 #m.slide(layout: m.layouts.title(), foreground: none)
 
 #m.slide(layout: m.layouts.content(variant: "header-body"))[
-  == REQUEST PIPELINE
+  REQUEST PIPELINE
 ][
   #grid(
     columns: (1fr, 1fr),

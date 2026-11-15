@@ -44,15 +44,12 @@
 #assert(body-cell-ids(with-fixed) == ("body",))
 #assert(resolve-content(with-fixed, (body: [Body]), ()) == (body: [Body]))
 
-// Every open cell is optional. Omitted named or positional cells resolve to
-// empty content while supplied cells keep declaration order.
+// Every open cell is optional when content is named, and a slide with no
+// positional bodies at all is empty. Positional bodies are counted strictly:
+// a partial list is an error (tests/invalid/slide-bodies-too-few.typ).
 #assert(
   resolve-content(comparison, (right: [Right]), ())
     == (heading: [], left: [], right: [Right]),
-)
-#assert(
-  resolve-content(comparison, (:), ([Heading],))
-    == (heading: [Heading], left: [], right: []),
 )
 #assert(
   resolve-content(comparison, (:), ())

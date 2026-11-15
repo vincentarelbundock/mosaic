@@ -42,8 +42,7 @@
 // sizes to its content once it is there. Removed before its step (pages
 // 4-5), it leaves no space; hidden (pages 6-7), it keeps its measured space,
 // so the body does not jump. The header holds plain text because a heading
-// may not sit in an incremental node, so it is addressed by name: positional
-// bodies fill a header only with the slide's opening heading.
+// may not sit in an incremental node.
 #let revealed(before) = m.grids.rows(
   m.grids.track(auto, m.steps.on("2-", before: before, m.grids.columns(
     m.grids.track(1fr, "header"),
@@ -51,8 +50,8 @@
   ))),
   m.grids.track(1fr, "body"),
 )
-#m.slide(layout: revealed("removed"), cells: (header: [Removed], body: [Body]))
-#m.slide(layout: revealed("hidden"), cells: (header: [Hidden], body: [Body]))
+#m.slide(layout: revealed("removed"))[Removed][Body]
+#m.slide(layout: revealed("hidden"))[Hidden][Body]
 
 #let corner(id, name) = {
   let found = query(label("mosaic-cell-" + id + "-" + name))

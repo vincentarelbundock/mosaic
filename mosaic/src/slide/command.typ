@@ -161,37 +161,27 @@
 ///
 /// Use one of the two forms, never both on the same slide:
 ///
-/// - Positional bodies. A slide's opening heading is its header, and
-///   everything else fills the cells: when the layout has a `header` cell and
-///   the first body opens with a heading, that heading fills the header, just
-///   as `== Title` does on an automatic slide. The bodies then fill, in
-///   depth-first layout order, the cells that are not the header and have no
-///   deck default from `setup(cells:)`. The rule does not depend on how many
-///   bodies there are, so these three are the same slide:
+/// - Positional bodies, routed by how many there are and never by what they
+///   contain. They fill the layout's cells in depth-first order, except a
+///   cell named `footer`, which recurring furniture reaches only by name. A
+///   slide gives either one body per cell that has no deck default, or one
+///   body per cell, defaults included, which overrides them. The `header`
+///   cell always counts as having a default, so on the usual header-and-body
+///   layout one body fills the body and two fill the header and the body:
 ///
 ///   ```typ
-///   == Title
-///   Body.
-///
+///   #mosaic.slide[Body only.]
 ///   #mosaic.slide[== Title][Body.]
-///
-///   #mosaic.slide[
-///     == Title
-///     Body.
-///   ]
 ///   ```
 ///
-///   A layout without a `header` cell lifts nothing, and the heading stays in
-///   the body it was written in. More bodies than there are cells to fill is
-///   an error that lists the cells positional bodies reach.
+///   Any other count is an error that names both accepted counts and the
+///   cells each fills. No bodies at all is an empty slide.
 /// - A `cells:` dictionary keyed by cell id, which is order-independent, lets
-///   a slide skip cells, and is the way to reach the cells positional bodies
-///   pass over: a header that is not a heading, or a cell with a deck default.
-///   Nothing is lifted from named cells; content stays in the cell it names.
+///   a slide skip cells, and is the way to reach the footer.
 ///
 /// ```typ
 /// #mosaic.slide(cells: (
-///   header: [Not a heading],
+///   header: [== Named cells],
 ///   body: [Order does not matter here.],
 ///   footer: [Replaces the deck footer on this slide.],
 /// ))

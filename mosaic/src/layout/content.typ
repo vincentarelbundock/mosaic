@@ -55,15 +55,13 @@
 /// - `body`, or `body-1`, `body-2`, and so on when `columns` is above one.
 /// - `footer`, when the variant includes one.
 ///
-/// The surrounding `mosaic.slide` fills them by its one rule: the slide's
-/// opening heading is its header, and everything else fills the cells. With a
-/// `header` cell, a heading that opens the first body fills it; the bodies
-/// then fill, in the order above, the cells that are not the header and have
-/// no deck default. So the slide takes one body per body column, plus one for
-/// the footer unless `setup(cells: (footer: ..))` already supplies it. A
-/// variant without a `header` cell lifts nothing, and an opening heading
-/// stays in the body it was written in. Use `cells:` on the slide to reach a
-/// cell by name instead, such as a header that is not a heading.
+/// The surrounding `mosaic.slide` fills them in that order by counting its
+/// positional bodies. The footer is never filled positionally; it is reached
+/// by name, through `cells: (footer: ..)` on the slide or deck-wide through
+/// `setup(cells: (footer: ..))`. The header always has a deck default, so a
+/// slide gives either one body per body column, or one more than that, which
+/// fills the header first. Any other count is an error. Use `cells:` on the
+/// slide to reach a cell by name instead.
 ///
 /// *Variants*
 ///
@@ -93,10 +91,10 @@
 /// #show label("mosaic-cell-header"): set block(fill: luma(240))
 /// ```
 ///
-/// The header cell carries no special typography of its own. It is filled by
-/// the slide's opening heading, a native heading that the theme styles and the
-/// outline registers; alignment and paint are the theme's, through rules on
-/// the cell's label.
+/// The header cell carries no special typography of its own. Put a native
+/// level-two heading in its content to style it as a heading and register it
+/// with outlines; alignment and paint are the theme's, through rules on the
+/// cell's label.
 ///
 /// -> dictionary
 #let content(
