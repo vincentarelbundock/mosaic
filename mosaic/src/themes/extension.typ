@@ -41,8 +41,8 @@
 ///     line: rgb("#2a3350"), accent: rgb("#7cc4ff"),
 ///     warning: rgb("#fbbf24"), error: rgb("#f87171"),
 ///   ),
-///   defaults: (font: "Inter", base-size: 28pt, overflow: "error"),
-///   options: (density: "airy"),
+///   defaults: (overflow: "error"),
+///   options: (font: "Inter", base-size: 28pt, density: "airy"),
 ///   apply: (body, colors: (:), options: (:)) => {
 ///     set par(leading: if options.density == "airy" { 0.9em } else { 0.6em })
 ///     show heading: set text(
@@ -71,9 +71,8 @@
 /// - `name`: the theme's display name, used in its error messages. Defaults to
 ///   `"Custom"`.
 /// - `defaults`: ordinary `setup` options the theme presets. A deck can still
-///   override any of them. This is where a theme states its `font` and
-///   `base-size`, which are options of `setup` under every theme. Layouts and
-///   colors do not belong here; they have their own keys.
+///   override any of them. Layouts and colors do not belong here; they have
+///   their own keys.
 /// - `options`: the theme's own options and their defaults. See below.
 /// - `layouts`: a complete dictionary of `content`, `title`, and `section`
 ///   layouts, or a function of the resolved options returning one. Explicit and
@@ -87,12 +86,13 @@
 ///
 /// *Base typography*
 ///
-/// `font` and `base-size` are deck options, not theme options: `setup(font:
-/// .., base-size: ..)` works under every theme, bundled or custom. A theme
-/// supplies its own values through `defaults`; one that states neither gets
-/// Typst's own font and a 24pt base size. Both reach `apply` and a `layouts`
-/// function resolved, as `options.font` and `options.base-size`, next to the
-/// theme's own options. State heading sizes as multiples of
+/// `font` and `base-size` are the two options every theme has, whether or not
+/// its definition declares them: `setup(font: .., base-size: ..)` works under
+/// every theme, bundled or custom. A theme states its own values under
+/// `options`, like any other option; one that states neither gets Typst's
+/// own font and a 24pt base size. Both reach `apply` and a `layouts` function
+/// resolved, as `options.font` and `options.base-size`. State heading sizes
+/// as multiples of
 /// `options.base-size` rather than in `em`: an em size multiplies with Typst's
 /// native per-level heading scale, so the same heading changes size under
 /// `set heading(offset: ..)`.
@@ -103,8 +103,7 @@
 /// function. They are consumed before ordinary setup validation and handed to
 /// `layouts` and `apply` as the `options` dictionary, so a theme can offer
 /// choices Mosaic itself knows nothing about. An option name that collides
-/// with a built-in `setup` option, `font` and `base-size` included, is an
-/// error. Every other named argument passes through as an ordinary `setup`
+/// with a built-in `setup` option is an error. Every other named argument passes through as an ordinary `setup`
 /// option.
 ///
 /// -> function

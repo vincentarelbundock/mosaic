@@ -765,10 +765,11 @@ def run_core(typst: str, sources: list[str]) -> None:
         if not all(sizes["0"]) or sizes["0"] != sizes["1"]:
             raise TestFailure(f"{theme} heading sizes change under a heading offset: {sizes}")
 
-    # `font` and `base-size` are setup options under every theme: a custom
-    # theme that states nothing, the same theme with a deck's values, and a
-    # bundled theme with a deck's values. The fixture asserts each case.
-    for case in ("bare", "deck", "bundled"):
+    # `font` and `base-size` are options every theme has: a custom theme that
+    # states nothing, the same theme with a deck's values, a custom theme that
+    # states them under `options`, and a bundled theme with a deck's values.
+    # The fixture asserts each case.
+    for case in ("bare", "deck", "stated", "bundled"):
         typst_compile(
             typst, "theme-typography.typ",
             TMP / f"mosaic-theme-typography-{case}.pdf",

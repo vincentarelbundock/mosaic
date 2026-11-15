@@ -77,6 +77,18 @@
   name: "Metropolis",
   colors: tokens.colors,
   defaults: (
+    // The signature progress line at the bottom edge of every numbered slide,
+    // filling as the deck advances. It resolves its colors from the deck
+    // record, so a palette swap recolors it too, and the component quiets
+    // itself on unnumbered pages: the title keeps its clean edge and section
+    // slides already carry the big section bar.
+    // Chrome, not content: the artifact wrapper keeps it out of the tagged
+    // PDF's structure tree, so a screen reader never announces it.
+    foreground: pdf.artifact(place(bottom, components.progress(
+      variant: "line", count: "slides", width: 100%, thickness: 3pt,
+    ))),
+  ),
+  options: (
     // Designed face first, then the best slide sans each platform ships by
     // default, then the Linux workhorse, ending in Libertinus Serif. Typst
     // embeds no sans at all, so the terminal is a serif and some name here
@@ -95,16 +107,6 @@
       "Libertinus Serif",
     ),
     base-size: 21.5pt,
-    // The signature progress line at the bottom edge of every numbered slide,
-    // filling as the deck advances. It resolves its colors from the deck
-    // record, so a palette swap recolors it too, and the component quiets
-    // itself on unnumbered pages: the title keeps its clean edge and section
-    // slides already carry the big section bar.
-    // Chrome, not content: the artifact wrapper keeps it out of the tagged
-    // PDF's structure tree, so a screen reader never announces it.
-    foreground: pdf.artifact(place(bottom, components.progress(
-      variant: "line", count: "slides", width: 100%, thickness: 3pt,
-    ))),
   ),
   layouts: (
     content: layouts.content(),

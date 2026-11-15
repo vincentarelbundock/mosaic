@@ -43,8 +43,6 @@
   spacing: (:),
   notes: (:),
   overflow: "off",
-  font: default-font,
-  base-size: default-base-size,
   layouts: standard-layouts,
   headings: default-heading-policy,
   handout: false,
@@ -63,7 +61,13 @@
 
 // Private setup engine. The theme engine supplies an exact options dictionary
 // and fully resolved semantic colors; no color registry enters the API.
-#let setup-core(options, body, colors: light) = {
+#let setup-core(
+  options,
+  body,
+  colors: light,
+  font: default-font,
+  base-size: default-base-size,
+) = {
   if type(options) != dictionary {
     fail("internal setup options must be a dictionary; got " + repr(type(options)))
   }
@@ -104,8 +108,8 @@
     spacing: spacing,
     notes: notes,
     overflow: overflow,
-    font: options.font,
-    base-size: options.base-size,
+    font: font,
+    base-size: base-size,
   )
   let page-options = if output == "slides" {
     // A presentation canvas is edge to edge, so the margin defaults to zero and
@@ -144,8 +148,9 @@
   let names = settings.deck.authors.map(author => plain-name(author.name))
   let document-authors = if none in names { () } else { names }
   set document(title: settings.deck.title, author: document-authors)
-  // No slide typography here by design. The deck's `font` and `base-size`
-  // are validated into the settings record here but stated by the theme
+  // No slide typography here by design. The deck's `font` and `base-size`,
+  // handed over resolved by the theme engine like `colors`, are validated
+  // into the settings record here but stated by the theme
   // engine, next to the text fill; every other `set` and `show` rule a slide
   // renders with comes from the active theme's `apply`, including the rules
   // that style the canonical <mosaic-cell-*> vocabulary. This engine owns

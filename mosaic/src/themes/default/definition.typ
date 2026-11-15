@@ -49,6 +49,18 @@
   name: "Default",
   colors: light,
   defaults: (
+    // The progress ring in the corner of every numbered slide, the one piece
+    // of furniture the quiet theme carries. It resolves its colors from the
+    // deck record, so a palette swap recolors it too, and the component
+    // quiets itself on unnumbered pages such as titles.
+    // Chrome, not content: the artifact wrapper keeps it out of the tagged
+    // PDF's structure tree, so a screen reader never announces it.
+    foreground: pdf.artifact(place(bottom + right, block(
+      inset: (right: 18pt, bottom: 14pt),
+      text(size: 0.55em, components.progress(variant: "circle")),
+    ))),
+  ),
+  options: (
     // Designed face first, then the best slide sans each platform ships by
     // default, then the Linux workhorse, ending in Libertinus Serif. Typst
     // embeds no sans at all, so the terminal is a serif and some name here
@@ -63,16 +75,6 @@
       "Libertinus Serif",
     ),
     base-size: 28pt,
-    // The progress ring in the corner of every numbered slide, the one piece
-    // of furniture the quiet theme carries. It resolves its colors from the
-    // deck record, so a palette swap recolors it too, and the component
-    // quiets itself on unnumbered pages such as titles.
-    // Chrome, not content: the artifact wrapper keeps it out of the tagged
-    // PDF's structure tree, so a screen reader never announces it.
-    foreground: pdf.artifact(place(bottom + right, block(
-      inset: (right: 18pt, bottom: 14pt),
-      text(size: 0.55em, components.progress(variant: "circle")),
-    ))),
   ),
   layouts: (
     content: layouts.content(),

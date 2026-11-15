@@ -100,27 +100,29 @@
 )
 
 // The deck's base typography: the two `text` arguments every theme needs and
-// every deck may override, so they are `setup` options rather than options a
-// theme declares. A theme states its own values through its definition's
-// `defaults`; the engine states them as one `set text(..)` before the theme's
-// `apply` runs. `font: auto` states no font at all, which leaves Typst's own.
-// The base size is the measure a theme's heading sizes are multiples of.
+// every deck may override. They are theme options: a definition states its
+// own values under `options`, and the theme engine supplies these fallbacks
+// when it states none, so `setup(font: .., base-size: ..)` works under every
+// theme. The engine states the resolved pair as one `set text(..)` before the
+// theme's `apply` runs. `font: auto` states no font at all, which leaves
+// Typst's own. The base size is the measure a theme's heading sizes are
+// multiples of.
 #let default-font = auto
 #let default-base-size = 24pt
 
-#let validate-font(value) = {
+#let validate-font(value, name: "setup font") = {
   let is-family(item) = type(item) in (str, dictionary)
   if value != auto and not is-family(value) and (
     type(value) != array or value.len() == 0 or not value.all(is-family)
   ) {
-    fail("setup font must be auto, a font family, or an array of font families")
+    fail(name + " must be auto, a font family, or an array of font families")
   }
   value
 }
 
-#let validate-base-size(value) = {
+#let validate-base-size(value, name: "setup base-size") = {
   if type(value) != length {
-    fail("setup base-size must be a length")
+    fail(name + " must be a length")
   }
   value
 }

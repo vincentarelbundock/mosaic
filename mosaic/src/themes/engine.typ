@@ -1,6 +1,9 @@
 // Private engine that consumes passive theme definitions.
 #import "../shared.typ": fail, validate-keys
-#import "../settings.typ": resolve-colors, validate-base-size, validate-font
+#import "../settings.typ": (
+  default-base-size, default-font, resolve-colors, validate-base-size,
+  validate-font,
+)
 #import "../palettes.typ": light
 #import "../setup-core.typ": setup-core, default-setup
 #import "../layout/config.typ": standard-layouts, validate-layouts
@@ -14,6 +17,12 @@
   layouts: standard-layouts,
   apply: identity,
 )
+// The two options every theme has, declared or not: the deck's base
+// typography. A definition states its own values under `options`, like any
+// other theme option; one that omits them takes these, so `setup(font: ..,
+// base-size: ..)` is accepted under every theme. `font: auto` states no font
+// at all, which leaves Typst's own.
+#let default-options = (font: default-font, base-size: default-base-size)
 // The theme-neutral option names are exactly what themed setup accepts:
 // setup-core's own options plus `colors`, which the engine resolves against
 // the theme palette before setup-core runs.
@@ -67,18 +76,15 @@
     if type(key) != str or key.trim() == "" {
       fail("theme option names must be non-empty strings")
     }
-    // Once per-theme options, now options of `setup` itself: a definition
-    // written for the old shape is told where its default belongs.
-    if key in ("font", "base-size") {
-      fail(
-        "theme option " + repr(key) + " is a setup option; state the theme's "
-          + "default through defaults: (" + key + ": ..)",
-      )
-    }
     if key in generic-options {
       fail("theme option " + repr(key) + " conflicts with setup")
     }
   }
+  // The two options the engine itself reads are checked where the theme is
+  // bound; every other option's value is the theme's own business.
+  let theme = theme + (options: default-options + theme.options)
+  _ = validate-font(theme.options.font, name: "theme options font")
+  _ = validate-base-size(theme.options.base-size, name: "theme options base-size")
   if type(theme.layouts) not in (dictionary, function) {
     fail("theme layouts must be a dictionary or function")
   }
@@ -127,23 +133,14 @@
       theme-options.insert(key, named.remove(key))
     }
   }
-  // The deck's base typography, resolved here because both the theme's
-  // `layouts` function and its `apply` read it: the deck's value, else the
-  // theme's default, else the engine's. Validated before the `set text` below
-  // evaluates it, so a wrong type is a `mosaic:` diagnostic, not a native one.
+  // The deck's base typography: the deck's value, else the theme's option,
+  // else the engine's fallback, which `validate-theme` already merged into
+  // `theme.options`. Validated before the `set text` below evaluates it, so a
+  // wrong type is a `mosaic:` diagnostic, not a native one.
   let typography = (
-    font: validate-font(
-      named.at("font", default: theme.defaults.at("font", default: default-setup.font)),
-    ),
-    base-size: validate-base-size(named.at(
-      "base-size",
-      default: theme.defaults.at("base-size", default: default-setup.base-size),
-    )),
+    font: validate-font(theme-options.font),
+    base-size: validate-base-size(theme-options.base-size),
   )
-  // What a theme is handed as `options`: its own options as the deck set
-  // them, plus the resolved `font` and `base-size`. The two are read-only
-  // here, deck options the theme sees rather than options it declares.
-  let theme-options = theme-options + typography
   let layout-overrides = (:)
   if "layouts" in named {
     layout-overrides = validate-layouts(named.remove("layouts"), partial: true)
@@ -177,12 +174,14 @@
   show: setup-core.with(
     setup-options + (layouts: layouts),
     colors: colors,
+    ..typography,
   )
   // The typographic statements the engine makes on a theme's behalf. The ink
   // follows the resolved palette, as the canvas already does: without it a
   // theme that states only `colors` would set black type on a dark canvas.
-  // The base size and the font are the deck's `base-size` and `font`. All
-  // three precede `apply`, so any theme rule on them overrides the engine's.
+  // The base size and the font are the resolved `base-size` and `font`
+  // options. All three precede `apply`, so any theme rule on them overrides
+  // the engine's.
   set text(fill: colors.text, size: typography.base-size)
   set text(font: typography.font) if typography.font != auto
   show: (theme.apply).with(colors: colors, options: theme-options)
