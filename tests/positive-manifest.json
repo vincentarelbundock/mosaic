@@ -99,6 +99,7 @@
     "incremental-labels.typ",
     "pause-inert-segment.typ",
     "pause-list-markers.typ",
+    "list-timed-twin.typ",
     "replace-wrap.typ",
     "speaker-notes-embed-text.typ"
   ],

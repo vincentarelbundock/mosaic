@@ -116,9 +116,12 @@
 /// #mosaic.steps.on("2-")[- Arrives on step 2]
 /// ```
 ///
-/// The list is then drawn by Mosaic rather than by Typst, so that the marker
-/// of a hidden item is hidden with it. It takes the deck's `list.marker`,
-/// `enum.numbering`, spacing, and indents.
+/// The marker of a hidden item is hidden with it, and the list keeps the place
+/// and shape it has without the timing. While an item of a bulleted list is
+/// hidden, dimmed, or removed, Mosaic hands the list to Typst as an `enum`
+/// whose "numbers" are the list's own markers, which is the one way to give
+/// each item a marker of its own. It looks the same, but a `show list` rule of
+/// the deck does not match it on those frames; `show enum` does.
 ///
 /// *Where it works*
 ///
@@ -197,7 +200,7 @@
 // Splits revealed items into slots. A single body holding list items reveals
 // one item per step, so its untimed siblings ride along with `index: none`;
 // every other shape reveals one whole entry per step. `list` reports which
-// shape was found, because only the first can render as a marker grid.
+// shape was found, because only the first is timed item by item.
 #let reveal-slots(items) = {
   if items.len() == 1 and type(items.first()) == content {
     let children = content-children(items.first())
@@ -274,9 +277,9 @@
 ///   one call.
 /// - Inside `steps.drawing`, the items may be drawing commands, one per step.
 ///
-/// A revealed list is drawn by Mosaic rather than by Typst, so that hidden
-/// items hide their markers too. It takes the deck's `list.marker`,
-/// `enum.numbering`, spacing, and indents.
+/// A hidden item hides its marker too, and the list keeps the place and shape
+/// it has unrevealed; see `steps.on` for how a bulleted list is handled while
+/// one of its items is not plainly visible.
 ///
 /// ```typ
 /// #mosaic.steps.reveal(start: 2, after: "dimmed",
