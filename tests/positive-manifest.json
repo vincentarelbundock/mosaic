@@ -91,7 +91,16 @@
     "components-roles.typ",
     "author-plain-name.typ",
     "incremental-cell-surface.typ",
-    "heading-offset-themes.typ"
+    "heading-offset-themes.typ",
+    "fit-extents.typ",
+    "handout-headings.typ",
+    "heading-decoration.typ",
+    "incremental-containers.typ",
+    "incremental-labels.typ",
+    "pause-inert-segment.typ",
+    "pause-list-markers.typ",
+    "replace-wrap.typ",
+    "speaker-notes-embed-text.typ"
   ],
   "layout": [
     "fit.typ",

@@ -150,3 +150,13 @@ layouts-section-number-type|layout "section" number must be content, a string, o
 layouts-image-caption-type|layout "image" caption must be content, a string, or none
 layouts-image-fit-content|layout "image" fit applies only to a path image
 layouts-title-empty|layout "title" requires title content through title:
+decorate-heading-function|decorate-heading expects a function
+fit-flag-type|fit grow must be a boolean, received 1
+fit-step-one|fit cannot hold incremental steps or speaker notes
+fit-width-type|fit width must be auto, a length, a ratio, a relative length, or a fraction, received "wide"
+note-in-component|note cannot be used inside a Mosaic component, a context block, a layout callback, or show-rule output
+pause-item-end|a pause at the end of a list item has no effect
+replace-align|replace align must be an alignment, received "center"
+slide-nested|slide cannot be nested inside another slide or a container
+steps-in-context|pause and steps cannot be used inside a Mosaic component, a context block, a layout callback, or show-rule output
+steps-unsupported-container|pause, steps, and note cannot be used inside binom, which the slide runtime cannot rebuild

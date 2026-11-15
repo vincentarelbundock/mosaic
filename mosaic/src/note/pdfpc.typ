@@ -22,7 +22,11 @@
 // pdfpc itself does not read attachments; its lookup is filesystem-only. This
 // is written for consoles that do, and for `pdftk unpack_files` or `mutool
 // extract` to recover the conventional sidecar from the PDF when they don't.
-#import "../shared.typ": tag
+#import "../shared.typ": tag, typst-styled
+
+// Typst's element for a symbol, an escape (`\$`), or a shorthand (`--`, `~`).
+// Like the structural elements in `shared.typ`, it has no public constructor.
+#let typst-symbol = [~].func()
 
 // The attachment's name inside the PDF.
 //
@@ -53,16 +57,17 @@
 // figure would be the worse failure.
 #let note-text(value) = {
   if type(value) == str { return value }
+  if type(value) == array { return value.map(note-text).join("") }
   if type(value) != content { return "" }
   let func = value.func()
-  if func == text { return value.text }
+  if func in (text, raw, typst-symbol) { return value.text }
   if func == [ ].func() { return " " }
   if func == linebreak { return "\n" }
   if func == parbreak { return "\n\n" }
-  if func == raw { return value.text }
   if func == smartquote {
     return if value.at("double", default: true) { "\"" } else { "'" }
   }
+  if func == typst-styled { return note-text(value.child) }
   // List and enum items keep a marker, because a note's structure is part of
   // how the presenter reads it under pressure. The marker is written flat
   // rather than nested: the format carries no depth, and a bullet that says
@@ -70,11 +75,22 @@
   if func == list.item or func == enum.item {
     return "\n- " + note-text(value.body)
   }
-  let children = value.at("children", default: none)
-  if children != none { return children.map(note-text).join("") }
-  let body = value.at("body", default: none)
-  if body != none { return note-text(body) }
-  ""
+  if func == terms.item {
+    return (
+      "\n- " + note-text(value.term) + ": " + note-text(value.description)
+    )
+  }
+  // Everything else is a container of some kind, and the words are in its
+  // content-valued fields: a body, children, a fraction's two halves. Reading
+  // them in field order keeps the text of elements this function has never
+  // heard of. Metadata is the exception, because its value is data.
+  if func == metadata { return "" }
+  value
+    .fields()
+    .values()
+    .filter(field => type(field) in (content, array))
+    .map(note-text)
+    .join("")
 }
 
 // Collapses the whitespace flattening leaves behind.
@@ -96,8 +112,9 @@
 // Several notes on one frame are separate blocks of prose, so they are joined
 // by a blank line rather than run together: the presenter wrote them apart.
 #let page-record(page, notes) = (
-  // The format counts physical pages from one, which is what `page()` gives.
-  idx: page,
+  // The format counts physical pages from zero, as pdfpc's own files and the
+  // Touying and Polylux exporters do; `page()` counts from one.
+  idx: page - 1,
   note: tidy-note(notes.map(note-text).join("\n\n")),
 )
 

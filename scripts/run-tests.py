@@ -393,16 +393,18 @@ def run_core(typst: str, sources: list[str]) -> None:
     embedded = json.loads(pdf_attachment("speaker-notes-embed", "speaker-notes.pdfpc"))
     if embedded["pdfpcFormat"] != 2:
         raise TestFailure(f"embedded pdfpc format: {embedded['pdfpcFormat']}")
+    # `idx` counts physical pages from zero, as pdfpc's own files do, so the
+    # notes on pages 1, 4, and 5 are keyed 0, 3, and 4.
     notes = {page["idx"]: page["note"] for page in embedded["pages"]}
-    if sorted(notes) != [1, 4, 5]:
+    if sorted(notes) != [0, 3, 4]:
         raise TestFailure(f"embedded pdfpc pages: {sorted(notes)}")
-    if notes[1] != "EMBED FIRST NOTE":
-        raise TestFailure(f"embedded note on page 1: {notes[1]!r}")
+    if notes[0] != "EMBED FIRST NOTE":
+        raise TestFailure(f"embedded note on page 1: {notes[0]!r}")
     # The frame's own note, on the frame rather than on the slide's first page.
-    if notes[4] != "EMBED FRAME NOTE":
-        raise TestFailure(f"embedded note on page 4: {notes[4]!r}")
-    if notes[5] != "EMBED PAIR ONE\n\nEMBED PAIR TWO":
-        raise TestFailure(f"embedded notes on page 5: {notes[5]!r}")
+    if notes[3] != "EMBED FRAME NOTE":
+        raise TestFailure(f"embedded note on page 4: {notes[3]!r}")
+    if notes[4] != "EMBED PAIR ONE\n\nEMBED PAIR TWO":
+        raise TestFailure(f"embedded notes on page 5: {notes[4]!r}")
 
     # A deck with no notes carries no attachment, so `pdfdetach` finds nothing
     # to list. The payload is not an empty file the reader must then interpret.
@@ -739,6 +741,62 @@ def run_core(typst: str, sources: list[str]) -> None:
     # Punctuation in a name no longer drops the PDF author field.
     require_contains(pdf_info("author-plain-name"), "Conan O'Brien, Ada Lovelace")
 
+
+    # Steps inside native containers reach the page they name and no earlier
+    # one. Each pair is the page before and after the step, and every word is
+    # one token so a narrow shape cannot hyphenate it out of the grep.
+    container_words = {
+        2: ("TABLEFIRST", ("TABLEHEADSECOND", "TABLESECOND")),
+        4: ("TERMFIRST", ("TERMSECOND",)),
+        6: ("RECTFIRST", ("RECTSECOND", "CIRCLESECOND")),
+        8: ("ROTATEFIRST", ("ROTATESECOND", "SCALESECOND", "MOVESECOND")),
+        10: ("COLUMNFIRST", ("COLUMNSECOND", "PARSECOND")),
+        12: ("MATHFIRST", ("FRACSECOND", "ROOTSECOND", "ATTACHSECOND")),
+        14: ("CAPTIONFIRST", ("CAPTIONSECOND",)),
+        16: ("HEADINGFIRST", ("HEADINGSECOND",)),
+    }
+    for expected in ("PLACEHOST", "PLACEDEFAULT", "PLACEOFFSET"):
+        require_contains(pdf_page_text("incremental-containers", 1), expected)
+    for page, (first, later) in container_words.items():
+        before = pdf_page_text("incremental-containers", page)
+        after = pdf_page_text("incremental-containers", page + 1)
+        require_contains(before, first)
+        for word in later:
+            require_contains(before, word, absent=True)
+            require_contains(after, word)
+    require_contains(pdf_page_text("incremental-containers", 17), "HEADINGFIRST", absent=True)
+
+    # A hidden list item hides its marker, and a timed list is drawn with the
+    # deck's own marker and numbering. The markers are counted per page: a
+    # leaked marker is in the text layer even when its item is not.
+    marker_counts = {
+        1: {"§": 1, "¶": 0},
+        2: {"§": 2, "¶": 1},
+        3: {"§": 3, "¶": 1},
+        4: {"a)": 1, "b)": 0, "c)": 1},
+        5: {"a)": 1, "b)": 1, "c)": 1},
+        6: {"a)": 1, "b)": 0},
+        7: {"a)": 1, "b)": 1},
+        8: {"§": 2},
+    }
+    for page, counts in marker_counts.items():
+        marker_page = pdf_page_text("pause-list-markers", page)
+        for marker, count in counts.items():
+            require_contains(marker_page, marker, count=count)
+
+    # The embedded note text keeps the words of styled runs, symbols, escapes,
+    # term lists, and math.
+    flattened = json.loads(
+        pdf_attachment("speaker-notes-embed-text", "speaker-notes.pdfpc")
+    )["pages"]
+    expected_note = (
+        "Say THIS and that, cost $5 \u2013 maybe\u2026 50%. SCOPED\n\n"
+        "- Term: description\n- bullet\n\nx2y"
+    )
+    if [page["idx"] for page in flattened] != [0]:
+        raise TestFailure(f"flattened note pages: {flattened!r}")
+    if flattened[0]["note"] != expected_note:
+        raise TestFailure(f"flattened note text: {flattened[0]['note']!r}")
 
 def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
     compile_group(typst, sources)
