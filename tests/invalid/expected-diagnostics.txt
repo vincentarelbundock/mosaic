@@ -94,7 +94,6 @@ setup-section-grid-removed|setup does not accept "section-grid"
 setup-spacing-type|setup spacing inset must be a length
 setup-title-type|setup title must be content, a string, or none
 slide-cells-fixed|slide cells cannot supply fixed-content cell "logo"
-slide-cells-mixed|slide cannot combine named and positional cell content
 slide-cells-type|slide cells must be a dictionary
 slide-cells-unknown|slide cells contains unknown cell id "sidebar"
 slide-cells-value-type|slide cells for "body" must be content or none
@@ -183,3 +182,4 @@ layouts-title-image-size|image does not accept "width"
 slide-bodies-too-few|slide received 1 positional body; this layout takes 2 ("body-1", "body-2") or 3 ("header", "body-1", "body-2"); or fill its cells by name through cells:
 slide-bodies-footer|slide received 3 positional bodies; this layout takes 1 ("body") or 2 ("header", "body"); fill other cells such as "footer" by name through cells:
 slide-bodies-columns-many|slide received 4 positional bodies; this layout takes 2 ("body-1", "body-2") or 3 ("header", "body-1", "body-2"); or fill its cells by name through cells:
+slide-bodies-named-footer|slide received 3 positional bodies; the cells not named in cells: take 1 ("body") or 2 ("header", "body"); or name more of them in cells:

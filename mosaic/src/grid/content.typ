@@ -22,9 +22,10 @@
 // content-bearing cells that exist in this resolved grid. Named slide content
 // overrides those defaults; `none` explicitly suppresses one.
 //
-// Positional bodies are routed by their count alone; their content is never
-// read. The fillable cells are the content-bearing cells other than the
-// footer, in depth-first layout order. A slide gives either one body for each
+// Cells named in `cells:` are filled from it first and leave the pool.
+// Positional bodies are then routed by their count alone over the cells that
+// remain; their content is never read. The fillable cells are the remaining
+// content-bearing cells other than the footer, in depth-first layout order. A slide gives either one body for each
 // fillable cell without a deck default, which leaves the defaults in place,
 // or one body for every fillable cell, which overrides them. The `header`
 // cell always carries a default (setup injects one), so on a header-and-body
@@ -39,8 +40,9 @@
 // value for an unknown id is still an error: there the author is supplying
 // content that would silently vanish.
 // One message for too many and too few: the count received, the cells each
-// accepted count fills, and the way to reach any other cell.
-#let positional-count-error(count, undefaulted, fillable, body-ids) = {
+// accepted count fills, and the way to reach any other cell. `remaining` is
+// what `cells:` left, so the message stays true when the slide named some.
+#let positional-count-error(count, undefaulted, fillable, remaining, named: false) = {
   let describe(ids) = (
     str(ids.len()) + " (" + ids.map(repr).join(", ") + ")"
   )
@@ -51,17 +53,20 @@
   } else {
     describe(undefaulted) + " or " + describe(fillable)
   }
-  let others = body-ids.filter(id => id not in fillable)
+  let others = remaining.filter(id => id not in fillable)
   (
     "slide received " + str(count) + " positional "
       + (if count == 1 { "body" } else { "bodies" })
-      + "; this layout takes " + accepted
+      + (if named { "; the cells not named in cells: take " } else { "; this layout takes " })
+      + accepted
       + (
         if others.len() > 0 {
           (
             "; fill other cells such as " + others.map(repr).join(", ")
               + " by name through cells:"
           )
+        } else if named {
+          "; or name more of them in cells:"
         } else {
           "; or fill its cells by name through cells:"
         }
@@ -78,53 +83,53 @@
       inherited.insert(id, if value == none { [] } else { value })
     }
   }
-  if named.len() > 0 {
-    let all-ids = resolve-cell-ids(node)
-    let explicit = (:)
-    for (id, value) in named {
-      if id not in all-ids {
-        if value == none { continue }
-        fail("slide cells contains unknown cell id " + repr(id))
-      }
-      // A fixed-content cell is a different case: the cell does exist, so
-      // `none` there reads as "blank it", which the layout cannot honor.
-      // Keeping the error surfaces that rather than silently ignoring it.
-      if id not in body-ids {
-        fail("slide cells cannot supply fixed-content cell " + repr(id))
-      }
-      if value != none and type(value) != content {
-        fail("slide cells for " + repr(id) + " must be content or none")
-      }
-      explicit.insert(id, if value == none { [] } else { value })
+  // Named content first: each cell `cells:` names is filled from it and
+  // leaves the positional pool.
+  let all-ids = resolve-cell-ids(node)
+  let explicit = (:)
+  for (id, value) in named {
+    if id not in all-ids {
+      if value == none { continue }
+      fail("slide cells contains unknown cell id " + repr(id))
     }
-    let resolved = inherited + explicit
-    for id in body-ids {
-      if id not in resolved {
-        resolved.insert(id, [])
-      }
+    // A fixed-content cell is a different case: the cell does exist, so
+    // `none` there reads as "blank it", which the layout cannot honor.
+    // Keeping the error surfaces that rather than silently ignoring it.
+    if id not in body-ids {
+      fail("slide cells cannot supply fixed-content cell " + repr(id))
     }
-    resolved
-  } else {
-    let fillable = body-ids.filter(id => id != footer-id)
-    let undefaulted = fillable.filter(id => id not in inherited)
-    let destination-ids = if bodies.len() == 0 {
-      ()
-    } else if bodies.len() == undefaulted.len() {
-      undefaulted
-    } else if bodies.len() == fillable.len() {
-      fillable
-    } else {
-      fail(positional-count-error(bodies.len(), undefaulted, fillable, body-ids))
+    if value != none and type(value) != content {
+      fail("slide cells for " + repr(id) + " must be content or none")
     }
-    let resolved = inherited
-    for (index, id) in destination-ids.enumerate() {
-      resolved.insert(id, bodies.at(index))
-    }
-    for id in body-ids {
-      if id not in resolved {
-        resolved.insert(id, [])
-      }
-    }
-    resolved
+    explicit.insert(id, if value == none { [] } else { value })
   }
+  // Then the positional bodies, counted strictly over the cells that remain.
+  let remaining = body-ids.filter(id => id not in explicit)
+  let fillable = remaining.filter(id => id != footer-id)
+  let undefaulted = fillable.filter(id => id not in inherited)
+  let destination-ids = if bodies.len() == 0 {
+    ()
+  } else if bodies.len() == undefaulted.len() {
+    undefaulted
+  } else if bodies.len() == fillable.len() {
+    fillable
+  } else {
+    fail(positional-count-error(
+      bodies.len(),
+      undefaulted,
+      fillable,
+      remaining,
+      named: explicit.len() > 0,
+    ))
+  }
+  let resolved = inherited + explicit
+  for (index, id) in destination-ids.enumerate() {
+    resolved.insert(id, bodies.at(index))
+  }
+  for id in body-ids {
+    if id not in resolved {
+      resolved.insert(id, [])
+    }
+  }
+  resolved
 }
