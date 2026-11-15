@@ -369,16 +369,18 @@ def run_core(typst: str, sources: list[str]) -> None:
     embedded = json.loads(pdf_attachment("speaker-notes-embed", "speaker-notes.pdfpc"))
     if embedded["pdfpcFormat"] != 2:
         raise TestFailure(f"embedded pdfpc format: {embedded['pdfpcFormat']}")
+    # `idx` counts physical pages from zero, as pdfpc's own files do, so the
+    # notes on pages 1, 4, and 5 are keyed 0, 3, and 4.
     notes = {page["idx"]: page["note"] for page in embedded["pages"]}
-    if sorted(notes) != [1, 4, 5]:
+    if sorted(notes) != [0, 3, 4]:
         raise TestFailure(f"embedded pdfpc pages: {sorted(notes)}")
-    if notes[1] != "EMBED FIRST NOTE":
-        raise TestFailure(f"embedded note on page 1: {notes[1]!r}")
+    if notes[0] != "EMBED FIRST NOTE":
+        raise TestFailure(f"embedded note on page 1: {notes[0]!r}")
     # The frame's own note, on the frame rather than on the slide's first page.
-    if notes[4] != "EMBED FRAME NOTE":
-        raise TestFailure(f"embedded note on page 4: {notes[4]!r}")
-    if notes[5] != "EMBED PAIR ONE\n\nEMBED PAIR TWO":
-        raise TestFailure(f"embedded notes on page 5: {notes[5]!r}")
+    if notes[3] != "EMBED FRAME NOTE":
+        raise TestFailure(f"embedded note on page 4: {notes[3]!r}")
+    if notes[4] != "EMBED PAIR ONE\n\nEMBED PAIR TWO":
+        raise TestFailure(f"embedded notes on page 5: {notes[4]!r}")
 
     # A deck with no notes carries no attachment, so `pdfdetach` finds nothing
     # to list. The payload is not an empty file the reader must then interpret.
@@ -662,6 +664,20 @@ def run_core(typst: str, sources: list[str]) -> None:
         marker_page = pdf_page_text("pause-list-markers", page)
         for marker, count in counts.items():
             require_contains(marker_page, marker, count=count)
+
+    # The embedded note text keeps the words of styled runs, symbols, escapes,
+    # term lists, and math.
+    flattened = json.loads(
+        pdf_attachment("speaker-notes-embed-text", "speaker-notes.pdfpc")
+    )["pages"]
+    expected_note = (
+        "Say THIS and that, cost $5 \u2013 maybe\u2026 50%. SCOPED\n\n"
+        "- Term: description\n- bullet\n\nx2y"
+    )
+    if [page["idx"] for page in flattened] != [0]:
+        raise TestFailure(f"flattened note pages: {flattened!r}")
+    if flattened[0]["note"] != expected_note:
+        raise TestFailure(f"flattened note text: {flattened[0]['note']!r}")
 
 def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
     compile_group(typst, sources)
