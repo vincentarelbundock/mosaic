@@ -129,6 +129,9 @@ theme-definition-unknown|theme does not accept "mystery"
 theme-layouts-incomplete|theme layouts requires "title"
 too-many|grid expects 1 bodies with setup defaults or 2 bodies to override them, received 3
 decorate-heading-function|decorate-heading expects a function
+fit-flag-type|fit grow must be a boolean, received 1
+fit-step-one|fit cannot hold incremental steps or speaker notes
+fit-width-type|fit width must be auto, a length, a ratio, a relative length, or a fraction, received "wide"
 note-in-component|note cannot be used inside a Mosaic component, a context block, a layout callback, or show-rule output
 pause-item-end|a pause at the end of a list item has no effect
 replace-align|replace align must be an alignment, received "center"
