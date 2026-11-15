@@ -52,6 +52,16 @@
 // so the three fields travel together: the picture is required exactly when
 // the variant uses one, `position` places it, and `tracks` sizes the split of
 // a directional position.
+//
+// A picture does not select the variant by itself. The resolver sees one
+// merged record, in which a field written on the slide and one inherited from
+// the deck's layout configuration look the same, so "the author asked for a
+// picture here" cannot be told from "the deck configures one", and a variant
+// inferred from `image:` would also replace whatever text design the deck
+// chose. The picture fields are therefore rejected outside the picture
+// variant, and the message says what to add.
+#let add-image-variant = "; add variant: \"image\""
+
 #let validate-image-fields(fields, name) = {
   if fields.variant == "image" {
     if fields.image == none {
@@ -68,13 +78,16 @@
     }
   } else {
     if fields.image != none {
-      fail(name + " variant " + repr(fields.variant) + " does not use image")
+      fail(
+        name + " variant " + repr(fields.variant) + " does not use image"
+          + add-image-variant,
+      )
     }
     if fields.position != auto {
-      fail(name + " position applies only to variant \"image\"")
+      fail(name + " position applies only to variant \"image\"" + add-image-variant)
     }
     if fields.tracks != auto {
-      fail(name + " tracks apply only to variant \"image\"")
+      fail(name + " tracks apply only to variant \"image\"" + add-image-variant)
     }
   }
   fields

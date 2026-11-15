@@ -140,7 +140,13 @@
 /// One variant carries a picture:
 ///
 /// - `image`: the compact title stack with a picture, placed by `position`.
-///   Requires `image`.
+///   Requires `image`, and is the only variant that takes one: write
+///   `variant: "image"` together with `image:`.
+///
+/// Every variant states its own arrangement, as described above; unlike the
+/// `plain` section, none leaves the placement of its stack to the theme. The
+/// theme decides the type: the display size on `<mosaic-title-display>` and
+/// the typography of the cell.
 ///
 /// *Pictures*
 ///

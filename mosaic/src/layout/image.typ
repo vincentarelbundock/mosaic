@@ -77,7 +77,11 @@
 ///
 /// This is the image-first counterpart to `layouts.content`: the picture is the
 /// argument rather than slide content, and the text regions arrange around it.
-/// The surrounding `mosaic.slide` fills only the text cells.
+/// The surrounding `mosaic.slide` fills only the text cells, by its one rule:
+/// the slide's opening heading is its header, and everything else fills the
+/// cells. At `"body"` the slide therefore needs nothing but that heading; at a
+/// directional position it takes the heading and one body; at `"background"`
+/// there is no `header` cell, so a heading stays in the one body.
 ///
 /// ```typ
 /// #mosaic.slide(
@@ -94,14 +98,15 @@
 /// `position` names the picture's place, in the vocabulary every layout with
 /// a picture shares, plus `"body"`:
 ///
-/// - `"body"`: a contained picture centered in the body region under a
-///   `header` cell, with an optional `caption` below it. The conventional
+/// - `"body"`: the picture in the body region under a `header` cell, with an
+///   optional `caption` below it. A picture given as a path is contained, so
+///   it is never cropped, and sits centered in the region. The conventional
 ///   academic figure slide, and the default.
 /// - `"left"`, `"right"`, `"top"`, `"bottom"`: a full-bleed picture paired
 ///   with a text region of `header` and `body` cells, sized by `tracks`.
 /// - `"background"`: the picture behind a single `body` cell, so text reads
-///   over the photograph. Put a heading inside the body to title it, or pass
-///   an empty block for a bare full-bleed slide.
+///   over the photograph. Open the body with a heading to title it, or give
+///   no body at all for a bare full-bleed slide.
 ///
 /// The layout has no `variant`: it carries no text design of its own.
 ///

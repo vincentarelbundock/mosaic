@@ -157,9 +157,13 @@
 ///
 /// *Variants*
 ///
-/// - `plain`: one centered `section` cell. The default of this constructor; a
-///   theme's own `layouts.section` and its automatic headings may select
-///   another.
+/// - `plain`: one `section` cell holding the optional number, the title, and
+///   the optional subtitle as a plain stack. The layout states no arrangement
+///   for it: where the stack sits in the cell, and the title's size and
+///   weight, are the theme's, through its rules on `<mosaic-cell-section>`
+///   (the default theme sets it flush left at the vertical center). The
+///   default of this constructor; a theme's own `layouts.section` and its
+///   automatic headings may select another.
 /// - `rule`: a heavy full-width rule with the title hanging beneath it, flush
 ///   left, the number above the rule.
 /// - `numeral`: the section number set enormous in the line color, bleeding
@@ -169,12 +173,15 @@
 /// - `toc`: every section in the deck listed, the current one alive with its
 ///   number, the others ghosted.
 /// - `image`: the `plain` composition with a picture, placed by `position`.
-///   Requires `image`.
+///   Requires `image`, and is the only variant that takes one: write
+///   `variant: "image"` together with `image:`.
 ///
 /// The designed text variants (`rule`, `numeral`, `baseline`, `toc`) treat an
 /// omitted `number` as the automatic section counter, so they need no argument
 /// in the ordinary case. They are compositions of type alone and take no
-/// picture.
+/// picture. Each one owns its arrangement, as described above, so a theme's
+/// alignment rule on the cell does not move it; the theme still decides the
+/// display size the composition scales from.
 ///
 /// *Pictures*
 ///
@@ -208,8 +215,9 @@
 ///
 /// *Styling*
 ///
-/// The layout is structural. The centered arrangement and title typography come
-/// from the `<mosaic-cell-section>` label rules `setup` emits. Over a
+/// The layout is structural. The `plain` and `image` arrangement and the title
+/// typography come from the `<mosaic-cell-section>` label rules the theme
+/// states. Over a
 /// photograph the text inherits the surrounding native text color, so quiet the
 /// picture with the `scrim` argument of `components.image` and override the
 /// cell's text fill.

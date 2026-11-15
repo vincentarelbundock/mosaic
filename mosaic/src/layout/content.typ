@@ -49,18 +49,25 @@
 ///
 /// *Cells*
 ///
-/// The surrounding `mosaic.slide` fills cells in traversal order:
+/// The layout builds these cells, in this order:
 ///
 /// - `header`, when the variant includes one.
 /// - `body`, or `body-1`, `body-2`, and so on when `columns` is above one.
 /// - `footer`, when the variant includes one.
 ///
-/// A setup-level `cells: (footer: ...)` default can satisfy the footer, so a
-/// positional slide may omit that final block.
+/// The surrounding `mosaic.slide` fills them by its one rule: the slide's
+/// opening heading is its header, and everything else fills the cells. With a
+/// `header` cell, a heading that opens the first body fills it; the bodies
+/// then fill, in the order above, the cells that are not the header and have
+/// no deck default. So the slide takes one body per body column, plus one for
+/// the footer unless `setup(cells: (footer: ..))` already supplies it. A
+/// variant without a `header` cell lifts nothing, and an opening heading
+/// stays in the body it was written in. Use `cells:` on the slide to reach a
+/// cell by name instead, such as a header that is not a heading.
 ///
 /// *Variants*
 ///
-/// - `body`: one region, edge to edge.
+/// - `body`: the body region alone, with no header or footer.
 /// - `header-body`: a content-sized header above the body.
 /// - `body-footer`: the body above a content-sized footer.
 /// - `header-body-footer`: both. The default of this constructor; a theme's
@@ -86,9 +93,10 @@
 /// #show label("mosaic-cell-header"): set block(fill: luma(240))
 /// ```
 ///
-/// The header cell carries no special typography of its own. Put a native
-/// level-two heading in its content to style it as a heading and register it
-/// with outlines.
+/// The header cell carries no special typography of its own. It is filled by
+/// the slide's opening heading, a native heading that the theme styles and the
+/// outline registers; alignment and paint are the theme's, through rules on
+/// the cell's label.
 ///
 /// -> dictionary
 #let content(
