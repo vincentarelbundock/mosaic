@@ -35,6 +35,41 @@
 #assert("position" not in mosaic.layouts.section().fields)
 #assert("position" not in mosaic.layouts.title().fields)
 
+// A picture dictionary and the equivalent `components.image(..)` build the
+// same element, so the two spellings render the same slide.
+#let scrim = black.transparentize(45%)
+#let as-dictionary = (path: river, alt: "Wetlands", scrim: scrim)
+#let as-content = mosaic.components.image(river, alt: "Wetlands", scrim: scrim)
+// Compared through `repr`, which prints every field of the element: two
+// image elements never compare equal as values, even when identical.
+#let background(layout) = repr(grid-test.info(
+  resolve-layout(layout, settings),
+  layout.name,
+).cell.style.background)
+#let image-cell(layout) = grid-test.info(resolve-layout(layout, settings), "image").cell.content
+#let picture(layout) = repr(image-cell(layout))
+#assert(
+  background(mosaic.layouts.title(variant: "image-background", image: as-dictionary))
+    == background(mosaic.layouts.title(variant: "image-background", image: as-content)),
+)
+#assert(
+  background(mosaic.layouts.section(variant: "image-background", image: as-dictionary))
+    == background(mosaic.layouts.section(variant: "image-background", image: as-content)),
+)
+#assert(
+  picture(mosaic.layouts.title(variant: "image-left", image: as-dictionary))
+    == picture(mosaic.layouts.title(variant: "image-left", image: as-content)),
+)
+// (The image layout boxes ready-made content at the region's size and rebuilds
+// a dictionary at that size, so there the elements differ and only the
+// rendering agrees.)
+// A dictionary `fit` key applies, and the layout's explicit `fit:` wins over it.
+#assert(image-cell(mosaic.layouts.image((path: dog, fit: "contain"), variant: "left")).fit == "contain")
+#assert(
+  image-cell(mosaic.layouts.image((path: dog, fit: "cover"), variant: "left", fit: "contain")).fit
+    == "contain",
+)
+
 #show: mosaic.setup.with(
   title: [ZQDECK title],
   subtitle: [ZQSUB subtitle],
@@ -43,13 +78,14 @@
   overflow: "error",
 )
 
-// Page 1: the title stack over a full-slide picture, recolored by one rule.
+// Page 1: the title stack over a full-slide picture given as a dictionary
+// with a scrim, recolored by one rule.
 #[
   #show label("mosaic-cell-title"): set text(fill: rgb("#fedcba"))
   #mosaic.slide(
     layout: "title",
     variant: "image-background",
-    image: mosaic.components.image(river, scrim: black.transparentize(45%)),
+    image: (path: river, scrim: black.transparentize(45%)),
   )
 ]
 

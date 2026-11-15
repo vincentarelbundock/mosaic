@@ -42,20 +42,48 @@
   nodes.zip(tracks).map(((node, size)) => track(size, node))
 }
 
-// The picture a layout places: ready-made content as it stands, or a bare
-// path built into an image at the size and fit the composition wants.
+#let path-image(
+  value,
+  name,
+  width: auto,
+  height: auto,
+  fit: "cover",
+  allow-size: true,
+) = {
+  let image = validate-image(value, name, allow-size: allow-size)
+  let alt = image.at("alt", default: none)
+  let image-fit = image.at("fit", default: fit)
+  // The scrim rides the picture rather than the cell, so it hugs an inset
+  // figure exactly as it covers a full-bleed background.
+  mosaic-image(
+    image.path,
+    alt: alt,
+    width: if allow-size { image.at("width", default: width) } else { width },
+    height: if allow-size { image.at("height", default: height) } else { height },
+    fit: image-fit,
+    scrim: image.at("scrim", default: none),
+  )
+}
+
 #let image-content(
   value,
   name,
   width: auto,
   height: auto,
   fit: "cover",
+  allow-size: true,
 ) = {
-  let value = validate-image(value, name)
   if type(value) == content {
     value
   } else {
-    mosaic-image(value, width: width, height: height, fit: fit)
+    path-image(
+      value,
+      name,
+      width: width,
+      height: height,
+      fit: fit,
+      allow-size: allow-size,
+    )
   }
 }
 

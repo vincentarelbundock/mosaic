@@ -196,18 +196,15 @@
 /// and the title typography come from the `<mosaic-cell-section>` label rules
 /// the theme states. Over a
 /// photograph the text inherits the surrounding native text color, so quiet the
-/// picture with the `scrim` argument of `components.image` and override the
-/// cell's text fill.
+/// picture with the image dictionary's `scrim` key and override the cell's
+/// text fill.
 ///
 /// ```typ
 /// #show label("mosaic-cell-section"): set text(fill: white)
 /// #mosaic.slide(
 ///   layout: "section",
 ///   variant: "image-background",
-///   image: mosaic.components.image(
-///     path("cover.webp"),
-///     scrim: black.transparentize(55%),
-///   ),
+///   image: (path: path("cover.webp"), scrim: black.transparentize(55%)),
 /// )[Structure]
 /// ```
 ///
@@ -223,12 +220,12 @@
   /// -> content | str | none
   number: none,
   /// The picture of the image variants, required there and rejected by the
-  /// others. Give a native `path(..)` value, which fills its region, or
-  /// ready-made content such as `components.image(path(..), scrim: ..)`,
-  /// whose `scrim` quiets the photograph enough to read text over it. A bare
-  /// string is rejected: it would resolve inside the package rather than in
-  /// the deck's project.
-  /// -> none | content | path
+  /// others. Give a native `path(..)` value, ready-made content, or a
+  /// dictionary whose `path` key holds one and whose `scrim` key quiets the
+  /// photograph enough to read text over it; `alt` and `fit` are its other
+  /// keys. A bare string is rejected: it would resolve inside the package
+  /// rather than in the deck's project.
+  /// -> none | content | path | dictionary
   image: none,
   /// Structural arrangement: `plain`, `rule`, `numeral`, `baseline`, `toc`,
   /// `image-left`, `image-right`, `image-top`, `image-bottom`, or

@@ -230,10 +230,7 @@
 /// #mosaic.slide(
 ///   layout: "title",
 ///   variant: "image-background",
-///   image: mosaic.components.image(
-///     path("cover.webp"),
-///     scrim: black.transparentize(55%),
-///   ),
+///   image: (path: path("cover.webp"), scrim: black.transparentize(55%)),
 /// )
 /// ```
 ///
@@ -269,13 +266,13 @@
   /// -> auto | content | str | none
   date: auto,
   /// The picture of the image variants, required there and rejected by the
-  /// others. Give a native `path(..)` value, which fills its region, or
-  /// ready-made content such as
-  /// `components.image(path("cover.webp"), scrim: black.transparentize(55%))`,
-  /// whose `scrim` quiets the photograph enough to read text over it. A bare
-  /// string is rejected: it would resolve inside the package rather than in
-  /// the deck's project.
-  /// -> none | content | path
+  /// others. Give a native `path(..)` value, ready-made content, or a
+  /// dictionary whose `path` key holds one and whose `scrim` key quiets the
+  /// photograph enough to read text over it, as in
+  /// `(path: path("cover.webp"), scrim: black.transparentize(55%))`; `alt`
+  /// and `fit` are its other keys. A bare string is rejected: it would
+  /// resolve inside the package rather than in the deck's project.
+  /// -> none | content | path | dictionary
   image: none,
   /// The text design: `ruled`, `centered`, `bordered`, `kicker`, `panel`,
   /// `academic`, `image-left`, `image-right`, `image-top`, `image-bottom`, or
