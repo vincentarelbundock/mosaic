@@ -90,7 +90,8 @@
     "slide-invert-raw.typ",
     "components-roles.typ",
     "author-plain-name.typ",
-    "incremental-cell-surface.typ"
+    "incremental-cell-surface.typ",
+    "heading-offset-themes.typ"
   ],
   "layout": [
     "fit.typ",

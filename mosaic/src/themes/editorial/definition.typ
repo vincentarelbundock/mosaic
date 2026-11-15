@@ -60,12 +60,12 @@
     .or(label("mosaic-title-display"))
     .or(label("mosaic-cell-section")): set text(font: options.font-display)
   show heading: set text(weight: "semibold")
-  show heading.where(level: 1): set text(size: base-size * 1.9)
-  show heading.where(level: 2): set text(size: base-size * 1.35)
+  show heading.where(depth: 1): set text(size: base-size * 1.9)
+  show heading.where(depth: 2): set text(size: base-size * 1.35)
   show heading: set block(below: 1em)
   // The kicker rule: a short accent stroke under every slide heading, the
   // editorial counterpart of a standfirst rule.
-  show heading.where(level: 2): it => block(width: 100%)[
+  show heading.where(depth: 2): it => block(width: 100%)[
     #it
     #v(0.24em)
     #line(length: 2.4em, stroke: 0.14em + colors.accent)

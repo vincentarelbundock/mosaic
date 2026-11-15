@@ -48,13 +48,13 @@
   set terms(spacing: 0.9em)
   set table(stroke: 0.8pt + colors.line)
   set raw(theme: dark-code-theme) if is-dark-canvas(colors)
-  show heading.where(level: 1): set text(size: base-size * 2.2, weight: "bold")
-  show heading.where(level: 2): set text(
+  show heading.where(depth: 1): set text(size: base-size * 2.2, weight: "bold")
+  show heading.where(depth: 2): set text(
     size: base-size * 1.6, weight: "bold", tracking: 0.06em,
   )
   // Poster headings shout: every slide heading is set in uppercase, and the
   // tracking above keeps the capitals from crowding.
-  show heading.where(level: 2): it => upper(it)
+  show heading.where(depth: 2): it => upper(it)
   show heading: set block(below: 1em)
   show figure.caption: set text(size: 0.72em, fill: colors.muted)
   show label("mosaic-title-display"): set text(
