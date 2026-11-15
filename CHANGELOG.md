@@ -16,6 +16,10 @@ Notable changes to Mosaic. The development version in `mosaic/typst.toml` moves 
 
 - A partial `spacing:` or `notes:` keeps the theme's other values: `setup(spacing: (gap: ..))` under editorial no longer resets its wider `inset`.
 
+### Fixed
+
+- An `auto` track now sizes to its content whatever it holds. A nested `columns` or `rows` in an `auto` row filled the whole slide and pushed the tracks after it off the page, and a cell in an `auto` column took the full width and squeezed its siblings to nothing. Cells side by side in an `auto` row share its height, so a header beside a logo cell paints one strip, and every cell below an `auto` row takes the compact inset.
+
 ## 0.0.2
 
 ### Breaking
