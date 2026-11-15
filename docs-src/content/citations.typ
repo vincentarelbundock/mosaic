@@ -25,7 +25,7 @@ The usual Typst citation forms all apply. `@key` produces a normal citation, `#c
 
 = Footnotes
 
-Typst moves a footnote entry to the bottom of the page region that holds its marker. A Mosaic slide is a fixed-size frame, so there is no room below the content for the entry, and Typst pushes it onto a page of its own: the marker appears on the slide, the note text on the next frame. Native `#footnote` is therefore not usable inside a slide body.
+Typst moves a footnote entry to the bottom of the page region that holds its marker. A Mosaic slide is a fixed-size frame, so there is no room below the content for the entry, and Typst would push it onto a page of its own. Mosaic therefore rejects a native `#footnote` on a slide with a compile error rather than let the note text land on an extra frame.
 
 Put the notes in a cell instead. An `auto`-height row at the bottom of the grid holds them, sized down and dimmed, and they stay on the slide that references them:
 

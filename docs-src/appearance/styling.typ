@@ -21,7 +21,7 @@ Place native Typst text and heading rules after `m.setup` so they apply across t
 #show heading.where(depth: 2): set text(size: 1.4em)
 ```
 
-A semantic heading feeds outlines, bookmarks, and content slides. Use `text` directly for display type that should not appear in navigation, or exclude the heading:
+A semantic heading feeds outlines, bookmarks, and content slides. Slides open on heading depth, the number of `=` signs, so `set heading(offset: 1)` shifts the levels the outline records without changing which headings open slides or how a theme styles them. Use `text` directly for display type that should not appear in navigation, or exclude the heading:
 
 ```typ
 #text(size: 60pt, weight: "black")[BOLD]
@@ -56,7 +56,7 @@ Target a cell by its label. Font, size, color, and alignment are `set text`, `se
 #show label("mosaic-cell-footer"): set text(fill: white)
 #show label("mosaic-cell-footer"): set block(fill: ink)
 
-#m.slide(layout: m.layouts.content())[
+#m.slide(layout: m.layouts.content(variant: "header-body-footer"))[
   == Inverted header and footer
 ][
   #lorem(36)

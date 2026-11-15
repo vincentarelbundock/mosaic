@@ -24,7 +24,7 @@ Attach speaker notes with `m.note[...]`. Notes never appear in the presentation 
 ]
 ```
 
-A note outside a timing command applies to every frame. A note inside `m.steps.on`, `m.steps.reveal`, or `m.steps.replace` appears with that content.
+A note outside a timing command applies to every frame. A note inside `m.steps.on`, `m.steps.reveal`, or `m.steps.replace` appears with that content. A note inside a component, a `context` block, a `layout` callback, or show-rule output cannot be collected and fails the compile; write it beside the component instead.
 
 Notes also hold material that supports a slide without belonging on it: the source URL of a figure, a reminder of what to say, or the link behind an image slide.
 

@@ -27,7 +27,9 @@
 #show: m.setup
 #show: custom
 
-#let myslide = m.slide.with(layout: m.layouts.content())
+#let myslide = m.slide.with(
+  layout: m.layouts.content(variant: "header-body-footer"),
+)
 
 #myslide[
   == First slide

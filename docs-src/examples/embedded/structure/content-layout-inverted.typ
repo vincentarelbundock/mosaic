@@ -15,7 +15,7 @@
 #show label("mosaic-cell-footer"): set block(fill: ink)
 
 #let myslide = m.slide.with(
-  layout: m.layouts.content(),
+  layout: m.layouts.content(variant: "header-body-footer"),
 )
 
 #myslide[
