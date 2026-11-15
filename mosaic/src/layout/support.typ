@@ -50,14 +50,6 @@
   nodes.zip(tracks).map(((node, size)) => track(size, node))
 }
 
-#let image-path(value) = if type(value) != str {
-  value
-} else if value.starts-with("/") {
-  value
-} else {
-  "/" + value
-}
-
 #let path-image(
   value,
   name,
@@ -72,7 +64,7 @@
   // The scrim rides the picture rather than the cell, so it hugs an inset
   // figure exactly as it covers a full-bleed background.
   mosaic-image(
-    image-path(image.path),
+    image.path,
     alt: alt,
     width: if allow-size { image.at("width", default: width) } else { width },
     height: if allow-size { image.at("height", default: height) } else { height },

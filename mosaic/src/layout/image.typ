@@ -8,7 +8,7 @@
 #import "../caption-fit.typ": captioned-image
 #import "../grid/constructors.typ": styled-cell, rows, track
 #import "core.typ": image-fit-modes, make-layout, validate-image, validate-variant
-#import "support.typ": image-content, inset-cell
+#import "support.typ": as-content, image-content, inset-cell
 #import "image-support.typ": (
   directional-image-layout,
   image-background-cell,
@@ -33,6 +33,17 @@
     type(fields.fit) != str or fields.fit not in image-fit-modes
   ) {
     fail("layout \"image\" fit must be auto, \"cover\", or \"contain\"")
+  }
+  // Ready-made content is already an image element with a fit of its own, and
+  // nothing here can rebuild it, so a `fit:` beside it would be dropped.
+  if fields.fit != auto and type(fields.image) == content {
+    fail(
+      "layout \"image\" fit applies only to a path image; ready-made content "
+        + "states its own fit",
+    )
+  }
+  if fields.caption != none and type(fields.caption) not in (content, str) {
+    fail("layout \"image\" caption must be content, a string, or none")
   }
   if fields.caption != none and variant != "figure" {
     fail("layout \"image\" caption applies only to the \"figure\" variant")
@@ -103,7 +114,7 @@
 /// #show label("mosaic-cell-body"): set text(fill: white)
 /// #mosaic.slide(
 ///   layout: mosaic.layouts.image(
-///     (path: "photo.webp", scrim: black.transparentize(55%)),
+///     (path: path("photo.webp"), scrim: black.transparentize(55%)),
 ///     variant: "full",
 ///   ),
 ///   [== Full bleed],
@@ -113,16 +124,19 @@
 /// -> dictionary
 #let image(
   /// The picture the slide is built around, as the sole positional argument.
-  /// Give a path, ready-made content, or a dictionary whose `scrim` key
-  /// paints a layer over the picture and under any text composed on top of it.
-  /// -> content | str | path | dictionary
+  /// Give a native `path(..)` value, ready-made content, or a dictionary whose
+  /// `path` key holds one and whose `scrim` key paints a layer over the
+  /// picture and under any text composed on top of it. A bare string is
+  /// rejected: it would resolve inside the package rather than in the deck's
+  /// project.
+  /// -> content | path | dictionary
   image,
   /// Structural arrangement of picture and text: `figure`, `full`, `left`,
   /// `right`, `top`, or `bottom`.
   /// -> str
   variant: "figure",
   /// Caption composed below a `figure` picture. Rejected by the other variants.
-  /// -> content | none
+  /// -> content | str | none
   caption: none,
   /// How the picture fills its region.
   ///
@@ -131,7 +145,10 @@
   /// - `"cover"`: fill the region, cropping the overhang. The default for every
   ///   other variant.
   ///
-  /// `auto` picks the per-variant default above.
+  /// `auto` picks the per-variant default above, unless the picture is a
+  /// dictionary with a `fit` key of its own, which then applies. An explicit
+  /// value here wins over that key. Rejected beside ready-made content, which
+  /// states its own fit and cannot be rebuilt.
   /// -> auto | str
   fit: auto,
   /// Sizes the split of a directional variant, and is rejected by `figure` and
@@ -170,13 +187,21 @@
   let fields = validate-fields(command.fields)
   let default-fit = if fields.variant == "figure" { "contain" } else { "cover" }
   let fitting = if fields.fit == auto { default-fit } else { fields.fit }
+  // The argument is the more specific statement, so it outranks a `fit` key
+  // carried by the picture dictionary; left at `auto`, the key applies and the
+  // variant default only fills in behind it.
+  let source = if fields.fit != auto and type(fields.image) == dictionary {
+    fields.image + (fit: fields.fit)
+  } else {
+    fields.image
+  }
   // Rebuilds the picture at a given size. A picture supplied as ready-made
   // content cannot be rebuilt, so it is boxed at that size instead.
   let resize(height, width) = if type(fields.image) == content {
     block(width: width, height: height, fields.image)
   } else {
     image-content(
-      fields.image,
+      source,
       "layout \"image\" image",
       width: width,
       height: height,
@@ -194,7 +219,7 @@
     let content = if fields.caption == none {
       picture
     } else {
-      captioned-image(resize, fields.caption)
+      captioned-image(resize, as-content(fields.caption))
     }
     rows(
       track(auto, inset-cell(

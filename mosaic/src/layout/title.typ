@@ -47,7 +47,10 @@
 #let validate-fields(fields, allow-auto: false) = {
   let fields = validate-accent(fields, "title", allow-auto: allow-auto)
   let variant = validate-variant(fields.variant, variants, "layout \"title\"")
-  if type(fields.title) not in (content, str) and not (allow-auto and fields.title == auto) {
+  if (
+    (type(fields.title) not in (content, str) or fields.title in ("", []))
+      and not (allow-auto and fields.title == auto)
+  ) {
     fail("layout \"title\" requires title content through title:")
   }
   for name in ("subtitle", "date") {
@@ -132,7 +135,7 @@
 /// Text variants:
 ///
 /// - `centered`: the heading stack at the slide's center, details anchored to
-///   the bottom edge.
+///   the bottom edge. `rule: true` adds a short accent rule under the heading.
 /// - `bordered`: a thin rule border inset from the slide edge with the
 ///   centered stack inside it.
 /// - `ruled`: the heading stack over a full-width accent rule with the
@@ -143,10 +146,12 @@
 ///   and the details anchored to the bottom edge.
 /// - `panel`: a vertical side panel in the deck's text color carries the
 ///   details, knocked out in the canvas color under a short accent rule; the
-///   heading stack takes the main field.
-/// - `academic`: the conference-poster arrangement. Author names carry
-///   superscript affiliation numbers over a numbered affiliation legend and a
-///   contact line. Requires at least one author.
+///   heading stack takes the main field. A slide with no authors and no date
+///   has nothing to put in the panel and draws the heading stack alone.
+/// - `academic`: the conference-poster arrangement. A short accent rule
+///   closes the heading stack, and author names carry superscript affiliation
+///   numbers over a numbered affiliation legend and a contact line. Requires
+///   at least one author.
 ///
 /// One image variant, which requires `image` and reads `position`:
 ///
@@ -157,6 +162,16 @@
 /// A full-slide photographic title is not a variant: give the slide a
 /// `background:` plane and compose the type yourself, reading the deck's own
 /// metadata back through `info()`.
+///
+/// *Long titles*
+///
+/// Title metadata cannot be cut, so no variant lets it collide. The details
+/// grow to a share of the slide and then scale down to hold it, and the
+/// heading stack scales down in turn once it outgrows the room the details
+/// leave, so a long title over a long author list shrinks rather than
+/// overprinting. With `setup(overflow: ..)` switched on, a title that fits
+/// only because it was scaled down is still reported, so a checking pass
+/// names the slide whose title wants shortening.
 ///
 /// To invert any of these, with the slide ground in the deck's text color and
 /// the type knocked out, pass `invert: true` on the slide rather than picking
@@ -201,7 +216,7 @@
 /// #show label("mosaic-cell-title"): set text(fill: white)
 /// #mosaic.slide(
 ///   layout: "title",
-///   background: mosaic.components.image("cover.webp", scrim: black.transparentize(55%)),
+///   background: mosaic.components.image(path("cover.webp"), scrim: black.transparentize(55%)),
 /// )
 /// ```
 ///
@@ -236,10 +251,13 @@
   /// -> auto | content | str | none
   date: auto,
   /// The picture used by the `image` variant, and rejected by the others.
-  /// Give a path, ready-made content, or a dictionary whose `scrim` key quiets
-  /// the photograph enough to read text over it, as in
-  /// `(path: "cover.webp", scrim: black.transparentize(55%))`.
-  /// -> none | content | str | path | dictionary
+  /// Give a native `path(..)` value, ready-made content, or a dictionary whose
+  /// `path` key holds one and whose `scrim` key quiets the photograph enough
+  /// to read text over it, as in
+  /// `(path: path("cover.webp"), scrim: black.transparentize(55%))`. A bare
+  /// string is rejected: it would resolve inside the package rather than in
+  /// the deck's project.
+  /// -> none | content | path | dictionary
   image: none,
   /// Structural arrangement: `ruled`, `centered`, `bordered`, `kicker`,
   /// `panel`, `academic`, or `image`.
@@ -262,18 +280,20 @@
   /// `auto` gives the picture the smaller share.
   /// -> auto | length | ratio | relative | fraction | array
   tracks: auto,
-  /// Whether to draw the variant's structural mark: the `ruled` full-width
-  /// rule, the `bordered` border, or the `kicker` opening rule. On the
-  /// `image` variant it draws the short accent rule of the compact stack
-  /// instead. Ignored by the `panel` variant, whose accent rule always draws.
-  /// `auto` draws the structural marks and omits the accent rule on the
-  /// `image` variant, where the photograph already does that work.
+  /// Whether to draw the variant's mark: the `ruled` full-width rule, the
+  /// `bordered` border, the `kicker` opening rule, or the short accent rule
+  /// that closes the heading stack of the `academic`, `centered`, and `image`
+  /// variants. `auto` draws the mark everywhere except on `centered` and
+  /// `image`, which stay bare unless asked: the first is the plain
+  /// composition, and on the second the photograph already does that work.
+  /// Ignored by the `panel` variant, whose accent rule is part of the panel
+  /// and always draws.
   /// -> auto | bool
   rule: auto,
-  /// Color of the variant's structural mark. `auto` uses the deck's text
-  /// color for the marked text variants (`bordered`, `kicker`) and the
-  /// semantic accent for `ruled`, `panel`, and the `image` variant's short
-  /// rule.
+  /// Color of the variant's mark. `auto` uses the deck's text color for the
+  /// `bordered` border and the `kicker` opening rule, and the semantic accent
+  /// everywhere else: the `ruled` rule, the `panel` rule, the `kicker`
+  /// eyebrow, and the short rule of `academic`, `centered`, and `image`.
   /// -> color | auto
   accent: auto,
 ) = {
@@ -794,17 +814,56 @@
   }
 }
 
-// The details stack anchored to the bottom edge, as the centered, bordered,
-// and kicker variants place it inside their cells.
-#let anchored-details(parts, settings, anchor: center) = if has-details(parts) {
-  place(
-    bottom + anchor,
-    align(anchor, capped-fit(
-      details-stack(parts, settings),
-      settings.title-tokens.details-cap,
-    )),
-  )
-}
+// A heading stack that shrinks to its allocation instead of overprinting
+// whatever sits below it. Ordinary titles are far inside the region and come
+// back untouched, so this costs a measurement and changes nothing; only a
+// title that outgrows the room its variant gives it scales down.
+#let apply-stack-fit(body, settings) = capped-fit(body, settings.title-tokens.stack-cap)
+
+// The two-tier composition of the variants that anchor their details to the
+// bottom edge (centered, kicker): the details are measured and capped first,
+// the same arithmetic as capped-fit, and the heading takes the region they
+// leave clear. Neither tier can reach the other however long the author list
+// or the title grows. `heading` receives nothing and is laid out in a block of
+// exactly the clear height, so it is the caller's to align and fit.
+//
+// Under `measure` there is no region to divide, so the two tiers come back
+// stacked at their natural size, like the fitters in fit.typ. Overflow
+// observation therefore sees the unfitted composition and reports a title
+// that fits only because it was scaled down, which is the report an author
+// checking a deck wants.
+//
+// `pinned` places the heading region at the top edge outright. A theme may
+// align the title cell on the horizon, and that alignment reaches every block
+// in the cell: it is how the centered heading region has always been placed,
+// but it would slide a top-anchored masthead down the slide.
+#let heading-over-details(
+  heading,
+  parts,
+  settings,
+  anchor: center,
+  pinned: false,
+) = layout(region => {
+  let details = align(anchor, details-stack(parts, settings))
+  if unsolvable(region.width) or unsolvable(region.height) {
+    return {
+      heading
+      v(settings.spacing.gap)
+      details
+    }
+  }
+  let natural = measure(details, width: region.width)
+  let limit = settings.title-tokens.details-cap * region.height
+  if natural.height > limit {
+    details = reflow-scale(fit-ratio(natural, height: limit), details)
+  }
+  let reserved = calc.min(natural.height, limit) + settings.spacing.gap
+  block(width: 100%, height: region.height, {
+    place(bottom + anchor, details)
+    let clear = block(width: 100%, height: region.height - reserved, heading)
+    if pinned { place(top + left, clear) } else { clear }
+  })
+})
 
 // The paint of a variant's structural mark: the deck's text color unless the
 // author asked for an explicit accent.
@@ -824,7 +883,10 @@
   let parts = details-parts(fields, settings)
   styled-cell(
     id: "title",
-    content: align(left + horizon, {
+    // The whole block is one fitted composition: the details cap themselves
+    // first, and whatever still outgrows the cell scales as a unit, rule and
+    // all, so the three tiers keep their order and their proportions.
+    content: align(left + horizon, apply-stack-fit({
       heading-stack(fields, settings)
       if has-rule(fields) {
         block(
@@ -844,46 +906,40 @@
           ),
         )
       }
-    }),
+    }, settings)),
     style: (inset: settings.spacing.inset),
   )
 }
 
 // centered: the heading stack at the slide's center, the details anchored to
-// the bottom edge so the composition never reads as top-heavy.
-#let centered-heading(fields, settings) = align(center + horizon, {
+// the bottom edge so the composition never reads as top-heavy. The variant is
+// the plain one, so its short accent rule draws only on request.
+#let centered-heading(fields, settings) = align(center + horizon, apply-stack-fit({
   set align(center)
   heading-stack(fields, settings)
-})
+  if fields.rule == true {
+    accent-rule(
+      fields.accent,
+      settings,
+      above: settings.title-tokens.rule-gap * settings.spacing.gap,
+    )
+  }
+}, settings))
 
 #let resolve-centered-title(fields, settings) = {
   let parts = details-parts(fields, settings)
   styled-cell(
     id: "title",
+    // The heading centers in the space the details leave clear rather than
+    // in the whole cell; see heading-over-details.
     content: if not has-details(parts) {
       centered-heading(fields, settings)
     } else {
-      // The heading centers in the space the details leave clear rather than
-      // in the whole cell, so the two tiers cannot collide however long the
-      // author list grows. The details height is measured (and capped, the
-      // same arithmetic as capped-fit) before the heading region is sized.
-      layout(region => {
-        let details = align(center, details-stack(parts, settings))
-        let natural = measure(details, width: region.width)
-        let limit = settings.title-tokens.details-cap * region.height
-        if natural.height > limit {
-          details = reflow-scale(fit-ratio(natural, height: limit), details)
-        }
-        let reserved = calc.min(natural.height, limit) + settings.spacing.gap
-        block(width: 100%, height: region.height, {
-          place(bottom + center, details)
-          block(
-            width: 100%,
-            height: region.height - reserved,
-            centered-heading(fields, settings),
-          )
-        })
-      })
+      heading-over-details(
+        centered-heading(fields, settings),
+        parts,
+        settings,
+      )
     },
     style: (inset: settings.spacing.inset),
   )
@@ -892,36 +948,76 @@
 // kicker: the magazine masthead. A strong opening rule at the top edge, the
 // subtitle set as a small tracked-caps eyebrow in the accent color, the title
 // below it, and the details anchored to the bottom edge, all flush left.
+//
+// The opening rule spans the cell and is never scaled; a masthead that
+// outgrows the room under it shrinks beneath the rule, which keeps its
+// length and weight.
+#let kicker-masthead(fields, settings) = {
+  if fields.subtitle != none {
+    block(
+      below: settings.title-tokens.kicker-title-gap * settings.spacing.gap,
+      text(
+        size: settings.title-tokens.kicker-scale * 1em,
+        weight: "semibold",
+        tracking: settings.title-tokens.kicker-tracking * 1em,
+        fill: fields.accent,
+        upper(as-content(fields.subtitle)),
+      ),
+    )
+  }
+  title-display(as-content(fields.title))
+}
+
+#let kicker-heading(fields, settings) = {
+  let rule = if has-rule(fields) {
+    block(
+      below: settings.title-tokens.kicker-rule-gap * settings.spacing.gap,
+      line(length: 100%, stroke: (
+        paint: rule-paint(fields, settings),
+        thickness: settings.title-tokens.kicker-rule-thickness * 1em,
+      )),
+    )
+  }
+  let masthead = kicker-masthead(fields, settings)
+  align(left + top, layout(region => {
+    let whole = {
+      rule
+      masthead
+    }
+    if unsolvable(region.width) or unsolvable(region.height) {
+      return whole
+    }
+    let natural = measure(whole, width: region.width)
+    if natural.height <= region.height {
+      return whole
+    }
+    // Everything the rule and its gap take is fixed; the masthead scales
+    // into what is left.
+    let scaled = measure(masthead, width: region.width)
+    let fixed = natural.height - scaled.height
+    let room = region.height - fixed
+    if unsolvable(room) {
+      return whole
+    }
+    rule
+    block(reflow-scale(fit-ratio(scaled, height: room), masthead))
+  }))
+}
+
 #let resolve-kicker-title(fields, settings) = {
   let parts = details-parts(fields, settings)
   styled-cell(
     id: "title",
-    content: {
-      align(left + top, {
-        if has-rule(fields) {
-          block(
-            below: settings.title-tokens.kicker-rule-gap * settings.spacing.gap,
-            line(length: 100%, stroke: (
-              paint: rule-paint(fields, settings),
-              thickness: settings.title-tokens.kicker-rule-thickness * 1em,
-            )),
-          )
-        }
-        if fields.subtitle != none {
-          block(
-            below: settings.title-tokens.kicker-title-gap * settings.spacing.gap,
-            text(
-              size: settings.title-tokens.kicker-scale * 1em,
-              weight: "semibold",
-              tracking: settings.title-tokens.kicker-tracking * 1em,
-              fill: fields.accent,
-              upper(as-content(fields.subtitle)),
-            ),
-          )
-        }
-        title-display(as-content(fields.title))
-      })
-      anchored-details(parts, settings, anchor: left)
+    content: if not has-details(parts) {
+      kicker-heading(fields, settings)
+    } else {
+      heading-over-details(
+        kicker-heading(fields, settings),
+        parts,
+        settings,
+        anchor: left,
+        pinned: true,
+      )
     },
     style: (inset: settings.spacing.inset),
   )
@@ -976,12 +1072,19 @@
       fill: settings.colors.text,
     ),
   )
+  let heading = title-body-cell(
+    settings,
+    content: heading-stack(fields, settings),
+    cap: settings.title-tokens.stack-cap,
+  )
+  // A panel with nothing to carry would be an empty slab of ink under a lone
+  // rule, so the heading takes the slide.
+  if not has-details(parts) {
+    return heading
+  }
   columns(
     track(settings.title-tokens.panel-track, panel),
-    track(1fr, title-body-cell(
-      settings,
-      content: heading-stack(fields, settings),
-    )),
+    track(1fr, heading),
   )
 }
 
@@ -989,7 +1092,7 @@
   let parts = details-parts(fields, settings)
   styled-cell(
     id: "title",
-    content: context block(
+    content: block(
       width: 100%,
       height: 100%,
       stroke: if has-rule(fields) {
@@ -1004,7 +1107,7 @@
       // One centered composition: the heading stack and the details travel
       // together, so the whole text area sits at the horizon rather than the
       // heading alone centering while the details hug the frame's bottom.
-      align(center + horizon, {
+      align(center + horizon, apply-stack-fit({
         set align(center)
         text(size: settings.title-tokens.card-title-scale, heading-stack(fields, settings))
         if has-details(parts) {
@@ -1016,7 +1119,7 @@
             ),
           )
         }
-      }),
+      }, settings)),
     ),
     style: (inset: settings.title-tokens.card-outer-inset * settings.spacing.inset),
   )
@@ -1040,6 +1143,7 @@
       include-details: false,
     ),
     bottom-inset: settings.spacing.gap,
+    cap: settings.title-tokens.stack-cap,
   )))
   if parts.names.len() > 0 {
     children.push(track(

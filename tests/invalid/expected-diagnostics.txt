@@ -50,10 +50,10 @@ layouts-title-accent|layout "title" accent must be a color
 layouts-title-authors-empty|variant "academic" requires at least one author
 layouts-title-authors|layout "title" author 1 must be a name or created with author()
 layouts-title-content|requires title content through title:
-layouts-title-image-path|image path must be a non-empty string
+layouts-title-image-path|image path must be a native path; write path("cover.webp")
 layouts-title-image-required|variant "image" requires image
 layouts-title-image-size|image does not accept "width"
-layouts-title-image-type|image must be content, a non-empty path string, a native path, or a path dictionary
+layouts-title-image-type|image must be content, a native path, or a path dictionary
 layouts-title-image-unused|variant "centered" does not use image
 layouts-title-mutated-command|variant "image" requires image
 layouts-title-ordinary-authors|author 1 must be a name or created with author()
@@ -128,3 +128,10 @@ theme-definition-option-conflict|theme option "paper" conflicts with setup
 theme-definition-unknown|theme does not accept "mystery"
 theme-layouts-incomplete|theme layouts requires "title"
 too-many|grid expects 1 bodies with setup defaults or 2 bodies to override them, received 3
+layouts-image-string-path|layout "image" image must be a native path, not a string; write path("cover.webp")
+layouts-section-image-string-path|layout "section" image path must be a native path; write path("cover.webp")
+layouts-section-subtitle-type|layout "section" subtitle must be content, a string, or none
+layouts-section-number-type|layout "section" number must be content, a string, or none
+layouts-image-caption-type|layout "image" caption must be content, a string, or none
+layouts-image-fit-content|layout "image" fit applies only to a path image
+layouts-title-empty|layout "title" requires title content through title:

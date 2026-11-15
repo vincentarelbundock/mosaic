@@ -97,6 +97,8 @@
     "layouts-title-scale.typ",
     "layouts-title-stress.typ",
     "layouts-title-variants.typ",
+    "layouts-title-fit.typ",
+    "layouts-section-fields.typ",
     "layouts.typ",
     "slide-layout-fields.typ",
     "slide-layout-positional.typ"

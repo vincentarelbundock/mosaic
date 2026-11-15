@@ -47,10 +47,40 @@
   layout: mosaic.layouts.image(photo, variant: "full"),
 )
 
-// `fit` overrides the per-variant default.
+// `fit` overrides the per-variant default. It rebuilds the picture, so it
+// needs a path; ready-made content states its own fit and is rejected
+// (tests/invalid/layouts-image-fit-content.typ).
+#let dog = path("/docs-src/assets/images/dog.webp")
 #mosaic.slide(
-  layout: mosaic.layouts.image(photo, variant: "left", fit: "contain"),
+  layout: mosaic.layouts.image(dog, variant: "left", fit: "contain"),
   cells: (header: [== Contained], body: [Uncropped picture.]),
+)
+
+// The argument outranks a `fit` key carried by the picture dictionary, and the
+// key applies when the argument is left at `auto`.
+#import "../mosaic/src/layout/resolver.typ": resolve-layout
+#import "../mosaic/src/settings.typ": make-settings
+#import "support/grid.typ" as grid-test
+#let picture-fit(layout) = {
+  let resolved = resolve-layout(layout, make-settings())
+  let picture = grid-test.info(resolved, "image").cell.content
+  picture.fit
+}
+#assert(picture-fit(mosaic.layouts.image(dog, variant: "left")) == "cover")
+#assert(picture-fit(mosaic.layouts.image(dog, variant: "left", fit: "contain")) == "contain")
+#assert(picture-fit(mosaic.layouts.image((path: dog, fit: "contain"), variant: "left")) == "contain")
+#assert(
+  picture-fit(mosaic.layouts.image(
+    (path: dog, fit: "cover"),
+    variant: "left",
+    fit: "contain",
+  )) == "contain",
+  message: "an explicit fit: must win over the picture dictionary's fit key",
+)
+// A string caption is accepted like any other optional content field.
+#mosaic.slide(
+  layout: mosaic.layouts.image(dog, caption: "A string caption"),
+  cells: (header: [== String caption]),
 )
 
 // The layout is explicit-only: it is not part of the configurable set that

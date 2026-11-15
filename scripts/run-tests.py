@@ -58,6 +58,25 @@ def require_same_line(path: Path, first: str, second: str) -> None:
     raise TestFailure(f"{path} has no line holding both {first!r} and {second!r}")
 
 
+def pdf_word_boxes(stem: str, page: int) -> dict[str, tuple[float, float]]:
+    """The vertical extent (top, bottom) of each word on one page, keyed by the
+    word. Later duplicates overwrite earlier ones, so fixtures that read a
+    position mark it with a token that occurs once."""
+    source = TMP / f"mosaic-{stem}.pdf"
+    target = TMP / f"mosaic-{stem}-page-{page}-bbox.html"
+    command([
+        "pdftotext", "-bbox", "-f", str(page), "-l", str(page),
+        str(source), str(target),
+    ])
+    boxes: dict[str, tuple[float, float]] = {}
+    pattern = re.compile(
+        r'<word xMin="[^"]*" yMin="([^"]*)" xMax="[^"]*" yMax="([^"]*)">([^<]*)</word>'
+    )
+    for top, bottom, word in pattern.findall(target.read_text(encoding="utf-8")):
+        boxes[word] = (float(top), float(bottom))
+    return boxes
+
+
 def typst_compile(typst: str, source: str, output: Path, *extra: str) -> None:
     command([typst, "compile", "--root", ".", *extra, f"tests/{source}", str(output)])
 
@@ -698,6 +717,34 @@ def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
         require_contains(path, "#737373", absent=True)
     for page, color in enumerate(("#d97706", "#ffffff", "#fedcba", "#123456"), 1):
         require_contains(TMP / f"mosaic-layouts-progress-{page}.svg", color)
+
+    # A long title over a long author list scales down instead of overprinting
+    # the byline: on every page that sets the byline beneath the heading, the
+    # last title word ends above the first author.
+    for page, variant in enumerate(("centered", "bordered", "ruled", "kicker", "academic"), 1):
+        boxes = pdf_word_boxes("layouts-title-fit", page)
+        for token in ("ZQLAST", "ZQAUTHOR"):
+            if token not in boxes:
+                raise TestFailure(f"title fit: {variant} (page {page}) is missing {token}")
+        if boxes["ZQLAST"][1] > boxes["ZQAUTHOR"][0] + 0.5:
+            raise TestFailure(
+                f"title fit: {variant} (page {page}) prints its title over the byline"
+            )
+    typst_compile(typst, "layouts-title-fit.typ", TMP / "mosaic-layouts-title-fit-{p}.svg", "--format", "svg")
+    require_contains(TMP / "mosaic-layouts-title-fit-7.svg", "#13579b")
+    require_contains(TMP / "mosaic-layouts-title-fit-1.svg", "#13579b", absent=True)
+
+    # The plain section subtitle is a caption: well under the title's size.
+    boxes = pdf_word_boxes("layouts-section-fields", 1)
+    title_height = boxes["ZQSECTION"][1] - boxes["ZQSECTION"][0]
+    subtitle_height = boxes["zqsubtitle"][1] - boxes["zqsubtitle"][0]
+    if subtitle_height > 0.6 * title_height:
+        raise TestFailure("section fields: the plain subtitle is not subordinate to the title")
+    # An explicit accent reaches the number in baseline and numeral, and a
+    # recolored directional section cell paints its region.
+    typst_compile(typst, "layouts-section-fields.typ", TMP / "mosaic-layouts-section-fields-{p}.svg", "--format", "svg")
+    for page, color in ((2, "#a1b2c3"), (3, "#654321"), (4, "#fedcba")):
+        require_contains(TMP / f"mosaic-layouts-section-fields-{page}.svg", color)
 
 def negative_expectations() -> dict[str, str]:
     expectations: dict[str, str] = {}
