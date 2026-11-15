@@ -29,7 +29,7 @@ The usual Typst citation forms all apply. `@key` produces a normal citation, `#c
 
 Typst moves a footnote entry to the bottom of the page region that holds its marker. A Mosaic slide is a fixed-size frame, so there is no room below the content for the entry, and Typst would push it onto a page of its own. Mosaic therefore rejects a native `#footnote` on a slide with a compile error rather than let the note text land on an extra frame.
 
-#unreleased(calepin.elements.callout)[The example below sizes its grid with `tracks:`, and rejecting `#footnote` with an error is new; the released version lets the entry spill onto an extra frame.]
+#unreleased(calepin.elements.callout)[Rejecting `#footnote` with an error is new; the released version lets the entry spill onto an extra frame.]
 
 Put the notes in a cell instead. An `auto`-height row at the bottom of the grid holds them, sized down and dimmed, and they stay on the slide that references them:
 

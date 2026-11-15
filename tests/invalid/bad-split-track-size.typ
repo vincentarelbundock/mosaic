@@ -2,5 +2,5 @@
 
 #show: mosaic.setup
 #mosaic.slide(
-  layout: mosaic.grids.columns(tracks: ("wide",), "main"),
+  layout: mosaic.grids.columns(mosaic.grids.track("wide", "main")),
 )[Invalid track]

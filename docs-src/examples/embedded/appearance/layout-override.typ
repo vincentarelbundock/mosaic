@@ -5,8 +5,7 @@
 
 // A section slide of our own: a rule across the top, the title beneath it.
 #let chapter = m.grids.rows(
-  tracks: (auto, 1fr),
-  m.grids.cell("rule", content: line(length: 100%, stroke: 3pt)),
+  m.grids.track(auto, m.grids.cell("rule", content: line(length: 100%, stroke: 3pt))),
   "section",
 )
 

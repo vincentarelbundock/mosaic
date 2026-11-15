@@ -15,13 +15,11 @@
 #show label("mosaic-cell-logo"): set block(fill: rgb("#2ecc40"))
 
 #mosaic.slide(mosaic.grids.rows(
-  tracks: (auto, auto, 1fr),
-  mosaic.steps.on("2-", mosaic.grids.cell("strip")),
-  mosaic.grids.columns(
-    tracks: (1fr, auto),
+  mosaic.grids.track(auto, mosaic.steps.on("2-", mosaic.grids.cell("strip"))),
+  mosaic.grids.track(auto, mosaic.grids.columns(
     "head",
-    mosaic.steps.on("2-", mosaic.grids.cell("logo")),
-  ),
+    mosaic.grids.track(auto, mosaic.steps.on("2-", mosaic.grids.cell("logo"))),
+  )),
   mosaic.grids.columns(
     "body",
     mosaic.steps.on("2-", mosaic.grids.cell("side")),

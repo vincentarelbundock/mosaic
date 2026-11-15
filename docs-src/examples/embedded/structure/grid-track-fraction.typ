@@ -9,8 +9,8 @@
 #show label("mosaic-cell-a"): set block(stroke: outline)
 #show label("mosaic-cell-b"): set block(stroke: outline)
 
-// tracks: gives one size per child, in order: "a" takes two thirds of the
-// width and "b" the remaining third.
-#let two-thirds = m.grids.columns(tracks: (2fr, 1fr), "a", "b")
+// track() sizes one child: "a" takes two thirds of the width, "b" keeps the
+// default 1fr and receives the rest.
+#let two-thirds = m.grids.columns(m.grids.track(2fr, "a"), "b")
 
 #m.slide(layout: two-thirds)[a][b]

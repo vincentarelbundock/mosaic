@@ -6,7 +6,7 @@
 // title and section layouts already use.
 #import "../shared.typ": fail
 #import "../caption-fit.typ": captioned-image
-#import "../grid/constructors.typ": make-cell, rows, make-track
+#import "../grid/constructors.typ": make-cell, rows, track
 #import "core.typ": image-fit-modes, make-layout, validate-image
 #import "support.typ": as-content, image-content, inset-cell
 #import "image-support.typ": (
@@ -223,12 +223,12 @@
 // so it takes the compact inset; the body keeps the deck inset on
 // all four sides.
 #let text-column(settings) = rows(
-  make-track(auto, inset-cell(
+  track(auto, inset-cell(
     "header",
     settings,
     content-sized: true,
   )),
-  make-track(1fr, inset-cell("body", settings)),
+  track(1fr, inset-cell("body", settings)),
 )
 
 #let resolve-image-layout(command, settings) = {
@@ -269,13 +269,13 @@
       )
     }
     rows(
-      make-track(auto, inset-cell(
+      track(auto, inset-cell(
         "header",
         settings,
         content-sized: true,
       )),
       // The picture owns a fixed cell, so the slide supplies no block for it.
-      make-track(1fr, make-cell(
+      track(1fr, make-cell(
         id: "image",
         content: content,
         style: (content-sized: false, inset: settings.spacing.inset),

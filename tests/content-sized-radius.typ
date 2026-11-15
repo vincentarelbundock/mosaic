@@ -14,8 +14,7 @@
 )
 
 #mosaic.slide(layout: mosaic.grids.rows(
-  tracks: (auto, 1fr),
-  compact,
+  mosaic.grids.track(auto, compact),
   mosaic.grids.cell(id: "body"),
 ))[Body]
 

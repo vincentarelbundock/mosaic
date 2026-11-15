@@ -326,9 +326,11 @@ Build custom structure only when headings and layout factories are insufficient.
 
 ```typ
 #let composition = m.grids.columns(
-  tracks: (2fr, 1fr),
-  "main",
-  m.grids.rows(tracks: (2fr, 1fr), "notes", "source"),
+  m.grids.track(2fr, "main"),
+  m.grids.track(1fr, m.grids.rows(
+    m.grids.track(2fr, "notes"),
+    m.grids.track(1fr, "source"),
+  )),
 )
 
 #m.slide(
@@ -342,7 +344,7 @@ Build custom structure only when headings and layout factories are insufficient.
 ```
 
 - `m.grids.columns(...)` places children side by side; `m.grids.rows(...)` stacks them. Each string is a cell ID. Children may be nested grids. Both accept `gutter:` (a native track size between adjacent children, default `0pt`) and `stroke:` (a stroke drawn along each interior boundary, centered in the gutter, default `none`).
-- Every direct child gets a `1fr` track by default. Pass `tracks:` for other sizes: an array with exactly one size per child, in order, as in `m.grids.rows(tracks: (auto, 1fr), "header", "body")`. A size is `auto`, a fixed length, a percentage, or an `fr` value. It is the same `tracks:` the content layout takes. There is no per-child wrapper.
+- Every direct child gets a `1fr` track by default. Wrap a child in `m.grids.track(size, child)` for another size; tracks accept `auto`, fixed lengths, percentages, and `fr` values. From 0.0.3, `tracks: (2fr, 1fr)` on the split states every size at once instead, one per child; a split takes one form or the other.
 - `m.grids.cell(id, ...)` creates an explicitly configured cell: `inset:` (padding, affects layout measurement), fixed `content:` (an image or logo owned by the grid, needing no body or `cells:` entry). Cells do not fit or scale their content: they are structural only.
 - Read a grid from the outside inward: largest split first, then replace children with nested splits. Keep descriptive IDs and indentation.
 
@@ -527,11 +529,11 @@ When compilation fails:
 2. Check for an unknown layout name, a missing named cell, mixed positional and named content, or an invalid layout variant.
    - `mosaic: content appears before the first heading handled by setup` means something after `#show: m.setup` emits content before the first `=`/`==` or `m.slide` — often a tool-setup call (e.g. `calepin.setup(..)`) that looks inert but produces content. Move it inside the first slide's body.
    - `mosaic: content appears after an explicit slide and belongs to no slide` means text or a call follows an `m.slide(..)` at the top level. Open a new slide with a heading, or move the content into the slide.
-   - A `was removed; write ..` diagnostic names the current spelling of a renamed argument (`variant: "image-left"`, the image layout's `variant:`, a picture dictionary, `grids.track`, a `headings:` dictionary). Apply it as written.
+   - A `was removed; write ..` diagnostic names the current spelling of a renamed argument (`variant: "image-left"`, the image layout's `variant:`, a picture dictionary, a `headings:` dictionary). Apply it as written.
    - `failed to decode image (Format error decoding Jpeg ...)` or `unknown image format` means the file's extension lies about its bytes. Typst chooses its decoder from the extension, so a PNG or WebP named `.jpg` fails. Check with `file -b`, and prefer adding a correctly-named *copy* over renaming when other documents reference the original name. Typst has no AVIF decoder at all — convert those.
 3. Confirm that dictionary-held functions are called with parentheses when needed, for example `(theme.layouts.section)()`.
 4. Confirm that `layouts:` passed to setup is a dictionary and only overrides `content`, `title`, or `section`.
-5. Confirm that a picture is a `path(..)` or content placed by `position:`, and that `tracks:` has one size per child.
+5. Confirm that a picture is a `path(..)` or content placed by `position:`, and that an image layout's `tracks:` is valid.
 6. Change the narrowest source responsible, then recompile the original deck.
 
 Do not add compatibility aliases for removed APIs. In particular, slides use `layout:`, not a separate semantic selector.

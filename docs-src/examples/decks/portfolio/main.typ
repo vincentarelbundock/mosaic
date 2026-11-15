@@ -34,10 +34,9 @@
       ),
       m.slide(
         layout: m.grids.columns(
-          tracks: (0.16fr, 0.64fr, 0.20fr),
-          cell("contents-margin", content: []),
-          cell("contents-image", content: photo("image13.jpg")),
-          cell("contents-edge", content: []),
+          m.grids.track(0.16fr, cell("contents-margin", content: [])),
+          m.grids.track(0.64fr, cell("contents-image", content: photo("image13.jpg"))),
+          m.grids.track(0.20fr, cell("contents-edge", content: [])),
         ),
         foreground: [
           #place(top + center, dy: -12pt)[
@@ -68,9 +67,8 @@
       ),
       m.slide(
         layout: m.grids.columns(
-          tracks: (0.48fr, 0.52fr),
-          cell("hello-copy"),
-          cell("hello-photo", content: photo("image21.jpg")),
+          m.grids.track(0.48fr, cell("hello-copy")),
+          m.grids.track(0.52fr, cell("hello-photo", content: photo("image21.jpg"))),
         ),
       )[
         #black-panel([
@@ -92,9 +90,8 @@
       ),
       m.slide(
         layout: m.grids.rows(
-          tracks: (1.05fr, 0.95fr),
-          cell("about-photo"),
-          cell("about-copy"),
+          m.grids.track(1.05fr, cell("about-photo")),
+          m.grids.track(0.95fr, cell("about-copy")),
         ),
       )[
         #box(width: 100%, height: 100%)[
@@ -122,10 +119,9 @@
       ),
       m.slide(
         layout: m.grids.columns(
-          tracks: (0.72fr, 0.72fr, 1.05fr),
-          cell("pier", content: photo("image12.jpg")),
-          cell("portrait", content: photo("image9.jpg")),
-          cell("story"),
+          m.grids.track(0.72fr, cell("pier", content: photo("image12.jpg"))),
+          m.grids.track(0.72fr, cell("portrait", content: photo("image9.jpg"))),
+          m.grids.track(1.05fr, cell("story")),
         ),
       )[
         #text(size: 13pt)[#lorem]
@@ -140,9 +136,8 @@
       ),
       m.slide(
         layout: m.grids.columns(
-          tracks: (1.3fr, 0.7fr),
-          cell("mission-body"),
-          cell("mission-photo", content: photo("image1.jpg")),
+          m.grids.track(1.3fr, cell("mission-body")),
+          m.grids.track(0.7fr, cell("mission-photo", content: photo("image1.jpg"))),
         ),
       )[
         #set par(leading: 0.3em)
@@ -187,10 +182,9 @@
   ),
   m.slide(
     layout: m.grids.columns(
-      tracks: (0.95fr, 0.62fr, 0.9fr),
-      cell("best-intro"),
-      cell("best-photo", content: photo("image5.jpg")),
-      cell("best-list"),
+      m.grids.track(0.95fr, cell("best-intro")),
+      m.grids.track(0.62fr, cell("best-photo", content: photo("image5.jpg"))),
+      m.grids.track(0.9fr, cell("best-list")),
     ),
   )[
     #set par(leading: 0.3em)
@@ -271,9 +265,8 @@
   ),
   m.slide(
     layout: m.grids.columns(
-      tracks: (0.85fr, 1.15fr),
-      cell("chart-copy"),
-      cell("chart-graphic", content: photo("image8.png", fit: "contain")),
+      m.grids.track(0.85fr, cell("chart-copy")),
+      m.grids.track(1.15fr, cell("chart-graphic", content: photo("image8.png", fit: "contain"))),
     ),
   )[
     #set text(fill: white)
@@ -297,14 +290,13 @@
   ),
   m.slide(
     layout: m.grids.rows(
-      tracks: (0.28fr, 1fr),
-      cell("exhibitions-title"),
-      m.grids.columns(
+      m.grids.track(0.28fr, cell("exhibitions-title")),
+      m.grids.track(1fr, m.grids.columns(
         cell("exhibition-1"),
         cell("exhibition-2"),
         cell("exhibition-3"),
         gutter: 7pt,
-      ),
+      )),
     ),
   )[
     #text(size: 31pt, weight: "bold", fill: white)[EXHIBITIONS]
@@ -349,12 +341,11 @@
   ),
   m.slide(
     layout: m.grids.columns(
-      tracks: (0.42fr, 0.58fr),
-      cell("thanks"),
-      cell(
+      m.grids.track(0.42fr, cell("thanks")),
+      m.grids.track(0.58fr, cell(
         "closing-photo",
         content: photo("image20.jpg"),
-      ),
+      )),
     ),
   )[
     #set par(leading: 0.35em)

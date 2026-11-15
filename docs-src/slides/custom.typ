@@ -41,7 +41,7 @@ When no built-in layout fits, write the slide's arrangement yourself. A custom s
 
 Build a custom slide in three separate layers: define its named grid, assign content to those names, and style the labeled cells with native Typst rules. The walkthrough below grows one slide through all three. The sections after it are the reference for each layer.
 
-#unreleased(calepin.elements.callout)[Sizing a split with `tracks:`, painting a cell's own block with `set block` rules, and the rule that a slide's opening heading is its header are new.]
+#unreleased(calepin.elements.callout)[The `tracks:` argument of `m.grids.columns` and `m.grids.rows`, painting a cell's own block with `set block` rules, and the rule that a slide's opening heading is its header are new.]
 
 = Walkthrough
 
@@ -80,13 +80,15 @@ Start with one named cell and pass it to `slide` as the layout.
 
 == Nest splits and size tracks
 
-Splits nest directly: `rows` stacks the sidebar cells, `columns` combines the sidebar with the main cell, and each split's `tracks:` gives its children their proportions.
+Splits nest directly: `rows` stacks the sidebar cells, `track` assigns their proportions, and `columns` combines the sidebar with the main cell.
 
 ```typ
 #let composition = m.grids.columns(
-  tracks: (2fr, 1fr),
-  "main",
-  m.grids.rows(tracks: (2fr, 1fr), "notes", "source"),
+  m.grids.track(2fr, "main"),
+  m.grids.track(1fr, m.grids.rows(
+    m.grids.track(2fr, "notes"),
+    m.grids.track(1fr, "source"),
+  )),
 )
 
 #m.slide(
@@ -227,7 +229,7 @@ Splits nest to any depth. Read a grid from the outside inward: choose the larges
 
 = Grid sizes (tracks)
 
-By default, every direct child of `m.grids.columns` or `m.grids.rows` receives a `1fr` track, so the split divides its space evenly. Pass `tracks:` to size them: an array with exactly one size per child, in order. It is the same argument, with the same meaning, that the content layout takes for its columns and Typst's own `grid` takes as `columns:` and `rows:`.
+By default, every direct child of `m.grids.columns` or `m.grids.rows` receives a `1fr` track, so the split divides its space evenly. Wrap a child with `m.grids.track` when it needs another size:
 
 #embedded-example(
   calepin.elements.gallery,
@@ -237,6 +239,8 @@ By default, every direct child of `m.grids.columns` or `m.grids.rows` receives a
   columns: 1,
   show-captions: false,
 )
+
+The `tracks:` argument states the same sizes on the split instead, in one array with one size per child: `m.grids.columns(tracks: (2fr, 1fr), "main", "side")`. It is the argument the content layout takes for its columns. A split takes one form or the other, never both.
 
 A size is anything a native grid track accepts: `auto` for as much as the child's content needs, a fixed length, a percentage, or an `fr` share of what remains:
 

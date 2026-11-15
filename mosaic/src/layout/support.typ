@@ -1,5 +1,5 @@
 // Shared content and surface primitives for layout resolvers.
-#import "../grid/constructors.typ": make-cell, make-track
+#import "../grid/constructors.typ": make-cell, track
 #import "../component/image.typ": image as mosaic-image
 #import "core.typ": validate-image
 #import "../settings.typ": compact-cell-inset
@@ -39,7 +39,7 @@
 #let track-children(nodes, tracks) = if tracks == auto {
   nodes
 } else {
-  nodes.zip(tracks).map(((node, size)) => make-track(size, node))
+  nodes.zip(tracks).map(((node, size)) => track(size, node))
 }
 
 // The picture a layout places: ready-made content as it stands, or a bare

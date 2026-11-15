@@ -37,9 +37,8 @@
   ),
   slide(
     layout: m.grids.columns(
-      tracks: (0.62fr, 0.38fr),
-      c("cover", content: []),
-      c("cover-photo", content: photo("image2.jpg")),
+      m.grids.track(0.62fr, c("cover", content: [])),
+      m.grids.track(0.38fr, c("cover-photo", content: photo("image2.jpg"))),
     ),
     foreground: [
       #place(bottom + left, dx: 142pt, dy: -68pt)[
@@ -58,9 +57,8 @@
   ),
   slide(
     layout: m.grids.columns(
-      tracks: (0.55fr, 0.45fr),
-      c("agenda"),
-      c("agenda-photo", content: photo("image10.jpg")),
+      m.grids.track(0.55fr, c("agenda")),
+      m.grids.track(0.45fr, c("agenda-photo", content: photo("image10.jpg"))),
     ),
   )[
     #set text(fill: ink)
@@ -92,9 +90,8 @@
   ),
   slide(
     layout: m.grids.columns(
-      tracks: (0.56fr, 0.44fr),
-      c("intro"),
-      c("intro-photo", content: photo("image8.jpg")),
+      m.grids.track(0.56fr, c("intro")),
+      m.grids.track(0.44fr, c("intro-photo", content: photo("image8.jpg"))),
     ),
     foreground: [#frame],
   )[
@@ -135,9 +132,8 @@
   ),
   slide(
     layout: m.grids.columns(
-      tracks: (0.54fr, 0.46fr),
-      c("topic-copy"),
-      c("topic-photo", content: photo("image4.jpg")),
+      m.grids.track(0.54fr, c("topic-copy")),
+      m.grids.track(0.46fr, c("topic-photo", content: photo("image4.jpg"))),
     ),
     foreground: [#frame],
   )[
@@ -176,9 +172,8 @@
   ),
   slide(
     layout: m.grids.columns(
-      tracks: (0.62fr, 0.38fr),
-      c("about"),
-      c("about-photo", content: photo("image1.jpg")),
+      m.grids.track(0.62fr, c("about")),
+      m.grids.track(0.38fr, c("about-photo", content: photo("image1.jpg"))),
     ),
   )[
     #set text(fill: ink)
@@ -202,9 +197,8 @@
   ),
   slide(
     layout: m.grids.columns(
-      tracks: (0.67fr, 0.33fr),
-      c("cream-topics"),
-      c("cream-photo", content: photo("image7.jpg")),
+      m.grids.track(0.67fr, c("cream-topics")),
+      m.grids.track(0.33fr, c("cream-photo", content: photo("image7.jpg"))),
     ),
   )[
     #set text(fill: ink)
@@ -281,9 +275,8 @@
   ),
   slide(
     layout: m.grids.columns(
-      tracks: (1fr, 22pt, 1fr),
       c("picture-left", content: []),
-      c("picture-caption"),
+      m.grids.track(22pt, c("picture-caption")),
       c("picture-right", content: []),
     ),
     background: photo("image26.jpg"),
@@ -304,9 +297,8 @@
   ),
   slide(
     layout: m.grids.columns(
-      tracks: (0.61fr, 0.39fr),
-      c("projects-section"),
-      c("projects-photo", content: photo("image28.jpg")),
+      m.grids.track(0.61fr, c("projects-section")),
+      m.grids.track(0.39fr, c("projects-photo", content: photo("image28.jpg"))),
     ),
   )[
     #circle(radius: 174pt, stroke: 1pt + white, inset: 55pt)[
@@ -325,9 +317,8 @@
     projects-pattern: surface(),
   ),
   slide(layout: m.grids.columns(
-    tracks: (0.64fr, 0.36fr),
-    c("projects-list"),
-    c("projects-pattern", content: photo("image34.jpg")),
+    m.grids.track(0.64fr, c("projects-list")),
+    m.grids.track(0.36fr, c("projects-pattern", content: photo("image34.jpg"))),
   ), foreground: [#frame])[
     #grid(
       columns: (1fr, 1fr),
@@ -352,9 +343,8 @@
     research-list: surface(inset: 32pt),
   ),
   slide(layout: m.grids.columns(
-    tracks: (0.58fr, 0.42fr),
-    c("research-photo"),
-    c("research-list"),
+    m.grids.track(0.58fr, c("research-photo")),
+    m.grids.track(0.42fr, c("research-list")),
   ), foreground: [#frame])[
     #photo("image30.jpg")
     // This cell is covered by a pale photo rather than by its sage fill, so
@@ -384,9 +374,8 @@
     donut-photo: surface(),
   ),
   slide(layout: m.grids.columns(
-    tracks: (0.78fr, 0.22fr),
-    c("donuts"),
-    c("donut-photo", content: photo("image37.jpg")),
+    m.grids.track(0.78fr, c("donuts")),
+    m.grids.track(0.22fr, c("donut-photo", content: photo("image37.jpg"))),
   ), foreground: [#frame])[
     #align(center)[
       #v(1em)
@@ -422,9 +411,8 @@
     gallery-layout: surface(inset: 0pt),
   ),
   slide(layout: m.grids.columns(
-    tracks: (0.34fr, 0.66fr),
-    c("gallery-title"),
-    c("gallery-grid"),
+    m.grids.track(0.34fr, c("gallery-title")),
+    m.grids.track(0.66fr, c("gallery-grid")),
   ), foreground: [#frame])[
     = GALLERY\ IMAGE
     Elaborate on your topic here.
@@ -447,9 +435,8 @@
     contact: surface(inset: 44pt, align: left + horizon),
   ),
   slide(layout: m.grids.columns(
-    tracks: (0.46fr, 0.54fr),
-    c("contact-photo", content: photo("image47.jpg")),
-    c("contact"),
+    m.grids.track(0.46fr, c("contact-photo", content: photo("image47.jpg"))),
+    m.grids.track(0.54fr, c("contact")),
   ), foreground: [#frame])[
     = CONTACT US
     #v(12pt)

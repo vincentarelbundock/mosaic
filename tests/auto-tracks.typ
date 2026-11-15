@@ -16,14 +16,12 @@
 // `auto` row; an `auto` side column in the body; a two-row footer split in an
 // `auto` row.
 #let logo-header = m.grids.rows(
-  tracks: (auto, 1fr, auto),
-  m.grids.columns(
-    tracks: (1fr, auto),
-    "header",
-    m.grids.cell("logo", content: text(size: 2em)[LOGO]),
-  ),
-  m.grids.columns(tracks: (1fr, auto), "main", "side"),
-  m.grids.rows("foot-a", "foot-b"),
+  m.grids.track(auto, m.grids.columns(
+    m.grids.track(1fr, "header"),
+    m.grids.track(auto, m.grids.cell("logo", content: text(size: 2em)[LOGO])),
+  )),
+  m.grids.track(1fr, m.grids.columns("main", m.grids.track(auto, "side"))),
+  m.grids.track(auto, m.grids.rows("foot-a", "foot-b")),
 )
 #m.slide(layout: logo-header)[== Logo][Main][Side][Foot A][Foot B]
 
@@ -31,16 +29,14 @@
 // to a plain `auto`-row header on page 3. Compact insets on both sides make
 // the two strips the same depth.
 #let small-logo = m.grids.rows(
-  tracks: (auto, 1fr),
-  m.grids.columns(
-    tracks: (1fr, auto),
-    "header",
-    m.grids.cell("logo", content: text(size: 0.5em)[L]),
-  ),
-  "body",
+  m.grids.track(auto, m.grids.columns(
+    m.grids.track(1fr, "header"),
+    m.grids.track(auto, m.grids.cell("logo", content: text(size: 0.5em)[L])),
+  )),
+  m.grids.track(1fr, "body"),
 )
 #m.slide(layout: small-logo)[== Strip][Body]
-#m.slide(layout: m.grids.rows(tracks: (auto, 1fr), "header", "body"))[== Strip][Body]
+#m.slide(layout: m.grids.rows(m.grids.track(auto, "header"), "body"))[== Strip][Body]
 
 // Pages 4-7: an incremental split in an `auto` row appears on step two and
 // sizes to its content once it is there. Removed before its step (pages
@@ -49,13 +45,11 @@
 // may not sit in an incremental node, so it is addressed by name: positional
 // bodies fill a header only with the slide's opening heading.
 #let revealed(before) = m.grids.rows(
-  tracks: (auto, 1fr),
-  m.steps.on("2-", before: before, m.grids.columns(
-    tracks: (1fr, auto),
-    "header",
-    m.grids.cell("logo", content: [LOGO]),
-  )),
-  "body",
+  m.grids.track(auto, m.steps.on("2-", before: before, m.grids.columns(
+    m.grids.track(1fr, "header"),
+    m.grids.track(auto, m.grids.cell("logo", content: [LOGO])),
+  ))),
+  m.grids.track(1fr, "body"),
 )
 #m.slide(layout: revealed("removed"), cells: (header: [Removed], body: [Body]))
 #m.slide(layout: revealed("hidden"), cells: (header: [Hidden], body: [Body]))

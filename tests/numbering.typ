@@ -3,9 +3,11 @@
 
 #set page(width: 160pt, height: 90pt, margin: 5pt)
 #let numbered-grid = mosaic.grids.rows(
-  tracks: (1fr, auto),
   "left",
-  mosaic.grids.cell(id: "right", content: align(right)[Fixed furniture]),
+  mosaic.grids.track(
+    auto,
+    mosaic.grids.cell(id: "right", content: align(right)[Fixed furniture]),
+  ),
 )
 #assert(grid-test.count(numbered-grid) == 2)
 

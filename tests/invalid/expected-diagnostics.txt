@@ -11,9 +11,9 @@ author-sparse|author 1 must be a name or created with author()
 bad-range|step range starts after it ends: "3-2"
 bad-split-child|columns/rows children must be string cell IDs or Mosaic grid nodes
 bad-split-gutter|columns gutter must be a native Typst track size
-bad-split-track-size|columns tracks must be auto or an array with one track size per child (1 here): auto, a length, a ratio, or a fraction
+bad-split-track-size|track size must be auto, a fixed or relative length, or a fractional length
 bad-state|before must be one of "visible", "hidden", "dimmed", "removed", received "ghosted"
-bare-track-wrapper|grids.track was removed; size the tracks on the split: grids.rows(tracks: (auto, 1fr), "header", "body")
+bare-track-wrapper|slide layout must be a Mosaic grid tree or layout
 cell-id-both|cell id must be passed positionally or through id:, not both
 cell-surface-ownership|cell accepts only a cell id, optional fixed content, and inset
 components-progress-count|progress count must be "slides" or "sections"
@@ -163,6 +163,8 @@ setup-base-size-type|setup base-size must be a length
 setup-font-type|setup font must be auto, a font family, or an array of font families
 headings-policy-role|setup headings level 2 must be "section", "slide", or none
 split-tracks-count|rows tracks must be auto or an array with one track size per child (2 here): auto, a length, a ratio, or a fraction
+split-tracks-and-track|rows sizes its children through tracks: or through track(..) wrappers, not both
+split-tracks-invalid-size|columns tracks must be auto or an array with one track size per child (1 here): auto, a length, a ratio, or a fraction
 split-tracks-single|columns tracks must be auto or an array with one track size per child (2 here): auto, a length, a ratio, or a fraction
 slide-without-setup|slide requires a deck; apply setup with a show rule, such as `#show: mosaic.setup`, before the first slide
 layouts-title-image-dictionary|layout "title" image no longer takes a dictionary; build the picture with components.image(path("cover.webp"), scrim: ..) and pass that

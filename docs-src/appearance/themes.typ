@@ -320,16 +320,13 @@ In this example, we create a new "content" slide with a custom footer. The code 
 
 ```typ
 // a slide is composed of a grid
-#let footered = m.grids.rows(
-  // one height per row: the header and footer hug their content (auto),
-  // and the body takes all the space left between them (1fr)
-  tracks: (auto, 1fr, auto),
-  // 1st row cell is called "header"
-  "header",
-  // 2nd row cell is called "body"
-  "body",
-  // 3rd row cell is called "footer"
-  m.grids.cell(
+#let footered = m.grids.rows(         
+  // 1st row cell is called "header" and its height is automatic based on content (auto)
+  m.grids.track(auto, "header"),      
+  // 2nd row cell is called "body" and its height takes all the available space (1fr)
+  m.grids.track(1fr, "body"),
+  // 3rd row cell is called "footer" and its height is automatic based on content (auto)
+  m.grids.track(auto, m.grids.cell(
     "footer",
     // the footer cell has default content that will appear on every slide using that layout
     content: [
@@ -337,11 +334,11 @@ In this example, we create a new "content" slide with a custom footer. The code 
       #h(1fr)                    // space
       #m.components.progress()   // slide number
     ],
-  ),
+  )),
 )
 ```
 
-That defines a variant of the content layout, bound to the name `footered`. It sets up a grid of three rows, and `tracks:` gives their heights in order: the usual `header` cell at automatic height, then the `body` cell with an instruction to fill the available space, which is what pushes the footer to the bottom edge. Each string names a cell, a name you can later style with a `show` rule.
+That defines a variant of the content layout, bound to the name `footered`. It sets up a grid of rows: first the usual `header` cell at automatic height, then the `body` cell with an instruction to fill the available space, which is what pushes the footer to the bottom edge. Naming a track with `grids.track` gives the cell a name you can later style with a `show` rule, and sets its size.
 
 The footer row comes last, again at automatic height, and carries a cell named `footer`. Because it is declared with `grids.cell` rather than a bare name, that cell can hold default content, which then appears on every slide built from this layout without being written into a single one of them. The content opens with the text "Mosaic"; a conference abbreviation, a course name, a logo, or whatever else suits would go here. An expanding `h(1fr)` then flushes the final element right. The default display of the `progress` component is exactly what we want there: a pair `N / M` denoting the Nth slide out of M.
 

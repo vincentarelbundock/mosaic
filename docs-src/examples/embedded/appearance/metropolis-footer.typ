@@ -2,16 +2,13 @@
 #import mosaic.themes.metropolis as m
 
 // a slide is composed of a grid
-#let footered = m.grids.rows(
-  // one height per row: the header and footer hug their content (auto),
-  // and the body takes all the space left between them (1fr)
-  tracks: (auto, 1fr, auto),
-  // 1st row cell is called "header"
-  "header",
-  // 2nd row cell is called "body"
-  "body",
-  // 3rd row cell is called "footer"
-  m.grids.cell(
+#let footered = m.grids.rows(         
+  // 1st row cell is called "header" and its height is automatic based on content (auto)
+  m.grids.track(auto, "header"),      
+  // 2nd row cell is called "body" and its height takes all the available space (1fr)
+  m.grids.track(1fr, "body"),
+  // 3rd row cell is called "footer" and its height is automatic based on content (auto)
+  m.grids.track(auto, m.grids.cell(
     "footer",
     // the footer cell has default content that will appear on every slide using that layout
     content: [
@@ -19,7 +16,7 @@
       #h(1fr)                    	// space
       #m.components.progress()   	// slide number
     ],
-  ),
+  )),
 )
 
 #show: m.setup.with(

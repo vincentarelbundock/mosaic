@@ -60,14 +60,13 @@
 // section cell fits its own content and anything appended would land outside
 // the fitted region.
 #let section-layout = mosaic.grids.rows(
-  tracks: (1fr, auto, auto, 1fr),
-  mosaic.grids.cell("section-space-above", content: []),
-  "section",
-  mosaic.grids.cell(
+  mosaic.grids.track(1fr, mosaic.grids.cell("section-space-above", content: [])),
+  mosaic.grids.track(auto, "section"),
+  mosaic.grids.track(auto, mosaic.grids.cell(
     "section-rule",
     content: align(center, accent-rule),
-  ),
-  mosaic.grids.cell("section-space-below", content: []),
+  )),
+  mosaic.grids.track(1fr, mosaic.grids.cell("section-space-below", content: [])),
 )
 
 #let apply(body, colors: (:), options: (:)) = {

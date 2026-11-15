@@ -2,10 +2,22 @@
 #import "support/grid.typ" as grid-test
 
 #let grid = mosaic.grids.columns(
+  gutter: 0.6em,
+  mosaic.grids.track(2fr, "a"),
+  mosaic.grids.track(1fr, mosaic.grids.rows("b", "c")),
+)
+
+// `tracks:` on the split and `track` around each child are two spellings of
+// one tree.
+#assert(grid == mosaic.grids.columns(
   tracks: (2fr, 1fr),
   gutter: 0.6em,
   "a",
   mosaic.grids.rows("b", "c"),
+))
+#assert(
+  mosaic.grids.rows(mosaic.grids.track(auto, "header"), "body")
+    == mosaic.grids.rows(tracks: (auto, 1fr), "header", "body"),
 )
 
 #assert(grid.kind == "split")
@@ -23,12 +35,11 @@
 #assert(grid-test.count(grid) == 3)
 
 #let native-tracks = mosaic.grids.columns(
-  tracks: (auto, 4cm, 25%, 25% + 1cm, 2fr),
-  "auto",
-  "fixed",
-  "ratio",
-  "relative",
-  mosaic.grids.cell(id: "fraction"),
+  mosaic.grids.track(auto, "auto"),
+  mosaic.grids.track(4cm, "fixed"),
+  mosaic.grids.track(25%, "ratio"),
+  mosaic.grids.track(25% + 1cm, "relative"),
+  mosaic.grids.track(2fr, mosaic.grids.cell(id: "fraction")),
 )
 #assert(native-tracks.tracks == (auto, 4cm, 25%, 25% + 1cm, 2fr))
 #assert(native-tracks.children.map(child => child.id) == (
@@ -53,8 +64,7 @@
 #show: mosaic.setup
 #mosaic.slide(layout: grid)[Main][Details][Notes]
 #mosaic.slide(layout: mosaic.grids.rows(
-  tracks: (2fr, 1fr),
   stroke: 0.5pt + blue,
-  mosaic.grids.columns(stroke: 1pt + red, gutter: 1.5em, "a", "b", "c"),
-  "d",
+  mosaic.grids.track(2fr, mosaic.grids.columns(stroke: 1pt + red, gutter: 1.5em, "a", "b", "c")),
+  mosaic.grids.track(1fr, "d"),
 ))[A][B][C][D]

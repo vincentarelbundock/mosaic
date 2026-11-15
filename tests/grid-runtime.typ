@@ -31,8 +31,10 @@
 // targeting each cell's <mosaic-cell-ID> label.
 #let pink = rgb("#f8dce5")
 #let configured = mosaic.grids.rows(
-  tracks: (auto, 1fr),
-  mosaic.grids.cell("banner", inset: 4pt),
+  mosaic.grids.track(
+    auto,
+    mosaic.grids.cell("banner", inset: 4pt),
+  ),
   mosaic.grids.cell("body", inset: 4pt),
 )
 #assert(configured.tracks == (auto, 1fr))
@@ -52,8 +54,7 @@
 
 // Temporal wrappers do not add an artificial step to the child path.
 #let temporal-grid = mosaic.grids.rows(
-  tracks: (auto, 1fr),
-  mosaic.steps.on("2-", mosaic.grids.cell(id: "first")),
+  mosaic.grids.track(auto, mosaic.steps.on("2-", mosaic.grids.cell(id: "first"))),
   "second",
 )
 #let temporal-info = grid-test.info(temporal-grid, "first")
@@ -63,18 +64,20 @@
 
 // A fixed image cell owns content; appearance stays native.
 #let image-grid = mosaic.grids.columns(
-  tracks: (30%, 1fr),
-  mosaic.grids.cell(
-    id: "image",
-    inset: 0pt,
-    content: image(
-      "../docs-src/assets/images/mosaic-logo.svg",
-      width: 100%,
-      height: 100%,
-      fit: "contain",
-      alt: "Mosaic logo",
+  mosaic.grids.track(
+    30%,
+    mosaic.grids.cell(
+      id: "image",
+      inset: 0pt,
+      content: image(
+        "../docs-src/assets/images/mosaic-logo.svg",
+        width: 100%,
+        height: 100%,
+        fit: "contain",
+        alt: "Mosaic logo",
+      ),
     ),
-    ),
+  ),
   mosaic.grids.cell("text"),
 )
 #let image-info = grid-test.info(image-grid, "image")
@@ -107,11 +110,10 @@
 #let nested = mosaic.grids.rows(
   "top",
   mosaic.grids.columns(
-    tracks: (1fr, 20pt, auto),
     gutter: 2pt,
     "left",
-    mosaic.grids.rows("middle-top", "middle-bottom"),
-    "right",
+    mosaic.grids.track(20pt, mosaic.grids.rows("middle-top", "middle-bottom")),
+    mosaic.grids.track(auto, "right"),
   ),
 )
 #mosaic.slide(layout: nested)[1][2][3][4][5]
@@ -157,18 +159,20 @@
     it,
   )
   #mosaic.slide(layout: mosaic.grids.columns(
-    tracks: (30%, 1fr),
-    mosaic.grids.cell(
-      id: "a",
-      inset: 2pt,
-      content: image(
-        "../docs-src/assets/images/mosaic-logo.svg",
-        width: 100%,
-        height: 100%,
-        fit: "contain",
-        alt: "Mosaic logo",
+    mosaic.grids.track(
+      30%,
+      mosaic.grids.cell(
+        id: "a",
+        inset: 2pt,
+        content: image(
+          "../docs-src/assets/images/mosaic-logo.svg",
+          width: 100%,
+          height: 100%,
+          fit: "contain",
+          alt: "Mosaic logo",
+        ),
       ),
-      ),
+    ),
     mosaic.grids.cell("b"),
   ))[Configured grid]
 

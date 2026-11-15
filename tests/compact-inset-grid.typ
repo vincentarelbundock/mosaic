@@ -9,9 +9,8 @@
 #show: m.setup.with(spacing: (compact-inset: 20pt))
 
 #let hand-built = m.grids.rows(
-  tracks: (auto, 1fr),
-  "header",
-  "body",
+  m.grids.track(auto, "header"),
+  m.grids.track(1fr, "body"),
 )
 
 #m.slide(layout: hand-built)[== Hand-built][Body]
