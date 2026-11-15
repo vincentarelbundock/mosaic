@@ -6,9 +6,8 @@
   section: mosaic.layouts.section(),
 )
 
-// `font` and `base-size` are deck options the theme presets through
-// `defaults`; the engine states them, and `apply` reads the resolved values
-// from `options` without declaring them.
+// The theme states `font` and `base-size` under `options`; the engine states
+// them as the base `set text(..)`, and `apply` reads the resolved values.
 #let apply(body, colors: (:), options: (:)) = {
   assert(options.font == "DejaVu Sans")
   assert(options.base-size == 26pt, message: repr(options.base-size))
@@ -32,18 +31,17 @@
     error: rgb("#D55E00"),
   ),
   defaults: (
-    font: "DejaVu Sans",
-    base-size: 22pt,
     spacing: (inset: 32pt),
     cells: (footer: [ENGINE CONSUMED THEME]),
   ),
+  options: (font: "DejaVu Sans", base-size: 22pt),
   layouts: layouts,
   apply: apply,
 )
 
 #show: mosaic.themes.setup(theme).with(
   title: [Passive theme definition],
-  // A deck overrides the theme's preset like any other setup option.
+  // A deck overrides the theme's option; `font` is left at the theme's value.
   base-size: 26pt,
 )
 

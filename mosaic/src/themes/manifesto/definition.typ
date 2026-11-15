@@ -72,6 +72,19 @@
   name: "Manifesto",
   colors: tokens.colors,
   defaults: (
+    spacing: (inset: 45pt),
+    // The progress ring in the corner of every numbered slide, drawn in the
+    // poster's red. It resolves its colors from the deck record, so a palette
+    // swap recolors it too, and the component quiets itself on unnumbered
+    // pages such as titles.
+    // Chrome, not content: the artifact wrapper keeps it out of the tagged
+    // PDF's structure tree, so a screen reader never announces it.
+    foreground: pdf.artifact(place(bottom + right, block(
+      inset: (right: 18pt, bottom: 14pt),
+      components.progress(variant: "circle"),
+    ))),
+  ),
+  options: (
     // Designed face first, then the display serif each platform ships by
     // default, ending in Libertinus Serif, which Typst embeds and so always
     // resolves. Typst warns once per unknown family even when a later one
@@ -84,17 +97,6 @@
       "Libertinus Serif",
     ),
     base-size: 16pt,
-    spacing: (inset: 45pt),
-    // The progress ring in the corner of every numbered slide, drawn in the
-    // poster's red. It resolves its colors from the deck record, so a palette
-    // swap recolors it too, and the component quiets itself on unnumbered
-    // pages such as titles.
-    // Chrome, not content: the artifact wrapper keeps it out of the tagged
-    // PDF's structure tree, so a screen reader never announces it.
-    foreground: pdf.artifact(place(bottom + right, block(
-      inset: (right: 18pt, bottom: 14pt),
-      components.progress(variant: "circle"),
-    ))),
   ),
   layouts: (
     content: layouts.content(),
