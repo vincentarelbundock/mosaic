@@ -145,10 +145,9 @@
 // A cell that states no inset of its own takes the deck's configured spacing.
 // Read inside the render context, where the deck record is live; a component
 // rendered outside `setup` falls back to the library default. A compact cell
-// (one in an `auto` row track, or one a layout marks content-sized) takes the
-// compact inset, exactly as the
-// built-in headers and footers do, so a hand-built grid cannot drift from
-// them.
+// (one in an `auto` row track, at any depth below it, or one a layout marks
+// content-sized) takes the compact inset, exactly as the built-in headers and
+// footers do, so a hand-built grid cannot drift from them.
 #let configured-inset(content-sized: false) = {
   let settings = deck-settings()
   let spacing = if settings == none {
@@ -178,6 +177,8 @@
   slide: initial-slide,
   track: none,
   vertical: false,
+  shrink: (width: false, height: false),
+  compact: false,
 ) = {
   // A styleless cell is a container the tree produced, not one an author named.
   // Its content is measured again by every cell inside it, so observing it too
@@ -205,7 +206,19 @@
   // (`auto` on the horizontal axis is a column width and must not collapse the
   // cell height, so only the vertical axis opts in here.)
   let auto-height = vertical and track == auto
-  let region-height = if content-sized or auto-height { auto } else { 100% }
+  let region-height = if content-sized or auto-height or shrink.height {
+    auto
+  } else {
+    100%
+  }
+  // The horizontal counterpart: a cell in an `auto` column, or one measured
+  // inside such a column (see `render-node`), takes its content's width. At
+  // `100%` it would claim the whole region and starve its sibling columns.
+  let region-width = if (not vertical and track == auto) or shrink.width {
+    auto
+  } else {
+    100%
+  }
   // `map` is the layout's transform of the slide body alone: variants that
   // recompose user-supplied content (small caps, recoloring, a title/number
   // grid) apply it here, before the affixes join, so `before` and `after`
@@ -250,7 +263,7 @@
   grid.cell(inset: 0pt, context {
     let base = text.size
     let inset = if inset == auto {
-      configured-inset(content-sized: region-height == auto)
+      configured-inset(content-sized: region-height == auto or compact)
     } else {
       inset
     }
@@ -274,7 +287,7 @@
     // of stacking behind it the way a wrapping transform does. A declared
     // paint is the variant's design and stays constructor-strength.
     let body = block(
-      width: 100%,
+      width: region-width,
       height: region-height,
       ..if fill == none { (:) } else { (fill: fill) },
       ..if stroke == none { (:) } else { (stroke: stroke) },
@@ -307,7 +320,7 @@
         }
       }
       #block(
-        width: 100%,
+        width: region-width,
         height: region-height,
         inset: resolve-inset(inset, base),
         content,
@@ -321,10 +334,32 @@
   })
 }
 
+// Whether a node is a split once any `on` wrappers are looked through.
+#let is-split-node(node) = if node.kind == "on" {
+  is-split-node(node.child)
+} else {
+  node.kind == "split"
+}
+
 // `contents` is the id -> content map. Each content-bearing cell looks up its
 // own content by id, so there is no positional cursor to thread or keep aligned
 // across branches and removed incremental nodes. Returns (content, removed,
 // style).
+//
+// A split normally fills its region, which is what `1fr` tracks need. A split
+// in an `auto` track has no region to fill: it must size to its content, and
+// its cells must still paint edge to edge across the size it settles on, so
+// that a header cell and a logo cell beside it share one height. It renders in
+// two passes. The measuring pass renders the split with `shrink` set on the
+// track's axis: every cell and split below takes its content's size on that
+// axis, and fractional tracks along it, which have nothing to divide, act as
+// `auto`. The measured size then becomes a fixed block, and the split renders
+// again inside it the ordinary way, where `100%` and `1fr` resolve against that
+// block. The measuring pass is never placed, so its labels, headings, and
+// overflow records never reach the document.
+//
+// `compact` marks everything below an `auto` row, so cells there take the
+// compact inset in both passes and the measured height is the rendered one.
 #let render-node(
   node,
   contents,
@@ -332,6 +367,8 @@
   path: "grid",
   overflow: "off",
   slide: initial-slide,
+  shrink: (width: false, height: false),
+  compact: false,
 ) = {
   if node.kind == "on" {
     let state = status(
@@ -350,6 +387,8 @@
       path: path + ".on",
       overflow: overflow,
       slide: slide,
+      shrink: shrink,
+      compact: compact,
     )
     return (apply-state(state, child-content), removed, style)
   }
@@ -362,29 +401,72 @@
   } else {
     let rendered = ()
     let tracks = ()
-    let resolved = resolved-tracks(node)
+    let along = if node.axis == "width" { "width" } else { "height" }
+    let measuring = shrink.width or shrink.height
+    let resolved = resolved-tracks(node).map(size => if (
+      shrink.at(along) and type(size) == fraction
+    ) { auto } else { size })
     for (index, child) in node.children.enumerate() {
-      let (child-content, removed, style) = render-node(
-        child,
-        contents,
-        step,
-        path: path + "." + str(index),
-        overflow: overflow,
-        slide: slide,
-      )
+      let child-path = path + "." + str(index)
+      let track = resolved.at(index)
+      let child-shrink = shrink
+      if track == auto { child-shrink.insert(along, true) }
+      let child-compact = compact or (along == "height" and track == auto)
+      let (child-content, removed, style) = if (
+        track == auto and not measuring and is-split-node(child)
+      ) {
+        let (full, removed, style) = render-node(
+          child,
+          contents,
+          step,
+          path: child-path,
+          overflow: overflow,
+          slide: slide,
+          compact: child-compact,
+        )
+        let sized = if removed { full } else {
+          let probe = render-node(
+            child,
+            contents,
+            step,
+            path: child-path,
+            slide: slide,
+            shrink: child-shrink,
+            compact: child-compact,
+          ).at(0)
+          layout(region => {
+            let natural = measure(probe, width: region.width)
+            block(width: natural.width, height: natural.height, full)
+          })
+        }
+        (sized, removed, style)
+      } else {
+        render-node(
+          child,
+          contents,
+          step,
+          path: child-path,
+          overflow: if measuring { "off" } else { overflow },
+          slide: slide,
+          shrink: child-shrink,
+          compact: child-compact,
+        )
+      }
       if not removed {
         let content = render-cell(
           child-content,
           style,
           step,
-          path: path + "." + str(index),
-          overflow: overflow,
+          path: child-path,
+          overflow: if measuring { "off" } else { overflow },
           slide: slide,
-          track: resolved.at(index),
+          track: track,
           vertical: node.axis != "width",
+          shrink: child-shrink,
+          compact: child-compact,
         )
         rendered.push(content)
-        tracks.push(resolved.at(index))
+        tracks.push(track)
       }
     }
     if rendered.len() == 0 {
@@ -400,20 +482,25 @@
     } else {
       range(1, rendered.len()).map(y => grid.hline(y: y, stroke: stroke))
     }
+    let cross = (if shrink.at(if along == "width" { "height" } else { "width" }) {
+      auto
+    } else {
+      1fr
+    },)
     let content = block(
-      width: 100%,
-      height: 100%,
+      width: if shrink.width { auto } else { 100% },
+      height: if shrink.height { auto } else { 100% },
       if node.axis == "width" {
         grid(
           columns: tracks,
-          rows: (1fr,),
+          rows: cross,
           column-gutter: node.gutter,
           ..rules,
           ..rendered,
         )
       } else {
         grid(
-          columns: (1fr,),
+          columns: cross,
           rows: tracks,
           row-gutter: node.gutter,
           ..rules,

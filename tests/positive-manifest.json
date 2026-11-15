@@ -2,6 +2,7 @@
   "core": [
     "accessibility.typ",
     "author.typ",
+    "auto-tracks.typ",
     "cell-inset-settings.typ",
     "compact-inset-grid.typ",
     "components.typ",
