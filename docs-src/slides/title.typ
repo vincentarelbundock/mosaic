@@ -11,7 +11,7 @@
 
 A title slide takes its content from the deck rather than from the slide, and its arrangement from a variant.
 
-#unreleased(calepin.elements.callout)[Placing a title slide's picture with `position:`, including behind the text, and suppressing the title with `none` are new.]
+#unreleased(calepin.elements.callout)[Two things on this page are new: `position: "background"`, which sets the title over a full-slide picture, and `none` for the title itself. The examples compile under the released version as they stand.]
 
 = A simple title slide
 
@@ -37,7 +37,7 @@ To change one field on one slide, name it on `slide`. This deck opens on a draft
 #m.slide(layout: "title", date: [Draft])
 ```
 
-Writing `none` drops any inherited field from that slide: the title, the subtitle, the date, or the authors.
+Writing `none` drops an inherited field from that slide: the subtitle, the date, the authors (for which `()` means the same), and, from the development version, the title itself.
 
 = Variants
 
@@ -50,7 +50,7 @@ Each variant borrows a classic minimalist tradition. The six text variants need 
 - `panel`: an ink side panel carries the details; the heading stack takes the main field.
 - `academic`: the conference poster: superscript affiliation numbers, a numbered legend, a contact line. Requires at least one author.
 
-The seventh variant, `image`, sets a compact title stack with a picture. A picture needs `variant: "image"`: write it together with `image:`. `position:` and `tracks:` apply only to that variant. `position:` places the picture: `"left"` (the default), `"right"`, `"top"`, or `"bottom"` for a full-bleed picture beside or above the stack, sized by `tracks:`, or `"background"` for the stack over a full-slide picture. #link("../content/images.html#pictures-in-layouts")[Pictures in layouts] describes both arguments, which the section and image layouts share. Over a background picture the type keeps the deck's text color, so give the picture a #link("../content/images.html#scrims")[scrim] and recolor the title cell:
+The seventh variant, `image`, sets a compact title stack with a picture. A picture needs `variant: "image"`: write it together with `image:`. `position:` and `tracks:` apply only to that variant. `position:` places the picture: `"left"` (the default), `"right"`, `"top"`, or `"bottom"` for a full-bleed picture beside or above the stack, sized by `tracks:`, or `"background"` for the stack over a full-slide picture. #link("../content/images.html#pictures-in-layouts")[Pictures in layouts] describes what `image:` accepts. `position: "background"` is new in the development version, and `tracks:` does not apply to it. Over a background picture the type keeps the deck's text color, so give the picture a #link("../content/images.html#scrims")[scrim] and recolor the title cell:
 
 ```typ
 #[
@@ -74,7 +74,7 @@ The thumbnails below all render the same title information: one deck title and s
 Written out in full, one of those decks is this:
 
 ```typ
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.1" as m
 
 #let ccp = [Centre for Comparative Politics]
 #let eis = [European Institute for Social Data]

@@ -178,7 +178,7 @@ The grid of every slide also carries the label `<mosaic-slide>`, so one rule rea
   #show label("mosaic-slide"): set text(fill: white)
   #m.slide(
     layout: "image",
-    position: "left",
+    variant: "left",
     image: m.components.image(
       path("cover.webp"),
       scrim: black.transparentize(40%),
