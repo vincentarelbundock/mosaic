@@ -1,5 +1,6 @@
 #import "/.calepin/calepin.typ" as calepin
 #import "/_includes/embedded-examples.typ": embedded-example, thumbnail-gallery
+#import "/_includes/site.typ": unreleased
 
 #set document(title: [Styling cells])
 #metadata((title: "Styling cells")) <website-metadata>
@@ -12,14 +13,15 @@ Behind that, the engine keeps exactly one record of its own: the deck record, wr
 
 = Deck typography
 
-Place native Typst text and heading rules after `m.setup` so they apply across the deck:
+The deck's typeface and base size are options of `m.setup`, under every theme. Everything else is a native Typst rule placed after `m.setup`, so that it applies across the deck:
 
 ```typ
-#show: m.setup
-#set text(font: "EB Garamond", size: 26pt)
+#show: m.setup.with(font: "EB Garamond", base-size: 26pt)
 #show heading.where(depth: 1): set text(font: "Inter", weight: "black")
-#show heading.where(depth: 2): set text(size: 1.4em)
+#show heading.where(depth: 2): set text(weight: "regular")
 ```
+
+`base-size` is the size the theme's headings, captions, and other tiers are stated as multiples of, so the whole deck scales with it. A `set text(size: ..)` after `m.setup` changes the body text alone: a theme's heading sizes are absolute, and do not follow it.
 
 A semantic heading feeds outlines, bookmarks, and content slides. Slides open on heading depth, the number of `=` signs, so `set heading(offset: 1)` shifts the levels the outline records without changing which headings open slides or how a theme styles them. Use `text` directly for display type that should not appear in navigation, or exclude the heading:
 
@@ -38,15 +40,7 @@ Everything about the deck's palette, overriding entries, the bundled palette col
 
 Target a cell by its label. Font, size, color, and alignment are `set text`, `set par`, and `set align`; the cell's own fill, stroke, and corner radius are `set block` on the same label. The #link("../api/labels.html")[label reference] lists every label a slide emits:
 
-#calepin.elements.callout(kind: "warning", title: [Requires Mosaic 0.0.3])[
-  Painting a cell's own block with `set block` rules is new in the development version, 0.0.3, which is not on Typst Universe yet, so the snippets and examples on this page pin the development version. One command installs it — `curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh` — and then it imports as:
-
-  ```typ
-  #import "@local/mosaic:0.0.3" as m
-  ```
-
-  See #link("../start/install.html")[Install] for the full instructions.
-]
+#unreleased(calepin.elements.callout)[Painting a cell's own block with `set block` rules, the `compact-inset` spacing, and `font` and `base-size` as deck options under every theme are new.]
 
 ```typ
 #let ink = rgb("#20262d")
@@ -160,9 +154,7 @@ A cell that sits directly in an `auto` row hugs its content: the row is exactly 
 
 The default, `auto`, is 55% of `inset`. Setting it equal to `inset` gives a deep band with the same padding on all four sides, which leaves room for a logo placed in the foreground beside the title. The value applies to the compact cells of the built-in layouts and of your own grids alike, so a content slide built from a custom layout and an image slide in the same deck draw the same band. A cell that passes its own `inset:` keeps it.
 
-#calepin.elements.callout(kind: "warning", title: [Requires Mosaic 0.0.3])[
-  `compact-inset` is new in 0.0.3, which is not on Typst Universe yet. One command installs the development version — `curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh` — and then it imports as `#import "@local/mosaic:0.0.3" as m`. In earlier versions the built-in headers always take the shallow padding, and a compact cell in your own grid takes the full `inset` on every side. See #link("../start/install.html")[Install] for the full instructions.
-]
+In the released 0.0.1 the built-in headers always take the shallow padding, and a compact cell in your own grid takes the full `inset` on every side.
 
 = Properties an element pins on itself
 
@@ -186,8 +178,11 @@ The grid of every slide also carries the label `<mosaic-slide>`, so one rule rea
   #show label("mosaic-slide"): set text(fill: white)
   #m.slide(
     layout: "image",
-    variant: "left",
-    image: (path: path("cover.webp"), scrim: black.transparentize(40%)),
+    position: "left",
+    image: m.components.image(
+      path("cover.webp"),
+      scrim: black.transparentize(40%),
+    ),
   )[== Header][Both cells are white from one rule]
 ]
 ```
@@ -201,6 +196,7 @@ The `title` and `section` layouts are compositions, not bare grids: each variant
 Typography goes through labels, exactly as a cell does. Every tier a variant emits carries its own label, so a rule reaches it without knowing anything about the layout:
 
 ```typ
+#show label("mosaic-section-title"): set text(tracking: 0.02em)
 #show label("mosaic-section-number"): set text(weight: "black")
 #show label("mosaic-section-subtitle"): set text(style: "italic")
 #show label("mosaic-title-display"): set text(tracking: -0.02em)

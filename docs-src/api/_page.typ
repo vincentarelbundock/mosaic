@@ -1,6 +1,9 @@
 // Shared frame for the generated API reference pages. Each page names its
 // group and then includes generated/<group>/index.typ, which typst-doc writes
 // from the package's `///` comments on every website build.
+#import "/.calepin/calepin.typ" as calepin
+#import "/_includes/site.typ": unreleased
+
 #let api-page(group-title, body) = {
   set document(title: group-title)
 
@@ -20,6 +23,8 @@
     #title()
 
     The contents below link to each definition. Function entries show the signature, then a description, then the parameters with their types and defaults; variable entries show the declared type.
+
+    #unreleased(calepin.elements.callout)[This reference is generated from the package sources, so it describes the development version throughout; #link("https://github.com/vincentarelbundock/mosaic/blob/main/CHANGELOG.md")[the changelog] lists what differs from the released one.]
 
     #body
   ]

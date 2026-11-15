@@ -1,12 +1,16 @@
 #import "/.calepin/calepin.typ" as calepin
 #import "/_includes/embedded-examples.typ": thumbnail-gallery
 
+#import "/_includes/site.typ": unreleased
+
 #set document(title: [Section slides])
 #metadata((title: "Section")) <website-metadata>
 
 #title()
 
 A section slide divides a talk into parts. It announces where the audience has arrived, carries no body content, and usually shows a number so the deck's shape stays legible.
+
+#unreleased(calepin.elements.callout)[A section picture is now `variant: "image"` placed by `position:`, where the released version has five `image-*` variants.]
 
 = Sections from headings
 
@@ -50,9 +54,18 @@ Each variant borrows a classic minimalist tradition:
 - `baseline`: title and number tied to one baseline by a hairline.
 - `toc`: every section in the deck listed, with the current one alive and the others ghosted.
 
-The designed variants build their composition around the section number, so an omitted `number:` reads the automatic counter. Pass `accent:` to recolor the number. A `subtitle:` is set caption-sized beneath the title in every variant.
+The designed variants build their composition around the section number, so an omitted `number:` reads the automatic counter. Pass `accent:` to recolor the number, and with it the hairline of the `baseline` variant. A `subtitle:` is set caption-sized beneath the title in every variant.
 
-The image variants place the section text beside a full-bleed picture (`image-left`, `image-right`, `image-top`, `image-bottom`, sized by `tracks:`) or directly over one (`image-background`). Every image variant requires `image:`, wrapped in Typst's `path()` so the picture is found in your project rather than in the package; see #link("../content/images.html#asset-paths")[Asset paths].
+The `image` variant is the `plain` composition with a picture. It requires an `image:`, and `position:` places it: `"left"` (the default), `"right"`, `"top"`, or `"bottom"` for the section text beside a full-bleed picture, sized by `tracks:`, or `"background"` for the text directly over one. #link("../content/images.html#pictures-in-layouts")[Pictures in layouts] describes both arguments, which the title and image layouts share:
+
+```typ
+#m.slide(
+  layout: "section",
+  variant: "image",
+  position: "right",
+  image: path("fig/chapter.jpg"),
+)[Methods]
+```
 
 Written out in full, one of those slides is:
 
@@ -64,7 +77,7 @@ Written out in full, one of those slides is:
 )[Numeral section]
 ```
 
-The thumbnails below grow the same divider one argument at a time: plain, numbered, the designed text variants, then each image placement. Open any thumbnail to see the slide at full size:
+The thumbnails below grow the same divider one argument at a time: plain, numbered, the designed text variants, then the `image` variant at each position. Open any thumbnail to see the slide at full size:
 
 #thumbnail-gallery(
   calepin.elements.gallery,
