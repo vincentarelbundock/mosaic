@@ -72,9 +72,12 @@ class ThemeArchitectureTests(unittest.TestCase):
         ):
             self.assertFalse((PORTFOLIO / name).exists())
         preamble = (PORTFOLIO / "preamble.typ").read_text(encoding="utf-8")
-        # Version-agnostic on purpose: website examples pin the released
-        # version, which moves independently of the development tree.
-        self.assertRegex(preamble, r'"@preview/mosaic:\d+\.\d+\.\d+" as m')
+        # Namespace- and version-agnostic on purpose: website examples pin the
+        # released version, which moves independently of the development tree,
+        # and a deck that needs an unreleased spelling pins `@local` until the
+        # release catches up. scripts/check-versions.py governs which `@local`
+        # version is allowed.
+        self.assertRegex(preamble, r'"@(?:preview|local)/mosaic:\d+\.\d+\.\d+" as m')
         main = (PORTFOLIO / "main.typ").read_text(encoding="utf-8")
         self.assertIn("colors: greyscale", main)
 

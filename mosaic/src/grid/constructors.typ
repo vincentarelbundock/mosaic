@@ -129,7 +129,7 @@
 // `tracks:` argument of `columns` and `rows`, the one public spelling. The
 // wrapper is temporary: the split constructor unwraps it, so a track value
 // never appears in a resolved tree.
-#let track(size, child) = {
+#let make-track(size, child) = {
   if not is-track-size(size) {
     fail(
       "track size must be auto, a fixed or relative length, or a"
@@ -183,7 +183,7 @@
     )
   }
   if children.any(is-track) {
-    fail(name + " cannot combine tracks: with track-wrapped children")
+    fail(name + " cannot combine tracks: with make-track children")
   }
   tracks
 }

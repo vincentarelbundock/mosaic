@@ -75,9 +75,11 @@
     )
     let resolved = inherited
     let bodies = bodies
+    let lifted = false
     if header-id in body-ids and bodies.len() > 0 {
       let opening = split-opening-heading(bodies.first())
       if opening.heading != none {
+        lifted = true
         resolved.insert(header-id, opening.heading)
         bodies = bodies.slice(1)
         if opening.rest != none {
@@ -95,7 +97,17 @@
               destination-ids.map(repr).join(", ", last: " and ")
             }
           )
-          + "; address any other cell by name through cells:",
+          + "; address any other cell by name through cells:"
+          // The likeliest cause on a layout with a header: a first body meant
+          // for it that is not a heading. Say what would have worked.
+          + (
+            if header-id in body-ids and not lifted {
+              (
+                ". A first body that opens with a heading fills the header; "
+                  + "other header content goes through cells: (header: ..)"
+              )
+            } else { "" }
+          ),
       )
     }
     for (index, id) in destination-ids.enumerate() {
