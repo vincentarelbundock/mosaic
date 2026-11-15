@@ -26,6 +26,7 @@
 #import "../layout/core.typ": is-layout
 #import "../layout/config.typ": unconfigured-layouts
 #import "../deck-record.typ": read-deck-record
+#import "../themes/polarity.typ": is-dark-canvas, dark-code-theme
 #import "../deck-state.typ": (
   logical-slide,
   logical-slide-id,
@@ -471,9 +472,18 @@
       // The knocked-out ink, stated inside the frame so it overrides the
       // theme's document-level fill, plus the same statement on headings,
       // which themes pin through show-set rules a plain `set` cannot reach.
+      // The syntax highlighting theme is the one asset a theme picks from the
+      // deck canvas rather than paints from `colors.*`, so it is re-derived
+      // here from the inverted canvas: light-ground colors on a slide that
+      // inverted to light, the dark theme on one that inverted to dark.
       frame = {
         set text(fill: settings.colors.text)
         show heading: set text(fill: settings.colors.text)
+        set raw(theme: if is-dark-canvas(settings.colors) {
+          dark-code-theme
+        } else {
+          auto
+        })
         frame
       }
     }

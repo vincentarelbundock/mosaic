@@ -8,10 +8,19 @@
 
 #assert("content" in mosaic.layouts)
 
+// The root facade is the Default theme, so a bare call builds what a `==`
+// heading builds under it: a header over a body, with no footer row.
 #let content-layout = mosaic.layouts.content()
 #let resolved-content = resolve-layout(content-layout, settings)
-#assert(resolved-content.tracks == (auto, 1fr, auto))
-#assert(grid-test.count(resolved-content) == 3)
+#assert(resolved-content.tracks == (auto, 1fr))
+#assert(grid-test.count(resolved-content) == 2)
+#assert(content-layout == mosaic.definition.layouts.content)
+#assert(mosaic.layouts.section() == mosaic.definition.layouts.section)
+
+#let footer-layout = mosaic.layouts.content(variant: "header-body-footer")
+#let resolved-footer = resolve-layout(footer-layout, settings)
+#assert(resolved-footer.tracks == (auto, 1fr, auto))
+#assert(grid-test.count(resolved-footer) == 3)
 
 #let basic-grid = mosaic.layouts.content(variant: "body")
 #let resolved-basic = resolve-layout(basic-grid, settings)
@@ -22,6 +31,7 @@
 #let basic = mosaic.slide(layout: basic-grid)[Body content]
 
 #let structured-grid = mosaic.layouts.content(
+  variant: "header-body-footer",
   columns: 2,
   tracks: (2fr, 1fr),
 )
@@ -98,7 +108,7 @@
   )
   #show label("mosaic-cell-body"): set text(fill: rgb("#123456"))
   #show label("mosaic-cell-footer"): set align(right)
-  #mosaic.slide(layout: mosaic.layouts.content())[Styled header][Body region][Independent footer style]
+  #mosaic.slide(layout: footer-layout)[Styled header][Body region][Independent footer style]
 ]
 
 #let header-body-layout = mosaic.layouts.content(variant: "header-body")

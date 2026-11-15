@@ -18,21 +18,31 @@
     fill: colors.text,
     fallback: true,
   )
-  // Tight lists become wide. A list nested in an item is then a block that
-  // would take the paragraph spacing above it, a gap wider than the item
-  // rhythm, so each item body pins nested lists to the item spacing. The
-  // rule lives in the body, not on the list, so the space above a top-level
-  // list is left alone.
-  let widen(item) = {
-    let fields = item.fields()
-    let body = fields.remove("body")
-    (item.func())(..fields, {
-      show selector(list).or(enum): set block(above: 0.9em)
-      body
-    })
+  // Tight lists become wide, keeping every argument the list was written with
+  // (`start`, `numbering`, `marker`, ..): only `tight` changes.
+  let widen(it) = {
+    let fields = it.fields()
+    let children = fields.remove("children")
+    _ = fields.remove("tight", default: none)
+    (it.func())(..fields, tight: false, ..children)
   }
-  show list.where(tight: true): it => list(tight: false, ..it.children.map(widen))
-  show enum.where(tight: true): it => enum(tight: false, ..it.children.map(widen))
+  show list.where(tight: true): widen
+  show enum.where(tight: true): widen
+  // A list nested in an item of a wide list is a block, which would take the
+  // paragraph spacing above it, a gap wider than the item rhythm. Every list
+  // therefore pins the lists nested in it to its own item spacing, read from
+  // the live `set list(spacing: ..)` or `set enum(spacing: ..)` so a deck
+  // that changes the rhythm keeps it even. The rule is stated inside the
+  // list, so the space above a top-level list is left alone. It is a
+  // show-set rule scoped to the list, which is the limit: a deck-level
+  // `show list: set block(above: ..)` does not reach nested lists.
+  let pin-nested(it) = context {
+    let gap = if it.func() == enum { enum.spacing } else { list.spacing }
+    if type(gap) != length { return it }
+    show selector(list).or(enum): set block(above: gap)
+    it
+  }
+  show selector(list).or(enum): pin-nested
   set list(spacing: 0.9em)
   set enum(spacing: 0.9em)
   set terms(spacing: 0.9em)

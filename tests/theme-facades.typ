@@ -21,4 +21,13 @@
   assert(type(theme.layouts.content()) == dictionary)
   assert(type(theme.layouts.title(title: [No-author title])) == dictionary)
   assert(type(theme.layouts.section()) == dictionary)
+  // A bare call to an exported layout builds the slide the theme's automatic
+  // headings build, so explicit and automatic slides cannot drift apart.
+  for name in ("content", "title", "section") {
+    assert(
+      dictionary(theme.layouts).at(name)() == theme.definition.layouts.at(name),
+      message: theme.definition.name + " layouts." + name
+        + " differs from its definition",
+    )
+  }
 }

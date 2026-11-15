@@ -20,7 +20,9 @@
 /// A theme is data, not code: you describe colors, defaults, and rules in a
 /// plain dictionary. The definition is validated here, where the setup is
 /// built, so a malformed theme fails at that line rather than somewhere inside
-/// a deck.
+/// a deck. Two things cannot be checked that early: a `layouts` function,
+/// whose result depends on the options a deck passes, and the values a deck
+/// gives the theme's own options, which only `apply` knows how to read.
 ///
 /// Every bundled theme facade also exports the `definition` its own `setup`
 /// was built from, so `mosaic.themes.default.definition` and friends are the
@@ -90,4 +92,7 @@
   /// The passive theme definition dictionary described above.
   /// -> dictionary
   theme,
-) = _theme-setup.with(theme: _validate-theme(theme))
+) = {
+  let theme = _validate-theme(theme)
+  (body, ..options) => _theme-setup(theme, body, ..options)
+}

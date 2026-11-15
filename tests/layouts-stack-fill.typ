@@ -34,7 +34,10 @@
 // Page 3: the section subtitle follows the section cell the same way.
 #[
   #show label("mosaic-cell-section"): set text(fill: rgb("#abcdef"))
-  #mosaic.slide(layout: mosaic.layouts.section(subtitle: [Overridden tagline]))[
+  #mosaic.slide(layout: mosaic.layouts.section(
+    variant: "plain",
+    subtitle: [Overridden tagline],
+  ))[
     Section
   ]
 ]

@@ -11,6 +11,9 @@
 
 #let section-accent = rgb("#a1b2c3")
 #let section-layout = mosaic.layouts.section(
+  // The variant that paints its number in the accent; the Default theme's own
+  // `baseline` draws its rule in the deck accent.
+  variant: "plain",
   number: [03],
   accent: section-accent,
 )
