@@ -102,7 +102,13 @@
     "pause-list-markers.typ",
     "list-timed-twin.typ",
     "replace-wrap.typ",
-    "speaker-notes-embed-text.typ"
+    "speaker-notes-embed-text.typ",
+    "components-transparent.typ",
+    "components-standalone.typ",
+    "layout-fields-steps.typ",
+    "drawing-hide-optional.typ",
+    "components-dimmed.typ",
+    "components-quote-native.typ"
   ],
   "layout": [
     "fit.typ",

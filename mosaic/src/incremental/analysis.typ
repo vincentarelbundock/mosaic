@@ -4,6 +4,7 @@
 #import "command.typ": is-command-on, is-temporal
 #import "../note/command.typ": is-note
 #import "pause.typ": has-pause, is-pause, pause-schedule
+#import "container.typ": is-container
 
 // Does this value hold a record matching `matching`, anywhere a content walk
 // can reach?
@@ -14,11 +15,12 @@
 #let has-record(value, matching: none) = {
   let recurse = has-record.with(matching: matching)
   if matching(value) { return true }
-  if is-command-on(value) { return recurse(value.body) }
+  if is-command-on(value) { return recurse(value.value.body) }
   if type(value) == array { return value.any(recurse) }
   if type(value) == dictionary { return value.values().any(recurse) }
   if type(value) != content { return false }
   if value.func() == metadata {
+    if is-container(value) { return recurse(value.value.parts) }
     return is-temporal(value) and recurse(value.value)
   }
   value.fields().values().any(recurse)
@@ -44,14 +46,18 @@
     return 0
   }
   if is-command-on(value) {
-    let nested = max-step(value.body)
+    let nested = max-step(value.value.body)
     if nested == 0 {
       return 0
     }
     return calc.max(
-      range-last(value.range),
+      range-last(value.value.range),
       nested,
     )
+  }
+  // A container is visible in its own right, and as deep as what it holds.
+  if is-container(value) {
+    return calc.max(1, max-step(value.value.parts.values()))
   }
   if type(value) == array {
     return array-max(value.map(max-step))

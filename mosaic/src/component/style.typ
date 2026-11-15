@@ -3,6 +3,7 @@
 #import "../shared.typ": fail, validate-dictionary
 #import "../deck-state.typ": deck-settings, inverted-slide-colors
 #import "../palettes.typ": light
+#import "../incremental/core.typ": dim-paint
 
 // The role names a component's `role` argument accepts. Every name but
 // `neutral` is a key in the deck palette, so a role is one color the deck
@@ -84,6 +85,55 @@
   )
 }
 
+// Whether the component is being drawn dimmed. `steps.on(.., before:
+// "dimmed")` dims by setting the ink to `dim-paint`, which is all a set rule
+// can do: it reaches text and nothing a component paints. So a component
+// reads that ink in its own context and mutes its paint to match. Call inside
+// `context`.
+#let is-dimmed() = text.fill == dim-paint
+
+// A paint with its color taken out and most of its strength with it, which is
+// what "dimmed" means for a fill or a rule: still there, no longer speaking.
+// Only a plain color can be muted this way; a gradient or tiling is left as
+// written.
+#let mute-paint(paint) = if type(paint) == color {
+  paint.desaturate(100%).transparentize(60%)
+} else {
+  paint
+}
+
+#let mute-stroke(value) = if type(value) == dictionary {
+  let muted = (:)
+  for (side, part) in value {
+    muted.insert(side, mute-stroke(part))
+  }
+  muted
+} else if value == none or value == auto {
+  value
+} else {
+  let resolved = stroke(value)
+  // `stroke` reports an unset field as `auto`, which its constructor takes
+  // back, so every field is carried across.
+  stroke(
+    paint: if resolved.paint == auto { auto } else { mute-paint(resolved.paint) },
+    thickness: resolved.thickness,
+    cap: resolved.cap,
+    join: resolved.join,
+    dash: resolved.dash,
+    miter-limit: resolved.miter-limit,
+  )
+}
+
+// A resolved style as a dimmed component draws it. The text takes the dim
+// ink itself, because the role's text color would otherwise restate the fill
+// the dimming set.
+#let mute-style(style) = style + (
+  fill: mute-paint(style.fill),
+  accent: mute-paint(style.accent),
+  stroke: mute-stroke(style.stroke),
+  text: style.text + (fill: dim-paint),
+)
+
 // Resolves a component's paint and geometry from its role plus the flat
 // overrides its caller was given. `auto` on any argument means "take it from
 // the role", which is resolved here and never stored, so no sentinel escapes
@@ -119,7 +169,7 @@
   } else {
     base.stroke
   }
-  (
+  let style = (
     fill: if fill == auto { base.fill } else { fill },
     accent: accent,
     stroke: stroke,
@@ -130,6 +180,7 @@
     // role's text color.
     text: (fill: colors.text) + text,
   )
+  if is-dimmed() { mute-style(style) } else { style }
 }
 
 #let styled-body(style, body) = {

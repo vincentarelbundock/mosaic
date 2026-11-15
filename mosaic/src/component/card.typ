@@ -1,5 +1,45 @@
 // Clipped, semantically styled block used as the base of other components.
 #import "style.typ": resolve-style, styled-body
+#import "../incremental/container.typ": make-container
+
+// The panel itself, around a body that is already final. `card` and the
+// components built on it (`callout`, `quote`) draw through this, so each of
+// them is one container to the incremental walks rather than a card inside
+// another.
+#let card-panel(
+  body,
+  role: "neutral",
+  fill: auto,
+  accent: auto,
+  stroke: auto,
+  radius: auto,
+  inset: auto,
+  align: auto,
+  text: (:),
+  width: auto,
+  height: auto,
+) = context {
+  let it = resolve-style(
+    role: role,
+    fill: fill,
+    accent: accent,
+    stroke: stroke,
+    radius: radius,
+    inset: inset,
+    align: align,
+    text: text,
+  )
+  block(
+    width: width,
+    height: height,
+    fill: it.fill,
+    stroke: it.stroke,
+    radius: it.radius,
+    inset: it.inset,
+    clip: true,
+    styled-body(it, body),
+  )
+}
 
 /// Wraps content in a clipped, semantically styled block.
 ///
@@ -44,6 +84,25 @@
 /// )[Quiet panel]
 /// ```
 ///
+/// *Steps, pauses, and notes*
+///
+/// A component is transparent to Mosaic's own commands: `steps.pause`,
+/// `steps.on`, `steps.reveal`, `steps.replace`, and `note` work in its body as
+/// they do in the slide around it. The same holds for every component that
+/// takes content, including a callout's title and a quotation's attribution.
+///
+/// ```typ
+/// #mosaic.components.card[
+///   The premise.
+///   #mosaic.steps.pause
+///   The consequence.
+/// ]
+/// ```
+///
+/// A component dimmed by `steps.on(.., before: "dimmed")` mutes its own paint
+/// along with its text: fill, border, and rail lose their color and most of
+/// their strength.
+///
 /// -> content
 #let card(
   /// Content inside the card.
@@ -79,25 +138,16 @@
   /// Native block height. `auto` hugs the content.
   /// -> auto | length | relative | fraction
   height: auto,
-) = context {
-  let it = resolve-style(
-    role: role,
-    fill: fill,
-    accent: accent,
-    stroke: stroke,
-    radius: radius,
-    inset: inset,
-    align: align,
-    text: text,
-  )
-  block(
-    width: width,
-    height: height,
-    fill: it.fill,
-    stroke: it.stroke,
-    radius: it.radius,
-    inset: it.inset,
-    clip: true,
-    styled-body(it, body),
-  )
-}
+) = make-container((body: body), render: parts => card-panel(
+  parts.body,
+  role: role,
+  fill: fill,
+  accent: accent,
+  stroke: stroke,
+  radius: radius,
+  inset: inset,
+  align: align,
+  text: text,
+  width: width,
+  height: height,
+))

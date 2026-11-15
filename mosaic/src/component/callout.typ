@@ -1,6 +1,7 @@
 // Card-based callout with a semantic side stripe.
 #import "style.typ": resolve-style, component-tokens
-#import "card.typ": card
+#import "card.typ": card-panel
+#import "../incremental/container.typ": make-container
 
 /// Creates a callout with a semantic side stripe.
 ///
@@ -78,7 +79,7 @@
   /// to one edge; `auto` hugs the content the way `card` does.
   /// -> auto | length | relative
   width: 100%,
-) = context {
+) = make-container((body: body, title: title), render: parts => context {
   let it = resolve-style(
     role: role,
     fill: fill,
@@ -100,13 +101,13 @@
   } else {
     it.accent
   }
-  card(
+  card-panel(
     [
-      #if title != none {
-        std.text(weight: "bold", fill: title-fill)[#title]
+      #if parts.title != none {
+        std.text(weight: "bold", fill: title-fill)[#parts.title]
         parbreak()
       }
-      #body
+      #parts.body
     ],
     role: role,
     fill: it.fill,
@@ -118,4 +119,4 @@
     text: it.text,
     width: width,
   )
-}
+})

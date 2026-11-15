@@ -52,6 +52,9 @@ NOTE-FREE SLIDE BODY
     "[SECOND REVEAL NOTE]",
     "[GENERAL NOTE TWO]",
     "[SECOND FRAME NOTE]",
+    // Tied to step 5 of a two-step slide: it adds no frame, and rather than
+    // being dropped it is shown on the last one.
+    "[LATE NOTE MUST NOT CREATE A FRAME]",
   ))
   assert(records.at(2).notes.map(repr) == (repr([AUTOMATIC SLIDE NOTE]),))
   assert(records.at(3).notes == ())

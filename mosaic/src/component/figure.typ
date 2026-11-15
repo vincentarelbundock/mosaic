@@ -3,6 +3,7 @@
 #import "../caption-fit.typ": captioned-image
 #import "../fit.typ": fit as fit-block
 #import "image.typ": image as picture
+#import "../incremental/container.typ": make-container
 
 #let _native-figure = figure
 
@@ -142,57 +143,72 @@
     }
   }
 
-  let resize = if is-image {
-    (height, width) => picture(
-      body,
-      width: width,
-      height: height,
-      fit: fit,
-      scrim: scrim,
-      ..native,
-    )
-  } else {
-    (height, width) => if height == auto {
-      // The body as it stands, which is what the caption's measurement is taken
-      // out of.
-      body
-    } else {
-      // Scaled as a whole rather than offered a narrower width: a table given
-      // less room rearranges its columns, which changes the composition instead
-      // of its size. `grow` stays off, since a table magnified past its natural
-      // size is a worse table.
-      fit-block(
+  // The body of a picture is a source, not content, and holds nothing a walk
+  // could step through; a content body and a caption are the author's own and
+  // are parts like any other component's.
+  let draw(body, caption) = {
+    let resize = if is-image {
+      (height, width) => picture(
         body,
         width: width,
         height: height,
-        wrap: false,
-        grow: false,
+        fit: fit,
+        scrim: scrim,
+        ..native,
+      )
+    } else {
+      (height, width) => if height == auto {
+        // The body as it stands, which is what the caption's measurement is taken
+        // out of.
+        body
+      } else {
+        // Scaled as a whole rather than offered a narrower width: a table given
+        // less room rearranges its columns, which changes the composition instead
+        // of its size. `grow` stays off, since a table magnified past its natural
+        // size is a worse table.
+        fit-block(
+          body,
+          width: width,
+          height: height,
+          wrap: false,
+          grow: false,
+        )
+      }
+    }
+
+    // A figure given the cell's height owns the cell, so it centers in it. One
+    // given an explicit height is sharing the cell with something else, and a
+    // vertical alignment there would claim room it was not given and push that
+    // content around: it takes the height it asked for and no more.
+    let place = align.with(if height == auto { center + horizon } else { center })
+
+    if caption == none {
+      return place(resize(if height == auto { 100% } else { height }, width))
+    }
+
+    let figure-args = if is-image { (:) } else { native.named() }
+    if height == auto {
+      // A picture stretches to the cell, so pinning its caption to the foot gives
+      // two figures in adjacent cells one caption baseline however their aspect
+      // ratios differ. Content keeps its own height, so its caption stays with it.
+      return captioned-image(
+        resize,
+        caption,
+        width: width,
+        pin: is-image,
+        figure-args: figure-args,
       )
     }
+    place(_native-figure(resize(height, width), caption: caption, ..figure-args))
   }
-
-  // A figure given the cell's height owns the cell, so it centers in it. One
-  // given an explicit height is sharing the cell with something else, and a
-  // vertical alignment there would claim room it was not given and push that
-  // content around: it takes the height it asked for and no more.
-  let place = align.with(if height == auto { center + horizon } else { center })
-
-  if caption == none {
-    return place(resize(if height == auto { 100% } else { height }, width))
+  if is-image and caption == none {
+    return draw(body, caption)
   }
-
-  let figure-args = if is-image { (:) } else { native.named() }
-  if height == auto {
-    // A picture stretches to the cell, so pinning its caption to the foot gives
-    // two figures in adjacent cells one caption baseline however their aspect
-    // ratios differ. Content keeps its own height, so its caption stays with it.
-    return captioned-image(
-      resize,
-      caption,
-      width: width,
-      pin: is-image,
-      figure-args: figure-args,
-    )
-  }
-  place(_native-figure(resize(height, width), caption: caption, ..figure-args))
+  make-container(
+    (body: if is-image { none } else { body }, caption: caption),
+    render: parts => draw(
+      if is-image { body } else { parts.body },
+      parts.caption,
+    ),
+  )
 }
