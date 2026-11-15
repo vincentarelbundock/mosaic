@@ -26,7 +26,7 @@ Notable changes to Mosaic. The development version in `mosaic/typst.toml` moves 
 
 - A partial `spacing:` or `notes:` keeps the theme's other values: `setup(spacing: (gap: ..))` under editorial no longer resets its wider `inset`.
 - Steps, pauses, and notes work inside tables, term lists, shapes, transforms, `columns`, and math.
-- A list timed with `pause` or `on` is drawn like a revealed one, with the deck's own marker, numbering, spacing, and indents.
+- A list timed with `pause`, `on`, or `reveal` keeps the exact position and shape of the same list untimed, with the deck's own marker, numbering, spacing, and indents.
 - A long title shrinks to fit instead of overprinting the byline.
 - `fit` validates its arguments, resolves relative sizes such as `50% + 1cm`, and offers prose a wider measure before scaling it, so fitted text fills its cell's width.
 - A theme's text takes the palette's `text` color before `apply` runs, so a theme only states what it overrides.
