@@ -9,7 +9,7 @@
 #set enum(numbering: "a)")
 
 // Three pages: a pause between items.
-#m.slide[
+#m.slide[][
   - PAUSE-ONE
   #m.steps.pause
   - PAUSE-TWO
@@ -19,14 +19,14 @@
 ]
 
 // Two pages: `on` around an item joins the surrounding list.
-#m.slide[
+#m.slide[][
   + ON-ONE
   #m.steps.on("2-")[+ ON-TWO]
   + ON-THREE
 ]
 
 // Two pages: `reveal` takes the same marker and numbering.
-#m.slide[
+#m.slide[][
   #m.steps.reveal[
     + REVEAL-ONE
     + REVEAL-TWO
@@ -34,7 +34,7 @@
 ]
 
 // One page: an untimed list stays native.
-#m.slide[
+#m.slide[][
   - NATIVE-ONE
   - NATIVE-TWO
 ]

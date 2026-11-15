@@ -8,7 +8,7 @@
 #set math.equation(numbering: "(1)")
 #show <label-styled>: set text(fill: red)
 
-#m.slide[
+#m.slide[][
   #block[LABEL STYLED] <label-styled>
   #figure(rect(), caption: [LABEL CAPTION]) <label-figure>
   $ x = 1 $ <label-equation>

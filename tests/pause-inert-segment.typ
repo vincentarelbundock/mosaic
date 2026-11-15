@@ -4,7 +4,7 @@
 
 #show: m.setup
 
-#m.slide[
+#m.slide[][
   INERT FIRST
   #m.steps.pause
   #v(1em)

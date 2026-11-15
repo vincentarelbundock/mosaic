@@ -20,7 +20,7 @@
 
 // An unnumbered slide before every section: the counts are the deck's finals,
 // the section number is zero, and the slide has no number of its own.
-#mosaic.slide(numbered: false)[
+#mosaic.slide(numbered: false)[][
   #context {
     let info = mosaic.info()
     assert(info.keys().sorted() == fields)
@@ -48,7 +48,7 @@
 )[Methods]
 
 // An ordinary slide holds the section it is in and takes the next number.
-#mosaic.slide[
+#mosaic.slide[][
   #context {
     let info = mosaic.info()
     assert(info.slide == (number: 1, total: 2, numbered: true))
@@ -60,7 +60,7 @@
 
 // Incremental frames are one logical slide, so the number does not advance
 // with the reveal.
-#mosaic.slide[
+#mosaic.slide[][
   #mosaic.steps.reveal[One][Two]
   #context {
     let info = mosaic.info()
@@ -72,7 +72,7 @@
 // The same numbers the progress component prints, which reads the same
 // position records. This slide is unnumbered after two numbered ones, so it
 // reports no number rather than the previous slide's.
-#mosaic.slide(numbered: false)[
+#mosaic.slide(numbered: false)[][
   #context assert(
     mosaic.info().slide == (number: none, total: 2, numbered: false),
   )

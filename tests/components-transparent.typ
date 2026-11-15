@@ -8,7 +8,7 @@
 
 // Three pages: a pause in a card, and a step in a card nested inside it. The
 // nested step is counted from the pause, as any step after a pause is.
-#m.slide[
+#m.slide[][
   #m.components.card[
     CARDFIRST #m.note[CARD NOTE]
     #m.steps.pause
@@ -18,7 +18,7 @@
 ]
 
 // Three pages: a step in a callout's title, a revealed list in its body.
-#m.slide[
+#m.slide[][
   #m.components.callout(title: [TITLEFIRST #m.steps.on(2)[TITLESECOND]])[
     #m.steps.reveal[
       - REVEALONE
@@ -30,7 +30,7 @@
 
 // Two pages: a quotation in a native table cell, with a note in its
 // attribution; a badge; a divider's title.
-#m.slide[
+#m.slide[][
   #table(
     columns: 1,
     m.components.quote(attribution: [QUOTEWHO #m.note[QUOTE NOTE]])[
@@ -42,7 +42,7 @@
 ]
 
 // Two pages: a figure's content body and its caption.
-#m.slide[
+#m.slide[][
   #m.components.figure(
     rect[FIGUREFIRST #m.steps.on(2)[FIGURESECOND]],
     caption: [CAPTIONFIRST #m.steps.on(2)[CAPTIONSECOND]],

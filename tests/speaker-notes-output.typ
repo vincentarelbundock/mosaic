@@ -3,7 +3,7 @@
 #let output = sys.inputs.at("output", default: "slides")
 #show: m.setup.with(output: output)
 
-#m.slide[
+#m.slide[][
   // The probe reads the weight the note body actually renders at. The frame
   // heading's label sets bold, and a label on a bare sequence used to carry
   // that bold into every printed output but `speaker`.

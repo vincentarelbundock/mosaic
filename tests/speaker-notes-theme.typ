@@ -3,7 +3,7 @@
 
 #show: m.setup.with(output: "speaker")
 
-#m.slide[
+#m.slide[][
   #m.note[THEMED SPEAKER NOTE]
   == Themed speaker slide
 ]

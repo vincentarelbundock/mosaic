@@ -4,7 +4,7 @@
 
 #show: m.setup
 
-#m.slide[
+#m.slide[][
   VISIBLE DRAWING FRAME
   #m.steps.drawing(
     render: renderer,

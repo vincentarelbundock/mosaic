@@ -2,9 +2,9 @@
 
 #show: mosaic.setup.with(overflow: "record")
 
-#mosaic.slide[Normal content fits.]
+#mosaic.slide[][Normal content fits.]
 
-#mosaic.slide[
+#mosaic.slide[][
   #mosaic.steps.reveal[
     #lorem(180)
   ][

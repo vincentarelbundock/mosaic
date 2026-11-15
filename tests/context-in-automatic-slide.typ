@@ -13,7 +13,7 @@
 
 Before #context [CONTEXT-ONE] after.
 
-#mosaic.slide[Explicit #context [CONTEXT-TWO]]
+#mosaic.slide[][Explicit #context [CONTEXT-TWO]]
 
 == Second
 

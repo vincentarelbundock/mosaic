@@ -19,7 +19,7 @@
 
 = Offset section
 
-#mosaic.slide[
+#mosaic.slide[][
   = In-body section heading #probe("section-size")
 ]
 

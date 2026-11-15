@@ -2,9 +2,9 @@
 
 #show: m.setup
 
-#m.slide(numbered: false)[#m.note[FIRST UNNUMBERED NOTE] FIRST]
-#m.slide(numbered: false)[#m.note[SECOND UNNUMBERED NOTE] SECOND]
-#m.slide[#m.note[NUMBERED NOTE] THIRD]
+#m.slide(numbered: false)[][#m.note[FIRST UNNUMBERED NOTE] FIRST]
+#m.slide(numbered: false)[][#m.note[SECOND UNNUMBERED NOTE] SECOND]
+#m.slide[][#m.note[NUMBERED NOTE] THIRD]
 
 #context {
   let records = query(<mosaic-speaker-notes>).map(it => it.value)

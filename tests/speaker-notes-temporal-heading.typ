@@ -7,7 +7,7 @@
 #show: mosaic.setup.with(spacing: (inset: 5pt))
 #set text(size: 7pt)
 
-#mosaic.slide[
+#mosaic.slide[][
   == Stable
   #mosaic.steps.on(2)[LATE CONTENT #mosaic.note[== NOTE HEADING]]
 ]

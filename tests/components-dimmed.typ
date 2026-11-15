@@ -12,7 +12,7 @@
 #let nested = (fill: rgb("#1100ff"), accent: rgb("#ff00ee"))
 
 // Two pages: dimmed, then lit.
-#m.slide[
+#m.slide[][
   #m.steps.on(2, before: "dimmed")[
     #m.components.card(..loud)[
       DIMMED CARD
@@ -27,14 +27,14 @@
 ]
 
 // One page: the dim ink written by hand is text color and nothing else.
-#m.slide[
+#m.slide[][
   #text(fill: gray)[
     #m.components.card(..loud)[GRAY TEXT, LIT CARD]
   ]
 ]
 
 // Two pages: a revealed item dimmed once the build moves on.
-#m.slide[
+#m.slide[][
   #m.steps.reveal(after: "dimmed")[
     - #m.components.badge(..loud)[FIRST ITEM]
     - Second item

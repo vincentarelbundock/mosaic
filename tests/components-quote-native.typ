@@ -6,7 +6,7 @@
 #show: m.setup
 #show quote: set text(style: "italic")
 
-#m.slide[
+#m.slide[][
   // The default: a block panel with no quotation marks.
   #m.components.quote(attribution: [PANELWHO], source: [PANELSOURCE])[PANELQUOTE]
 

@@ -20,4 +20,4 @@
 #mosaic.slide(layout: "title", variant: "academic")
 #mosaic.slide(layout: "section", number: [07])[Overlaid section]
 // `layout: auto` overlays onto the configured content layout.
-#mosaic.slide(columns: 2)[Left column][Right column]
+#mosaic.slide(columns: 2)[][Left column][Right column]

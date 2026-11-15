@@ -2,6 +2,6 @@
 
 #show: m.setup
 
-#m.slide[
+#m.slide[][
   Said #m.components.quote(block: false, source: [Notes])[inline].
 ]

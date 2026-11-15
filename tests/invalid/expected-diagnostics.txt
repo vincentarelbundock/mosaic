@@ -123,7 +123,7 @@ temporal-heading|headings cannot be wrapped in on, reveal, replace, or drawing; 
 theme-definition-option-conflict|theme option "paper" conflicts with setup
 theme-definition-unknown|theme does not accept "mystery"
 theme-layouts-incomplete|theme layouts requires "title"
-too-many|slide received 3 positional bodies; this layout takes 1 ("body") or 2 ("header", "body"); or fill its cells by name through cells:
+too-many|slide received 3 positional bodies, but this layout has 2 cells to fill: "header", "body"
 slide-body-type|slide positional bodies must be content, received integer
 cell-inset-type|cell inset must be auto, a length, or a dictionary of sides with length values
 cell-inset-side|cell inset must be auto, a length, or a dictionary of sides with length values
@@ -164,7 +164,7 @@ headings-policy-role|setup headings level 2 must be "section", "slide", or none
 slide-without-setup|slide requires a deck; apply setup with a show rule, such as `#show: mosaic.setup`, before the first slide
 layouts-title-image-background-tracks|layout "title" tracks apply only to directional image variants
 layouts-title-auto-missing|layout "title" requires title content through title: or setup(title: ..); pass title: none to compose the slide without one
-slide-bodies-defaulted|slide received 4 positional bodies; this layout takes 2 ("body-1", "body-2") or 3 ("header", "body-1", "body-2"); fill other cells such as "footer" by name through cells:
+slide-bodies-defaulted|slide received 5 positional bodies, but this layout has 4 cells to fill: "header", "body-1", "body-2", "footer"
 note-in-context|note cannot be used inside a context block, a layout callback, or show-rule output
 steps-command-in-markup|steps.on and steps.reveal take a body that is not content only as a drawing command inside steps.drawing
 drawing-hide-needed|a hidden drawing command needs hide: on steps.drawing
@@ -179,7 +179,5 @@ slide-title-image-variant-removed|layout "title" variant "image" was removed; wr
 layouts-image-scrim-type|layout "image" image scrim must be a color, gradient, or tiling
 layouts-title-image-path|image path must be a native path; write path("cover.webp")
 layouts-title-image-size|image does not accept "width"
-slide-bodies-too-few|slide received 1 positional body; this layout takes 2 ("body-1", "body-2") or 3 ("header", "body-1", "body-2"); or fill its cells by name through cells:
-slide-bodies-footer|slide received 3 positional bodies; this layout takes 1 ("body") or 2 ("header", "body"); fill other cells such as "footer" by name through cells:
-slide-bodies-columns-many|slide received 4 positional bodies; this layout takes 2 ("body-1", "body-2") or 3 ("header", "body-1", "body-2"); or fill its cells by name through cells:
-slide-bodies-named-footer|slide received 3 positional bodies; the cells not named in cells: take 1 ("body") or 2 ("header", "body"); or name more of them in cells:
+slide-bodies-columns-many|slide received 4 positional bodies, but this layout has 3 cells to fill: "header", "body-1", "body-2"
+slide-bodies-named-footer|slide received 3 positional bodies, but this layout has 2 cells not named in cells: to fill: "header", "body"

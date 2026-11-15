@@ -1,3 +1,3 @@
 #import "@local/mosaic:0.0.3" as m
 #show: m.setup.with(cells: [not a dictionary])
-#m.slide[Invalid setup content]
+#m.slide[][Invalid setup content]

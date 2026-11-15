@@ -22,22 +22,22 @@
   native-state.update(value => value + 1)
 }
 
-#mosaic.slide[
+#mosaic.slide[][
   #tick
   #mosaic.steps.replace([REPLACE FIRST], [REPLACE FINAL])
   HANDOUT FINAL FRAME
 ]
 
-#mosaic.slide[
+#mosaic.slide[][
   #mosaic.steps.reveal[REVEAL FIRST][REVEAL FINAL]
 ]
 
-#mosaic.slide[
+#mosaic.slide[][
   ON BASE
   #mosaic.steps.on(2, before: "removed")[ON FINAL]
 ]
 
-#mosaic.slide[
+#mosaic.slide[][
   #command-list((
     [REDUCER BASE],
     mosaic.steps.on(2, [REDUCER FINAL]),
@@ -53,9 +53,9 @@
     [#move(dx: 500pt, dy: 20pt)[FOREGROUND FIRST]],
     [#move(dx: 500pt, dy: 20pt)[FOREGROUND FINAL]],
   ),
-)[#align(center + horizon)[PLANE BODY]]
+)[][#align(center + horizon)[PLANE BODY]]
 
-#mosaic.slide[
+#mosaic.slide[][
   STATIC FINAL: frozen #context frozen-counter.get().first()/#context frozen-state.get(); native #context native-counter.get().first()/#context native-state.get().
 ]
 

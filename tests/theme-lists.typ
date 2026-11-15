@@ -23,7 +23,7 @@
 }
 
 // Every spelling of an enum compiles and keeps its numbering.
-#mosaic.slide[
+#mosaic.slide[][
   + PLUS ONE
   + PLUS TWO
 
@@ -39,14 +39,14 @@
 
 // A list nested in a tight list, in a wide list, and in an enum sits at the
 // item rhythm, not at the paragraph spacing.
-#mosaic.slide[
+#mosaic.slide[][
   - #mark("tight-a") a
   - #mark("tight-b") b
     - #mark("tight-n1") n1
     - #mark("tight-n2") n2
   - #mark("tight-c") c
 ]
-#mosaic.slide[
+#mosaic.slide[][
   - #mark("wide-a") a
 
   - #mark("wide-b") b
@@ -55,7 +55,7 @@
 
   - #mark("wide-c") c
 ]
-#mosaic.slide[
+#mosaic.slide[][
   + #mark("enum-a") a
   + #mark("enum-b") b
     - #mark("enum-n1") n1
@@ -65,7 +65,7 @@
 // A deck that changes the item spacing keeps the rhythm even.
 #[
   #set list(spacing: 2em)
-  #mosaic.slide[
+  #mosaic.slide[][
     - #mark("user-a") a
     - #mark("user-b") b
       - #mark("user-n1") n1

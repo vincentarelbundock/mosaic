@@ -16,4 +16,4 @@
 #assert(mosaic.components == default-theme.components)
 
 #show: default-theme.setup
-#default-theme.slide[DEFAULT FACADE]
+#default-theme.slide[][DEFAULT FACADE]

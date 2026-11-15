@@ -2,4 +2,4 @@
 
 #show: mosaic.setup
 
-#block[#mosaic.slide[A slide wrapped in a container]]
+#block[#mosaic.slide[][A slide wrapped in a container]]

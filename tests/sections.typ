@@ -8,11 +8,11 @@
 )
 #set text(size: 9pt)
 
-#mosaic.slide(numbered: false)[
+#mosaic.slide(numbered: false)[][
   = Alpha <alpha>
 ]
 
-#mosaic.slide[
+#mosaic.slide[][
   == Alpha slide <alpha-slide>
 
   #mosaic.steps.reveal[First][Second][Third]
@@ -20,7 +20,7 @@
   === Detail <alpha-detail>
 ]
 
-#mosaic.slide(numbered: false)[
+#mosaic.slide(numbered: false)[][
   #heading(
     depth: 1,
     outlined: false,
@@ -28,13 +28,13 @@
   )[Beta]
 ]
 
-#mosaic.slide[
+#mosaic.slide[][
   == Beta slide
 
   #mosaic.steps.replace[Before][After]
 ]
 
-#mosaic.slide[
+#mosaic.slide[][
   == Nested container
 
   #grid[

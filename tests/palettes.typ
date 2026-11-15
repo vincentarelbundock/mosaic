@@ -37,7 +37,7 @@
   ]
 ]
 
-#slide(invert: true)[
+#slide(invert: true)[][
   One inverted slide keeps the accent and status colors while the ground
   swaps to the palette's text color.
 ]

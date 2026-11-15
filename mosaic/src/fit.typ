@@ -241,8 +241,7 @@
 /// region.
 ///
 /// ```typ
-/// #mosaic.slide[
-///   == A long argument
+/// #mosaic.slide[== A long argument][
 ///   #mosaic.fit(generated-list)
 /// ]
 /// ```

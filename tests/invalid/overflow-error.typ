@@ -5,5 +5,5 @@
 // author can navigate to. Slide 2 is the offender here, not slide 1.
 #show: mosaic.setup.with(overflow: "error")
 
-#mosaic.slide[Fits.]
-#mosaic.slide[#lorem(200)]
+#mosaic.slide[][Fits.]
+#mosaic.slide[][#lorem(200)]

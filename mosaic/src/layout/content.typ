@@ -55,13 +55,11 @@
 /// - `body`, or `body-1`, `body-2`, and so on when `columns` is above one.
 /// - `footer`, when the variant includes one.
 ///
-/// The surrounding `mosaic.slide` fills them in that order by counting its
-/// positional bodies. The footer is never filled positionally; it is reached
-/// by name, through `cells: (footer: ..)` on the slide or deck-wide through
-/// `setup(cells: (footer: ..))`. The header always has a deck default, so a
-/// slide gives either one body per body column, or one more than that, which
-/// fills the header first. Any other count is an error. Use `cells:` on the
-/// slide to reach a cell by name instead.
+/// The surrounding `mosaic.slide` fills them in that order, one positional
+/// body per cell starting with the header. Cells left without a body keep
+/// their deck default, so a deck-wide `setup(cells: (footer: ..))` shows on
+/// every slide that stops before the footer. Use `cells:` on the slide to
+/// reach a cell by name instead.
 ///
 /// *Variants*
 ///

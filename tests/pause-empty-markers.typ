@@ -2,7 +2,7 @@
 
 #show: m.setup
 
-#m.slide[
+#m.slide[][
   #m.steps.pause
   #m.steps.pause
   EMPTY MARKER VISUAL
