@@ -1,5 +1,8 @@
 // Stable extension surface for engine-consumed theme definitions.
 #import "engine.typ": theme-setup as _theme-setup, validate-theme as _validate-theme
+// The one rule a theme cannot state natively: a heading rule that rebuilds the
+// heading has to be declared through this to hold on every frame of a slide.
+#import "../incremental/heading.typ": decorate-heading
 
 /// Turns a passive theme definition into a setup function.
 ///

@@ -61,7 +61,15 @@
   value.kind
 }
 
-#let is-command-on(value) = record-kind(value, ("command-on",)) != none
+// A drawing command under `on`: the same record as `temporal-on`, with a body
+// that is not content. It is metadata rather than a bare dictionary so that,
+// written outside `steps.drawing`, it is content the frame can refuse instead
+// of a dictionary Typst prints.
+#let is-command-on(value) = (
+  type(value) == content
+    and value.func() == metadata
+    and record-kind(value.value, ("command-on",)) != none
+)
 
 #let is-temporal(value, kind: none) = {
   if type(value) != content or value.func() != metadata {
@@ -99,7 +107,8 @@
 /// - `"hidden"`: the body reserves its space but is not drawn.
 /// - `"visible"`: the body is drawn normally.
 /// - `"dimmed"`: the body is drawn muted, which is how a point stays legible
-///   after the discussion has moved on.
+///   after the discussion has moved on. See *Dimming* below for what that
+///   reaches.
 /// - `"removed"`: the body is absent and gives up its space, so the content
 ///   around it moves.
 ///
@@ -123,15 +132,30 @@
 /// each item a marker of its own. It looks the same, but a `show list` rule of
 /// the deck does not match it on those frames; `show enum` does.
 ///
+/// *Dimming*
+///
+/// Dimming sets the ink of the body to gray, which is what a set rule can do:
+/// it reaches text. A Mosaic component in the body follows, muting its own
+/// fill, border, and rail, so a dimmed card is dimmed as a whole. A fill or a
+/// stroke written on a native element (`rect(fill: ..)`, a table's stroke)
+/// stays as written, because Typst has no way to fade a group of drawings;
+/// restate such paint for the dimmed steps if it matters.
+///
 /// *Where it works*
 ///
 /// Mosaic resolves steps by walking the slide's content, rebuilding each
-/// element around what this frame shows. It can do that for ordinary markup
-/// and for the native containers a slide is made of: blocks and boxes, lists,
-/// tables and grids, figures, shapes, transforms, columns, and math. It cannot
-/// look inside a `context` block, a `layout` callback, or the output of a show
-/// rule, nor rebuild an element it does not know. A step, `pause`, or `note`
-/// placed there fails the compile rather than vanishing; move it outside.
+/// element around what this frame shows. It can do that for ordinary markup,
+/// for the native containers a slide is made of (blocks and boxes, lists,
+/// tables and grids, figures, shapes, transforms, columns, and math), and for
+/// everything Mosaic itself provides: the body, title, attribution, and
+/// caption of a component, and a layout's content fields, such as a section
+/// tagline or a title slide's subtitle. It cannot look inside a `context`
+/// block, a `layout` callback, or the output of a show rule, nor rebuild an
+/// element it does not know. A step, `pause`, or `note` placed there fails the
+/// compile rather than vanishing; move it outside.
+///
+/// A body that is not content is a drawing command, and has meaning only
+/// inside `steps.drawing`. Written anywhere else it is an error.
 ///
 /// -> content | dictionary
 #let on(
@@ -173,9 +197,8 @@
       body: body,
     )
   } else {
-    (
-      mosaic: tag,
-      kind: "command-on",
+    make-record(
+      "command-on",
       range: range,
       before: before,
       after: after,
@@ -429,8 +452,9 @@
 /// or `reveal`, alone or as an array. Named arguments are forwarded untouched to
 /// `render`, which is how `spacing:` above reaches `fletcher.diagram`.
 ///
-/// `render` and `hide` are both required; `none` is only the placeholder that
-/// `drawing.with(..)` fills in.
+/// `render` is required; `none` is only the placeholder that
+/// `drawing.with(..)` fills in. `hide` and `dim` are needed only by a drawing
+/// that asks for the state each one draws.
 ///
 /// -> content
 #let drawing(
@@ -441,8 +465,10 @@
   render: none,
   /// Turns one command into its invisible counterpart, so it still reserves
   /// space and the drawing does not shift between frames. Usually the library's
-  /// own `hide`. Required, even when no command is ever hidden.
-  /// -> function
+  /// own `hide`. Required only if some step range leaves a command
+  /// `"hidden"`, which is the default before and after a range; a drawing whose
+  /// commands are all `"removed"` outside their range needs none.
+  /// -> function | none
   hide: none,
   /// Turns one command into its muted counterpart. Required only if some step
   /// range uses the `"dimmed"` state; omitting it makes that an error.
@@ -456,8 +482,8 @@
   if type(render) != function {
     fail("drawing render must be a function")
   }
-  if type(hide) != function {
-    fail("drawing hide must be a function")
+  if hide != none and type(hide) != function {
+    fail("drawing hide must be none or a function")
   }
   if dim != none and type(dim) != function {
     fail("drawing dim must be none or a function")

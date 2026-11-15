@@ -1,5 +1,6 @@
 // Speaker-note extraction for one physical incremental frame.
-#import "../incremental/core.typ": status
+#import "../incremental/core.typ": status, validate-range
+#import "../incremental/container.typ": is-container
 #import "../incremental/command.typ": (
   is-command-on,
   is-temporal,
@@ -26,11 +27,12 @@
 // temporal check, exactly as in `notes-at` below.
 #let has-note(value) = {
   if is-note(value) { return true }
-  if is-command-on(value) { return has-note(value.body) }
+  if is-command-on(value) { return has-note(value.value.body) }
   if type(value) == array { return value.any(has-note) }
   if type(value) == dictionary { return value.values().any(has-note) }
   if type(value) != content { return false }
   if value.func() == metadata {
+    if is-container(value) { return has-note(value.value.parts) }
     return is-temporal(value) and has-note(value.value)
   }
   value.fields().values().any(has-note)
@@ -46,7 +48,14 @@
   (node, children) => children.any(value => value),
 )
 
-#let notes-at(value, step) = {
+// The notes visible on one step.
+//
+// `last` is the slide's last step. A note never adds a frame, so a note tied
+// to a step the slide does not reach has no frame of its own; rather than
+// being dropped it is shown on the last one. That is the meaning of `late`
+// below: on the last step, a range that only begins after it is open.
+#let notes-at(value, step, last: none) = {
+  let late(start) = last != none and step == last and start > last
   let visit(value) = {
     if is-note(value) {
       return (value.value.body,)
@@ -54,10 +63,11 @@
     if is-pause(value) {
       return ()
     }
-    if is-command-on(value) {
-      let state = status(value.range, value.before, value.after, step)
-      if state == "visible" {
-        return visit(value.body)
+    if is-command-on(value) or is-temporal(value, kind: "temporal-on") {
+      let timed = value.value
+      let state = status(timed.range, timed.before, timed.after, step)
+      if state == "visible" or late(validate-range(timed.range).start) {
+        return visit(timed.body)
       }
       return ()
     }
@@ -70,19 +80,18 @@
     if type(value) != content {
       return ()
     }
+    if is-container(value) {
+      return visit(value.value.parts)
+    }
     if is-temporal(value) {
       let timed = value.value
-      if timed.kind == "temporal-on" {
-        let state = status(timed.range, timed.before, timed.after, step)
-        if state == "visible" {
-          return visit(timed.body)
-        }
-        return ()
-      }
       if timed.kind == "temporal-reveal" {
         let result = ()
         for slot in reveal-slots(timed.items).slots {
-          if slot-status(timed, slot, step) == "visible" {
+          if (
+            slot-status(timed, slot, step) == "visible"
+              or (slot.index != none and late(timed.start + slot.index))
+          ) {
             result += visit(slot.body)
           }
         }
@@ -90,10 +99,15 @@
       }
       if timed.kind == "temporal-replace" {
         let index = replace-index(timed, step)
-        if index == none {
-          return ()
+        let result = if index == none { () } else {
+          visit(timed.bodies.at(index))
         }
-        return visit(timed.bodies.at(index))
+        for (position, body) in timed.bodies.enumerate() {
+          if position != index and late(timed.start + position) {
+            result += visit(body)
+          }
+        }
+        return result
       }
       if timed.kind == "temporal-drawing" {
         return visit(timed.args)
@@ -105,7 +119,11 @@
         for segment in pause-schedule(value.children, max-step) {
           let local-step = step - segment.start + 1
           if local-step > 0 {
-            result += notes-at(segment.children, local-step)
+            result += notes-at(
+              segment.children,
+              local-step,
+              last: if last == none { none } else { last - segment.start + 1 },
+            )
           }
         }
         return result
@@ -119,11 +137,18 @@
   visit(value)
 }
 
-#let fixed-grid-notes-at(node, step) = fold-grid(
+#let fixed-grid-notes-at(node, step, last: none) = fold-grid(
   node,
-  cell => if cell.content == none { () } else { notes-at(cell.content, step) },
+  cell => if cell.content == none { () } else {
+    notes-at(cell.content, step, last: last)
+  },
   (node, child) => if (
     status(node.range, node.before, node.after, step) == "visible"
+      or (
+        last != none
+          and step == last
+          and validate-range(node.range).start > last
+      )
   ) { child } else { () },
   (node, children) => children.sum(default: ()),
 )

@@ -1,9 +1,11 @@
 // A transforming heading rule declared through `decorate-heading` is applied on
 // every frame, not only on the one that carries the real heading element. Two
 // rules nest in declaration order, the later one outermost, as native show
-// rules do.
+// rules do. The function is reached through the public theme-extension API,
+// `themes.decorate-heading`, which is how a deck or a custom theme spells it.
 #import "@local/mosaic:0.0.3" as m
-#import "../mosaic/src/incremental/heading.typ": decorate-heading
+
+#let decorate-heading = m.themes.decorate-heading
 
 #show: m.setup
 #show heading.where(level: 2): set text(fill: red)

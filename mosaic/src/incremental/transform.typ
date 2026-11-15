@@ -28,6 +28,7 @@
 #import "../note/command.typ": is-note
 #import "pause.typ": has-pause, is-pause, pause-schedule
 #import "analysis.typ": has-deferred-record, max-step
+#import "container.typ": is-container, is-stand-in, stand-in-label
 
 // The elements `transform` can rebuild around transformed content. An element
 // missing from this table is opaque: it is passed through untouched, and a
@@ -149,6 +150,16 @@
   if state == "visible" {
     command-array(body)
   } else if state == "hidden" {
+    // Only a drawing library knows how to make one of its commands invisible
+    // while it still takes its space, so `hide:` is needed exactly when a
+    // command is hidden, and not before.
+    if hide == none {
+      fail(
+        "a hidden drawing command needs hide: on steps.drawing, the "
+          + "library's function that makes a command invisible; or keep the "
+          + "command out of the frame with before: \"removed\"",
+      )
+    }
     command-array(hide(body))
   } else if state == "dimmed" {
     if dim == none {
@@ -163,9 +174,9 @@
 #let render-commands(values, step, hide: none, dim: none) = {
   let result = ()
   for value in command-array(values) {
-    let temporal = if is-command-on(value) {
-      value
-    } else if is-temporal(value, kind: "temporal-on") {
+    let temporal = if (
+      is-command-on(value) or is-temporal(value, kind: "temporal-on")
+    ) {
       value.value
     } else {
       none
@@ -365,45 +376,45 @@
   parts.sum(default: [])
 }
 
+// What a drawing command says when it is found outside a drawing.
+#let stray-command-message = (
+  "steps.on and steps.reveal take a body that is not content only as a "
+    + "drawing command inside steps.drawing; write text as content, "
+    + "on(2)[text], not as a string"
+)
+
 // The frame-level guard against records the walks never reached.
 //
 // `transform`, `max-step`, and `notes-at` find steps, pauses, and notes by
 // walking content. A record produced where no walk can look (inside a
-// `context` block, a `layout` callback, the output of a show rule, or a
-// component, which is built from the first two) is only discovered when Typst
-// realizes it, by which time the frame count is settled and the note list is
-// built. It would render as nothing, so the slide runtime installs this as a
-// `show metadata` rule on every frame and the loss becomes a diagnostic. A
-// slide command realized inside a frame is a nested slide.
+// `context` block, a `layout` callback, or the output of a show rule) is only
+// discovered when Typst realizes it, by which time the frame count is settled
+// and the note list is built. It would render as nothing, so the slide runtime
+// installs this as a `show metadata` rule on every frame and the loss becomes
+// a diagnostic. A slide command realized inside a frame is a nested slide, and
+// a drawing command realized as content was written outside a drawing.
 //
-// `collected-notes` are the note bodies the runtime already gathered for this
-// frame. A note in a layout field (a section tagline is the `subtitle` field)
-// is rendered inside a `context` block, where the walks cannot reach it, but
-// the runtime reads it from the field itself, so its record is expected here.
-#let validate-frame-metadata(it, collected-notes: ()) = {
+// A container record that reaches the page is not a loss: it sits beside its
+// own stand-in, which renders, and whatever its parts hold is realized inside
+// that stand-in and judged here in its turn.
+#let validate-frame-metadata(it) = {
   let value = it.value
   if type(value) != dictionary or value.at("mosaic", default: none) != tag {
     return it
   }
   let kind = value.at("kind", default: none)
   let opaque = (
-    " cannot be used inside a Mosaic component, a context block, a layout "
-      + "callback, or show-rule output, where the slide runtime cannot see "
-      + "it; move it outside"
+    " cannot be used inside a context block, a layout callback, or "
+      + "show-rule output, where the slide runtime cannot see "
   )
   if kind == "note" {
-    if value.body in collected-notes {
-      return it
-    }
-    fail("note" + opaque)
+    fail("note" + opaque + "it; move it outside")
   }
   if kind == "pause" or kind in temporal-kinds {
-    fail(
-      "pause and steps cannot be used inside a Mosaic component, a section "
-        + "tagline or other layout field, a context block, a layout "
-        + "callback, or show-rule output, where the slide runtime cannot see "
-        + "them; move them into a cell body",
-    )
+    fail("pause and steps" + opaque + "them; move them outside")
+  }
+  if kind == "command-on" {
+    fail(stray-command-message)
   }
   if kind == "slide" {
     fail("slide cannot be nested inside another slide or a container")
@@ -532,8 +543,38 @@
           state: state,
         )
       }
-      for child in body {
+      // The sibling after a container record is that container's stand-in,
+      // which the record's own drawing replaces. It is told by its label,
+      // the stand-in's or one the author put on the component.
+      let stand-in = none
+      for (index, child) in body.enumerate() {
+        if index == stand-in {
+          continue
+        }
         let func = if type(child) == content { child.func() } else { none }
+        if is-container(child) {
+          let drawn = go(child)
+          let next = body.at(index + 1, default: none)
+          let own = if type(next) == content {
+            next.at("label", default: none)
+          } else {
+            none
+          }
+          if own != none {
+            stand-in = index + 1
+            if own != stand-in-label {
+              drawn = [#drawn#own]
+            }
+          }
+          result.push((
+            kind: "content",
+            body: drawn,
+            blank: false,
+            hidden: false,
+            group: none,
+          ))
+          continue
+        }
         if func in (list.item, enum.item) {
           result.push(make-item(child, "visible"))
           continue
@@ -570,6 +611,21 @@
     }
     if is-pause(body) {
       return []
+    }
+    // A container is redrawn around its transformed parts, and the stand-in
+    // that follows its record gives way to that drawing.
+    if is-container(body) {
+      let parts = (:)
+      for (name, part) in body.value.parts {
+        parts.insert(name, go(part))
+      }
+      return (body.value.render)(parts)
+    }
+    if is-stand-in(body) {
+      return []
+    }
+    if is-command-on(body) {
+      fail(stray-command-message)
     }
     if body.func() == heading {
       if has-heading(body.body) {
@@ -630,28 +686,30 @@
           list.item,
           enum.item,
         ) {
-          return render-entries(
-            slots.map(slot => if slot.index == none {
-              (
-                kind: "content",
-                body: go(slot.body),
-                blank: is-blank(slot.body),
-                hidden: false,
-                group: none,
-              )
-            } else {
-              let fields = slot.body.fields()
-              (
-                kind: "item",
-                func: slot.body.func(),
-                number: fields.at("number", default: auto),
-                label: none,
-                body: inner-depth => visit(slot.body.body, depth: inner-depth),
-                state: slot-status(value, slot, step),
-              )
-            }),
-            depth: depth,
-          )
+          // Untimed siblings are walked a stretch at a time, as the siblings
+          // they are, so that a component among them is one container and
+          // not a record and a stand-in met separately.
+          let entries = ()
+          let untimed = ()
+          for slot in slots {
+            if slot.index == none {
+              untimed.push(slot.body)
+              continue
+            }
+            entries += visit(untimed, depth: depth, entries: true)
+            untimed = ()
+            let fields = slot.body.fields()
+            entries.push((
+              kind: "item",
+              func: slot.body.func(),
+              number: fields.at("number", default: auto),
+              label: none,
+              body: inner-depth => visit(slot.body.body, depth: inner-depth),
+              state: slot-status(value, slot, step),
+            ))
+          }
+          entries += visit(untimed, depth: depth, entries: true)
+          return render-entries(entries, depth: depth)
         }
         return slots.map(slot => if slot.index == none {
           go(slot.body)
@@ -699,10 +757,14 @@
       }
     }
     if body.func() == typst-sequence {
-      return render-entries(
+      let rebuilt = render-entries(
         visit(body.children, depth: depth, entries: true),
         depth: depth,
       )
+      // A label written after a function call lands on the sequence the call
+      // returned, which is how `#card[..] <mine>` labels a component.
+      let own = body.at("label", default: none)
+      return if own == none { rebuilt } else { [#rebuilt#own] }
     }
     if body.func() == typst-styled {
       return typst-styled(go(body.child), body.styles)

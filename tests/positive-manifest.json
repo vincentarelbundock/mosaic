@@ -105,7 +105,13 @@
     "speaker-notes-embed-text.typ",
     "theme-typography.typ",
     "slide-invert-raw-own.typ",
-    "slide-opening-heading.typ"
+    "slide-opening-heading.typ",
+    "components-transparent.typ",
+    "components-standalone.typ",
+    "layout-fields-steps.typ",
+    "drawing-hide-optional.typ",
+    "components-dimmed.typ",
+    "components-quote-native.typ"
   ],
   "layout": [
     "fit.typ",

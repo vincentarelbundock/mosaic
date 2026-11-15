@@ -33,14 +33,15 @@
 /// frames as the incremental content it belongs with, so the speaker view shows
 /// it beside the frame it describes.
 ///
-/// A note never adds a frame. Tied to a step the slide does not reach, such as
-/// `steps.on(3)` on a slide whose visible content ends at step 2, it is not
-/// shown at all, so tie a note to steps that visible content already creates.
+/// A note never adds a frame, and is never dropped. Tied to a step the slide
+/// does not reach, such as `steps.on(3)` on a slide whose visible content ends
+/// at step 2, it is shown on the slide's last frame.
 ///
-/// A note must sit where Mosaic can find it by walking the slide's content:
-/// in ordinary markup or a native container, not inside a component, a
-/// `context` block, a `layout` callback, or the output of a show rule. A note
-/// placed there fails the compile rather than being dropped.
+/// A note can be written anywhere Mosaic can find it by walking the slide's
+/// content: in ordinary markup, in a native container, in a component, or in
+/// a layout field such as a section tagline. It cannot be found inside a
+/// `context` block, a `layout` callback, or the output of a show rule, and a
+/// note placed there fails the compile rather than being dropped.
 ///
 /// -> content
 #let note(

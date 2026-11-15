@@ -1,7 +1,7 @@
 // Position indicator driven by the deck's logical slide and section counters.
 #import "../shared.typ": fail
 #import "../deck-state.typ": slide-position, section-position
-#import "style.typ": role-colors, component-tokens
+#import "style.typ": role-colors, component-tokens, is-dimmed, mute-paint
 
 /// Displays progress through logical slides or semantic sections in the deck.
 ///
@@ -139,6 +139,11 @@
   let colors = role-colors(role)
   let fill = if fill == auto { colors.fill } else { fill }
   let accent = if accent == auto { colors.accent } else { accent }
+  let (fill, accent) = if is-dimmed() {
+    (mute-paint(fill), mute-paint(accent))
+  } else {
+    (fill, accent)
+  }
   let width = if width == auto {
     if variant == "circle" { component-tokens.progress-size } else { 100% }
   } else {

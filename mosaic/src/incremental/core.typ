@@ -92,6 +92,12 @@
   }
 }
 
+// The ink of dimmed content. It is also how a component learns that it is
+// dimmed: a set rule reaches text and nothing else, so components read this
+// ink in their own context and mute their paint to match (see
+// `component/style.typ`).
+#let dim-paint = gray
+
 // Wraps content in the rendering of one state: drawn, hidden but still
 // occupying its space, muted, or absent.
 #let apply-state(state, body) = if state == "visible" {
@@ -99,7 +105,7 @@
 } else if state == "hidden" {
   hide(body)
 } else if state == "dimmed" {
-  text(fill: gray, body)
+  text(fill: dim-paint, body)
 } else {
   []
 }

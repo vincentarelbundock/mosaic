@@ -35,11 +35,16 @@ EXPECTED = {
     # The curated palette collection every facade exposes as `palettes`.
     # tests/test_palettes.py enforces the contrast contract on these values.
     "mosaic/src/palettes.typ": PALETTES,
-    # The theme-extension API is `setup` alone. The built-in polarity pair is
-    # not duplicated here: it reaches decks and custom themes as
-    # `palettes.light` and `palettes.dark`, one name per value.
-    "mosaic/src/themes/extension.typ": {"setup"},
-    "mosaic/src/themes/api.typ": {"metropolis", "editorial", "manifesto", "mono", "default", "setup"},
+    # The theme-extension API: `setup` turns a definition into a show rule,
+    # and `decorate-heading` is the one rule a theme's `apply` cannot state
+    # natively. The built-in polarity pair is not duplicated here: it reaches
+    # decks and custom themes as `palettes.light` and `palettes.dark`, one
+    # name per value.
+    "mosaic/src/themes/extension.typ": {"setup", "decorate-heading"},
+    "mosaic/src/themes/api.typ": {
+        "metropolis", "editorial", "manifesto", "mono", "default",
+        "setup", "decorate-heading",
+    },
     "mosaic/src/themes/default.typ": THEMED_API,
     "mosaic/src/themes/default/layouts.typ": THEMED_LAYOUTS,
     "mosaic/src/themes/metropolis.typ": THEMED_API,

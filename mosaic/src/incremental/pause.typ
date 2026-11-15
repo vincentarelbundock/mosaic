@@ -93,9 +93,10 @@
 /// and shape it has without the pauses, so its last frame is the plain list.
 /// A pause written at the end of an item
 /// (`- Shown first #mosaic.steps.pause`) would split only that item and reveal
-/// nothing, so it is an error. The same limits as `steps.on` apply to where a
-/// pause can be found: not inside a component, a `context` block, a `layout`
-/// callback, or the output of a show rule.
+/// nothing, so it is an error. A pause works wherever `steps.on` does, which
+/// includes the body of a component and a layout field such as a section
+/// tagline, and excludes a `context` block, a `layout` callback, and the
+/// output of a show rule.
 ///
 /// -> content
 #let pause = metadata((

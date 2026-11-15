@@ -13,9 +13,17 @@
 #assert(bare.body.at("height") == 100%)
 #assert(bare.body.at("alt") == "A brown dog")
 
+// A figure with a caption or a content body is a container: it returns a
+// record of what the author wrote, which the incremental walks read, and the
+// function that draws the figure around it. `drawn` is that drawing.
+#let drawn(value) = {
+  let record = value.children.first().value
+  (record.render)(record.parts)
+}
+
 // An explicit height sizes the picture area directly, so the composition is
 // settled at construction and the caption follows beneath it.
-#let sized = mosaic.components.figure(dog, height: 40%, caption: [Sized])
+#let sized = drawn(mosaic.components.figure(dog, height: 40%, caption: [Sized]))
 #assert(sized.func() == align)
 #assert(sized.body.func() == figure)
 #assert(sized.body.body.at("height") == 40%)
@@ -24,13 +32,13 @@
 // `height: auto` with a caption has to measure the caption before it can size
 // the picture, so nothing is settled at construction: the composition is
 // deferred to a layout pass, and the rendered pages below are what pin it.
-#let auto-sized = mosaic.components.figure(dog, caption: [Auto])
+#let auto-sized = drawn(mosaic.components.figure(dog, caption: [Auto]))
 #assert(auto-sized.func() != align)
 #assert(auto-sized.func() != figure)
 
 // A content body is scaled rather than refitted, so nothing is settled at
 // construction there either, captioned or not.
-#let tabled = mosaic.components.figure(table(columns: 1, [a]))
+#let tabled = drawn(mosaic.components.figure(table(columns: 1, [a])))
 #assert(tabled.func() == align)
 #assert(tabled.body.func() != table)
 

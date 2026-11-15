@@ -23,6 +23,7 @@
 // is written for consoles that do, and for `pdftk unpack_files` or `mutool
 // extract` to recover the conventional sidecar from the PDF when they don't.
 #import "../shared.typ": tag, typst-styled
+#import "../incremental/container.typ": is-container
 
 // Typst's element for a symbol, an escape (`\$`), or a shorthand (`--`, `~`).
 // Like the structural elements in `shared.typ`, it has no public constructor.
@@ -84,7 +85,15 @@
   // content-valued fields: a body, children, a fraction's two halves. Reading
   // them in field order keeps the text of elements this function has never
   // heard of. Metadata is the exception, because its value is data.
-  if func == metadata { return "" }
+  if func == metadata {
+    // A component's record holds what its author wrote; the stand-in beside
+    // it is a `context` block, which has no fields to read.
+    return if is-container(value) {
+      note-text(value.value.parts.values())
+    } else {
+      ""
+    }
+  }
   value
     .fields()
     .values()

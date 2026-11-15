@@ -1,5 +1,6 @@
 // Horizontal divider, optionally split around a title.
-#import "style.typ": component-tokens, deck-colors
+#import "style.typ": component-tokens, deck-colors, is-dimmed, mute-stroke
+#import "../incremental/container.typ": make-container
 
 /// Creates a horizontal divider, optionally split around a title.
 ///
@@ -26,12 +27,14 @@
   /// line color at the shared component thickness.
   /// -> auto | stroke
   stroke: auto,
-) = context {
+) = make-container((title: title), render: parts => context {
+  let title = parts.title
   let stroke = if stroke != auto {
     stroke
   } else {
     component-tokens.rule-thickness + deck-colors().line
   }
+  let stroke = if is-dimmed() { mute-stroke(stroke) } else { stroke }
   grid(
     columns: if title == none { (1fr,) } else { (1fr, auto, 1fr) },
     gutter: component-tokens.divider-gap,
@@ -46,4 +49,4 @@
       )
     },
   )
-}
+})

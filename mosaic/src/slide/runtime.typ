@@ -3,7 +3,7 @@
 #import "../grid/model.typ": plane-ids
 #import "../grid/validation.typ": validate
 #import "../grid/content.typ": body-cell-ids, resolve-content
-#import "../incremental/analysis.typ": max-step
+#import "../incremental/analysis.typ": has-deferred-record, max-step
 #import "../incremental/transform.typ": (
   transform,
   validate-stable-temporal-headings,
@@ -91,15 +91,37 @@
   )
 })
 
-// The content a layout value carries in its own fields: a subtitle, a date, a
-// title. A resolver may render such a field from inside a `context` block or
-// a cell affix, where no content walk can see it, so a speaker note written
-// there (an automatic section tagline is the `subtitle` field) is read from
-// the field itself rather than from the resolved grid.
+// The content a layout value carries in its own fields, by field name: a
+// subtitle, a date, a title, a section tagline (which is the `subtitle`
+// field). A resolver may render such a field from inside a `context` block
+// or a cell affix, where no content walk can see it. So the walks read the
+// fields themselves: steps are counted and notes collected here, and each
+// frame resolves the layout from the fields already transformed for its step.
 #let layout-field-content(layout) = if is-layout(layout) {
-  layout.fields.values().filter(value => type(value) == content)
+  let fields = (:)
+  for (name, value) in layout.fields {
+    if type(value) == content {
+      fields.insert(name, value)
+    }
+  }
+  fields
 } else {
-  ()
+  (:)
+}
+
+// The layout as one step shows it: every content field transformed for that
+// step, so the resolver renders plain content and never meets a step, a
+// pause, or a note.
+#let layout-at(layout, fields, step) = {
+  let transformed = (:)
+  for (name, value) in fields {
+    transformed.insert(name, transform(
+      value,
+      step,
+      heading-scope: "field-" + name,
+    ))
+  }
+  layout + (fields: layout.fields + transformed)
 }
 
 #let slide-frame(
@@ -343,10 +365,18 @@
       )
     }
   }
-  let resolved-grid = if is-layout(requested-layout) {
-    resolve-layout(requested-layout, settings)
-  } else {
+  // Fields that hold a step, a pause, or a note make the resolved grid a
+  // function of the step. The grid resolved here is step 1's: its structure
+  // (cells, tracks, ids) is the same on every step, which is all the checks
+  // and the content routing below read from it.
+  let field-content = layout-field-content(requested-layout)
+  let live-fields = field-content.values().any(has-deferred-record)
+  let resolved-grid = if not is-layout(requested-layout) {
     requested-layout
+  } else if live-fields {
+    resolve-layout(layout-at(requested-layout, field-content, 1), settings)
+  } else {
+    resolve-layout(requested-layout, settings)
   }
   _ = validate(resolved-grid)
   // Automatic heading slides name the cells the standard layouts carry —
@@ -395,6 +425,7 @@
   let steps = calc.max(
     max-node(resolved-grid),
     max-step(contents.values()),
+    max-step(field-content.values()),
     max-step(planes.background),
     max-step(planes.foreground),
   )
@@ -438,7 +469,7 @@
   // frame, so both checks run here rather than inside the render and transform
   // walks that the frame loop repeats.
   _ = validate-stable-grid-headings(resolved-grid, contents)
-  for value in contents.values() {
+  for value in contents.values() + field-content.values() {
     _ = validate-stable-temporal-headings(value)
   }
   _ = validate-stable-temporal-headings(planes.background)
@@ -446,10 +477,9 @@
   // Whether this slide holds any note at all, asked once rather than once per
   // frame. Note extraction is four content walks per frame, and a deck with no
   // notes would otherwise pay all of them on every page.
-  let field-content = layout-field-content(requested-layout)
   let any-notes = (
     fixed-grid-has-note(resolved-grid)
-      or has-note(field-content)
+      or has-note(field-content.values())
       or has-note(contents.values())
       or has-note(planes.background)
       or has-note(planes.foreground)
@@ -484,9 +514,14 @@
     // happens to produce, and a change of variant silently leaves a cell
     // behind. Per-cell labels still apply, and sit inside this one, so a
     // <mosaic-cell-*> rule refines what this sets.
+    let frame-grid = if live-fields and step != 1 {
+      resolve-layout(layout-at(requested-layout, field-content, step), settings)
+    } else {
+      resolved-grid
+    }
     let rendered = [
       #render(
-        resolved-grid,
+        frame-grid,
         contents,
         step,
         overflow: settings.overflow,
@@ -498,20 +533,21 @@
     prepare-frame(step, freeze-location, handout: handout)
     let background-content = render-plane(planes.background, step, "background")
     let foreground-content = render-plane(planes.foreground, step, "foreground")
+    // `last: steps` is what keeps a note from being dropped: a note tied to
+    // a step the slide never reaches is shown on the last frame instead. The
+    // grid holds no field note, because its fields were transformed before it
+    // was resolved, so the two walks cannot report the same note twice.
     let notes = if not any-notes { () } else {
-      // A field a resolver placed in fixed cell content is found by the grid
-      // walk already; only the notes that walk could not reach are added.
-      let grid-notes = fixed-grid-notes-at(resolved-grid, step)
       (
-        grid-notes
-          + notes-at(field-content, step).filter(note => note not in grid-notes)
-          + notes-at(contents.values(), step)
-          + notes-at(planes.background, step)
-          + notes-at(planes.foreground, step)
+        fixed-grid-notes-at(resolved-grid, step, last: steps)
+          + notes-at(field-content.values(), step, last: steps)
+          + notes-at(contents.values(), step, last: steps)
+          + notes-at(planes.background, step, last: steps)
+          + notes-at(planes.foreground, step, last: steps)
       )
     }
     let frame = [
-        #show metadata: validate-frame-metadata.with(collected-notes: notes)
+        #show metadata: validate-frame-metadata
         #full-slide-layer(background-content)
         #full-slide-layer(rendered)
         #full-slide-layer(foreground-content)

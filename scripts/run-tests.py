@@ -897,6 +897,66 @@ def run_core(typst: str, sources: list[str]) -> None:
         if counts != sorted(counts) or counts[0] >= counts[-1]:
             raise TestFailure(f"{theme}: timed list frames do not accumulate: {counts}")
 
+    # A component is transparent to steps: each word reaches the page its step
+    # names and no earlier one. Keyed by page: words present, words absent.
+    def require_words(stem: str, pages: dict[int, tuple[tuple[str, ...], tuple[str, ...]]]) -> None:
+        for page, (present, absent) in pages.items():
+            text = pdf_page_text(stem, page)
+            for word in present:
+                require_contains(text, word)
+            for word in absent:
+                require_contains(text, word, absent=True)
+
+    require_words("components-transparent", {
+        1: (("CARDFIRST",), ("CARDSECOND", "NESTEDFIRST", "NESTEDLATER")),
+        2: (("CARDSECOND", "NESTEDFIRST"), ("NESTEDLATER",)),
+        3: (("CARDFIRST", "NESTEDLATER"), ()),
+        4: (("TITLEFIRST", "REVEALONE"), ("TITLESECOND", "REVEALTWO")),
+        5: (("TITLESECOND", "REVEALTWO"), ("REVEALTHREE",)),
+        6: (("REVEALTHREE",), ("TITLESECOND",)),
+        7: (
+            ("QUOTEFIRST", "QUOTEWHO", "BADGEFIRST", "DIVIDERFIRST"),
+            ("QUOTESECOND", "BADGESECOND", "DIVIDERSECOND"),
+        ),
+        8: (("QUOTESECOND", "BADGESECOND", "DIVIDERSECOND"), ()),
+        9: (("FIGUREFIRST", "CAPTIONFIRST"), ("FIGURESECOND", "CAPTIONSECOND")),
+        10: (("FIGURESECOND", "CAPTIONSECOND"), ()),
+    })
+    # The same holds for a layout's content fields: a section tagline and the
+    # title layout's title and subtitle.
+    require_words("layout-fields-steps", {
+        1: (("TAGLINEFIRST",), ("TAGLINESECOND",)),
+        2: (("TAGLINEFIRST", "TAGLINESECOND"), ()),
+        3: (("FIELDTITLE", "FIELDSUBTITLE"), ("TITLESECOND", "SUBTITLESECOND")),
+        4: (("TITLESECOND", "SUBTITLESECOND"), ()),
+    })
+    require_words("drawing-hide-optional", {
+        1: (("DRAWBASE",), ("DRAWLATER",)),
+        2: (("DRAWBASE", "DRAWLATER"), ()),
+    })
+    # Outside a deck nothing walks a component, and it draws itself.
+    standalone = pdf_text("components-standalone")
+    for word in (
+        "STANDALONECARD", "STANDALONETITLE", "STANDALONECALLOUT",
+        "STANDALONEQUOTE", "STANDALONEWHO", "STANDALONEBADGE",
+    ):
+        require_contains(standalone, word)
+    require_contains(standalone, "Nowhere to go", absent=True)
+    # The native quote's own arguments: marks on request and on an inline
+    # quotation, none on the default panel.
+    quoted = pdf_text("components-quote-native")
+    require_contains(quoted, "\u201cMARKEDQUOTE\u201d")
+    require_contains(quoted, "\u201cINLINEQUOTE\u201d")
+    require_contains(quoted, "\u201cPANELQUOTE", absent=True)
+    require_contains(quoted, "PANELWHO, PANELSOURCE")
+
+    # A dimmed component mutes its own paint: the fixture's loud fill and accent
+    # are nowhere in the dimmed frame and back in the lit one.
+    typst_compile(typst, "components-dimmed.typ", TMP / "mosaic-components-dimmed-{p}.svg", "--format", "svg")
+    for paint in ("#00ff11", "#ff0011"):
+        require_contains(TMP / "mosaic-components-dimmed-1.svg", paint, absent=True)
+        require_contains(TMP / "mosaic-components-dimmed-2.svg", paint)
+
 def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
     compile_group(typst, sources)
     for source in responsive:

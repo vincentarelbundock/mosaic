@@ -1,5 +1,6 @@
 // Compact inline badge.
 #import "style.typ": resolve-style, styled-body, component-tokens
+#import "../incremental/container.typ": make-container
 
 /// Creates a compact inline badge.
 ///
@@ -34,9 +35,10 @@
   /// Semantic role name: `neutral`, `accent`, `warning`, or `error`.
   /// -> str
   role: "neutral",
-  /// Corner radius. Oversize it (`999pt`) for fully rounded pill ends.
-  /// -> length | dictionary
-  radius: component-tokens.badge-radius,
+  /// Corner radius. `auto` uses the compact badge radius. Oversize it
+  /// (`999pt`) for fully rounded pill ends.
+  /// -> auto | length | dictionary
+  radius: auto,
   /// Pill fill. `auto` uses the role's color tinted into the deck canvas.
   /// -> auto | color | gradient | tiling | none
   fill: auto,
@@ -53,7 +55,7 @@
   /// and `weight`.
   /// -> dictionary
   text: (:),
-) = context {
+) = make-container((body: body), render: parts => context {
   let it = resolve-style(
     role: role,
     fill: fill,
@@ -62,13 +64,16 @@
     radius: radius,
     inset: inset,
     text: text,
-    defaults: (inset: component-tokens.badge-inset),
+    defaults: (
+      inset: component-tokens.badge-inset,
+      radius: component-tokens.badge-radius,
+    ),
   )
   box(
     fill: it.fill,
     stroke: it.stroke,
     radius: it.radius,
     inset: it.inset,
-    styled-body(it, body),
+    styled-body(it, parts.body),
   )
-}
+})
