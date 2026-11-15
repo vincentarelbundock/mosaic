@@ -27,6 +27,15 @@
 )
 // Zero bodies is an empty slide.
 #assert(route(header-body) == (header: [], body: []))
+// A cell named in `cells:` leaves the positional count, which then applies to
+// the cells that remain.
+#let mixed(grid, named, ..bodies) = resolve-content(grid, named, bodies.pos(), defaults: defaults)
+#assert(mixed(with-footer, (footer: [F]))[B] == (header: [], footer: [F], body: [B]))
+#assert(mixed(with-footer, (footer: [F]))[H][B] == (header: [H], footer: [F], body: [B]))
+#assert(mixed(header-body, (header: [T]))[B] == (header: [T], body: [B]))
+#assert(
+  mixed(two-columns, (body-2: [R]))[L] == (header: [], body-2: [R], body-1: [L]),
+)
 
 // The same placements rendered. Each body carries a probe naming the cell it
 // must land in; the check below finds that cell on the probe's page.
@@ -70,11 +79,31 @@
 ))
 // 8: no bodies at all.
 #mosaic.slide(layout: content(variant: "header-body-footer"))
+// 9: a footer by name with one body.
+#mosaic.slide(
+  layout: content(variant: "header-body-footer"),
+  cells: (footer: [Source #probe("footer")]),
+)[Body #probe("body")]
+// 10: a footer by name with two bodies.
+#mosaic.slide(
+  layout: content(variant: "header-body-footer"),
+  cells: (footer: [Source #probe("footer")]),
+)[== Title #probe("header")][Body #probe("body")]
+// 11: the header by name; exactly one body remains to fill.
+#mosaic.slide(
+  layout: content(variant: "header-body"),
+  cells: (header: [== Named #probe("header")]),
+)[Body #probe("body")]
+// 12: two columns with the second by name; one body fills the first.
+#mosaic.slide(
+  layout: content(variant: "header-body", columns: 2),
+  cells: (body-2: [Right #probe("body-2")]),
+)[Left #probe("body-1")]
 
 #context {
-  assert(counter(page).final().first() == 8)
+  assert(counter(page).final().first() == 12)
   let probes = query(<probe>)
-  assert(probes.len() == 14, message: repr(probes.len()))
+  assert(probes.len() == 23, message: repr(probes.len()))
   for probe in probes {
     let at = probe.location().position()
     let edge(name) = query(label("mosaic-cell-" + probe.value + "-" + name))

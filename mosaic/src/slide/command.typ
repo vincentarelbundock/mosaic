@@ -159,7 +159,7 @@
 ///
 /// *Supplying content*
 ///
-/// Use one of the two forms, never both on the same slide:
+/// Two forms, which combine:
 ///
 /// - Positional bodies, routed by how many there are and never by what they
 ///   contain. They fill the layout's cells in depth-first order, except a
@@ -185,6 +185,14 @@
 ///   body: [Order does not matter here.],
 ///   footer: [Replaces the deck footer on this slide.],
 /// ))
+/// ```
+///
+/// Given together, a cell named in `cells:` is filled from it and leaves the
+/// positional count, which then applies to the cells that remain. So a slide
+/// adds a footer without naming its other cells:
+///
+/// ```typ
+/// #mosaic.slide(cells: (footer: [Source: OECD]))[== Title][Body.]
 /// ```
 ///
 /// *Planes*
@@ -238,7 +246,8 @@
   /// values.
   /// -> bool
   invert: false,
-  /// Cell bodies keyed by cell id. Mutually exclusive with positional bodies.
+  /// Cell bodies keyed by cell id. A cell named here is not filled
+  /// positionally.
   /// -> dictionary
   cells: (:),
   /// Full-slide layer drawn behind the grid. `auto` inherits the deck
@@ -301,9 +310,6 @@
   }
   _ = validate-plane(background, "background")
   _ = validate-plane(foreground, "foreground")
-  if bodies.len() > 0 and cells.len() > 0 {
-    fail("slide cannot combine named and positional cell content")
-  }
   metadata(slide-command(
     bodies,
     layout: layout,
