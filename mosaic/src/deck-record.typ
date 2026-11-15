@@ -12,7 +12,7 @@
 // compilation.
 //
 //   settings         dictionary | none   Everything a slide renders against:
-//                                        colors, roles, spacing, notes
+//                                        colors, spacing, notes
 //                                        geometry, content defaults, deck
 //                                        metadata, and the overflow policy.
 //                                        `none` only in the no-deck fallback
