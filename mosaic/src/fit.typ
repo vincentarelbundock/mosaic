@@ -64,10 +64,10 @@
 
 // A width or height option resolved against the region that hosts it, inside
 // a `layout` callback where em units have a font size to resolve against.
-// `auto` and a fraction both mean "the whole region". A fractional height is
-// made real by the block `fit-to-height` wraps around the fitter, so the
-// region seen here already is that share; a fractional width has no free space
-// to divide and is accepted as the spelling of "all of it".
+// `auto` means the whole region. A fraction reaches here only from
+// `fit-to-height`'s own `1fr` default, which the block it wraps around the
+// fitter makes real, so the region seen here already is that share. The
+// public `fit` refuses a fraction before it gets this far.
 #let resolve-extent(value, container-dimension) = if (
   value in (none, auto) or type(value) == fraction
 ) {
@@ -81,10 +81,21 @@
 }
 
 #let validate-extent(value, name) = {
-  if value != auto and type(value) not in (length, ratio, relative, fraction) {
+  // A fraction is a share of the space left over among siblings, and a fitter
+  // measuring one block has no siblings to share with. It used to be read as
+  // "the whole region" whatever its magnitude, which made `2fr` and `1fr` the
+  // same request; the ratio says what was meant.
+  if type(value) == fraction {
     fail(
-      "fit " + name + " must be auto, a length, a ratio, a relative length, "
-        + "or a fraction, received " + repr(value),
+      "fit " + name + " cannot be a fraction such as " + repr(value)
+        + ", which is a share of free space that fit does not divide; use a "
+        + "ratio of the region, such as 100%",
+    )
+  }
+  if value != auto and type(value) not in (length, ratio, relative) {
+    fail(
+      "fit " + name + " must be auto, a length, a ratio, or a relative "
+        + "length, received " + repr(value),
     )
   }
   value
@@ -288,11 +299,10 @@
 /// *Sizes*
 ///
 /// `width` and `height` take a length (`12cm`, `20em`), a ratio of the region
-/// (`50%`), or a relative length combining the two (`50% + 1cm`). A fractional
-/// `width` such as `1fr` means the whole region, like `auto`; its magnitude is
-/// not read, because a fitter measuring one block has no free width to share
-/// out. A fractional `height` makes the fitted block take that share of the
-/// remaining height, as `block(height: 1fr)` would, and fits into it.
+/// (`50%`), or a relative length combining the two (`50% + 1cm`). `auto` is
+/// the whole region, and so is `100%`. A fraction such as `1fr` is refused: it
+/// is a share of the space left over among siblings, and a fitted block is
+/// measured on its own.
 ///
 /// -> content
 #let fit(
@@ -300,10 +310,10 @@
   /// -> content
   body,
   /// Width to fit into. `auto` uses the full width of the region.
-  /// -> auto | length | ratio | relative | fraction
+  /// -> auto | length | ratio | relative
   width: auto,
   /// Height to fit into. `auto` uses the full height of the region.
-  /// -> auto | length | ratio | relative | fraction
+  /// -> auto | length | ratio | relative
   height: auto,
   /// Let the content re-lay out at the available width before it is measured.
   /// Pass `false` for a block whose own arrangement must be preserved.

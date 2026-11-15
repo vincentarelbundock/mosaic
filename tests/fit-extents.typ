@@ -15,8 +15,8 @@
 #block(width: 200pt, mosaic.fit(width: 50%, ruler("ratio-edge")))
 #block(width: 200pt, mosaic.fit(width: 6em, ruler("length-edge")))
 
-// A fractional width is the whole region whatever its magnitude.
-#block(width: 200pt, mosaic.fit(width: 2fr, ruler("fraction-edge")))
+// The whole region is `100%`; a fraction is refused (tests/invalid/fit-fraction).
+#block(width: 200pt, mosaic.fit(width: 100%, ruler("full-edge")))
 
 #pagebreak()
 
@@ -38,7 +38,7 @@
   assert(near(x("relative-edge"), 120pt), message: repr(x("relative-edge")))
   assert(near(x("ratio-edge"), 100pt), message: repr(x("ratio-edge")))
   assert(near(x("length-edge"), 72pt), message: repr(x("length-edge")))
-  assert(near(x("fraction-edge"), 200pt), message: repr(x("fraction-edge")))
+  assert(near(x("full-edge"), 200pt), message: repr(x("full-edge")))
   assert(x("prose-edge") > 240pt, message: repr(x("prose-edge")))
   let end = query(<prose-end>).first().location().position()
   assert(end.page == 2 and end.y <= 130pt + 0.5pt, message: repr(end))

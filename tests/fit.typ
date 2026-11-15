@@ -9,7 +9,7 @@
 #block(
   width: 120pt,
   stroke: 0.5pt,
-  mosaic.fit(width: 1fr)[MOSAIC-AUTOMATIC-SCALING],
+  mosaic.fit(width: 100%)[MOSAIC-AUTOMATIC-SCALING],
 )
 
 #pagebreak()
