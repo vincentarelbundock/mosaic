@@ -1,16 +1,12 @@
 #import "/.calepin/calepin.typ" as calepin
 #import "/_includes/embedded-examples.typ": embedded-example
 
-#import "/_includes/site.typ": unreleased
-
 #set document(title: [Images])
 #metadata((title: "Images")) <website-metadata>
 
 #title()
 
 An image can sit in a cell, in a layout that is built around one, or on a #link("../slides/background.html")[background] or #link("../slides/foreground.html")[foreground] plane. Image loading, fitting, figures, captions, and references remain native Typst. This page is where pictures are explained once: what a picture is, where a layout can put one, and how to fit, quiet, and caption it.
-
-#unreleased(calepin.elements.callout)[How a layout takes a picture changed: a picture is a `path(..)` or content, and `position:` places it.]
 
 = Asset paths <asset-paths>
 
@@ -20,34 +16,34 @@ An image or other asset named inside a layout or component argument crosses the 
 #m.slide(layout: "image", image: path("fig/gdp.png"))[== Growth since 1950]
 ```
 
-This applies wherever a layout or component takes a path: the `image:` argument of the #link("../slides/title.html")[title], #link("../slides/section.html")[section], and #link("../slides/image.html")[image] layouts, and the source of `m.components.image()` and `m.components.figure()`. A layout rejects a bare string outright, with a message that names `path()`.
+This applies wherever a layout or component takes a path: the `image:` argument of the #link("../slides/title.html")[title], #link("../slides/section.html")[section], and #link("../slides/image.html")[image] layouts, and the source of `m.components.image()` and `m.components.figure()`.
 
 = Pictures in layouts <pictures-in-layouts>
 
-Three layouts are built around a picture: #link("../slides/image.html")[image], #link("../slides/title.html")[title], and #link("../slides/section.html")[section]. All three take it the same way, through two arguments.
-
-`image:` is the picture. It is one of two things:
+Three layouts are built around a picture: #link("../slides/image.html")[image], #link("../slides/title.html")[title], and #link("../slides/section.html")[section]. All three take the picture itself the same way, as `image:`. It is one of two things:
 
 - A `path(..)`, when the file is all there is to say. The layout sizes and fits it to its region.
 - Content, when the picture needs more than its file: `m.components.image(path(..), fit: .., scrim: .., alt: ..)`, described in the sections below. Any other content works too, such as a drawing made in code.
 
-`position:` is where the picture goes, in one vocabulary shared by all three layouts:
+Where the picture goes is chosen by the layout's `variant:`, the same argument that selects every other arrangement a layout offers:
 
 #table(
   columns: (auto, 1fr),
-  [`"left"`, `"right"`, `"top"`, `"bottom"`], [A full-bleed picture on that side of the slide, with the text in the rest. `tracks:` sizes the picture: one track size such as `40%` is the picture's share whichever side it is on, so `left` and `right` stay mirror images.],
-  [`"background"`], [The picture behind the text, covering the slide.],
-  [`"body"`], [The image layout only, and its default: a contained picture under a header, where a chart or a screenshot goes.],
+  [Image layout], [`figure` (the default: a contained picture under a header, where a chart or a screenshot goes), `left`, `right`, `top`, `bottom` (a full-bleed picture on that side, with the text in the rest), and `full` (the picture behind the text).],
+  [Section layout], [`image-left`, `image-right`, `image-top`, `image-bottom`, and `image-background`.],
+  [Title layout], [One variant, `image`, with a separate `position:` of `"left"`, `"right"`, `"top"`, or `"bottom"`.],
 )
+
+For a picture on one side, `tracks:` sizes it: one track size such as `40%` is the picture's share whichever side it is on, so left and right stay mirror images.
 
 ```typ
 // A file, placed.
-#m.slide(layout: "image", position: "right", image: path("fig/book.jpg"))[== Readings]
+#m.slide(layout: "image", variant: "right", image: path("fig/book.jpg"))[== Readings]
 
 // A picture that needs a scrim and a description is content.
 #m.slide(
   layout: "image",
-  position: "background",
+  variant: "full",
   image: m.components.image(
     path("fig/auditorium.jpg"),
     scrim: black.transparentize(45%),
@@ -58,8 +54,6 @@ Three layouts are built around a picture: #link("../slides/image.html")[image], 
   == Who are you?
 ]
 ```
-
-`variant:` is a different question. It names a layout's text design, such as the title layout's `kicker` or the section layout's `baseline`, and never where a picture sits. In the title and section layouts a picture needs `variant: "image"`: write it together with `image:`. `position:` and `tracks:` apply only to that variant. The image layout is nothing but its picture and has no variant.
 
 = Slide-sized images
 
@@ -173,7 +167,6 @@ A scrim is always the `scrim:` argument of `m.components.image()`, wherever the 
 #m.slide(
   layout: "title",
   variant: "image",
-  position: "background",
   image: m.components.image(
     path("cover.webp"),
     scrim: black.transparentize(45%),

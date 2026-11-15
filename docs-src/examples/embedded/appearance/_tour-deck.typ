@@ -3,14 +3,14 @@
 // slides is exactly what a theme owns.
 //
 // `deck` is the only export: the slides, called with the active theme facade
-// as `m`. The deck metadata rides on the title slide, so a wrapper needs no
-// second import.
-#import "@local/mosaic:0.0.3": layouts
-#let author = layouts.author
+// as `m`. The deck metadata rides on the title slide and everything comes from
+// that facade, so this file imports nothing and a wrapper needs no second
+// import.
 
 // The title and section slides name their layout rather than building one, so
 // they follow whatever `setup(layouts:)` configured for the deck.
 #let deck(m) = {
+  let author = m.layouts.author
   m.slide(
     "title",
     numbered: false,
@@ -87,7 +87,7 @@
         path("/docs-src/assets/images/dog.webp"),
         alt: "A dog resting on a sunlit floor",
       ),
-      position: "right",
+      variant: "right",
     ),
     cells: (
       header: [== A well-behaved subject],

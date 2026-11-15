@@ -1,18 +1,14 @@
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.1" as m
 #show: m.setup
 
 #let picture = m.components.image(
   path("/docs-src/assets/images/dog.webp"),
   alt: "Dog",
 )
-// The default theme's own section layout is `baseline`, so the plain variant
-// is named here.
-#let myslide = m.slide.with(layout: m.layouts.section(variant: "plain"))
+#let myslide = m.slide.with("section")
 #myslide[Plain section]
 
-#let myslide = m.slide.with(
-  layout: m.layouts.section(variant: "plain", number: [01]),
-)
+#let myslide = m.slide.with(layout: m.layouts.section(number: [01]))
 #myslide[Numbered section]
 
 // The designed text variants read the automatic section counter when no
@@ -39,40 +35,24 @@
 #myslide[Toc section]
 
 #let myslide = m.slide.with(
-  layout: m.layouts.section(
-    variant: "image",
-    position: "left",
-    image: picture,
-  ),
+  layout: m.layouts.section(variant: "image-left", image: picture),
 )
-#myslide[Picture on the left]
+#myslide[Image-left section]
 
 #let myslide = m.slide.with(
-  layout: m.layouts.section(
-    variant: "image",
-    position: "right",
-    image: picture,
-  ),
+  layout: m.layouts.section(variant: "image-right", image: picture),
 )
-#myslide[Picture on the right]
+#myslide[Image-right section]
 
 #let myslide = m.slide.with(
-  layout: m.layouts.section(
-    variant: "image",
-    position: "top",
-    image: picture,
-  ),
+  layout: m.layouts.section(variant: "image-top", image: picture),
 )
-#myslide[Picture on the top]
+#myslide[Image-top section]
 
 #let myslide = m.slide.with(
-  layout: m.layouts.section(
-    variant: "image",
-    position: "bottom",
-    image: picture,
-  ),
+  layout: m.layouts.section(variant: "image-bottom", image: picture),
 )
-#myslide[Picture on the bottom]
+#myslide[Image-bottom section]
 
 // The image itself carries the contrast: darken it and switch the section
 // cell to light text through its <mosaic-cell-section> label, scoped to this
@@ -80,12 +60,11 @@
 #[
   #show label("mosaic-cell-section"): set text(fill: white)
   #m.slide(layout: m.layouts.section(
-    variant: "image",
-    position: "background",
+    variant: "image-background",
     image: m.components.image(
       path("/docs-src/assets/images/dog.webp"),
       scrim: black.transparentize(55%),
       alt: "Dog",
     ),
-  ))[Picture in the background]
+  ))[Image-background section]
 ]

@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.1" as m
 
 #show: m.setup
 
@@ -18,7 +18,7 @@
   #m.slide(
     layout: m.layouts.image(
       m.components.image(path(river), alt: describe),
-      position: "background",
+      variant: "full",
     ),
     cells: (body: [
       == Without a scrim
@@ -40,7 +40,7 @@
         scrim: black.transparentize(45%),
         alt: describe,
       ),
-      position: "background",
+      variant: "full",
     ),
     cells: (body: [
       == A flat scrim
@@ -66,7 +66,7 @@
         ),
         alt: describe,
       ),
-      position: "background",
+      variant: "full",
     ),
     cells: (body: [
       #v(1fr)
@@ -89,7 +89,7 @@
       scrim: white.transparentize(25%),
       alt: describe,
     ),
-    position: "background",
+    variant: "full",
   ),
   cells: (body: [
     == A light scrim

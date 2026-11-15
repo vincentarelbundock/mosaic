@@ -114,16 +114,16 @@ Use a layout factory (`m.layouts.*`) when building a layout from scratch rather 
 
 Variants:
 
-- **Title**: `ruled` (the default: heading stack over a full-width accent rule with details beneath, flush left at the vertical center, the beamer-metropolis title page), `centered` (mass at slide center, metadata at the bottom edge), `bordered` (centered stack inside one thin border), `kicker` (magazine masthead: strong opening rule, subtitle as a tracked-caps eyebrow in the accent color, details at the bottom edge), `panel` (a vertical ink panel carries the details knocked out in canvas under a short accent rule; the title takes the main field), `academic` (conference-poster arrangement with superscript affiliations), and `image` (a compact stack with a picture, placed by `position:`; see *Pictures* below). Every variant renders every author field: names with ORCID icons and the corresponding asterisk, affiliations, contact addresses, and the date. Structural marks default to the text color (the bordered border, the kicker opening rule) or the semantic accent (the ruled rule); an explicit `accent:` recolors them. A title too long for its allocation shrinks to fit rather than overprinting the details, and `rule: true` adds a short accent rule under the `centered` heading. There is no plate variant: invert any slide with `m.slide(invert: true)`, which also flips code highlighting to match the inverted ground.
-- **Section**: `plain`, the designed text variants `rule` (heavy full-width rule over a flush-left title), `numeral` (giant ghost number bleeding off the top-right), `baseline` (title and number sharing one baseline over a full-width hairline), `toc` (all sections listed, the current one alive), and `image` (the `plain` composition with a picture, placed by `position:`). The designed text variants read the automatic section counter when `number:` is omitted. Section numbers never take the accent color by default: the `accent:` field defaults to the muted color, and an explicit color recolors the number, and the `baseline` hairline with it. A `subtitle:` is caption-sized under the title in every variant. The themed facades restyle the section cell, so under editorial, manifesto, or metropolis these variants render at that theme's own scale.
+- **Title**: `ruled` (the default: heading stack over a full-width accent rule with details beneath, flush left at the vertical center, the beamer-metropolis title page), `centered` (mass at slide center, metadata at the bottom edge), `bordered` (centered stack inside one thin border), `kicker` (magazine masthead: strong opening rule, subtitle as a tracked-caps eyebrow in the accent color, details at the bottom edge), `panel` (a vertical ink panel carries the details knocked out in canvas under a short accent rule; the title takes the main field), `academic` (conference-poster arrangement with superscript affiliations), and `image` with `position: "left"/"right"/"top"/"bottom"` (default left) for a picture beside or above the stack, or `position: "background"` for the stack over a full-slide picture. Every variant renders every author field: names with ORCID icons and the corresponding asterisk, affiliations, contact addresses, and the date. Structural marks default to the text color (the bordered border, the kicker opening rule) or the semantic accent (the ruled rule); an explicit `accent:` recolors them. A title too long for its allocation shrinks to fit rather than overprinting the details, and `rule: true` adds a short accent rule under the `centered` heading. There is no plate variant: invert any slide with `m.slide(invert: true)`, which also flips code highlighting to match the inverted ground.
+- **Section**: `plain`, the designed text variants `rule` (heavy full-width rule over a flush-left title), `numeral` (giant ghost number bleeding off the top-right), `baseline` (title and number sharing one baseline over a full-width hairline), `toc` (all sections listed, the current one alive), and five image variants: `image-left`, `image-right`, `image-top`, `image-bottom` (the section text beside a full-bleed picture, sized by `tracks:`) and `image-background` (the text over a full-slide picture). The designed text variants read the automatic section counter when `number:` is omitted. Section numbers never take the accent color by default: the `accent:` field defaults to the muted color, and an explicit color recolors the number, and the `baseline` hairline with it. A `subtitle:` is caption-sized under the title in every variant. The themed facades restyle the section cell, so under editorial, manifesto, or metropolis these variants render at that theme's own scale.
 - **Content**: `body`, `header-body`, `body-footer`, `header-body-footer`.
-- **Image**: no variants. The image layout has no text design of its own; `position:` is its only arrangement.
+- **Image**: `figure` (the default), `full`, `left`, `right`, `top`, `bottom`.
 
-**Pictures.** The title, section, and image layouts take a picture the same way, through two arguments. `image:` is the picture: a `path(..)` when the file is all there is to say, or content, typically `m.components.image(path(..), fit: .., scrim: .., alt: ..)`, when it needs a fit, a scrim, or a description. There is no dictionary form. `position:` is where it goes, in one vocabulary: `"left"`, `"right"`, `"top"`, `"bottom"` (a full-bleed picture on that side, sized by `tracks:`, where one size such as `40%` is the picture's share on whichever side) or `"background"` (the picture behind the text). The image layout adds `"body"`, its default: a contained picture under a header. `variant:` never places a picture; it names the text design only. In the title and section layouts a picture needs `variant: "image"`, written together with `image:`; `position:` and `tracks:` apply only to that variant.
+**Pictures.** The title, section, and image layouts take the picture itself the same way, as `image:`: a `path(..)` when the file is all there is to say, or content, typically `m.components.image(path(..), fit: .., scrim: .., alt: ..)`, when it needs a fit, a scrim, or a description. There is no dictionary form, and a bare string is rejected. Where the picture goes is the layout's `variant:`: the image layout's `left`/`right`/`top`/`bottom`/`full`, the section layout's `image-left` … `image-background`. Only the title layout splits it in two, `variant: "image"` plus `position:`. `tracks:` sizes a picture on one side, where one size such as `40%` is the picture's share on whichever side.
 
 ```typ
-#m.slide(layout: "image", position: "right", image: path("fig/book.jpg"))[== Readings]
-#m.slide(layout: "section", variant: "image", position: "top", image: path("fig/chapter.jpg"))[Methods]
+#m.slide(layout: "image", variant: "right", image: path("fig/book.jpg"))[== Readings]
+#m.slide(layout: "section", variant: "image-top", image: path("fig/chapter.jpg"))[Methods]
 #m.slide(
   layout: "title",
   variant: "image",
@@ -143,8 +143,7 @@ To replace a named layout deck-wide, configure it once in setup; to reuse one fo
 ```typ
 #show: m.setup.with(layouts: (
   section: m.layouts.section(
-    variant: "image",
-    position: "background",
+    variant: "image-background",
     image: path("chapter.jpg"),
   ),
 ))
@@ -157,10 +156,10 @@ To replace a named layout deck-wide, configure it once in setup; to reuse one fo
 
 Most decks are built from a handful of recurring shapes. Reach for the named form below before composing a grid by hand; each one is one line and stays correct when the deck's font size, paper, or theme changes.
 
-**Title slide.** `#m.slide(layout: "title")` with nothing else: it inherits `title`, `subtitle`, `authors`, and `date` from setup. Choose a stock variant when the preset suits the deck. When the deck wants type much quieter or more idiosyncratic than any preset, use the image layout at `position: "background"` as the escape hatch and write the title yourself. Write it as a level-one heading rather than plain text (`#heading(level: 1, outlined: false)[..]` keeps it out of the bookmarks): the image layout at that position has no header cell, so the heading renders in place in the body, it takes the theme's level-one heading size (a scoped `show heading: set text(size: ..)` in the body adjusts it), and it gives an accessible export the H1 that the built-in title layout supplies on its own:
+**Title slide.** `#m.slide(layout: "title")` with nothing else: it inherits `title`, `subtitle`, `authors`, and `date` from setup. Choose a stock variant when the preset suits the deck. When the deck wants type much quieter or more idiosyncratic than any preset, use the image layout's `full` variant as the escape hatch and write the title yourself. Write it as a level-one heading rather than plain text (`#heading(level: 1, outlined: false)[..]` keeps it out of the bookmarks): the `full` variant has no header cell, so the heading renders in place in the body, it takes the theme's level-one heading size (a scoped `show heading: set text(size: ..)` in the body adjusts it), and it gives an accessible export the H1 that the built-in title layout supplies on its own:
 
 ```typ
-#m.slide(layout: "image", position: "background", image: path("fig/cover.jpg"))[
+#m.slide(layout: "image", variant: "full", image: path("fig/cover.jpg"))[
   #set text(fill: white)
   #heading(level: 1, outlined: false)[Économie et Politique]
 
@@ -186,32 +185,32 @@ Most decks are built from a handful of recurring shapes. Reach for the named for
 
 Use it for side-by-side figures too, wrapping each in `m.components.figure(..)`, which contains the picture and sizes it to its cell. Add `tracks: (2fr, 1fr)` for an uneven split. Under a theme whose content layout is `header-body-footer` (Metropolis), a third block fills the footer cell unless the deck gave the footer a default, in which case positional bodies pass over it.
 
-**Figure slide.** The image layout's default position, `"body"`: a header above a contained picture, with an optional caption beneath.
+**Figure slide.** The image layout's default variant, `figure`: a header above a contained picture, with an optional caption beneath.
 
 ```typ
 #m.slide(layout: "image", image: path("fig/gdp.png"))[== Growth since 1950]
 #m.slide(layout: "image", image: path("fig/pie.png"), caption: [Teaching, research, admin])[== My job]
 ```
 
-A picture at `"body"` defaults to `fit: "contain"`, which is what a chart needs: never crop data. `caption:` composes a native Typst `figure`, so it takes the deck's own `show figure.caption` rules and figure numbering; switch numbering off with `set figure(numbering: none)`. `caption:` is rejected at every other position. This slide has header, image, and caption cells but no body, so a single standing line of commentary belongs in `caption:`.
+The `figure` variant defaults to `fit: "contain"`, which is what a chart needs: never crop data. `caption:` composes a native Typst `figure`, so it takes the deck's own `show figure.caption` rules and figure numbering; switch numbering off with `set figure(numbering: none)`. `caption:` is rejected by every other variant. This slide has header, image, and caption cells but no body, so a single standing line of commentary belongs in `caption:`.
 
-**Picture beside text.** The positions `left`, `right`, `top`, and `bottom` pair a full-bleed picture with a header and body region. The opening heading is the header and the next block the body:
+**Picture beside text.** The directional variants `left`, `right`, `top`, and `bottom` pair a full-bleed picture with a header and body region. The opening heading is the header and the next block the body:
 
 ```typ
-#m.slide(layout: "image", position: "right", image: path("fig/book.jpg"))[== Readings][
+#m.slide(layout: "image", variant: "right", image: path("fig/book.jpg"))[== Readings][
   - Almost every week
   - PDFs on the course site
 ]
 ```
 
-Stop after the heading when the picture needs a title but no body. `tracks:` sizes the picture region and is side-independent, so `tracks: 40%` means the same thing under `left` and `right` and the two stay mirror images. A picture given as a path defaults to `fit: "cover"` at these positions; pass `fit: "contain"` for a chart, a screenshot, or any picture whose edges carry meaning.
+Stop after the heading when the picture needs a title but no body. `tracks:` sizes the picture region and is side-independent, so `tracks: 40%` means the same thing under `left` and `right` and the two stay mirror images. A picture given as a path defaults to `fit: "cover"` in these variants; pass `fit: "contain"` for a chart, a screenshot, or any picture whose edges carry meaning.
 
-**Full-bleed photograph with text over it.** Position `"background"` puts the picture behind a single body cell:
+**Full-bleed photograph with text over it.** The `full` variant puts the picture behind a single body cell:
 
 ```typ
 #m.slide(
   layout: "image",
-  position: "background",
+  variant: "full",
   image: m.components.image(
     path("fig/auditorium.png"),
     scrim: black.transparentize(55%),
@@ -511,7 +510,7 @@ Independently of `output:`, a deck that holds any note also embeds those notes i
   typst compile --root . slides.typ /tmp/p-{n}.png --pages 20,23 --ppi 55
   ```
 
-  Overflow is nearly always a *body* cell holding more prose than its band. On a stacked image position (`top`/`bottom`) the usual fix is a smaller `tracks:` so the text band grows; when the body is a full bullet list plus a picture, abandon the image layout and use an ordinary content slide with `m.components.figure(.., height: N%)`, which is predictable.
+  Overflow is nearly always a *body* cell holding more prose than its band. On a stacked image variant (`top`/`bottom`) the usual fix is a smaller `tracks:` so the text band grows; when the body is a full bullet list plus a picture, abandon the image layout and use an ordinary content slide with `m.components.figure(.., height: N%)`, which is predictable.
 
 - **Convert a whole deck set**: when porting many sibling decks, keep an identical `m.setup` block in each so they stay a series, and drive the build from one pattern rule. Watch for output collisions before running that rule: `quarto render` + `pagedown::chrome_print` print `<deck>.pdf` from the same basename a Typst deck compiles to, so a first `make` can overwrite an existing set of PDFs. Whether that is wanted (the Typst decks are replacing them) or not (both sets must survive, so Typst output belongs in its own directory) is the author's call — ask rather than assume, and check whether the directory is under version control before finding out the hard way.
 
@@ -529,11 +528,11 @@ When compilation fails:
 2. Check for an unknown layout name, a missing named cell, mixed positional and named content, or an invalid layout variant.
    - `mosaic: content appears before the first heading handled by setup` means something after `#show: m.setup` emits content before the first `=`/`==` or `m.slide` — often a tool-setup call (e.g. `calepin.setup(..)`) that looks inert but produces content. Move it inside the first slide's body.
    - `mosaic: content appears after an explicit slide and belongs to no slide` means text or a call follows an `m.slide(..)` at the top level. Open a new slide with a heading, or move the content into the slide.
-   - A `was removed; write ..` diagnostic names the current spelling of a renamed argument (`variant: "image-left"`, the image layout's `variant:`, a picture dictionary, a `headings:` dictionary). Apply it as written.
+   - A diagnostic that names a replacement spelling (a picture dictionary, a `headings:` dictionary, a theme's `font` under `options`) gives the current spelling. Apply it as written.
    - `failed to decode image (Format error decoding Jpeg ...)` or `unknown image format` means the file's extension lies about its bytes. Typst chooses its decoder from the extension, so a PNG or WebP named `.jpg` fails. Check with `file -b`, and prefer adding a correctly-named *copy* over renaming when other documents reference the original name. Typst has no AVIF decoder at all — convert those.
 3. Confirm that dictionary-held functions are called with parentheses when needed, for example `(theme.layouts.section)()`.
 4. Confirm that `layouts:` passed to setup is a dictionary and only overrides `content`, `title`, or `section`.
-5. Confirm that a picture is a `path(..)` or content placed by `position:`, and that an image layout's `tracks:` is valid.
+5. Confirm that image variants receive an image (a `path(..)` or content) and valid tracks.
 6. Change the narrowest source responsible, then recompile the original deck.
 
 Do not add compatibility aliases for removed APIs. In particular, slides use `layout:`, not a separate semantic selector.

@@ -38,7 +38,7 @@
 
 This page hosts eight complete slide decks: four are built on one of Mosaic's bundled themes, some leaning on the themes' own layouts and others hand-crafting every slide from named cells and custom palettes, and the last four define a theme of their own to re-create an outside design. Click a thumbnail to page through its slides. The #link(repo)[GitHub repository] contains every deck's full Typst source, assets, Makefile, and compiled PDF.
 
-#unreleased(calepin.elements.callout)[Seven of these decks size their grids with `tracks:` or state a theme's font through `defaults`; the Metropolis deck imports the released version and compiles under it as it stands.]
+#unreleased(calepin.elements.callout)[Four of these decks (AnnArbor, Calmly, Clean, and Simpres) define a theme of their own and state its font through `defaults`, which needs the development version. The other four import the released version.]
 
 #calepin.elements.callout(kind: "warning", title: [Start with the tutorials])[
   These are complete, fairly intricate decks: they combine custom palettes, hand-built grids, and theme extensions, so their source is not the gentlest introduction to Mosaic. If you are new to the package, read #link("start/first-deck.html")[Get started] first, then the guides on #link("slides/content.html")[writing slides] and #link("appearance/themes.html")[themes and colors]. The code below reads much more easily afterwards.

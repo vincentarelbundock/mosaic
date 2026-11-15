@@ -338,7 +338,7 @@ Any named argument `slide` does not recognize is a field of the selected layout.
 ```typ
 #m.slide(layout: "title", variant: "academic")
 #m.slide(layout: "section", number: [03])[Methods]
-#m.slide(layout: "image", position: "right", image: path("fig/photo.jpg"))[== Title][Body]
+#m.slide(layout: "image", variant: "right", image: path("fig/photo.jpg"))[== Title][Body]
 #m.slide(columns: 2)[== Comparison][Left column][Right column]
 ```
 
@@ -363,8 +363,7 @@ To replace a named layout throughout a deck, configure it once in `m.setup`:
 ```typ
 #show: m.setup.with(layouts: (
   section: m.layouts.section(
-    variant: "image",
-    position: "background",
+    variant: "image-background",
     image: path("chapter.jpg"),
   ),
 ))

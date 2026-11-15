@@ -11,7 +11,7 @@
 
 A theme decides how a deck looks: its colors, its type, and the way each slide arranges what you put on it. Every Mosaic deck uses a theme, even one that never mentions the word. Import the package without naming a theme and you get the default theme. Name a different one and the whole deck changes at once, without a single edit to your slides.
 
-#unreleased(calepin.elements.callout)[A theme now states its `font` and `base-size` through `defaults`, `themes.decorate-heading` is new, and the running example places its picture with `position:`.]
+#unreleased(calepin.elements.callout)[A theme now states its `font` and `base-size` through `defaults`, and `themes.decorate-heading` is new. The running example and the bundled-theme tours compile under the released version as they stand; the custom-theme examples need the development version.]
 
 = Selecting themes
 
@@ -36,12 +36,12 @@ The default import is the bundled default theme. These two spellings are the sam
 
 ```typ
 // Default spelling
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.1" as m
 ```
 
 ```typ
 // Explicit spelling
-#import "@local/mosaic:0.0.3" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 #import mosaic.themes.default as m
 ```
 
@@ -241,7 +241,7 @@ apply: (body, colors: (:), options: (:)) => {
 Every bundled theme exports the `definition` behind its own `setup`. Varying a bundled look is therefore an ordinary dictionary merge:
 
 ```typ
-#import "@local/mosaic:0.0.3" as mosaic
+#import "@preview/mosaic:0.0.1" as mosaic
 #import mosaic.themes.metropolis as base
 
 #let mine = base.definition + (
@@ -266,7 +266,7 @@ Once a theme is worth reusing, give it a file of its own. That file re-exports t
 
 ```typ
 // mytheme.typ
-#import "@local/mosaic:0.0.3": slide, note, fit, grids, steps, components, themes
+#import "@preview/mosaic:0.0.1": slide, note, fit, grids, steps, components, themes
 #import "definition.typ": definition
 #import "layouts.typ" as layouts
 #let setup = themes.setup(definition)

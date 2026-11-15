@@ -1,21 +1,21 @@
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.1" as m
 
 #show: m.setup
 
-// The default position, `"body"`: a header above a contained picture, with an
+// The default `figure` variant: a header above a contained picture, with an
 // optional caption beneath. Charts and screenshots are never cropped.
 #m.slide(
   layout: "image",
   image: path("/docs-src/assets/images/bonsai.webp"),
   caption: [Careful pruning, every year],
-)[== A picture in the body]
+)[== The figure variant]
 
-// A directional position pairs a full-bleed picture with a header and body.
+// A directional variant pairs a full-bleed picture with a header and body.
 // `tracks` sizes the picture band; the first block is the header, the second
 // is the body.
 #m.slide(
   layout: "image",
-  position: "right",
+  variant: "right",
   image: path("/docs-src/assets/images/dog.webp"),
   tracks: 45%,
 )[== Picture beside text][
@@ -27,16 +27,16 @@
 // whole picture visible instead of cropping it to fill the band.
 #m.slide(
   layout: "image",
-  position: "bottom",
+  variant: "bottom",
   image: path("/docs-src/assets/images/bonsai.webp"),
   fit: "contain",
 )[== Picture below text][A single standing line above the picture.]
 
-// `"background"` puts the picture behind one free-form body cell. The scrim
-// quiets the photograph and the text fill supplies the contrast.
+// `full` puts the picture behind one free-form body cell. The scrim quiets
+// the photograph and the text fill supplies the contrast.
 #m.slide(
   layout: "image",
-  position: "background",
+  variant: "full",
   image: m.components.image(
     path("/docs-src/assets/images/title-city.webp"),
     scrim: black.transparentize(45%),
