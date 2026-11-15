@@ -11,6 +11,7 @@
 #import "layouts.typ" as layouts
 #import "tokens.typ" as tokens
 #import "../polarity.typ": is-dark-canvas, dark-code-theme
+#import "../../incremental/heading.typ": decorate-heading
 #import "../../component/style.typ": deck-colors
 
 #let apply(body, colors: (:), options: (:)) = {
@@ -56,7 +57,9 @@
   show heading: set block(below: 1em)
   // The slide-header prompt: a shell marker in the accent color before every
   // level-two heading, which is what opens a content slide.
-  show heading.where(depth: 2): it => grid(
+  // Declared through `decorate-heading` so the prompt is redrawn on every
+  // frame of an incremental slide, where only one frame holds the heading.
+  show: decorate-heading.with(depth: 2, it => grid(
     columns: (auto, 1fr),
     column-gutter: 0.5em,
     align: (left + top, left + top),
@@ -64,7 +67,7 @@
     // it out of the tagged PDF's structure tree.
     pdf.artifact(text(fill: colors.accent)[\$]),
     it,
-  )
+  ))
   show figure.caption: set text(size: 0.72em, fill: colors.muted)
   show link: set text(fill: colors.accent)
   show raw.where(block: false): set text(fill: colors.accent)

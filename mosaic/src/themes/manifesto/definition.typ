@@ -9,6 +9,7 @@
 #import "layouts.typ" as layouts
 #import "tokens.typ" as tokens
 #import "../polarity.typ": is-dark-canvas, dark-code-theme
+#import "../../incremental/heading.typ": decorate-heading
 
 #let apply(body, colors: (:), options: (:)) = {
   let base-size = options.base-size
@@ -54,7 +55,9 @@
   )
   // Poster headings shout: every slide heading is set in uppercase, and the
   // tracking above keeps the capitals from crowding.
-  show heading.where(depth: 2): it => upper(it)
+  // Declared through `decorate-heading` so the capitals hold on every frame
+  // of an incremental slide, where only one frame holds the heading.
+  show: decorate-heading.with(depth: 2, upper)
   show heading: set block(below: 1em)
   show figure.caption: set text(size: 0.72em, fill: colors.muted)
   show label("mosaic-title-display"): set text(

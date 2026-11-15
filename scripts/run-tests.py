@@ -738,6 +738,32 @@ def run_core(typst: str, sources: list[str]) -> None:
             "--input", f"theme={theme}",
         )
 
+    # A theme's transforming heading rule is drawn on every frame: the title's
+    # words and their bounding boxes are the same on frames 1 and 2. The body
+    # differs between the frames by design, so only the lines up to the body
+    # marker word are compared. Repeated under a heading offset, where the
+    # slide heading is depth 2 but native level 3.
+    for theme in ("default", "editorial", "metropolis", "manifesto", "mono"):
+        for offset in ("0", "1"):
+            output = TMP / f"mosaic-heading-decoration-{theme}-{offset}.pdf"
+            typst_compile(
+                typst, "heading-decoration-themes.typ", output,
+                "--input", f"theme={theme}", "--input", f"offset={offset}",
+            )
+            titles = []
+            for page in (1, 2):
+                boxes = command(
+                    ["pdftotext", "-bbox", "-f", str(page), "-l", str(page), str(output), "-"],
+                    capture=True,
+                ).stdout
+                words = [line.strip() for line in boxes.splitlines() if "<word" in line]
+                body = next(index for index, line in enumerate(words) if "FRAMEBODY" in line)
+                titles.append(words[:body])
+            if not titles[0] or titles[0] != titles[1]:
+                raise TestFailure(
+                    f"{theme} heading differs between frames at offset {offset}: {titles}"
+                )
+
     # Punctuation in a name no longer drops the PDF author field.
     require_contains(pdf_info("author-plain-name"), "Conan O'Brien, Ada Lovelace")
 
