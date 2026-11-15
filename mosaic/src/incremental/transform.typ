@@ -212,84 +212,109 @@
   marker
 }
 
-// Draws a run of list or enum items as a marker grid.
+// Draws a run of list or enum items some of which are not plainly visible.
 //
 // A native list draws every marker with the list's own style, so an item that
-// is hidden on this frame would still show its bullet or number. Here each
-// marker is its own cell and takes the state of its item. Every metric comes
-// from the active `list`/`enum` style rather than from a guess: the marker is
-// the deck's own (`list.marker` at this depth, `enum.numbering`), an `auto`
-// marker column sizes to the widest marker actually drawn, and the gutter is
-// the element's own body indent. `spacing: auto` resolves as it does natively:
-// paragraph leading between the items of a tight list, paragraph spacing
-// between those of a wide one. `tight` is whether the items were written
-// without blank lines between them.
+// is hidden on this frame would still show its bullet or number. The one
+// marker Typst lets a deck compute per item is an enum's number, so the run is
+// emitted as native `enum.item`s under a numbering function that gives each
+// number the state of its item. A bulleted run goes the same way, with the
+// enum borrowing the list's indents, spacing, and marker, which makes the two
+// lay out identically. Everything else is left to Typst: the items sit in the
+// flow exactly where they were written, so tightness, the space around the
+// list, and the theme's list rules apply as they do to an untimed list.
 //
-// `rows` holds `(kind: "item", number:, state:, body:)` records and
-// `(kind: "span", body:)` records for untimed siblings, which span both
-// columns. Explicit item numbers (`3.`) restart the count, exactly as they do
-// in a native enum; removed items still hold their number so the visible
-// markers never shift between steps.
-#let render-item-grid(item-kind, rows, depth: 0, tight: true) = context {
-  let bulleted = item-kind == list.item
-  let (spacing, body-indent, indent) = if bulleted {
-    (list.spacing, list.body-indent, list.indent)
-  } else {
-    (enum.spacing, enum.body-indent, enum.indent)
-  }
+// Each item body restates the enum settings this borrows, so a list nested in
+// an item is untouched. A bulleted item also re-bases `list.marker` to its own
+// depth: inside an enum a nested list would otherwise restart the marker
+// cycle. Bodies are therefore walked from depth zero.
+//
+// Every item carries an explicit number, so a removed item keeps its place in
+// the count and the visible numbers never shift between steps.
+#let render-item-run(run, depth: 0) = context {
+  let bulleted = run.first().func == list.item
   let marker = list.marker
   let pattern = enum.numbering
-  let number = if type(enum.start) == int { enum.start } else { 1 }
-  let cells = ()
-  for row in rows {
-    if row.kind == "span" {
-      cells.push(grid.cell(colspan: 2, align: left, row.body))
+  let own = (
+    numbering: pattern,
+    indent: enum.indent,
+    body-indent: enum.body-indent,
+    spacing: enum.spacing,
+    number-align: enum.number-align,
+  )
+  let borrowed = if bulleted {
+    (
+      indent: list.indent,
+      body-indent: list.body-indent,
+      spacing: list.spacing,
+      number-align: start + top,
+    )
+  } else {
+    (:)
+  }
+  let states = (:)
+  let parts = ()
+  let number = if not bulleted and type(enum.start) == int { enum.start } else { 1 }
+  for member in run {
+    if member.kind != "item" {
+      parts.push(member.body)
       continue
     }
-    if type(row.number) == int {
-      number = row.number
+    if not bulleted and type(member.number) == int {
+      number = member.number
     }
-    if row.state != "removed" {
-      // The zero-width space gives the marker's line the metrics of body
-      // text, so a marker set smaller than the text still sits on the first
-      // baseline of its item, as a native marker does.
-      cells.push(apply-state(row.state, sym.zws + if bulleted {
-        resolve-list-marker(marker, depth)
-      } else {
-        numbering(pattern, number)
-      }))
-      cells.push(apply-state(row.state, if bulleted {
-        set list(marker: shift-list-marker(marker, depth + 1))
-        row.body
-      } else {
-        row.body
-      }))
+    states.insert(str(number), member.state)
+    if member.state != "removed" {
+      parts.push(enum.item(number, apply-state(member.state, {
+        set enum(..own)
+        set list(marker: shift-list-marker(marker, depth + 1)) if bulleted
+        (member.body)(if bulleted { 0 } else { depth })
+      })))
     }
     number += 1
   }
-  pad(left: indent, grid(
-    columns: (auto, 1fr),
-    column-gutter: body-indent,
-    row-gutter: if spacing != auto {
-      spacing
-    } else if tight {
-      par.leading
-    } else {
-      par.spacing
-    },
-    align: (if bulleted { left } else { enum.number-align }, left),
-    ..cells,
-  ))
+  set enum(
+    numbering: (..numbers) => apply-state(
+      states.at(str(numbers.pos().last()), default: "visible"),
+      if bulleted {
+        // An enum sets its number at the top of the line, a list sets its
+        // marker on the first baseline. The two differ only for a marker
+        // smaller or larger than the text, and the zero-width space settles
+        // it: it gives the marker's line the metrics of body text.
+        sym.zws + resolve-list-marker(marker, depth)
+      } else {
+        numbering(pattern, ..numbers)
+      },
+    ),
+    ..borrowed,
+  )
+  parts.sum(default: [])
+}
+
+// A list item as Typst would have built it from the markup.
+#let native-item(entry, depth) = {
+  let bulleted = entry.func == list.item
+  let body = (entry.body)(if bulleted { depth + 1 } else { depth })
+  let item = if bulleted {
+    list.item(body)
+  } else if type(entry.number) == int {
+    enum.item(entry.number, body)
+  } else {
+    enum.item(body)
+  }
+  if entry.label == none { item } else { [#item#entry.label] }
 }
 
 // Joins the entries of one sibling sequence back into content.
 //
 // An entry is either `(kind: "content", body:, blank:, hidden:, group:)` or a
-// list item, `(kind: "item", func:, native:, number:, body:, state:,
-// timed:)`. Content is joined as it stands, one `hide` around each contiguous
-// hidden stretch. A run of items stays native unless one of them is timed (it
-// sits after a pause or inside `on`); a timed run is drawn as a marker grid on
-// every frame, so the list does not change shape as its items arrive.
+// list item, `(kind: "item", func:, number:, label:, body:, state:)`, whose
+// `body` is a function of the list depth to walk it at, because that depth
+// depends on how the run it belongs to is drawn. Content is joined as it
+// stands, one `hide` around each contiguous hidden stretch. A run of items in
+// which every item is visible is the native list, untouched, so the last frame
+// of a list revealed by pauses is the same list written without them. A run
+// with a hidden, dimmed, or removed item goes through `render-item-run`.
 #let render-entries(entries, depth: 0) = {
   let parts = ()
   let index = 0
@@ -309,21 +334,14 @@
       }
       let run = entries.slice(index, last + 1)
       let items = run.filter(member => member.kind == "item")
-      if items.any(item => item.timed) {
-        parts.push(render-item-grid(
-          entry.func,
-          items,
-          depth: depth,
-          tight: not run.any(member => (
-            member.kind == "content" and member.body.func() == parbreak
-          )),
-        ))
-      } else {
+      if items.all(item => item.state == "visible") {
         parts += run.map(member => if member.kind == "item" {
-          member.native
+          native-item(member, depth)
         } else {
           member.body
         })
+      } else {
+        parts.push(render-item-run(run, depth: depth))
       }
       index = last + 1
     } else {
@@ -483,7 +501,6 @@
           )
           for entry in nested {
             if entry.kind == "item" {
-              entry.timed = entry.timed or index > 0
               if local-step < 1 and entry.state != "removed" {
                 entry.state = "hidden"
               }
@@ -497,11 +514,8 @@
         return result
       }
       let result = ()
-      let make-item(child, state, timed) = {
-        let bulleted = child.func() == list.item
+      let make-item(child, state) = {
         let fields = child.fields()
-        let label = fields.at("label", default: none)
-        let number = fields.at("number", default: auto)
         let own = content-children(child.body).filter(part => not is-blank(part))
         if own.len() > 0 and is-pause(own.last()) {
           fail(
@@ -509,31 +523,19 @@
               + "on its own line between the items, or use steps.reveal",
           )
         }
-        let inner = visit(
-          child.body,
-          depth: if bulleted { depth + 1 } else { depth },
-        )
-        let native = if bulleted {
-          list.item(inner)
-        } else if type(number) == int {
-          enum.item(number, inner)
-        } else {
-          enum.item(inner)
-        }
         (
           kind: "item",
           func: child.func(),
-          native: if label == none { native } else { [#native#label] },
-          number: number,
-          body: inner,
+          number: fields.at("number", default: auto),
+          label: fields.at("label", default: none),
+          body: inner-depth => visit(child.body, depth: inner-depth),
           state: state,
-          timed: timed,
         )
       }
       for child in body {
         let func = if type(child) == content { child.func() } else { none }
         if func in (list.item, enum.item) {
-          result.push(make-item(child, "visible", false))
+          result.push(make-item(child, "visible"))
           continue
         }
         // `on` around nothing but items of one kind times those items, so
@@ -546,7 +548,7 @@
           let kinds = inner.map(part => part.func()).dedup()
           if kinds.len() == 1 and kinds.first() in (list.item, enum.item) {
             let state = status(value.range, value.before, value.after, step)
-            result += inner.map(item => make-item(item, state, true))
+            result += inner.map(item => make-item(item, state))
             continue
           }
         }
@@ -621,40 +623,34 @@
         let (list: list-mode, slots) = reveal-slots(value.items)
         let indexed = slots.filter(slot => slot.index != none)
         let kinds = indexed.map(slot => slot.body.func()).dedup()
-        // A uniform bullet or numbered list is drawn as a marker grid so that
-        // hidden items keep their markers aligned with the revealed ones.
+        // A uniform bullet or numbered list goes through the same entries as
+        // a list timed by pauses, so a hidden item hides its marker. Untimed
+        // siblings ride along in place, always visible.
         if list-mode and kinds.len() == 1 and kinds.first() in (
           list.item,
           enum.item,
         ) {
-          let item-kind = kinds.first()
-          let inner-depth = if item-kind == list.item { depth + 1 } else { depth }
-          let rows = ()
-          for slot in slots {
-            // An untimed sibling rides along, always visible, spanning both
-            // the marker and body columns. Pure spacing between items stays
-            // out: the grid's own row gutter already provides it, and a row
-            // per space would double every gap.
-            if slot.index == none {
-              if not is-blank(slot.body) {
-                rows.push((kind: "span", body: go(slot.body)))
-              }
-              continue
-            }
-            rows.push((
-              kind: "item",
-              number: slot.body.fields().at("number", default: auto),
-              state: slot-status(value, slot, step),
-              body: visit(slot.body.body, depth: inner-depth),
-            ))
-          }
-          return render-item-grid(
-            item-kind,
-            rows,
+          return render-entries(
+            slots.map(slot => if slot.index == none {
+              (
+                kind: "content",
+                body: go(slot.body),
+                blank: is-blank(slot.body),
+                hidden: false,
+                group: none,
+              )
+            } else {
+              let fields = slot.body.fields()
+              (
+                kind: "item",
+                func: slot.body.func(),
+                number: fields.at("number", default: auto),
+                label: none,
+                body: inner-depth => visit(slot.body.body, depth: inner-depth),
+                state: slot-status(value, slot, step),
+              )
+            }),
             depth: depth,
-            tight: not slots.any(slot => (
-              slot.index == none and slot.body.func() == parbreak
-            )),
           )
         }
         return slots.map(slot => if slot.index == none {

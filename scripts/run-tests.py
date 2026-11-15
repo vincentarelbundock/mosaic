@@ -824,6 +824,42 @@ def run_core(typst: str, sources: list[str]) -> None:
     if flattened[0]["note"] != expected_note:
         raise TestFailure(f"flattened note text: {flattened[0]['note']!r}")
 
+    # A timed list is the native list. The fixture's first page is a list
+    # written plainly and the pages after it are the frames of its timed twin.
+    # The last frame must match the plain page word for word and box for box,
+    # and every earlier frame must draw what it shows where the last one does,
+    # so nothing moves as the items arrive. A hidden item's marker is hidden
+    # with it, so the number of words on a frame grows with the steps.
+    def word_boxes(pdf: Path, page: int) -> list[str]:
+        boxes = command(
+            ["pdftotext", "-bbox", "-f", str(page), "-l", str(page), str(pdf), "-"],
+            capture=True,
+        ).stdout
+        # The zero-width space is the baseline strut of a hidden-capable
+        # marker; it carries no ink and no width.
+        return [
+            line.strip().replace("\u200b", "")
+            for line in boxes.splitlines()
+            if "<word" in line
+        ]
+
+    for theme in ("default", "editorial", "metropolis", "manifesto", "mono"):
+        twin = TMP / f"mosaic-list-timed-twin-{theme}.pdf"
+        typst_compile(typst, "list-timed-twin.typ", twin, "--input", f"theme={theme}")
+        plain = word_boxes(twin, 1)
+        frames = [word_boxes(twin, page) for page in range(2, 7)]
+        if not plain or frames[-1] != plain:
+            moved = sorted(set(plain) ^ set(frames[-1]))
+            raise TestFailure(f"{theme}: a timed list differs from the plain list: {moved}")
+        final = set(plain)
+        for number, frame in enumerate(frames[:-1], start=1):
+            stray = [word for word in frame if word not in final]
+            if stray:
+                raise TestFailure(f"{theme}: frame {number} of the timed list moves {stray}")
+        counts = [len(frame) for frame in frames]
+        if counts != sorted(counts) or counts[0] >= counts[-1]:
+            raise TestFailure(f"{theme}: timed list frames do not accumulate: {counts}")
+
 def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
     compile_group(typst, sources)
     for source in responsive:
