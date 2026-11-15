@@ -26,3 +26,4 @@ dist/
 *.sync-conflict-*
 *.tmp.[0-9]*.*
 .claude
+.kata.local.toml
