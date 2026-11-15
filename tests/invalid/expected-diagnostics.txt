@@ -129,7 +129,6 @@ theme-definition-unknown|theme does not accept "mystery"
 theme-layouts-incomplete|theme layouts requires "title"
 too-many|grid expects 1 bodies with setup defaults or 2 bodies to override them, received 3
 slide-body-type|slide positional bodies must be content, received integer
-slide-body-none|slide positional bodies must be content, received none
 cell-inset-type|cell inset must be auto, a length, or a dictionary of sides with length values
 cell-inset-side|cell inset must be auto, a length, or a dictionary of sides with length values
 cell-content-type|cell content must be content or none

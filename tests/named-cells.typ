@@ -81,3 +81,7 @@
 
 // Named content flows through incremental cells.
 #mosaic.slide(layout: temporal, cells: (top: [Top], bottom: [Bottom]))
+
+// A `none` positional body is an empty cell: it is what a conditional yields
+// when its branch is not taken.
+#mosaic.slide(layout: comparison, none, [Left only], if false [Never])

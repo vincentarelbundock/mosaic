@@ -631,6 +631,14 @@ def run_core(typst: str, sources: list[str]) -> None:
         count=1,
     )
 
+    # A cell hidden by `steps.on` hides its whole surface: the fills label
+    # rules paint on three such cells are absent from frame 1 and all present
+    # on frame 2.
+    typst_compile(typst, "incremental-cell-surface.typ", TMP / "mosaic-incremental-cell-surface-{p}.svg", "--format", "svg")
+    for color in ("#ff4136", "#0074d9", "#2ecc40"):
+        require_contains(TMP / "mosaic-incremental-cell-surface-1.svg", color, absent=True)
+        require_contains(TMP / "mosaic-incremental-cell-surface-2.svg", color)
+
     section = pdf_text("section-counter")
     require_contains(section, "1/2")
     require_contains(section, "2/2")

@@ -84,7 +84,8 @@
     "slide-invert-margin.typ",
     "headings-style-escape.typ",
     "headings-constructed-depth.typ",
-    "speaker-notes-layout-fields.typ"
+    "speaker-notes-layout-fields.typ",
+    "incremental-cell-surface.typ"
   ],
   "layout": [
     "fit.typ",

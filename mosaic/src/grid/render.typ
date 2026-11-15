@@ -73,7 +73,7 @@
 // A heading inside an incremental grid node would be added and removed with the
 // node, so its outline entry would come and go between frames. Structural, and
 // therefore asked once per slide rather than once per rendered frame.
-#let require-stable-grid-headings(node, contents) = {
+#let validate-stable-grid-headings(node, contents) = {
   let offending = fold-grid(
     node,
     cell => false,
@@ -90,6 +90,7 @@
         + "keep semantic headings structurally stable across frames",
     )
   }
+  node
 }
 
 // Whether a cell paints anything of its own beyond its content, which is what
@@ -168,11 +169,18 @@
   resolve-inset-part(inset, base)
 }
 
+// `id` is the cell's id, which is `none` only alongside a `none` style: a
+// split has neither. `states` are the reveal states of the `on` wrappers
+// around the cell on this step, outermost first; they apply to the whole
+// cell here rather than to its body, so a hidden cell hides its surface,
+// its affixes, and whatever a label rule paints on it, exactly as a hidden
+// split hides everything inside it.
 #let render-cell(
   content,
   style,
   step,
-  path: "grid",
+  id: none,
+  states: (),
   overflow: "off",
   slide: initial-slide,
   track: none,
@@ -188,19 +196,17 @@
   if style == none {
     return content
   }
-  let surface = style
-  let id = surface.remove("_id", default: none)
-  let before = surface.remove("before", default: [])
-  let after = surface.remove("after", default: [])
-  let inset = surface.remove("inset")
-  let fill = surface.remove("fill", default: none)
-  let stroke = surface.remove("stroke", default: none)
-  let radius = surface.remove("radius", default: 0pt)
-  let background = surface.remove("background", default: none)
-  let content-sized = surface.remove("content-sized", default: false)
-  let fit = surface.remove("fit", default: none)
-  let map = surface.remove("map", default: none)
-  let anchor = surface.remove("align", default: none)
+  let before = style.at("before", default: [])
+  let after = style.at("after", default: [])
+  let inset = style.inset
+  let fill = style.at("fill", default: none)
+  let stroke = style.at("stroke", default: none)
+  let radius = style.at("radius", default: 0pt)
+  let background = style.at("background", default: none)
+  let content-sized = style.at("content-sized", default: false)
+  let fit = style.at("fit", default: none)
+  let map = style.at("map", default: none)
+  let anchor = style.at("align", default: none)
   // A cell in an `auto` row track sizes to its content, so its sibling `1fr`
   // tracks receive the remaining height and can align content on the horizon.
   // (`auto` on the horizontal axis is a column width and must not collapse the
@@ -225,6 +231,15 @@
   // keep their own typography.
   let content = if map == none { content } else { map(content) }
   let content = before + content + after
+  // Dimming is a text fill, so it goes on the joined content, inside the
+  // cell: there it reaches the affixes and outranks both the theme's label
+  // rules and the inverted-slide ink restated below. Hiding is applied to
+  // the finished cell at the end.
+  let content = if "dimmed" in states {
+    apply-state("dimmed", content)
+  } else {
+    content
+  }
   // Cell fit modes are the public `fit` helper under two fixed settings, so a
   // layout that shrinks a cell and a deck that shrinks a block go through the
   // same code and cannot drift apart.
@@ -245,12 +260,7 @@
   // `unsolvable`) and therefore hand back the unfitted body, which would read
   // as an overflow that the rendered slide does not have.
   if overflow != "off" and fit == none {
-    content = observe-overflow(
-      content,
-      if id == none { path } else { id },
-      slide,
-      step,
-    )
+    content = observe-overflow(content, id, slide, step)
   }
   // One block carries the whole cell, including its internal paint, and is
   // labeled <mosaic-cell-ID>. Native rules target it directly:
@@ -302,22 +312,20 @@
       #if background != none {
         place(top + left, block(width: 100%, height: 100%, background))
       }
-      #if id != none {
-        for (name, alignment) in (
-          center: center + horizon,
-          top: top + center,
-          right: right + horizon,
-          bottom: bottom + center,
-          left: left + horizon,
-          "top-left": top + left,
-          "top-right": top + right,
-          "bottom-left": bottom + left,
-          "bottom-right": bottom + right,
-        ) {
-          place(alignment)[
-            #metadata(none)#label("mosaic-cell-" + id + "-" + name)
-          ]
-        }
+      #for (name, alignment) in (
+        center: center + horizon,
+        top: top + center,
+        right: right + horizon,
+        bottom: bottom + center,
+        left: left + horizon,
+        "top-left": top + left,
+        "top-right": top + right,
+        "bottom-left": bottom + left,
+        "bottom-right": bottom + right,
+      ) {
+        place(alignment)[
+          #metadata(none)#label("mosaic-cell-" + id + "-" + name)
+        ]
       }
       #block(
         width: region-width,
@@ -326,11 +334,10 @@
         content,
       )
     ]
-    if id == none {
-      body
-    } else {
-      [#body#label("mosaic-cell-" + id)]
-    }
+    let cell = [#body#label("mosaic-cell-" + id)]
+    // Hidden, the cell keeps its place in the grid, and in the measuring
+    // pass of an `auto` track, and paints nothing.
+    if "hidden" in states { apply-state("hidden", cell) } else { cell }
   })
 }
 
@@ -344,7 +351,8 @@
 // `contents` is the id -> content map. Each content-bearing cell looks up its
 // own content by id, so there is no positional cursor to thread or keep aligned
 // across branches and removed incremental nodes. Returns (content, removed,
-// style).
+// cell): `cell` is `none` for a split, whose content is already complete, and
+// otherwise the `(id, style, states)` that `render-cell` wraps the content in.
 //
 // A split normally fills its region, which is what `1fr` tracks need. A split
 // in an `auto` track has no region to fill: it must size to its content, and
@@ -380,7 +388,7 @@
     if state == "removed" {
       return ([], true, none)
     }
-    let (child-content, removed, style) = render-node(
+    let (child-content, removed, cell) = render-node(
       node.child,
       contents,
       step,
@@ -390,14 +398,25 @@
       shrink: shrink,
       compact: compact,
     )
-    return (apply-state(state, child-content), removed, style)
+    // A split is finished content, so the state wraps it here. A cell is
+    // not wrapped yet: the state travels with it to `render-cell`, which
+    // applies it to the whole cell instead of to the body alone.
+    if cell == none {
+      return (apply-state(state, child-content), removed, none)
+    }
+    return (
+      child-content,
+      removed,
+      cell + (states: (state,) + cell.states),
+    )
   }
   if node.kind == "cell" {
-    let style = node.style
-    style.insert("_id", node.id)
-    let style = if style.len() == 0 { none } else { style }
     let body = if node.content == none { contents.at(node.id) } else { node.content }
-    (transform(body, step, heading-scope: path), false, style)
+    (
+      transform(body, step, heading-scope: path),
+      false,
+      (id: node.id, style: node.style, states: ()),
+    )
   } else {
     let rendered = ()
     let tracks = ()
@@ -412,10 +431,10 @@
       let child-shrink = shrink
       if track == auto { child-shrink.insert(along, true) }
       let child-compact = compact or (along == "height" and track == auto)
-      let (child-content, removed, style) = if (
+      let (child-content, removed, cell) = if (
         track == auto and not measuring and is-split-node(child)
       ) {
-        let (full, removed, style) = render-node(
+        let (full, removed, cell) = render-node(
           child,
           contents,
           step,
@@ -439,7 +458,7 @@
             block(width: natural.width, height: natural.height, full)
           })
         }
-        (sized, removed, style)
+        (sized, removed, cell)
       } else {
         render-node(
           child,
@@ -455,9 +474,9 @@
       if not removed {
         let content = render-cell(
           child-content,
-          style,
+          if cell == none { none } else { cell.style },
           step,
-          path: child-path,
+          ..if cell == none { (:) } else { (id: cell.id, states: cell.states) },
           overflow: if measuring { "off" } else { overflow },
           slide: slide,
           track: track,
@@ -513,7 +532,7 @@
 }
 
 #let render(node, contents, step, overflow: "off", slide: initial-slide) = {
-  let (body, removed, style) = render-node(
+  let (body, removed, cell) = render-node(
     node,
     contents,
     step,
@@ -521,7 +540,7 @@
     overflow: overflow,
     slide: slide,
   )
-  if style == none or removed {
+  if cell == none or removed {
     body
   } else {
     grid(
@@ -529,9 +548,10 @@
       rows: (1fr,),
       render-cell(
         body,
-        style,
+        cell.style,
         step,
-        path: "grid",
+        id: cell.id,
+        states: cell.states,
         overflow: overflow,
         slide: slide,
       ),

@@ -19,7 +19,7 @@
 #import "../grid/render.typ": (
   max-node,
   render,
-  require-stable-grid-headings,
+  validate-stable-grid-headings,
 )
 #import "../fit.typ": fit-ratio
 #import "../layout/resolver.typ": resolve-layout
@@ -433,7 +433,7 @@
   // Heading stability is a property of the slide's structure, not of any one
   // frame, so both checks run here rather than inside the render and transform
   // walks that the frame loop repeats.
-  require-stable-grid-headings(resolved-grid, contents)
+  _ = validate-stable-grid-headings(resolved-grid, contents)
   for value in contents.values() {
     require-stable-temporal-headings(value)
   }
