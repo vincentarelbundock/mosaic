@@ -54,9 +54,15 @@
   /// The transformation, called with the heading or its stand-in.
   /// -> function
   decorate,
-  /// The heading level the rule applies to, or `none` for every level.
+  /// The native heading level the rule applies to, or `none` for every level.
   /// -> none | int
   level: none,
+  /// The source depth the rule applies to (`==` is depth 2), or `none` for
+  /// every depth. This is what the deck compiler classifies slides by, and it
+  /// differs from `level` under `set heading(offset: ..)`, so a rule meant
+  /// for the heading that opens a slide selects by depth.
+  /// -> none | int
+  depth: none,
   /// The content the rule is in force for; supplied by `show:`.
   /// -> content
   body,
@@ -67,7 +73,14 @@
   if level != none and type(level) != int {
     fail("decorate-heading level must be none or an integer")
   }
-  show (if level == none { heading } else { heading.where(level: level) }): it => {
+  if depth != none and type(depth) != int {
+    fail("decorate-heading depth must be none or an integer")
+  }
+  let fields = (
+    (if level == none { (:) } else { (level: level) })
+      + (if depth == none { (:) } else { (depth: depth) })
+  )
+  show (if fields.len() == 0 { heading } else { heading.where(..fields) }): it => {
     pending-decorations.update(all => all + (decorate,))
     decorate(it)
   }
