@@ -27,6 +27,20 @@
 // this state otherwise.
 #let canonical-frame = state(key("canonical-frame"), 1)
 
+// The physical step of the frame being drawn, set by the slide runtime before
+// each one. `transform` is handed its step and does not need this; it is for
+// content built where no walk reaches and no step is passed, which can still
+// ask, from inside `context`, whether it is on the canonical frame.
+#let rendered-frame = state(key("rendered-frame"), 1)
+
+// Whether the frame being drawn is the one that carries the slide's real
+// headings. Call inside `context`. Outside a deck there is one frame and it is
+// canonical. A layout that builds a heading of its own inside a `context`
+// block (the title slide's display line) emits the element only when this
+// holds, and its plain text otherwise, so a slide of several frames still has
+// one heading.
+#let is-canonical-frame() = rendered-frame.get() == canonical-frame.get()
+
 // Emits `labeled` on the canonical frame and `plain` on every other one, so a
 // reference label exists exactly once per logical slide.
 #let canonical-only(labeled, plain, frame) = context {

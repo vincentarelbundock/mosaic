@@ -1,7 +1,8 @@
 // Position indicator driven by the deck's logical slide and section counters.
 #import "../shared.typ": fail
 #import "../deck-state.typ": slide-position, section-position
-#import "style.typ": role-colors, component-tokens, is-dimmed, mute-paint
+#import "style.typ": role-colors, component-tokens, mute-paint
+#import "../incremental/container.typ": make-container
 
 /// Displays progress through logical slides or semantic sections in the deck.
 ///
@@ -94,7 +95,10 @@
   /// role's accent.
   /// -> auto | color
   accent: auto,
-) = context {
+// It holds no content of the author's, so its parts are empty; it is a
+// container all the same, which is how the walk redraws it under a dimmed
+// step and tells it so.
+) = make-container((:), render: (parts, dimmed: false) => context {
   if type(variant) != function and (
     type(variant) != str or variant not in ("1/1", "1", "circle", "line")
   ) {
@@ -139,7 +143,7 @@
   let colors = role-colors(role)
   let fill = if fill == auto { colors.fill } else { fill }
   let accent = if accent == auto { colors.accent } else { accent }
-  let (fill, accent) = if is-dimmed() {
+  let (fill, accent) = if dimmed {
     (mute-paint(fill), mute-paint(accent))
   } else {
     (fill, accent)
@@ -199,4 +203,4 @@
       ))
     ]
   }
-}
+})

@@ -206,7 +206,9 @@
   }
   make-container(
     (body: if is-image { none } else { body }, caption: caption),
-    render: parts => draw(
+    // A picture has no paint of its own to mute, so a dimmed figure is its
+    // caption and body in the dim ink and nothing more.
+    render: (parts, dimmed: false) => draw(
       if is-image { body } else { parts.body },
       parts.caption,
     ),

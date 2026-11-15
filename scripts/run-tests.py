@@ -950,10 +950,18 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(quoted, "\u201cPANELQUOTE", absent=True)
     require_contains(quoted, "PANELWHO, PANELSOURCE")
 
-    # A dimmed component mutes its own paint: the fixture's loud fill and accent
-    # are nowhere in the dimmed frame and back in the lit one.
+    # A dimmed component mutes its own paint. The fixture's loud fills and
+    # accents are nowhere on a page where a step dims the component (pages 1
+    # and 5), nested component included, and present where it is lit (pages 2
+    # and 4). Page 3 is a card inside hand-written gray text, which is not a
+    # dimmed step: its paint is untouched.
     typst_compile(typst, "components-dimmed.typ", TMP / "mosaic-components-dimmed-{p}.svg", "--format", "svg")
-    for paint in ("#00ff11", "#ff0011"):
+    dimmed_pages = {1: False, 2: True, 3: True, 4: True, 5: False}
+    for page, lit in dimmed_pages.items():
+        svg = TMP / f"mosaic-components-dimmed-{page}.svg"
+        for paint in ("#00ff11", "#ff0011"):
+            require_contains(svg, paint, absent=not lit)
+    for paint in ("#1100ff", "#ff00ee"):
         require_contains(TMP / "mosaic-components-dimmed-1.svg", paint, absent=True)
         require_contains(TMP / "mosaic-components-dimmed-2.svg", paint)
 

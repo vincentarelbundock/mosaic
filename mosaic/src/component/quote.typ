@@ -128,7 +128,7 @@
     if source != none {
       fail("quote source applies only to a block quotation")
     }
-    return make-container((body: body), render: parts => _native-quote(
+    return make-container((body: body), render: (parts, dimmed: false) => _native-quote(
       block: false,
       quotes: quotes,
       attribution: attribution,
@@ -143,7 +143,7 @@
     attribution: if type(attribution) == label { none } else { attribution },
     source: source,
   )
-  make-container(parts, render: parts => context {
+  make-container(parts, render: (parts, dimmed: false) => context {
     // The tint is the deck's own text color laid over the canvas, not a fixed
     // black: on a dark deck a black tint is invisible, while a tint of the
     // text color reads as the same faint lift in either direction. Pass
@@ -171,6 +171,7 @@
       parts.attribution
     }
     card-panel(
+      dimmed: dimmed,
       role: role,
       fill: if fill == auto {
         tint.transparentize(component-tokens.quote-tint)
