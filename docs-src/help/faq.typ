@@ -21,9 +21,7 @@ How can I reuse slides and states?
 Define a slide as an ordinary Typst function and call it wherever it should appear:
 
 ```typ
-#let results-slide() = m.slide[
-  == Results
-
+#let results-slide() = m.slide[== Results][
   #m.steps.reveal[
     - The estimate is positive.
     - The interval excludes zero.
@@ -55,7 +53,7 @@ See #link(<details>)[the details slide].
 For an explicit slide, put labeled, zero-output metadata at the beginning of its content:
 
 ```typ
-#m.slide[
+#m.slide[][
   #metadata(none) <details>
   == Details
 

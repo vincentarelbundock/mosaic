@@ -42,7 +42,7 @@ For a picture on one side, `tracks:` sizes it: one track size such as `40%` is t
 
 ```typ
 // A file, placed.
-#m.slide(layout: "image", variant: "right", image: path("fig/book.jpg"))[== Readings]
+#m.slide(layout: "image", variant: "right", image: path("fig/book.jpg"))[== Readings][]
 
 // A picture that needs a scrim and a description is a dictionary.
 #m.slide(

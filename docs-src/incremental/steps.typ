@@ -31,7 +31,7 @@ The #link("reveals.html")[Reveal and replace] page shows each of these on real s
 Use `m.steps.pause` when source order already expresses the reveal order:
 
 ```typ
-#m.slide[
+#m.slide[][
   The estimate is positive.
 
   #m.steps.pause

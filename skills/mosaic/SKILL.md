@@ -122,7 +122,7 @@ Variants:
 **Pictures.** The title, section, and image layouts take the picture itself the same way, as `image:`: a `path(..)` when the file is all there is to say; a dictionary, `(path: path(..), alt: .., fit: .., scrim: ..)`, when the picture needs a scrim, a fit, or alt text; or content, such as `m.components.image(path(..), ..)`, when you already have a picture element. A bare string is rejected. A layout's `variant:` selects its arrangement, a picture's place included: the image layout's `left`/`right`/`top`/`bottom`/`full`, and `image-left` … `image-background` in both the title and section layouts. There is no `position:` argument. `tracks:` sizes a picture on one side, where one size such as `40%` is the picture's share on whichever side.
 
 ```typ
-#m.slide(layout: "image", variant: "right", image: path("fig/book.jpg"))[== Readings]
+#m.slide(layout: "image", variant: "right", image: path("fig/book.jpg"))[== Readings][]
 #m.slide(layout: "section", variant: "image-top", image: path("fig/chapter.jpg"))[Methods]
 #m.slide(
   layout: "title",
@@ -172,7 +172,7 @@ Most decks are built from a handful of recurring shapes. Reach for the named for
 
 **Bulleted content slide.** A bare `== Slide title` followed by a list. Do not write `m.slide` for this.
 
-**Two-column slide.** `columns: 2` on the content layout: the opening heading is the header, then one block per column.
+**Two-column slide.** `columns: 2` on the content layout, then three positional blocks: header, left, right.
 
 ```typ
 #m.slide(layout: "content", columns: 2)[== Comparison][
@@ -182,7 +182,7 @@ Most decks are built from a handful of recurring shapes. Reach for the named for
 ]
 ```
 
-Use it for side-by-side figures too, wrapping each in `m.components.figure(..)`, which contains the picture and sizes it to its cell. Add `tracks: (2fr, 1fr)` for an uneven split. Under a theme whose content layout is `header-body-footer` (Metropolis), a third block fills the footer cell unless the deck gave the footer a default, in which case positional bodies pass over it.
+Use it for side-by-side figures too, wrapping each in `m.components.figure(..)`, which contains the picture and sizes it to its cell. Add `tracks: (2fr, 1fr)` for an uneven split. Under a theme whose content layout is `header-body-footer` (Metropolis), the cells in order are header, body, footer, so `[== Title][Body]` leaves the footer to its deck default and a third block fills it.
 
 **Figure slide.** The image layout's default variant, `figure`: a header above a contained picture, with an optional caption beneath.
 
@@ -193,7 +193,7 @@ Use it for side-by-side figures too, wrapping each in `m.components.figure(..)`,
 
 The `figure` variant defaults to `fit: "contain"`, which is what a chart needs: never crop data. `caption:` composes a native Typst `figure`, so it takes the deck's own `show figure.caption` rules and figure numbering; switch numbering off with `set figure(numbering: none)`. `caption:` is rejected by every other variant. This slide has header, image, and caption cells but no body, so a single standing line of commentary belongs in `caption:`.
 
-**Picture beside text.** The directional variants `left`, `right`, `top`, and `bottom` pair a full-bleed picture with a header and body region. The opening heading is the header and the next block the body:
+**Picture beside text.** The directional variants `left`, `right`, `top`, and `bottom` pair a full-bleed picture with a header and body region. The first block fills the header and the second the body:
 
 ```typ
 #m.slide(layout: "image", variant: "right", image: path("fig/book.jpg"))[== Readings][
@@ -263,7 +263,7 @@ Key setup arguments:
 - `layouts:`: a dictionary overriding only `content`, `title`, or `section`. Both explicit slides and automatic `==` slides use the configured `content` layout.
 - `headings:`: which heading levels open slides. An array indexed by level whose entries are `"section"`, `"slide"`, or `none` for a level that opens nothing; the default is `("section", "slide")`. `("section", "section", "slide")` makes `===` the content slide. Levels past the end are ordinary content inside the current slide.
 - `font:` / `base-size:`: the deck's typeface (a family or a list of families) and base text size. They are theme options every theme has, so `setup` takes them under any theme. A theme's headings and tiers are multiples of the base size, so the deck scales with it; a `set text(size: ..)` after setup changes body text alone.
-- `cells:`: recurring cell defaults (such as `footer`). They apply only when the resolved layout contains that cell ID. Positional bodies pass over a cell with a default; a slide replaces or suppresses it by name, through its own `cells: (footer: ..)` or `cells: (footer: none)`.
+- `cells:`: recurring cell defaults (such as `footer`). They apply only when the resolved layout contains that cell ID. A positional body that reaches the cell replaces the default; otherwise a slide replaces or suppresses it by name, through its own `cells: (footer: ..)` or `cells: (footer: none)`.
 - `background:` / `foreground:`: the deck's full-slide planes. Every slide inherits them unless it passes its own value, or `none` to suppress one.
 - `paper:`: `"16-9"` (default), `"4-3"`, or a `(width:, height:)` dictionary of positive absolute lengths (no `em`).
 - `spacing:`: for example `(inset: 1.5em)` to set the default cell inset.
@@ -347,19 +347,20 @@ Cell insets provide slide margins (`setup` uses a zero page margin). Adjacent ce
 
 ## 8. Fill cells with content
 
-A slide accepts cell content in two distinct forms. Do not mix them in one slide.
+A slide accepts cell content in two forms, and they combine: a cell named in `cells:` is filled from it, and the positional blocks fill the rest.
 
-**Positional bodies** follow one rule: *a slide's opening heading is its header, and everything else fills the cells in order.* In a layout with a `header` cell, the heading that opens the slide fills it, whether it sits in a block of its own or opens the first one, exactly as `== Title` does on a heading slide. The bodies then fill the other cells in source order: left to right within `columns`, top to bottom within `rows`, recursively through nesting. A grid with no `header` cell lifts nothing.
+**Positional bodies** fill the layout's cells in order, starting with the first: the Nth block fills the Nth cell. Content is never read. The order is the layout's: header, body, footer for the content layout; left to right within `columns`, top to bottom within `rows`, recursively through nesting. The header, a footer, and cells with a deck default all count. Fewer blocks than cells leaves the trailing cells to their deck default, or empty; more is an error naming the cells there are to fill.
 
 ```typ
 #m.slide(layout: m.grids.columns("a", "b", "c"))[a][b][c]
-#m.slide[== Title][Body]            // header, then body
+#m.slide[== Title][Body]                       // header, then body
+#m.slide[][Body only]                          // empty header, then body
 #m.slide(columns: 2)[== Title][Left][Right]
 ```
 
-Two kinds of cell are out of positional reach, and are addressed by name: a header that is not a heading (`#m.slide[Plain][Body]` is an error on a header layout), and a cell with a deck default from `setup(cells:)`. More bodies than cells to fill is an error listing the cells positional bodies reach.
+So `#m.slide[Some text]` puts the text in the *header*. For a body-only slide on a layout with a header, write `#m.slide[][Body]`, name the cell (`cells: (body: [..])`), or pick the `body` variant.
 
-**Named `cells:`** for anything larger or reusable — assignment stays independent of traversal order:
+**Named `cells:`** for anything larger or reusable, assignment independent of traversal order, or a single cell beside positional blocks (`#m.slide(cells: (footer: [Source: OECD]))[== Results][Body]`):
 
 ```typ
 #m.slide(layout: composition, cells: (main: [...], notes: [...], source: [...]))
@@ -401,7 +402,7 @@ Rules after `#show: m.setup` apply deck-wide. Scope a rule and slide inside a bl
 ```typ
 #[
   #show label("mosaic-cell-body"): set align(center + horizon)
-  #m.slide[Centered for this slide only]
+  #m.slide[][Centered for this slide only]
 ]
 ```
 
@@ -428,7 +429,7 @@ A semantic heading feeds outlines and bookmarks; use `text(...)` directly for di
 
 Keep three concerns distinct:
 
-- **Cells** (`header`, `body`, `footer`) participate in the resolved grid. A recurring footer is a setup `cells:` default for the real `footer` cell, applied whenever the resolved layout contains that cell. A slide overrides or suppresses it by name, `cells: (footer: ..)` or `cells: (footer: none)`; positional bodies pass over it. Title slides have no `footer` cell, so they are unaffected.
+- **Cells** (`header`, `body`, `footer`) participate in the resolved grid. A recurring footer is a setup `cells:` default for the real `footer` cell, applied whenever the resolved layout contains that cell. A slide overrides or suppresses it by name, `cells: (footer: ..)` or `cells: (footer: none)`, or with a positional block that reaches the footer. Title slides have no `footer` cell, so they are unaffected.
 - **Planes** are the `background:` and `foreground:` arguments of `setup` and `slide`, never entries in `cells:`. They cover the full usable slide area without changing grid measurements. A slide inherits the setup plane by default, replaces it with its own value, or suppresses it with `none`.
 - **Runtime state** supplies logical slide, section, and frame counters, read by components such as `m.components.progress()`.
 
@@ -454,8 +455,7 @@ Write one logical slide; Mosaic adds frames until the last timed command has run
 - `m.steps.drawing`: connects the same timing model to custom structures (CeTZ canvases, Fletcher diagrams); preserve hidden bounds so later additions do not shift the drawing. A command wrapped in `on` is only valid inside `steps.drawing`; text outside it is written as content, `on(2)[text]`.
 
 ```typ
-#m.slide[
-  == Findings
+#m.slide[== Findings][
   - The estimate is positive.
   #m.steps.pause
   - The interval excludes zero.
@@ -521,7 +521,7 @@ Independently of `output:`, a deck that holds any note also embeds those notes i
 When compilation fails:
 
 1. Recompile the smallest affected deck and capture the exact diagnostic.
-2. Check for an unknown layout name, a missing named cell, mixed positional and named content, or an invalid layout variant.
+2. Check for an unknown layout name, a missing named cell, more positional blocks than the layout has cells, or an invalid layout variant.
    - `mosaic: content appears before the first heading handled by setup` means something after `#show: m.setup` emits content before the first `=`/`==` or `m.slide` — often a tool-setup call (e.g. `calepin.setup(..)`) that looks inert but produces content. Move it inside the first slide's body.
    - `mosaic: content appears after an explicit slide and belongs to no slide` means text or a call follows an `m.slide(..)` at the top level. Open a new slide with a heading, or move the content into the slide.
    - A diagnostic that names a replacement spelling (a title's `variant: "image"` or `position:`, a `headings:` dictionary) gives the current spelling. Apply it as written.

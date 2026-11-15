@@ -60,7 +60,7 @@ Native rules after `m.setup` are still the right tool for typography or a specia
   #show label("mosaic-cell-body"): set text(fill: white)
   #m.slide(
     background: block(width: 100%, height: 100%, fill: rgb("#111827")),
-  )[Dark for this slide only]
+  )[][Dark for this slide only]
 ]
 ```
 
@@ -120,7 +120,7 @@ The dark schemes swap in the dark syntax highlighting theme on their own; polari
 The last slide of every gallery above is the same command:
 
 ```typ
-#m.slide(invert: true)[
+#m.slide(invert: true)[][
   One inverted slide for the headline number.
 ]
 ```

@@ -41,7 +41,7 @@ When no built-in layout fits, write the slide's arrangement yourself. A custom s
 
 Build a custom slide in three separate layers: define its named grid, assign content to those names, and style the labeled cells with native Typst rules. The walkthrough below grows one slide through all three. The sections after it are the reference for each layer.
 
-#unreleased(calepin.elements.callout)[Painting a cell's own block with `set block` rules and the rule that a slide's opening heading is its header are new.]
+#unreleased(calepin.elements.callout)[Painting a cell's own block with `set block` rules, positional bodies that fill every cell in order (so a single body fills the header), and combining positional bodies with `cells:` are new.]
 
 = Walkthrough
 
@@ -268,13 +268,11 @@ The #link("../api/grids.html")[Grid API] lists the exact accepted forms and thei
 
 = Filling cells
 
-A slide accepts cell content in two distinct forms. Use positional content blocks (`[...][...]`) for the ordinary case, where order says enough, or the named `cells:` dictionary to assign content by cell ID. Do not mix the two forms in one slide. Both forms work for a custom grid and for a built-in layout alike.
+A slide accepts cell content in two forms: positional content blocks (`[...][...]`), matched to cells by order, and the named `cells:` dictionary, which assigns content by cell ID. They combine on one slide. Both forms work for a custom grid and for a built-in layout alike.
 
 == Positional content with `[][]`
 
-Place content blocks directly after the `m.slide(...)` call. Each pair of brackets is one positional body: `[a][b][c]` supplies three bodies. One rule decides where they go: *a slide's opening heading is its header, and everything else fills the cells in order.*
-
-In a grid of your own, that order is the source order of the cells: left to right within columns, top to bottom within rows, and recursively through nested grids.
+Place content blocks directly after the `m.slide(...)` call. Each pair of brackets is one positional body: `[a][b][c]` supplies three bodies. Mosaic matches them to cell IDs in source order, left to right within columns, top to bottom within rows, and recursively through nested grids.
 
 ```typ
 #m.slide(layout: m.grids.columns("a", "b", "c"))[a][b][c]
@@ -287,28 +285,28 @@ In a grid of your own, that order is the source order of the cells: left to righ
   title: "Positional bodies assigned to horizontal and vertical grids",
 )
 
-In a layout with a `header` cell, such as the content layout, the heading that opens the slide fills the header, exactly as `== Title` does when a heading opens a slide by itself. The bodies then fill the remaining cells. It makes no difference whether the heading sits in a block of its own or opens the first one, so these are three spellings of one slide:
+The Nth block always fills the Nth cell, and Mosaic never looks inside the blocks. Every cell counts, the header and a footer included, so in the content layout the first block is the header:
 
 ```typ
-== Results
-
-The estimate is positive.
-
-#m.slide[== Results][The estimate is positive.]
-
-#m.slide[
-  == Results
-
-  The estimate is positive.
-]
+#m.slide[== Results][The estimate is positive.]   // header, then body
+#m.slide[][The estimate is positive.]             // empty header, then body
+#m.slide[The estimate is positive.]               // the header alone
 ```
 
-Two kinds of cell are out of positional reach, and `cells:` addresses both by name:
+The last line is the one to watch: a single block on a layout with a header fills the header. Leave the header empty with `[]`, name the cell through `cells:`, or pick a layout variant without a header.
 
-- The header, when what goes in it is not a heading. `#m.slide[Results][The estimate is positive.]` is an error on a header layout rather than a guess about which block is which.
-- A cell with a deck default from `m.setup(cells:)`, such as a recurring footer. Positional bodies pass over it, so the default shows; name the cell to replace or suppress it on one slide.
+Fewer blocks than cells leaves the trailing cells to their deck default from `m.setup(cells:)`, or empty, which is how a deck footer survives an ordinary `[== Title][Body]` slide. More blocks than cells is an error that names the cells there are to fill. A slide with no blocks at all is an empty slide. Content written after an explicit slide, outside any slide, is an error too: open a new slide with a heading, or put the content in the slide.
 
-Supplying more bodies than there are cells to fill is an error that lists the cells positional bodies reach, and says how to reach the header when no heading was lifted. Content written after an explicit slide, outside any slide, is an error too: open a new slide with a heading, or put the content in the slide.
+== Combining both forms
+
+A cell named in `cells:` is filled from it and leaves the positional pool; the blocks then fill the remaining cells in order. The usual case is a footer that belongs to one slide:
+
+```typ
+#m.slide(
+  layout: m.layouts.content(variant: "header-body-footer"),
+  cells: (footer: [Source: OECD]),
+)[== Results][The estimate is positive.]
+```
 
 == Named content with `cells:`
 

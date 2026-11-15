@@ -29,8 +29,7 @@ An overflow means the slide holds more than it can show. The remedy is editorial
 When a single indivisible block is the problem, a wide table, a chart, or a generated list, scale that one block with `m.fit` and leave the deck's typography alone:
 
 ```typ
-#m.slide[
-  == Regression results
+#m.slide[== Regression results][
   #m.fit(my-table)
 ]
 ```
