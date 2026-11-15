@@ -91,3 +91,15 @@
     "visible"
   }
 }
+
+// Wraps content in the rendering of one state: drawn, hidden but still
+// occupying its space, muted, or absent.
+#let apply-state(state, body) = if state == "visible" {
+  body
+} else if state == "hidden" {
+  hide(body)
+} else if state == "dimmed" {
+  text(fill: gray, body)
+} else {
+  []
+}

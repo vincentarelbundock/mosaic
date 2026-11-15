@@ -621,6 +621,48 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(section, "2/2")
 
 
+    # Steps inside native containers reach the page they name and no earlier
+    # one. Each pair is the page before and after the step, and every word is
+    # one token so a narrow shape cannot hyphenate it out of the grep.
+    container_words = {
+        2: ("TABLEFIRST", ("TABLEHEADSECOND", "TABLESECOND")),
+        4: ("TERMFIRST", ("TERMSECOND",)),
+        6: ("RECTFIRST", ("RECTSECOND", "CIRCLESECOND")),
+        8: ("ROTATEFIRST", ("ROTATESECOND", "SCALESECOND", "MOVESECOND")),
+        10: ("COLUMNFIRST", ("COLUMNSECOND", "PARSECOND")),
+        12: ("MATHFIRST", ("FRACSECOND", "ROOTSECOND", "ATTACHSECOND")),
+        14: ("CAPTIONFIRST", ("CAPTIONSECOND",)),
+        16: ("HEADINGFIRST", ("HEADINGSECOND",)),
+    }
+    for expected in ("PLACEHOST", "PLACEDEFAULT", "PLACEOFFSET"):
+        require_contains(pdf_page_text("incremental-containers", 1), expected)
+    for page, (first, later) in container_words.items():
+        before = pdf_page_text("incremental-containers", page)
+        after = pdf_page_text("incremental-containers", page + 1)
+        require_contains(before, first)
+        for word in later:
+            require_contains(before, word, absent=True)
+            require_contains(after, word)
+    require_contains(pdf_page_text("incremental-containers", 17), "HEADINGFIRST", absent=True)
+
+    # A hidden list item hides its marker, and a timed list is drawn with the
+    # deck's own marker and numbering. The markers are counted per page: a
+    # leaked marker is in the text layer even when its item is not.
+    marker_counts = {
+        1: {"§": 1, "¶": 0},
+        2: {"§": 2, "¶": 1},
+        3: {"§": 3, "¶": 1},
+        4: {"a)": 1, "b)": 0, "c)": 1},
+        5: {"a)": 1, "b)": 1, "c)": 1},
+        6: {"a)": 1, "b)": 0},
+        7: {"a)": 1, "b)": 1},
+        8: {"§": 2},
+    }
+    for page, counts in marker_counts.items():
+        marker_page = pdf_page_text("pause-list-markers", page)
+        for marker, count in counts.items():
+            require_contains(marker_page, marker, count=count)
+
 def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
     compile_group(typst, sources)
     for source in responsive:

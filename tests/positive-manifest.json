@@ -79,7 +79,14 @@
     "theme-facade-metropolis.typ",
     "theme-facades.typ",
     "theme-spacing-merge.typ",
-    "theme-default.typ"
+    "theme-default.typ",
+    "handout-headings.typ",
+    "heading-decoration.typ",
+    "incremental-containers.typ",
+    "incremental-labels.typ",
+    "pause-inert-segment.typ",
+    "pause-list-markers.typ",
+    "replace-wrap.typ"
   ],
   "layout": [
     "fit.typ",

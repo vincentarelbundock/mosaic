@@ -128,3 +128,10 @@ theme-definition-option-conflict|theme option "paper" conflicts with setup
 theme-definition-unknown|theme does not accept "mystery"
 theme-layouts-incomplete|theme layouts requires "title"
 too-many|grid expects 1 bodies with setup defaults or 2 bodies to override them, received 3
+decorate-heading-function|decorate-heading expects a function
+note-in-component|note cannot be used inside a Mosaic component, a context block, a layout callback, or show-rule output
+pause-item-end|a pause at the end of a list item has no effect
+replace-align|replace align must be an alignment, received "center"
+slide-nested|slide cannot be nested inside another slide or a container
+steps-in-context|pause and steps cannot be used inside a Mosaic component, a context block, a layout callback, or show-rule output
+steps-unsupported-container|pause, steps, and note cannot be used inside binom, which the slide runtime cannot rebuild

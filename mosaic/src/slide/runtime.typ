@@ -7,15 +7,15 @@
 #import "../incremental/transform.typ": (
   transform,
   require-stable-temporal-headings,
+  validate-frame-metadata,
 )
-#import "../incremental/heading.typ": strip-headings
+#import "../incremental/heading.typ": canonical-frame, strip-headings
 #import "../note/analysis.typ": (
   notes-at,
   fixed-grid-notes-at,
   has-note,
   fixed-grid-has-note,
 )
-#import "../note/command.typ": is-note
 #import "../grid/render.typ": (
   max-node,
   render,
@@ -429,6 +429,9 @@
   } else {
     page.fill
   }
+  // The frame that carries the slide's real headings and reference labels is
+  // the first one rendered: step 1, or the only step of a handout.
+  canonical-frame.update(_ => physical-steps(steps, handout).first())
   for step in physical-steps(steps, handout) {
     // The whole cell grid carries <mosaic-slide>, so one native rule can reach
     // every cell of a slide at once:
@@ -462,7 +465,7 @@
       )
     }
     let frame = [
-        #show metadata: it => if is-note(it) { [] } else { it }
+        #show metadata: validate-frame-metadata
         #full-slide-layer(background-content)
         #full-slide-layer(rendered)
         #full-slide-layer(foreground-content)

@@ -77,7 +77,24 @@
 /// body. Compare `steps.on` and `steps.reveal`, which name their steps
 /// explicitly and can therefore reach frames out of source order.
 ///
-/// Empty leading, trailing, or consecutive pauses produce no blank frames.
+/// Empty leading, trailing, or consecutive pauses produce no blank frames, and
+/// neither does a stretch between two pauses that holds only spacing.
+///
+/// A pause splits the content it sits in, so put it between the things it
+/// separates. Between list items it goes on a line of its own:
+///
+/// ```typ
+/// - Shown first
+/// #mosaic.steps.pause
+/// - Shown second
+/// ```
+///
+/// The list is then drawn by Mosaic rather than by Typst, so that the marker
+/// of a hidden item is hidden with it. A pause written at the end of an item
+/// (`- Shown first #mosaic.steps.pause`) would split only that item and reveal
+/// nothing, so it is an error. The same limits as `steps.on` apply to where a
+/// pause can be found: not inside a component, a `context` block, a `layout`
+/// callback, or the output of a show rule.
 ///
 /// -> content
 #let pause = metadata((

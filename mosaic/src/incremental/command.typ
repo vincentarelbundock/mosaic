@@ -7,7 +7,7 @@
   validate-states,
 )
 #import "../grid/model.typ": is-node
-#let wrapper(kind, ..fields) = metadata((
+#let make-record(kind, ..fields) = metadata((
   mosaic: tag,
   kind: kind,
   ..fields.named(),
@@ -89,6 +89,7 @@
 ///
 /// - `2`: the single step 2.
 /// - `"2-"`: step 2 onward, to the end of the slide.
+/// - `"-2"`: from the first step through step 2.
 /// - `"2-4"`: steps 2 through 4 inclusive.
 ///
 /// *States*
@@ -99,26 +100,54 @@
 /// - `"visible"`: the body is drawn normally.
 /// - `"dimmed"`: the body is drawn muted, which is how a point stays legible
 ///   after the discussion has moved on.
+/// - `"removed"`: the body is absent and gives up its space, so the content
+///   around it moves.
 ///
 /// The body may be content or a Mosaic grid node, so whole regions of a layout
-/// can appear and disappear, not just text.
+/// can appear and disappear, not just text. Inside `steps.drawing` it may also
+/// be a drawing command or an array of them.
+///
+/// *List items*
+///
+/// `on` around list items keeps them in the surrounding list:
+///
+/// ```typ
+/// - Always here
+/// #mosaic.steps.on("2-")[- Arrives on step 2]
+/// ```
+///
+/// The list is then drawn by Mosaic rather than by Typst, so that the marker
+/// of a hidden item is hidden with it. It takes the deck's `list.marker`,
+/// `enum.numbering`, spacing, and indents.
+///
+/// *Where it works*
+///
+/// Mosaic resolves steps by walking the slide's content, rebuilding each
+/// element around what this frame shows. It can do that for ordinary markup
+/// and for the native containers a slide is made of: blocks and boxes, lists,
+/// tables and grids, figures, shapes, transforms, columns, and math. It cannot
+/// look inside a `context` block, a `layout` callback, or the output of a show
+/// rule, nor rebuild an element it does not know. A step, `pause`, or `note`
+/// placed there fails the compile rather than vanishing; move it outside.
 ///
 /// -> content | dictionary
 #let on(
-  /// Which steps show the body: an integer, `"N-"` for open-ended, or `"N-M"`
-  /// for a closed range.
+  /// Which steps show the body: an integer, `"N-"` for open-ended, `"-M"` for
+  /// everything up to a step, or `"N-M"` for a closed range.
   /// -> int | str
   range,
-  /// How the body renders before the range: `"hidden"`, `"visible"`, or
-  /// `"dimmed"`.
+  /// How the body renders before the range: `"hidden"`, `"visible"`,
+  /// `"dimmed"`, or `"removed"`.
   /// -> str
   before: "hidden",
-  /// How the body renders after the range: `"hidden"`, `"visible"`, or
-  /// `"dimmed"`.
+  /// How the body renders after the range: `"hidden"`, `"visible"`,
+  /// `"dimmed"`, or `"removed"`.
   /// -> str
   after: "hidden",
-  /// Content or Mosaic grid node controlled by the range.
-  /// -> content | dictionary
+  /// Content or Mosaic grid node controlled by the range. Anything else is a
+  /// drawing command, which only `steps.drawing` can interpret: write text as
+  /// content (`[text]`), not as a string.
+  /// -> content | dictionary | any
   body,
 ) = {
   _ = validate-range(range)
@@ -133,7 +162,7 @@
       child: body,
     )
   } else if type(body) == content {
-    wrapper(
+    make-record(
       "temporal-on",
       range: range,
       before: before,
@@ -243,6 +272,11 @@
 /// - Otherwise each positional argument is one item, revealed whole.
 /// - Grid nodes may be revealed too, but content and nodes cannot be mixed in
 ///   one call.
+/// - Inside `steps.drawing`, the items may be drawing commands, one per step.
+///
+/// A revealed list is drawn by Mosaic rather than by Typst, so that hidden
+/// items hide their markers too. It takes the deck's `list.marker`,
+/// `enum.numbering`, spacing, and indents.
 ///
 /// ```typ
 /// #mosaic.steps.reveal(start: 2, after: "dimmed",
@@ -263,8 +297,8 @@
   /// `"dimmed"` mutes it as the build moves on, and `"hidden"` removes it.
   /// -> str
   after: "visible",
-  /// The items: content blocks or Mosaic grid nodes, but not both. At least one
-  /// is required.
+  /// The items: content blocks, Mosaic grid nodes, or drawing commands, but
+  /// only one kind per call. At least one is required.
   /// -> arguments
   ..items,
 ) = {
@@ -275,21 +309,25 @@
     fail("reveal expects content or at least one grid node")
   }
   let node-count = items.filter(is-node).len()
-  if node-count > 0 {
-    if node-count != items.len() {
-      fail("reveal cannot mix content and grid nodes")
-    }
-    return items.enumerate().map(((index, node)) => on(
+  if node-count > 0 and node-count != items.len() {
+    fail("reveal cannot mix content and grid nodes")
+  }
+  // Grid nodes and drawing commands have no content to wrap, so each becomes
+  // its own `on`. A drawing command is whatever the drawing library produces
+  // that is not content: a function, an array, a string.
+  let is-command(item) = type(item) != content and not is-node(item)
+  if node-count > 0 or items.all(is-command) {
+    return items.enumerate().map(((index, item)) => on(
       start + index,
       before: before,
       after: after,
-      node,
+      item,
     ))
   }
   if not items.all(item => type(item) == content) {
     fail("reveal expects content or Mosaic grid nodes")
   }
-  wrapper(
+  make-record(
     "temporal-reveal",
     start: start,
     before: before,
@@ -302,7 +340,9 @@
 /// Replaces one content block with the next on successive steps.
 ///
 /// Exactly one body is on screen at a time, and every body occupies the same
-/// space, so surrounding content does not shift as the slide advances. That
+/// space, so surrounding content does not shift as the slide advances. Each
+/// body is laid out at the width the slot is offered, so prose wraps as usual,
+/// and the slot is as large as the largest of them. That
 /// makes it the tool for an equation that rewrites itself or a diagram that
 /// gains an annotation.
 ///
@@ -341,7 +381,10 @@
         + "cell rather than replacing grid trees",
     )
   }
-  wrapper(
+  if type(align) != alignment {
+    fail("replace align must be an alignment, received " + repr(align))
+  }
+  make-record(
     "temporal-replace",
     start: start,
     align: align,
@@ -383,17 +426,20 @@
 /// or `reveal`, alone or as an array. Named arguments are forwarded untouched to
 /// `render`, which is how `spacing:` above reaches `fletcher.diagram`.
 ///
+/// `render` and `hide` are both required; `none` is only the placeholder that
+/// `drawing.with(..)` fills in.
+///
 /// -> content
 #let drawing(
   /// Draws the frame. Called as `render(..named, commands)` with the named
   /// arguments given here and the array of commands this frame keeps. Usually
-  /// the library's own top-level renderer.
-  /// -> function | none
+  /// the library's own top-level renderer. Required.
+  /// -> function
   render: none,
   /// Turns one command into its invisible counterpart, so it still reserves
   /// space and the drawing does not shift between frames. Usually the library's
-  /// own `hide`.
-  /// -> function | none
+  /// own `hide`. Required, even when no command is ever hidden.
+  /// -> function
   hide: none,
   /// Turns one command into its muted counterpart. Required only if some step
   /// range uses the `"dimmed"` state; omitting it makes that an error.
@@ -413,7 +459,7 @@
   if dim != none and type(dim) != function {
     fail("drawing dim must be none or a function")
   }
-  wrapper(
+  make-record(
     "temporal-drawing",
     render: render,
     hide: hide,
