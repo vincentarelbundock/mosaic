@@ -1,8 +1,8 @@
 // A theme with one option of its own, in the importable shape a deck expects.
-#import "@preview/mosaic:0.0.1": (
+#import "@local/mosaic:0.0.3": (
   slide, note, fit, grids, steps, components, themes, layouts,
 )
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 
 #let base = mosaic.themes.default.definition
 
@@ -11,10 +11,13 @@
 // reaches `apply`.
 #let seminar = base + (
   name: "Seminar",
-  options: base.options + (density: "airy"),
+  options: (density: "airy"),
   apply: (body, colors: (:), options: (:)) => {
-    let size = if options.density == "airy" { 30pt } else { 22pt }
-    show: (base.apply).with(colors: colors, options: options + (base-size: size))
+    show: (base.apply).with(colors: colors, options: options)
+    let airy = options.density == "airy"
+    set par(leading: if airy { 0.9em } else { 0.5em })
+    set list(spacing: if airy { 1.4em } else { 0.6em })
+    set enum(spacing: if airy { 1.4em } else { 0.6em })
     body
   },
 )

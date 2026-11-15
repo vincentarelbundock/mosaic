@@ -1,7 +1,7 @@
 #import "/.calepin/calepin.typ" as calepin
 #import "/_includes/embedded-examples.typ": embedded-example, thumbnail-gallery
 #import "/_includes/pdf-slideshow.typ": pdf-slideshow
-#import "/_includes/site.typ": asset-url
+#import "/_includes/site.typ": asset-url, unreleased
 
 #set document(title: [Custom slides])
 #metadata((title: "Custom")) <website-metadata>
@@ -41,15 +41,7 @@ When no built-in layout fits, write the slide's arrangement yourself. A custom s
 
 Build a custom slide in three separate layers: define its named grid, assign content to those names, and style the labeled cells with native Typst rules. The walkthrough below grows one slide through all three. The sections after it are the reference for each layer.
 
-#calepin.elements.callout(kind: "warning", title: [Requires Mosaic 0.0.3])[
-  Painting a cell's own block with `set block` rules is new in the development version, 0.0.3, which is not on Typst Universe yet, so the snippets and examples on this page pin the development version. One command installs it — `curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh` — and then it imports as:
-
-  ```typ
-  #import "@local/mosaic:0.0.3" as m
-  ```
-
-  See #link("../start/install.html")[Install] for the full instructions.
-]
+#unreleased(calepin.elements.callout)[Sizing a split with `tracks:`, painting a cell's own block with `set block` rules, and the rule that a slide's opening heading is its header are new.]
 
 = Walkthrough
 
@@ -88,15 +80,13 @@ Start with one named cell and pass it to `slide` as the layout.
 
 == Nest splits and size tracks
 
-Splits nest directly: `rows` stacks the sidebar cells, `track` assigns their proportions, and `columns` combines the sidebar with the main cell.
+Splits nest directly: `rows` stacks the sidebar cells, `columns` combines the sidebar with the main cell, and each split's `tracks:` gives its children their proportions.
 
 ```typ
 #let composition = m.grids.columns(
-  m.grids.track(2fr, "main"),
-  m.grids.track(1fr, m.grids.rows(
-    m.grids.track(2fr, "notes"),
-    m.grids.track(1fr, "source"),
-  )),
+  tracks: (2fr, 1fr),
+  "main",
+  m.grids.rows(tracks: (2fr, 1fr), "notes", "source"),
 )
 
 #m.slide(
@@ -237,7 +227,7 @@ Splits nest to any depth. Read a grid from the outside inward: choose the larges
 
 = Grid sizes (tracks)
 
-By default, every direct child of `m.grids.columns` or `m.grids.rows` receives a `1fr` track. Wrap a child with `m.grids.track` when it needs another size:
+By default, every direct child of `m.grids.columns` or `m.grids.rows` receives a `1fr` track, so the split divides its space evenly. Pass `tracks:` to size them: an array with exactly one size per child, in order. It is the same argument, with the same meaning, that the content layout takes for its columns and Typst's own `grid` takes as `columns:` and `rows:`.
 
 #embedded-example(
   calepin.elements.gallery,
@@ -248,7 +238,7 @@ By default, every direct child of `m.grids.columns` or `m.grids.rows` receives a
   show-captions: false,
 )
 
-Tracks accept native `auto`, fixed lengths, percentages, and `fr` values:
+A size is anything a native grid track accepts: `auto` for as much as the child's content needs, a fixed length, a percentage, or an `fr` share of what remains:
 
 #embedded-example(
   calepin.elements.gallery,
@@ -259,7 +249,7 @@ Tracks accept native `auto`, fixed lengths, percentages, and `fr` values:
   show-captions: false,
 )
 
-A cell directly in an `auto` row hugs its content; Mosaic calls it a *compact cell*. From 0.0.3 (not on Typst Universe yet) a compact cell is padded like the header and footer of the built-in layouts: the full `inset` left and right, `compact-inset` above and below. A hand-built header therefore matches the built-in one; see #link("../appearance/styling.html#header-depth")[Header depth] to change how deep both are. Pass `inset:` to `m.grids.cell` to pad a cell differently.
+A cell directly in an `auto` row hugs its content; Mosaic calls it a *compact cell*. A compact cell is padded like the header and footer of the built-in layouts: the full `inset` left and right, `compact-inset` above and below. A hand-built header therefore matches the built-in one; see #link("../appearance/styling.html#header-depth")[Header depth] to change how deep both are. Pass `inset:` to `m.grids.cell` to pad a cell differently.
 
 Fractions compose, so three tracks can center a double-width column:
 
@@ -276,11 +266,13 @@ The #link("../api/grids.html")[Grid API] lists the exact accepted forms and thei
 
 = Filling cells
 
-A slide accepts cell content in two distinct forms. Use positional content blocks (`[...][...]`) for a short grid whose traversal order is obvious, or use the named `cells:` dictionary to assign content by cell ID. Do not mix the two forms in one slide. Both forms work for a custom grid and for a built-in layout alike.
+A slide accepts cell content in two distinct forms. Use positional content blocks (`[...][...]`) for the ordinary case, where order says enough, or the named `cells:` dictionary to assign content by cell ID. Do not mix the two forms in one slide. Both forms work for a custom grid and for a built-in layout alike.
 
 == Positional content with `[][]`
 
-Place content blocks directly after the `m.slide(...)` call. Each pair of brackets is one positional body: `[a][b][c]` supplies three bodies. Mosaic matches them to cell IDs in source order, left to right within columns, top to bottom within rows, and recursively through nested grids.
+Place content blocks directly after the `m.slide(...)` call. Each pair of brackets is one positional body: `[a][b][c]` supplies three bodies. One rule decides where they go: *a slide's opening heading is its header, and everything else fills the cells in order.*
+
+In a grid of your own, that order is the source order of the cells: left to right within columns, top to bottom within rows, and recursively through nested grids.
 
 ```typ
 #m.slide(layout: m.grids.columns("a", "b", "c"))[a][b][c]
@@ -293,7 +285,28 @@ Place content blocks directly after the `m.slide(...)` call. Each pair of bracke
   title: "Positional bodies assigned to horizontal and vertical grids",
 )
 
-This compact form is especially useful for a one-cell slide. In a larger or reusable grid, positional meaning can become hard to see after the grid changes.
+In a layout with a `header` cell, such as the content layout, the heading that opens the slide fills the header, exactly as `== Title` does when a heading opens a slide by itself. The bodies then fill the remaining cells. It makes no difference whether the heading sits in a block of its own or opens the first one, so these are three spellings of one slide:
+
+```typ
+== Results
+
+The estimate is positive.
+
+#m.slide[== Results][The estimate is positive.]
+
+#m.slide[
+  == Results
+
+  The estimate is positive.
+]
+```
+
+Two kinds of cell are out of positional reach, and `cells:` addresses both by name:
+
+- The header, when what goes in it is not a heading. `#m.slide[Results][The estimate is positive.]` is an error on a header layout rather than a guess about which block is which.
+- A cell with a deck default from `m.setup(cells:)`, such as a recurring footer. Positional bodies pass over it, so the default shows; name the cell to replace or suppress it on one slide.
+
+Supplying more bodies than there are cells to fill is an error that lists the cells positional bodies reach.
 
 == Named content with `cells:`
 
@@ -323,7 +336,7 @@ Any named argument `slide` does not recognize is a field of the selected layout.
 ```typ
 #m.slide(layout: "title", variant: "academic")
 #m.slide(layout: "section", number: [03])[Methods]
-#m.slide(layout: "image", variant: "right", image: path("fig/photo.jpg"))[== Title][Body]
+#m.slide(layout: "image", position: "right", image: path("fig/photo.jpg"))[== Title][Body]
 #m.slide(columns: 2)[== Comparison][Left column][Right column]
 ```
 
@@ -347,7 +360,11 @@ To replace a named layout throughout a deck, configure it once in `m.setup`:
 
 ```typ
 #show: m.setup.with(layouts: (
-  section: m.layouts.section(variant: "image-background", image: path("chapter.jpg")),
+  section: m.layouts.section(
+    variant: "image",
+    position: "background",
+    image: path("chapter.jpg"),
+  ),
 ))
 ```
 

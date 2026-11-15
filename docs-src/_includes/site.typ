@@ -27,3 +27,19 @@
     link(url, body)
   }
 }
+
+// The warning every page that documents the development version carries.
+//
+// The released package and the development version differ, and this site
+// documents both: a page whose snippets and examples need the development
+// version says so once, here, in one wording. `what` is the sentence naming
+// what on the page needs it. An example such a page shows imports the same
+// `@local` version; one that compiles under both stays on the released import. The version is stated in this one place, next to
+// the `@local` imports of the examples such a page shows.
+#let development-version = "0.0.3"
+#let unreleased(callout, what) = callout(
+  kind: "warning",
+  title: [Requires Mosaic #development-version],
+)[
+  #what This is the development version, which is not on Typst Universe yet: a deck that uses it imports #raw("@local/mosaic:" + development-version) rather than the released #raw("@preview/mosaic:0.0.1"). One command installs it; see #link(root-prefix() + "start/install.html")[Install].
+]

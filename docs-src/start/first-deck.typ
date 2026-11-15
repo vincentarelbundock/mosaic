@@ -1,6 +1,8 @@
 #import "/.calepin/calepin.typ" as calepin
 #import "/_includes/embedded-examples.typ": embedded-example
 
+#import "/_includes/site.typ": unreleased
+
 #set document(title: [Get started])
 #metadata((title: "Get started")) <website-metadata>
 
@@ -18,6 +20,8 @@ First, import Mosaic and apply its setup rule:
 After `#show: m.setup`, every `==` starts a *content slide*: the heading becomes the title and the text that follows becomes its content. A single `=` starts an unnumbered *section slide* with a larger, centered title, and any text between it and the next `==` becomes that section's subtitle.
 
 Most decks declare their shared settings once at the top with `m.setup.with(...)`: the deck's title and authors, the layout every content slide should use, and any recurring content such as a progress line. After that, the document is mostly headings, with explicit `m.slide` calls for slides a heading cannot express, such as a picture beside text or a two-column comparison.
+
+#unreleased(calepin.elements.callout)[The image slide in the example below places its picture with `position:`, where the released version writes `variant: "right"`. Nothing else on this page differs.]
 
 The example below is a complete deck in that shape. It declares its title and authors once, opens with the built-in `title` layout, creates ordinary slides from headings, and finishes with two explicit slides: one `image` layout and one two-column content slide.
 

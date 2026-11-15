@@ -1,3 +1,6 @@
+#import "/.calepin/calepin.typ" as calepin
+#import "/_includes/site.typ": unreleased
+
 #set document(title: [Steps and pauses])
 #metadata((title: "Steps and pauses")) <website-metadata>
 
@@ -6,6 +9,8 @@
 You write one slide; Mosaic can reveal, replace, or remove parts of it over a sequence of *frames*. Each frame is one page of the compiled document, and all frames of one slide share its slide number.
 
 The features and API described in this section were heavily influenced by the #link("https://touying-typ.github.io/docs/intro")[Touying package].
+
+#unreleased(calepin.elements.callout)[Steps inside tables, math, components, and layout fields, described under #link(label("where-steps-work"))[Where steps work], are new; the commands themselves are the same in the released version.]
 
 = Commands
 
@@ -69,11 +74,13 @@ What could be done about each of these?
 
 The first frame shows the title and the question. The second frame reveals the list. The same command holds back one full column of a two-column slide while the other stays visible from the first frame.
 
-= Where steps work
+= Where steps work <where-steps-work>
 
-Steps, pauses, and notes work in a cell body and inside the containers Mosaic rebuilds frame by frame: lists, tables, term lists, shapes, transforms, `columns`, and math. They do not work where the slide runtime cannot see them, and the compile fails rather than dropping them: inside a component (`card`, `callout`, `quote`), a `context` block, a `layout` callback, or the output of a show rule. A pause or step in a section tagline or another layout field fails the same way, though a note there is collected.
+Steps, pauses, and notes work wherever Mosaic can see them, which is nearly everywhere: in a cell body and a plane; inside lists, tables, term lists, shapes, transforms, `columns`, and math; inside Mosaic's own components (`card`, `callout`, `quote`, `badge`, `divider`, and `figure`); and in the content a layout takes as a field, such as a section tagline or a title slide's title and subtitle.
 
-Move the command out to the cell body, or wrap the whole component in it instead: `m.steps.on(2, m.components.card[..])` works, where a pause inside the card does not.
+Three places stay opaque, because Typst resolves them after the slide's frames are decided: a `context` block of your own, a `layout` callback, and the output of a show rule. A pause, step, or note there fails the compile rather than being dropped. Move it outside, or wrap the whole block in the command instead.
+
+A note never adds a frame. One tied to a step the slide does not reach is shown on the last frame rather than lost.
 
 A list timed with `pause`, `on`, or `reveal` is drawn by Mosaic rather than by the native list, so that a hidden item can hide its marker and keep its place. It takes the deck's own `list.marker`, `enum.numbering`, spacing, and indents, so it reads like every other list in the deck.
 

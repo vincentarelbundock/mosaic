@@ -101,10 +101,9 @@
         align: horizon,
         align(center, record.date),
         // Beamer's `totalframenumber` counter, from the same record. The
-        // title page precedes the count, so the slot stays clear there rather
-        // than printing a zero; a section divider keeps showing the number it
-        // is standing on, as beamer's does.
-        if record.slide.number > 0 [#record.slide.number\/#record.slide.total],
+        // title page and the section dividers are unnumbered, so the slot
+        // stays clear there rather than printing a number that is not theirs.
+        if record.slide.numbered [#record.slide.number\/#record.slide.total],
       ),
     ),
   )
@@ -180,14 +179,12 @@
   defaults: (
     foreground: chrome,
     spacing: (inset: chrome-inset, gap: 0.7em),
-  ),
-  options: (
     // Beamer's default font theme is sans: Computer Modern Sans, which Latin
     // Modern Sans continues.
     font: ("Latin Modern Sans", "CMU Sans Serif", "DejaVu Sans"),
-    font-mono: ("Latin Modern Mono", "DejaVu Sans Mono"),
     base-size: 22pt,
   ),
+  options: (font-mono: ("Latin Modern Mono", "DejaVu Sans Mono")),
   // Three built-in variants, no hand-built grid. The toc divider is beamer's
   // own `\AtBeginSection` habit: the whole outline, the section you are
   // entering alive and the rest ghosted.

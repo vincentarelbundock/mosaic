@@ -2,7 +2,7 @@
 #import "/_includes/embedded-examples.typ": (
   example-source, slideshow, slideshow-grid,
 )
-#import "/_includes/site.typ": repo-file
+#import "/_includes/site.typ": repo-file, unreleased
 
 #set document(title: [Title slides])
 #metadata((title: "Title")) <website-metadata>
@@ -10,6 +10,8 @@
 #title()
 
 A title slide takes its content from the deck rather than from the slide, and its arrangement from a variant.
+
+#unreleased(calepin.elements.callout)[Placing a title slide's picture with `position:`, including behind the text, and suppressing the title with `none` are new.]
 
 = A simple title slide
 
@@ -35,7 +37,7 @@ To change one field on one slide, name it on `slide`. This deck opens on a draft
 #m.slide(layout: "title", date: [Draft])
 ```
 
-Writing `none` drops an inherited subtitle or date from that slide, and `()` drops the authors. The title itself is required: replace it with other content, but it cannot be dropped.
+Writing `none` drops any inherited field from that slide: the title, the subtitle, the date, or the authors.
 
 = Variants
 
@@ -48,7 +50,22 @@ Each variant borrows a classic minimalist tradition. The six text variants need 
 - `panel`: an ink side panel carries the details; the heading stack takes the main field.
 - `academic`: the conference poster: superscript affiliation numbers, a numbered legend, a contact line. Requires at least one author.
 
-The `image` variant requires an `image` and places a full-bleed picture beside or above the title stack: `position:` is `"left"` (the default), `"right"`, `"top"`, or `"bottom"`, and `tracks` sizes the split. A full-slide photographic title is not a variant; the #link(label("custom-title-page"))[Custom title page] section below composes one by hand.
+The seventh variant, `image`, sets a compact title stack with a picture. It requires an `image:`, and `position:` places it: `"left"` (the default), `"right"`, `"top"`, or `"bottom"` for a full-bleed picture beside or above the stack, sized by `tracks:`, or `"background"` for the stack over a full-slide picture. #link("../content/images.html#pictures-in-layouts")[Pictures in layouts] describes both arguments, which the section and image layouts share. Over a background picture the type keeps the deck's text color, so give the picture a #link("../content/images.html#scrims")[scrim] and recolor the title cell:
+
+```typ
+#[
+  #show label("mosaic-cell-title"): set text(fill: white)
+  #m.slide(
+    layout: "title",
+    variant: "image",
+    position: "background",
+    image: m.components.image(
+      path("cover.webp"),
+      scrim: black.transparentize(55%),
+    ),
+  )
+]
+```
 
 Every variant renders every field the deck and its authors declare: the title and subtitle, each name with its linked ORCID icon and the corresponding asterisk, the affiliations, the contact addresses, and the date. Choosing a variant changes the arrangement, never the information. A title too long for the room its variant gives it is scaled down to fit rather than printed over the details.
 
@@ -57,7 +74,7 @@ The thumbnails below all render the same title information: one deck title and s
 Written out in full, one of those decks is this:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@local/mosaic:0.0.3" as m
 
 #let ccp = [Centre for Comparative Politics]
 #let eis = [European Institute for Social Data]
@@ -92,7 +109,7 @@ Written out in full, one of those decks is this:
 
 An affiliation is the institution itself rather than an identifier for it, so two authors land on one legend number exactly when they name the same institution. Binding `ccp` and `eis` once and reusing the bindings is what makes that happen.
 
-The remaining decks are that same file with a different variant on the last line, and the image decks also pass an `image:` wrapped in Typst's `path()`, as #link("../content/images.html#asset-paths")[Asset paths] explains.
+The remaining decks are that same file with a different variant on the last line, and the image decks also pass an `image:` and a `position:`.
 
 In your own deck, write the title information directly in `setup`, as the listing above does. The decks on this page keep it in one shared #repo-file("docs-src/examples/embedded/structure/_title-info.typ")[file] only so the page has a single copy to edit.
 
@@ -123,7 +140,7 @@ There is no inverted variant, because inversion is not an arrangement. Pass `inv
 
 = Custom title page <custom-title-page>
 
-When no variant draws the page you want, build the slide yourself. `m.info()` returns the `title`, `subtitle`, `authors`, and `date` you declared on `setup`, so the custom slide can use them without repeating them. Each author comes back as a dictionary with `name`, `affiliations`, `email`, `orcid`, and `corresponding` fields. Call `m.info()` inside a `context` block, as the example below does. The same reader also reports where the slide sits in the deck, in its `slide` and `section` fields, which is what hand-built chrome is made of; the #link("../presenting/footer.html")[footer and progress] page covers that side of it.
+When no variant draws the page you want, not even the `image` variant over a background picture, build the slide yourself. `m.info()` returns the `title`, `subtitle`, `authors`, and `date` you declared on `setup`, so the custom slide can use them without repeating them. Each author comes back as a dictionary with `name`, `affiliations`, `email`, `orcid`, and `corresponding` fields. Call `m.info()` inside a `context` block, as the example below does. The same reader also reports where the slide sits in the deck, in its `slide` and `section` fields, which is what hand-built chrome is made of; the #link("../presenting/footer.html")[footer and progress] page covers that side of it.
 
 The deck below composes a full-slide photograph on the slide's `background:` plane, anchors the heading to the top edge, and pins the byline to the bottom, an arrangement no built-in variant draws. The `scrim:` on the background image quiets the photograph exactly as it does on the image variants, and `numbered: false` keeps the cover out of the slide count the way named title layouts stay out of it automatically.
 

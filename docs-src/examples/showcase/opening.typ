@@ -1,6 +1,6 @@
 // Opening frame of the home-page showcase reel. It is not a documentation
 // example: no page embeds it, and the reel is its only consumer.
-#import "@preview/mosaic:0.0.1" as m
+#import "@local/mosaic:0.0.3" as m
 
 #show: m.setup
 
@@ -15,10 +15,9 @@
   #show label("mosaic-cell-body"): set align(top + right)
   #m.slide(
     layout: "image",
-    variant: "full",
-    image: (
-      path: path("/docs-src/assets/images/bonsai.webp"),
-      fit: "cover",
+    position: "background",
+    image: m.components.image(
+      path("/docs-src/assets/images/bonsai.webp"),
       alt: "A bonsai pine on a pale grey field",
     ),
   )[

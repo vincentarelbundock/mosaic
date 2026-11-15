@@ -9,7 +9,7 @@
 // This is a design, not a transcription. It states the palette and the few
 // structural gestures that make Calmly recognizable, and leaves everything
 // else to Mosaic's defaults.
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 #import mosaic: slide, note, fit, grids, layouts, steps, components
 
 // Calmly's "tomorrow" palette, light variant. Six names are the deck's own
@@ -60,13 +60,14 @@
 // section cell fits its own content and anything appended would land outside
 // the fitted region.
 #let section-layout = mosaic.grids.rows(
-  mosaic.grids.track(1fr, mosaic.grids.cell("section-space-above", content: [])),
-  mosaic.grids.track(auto, "section"),
-  mosaic.grids.track(auto, mosaic.grids.cell(
+  tracks: (1fr, auto, auto, 1fr),
+  mosaic.grids.cell("section-space-above", content: []),
+  "section",
+  mosaic.grids.cell(
     "section-rule",
     content: align(center, accent-rule),
-  )),
-  mosaic.grids.track(1fr, mosaic.grids.cell("section-space-below", content: [])),
+  ),
+  mosaic.grids.cell("section-space-below", content: []),
 )
 
 #let apply(body, colors: (:), options: (:)) = {
@@ -133,12 +134,10 @@
     // The deck gap is the title stack's vertical rhythm: the `ruled` variant
     // states its gaps as multiples of it, and Calmly's title page is airy.
     spacing: (gap: 1.6em),
-  ),
-  options: (
     font: ("Source Sans 3", "Inter", "Liberation Sans", "DejaVu Sans"),
-    font-mono: ("JetBrains Mono", "DejaVu Sans Mono"),
     base-size: 20pt,
   ),
+  options: (font-mono: ("JetBrains Mono", "DejaVu Sans Mono")),
   layouts: (
     content: mosaic.layouts.content(variant: "header-body-footer"),
     // Calmly rules its title page with a neutral hairline rather than the

@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 #import mosaic.themes.editorial as m
 #import "_tour-deck.typ": deck
 

@@ -1,6 +1,8 @@
 #import "/.calepin/calepin.typ" as calepin
 #import "/_includes/pdf-slideshow.typ": pdf-slideshow
 
+#import "/_includes/site.typ": unreleased
+
 #set document(title: [Examples])
 #metadata((
   title: "Examples",
@@ -35,6 +37,8 @@
 #title()
 
 This page hosts eight complete slide decks: four are built on one of Mosaic's bundled themes, some leaning on the themes' own layouts and others hand-crafting every slide from named cells and custom palettes, and the last four define a theme of their own to re-create an outside design. Click a thumbnail to page through its slides. The #link(repo)[GitHub repository] contains every deck's full Typst source, assets, Makefile, and compiled PDF.
+
+#unreleased(calepin.elements.callout)[Six of these decks size their grids with `tracks:` or state a theme's font through `defaults`. The Metropolis and Portfolio decks import the released version and compile under it as they stand; Portfolio's source therefore still sizes its grids with the released `m.grids.track`.]
 
 #calepin.elements.callout(kind: "warning", title: [Start with the tutorials])[
   These are complete, fairly intricate decks: they combine custom palettes, hand-built grids, and theme extensions, so their source is not the gentlest introduction to Mosaic. If you are new to the package, read #link("start/first-deck.html")[Get started] first, then the guides on #link("slides/content.html")[writing slides] and #link("appearance/themes.html")[themes and colors]. The code below reads much more easily afterwards.

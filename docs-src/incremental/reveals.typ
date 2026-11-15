@@ -1,6 +1,8 @@
 #import "/.calepin/calepin.typ" as calepin
 #import "/_includes/embedded-examples.typ": embedded-example
 
+#import "/_includes/site.typ": unreleased
+
 #set document(title: [Reveal and replace])
 #metadata((title: "Reveal and replace")) <website-metadata>
 
@@ -53,6 +55,8 @@ Use `m.steps.replace` to revise a word or larger fragment without moving surroun
 )
 
 = CeTZ drawings
+
+#unreleased(calepin.elements.callout)[This example sizes its grid with `tracks:`. The `m.steps.drawing` connection itself is the same in the released version.]
 
 Draw a figure progressively when you want to explain its geometry in the order it is constructed. Connect `m.steps.drawing` to a CeTZ canvas and preserve hidden bounds so later additions do not shift the drawing.
 

@@ -1,5 +1,7 @@
 #import "/.calepin/calepin.typ" as calepin
 
+#import "/_includes/site.typ": unreleased
+
 #set document(title: [Speaker notes])
 #metadata((title: "Speaker notes")) <website-metadata>
 
@@ -24,7 +26,7 @@ Attach speaker notes with `m.note[...]`. Notes never appear in the presentation 
 ]
 ```
 
-A note outside a timing command applies to every frame. A note inside `m.steps.on`, `m.steps.reveal`, or `m.steps.replace` appears with that content. A note inside a component, a `context` block, a `layout` callback, or show-rule output cannot be collected and fails the compile; write it beside the component instead.
+A note outside a timing command applies to every frame. A note inside `m.steps.on`, `m.steps.reveal`, or `m.steps.replace` appears with that content. #link("../incremental/steps.html#where-steps-work")[Where steps work] lists the few places a note cannot be collected from.
 
 Notes also hold material that supports a slide without belonging on it: the source URL of a figure, a reminder of what to say, or the link behind an image slide.
 
@@ -53,15 +55,7 @@ The note outputs are independent of `handout:`, so a deck can print a #link("../
 
 = On a second screen
 
-#calepin.elements.callout(kind: "warning", title: [Requires Mosaic 0.0.3])[
-  Everything below is new in the development version, 0.0.3, which is not on Typst Universe yet, so the rest of this documentation pins the released `0.0.1`. One command installs the development version — `curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh` — and then it imports as:
-
-  ```typ
-  #import "@local/mosaic:0.0.3" as m
-  ```
-
-  See #link("../start/install.html")[Install] for the full instructions. Everything above works with the package as published, with one difference: the released 0.0.1 sets the note text at a fixed 10pt and its heading at 12pt rather than inheriting the deck's base size.
-]
+#unreleased(calepin.elements.callout)[Everything below is new: the `split` output and the notes embedded in the PDF. Everything above works with the released package, with one difference: the released 0.0.1 sets the note text at a fixed 10pt and its heading at 12pt rather than inheriting the deck's base size.]
 
 A presenter console drives two displays: the projector shows the slide, your laptop shows the same slide with its notes, the next slide, and a clock. Typst produces a PDF, so the console is a separate program. Several free ones exist — #link("https://pympress.xyz/")[pympress], #link("https://pdfpc.github.io/")[pdfpc], #link("https://github.com/beamerpresenter/BeamerPresenter")[BeamerPresenter] — and they run on Linux, macOS, and Windows.
 

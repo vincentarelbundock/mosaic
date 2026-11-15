@@ -2,7 +2,7 @@
 #import "/_includes/embedded-examples.typ": (
   example-source, slideshow, slideshow-grid,
 )
-#import "/_includes/site.typ": repo-file
+#import "/_includes/site.typ": repo-file, unreleased
 
 #set document(title: [Colors])
 #metadata((title: "Colors")) <website-metadata>
@@ -50,7 +50,7 @@ Unknown names and non-color values are errors. The canvas, typography, component
       )
     ]
   ],
-)[Title][Body]
+)[== Title][Body]
 ```
 
 Native rules after `m.setup` are still the right tool for typography or a special local composition:
@@ -115,6 +115,8 @@ The dark schemes swap in the dark syntax highlighting theme on their own; polari
 
 = Inverting one slide
 
+#unreleased(calepin.elements.callout)[`invert: true` itself is in the released version. Code highlighting that follows the inverted ground, and a ground that reaches the page edge under a page margin, are new.]
+
 The last slide of every gallery above is the same command:
 
 ```typ
@@ -123,4 +125,4 @@ The last slide of every gallery above is the same command:
 ]
 ```
 
-`invert: true` swaps canvas and text within the active palette for that slide only: the canvas becomes the palette's text color, the text becomes its canvas, and muted, line, and surface are derived to match. The accent and status colors carry over unchanged, which is why a badge or callout keeps its color behind the swap. Code highlighting follows the inverted ground, and the ground reaches the page edge even when the deck sets a page margin. That survival is part of the bundled palettes' tested contract, so `invert:` composes with every scheme in the collection; a custom palette whose accent only reads on its own canvas will look washed out here, and passing a hand-picked palette to that one slide's components is the escape hatch.
+`invert: true` swaps canvas and text within the active palette for that slide only: the canvas becomes the palette's text color, the text becomes its canvas, and muted, line, and surface are derived to match. The accent and status colors carry over unchanged, which is why a badge or callout keeps its color behind the swap. Code highlighting follows the inverted ground unless the deck set a `raw` theme of its own, which is kept, and the ground reaches the page edge even when the deck sets a page margin. That survival is part of the bundled palettes' tested contract, so `invert:` composes with every scheme in the collection; a custom palette whose accent only reads on its own canvas will look washed out here, and passing a hand-picked palette to that one slide's components is the escape hatch.

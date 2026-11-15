@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as m
+#import "@local/mosaic:0.0.3" as m
 
 #show: m.setup
 
@@ -17,8 +17,8 @@
   #show: light-text
   #m.slide(
     layout: m.layouts.image(
-      (path: path(river), alt: describe),
-      variant: "full",
+      m.components.image(path(river), alt: describe),
+      position: "background",
     ),
     cells: (body: [
       == Without a scrim
@@ -35,12 +35,12 @@
   #show: light-text
   #m.slide(
     layout: m.layouts.image(
-      (
-        path: path(river),
+      m.components.image(
+        path(river),
         scrim: black.transparentize(45%),
         alt: describe,
       ),
-      variant: "full",
+      position: "background",
     ),
     cells: (body: [
       == A flat scrim
@@ -57,8 +57,8 @@
   #show: light-text
   #m.slide(
     layout: m.layouts.image(
-      (
-        path: path(river),
+      m.components.image(
+        path(river),
         scrim: gradient.linear(
           black.transparentize(100%),
           black.transparentize(10%),
@@ -66,7 +66,7 @@
         ),
         alt: describe,
       ),
-      variant: "full",
+      position: "background",
     ),
     cells: (body: [
       #v(1fr)
@@ -84,12 +84,12 @@
 // deck's ordinary text color.
 #m.slide(
   layout: m.layouts.image(
-    (
-      path: path(river),
+    m.components.image(
+      path(river),
       scrim: white.transparentize(25%),
       alt: describe,
     ),
-    variant: "full",
+    position: "background",
   ),
   cells: (body: [
     == A light scrim

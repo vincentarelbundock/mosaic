@@ -57,7 +57,7 @@ Write ordinary Typst content.
 
 Use explicit `m.slide` only when a heading slide is insufficient. Import Mosaic under a short alias (`as m`) so its constructors stay namespaced and native Typst `columns()` remains available.
 
-Vocabulary used throughout: *slide* (one unit), *deck* (sequence of slides), *cell* (named area holding content), *grid* (cells arranged with splits), *split* (horizontal or vertical division), *inset* (space between a cell's edge and its content), *background*/*foreground* (full-slide planes behind/over the grid), *layout* (ready-made slide arrangement), *theme* (coordinated colors, text styles, and layouts).
+Vocabulary used throughout: *slide* (one unit), *deck* (sequence of slides), *cell* (named area holding content), *grid* (cells arranged with splits), *split* (horizontal or vertical division), *track* (the size of one child of a split), *inset* (space between a cell's edge and its content), *background*/*foreground* (full-slide planes behind/over the grid), *layout* (ready-made slide arrangement), *theme* (coordinated colors, text styles, and layouts).
 
 ## 3. Layouts
 
@@ -82,7 +82,7 @@ Any named argument `slide` does not recognize is a field of the selected layout,
 ```typ
 #m.slide(layout: "title", variant: "academic")
 #m.slide(layout: "section", number: [03])[Methods]
-#m.slide(columns: 2)[Left column][Right column]
+#m.slide(columns: 2)[== Comparison][Left column][Right column]
 ```
 
 Field names are validated against the selected layout, so a name that layout does not have is a compile error. Fields require a layout selected by name (or `auto`); they cannot accompany an explicit `m.layouts.*` value, which replaces rather than refines the configured layout. Pass the fields to that constructor instead.
@@ -114,12 +114,25 @@ Use a layout factory (`m.layouts.*`) when building a layout from scratch rather 
 
 Variants:
 
-- **Title**: `ruled` (the default: heading stack over a full-width accent rule with details beneath, flush left at the vertical center, the beamer-metropolis title page), `centered` (mass at slide center, metadata at the bottom edge), `bordered` (centered stack inside one thin border), `kicker` (magazine masthead: strong opening rule, subtitle as a tracked-caps eyebrow in the accent color, details at the bottom edge), `panel` (a vertical ink panel carries the details knocked out in canvas under a short accent rule; the title takes the main field), `academic` (conference-poster arrangement with superscript affiliations), and `image` with `position: "left"/"right"/"top"/"bottom"` (default left). Every variant renders every author field: names with ORCID icons and the corresponding asterisk, affiliations, contact addresses, and the date. Structural marks default to the text color (the bordered border, the kicker opening rule) or the semantic accent (the ruled rule); an explicit `accent:` recolors them. A title too long for its allocation shrinks to fit rather than overprinting the details, and `rule: true` adds a short accent rule under the `centered` heading. There is no plate variant: invert any slide with `m.slide(invert: true)`, which also flips code highlighting to match the inverted ground.
-- **Section**: `plain`, the designed text variants `rule` (heavy full-width rule over a flush-left title), `numeral` (giant ghost number bleeding off the top-right), `baseline` (title and number sharing one baseline over a full-width hairline), `toc` (all sections listed, the current one alive), and five image variants: `image-left`, `image-right`, `image-top`, `image-bottom` (the section text beside a full-bleed picture, sized by `tracks:`) and `image-background` (the text over a full-slide picture). The designed text variants read the automatic section counter when `number:` is omitted. Section numbers never take the accent color by default: the `accent:` field defaults to the muted color, and an explicit color recolors the number, in `baseline` and `numeral` too. A `subtitle:` is caption-sized under the title in every variant. The themed facades restyle the section cell, so under editorial, manifesto, or metropolis these variants render at that theme's own scale.
+- **Title**: `ruled` (the default: heading stack over a full-width accent rule with details beneath, flush left at the vertical center, the beamer-metropolis title page), `centered` (mass at slide center, metadata at the bottom edge), `bordered` (centered stack inside one thin border), `kicker` (magazine masthead: strong opening rule, subtitle as a tracked-caps eyebrow in the accent color, details at the bottom edge), `panel` (a vertical ink panel carries the details knocked out in canvas under a short accent rule; the title takes the main field), `academic` (conference-poster arrangement with superscript affiliations), and `image` (a compact stack with a picture, placed by `position:`; see *Pictures* below). Every variant renders every author field: names with ORCID icons and the corresponding asterisk, affiliations, contact addresses, and the date. Structural marks default to the text color (the bordered border, the kicker opening rule) or the semantic accent (the ruled rule); an explicit `accent:` recolors them. A title too long for its allocation shrinks to fit rather than overprinting the details, and `rule: true` adds a short accent rule under the `centered` heading. There is no plate variant: invert any slide with `m.slide(invert: true)`, which also flips code highlighting to match the inverted ground.
+- **Section**: `plain`, the designed text variants `rule` (heavy full-width rule over a flush-left title), `numeral` (giant ghost number bleeding off the top-right), `baseline` (title and number sharing one baseline over a full-width hairline), `toc` (all sections listed, the current one alive), and `image` (the `plain` composition with a picture, placed by `position:`). The designed text variants read the automatic section counter when `number:` is omitted. Section numbers never take the accent color by default: the `accent:` field defaults to the muted color, and an explicit color recolors the number, and the `baseline` hairline with it. A `subtitle:` is caption-sized under the title in every variant. The themed facades restyle the section cell, so under editorial, manifesto, or metropolis these variants render at that theme's own scale.
 - **Content**: `body`, `header-body`, `body-footer`, `header-body-footer`.
-- **Image**: `figure` (the default), `full`, `left`, `right`, `top`, `bottom`.
+- **Image**: no variants. The image layout has no text design of its own; `position:` is its only arrangement.
 
-`m.layouts.title()` inherits `title`, `subtitle`, `authors`, and `date` from setup, so `m.slide(layout: "title")` needs no body. An explicit layout argument wins; pass `none` to suppress an inherited `subtitle` or `date` on one slide, and `()` to suppress `authors`. The `title` is required: replace it, but it cannot be suppressed. For image variants, `scrim:` on the image spec quiets the photograph, as in `image: (path: path("cover.webp"), scrim: black.transparentize(55%))`. A full-slide photographic title is not a variant: give the slide a `background:` plane (`background: m.components.image(path("cover.webp"), scrim: ..)`), and compose the type yourself with `m.info()`, a contextual reader returning the `title`, `subtitle`, resolved `authors` records, and `date` declared on setup, plus two position records: `slide` (`number`, `total`, `numbered`) and `section` (`number`, `total`, `title`), which are what hand-built footlines and headlines are made of and what `m.components.progress()` itself reads. Pair a photographic background with a scoped text-color rule on the `<mosaic-cell-title>` or `<mosaic-cell-section>` label for contrast. One such rule recolors the whole stack: the subtitle and details are muted only while the cell carries the deck's ordinary text color, and follow any override, so light-on-dark titles need no hand-built grid. A size rule on the same label works the same way, scaling the stack as a unit (`show label("mosaic-cell-title"): set text(size: 0.45em)` for quiet type in a corner), because the display line carries its own `<mosaic-title-display>` label where the theme states the display size. There is no `scale:` argument, and a hand-built grid is never the way to resize a title.
+**Pictures.** The title, section, and image layouts take a picture the same way, through two arguments. `image:` is the picture: a `path(..)` when the file is all there is to say, or content, typically `m.components.image(path(..), fit: .., scrim: .., alt: ..)`, when it needs a fit, a scrim, or a description. There is no dictionary form. `position:` is where it goes, in one vocabulary: `"left"`, `"right"`, `"top"`, `"bottom"` (a full-bleed picture on that side, sized by `tracks:`, where one size such as `40%` is the picture's share on whichever side) or `"background"` (the picture behind the text). The image layout adds `"body"`, its default: a contained picture under a header. `variant:` never places a picture; it names the text design only.
+
+```typ
+#m.slide(layout: "image", position: "right", image: path("fig/book.jpg"))[== Readings]
+#m.slide(layout: "section", variant: "image", position: "top", image: path("fig/chapter.jpg"))[Methods]
+#m.slide(
+  layout: "title",
+  variant: "image",
+  position: "background",
+  image: m.components.image(path("cover.webp"), scrim: black.transparentize(55%)),
+)
+```
+
+`m.layouts.title()` inherits `title`, `subtitle`, `authors`, and `date` from setup, so `m.slide(layout: "title")` needs no body. An explicit layout argument wins; pass `none` to suppress any inherited field on one slide (`title`, `subtitle`, `date`, or `authors`). A title over a full-slide photograph is the `image` variant at `position: "background"`. For a cover no variant draws, give the slide a `background:` plane (`background: m.components.image(path("cover.webp"), scrim: ..)`) and compose the type yourself with `m.info()`, a contextual reader returning the `title`, `subtitle`, resolved `authors` records, and `date` declared on setup, plus two position records: `slide` (`number`, `total`, `numbered`; `number` is `none` on an unnumbered slide) and `section` (`number`, `total`, `title`), which are what hand-built footlines and headlines are made of and what `m.components.progress()` itself reads. Pair a photographic background with a scoped text-color rule on the `<mosaic-cell-title>` or `<mosaic-cell-section>` label for contrast. One such rule recolors the whole stack: the subtitle and details are muted only while the cell carries the deck's ordinary text color, and follow any override, so light-on-dark titles need no hand-built grid. A size rule on the same label works the same way, scaling the stack as a unit (`show label("mosaic-cell-title"): set text(size: 0.45em)` for quiet type in a corner), because the display line carries its own `<mosaic-title-display>` label where the theme states the display size. There is no `scale:` argument, and a hand-built grid is never the way to resize a title.
 
 Mosaic has no automatic shrink-to-fit for body content, by design: a deck whose type size is decided slide by slide loses the typographic scale that holds it together. An overflow means cut a bullet, split the slide, or pick a layout with more room. When one indivisible block is oversized (a wide table, a chart, a generated list), scale that block alone with `m.fit(my-table)`, which measures it against its region and scales geometrically. `m.fit(grow: true)[42%]` goes the other way, filling a cell with display type. A fitted block never overflows and so stops appearing in the overflow records, which is why it is for indivisible blocks rather than crowded slides. It also cannot contain `m.steps.pause`, `m.steps`, or `m.note`: measuring hides the body from the runtime's walk, so those would be lost. `m.fit` raises an error rather than dropping them; keep them outside the fitted block. Prose too tall for its cell is offered a wider measure before it is scaled, so fitted text fills the cell's width.
 
@@ -129,7 +142,11 @@ To replace a named layout deck-wide, configure it once in setup; to reuse one fo
 
 ```typ
 #show: m.setup.with(layouts: (
-  section: m.layouts.section(variant: "image-background", image: path("chapter.jpg")),
+  section: m.layouts.section(
+    variant: "image",
+    position: "background",
+    image: path("chapter.jpg"),
+  ),
 ))
 
 #let myslide = m.slide.with(layout: m.layouts.content(variant: "header-body"))
@@ -140,10 +157,10 @@ To replace a named layout deck-wide, configure it once in setup; to reuse one fo
 
 Most decks are built from a handful of recurring shapes. Reach for the named form below before composing a grid by hand; each one is one line and stays correct when the deck's font size, paper, or theme changes.
 
-**Title slide.** `#m.slide(layout: "title")` with nothing else: it inherits `title`, `subtitle`, `authors`, and `date` from setup. Choose a stock variant when the preset suits the deck. When the deck wants type much quieter or more idiosyncratic than any preset, use the image layout's `full` variant as the escape hatch and write the title yourself. Write it as a level-one heading rather than plain text (`#heading(level: 1, outlined: false)[..]` keeps it out of the bookmarks): inside a slide body a heading renders in place and opens no slide, it takes the theme's level-one heading size (a scoped `show heading: set text(size: ..)` in the body adjusts it), and it gives an accessible export the H1 that the built-in title layout supplies on its own:
+**Title slide.** `#m.slide(layout: "title")` with nothing else: it inherits `title`, `subtitle`, `authors`, and `date` from setup. Choose a stock variant when the preset suits the deck. When the deck wants type much quieter or more idiosyncratic than any preset, use the image layout at `position: "background"` as the escape hatch and write the title yourself. Write it as a level-one heading rather than plain text (`#heading(level: 1, outlined: false)[..]` keeps it out of the bookmarks): the image layout at that position has no header cell, so the heading renders in place in the body, it takes the theme's level-one heading size (a scoped `show heading: set text(size: ..)` in the body adjusts it), and it gives an accessible export the H1 that the built-in title layout supplies on its own:
 
 ```typ
-#m.slide(layout: "image", variant: "full", image: path("fig/cover.jpg"))[
+#m.slide(layout: "image", position: "background", image: path("fig/cover.jpg"))[
   #set text(fill: white)
   #heading(level: 1, outlined: false)[Économie et Politique]
 
@@ -153,11 +170,11 @@ Most decks are built from a handful of recurring shapes. Reach for the named for
 ]
 ```
 
-**Section divider.** A bare `= Section name` is enough. Text written between the `=` and the next heading becomes the section slide's subtitle, so a tagline costs no extra slide. Use `setup(layouts: (section: ...))` when every divider should share one designed variant (for example `m.layouts.section(variant: "baseline")`) or carry the same photograph. A one-off design is a field overlay: `#m.slide(layout: "section", variant: "toc")[Methods]`.
+**Section divider.** A bare `= Section name` is enough. Text written between the `=` and the next heading becomes the section slide's subtitle, so a tagline costs no extra slide. Use `setup(layouts: (section: ...))` when every divider should share one designed variant (for example `m.layouts.section(variant: "baseline")`) or carry the same photograph. A tagline takes steps and notes like any body. A one-off design is a field overlay: `#m.slide(layout: "section", variant: "toc")[Methods]`.
 
 **Bulleted content slide.** A bare `== Slide title` followed by a list. Do not write `m.slide` for this.
 
-**Two-column slide.** `columns: 2` on the content layout, then three positional blocks: header, left, right.
+**Two-column slide.** `columns: 2` on the content layout: the opening heading is the header, then one block per column.
 
 ```typ
 #m.slide(layout: "content", columns: 2)[== Comparison][
@@ -167,42 +184,45 @@ Most decks are built from a handful of recurring shapes. Reach for the named for
 ]
 ```
 
-Use it for side-by-side figures too, wrapping each in `m.components.figure(..)`, which contains the picture and sizes it to its cell. Add `tracks: (2fr, 1fr)` for an uneven split. Under a theme whose content layout is `header-body-footer` (Metropolis), pass `variant: "header-body"` alongside `columns: 2` when you supply header + two bodies; otherwise the third positional block lands in the footer cell and renders small at the bottom edge.
+Use it for side-by-side figures too, wrapping each in `m.components.figure(..)`, which contains the picture and sizes it to its cell. Add `tracks: (2fr, 1fr)` for an uneven split. Under a theme whose content layout is `header-body-footer` (Metropolis), a third block fills the footer cell unless the deck gave the footer a default, in which case positional bodies pass over it.
 
-**Figure slide.** The image layout's default variant: a header above a contained picture, with an optional caption beneath.
+**Figure slide.** The image layout's default position, `"body"`: a header above a contained picture, with an optional caption beneath.
 
 ```typ
 #m.slide(layout: "image", image: path("fig/gdp.png"))[== Growth since 1950]
 #m.slide(layout: "image", image: path("fig/pie.png"), caption: [Teaching, research, admin])[== My job]
 ```
 
-`figure` defaults to `fit: "contain"`, which is what a chart needs: never crop data. `caption:` composes a native Typst `figure`, so it takes the deck's own `show figure.caption` rules and figure numbering; switch numbering off with `set figure(numbering: none)`. `caption:` is rejected by every other variant. The `figure` variant has header, image, and caption cells but no body, so a single standing line of commentary belongs in `caption:`.
+A picture at `"body"` defaults to `fit: "contain"`, which is what a chart needs: never crop data. `caption:` composes a native Typst `figure`, so it takes the deck's own `show figure.caption` rules and figure numbering; switch numbering off with `set figure(numbering: none)`. `caption:` is rejected at every other position. This slide has header, image, and caption cells but no body, so a single standing line of commentary belongs in `caption:`.
 
-**Picture beside text.** The directional variants `left`, `right`, `top`, and `bottom` pair a full-bleed picture with a header and body region, filled by two positional blocks:
+**Picture beside text.** The positions `left`, `right`, `top`, and `bottom` pair a full-bleed picture with a header and body region. The opening heading is the header and the next block the body:
 
 ```typ
-#m.slide(layout: "image", variant: "right", image: path("fig/book.jpg"))[== Readings][
+#m.slide(layout: "image", position: "right", image: path("fig/book.jpg"))[== Readings][
   - Almost every week
   - PDFs on the course site
 ]
 ```
 
-Pass `[]` as the second block when the picture needs a title but no body. `tracks:` sizes the picture region and is side-independent, so `tracks: 40%` means the same thing under `left` and `right` and the two stay mirror images. These variants default to `fit: "cover"`; pass `fit: "contain"` for a chart, a screenshot, or any picture whose edges carry meaning.
+Stop after the heading when the picture needs a title but no body. `tracks:` sizes the picture region and is side-independent, so `tracks: 40%` means the same thing under `left` and `right` and the two stay mirror images. A picture given as a path defaults to `fit: "cover"` at these positions; pass `fit: "contain"` for a chart, a screenshot, or any picture whose edges carry meaning.
 
-**Full-bleed photograph with text over it.** The `full` variant puts the picture behind a single body cell:
+**Full-bleed photograph with text over it.** Position `"background"` puts the picture behind a single body cell:
 
 ```typ
 #m.slide(
   layout: "image",
-  variant: "full",
-  image: (path: path("fig/auditorium.png"), scrim: black.transparentize(55%)),
+  position: "background",
+  image: m.components.image(
+    path("fig/auditorium.png"),
+    scrim: black.transparentize(55%),
+  ),
 )[
   #set text(fill: white)
   == Who are you?
 ]
 ```
 
-`full` inherits the deck's ordinary text color, so it needs both halves of the contrast pair: a `scrim:` on the image spec to quiet the photograph, and a text fill override in the body. Omit the body entirely (`#m.slide(layout: "image", variant: "full", image: ...)`) for a bare picture slide with no text at all. Prefer `full` over the section layout's `image-background` variant, or a title layout with a `background:` plane, when the composition is free-form rather than a titled preset.
+The body inherits the deck's ordinary text color, so it needs both halves of the contrast pair: a `scrim:` on the picture to quiet the photograph, and a text fill override in the body. Omit the body entirely for a bare picture slide with no text at all. Prefer this over a title or section layout with a background picture when the composition is free-form rather than a titled preset.
 
 **One big number or phrase.** Scope a centering rule around a single content slide, and let `m.fit(grow: true)` size the type to the cell instead of picking an em value that breaks when the number gains a digit:
 
@@ -246,9 +266,9 @@ Key setup arguments:
 - `title`, `subtitle`, `authors`, `date`: deck identity. `authors` takes a bare name the way `title` does, an array of names for several, or records mixed in among them. An author record is built by `m.layouts.author(name, ...)` and accepts `affiliations` (an array of institutions, as content or strings, deduplicated by value so authors sharing one institution share its legend number), `corresponding`, `email`, and `orcid`; the `academic` title variant requires at least one author. Feeds title layouts, Typst document metadata, and the queryable `<mosaic-deck-metadata>` record. Setup does not insert a title slide automatically; each `m.slide(layout: "title")` chooses where one appears.
 - `colors:`: partial overrides of the semantic palette. It is one flat dictionary: `canvas`, `surface`, `accent`, `text`, `muted`, and `line` are the deck's own chrome, and `warning` and `error` are the status colors components paint with. Unknown names and non-color values are errors; omitted names keep the active theme's defaults.
 - `layouts:`: a dictionary overriding only `content`, `title`, or `section`. Both explicit slides and automatic `==` slides use the configured `content` layout.
-- `headings:`: which heading levels open slides. A dictionary keyed by level as a string, with values `"section"` or `"slide"`; the default is `("1": "section", "2": "slide")`. A custom map replaces the default, so `("1": "section", "2": "section", "3": "slide")` makes `===` the content slide. Unmapped levels are ordinary content inside the current slide.
-- `font:` / `base-size:`: the theme's typeface (a family or a list of families) and base text size. They are theme options, declared by every bundled theme with its own defaults.
-- `cells:`: recurring cell defaults (such as `footer`). They apply only when the resolved layout contains that cell ID; explicit slide content or `none` overrides them.
+- `headings:`: which heading levels open slides. An array indexed by level whose entries are `"section"`, `"slide"`, or `none` for a level that opens nothing; the default is `("section", "slide")`. `("section", "section", "slide")` makes `===` the content slide. Levels past the end are ordinary content inside the current slide.
+- `font:` / `base-size:`: the deck's typeface (a family or a list of families) and base text size, under every theme, custom ones included. A theme's headings and tiers are multiples of the base size, so the deck scales with it; a `set text(size: ..)` after setup changes body text alone.
+- `cells:`: recurring cell defaults (such as `footer`). They apply only when the resolved layout contains that cell ID. Positional bodies pass over a cell with a default; a slide replaces or suppresses it by name, through its own `cells: (footer: ..)` or `cells: (footer: none)`.
 - `background:` / `foreground:`: the deck's full-slide planes. Every slide inherits them unless it passes its own value, or `none` to suppress one.
 - `paper:`: `"16-9"` (default), `"4-3"`, or a `(width:, height:)` dictionary of positive absolute lengths (no `em`).
 - `spacing:`: for example `(inset: 1.5em)` to set the default cell inset.
@@ -288,8 +308,8 @@ To develop a theme, start locally: define the complete semantic palette, all eig
     warning: rgb("#96793d"),
     error: rgb("#8a4a3a"),
   ),
+  defaults: (font: "Inter", base-size: 20pt),
   apply: (body, colors: (:), options: (:)) => {
-    set text(font: "Inter", size: 20pt)
     show list.where(tight: true): it => list(tight: false, ..it.children)
     body
   },
@@ -298,7 +318,7 @@ To develop a theme, start locally: define the complete semantic palette, all eig
 #show: m.themes.setup(theme)
 ```
 
-Only `colors` is required; `name`, `defaults`, `options`, `layouts`, and `apply` are optional. Mosaic's engine fills the canvas and sets the text fill from `colors.text` before `apply` runs, and emits no other `set` or `show` rule, so `apply` states the rest of the theme's look: font and size, headings, captions, list rhythm, and the canonical `<mosaic-cell-*>` rules the layouts compose against. The definition is validated where it is bound: a missing or misspelled color is named, as are unknown `defaults` keys and an incomplete `layouts` dictionary. The bound `setup` takes no `theme:` argument. Copy the default theme's `mosaic/src/themes/default/definition.typ` for the complete set in its plainest form. Themes that want compact markup lists to read at presentation distance loosen them with a plain show rule (`show list.where(tight: true): it => list(tight: false, ..it.children)`, and the same for `enum`). To start from an existing theme, merge its exported definition: `base.definition + (name: .., colors: base.definition.colors + (accent: ..))`. The merge replaces `apply` outright, so to extend inherited rules rather than drop them, run the base callback first with `show: (base.definition.apply).with(colors: colors, options: options)`. A reusable packaged facade keeps three core files: `theme.typ` (binds and exports the public API), `definition.typ` (passive design decisions), and `layouts.typ` (the callable layout namespace), bound once with `mosaic.themes.setup(definition)`. Copy the default theme's files and change only design values. Theme definitions are passive data consumed by Mosaic's engine; never call setup internals from a theme or forward Mosaic's setup arguments.
+Only `colors` is required; `name`, `defaults`, `options`, `layouts`, and `apply` are optional. A theme states its typeface and base size through `defaults: (font: .., base-size: ..)`, because they are deck options every theme accepts, never through `options`. Mosaic's engine fills the canvas and states the base typography before `apply` runs (text fill from `colors.text`, font and size from the deck's `font` and `base-size`) and emits no other `set` or `show` rule, so `apply` states the rest of the theme's look: headings, captions, list rhythm, and the canonical `<mosaic-cell-*>` rules the layouts compose against. `apply` reads the resolved values as `options.font` and `options.base-size`; state heading sizes as multiples of `options.base-size`, not in `em`, so they hold under `set heading(offset: ..)`. A heading rule that rebuilds the heading (`show heading: it => ..`) is declared through `show: mosaic.themes.decorate-heading.with(depth: 2, it => ..)` so that it holds on every frame of an incremental slide. The definition is validated where it is bound: a missing or misspelled color is named, as are unknown `defaults` keys and an incomplete `layouts` dictionary. The bound `setup` takes no `theme:` argument. Copy the default theme's `mosaic/src/themes/default/definition.typ` for the complete set in its plainest form. Themes that want compact markup lists to read at presentation distance loosen them with a plain show rule (`show list.where(tight: true): it => list(tight: false, ..it.children)`, and the same for `enum`). To start from an existing theme, merge its exported definition: `base.definition + (name: .., colors: base.definition.colors + (accent: ..))`. The merge replaces `apply` outright, so to extend inherited rules rather than drop them, run the base callback first with `show: (base.definition.apply).with(colors: colors, options: options)`. A reusable packaged facade keeps three core files: `theme.typ` (binds and exports the public API), `definition.typ` (passive design decisions), and `layouts.typ` (the callable layout namespace), bound once with `mosaic.themes.setup(definition)`. Copy the default theme's files and change only design values. Theme definitions are passive data consumed by Mosaic's engine; never call setup internals from a theme or forward Mosaic's setup arguments.
 
 ## 7. Custom grids
 
@@ -306,11 +326,9 @@ Build custom structure only when headings and layout factories are insufficient.
 
 ```typ
 #let composition = m.grids.columns(
-  m.grids.track(2fr, "main"),
-  m.grids.track(1fr, m.grids.rows(
-    m.grids.track(2fr, "notes"),
-    m.grids.track(1fr, "source"),
-  )),
+  tracks: (2fr, 1fr),
+  "main",
+  m.grids.rows(tracks: (2fr, 1fr), "notes", "source"),
 )
 
 #m.slide(
@@ -324,7 +342,7 @@ Build custom structure only when headings and layout factories are insufficient.
 ```
 
 - `m.grids.columns(...)` places children side by side; `m.grids.rows(...)` stacks them. Each string is a cell ID. Children may be nested grids. Both accept `gutter:` (a native track size between adjacent children, default `0pt`) and `stroke:` (a stroke drawn along each interior boundary, centered in the gutter, default `none`).
-- Every direct child gets a `1fr` track by default. Wrap a child in `m.grids.track(size, child)` for another size; tracks accept `auto`, fixed lengths, percentages, and `fr` values.
+- Every direct child gets a `1fr` track by default. Pass `tracks:` for other sizes: an array with exactly one size per child, in order, as in `m.grids.rows(tracks: (auto, 1fr), "header", "body")`. A size is `auto`, a fixed length, a percentage, or an `fr` value. It is the same `tracks:` the content layout takes. There is no per-child wrapper.
 - `m.grids.cell(id, ...)` creates an explicitly configured cell: `inset:` (padding, affects layout measurement), fixed `content:` (an image or logo owned by the grid, needing no body or `cells:` entry). Cells do not fit or scale their content: they are structural only.
 - Read a grid from the outside inward: largest split first, then replace children with nested splits. Keep descriptive IDs and indentation.
 
@@ -334,11 +352,15 @@ Cell insets provide slide margins (`setup` uses a zero page margin). Adjacent ce
 
 A slide accepts cell content in two distinct forms. Do not mix them in one slide.
 
-**Positional bodies** for short grids with obvious traversal order — matched in source order, left to right within `columns`, top to bottom within `rows`, recursively through nesting:
+**Positional bodies** follow one rule: *a slide's opening heading is its header, and everything else fills the cells in order.* In a layout with a `header` cell, the heading that opens the slide fills it, whether it sits in a block of its own or opens the first one, exactly as `== Title` does on a heading slide. The bodies then fill the other cells in source order: left to right within `columns`, top to bottom within `rows`, recursively through nesting. A grid with no `header` cell lifts nothing.
 
 ```typ
 #m.slide(layout: m.grids.columns("a", "b", "c"))[a][b][c]
+#m.slide[== Title][Body]            // header, then body
+#m.slide(columns: 2)[== Title][Left][Right]
 ```
+
+Two kinds of cell are out of positional reach, and are addressed by name: a header that is not a heading (`#m.slide[Plain][Body]` is an error on a header layout), and a cell with a deck default from `setup(cells:)`. More bodies than cells to fill is an error listing the cells positional bodies reach.
 
 **Named `cells:`** for anything larger or reusable — assignment stays independent of traversal order:
 
@@ -350,10 +372,10 @@ The cell ID connects all three layers: `m.grids.cell("body")` defines the cell, 
 
 Useful content values:
 
-- `m.components.image(path("photo.webp"), alt: "...")`: like native `image()` but defaults `width`/`height` to `100%` and `fit` to `"cover"`. `scrim:` paints a layer over the picture and takes any Typst paint, so `scrim: black.transparentize(55%)` darkens the whole picture and a `gradient.linear(..)` darkens only the band the text occupies. The same key is accepted in the image dictionaries the `title`, `section`, and `image` layouts take. Use Typst's `path()` so the location anchors to the calling document across the package boundary. For a full-bleed image, set the cell's `inset: 0pt`.
+- `m.components.image(path("photo.webp"), alt: "...")`: like native `image()` but defaults `width`/`height` to `100%` and `fit` to `"cover"`. `scrim:` paints a layer over the picture and takes any Typst paint, so `scrim: black.transparentize(55%)` darkens the whole picture and a `gradient.linear(..)` darkens only the band the text occupies. The result is content, which is what a layout's `image:` takes when a picture needs a scrim, a fit, or an `alt`. Use Typst's `path()` so the location anchors to the calling document across the package boundary. For a full-bleed image, set the cell's `inset: 0pt`.
 - `m.components.figure(path("chart.png"), caption: [..])`: the in-cell figure. Defaults `fit` to `"contain"` so nothing is cropped, centres the picture, and with the default `height: auto` hands it the cell's height less whatever the caption consumes. Two of them in adjacent cells caption on one baseline whatever their aspect ratios, so no matching height has to be found by hand. `auto` reads the cell, not the space left inside it, so a figure that follows prose in the same cell needs an explicit `height:` and then captions directly beneath itself. Use `m.components.image` instead for a background plane or a deliberately cropped cell.
   The body can be content rather than a source: `m.components.figure(my-table, caption: [..], kind: table)` captions a table or a code-drawn diagram, keeps its natural size, and scales it as a whole only when it is too large for the cell (never magnifies it). State `kind: table` because scaling costs the automatic detection; further named arguments go to the native `figure` for a content body and to the native `image` for a picture source. `fit:` and `scrim:` are picture-only and are rejected for content.
-- `m.components.card()` (clipped semantic panel), `callout()` (side stripe with optional title), `badge()` (compact inline badge), `quote()` (attribution treatment), `divider()` (horizontal rule), `progress()` (position indicator). All return ordinary content for any cell or plane. A component's `role:` names one color in the theme palette: `accent`, `warning`, or `error`, plus `neutral` for the deck's own surface. The component paints its border and rails in that color and its panel in that color tinted into the deck canvas. The panel components (`card`, `callout`, `quote`) also take flat `fill:`, `accent:`, `stroke:`, `radius:`, `inset:`, and `align:` overrides, each defaulting to `auto` (take it from the role), plus a `text:` dictionary of native `text` arguments, so a one-off color is `callout(accent: rgb("#7c3aed"))` rather than a new role. `badge` takes the same set without `align:`, `divider` takes only `title:` and `stroke:`, and `progress` takes `fill:` and `accent:` beside its own arguments.
+- `m.components.card()` (clipped semantic panel), `callout()` (side stripe with optional title), `badge()` (compact inline badge), `quote()` (attribution treatment), `divider()` (horizontal rule), `progress()` (position indicator). All return ordinary content for any cell or plane. A component's `role:` names one color in the theme palette: `accent`, `warning`, or `error`, plus `neutral` for the deck's own surface. The component paints its border and rails in that color and its panel in that color tinted into the deck canvas. The panel components (`card`, `callout`, `quote`) also take flat `fill:`, `accent:`, `stroke:`, `radius:`, `inset:`, and `align:` overrides, each defaulting to `auto` (take it from the role), plus a `text:` dictionary of native `text` arguments, so a one-off color is `callout(accent: rgb("#7c3aed"))` rather than a new role. `badge` takes the same set without `align:`, `divider` takes only `title:` and `stroke:`, and `progress` takes `fill:` and `accent:` beside its own arguments. Components are transparent to Mosaic's own commands: a pause, a step, or a note inside one works as in the cell around it, and a dimmed component mutes its paint. `quote` is a superset of the native `quote` (`block:`, `quotes:`, a label as `attribution:`).
 - Native math, `figure` with captions and references, MiTeX for LaTeX math, ctheorems for theorem environments: all work unchanged inside cells.
 
 ## 9. Style with native Typst rules
@@ -396,10 +418,10 @@ Bundle repeated rules in a transformer and apply it once with `#show:`:
 #show: styled
 ```
 
-Typography is native rules after setup:
+The typeface and base size are `setup` options; the rest of the typography is native rules after setup:
 
 ```typ
-#set text(font: "EB Garamond", size: 26pt)
+#show: m.setup.with(font: "EB Garamond", base-size: 26pt)
 #show heading.where(depth: 1): set text(font: "Inter", weight: "black")
 ```
 
@@ -409,7 +431,7 @@ A semantic heading feeds outlines and bookmarks; use `text(...)` directly for di
 
 Keep three concerns distinct:
 
-- **Cells** (`header`, `body`, `footer`) participate in the resolved grid. A recurring footer is a setup `cells:` default for the real `footer` cell, applied whenever the resolved layout contains that cell. An explicit slide value overrides it; `none` suppresses it on one slide. Title slides have no `footer` cell, so they are unaffected.
+- **Cells** (`header`, `body`, `footer`) participate in the resolved grid. A recurring footer is a setup `cells:` default for the real `footer` cell, applied whenever the resolved layout contains that cell. A slide overrides or suppresses it by name, `cells: (footer: ..)` or `cells: (footer: none)`; positional bodies pass over it. Title slides have no `footer` cell, so they are unaffected.
 - **Planes** are the `background:` and `foreground:` arguments of `setup` and `slide`, never entries in `cells:`. They cover the full usable slide area without changing grid measurements. A slide inherits the setup plane by default, replaces it with its own value, or suppresses it with `none`.
 - **Runtime state** supplies logical slide, section, and frame counters, read by components such as `m.components.progress()`.
 
@@ -432,7 +454,7 @@ Write one logical slide; Mosaic adds frames until the last timed command has run
 - `m.steps.on(range)[content]`: shows content over an exact step range. Ranges are integers, open (`"3-"`), closed (`"2-4"`), or up to a step (`"-2"`). `before:` and `after:` control the surrounding steps and each take `"visible"`, `"hidden"` (the default, keeps the space), `"dimmed"`, or `"removed"` (releases the space).
 - `m.steps.reveal[...]`: accumulates a list or sequence one item at a time.
 - `m.steps.replace[first][second]`: swaps alternatives in one stable slot sized by the largest alternative.
-- `m.steps.drawing`: connects the same timing model to custom structures (CeTZ canvases, Fletcher diagrams); preserve hidden bounds so later additions do not shift the drawing.
+- `m.steps.drawing`: connects the same timing model to custom structures (CeTZ canvases, Fletcher diagrams); preserve hidden bounds so later additions do not shift the drawing. A command wrapped in `on` is only valid inside `steps.drawing`; text outside it is written as content, `on(2)[text]`.
 
 ```typ
 #m.slide[
@@ -446,9 +468,9 @@ Write one logical slide; Mosaic adds frames until the last timed command has run
 Constraints and options:
 
 - A heading cannot be placed inside an incremental grid node (`m.steps.reveal`, `m.steps.replace`, and related step commands); keep headings structurally stable across frames.
-- Steps, pauses, and notes work in a cell body and inside the containers Mosaic rebuilds frame by frame: lists, tables, term lists, shapes, transforms, `columns`, and math. They do not work where the slide runtime cannot see them, and the compile fails rather than dropping them: inside a component (`card`, `callout`, `quote`), a `context` block, a `layout` callback, or the output of a show rule. A pause or step in a section tagline or another layout field fails the same way, though a note there is collected.
+- Steps, pauses, and notes work wherever Mosaic can see them: cell bodies and planes; lists, tables, term lists, shapes, transforms, `columns`, and math; Mosaic's own components (`card`, `callout`, `quote`, `badge`, `divider`, `figure`); and layout content fields such as a section tagline or a title slide's title and subtitle. Three places stay opaque and fail the compile rather than dropping content: your own `context` block, a `layout` callback, and show-rule output. A note tied to a step the slide never reaches is shown on the last frame.
 - A list timed with `pause`, `on`, or `reveal` is drawn by Mosaic rather than by the native list, using the deck's `list.marker`, `enum.numbering`, spacing, and indents; a hidden item hides its marker too.
-- `m.slide` cannot be nested inside another slide or a container, and a slide body must be content (or `none` for an empty cell). `#footnote` on a slide is an error: put the note in a footer cell.
+- `m.slide` cannot be nested inside another slide or a container, needs `#show: m.setup` before it, and takes content bodies (or `none` for an empty cell). `#footnote` on a slide is an error: put the note in a footer cell. `m.fit(width:)` and `height:` take a length or a ratio, not a fraction.
 - `setup(handout: true)` emits only the final frame of each logical slide, including timed planes.
 - Native counters and states advance once per physical frame by default. List them in `setup(frozen-counters: (...), frozen-states: (...))` to advance once per logical slide instead.
 - Reveal one part of an equation at a time by replacing plain terms with colored underbraces via steps commands; the layout stays fixed.
@@ -487,7 +509,7 @@ Independently of `output:`, a deck that holds any note also embeds those notes i
   typst compile --root . slides.typ /tmp/p-{n}.png --pages 20,23 --ppi 55
   ```
 
-  Overflow is nearly always a *body* cell holding more prose than its band. On a stacked image variant (`top`/`bottom`) the usual fix is a smaller `tracks:` so the text band grows; when the body is a full bullet list plus a picture, abandon the image layout and use an ordinary content slide with `m.components.figure(.., height: N%)`, which is predictable.
+  Overflow is nearly always a *body* cell holding more prose than its band. On a stacked image position (`top`/`bottom`) the usual fix is a smaller `tracks:` so the text band grows; when the body is a full bullet list plus a picture, abandon the image layout and use an ordinary content slide with `m.components.figure(.., height: N%)`, which is predictable.
 
 - **Convert a whole deck set**: when porting many sibling decks, keep an identical `m.setup` block in each so they stay a series, and drive the build from one pattern rule. Watch for output collisions before running that rule: `quarto render` + `pagedown::chrome_print` print `<deck>.pdf` from the same basename a Typst deck compiles to, so a first `make` can overwrite an existing set of PDFs. Whether that is wanted (the Typst decks are replacing them) or not (both sets must survive, so Typst output belongs in its own directory) is the author's call — ask rather than assume, and check whether the directory is under version control before finding out the hard way.
 
@@ -504,10 +526,11 @@ When compilation fails:
 1. Recompile the smallest affected deck and capture the exact diagnostic.
 2. Check for an unknown layout name, a missing named cell, mixed positional and named content, or an invalid layout variant.
    - `mosaic: content appears before the first heading handled by setup` means something after `#show: m.setup` emits content before the first `=`/`==` or `m.slide` — often a tool-setup call (e.g. `calepin.setup(..)`) that looks inert but produces content. Move it inside the first slide's body.
+   - A `was removed; write ..` diagnostic names the current spelling of a renamed argument (`variant: "image-left"`, the image layout's `variant:`, a picture dictionary, a `headings:` dictionary). Apply it as written.
    - `failed to decode image (Format error decoding Jpeg ...)` or `unknown image format` means the file's extension lies about its bytes. Typst chooses its decoder from the extension, so a PNG or WebP named `.jpg` fails. Check with `file -b`, and prefer adding a correctly-named *copy* over renaming when other documents reference the original name. Typst has no AVIF decoder at all — convert those.
 3. Confirm that dictionary-held functions are called with parentheses when needed, for example `(theme.layouts.section)()`.
 4. Confirm that `layouts:` passed to setup is a dictionary and only overrides `content`, `title`, or `section`.
-5. Confirm that image variants receive an image and valid tracks.
+5. Confirm that a picture is a `path(..)` or content placed by `position:`, and that `tracks:` has one size per child.
 6. Change the narrowest source responsible, then recompile the original deck.
 
 Do not add compatibility aliases for removed APIs. In particular, slides use `layout:`, not a separate semantic selector.

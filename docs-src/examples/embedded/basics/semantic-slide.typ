@@ -35,11 +35,9 @@
 
 // Add nested rows and explicit track proportions.
 #let composition = m.grids.columns(
-  m.grids.track(2fr, "main"),
-  m.grids.track(1fr, m.grids.rows(
-    m.grids.track(2fr, "notes"),
-    m.grids.track(1fr, "source"),
-  )),
+  tracks: (2fr, 1fr),
+  "main",
+  m.grids.rows(tracks: (2fr, 1fr), "notes", "source"),
 )
 
 #m.slide(

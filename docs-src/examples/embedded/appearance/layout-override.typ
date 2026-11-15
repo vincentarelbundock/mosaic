@@ -1,11 +1,12 @@
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 #import mosaic.themes.default as m
 
 #import "_tour-deck.typ": deck
 
 // A section slide of our own: a rule across the top, the title beneath it.
 #let chapter = m.grids.rows(
-  m.grids.track(auto, m.grids.cell("rule", content: line(length: 100%, stroke: 3pt))),
+  tracks: (auto, 1fr),
+  m.grids.cell("rule", content: line(length: 100%, stroke: 3pt)),
   "section",
 )
 

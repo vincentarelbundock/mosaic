@@ -7,10 +7,11 @@
 ///
 /// Install it as a document-wide show rule. Everything after it is presentation
 /// source: level-two headings become slides, and `mosaic.slide` commands become
-/// slides.
+/// slides. A `mosaic.slide` in a document that never applied `setup` is an
+/// error.
 ///
 /// ```typ
-/// #import "@preview/mosaic:0.0.1" as mosaic
+/// #import "@local/mosaic:0.0.3" as mosaic
 /// #show: mosaic.setup.with(
 ///   title: [Tree-based slide grids],
 ///   authors: [Ada Lovelace],
@@ -39,18 +40,9 @@
 /// is what lets a deck adjust one accent color or one layout without restating
 /// the theme.
 ///
-/// *Released and development versions*
-///
-/// This page documents the development version. Three things on it are not in
-/// the released 0.0.1: the `compact-inset` key of `spacing`, the `"split"`
-/// output, and the `split-inset` key of `notes`. Each is marked where it is
-/// described.
-///
 /// *Themes*
 ///
-/// This is the Default facade's setup. Its `font` and `base-size` options are
-/// that theme's own; every bundled theme declares the same two, with its own
-/// defaults. A themed facade such as
+/// This is the Default facade's setup. A themed facade such as
 /// `mosaic.themes.metropolis` exposes the same signature with different
 /// defaults, and may add its own options on top. See `themes.setup` for binding
 /// a custom theme definition.
@@ -174,7 +166,6 @@
   ///   Compact cells keep `inset` left and right. Built-in layouts and
   ///   hand-built grids both use it. `auto`, the default, takes 55% of
   ///   `inset`; set it to the `inset` value for a deeper painted header.
-  ///   Development version only; the released 0.0.1 rejects the key.
   ///
   /// Typographic rhythm is not here. Heading spacing and list spacing are
   /// ordinary `show` and `set` rules owned by the theme, so change them with
@@ -189,7 +180,7 @@
   /// - `margin`: the A4 page margin, default `15mm`.
   /// - `split-inset`: the same inset for the `split` output's notes half,
   ///   whose page carries no margin of its own so the two halves meet exactly
-  ///   at the midpoint, default `12mm`. Development version only.
+  ///   at the midpoint, default `12mm`.
   /// - `thumbnail-stroke`: the border drawn around the slide thumbnail,
   ///   default `0.6pt` in the light palette's line color, whatever the
   ///   deck's own palette, because these pages are white paper.
@@ -241,29 +232,27 @@
   /// -> dictionary
   layouts: (:),
   /// Which heading levels open a slide automatically, and what each one
-  /// opens. A dictionary keyed by heading level, written as a string because
-  /// Typst dictionary keys are strings, whose values are `"section"` (a
-  /// section slide) or `"slide"` (a content slide). A level the dictionary
-  /// does not name is ordinary content inside the current slide, so it must
-  /// come after the first heading that opens one.
+  /// opens. An array indexed by heading level: its first entry is for `=`,
+  /// its second for `==`, and so on. Each entry is `"section"` (a section
+  /// slide), `"slide"` (a content slide), or `none` for a level that opens
+  /// nothing. A level past the end of the array, like one marked `none`, is
+  /// ordinary content inside the current slide, so it must come after the
+  /// first heading that opens one.
   ///
   /// The default reads a deck the way its outline does. A document with a
-  /// deeper hierarchy passes its own map, which replaces the default rather
-  /// than merging into it:
+  /// deeper hierarchy passes its own array:
   ///
   /// ```typ
   /// // Parts at `=` and sections at `==` both open section slides; `===`
   /// // opens a content slide.
-  /// headings: ("1": "section", "2": "section", "3": "slide")
+  /// headings: ("section", "section", "slide")
   /// ```
-  ///
-  /// Levels must be positive integers written without leading zeros.
-  /// -> dictionary
-  headings: ("1": "section", "2": "slide"),
+  /// -> array
+  headings: ("section", "slide"),
   /// The deck's typeface, as a family name or a list of families in order of
-  /// preference. This is an option of the Default theme rather than of the
-  /// engine, and every bundled theme declares one with its own default list.
-  /// It accepts whatever native `text(font: ..)` does.
+  /// preference. A deck option under every theme, bundled or custom; the
+  /// value shown is the Default theme's, and each theme presets its own. It
+  /// accepts whatever native `text(font: ..)` does.
   ///
   /// ```typ
   /// font: ("EB Garamond", "Libertinus Serif")
@@ -277,9 +266,10 @@
     "DejaVu Sans",
     "Libertinus Serif",
   ),
-  /// The deck's base text size, which headings, captions, and every em-sized
-  /// measure scale from. Like `font`, an option of the Default theme that
-  /// every bundled theme declares with its own default.
+  /// The deck's base text size, which a theme's headings, captions, and
+  /// other tiers are stated as multiples of. Like `font`, a deck option under
+  /// every theme; the value shown is the Default theme's. A `set text(size:
+  /// ..)` after `setup` changes the body text alone.
   /// -> length
   base-size: 28pt,
   /// Whether to emit only the final frame of each logical slide, collapsing
@@ -293,7 +283,6 @@
   /// - `"notes"`: the notes alone, without the slide image.
   /// - `"split"`: each frame beside its notes on a double-width page, the
   ///   layout pympress and pdfpc cut in half to drive two screens.
-  ///   Development version only; the released 0.0.1 rejects it.
   /// -> str
   output: "slides",
   /// Counters restored to their pre-slide values before each continuation
