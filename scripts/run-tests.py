@@ -982,7 +982,7 @@ def run_core(typst: str, sources: list[str]) -> None:
             "theme", "automatic", "plain", "rule", "numeral", "baseline", "toc", "image-left",
         )),
         ("title-heading-frames", "Titleword", (
-            "theme", "centered", "bordered", "ruled", "kicker", "panel", "academic", "image",
+            "theme", "centered", "bordered", "ruled", "kicker", "panel", "academic", "image-left",
         )),
     )
     for stem, token, variants in heading_frames:
@@ -1011,7 +1011,7 @@ def run_core(typst: str, sources: list[str]) -> None:
                     )
     # A handout renders one frame per slide, and that frame carries the real
     # title heading; the fixture asserts the heading count.
-    for variant in ("theme", "kicker", "image"):
+    for variant in ("theme", "kicker", "image-left"):
         typst_compile(
             typst, "title-heading-frames.typ",
             TMP / f"mosaic-title-heading-frames-handout-{variant}.pdf",

@@ -1,7 +1,7 @@
 // A slide that fits is not an overflow. Every title variant scales a long
 // title and a long author list into its cell, so `overflow: "error"` must
 // compile this deck: nothing here is clipped. The image variant is included
-// at a side position, a band position, and over a background.
+// beside the picture, in a band above it, and over a background.
 #import "@local/mosaic:0.0.3" as mosaic
 
 #let authors = range(8).map(index => mosaic.layouts.author(
@@ -21,11 +21,10 @@
 #for variant in ("centered", "bordered", "ruled", "kicker", "panel", "academic") {
   mosaic.slide(layout: "title", variant: variant)
 }
-#for position in ("left", "top", "background") {
+#for variant in ("image-left", "image-top", "image-background") {
   mosaic.slide(
     layout: "title",
-    variant: "image",
-    position: position,
+    variant: variant,
     image: path("/docs-src/assets/images/title-river.webp"),
   )
 }

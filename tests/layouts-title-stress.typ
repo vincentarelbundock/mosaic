@@ -33,7 +33,6 @@
 #mosaic.slide(layout: "title", variant: "academic")
 #mosaic.slide(
   layout: "title",
-  variant: "image",
-  position: "top",
+  variant: "image-top",
   image: path("/docs-src/assets/images/title-river.webp"),
 )

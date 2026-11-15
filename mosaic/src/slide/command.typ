@@ -2,7 +2,7 @@
 #import "../shared.typ": tag, fail, is-record
 #import "../grid/model.typ": plane-ids
 #import "../layout/config.typ": selectable-layout-names, validate-layout-value
-#import "../layout/core.typ": layout-field-keys
+#import "../layout/core.typ": layout-field-keys, removed-layout-fields
 #import "../deck-state.typ": deck-state
 
 // `fields` overlays layout fields onto whichever layout the selection
@@ -113,6 +113,15 @@
   let layout-name = if selection == auto { "content" } else { selection }
   let allowed = layout-field-keys.at(layout-name)
   for key in fields.keys() {
+    // A field the layout once had fails with the layout's own pointer to its
+    // replacement rather than with the list of fields that remain.
+    let removed = removed-layout-fields.at(layout-name, default: (:))
+    if key in removed {
+      fail(
+        "slide layout " + repr(layout-name) + " field " + repr(key)
+          + " was removed; " + removed.at(key),
+      )
+    }
     if key not in allowed {
       fail(
         "slide layout " + repr(layout-name) + " has no field " + repr(key)

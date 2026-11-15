@@ -49,15 +49,15 @@ layouts-title-accent|layout "title" accent must be a color
 layouts-title-authors-empty|variant "academic" requires at least one author
 layouts-title-authors|layout "title" author 1 must be a name or created with author()
 layouts-title-content|requires title content through title:
-layouts-title-image-required|variant "image" requires image
+layouts-title-image-required|variant "image-left" requires image
 layouts-title-image-type|image must be a native path or content
-layouts-title-image-unused|variant "centered" does not use image
-layouts-title-mutated-command|variant "image" requires image
+layouts-title-image-unused|layout "title" variant "centered" does not use image; pick a picture variant: "image-left", "image-right", "image-top", "image-bottom", or "image-background"
+layouts-title-mutated-command|variant "image-left" requires image
 layouts-title-ordinary-authors|author 1 must be a name or created with author()
-layouts-title-position-scope|position applies only to variant "image"
-layouts-title-position|position must be auto or one of
+layouts-title-position-removed|layout "title" field "position" was removed; the picture's place is part of the variant now; write variant: "image-left", "image-right", "image-top", "image-bottom", or "image-background"
+layouts-title-image-variant-removed|layout "title" variant "image" with position: "right" was removed; write variant: "image-right"
 layouts-title-rule|rule must be auto, true, or false
-layouts-title-tracks-scope|tracks apply only to variant "image"
+layouts-title-tracks-scope|layout "title" tracks apply only to directional image variants
 layouts-title-tracks|"title" tracks must be auto, one native Typst track size for the image, or an array of 2 native Typst track sizes in visual order
 layouts-title-variant|unsupported variant "unknown"
 noncanonical-cell-record|invalid grid node at root
@@ -164,7 +164,7 @@ setup-font-type|setup font must be auto, a font family, or an array of font fami
 headings-policy-role|setup headings level 2 must be "section", "slide", or none
 slide-without-setup|slide requires a deck; apply setup with a show rule, such as `#show: mosaic.setup`, before the first slide
 layouts-title-image-dictionary|layout "title" image no longer takes a dictionary; build the picture with components.image(path("cover.webp"), scrim: ..) and pass that
-layouts-title-background-tracks|layout "title" tracks size a split, so they apply only to positions
+layouts-title-image-background-tracks|layout "title" tracks apply only to directional image variants
 layouts-title-auto-missing|layout "title" requires title content through title: or setup(title: ..); pass title: none to compose the slide without one
 slide-bodies-defaulted|slide received 3 positional bodies, but on this layout they fill "body-1" and "body-2"; address any other cell by name through cells:
 note-in-context|note cannot be used inside a context block, a layout callback, or show-rule output
@@ -175,6 +175,7 @@ fit-fraction|fit width cannot be a fraction such as 2fr, which is a share of fre
 context-assertion-runs|native:context assertion ran
 content-after-slide|content appears after an explicit slide and belongs to no slide; open a new slide with a heading (levels 1, 2) or put the content in a slide command
 layouts-section-image-without-variant|layout "section" variant "baseline" does not use image; pick a picture variant: "image-left", "image-right", "image-top", "image-bottom", or "image-background"
-layouts-title-position-without-variant|layout "title" position applies only to variant "image"; add variant: "image"
+slide-title-position-removed|slide layout "title" field "position" was removed; the picture's place is part of the variant now; write variant: "image-left", "image-right", "image-top", "image-bottom", or "image-background"
 layouts-image-tracks-scope|layout "image" tracks apply only to directional variants; pick "left", "right", "top", or "bottom"
 layouts-image-caption-scope|layout "image" caption applies only to the "figure" variant
+slide-title-image-variant-removed|layout "title" variant "image" was removed; write variant: "image-left"

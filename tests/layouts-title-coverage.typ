@@ -36,7 +36,7 @@
 #mosaic.slide(layout: "title", variant: "academic")
 #mosaic.slide(
   layout: "title",
-  variant: "image",
+  variant: "image-left",
   image: path("/docs-src/assets/images/title-river.webp"),
 )
 // The contract holds under inversion too.
