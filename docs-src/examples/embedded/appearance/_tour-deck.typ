@@ -5,7 +5,7 @@
 // `deck` is the only export: the slides, called with the active theme facade
 // as `m`. The deck metadata rides on the title slide, so a wrapper needs no
 // second import.
-#import "@preview/mosaic:0.0.1": layouts
+#import "@local/mosaic:0.0.3": layouts
 #let author = layouts.author
 
 // The title and section slides name their layout rather than building one, so
@@ -83,11 +83,11 @@
 
   m.slide(
     layout: m.layouts.image(
-      (
-        path: path("/docs-src/assets/images/dog.webp"),
+      m.components.image(
+        path("/docs-src/assets/images/dog.webp"),
         alt: "A dog resting on a sunlit floor",
       ),
-      variant: "right",
+      position: "right",
     ),
     cells: (
       header: [== A well-behaved subject],

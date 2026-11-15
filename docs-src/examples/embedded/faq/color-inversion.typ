@@ -22,8 +22,9 @@
 }
 
 #let split = m.grids.columns(
-  m.grids.track(0.44fr, m.grids.cell("headline", inset: 1.5em)),
-  m.grids.track(0.56fr, m.grids.cell("copy", inset: 1.5em)),
+  tracks: (0.44fr, 0.56fr),
+  m.grids.cell("headline", inset: 1.5em),
+  m.grids.cell("copy", inset: 1.5em),
 )
 
 #let panel(pair, name) = [

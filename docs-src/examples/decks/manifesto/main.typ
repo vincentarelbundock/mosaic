@@ -60,8 +60,9 @@
     welcome-photo: surface(inset: (top: 44pt, right: 48pt, bottom: 38pt)),
   ),
   slide(layout: m.grids.columns(
-    m.grids.track(1fr, c("welcome-copy")),
-    m.grids.track(0.72fr, c("welcome-photo")),
+    tracks: (1fr, 0.72fr),
+    c("welcome-copy"),
+    c("welcome-photo"),
   ))[
     #title([Welcome to\ Presentation], size: 2.07em)
     #v(10pt)
@@ -81,10 +82,11 @@
     questions: surface(inset: (left: 28pt, right: 45pt), align: left + horizon),
   ),
   slide(layout: m.grids.columns(
+    tracks: (0.95fr, 1fr),
     stroke: 0.8pt + red,
     gutter: 0.04fr,
-    m.grids.track(0.95fr, c("vision")),
-    m.grids.track(1fr, c("questions")),
+    c("vision"),
+    c("questions"),
   ))[
     #set par(leading: 0.2em)
     #title([Our company was\ created with the\ vision to be the best\ in the industry.], size: 1.93em)
@@ -114,8 +116,9 @@
     history-copy: surface(inset: (left: 28pt, right: 45pt), align: left + horizon),
   ),
   slide(layout: m.grids.columns(
-    m.grids.track(1fr, c("history-images")),
-    m.grids.track(1fr, c("history-copy")),
+    tracks: (1fr, 1fr),
+    c("history-images"),
+    c("history-copy"),
   ))[
     #grid(
       columns: (1fr),
@@ -158,10 +161,11 @@
     team-list: surface(inset: (left: 24pt, right: 48pt), align: left + horizon),
   ),
   slide(layout: m.grids.columns(
+    tracks: (0.98fr, 0.97fr),
     stroke: 0.8pt + red,
     gutter: 0.05fr,
-    m.grids.track(0.98fr, c("team-title")),
-    m.grids.track(0.97fr, c("team-list")),
+    c("team-title"),
+    c("team-list"),
   ))[
     #title([Meet the Team], size: 2.07em)
   ][
@@ -219,10 +223,11 @@
     project-one-gallery: surface(inset: (top: 48pt, right: 48pt, bottom: 42pt)),
   ),
   slide(layout: m.grids.columns(
+    tracks: (0.95fr, 1fr),
     stroke: 0.8pt + red,
     gutter: 0.05fr,
-    m.grids.track(0.95fr, c("project-one-title")),
-    m.grids.track(1fr, c("project-one-gallery")),
+    c("project-one-title"),
+    c("project-one-gallery"),
   ))[
     #title([Project One turns\ a focused idea into\ a clear, useful result.], size: 1.93em)
   ][
@@ -282,10 +287,11 @@
     research-stats: surface(inset: 44pt, align: left + horizon),
   ),
   slide(layout: m.grids.columns(
+    tracks: (1.05fr, 0.91fr),
     stroke: 0.8pt + red,
     gutter: 0.04fr,
-    m.grids.track(1.05fr, c("research-copy")),
-    m.grids.track(0.91fr, c("research-stats")),
+    c("research-copy"),
+    c("research-stats"),
   ))[
     #title([Market Research], size: 2.07em)
     #v(10pt)

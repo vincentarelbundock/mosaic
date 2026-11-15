@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as m
+#import "@local/mosaic:0.0.3" as m
 #show: m.setup
 
 #let picture = m.components.image(
@@ -35,24 +35,40 @@
 #myslide[Toc section]
 
 #let myslide = m.slide.with(
-  layout: m.layouts.section(variant: "image-left", image: picture),
+  layout: m.layouts.section(
+    variant: "image",
+    position: "left",
+    image: picture,
+  ),
 )
-#myslide[Image-left section]
+#myslide[Picture on the left]
 
 #let myslide = m.slide.with(
-  layout: m.layouts.section(variant: "image-right", image: picture),
+  layout: m.layouts.section(
+    variant: "image",
+    position: "right",
+    image: picture,
+  ),
 )
-#myslide[Image-right section]
+#myslide[Picture on the right]
 
 #let myslide = m.slide.with(
-  layout: m.layouts.section(variant: "image-top", image: picture),
+  layout: m.layouts.section(
+    variant: "image",
+    position: "top",
+    image: picture,
+  ),
 )
-#myslide[Image-top section]
+#myslide[Picture on the top]
 
 #let myslide = m.slide.with(
-  layout: m.layouts.section(variant: "image-bottom", image: picture),
+  layout: m.layouts.section(
+    variant: "image",
+    position: "bottom",
+    image: picture,
+  ),
 )
-#myslide[Image-bottom section]
+#myslide[Picture on the bottom]
 
 // The image itself carries the contrast: darken it and switch the section
 // cell to light text through its <mosaic-cell-section> label, scoped to this
@@ -60,11 +76,12 @@
 #[
   #show label("mosaic-cell-section"): set text(fill: white)
   #m.slide(layout: m.layouts.section(
-    variant: "image-background",
-    image: (
-      path: path("/docs-src/assets/images/dog.webp"),
+    variant: "image",
+    position: "background",
+    image: m.components.image(
+      path("/docs-src/assets/images/dog.webp"),
       scrim: black.transparentize(55%),
       alt: "Dog",
     ),
-  ))[Image-background section]
+  ))[Picture in the background]
 ]

@@ -9,7 +9,7 @@
 // This is a design, not a transcription. It states the palette and the few
 // structural gestures that make Simpres recognizable, and leaves everything
 // else to Mosaic's defaults.
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 #import mosaic: slide, note, fit, grids, layouts, steps, components
 #import "@preview/cetz:0.5.2"
 
@@ -96,12 +96,14 @@
 #let definition = (
   name: "Simpres",
   colors: colors,
-  defaults: (cells: (footer: footer-chrome)),
-  options: (
+  // The typeface and base size are deck options every theme presets through
+  // `defaults`; the code face is this theme's own option.
+  defaults: (
+    cells: (footer: footer-chrome),
     font: ("Source Sans 3", "Liberation Sans", "DejaVu Sans"),
-    font-mono: ("Source Code Pro", "DejaVu Sans Mono"),
     base-size: 22pt,
   ),
+  options: (font-mono: ("Source Code Pro", "DejaVu Sans Mono")),
   layouts: (
     content: mosaic.layouts.content(variant: "header-body-footer"),
     // Simpres rules its title page with a heavy bar in the primary color,

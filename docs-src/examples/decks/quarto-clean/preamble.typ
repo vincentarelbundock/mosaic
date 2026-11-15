@@ -11,7 +11,7 @@
 // the difference between them rather than a whole look. It starts from
 // Default's exported definition and overrides four things: the two accents,
 // the type, two layouts, and the handful of rules Clean owns.
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 #import mosaic: slide, note, fit, grids, layouts, steps, components
 
 #let base = mosaic.themes.default.definition
@@ -59,8 +59,8 @@
   // Clean holds its content well inside the page and spaces the title stack
   // generously. The cell inset is the slide margin; the gap is the title
   // stack's vertical rhythm. Default's corner progress ring is inherited.
-  defaults: base.defaults + (spacing: (inset: 1.6em, gap: 1.2em)),
-  options: base.options + (
+  defaults: base.defaults + (
+    spacing: (inset: 1.6em, gap: 1.2em),
     font: ("Roboto", "Source Sans 3", "Liberation Sans", "DejaVu Sans"),
     base-size: 20pt,
   ),

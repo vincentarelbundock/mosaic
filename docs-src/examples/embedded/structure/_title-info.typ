@@ -1,7 +1,7 @@
 // The title information every variant example on the Title slides page renders.
 // Three authors over two institutions, one of them shared, so the `academic`
 // legend has something to number; every field of `layouts.author` is exercised.
-#import "@preview/mosaic:0.0.1" as m
+#import "@local/mosaic:0.0.3" as m
 
 #let ccp = [Centre for Comparative Politics]
 #let eis = [European Institute for Social Data]
@@ -31,7 +31,7 @@
   date: [Toronto · July 2027],
 )
 
-#let river = (
-  path: path("/docs-src/assets/images/title-river.webp"),
+#let river = m.components.image(
+  path("/docs-src/assets/images/title-river.webp"),
   alt: "Aerial view of winding channels through autumn wetlands",
 )

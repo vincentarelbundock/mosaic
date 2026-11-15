@@ -1,5 +1,5 @@
 // Configure the deck once: identity, layouts, and a progress line.
-#import "@preview/mosaic:0.0.1" as m
+#import "@local/mosaic:0.0.3" as m
 
 #show: m.setup.with(
   title: [Getting started],
@@ -33,7 +33,7 @@ Explicit slides when a heading is not enough
 // The image layout takes two blocks: header, then body.
 #m.slide(
   layout: "image",
-  variant: "right",
+  position: "right",
   image: path("/docs-src/assets/images/dog.webp"),
 )[== A picture beside text][
   - The picture fills the right band.

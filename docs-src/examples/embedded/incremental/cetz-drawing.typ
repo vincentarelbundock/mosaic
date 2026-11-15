@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as m
+#import "@local/mosaic:0.0.3" as m
 #import "@preview/cetz:0.5.2"
 
 #show: m.setup
@@ -9,10 +9,11 @@
 )
 
 #let grid = m.grids.rows(
-  m.grids.track(auto, m.grids.cell(
+  tracks: (auto, 1fr),
+  m.grids.cell(
     "title",
     inset: (top: 0.8em, right: 1.5em, bottom: 0.2em, left: 1.5em),
-  )),
+  ),
   m.grids.cell(
     "diagram",
     inset: (top: 0.2em, right: 1em, bottom: 0.8em, left: 1em),
