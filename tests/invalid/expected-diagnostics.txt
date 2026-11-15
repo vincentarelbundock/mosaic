@@ -162,3 +162,7 @@ steps-in-context|pause and steps cannot be used inside a Mosaic component, a sec
 pause-in-tagline|pause and steps cannot be used inside a Mosaic component, a section tagline or other layout field
 steps-unsupported-container|pause, steps, and note cannot be used inside binom, which the slide runtime cannot rebuild
 slide-in-container|slide cannot be nested inside another slide or a container
+theme-option-font-moved|theme option "font" is a setup option; state the theme's default through defaults: (font: ..)
+theme-option-base-size-moved|theme option "base-size" is a setup option; state the theme's default through defaults: (base-size: ..)
+setup-base-size-type|setup base-size must be a length
+setup-font-type|setup font must be auto, a font family, or an array of font families

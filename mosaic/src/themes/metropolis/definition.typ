@@ -12,12 +12,6 @@
 
 #let apply(body, colors: (:), options: (:)) = {
   let base-size = options.base-size
-  set text(
-    font: options.font,
-    size: base-size,
-    fill: colors.text,
-    fallback: true,
-  )
   // Tight lists become wide, keeping every argument the list was written with
   // (`start`, `numbering`, `marker`, ..): only `tight` changes.
   let widen(it) = {
@@ -56,7 +50,7 @@
   // chain, so the two spellings render identically.
   let section-size = base-size * 1.5
   show heading.where(depth: 1): set text(size: section-size, weight: "semibold")
-  show heading.where(depth: 2): set text(size: 1.15em, weight: "regular")
+  show heading.where(depth: 2): set text(size: base-size * 1.38, weight: "regular")
   show heading: set block(below: 1em)
   show figure.caption: set text(size: 0.72em, fill: colors.muted)
   show raw.where(block: false): set text(size: 1.125em)
@@ -83,18 +77,6 @@
   name: "Metropolis",
   colors: tokens.colors,
   defaults: (
-    // The signature progress line at the bottom edge of every numbered slide,
-    // filling as the deck advances. It resolves its colors from the deck
-    // record, so a palette swap recolors it too, and the component quiets
-    // itself on unnumbered pages: the title keeps its clean edge and section
-    // slides already carry the big section bar.
-    // Chrome, not content: the artifact wrapper keeps it out of the tagged
-    // PDF's structure tree, so a screen reader never announces it.
-    foreground: pdf.artifact(place(bottom, components.progress(
-      variant: "line", count: "slides", width: 100%, thickness: 3pt,
-    ))),
-  ),
-  options: (
     // Designed face first, then the best slide sans each platform ships by
     // default, then the Linux workhorse, ending in Libertinus Serif. Typst
     // embeds no sans at all, so the terminal is a serif and some name here
@@ -113,6 +95,16 @@
       "Libertinus Serif",
     ),
     base-size: 21.5pt,
+    // The signature progress line at the bottom edge of every numbered slide,
+    // filling as the deck advances. It resolves its colors from the deck
+    // record, so a palette swap recolors it too, and the component quiets
+    // itself on unnumbered pages: the title keeps its clean edge and section
+    // slides already carry the big section bar.
+    // Chrome, not content: the artifact wrapper keeps it out of the tagged
+    // PDF's structure tree, so a screen reader never announces it.
+    foreground: pdf.artifact(place(bottom, components.progress(
+      variant: "line", count: "slides", width: 100%, thickness: 3pt,
+    ))),
   ),
   layouts: (
     content: layouts.content(),

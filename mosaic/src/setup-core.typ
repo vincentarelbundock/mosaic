@@ -6,7 +6,7 @@
 #import "grid/render.typ": overflow-report
 #import "note/pdfpc.typ": attach-notes
 #import "author.typ": plain-name
-#import "settings.typ": make-settings
+#import "settings.typ": default-base-size, default-font, make-settings
 #import "shared.typ": fail, validate-choice, validate-keys
 #import "palettes.typ": light
 #import "layout/config.typ": standard-layouts
@@ -43,6 +43,8 @@
   spacing: (:),
   notes: (:),
   overflow: "off",
+  font: default-font,
+  base-size: default-base-size,
   layouts: standard-layouts,
   headings: default-heading-policy,
   handout: false,
@@ -102,6 +104,8 @@
     spacing: spacing,
     notes: notes,
     overflow: overflow,
+    font: options.font,
+    base-size: options.base-size,
   )
   let page-options = if output == "slides" {
     // A presentation canvas is edge to edge, so the margin defaults to zero and
@@ -140,7 +144,9 @@
   let names = settings.deck.authors.map(author => plain-name(author.name))
   let document-authors = if none in names { () } else { names }
   set document(title: settings.deck.title, author: document-authors)
-  // No slide typography here by design. Every `set` and `show` rule a slide
+  // No slide typography here by design. The deck's `font` and `base-size`
+  // are validated into the settings record here but stated by the theme
+  // engine, next to the text fill; every other `set` and `show` rule a slide
   // renders with comes from the active theme's `apply`, including the rules
   // that style the canonical <mosaic-cell-*> vocabulary. This engine owns
   // structure only: page geometry, document metadata, the deck record, and

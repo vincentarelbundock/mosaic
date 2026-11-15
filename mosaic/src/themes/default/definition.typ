@@ -16,24 +16,23 @@
 #import "layouts.typ" as layouts
 
 #let apply(body, colors: (:), options: (:)) = {
-  set text(
-    font: options.font,
-    size: options.base-size,
-    fill: colors.text,
-    fallback: true,
-  )
-  show heading.where(depth: 1): set text(size: 2em, weight: "semibold")
-  show heading.where(depth: 2): set text(size: 1.4em, weight: "semibold")
-  show heading: set block(below: 1em)
-  show figure.caption: set text(size: 0.72em, fill: colors.muted)
+  let base-size = options.base-size
   // The accent stays functional: links, list markers, and the section
   // baseline rule carry it, and nothing decorative does.
-  show link: set text(fill: colors.accent)
   set list(spacing: 0.8em, marker: text(fill: colors.accent)[•])
   set enum(spacing: 0.8em)
   set terms(spacing: 0.8em)
   set table(stroke: 0.8pt + colors.line)
   set raw(theme: dark-code-theme) if is-dark-canvas(colors)
+  // Heading sizes are multiples of the deck's base size, not em values. An
+  // em size would multiply with Typst's native per-level heading scale, which
+  // follows the resolved level, so the same `==` heading would shrink under
+  // `set heading(offset: 1)`. An absolute size replaces the whole chain.
+  show heading.where(depth: 1): set text(size: base-size * 2.8, weight: "semibold")
+  show heading.where(depth: 2): set text(size: base-size * 1.68, weight: "semibold")
+  show heading: set block(below: 1em)
+  show figure.caption: set text(size: 0.72em, fill: colors.muted)
+  show link: set text(fill: colors.accent)
   show label("mosaic-title-display"): set text(
     size: 2em, weight: "semibold", tracking: -0.015em,
   )
@@ -50,18 +49,6 @@
   name: "Default",
   colors: light,
   defaults: (
-    // The progress ring in the corner of every numbered slide, the one piece
-    // of furniture the quiet theme carries. It resolves its colors from the
-    // deck record, so a palette swap recolors it too, and the component
-    // quiets itself on unnumbered pages such as titles.
-    // Chrome, not content: the artifact wrapper keeps it out of the tagged
-    // PDF's structure tree, so a screen reader never announces it.
-    foreground: pdf.artifact(place(bottom + right, block(
-      inset: (right: 18pt, bottom: 14pt),
-      text(size: 0.55em, components.progress(variant: "circle")),
-    ))),
-  ),
-  options: (
     // Designed face first, then the best slide sans each platform ships by
     // default, then the Linux workhorse, ending in Libertinus Serif. Typst
     // embeds no sans at all, so the terminal is a serif and some name here
@@ -76,6 +63,16 @@
       "Libertinus Serif",
     ),
     base-size: 28pt,
+    // The progress ring in the corner of every numbered slide, the one piece
+    // of furniture the quiet theme carries. It resolves its colors from the
+    // deck record, so a palette swap recolors it too, and the component
+    // quiets itself on unnumbered pages such as titles.
+    // Chrome, not content: the artifact wrapper keeps it out of the tagged
+    // PDF's structure tree, so a screen reader never announces it.
+    foreground: pdf.artifact(place(bottom + right, block(
+      inset: (right: 18pt, bottom: 14pt),
+      text(size: 0.55em, components.progress(variant: "circle")),
+    ))),
   ),
   layouts: (
     content: layouts.content(),

@@ -16,12 +16,6 @@
 
 #let apply(body, colors: (:), options: (:)) = {
   let base-size = options.base-size
-  set text(
-    font: options.font,
-    size: base-size,
-    fill: colors.text,
-    fallback: true,
-  )
   // Tight lists become wide, keeping every argument the list was written with
   // (`start`, `numbering`, `marker`, ..): only `tight` changes.
   let widen(it) = {
@@ -97,6 +91,11 @@
   name: "Mono",
   colors: tokens.colors,
   defaults: (
+    // The one chain that needs no platform names: Typst embeds DejaVu Sans
+    // Mono, so the designed face always resolves and no build ever warns.
+    // A deck that has a favorite mono passes it through `setup(font: ..)`.
+    font: ("DejaVu Sans Mono", "Liberation Mono"),
+    base-size: 19pt,
     // The statusline: a right-aligned slide counter at the bottom of every
     // numbered slide. It resolves its colors from the deck record, so a
     // palette swap recolors it too, and the component quiets itself on
@@ -110,13 +109,6 @@
         components.progress(variant: "1/1"),
       ),
     ))),
-  ),
-  options: (
-    // The one chain that needs no platform names: Typst embeds DejaVu Sans
-    // Mono, so the designed face always resolves and no build ever warns.
-    // A deck that has a favorite mono passes it through `setup(font: ..)`.
-    font: ("DejaVu Sans Mono", "Liberation Mono"),
-    base-size: 19pt,
   ),
   layouts: (
     content: layouts.content(),

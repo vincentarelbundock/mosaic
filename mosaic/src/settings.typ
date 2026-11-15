@@ -60,10 +60,12 @@
 }
 
 // Geometry the layout modules measure with. Typography is not here: every
-// `set` and `show` rule belongs to a theme's `apply`, so the engine holds no
-// type scale of its own. Layouts that need the deck's resolved text size read
-// it from `settings.base-size`, which `render-slide` captures from the live
-// context rather than from any stored default.
+// `set` and `show` rule but the base `font` and `base-size` (see
+// `default-base-size` below) belongs to a theme's `apply`, so the engine holds
+// no type scale of its own. Layouts that need the text size a slide actually
+// renders at read it from `settings.base-size`, which `render-slide`
+// overwrites with the live context's size, so a `set text(size: ..)` written
+// after `setup` is what they measure with.
 //
 // `compact-inset` is the vertical inset of a compact cell: one in an `auto`
 // row track, which hugs its content (a header, a footer, a one-line
@@ -96,6 +98,32 @@
   x: spacing.inset,
   y: spacing.compact-inset,
 )
+
+// The deck's base typography: the two `text` arguments every theme needs and
+// every deck may override, so they are `setup` options rather than options a
+// theme declares. A theme states its own values through its definition's
+// `defaults`; the engine states them as one `set text(..)` before the theme's
+// `apply` runs. `font: auto` states no font at all, which leaves Typst's own.
+// The base size is the measure a theme's heading sizes are multiples of.
+#let default-font = auto
+#let default-base-size = 24pt
+
+#let validate-font(value) = {
+  let is-family(item) = type(item) in (str, dictionary)
+  if value != auto and not is-family(value) and (
+    type(value) != array or value.len() == 0 or not value.all(is-family)
+  ) {
+    fail("setup font must be auto, a font family, or an array of font families")
+  }
+  value
+}
+
+#let validate-base-size(value) = {
+  if type(value) != length {
+    fail("setup base-size must be a length")
+  }
+  value
+}
 
 // Geometry for the `speaker`, `notes`, and `split` outputs. Geometry only: the
 // heading and note text on these pages render under the <mosaic-note-heading>
@@ -241,6 +269,8 @@
   spacing: (:),
   notes: (:),
   overflow: "off",
+  font: default-font,
+  base-size: default-base-size,
 ) = {
   let colors = validate-colors(colors, "setup colors")
   // Every slide layout can consult the header default, so it is injected
@@ -263,6 +293,8 @@
     spacing: spacing,
     notes: notes,
     overflow: overflow,
+    font: validate-font(font),
+    base-size: validate-base-size(base-size),
   )
 }
 
@@ -276,8 +308,8 @@
   if (
     type(value) != dictionary
       or value.keys().sorted() != (
-        "background", "cells", "colors", "deck", "foreground", "notes",
-        "overflow", "spacing",
+        "background", "base-size", "cells", "colors", "deck", "font",
+        "foreground", "notes", "overflow", "spacing",
       )
   ) {
     fail("invalid internal presentation settings")

@@ -6,8 +6,13 @@
   section: mosaic.layouts.section(),
 )
 
+// `font` and `base-size` are deck options the theme presets through
+// `defaults`; the engine states them, and `apply` reads the resolved values
+// from `options` without declaring them.
 #let apply(body, colors: (:), options: (:)) = {
-  set text(font: "DejaVu Sans", size: 24pt)
+  assert(options.font == "DejaVu Sans")
+  assert(options.base-size == 26pt, message: repr(options.base-size))
+  show heading.where(depth: 2): set text(size: options.base-size * 1.5)
   show label("mosaic-cell-header"): set text(fill: colors.canvas, weight: "bold")
   show label("mosaic-cell-header"): it => block(width: 100%, fill: colors.accent, it)
   show label("mosaic-cell-footer"): set text(fill: colors.muted)
@@ -27,6 +32,8 @@
     error: rgb("#D55E00"),
   ),
   defaults: (
+    font: "DejaVu Sans",
+    base-size: 22pt,
     spacing: (inset: 32pt),
     cells: (footer: [ENGINE CONSUMED THEME]),
   ),
@@ -36,6 +43,8 @@
 
 #show: mosaic.themes.setup(theme).with(
   title: [Passive theme definition],
+  // A deck overrides the theme's preset like any other setup option.
+  base-size: 26pt,
 )
 
 #mosaic.slide(
@@ -50,4 +59,9 @@ The theme supplies design values and native rules without importing setup intern
 
 #mosaic.components.progress(variant: "line", width: 100%)
 
-#context assert(counter(page).final().first() == 2)
+#context {
+  assert(counter(page).final().first() == 2)
+  // The engine stated both before `apply` ran.
+  assert(text.size == 26pt, message: repr(text.size))
+  assert(text.font == "dejavu sans", message: repr(text.font))
+}

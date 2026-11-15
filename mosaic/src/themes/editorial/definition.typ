@@ -15,12 +15,6 @@
 
 #let apply(body, colors: (:), options: (:)) = {
   let base-size = options.base-size
-  set text(
-    font: options.font,
-    size: base-size,
-    fill: colors.text,
-    fallback: true,
-  )
   // Tight lists become wide, keeping every argument the list was written with
   // (`start`, `numbering`, `marker`, ..): only `tight` changes.
   let widen(it) = {
@@ -93,6 +87,20 @@
   name: "Editorial",
   colors: tokens.colors,
   defaults: (
+    // Designed face first, then the best slide sans each platform ships by
+    // default, then the Linux workhorse, ending in Libertinus Serif. Typst
+    // embeds no sans at all, so the terminal is a serif and some name here
+    // is always unknown: it warns once per unknown family even when a later
+    // one resolves, which is the price of rendering as designed anywhere.
+    font: (
+      "Inter",
+      "Source Sans 3",
+      "Avenir Next",
+      "Segoe UI",
+      "DejaVu Sans",
+      "Libertinus Serif",
+    ),
+    base-size: 20pt,
     spacing: (inset: 42pt),
     // The folio: a ghost slide number in the corner of every numbered slide.
     // It reads its colors from the deck record, so a palette swap recolors it
@@ -108,26 +116,12 @@
     ))),
   ),
   options: (
-    // Designed face first, then the best slide sans each platform ships by
-    // default, then the Linux workhorse, ending in Libertinus Serif. Typst
-    // embeds no sans at all, so the terminal is a serif and some name here
-    // is always unknown: it warns once per unknown family even when a later
-    // one resolves, which is the price of rendering as designed anywhere.
-    font: (
-      "Inter",
-      "Source Sans 3",
-      "Avenir Next",
-      "Segoe UI",
-      "DejaVu Sans",
-      "Libertinus Serif",
-    ),
     font-display: (
       "Source Serif 4",
       "Charter",
       "Constantia",
       "Libertinus Serif",
     ),
-    base-size: 20pt,
   ),
   layouts: (
     content: layouts.content(),
