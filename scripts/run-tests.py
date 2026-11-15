@@ -10,12 +10,17 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import zlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TESTS = ROOT / "tests"
-TMP = Path(os.environ.get("TMPDIR", "/tmp"))
+# A directory of this run's own. Assertions read outputs back by fixed names
+# (`mosaic-<stem>-<page>.svg`), so in a shared directory a page the fixture no
+# longer produces would still be found, left there by an earlier run, and the
+# assertion would pass on it. Removed after a passing run, kept after a failure.
+TMP = Path(tempfile.mkdtemp(prefix="mosaic-tests-"))
 
 
 class TestFailure(RuntimeError):
@@ -620,6 +625,21 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(section, "1/2")
     require_contains(section, "2/2")
 
+    # Fixtures that were compile-only, each given the one output fact its name
+    # promises. A lone slide is one page, with no leading blank.
+    require_contains(pdf_info("single"), "Pages:           1")
+    # A two-column content layout sets the automatic heading beside the body,
+    # so the header cell and the body cell share a baseline.
+    require_same_line(pdf_text("headings-content-layout"), "Heading in the", "Body in the")
+    require_same_line(pdf_text("headings-multi-cell"), "Automatic", "The automatic slide")
+    # A deck's own show rule written after setup wins: the heading takes the
+    # later green, not the earlier red, and the caption keeps its blue.
+    typst_compile(typst, "setup-native-styles.typ", TMP / "mosaic-setup-native-styles-{p}.svg", "--format", "svg")
+    native_styles = TMP / "mosaic-setup-native-styles-1.svg"
+    require_contains(native_styles, "#2ecc40")
+    require_contains(native_styles, "#0074d9")
+    require_contains(native_styles, "#ff4136", absent=True)
+
 
 def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
     compile_group(typst, sources)
@@ -699,6 +719,24 @@ def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
     for page, color in enumerate(("#d97706", "#ffffff", "#fedcba", "#123456"), 1):
         require_contains(TMP / f"mosaic-layouts-progress-{page}.svg", color)
 
+    # Fixtures that were compile-only. Layout fields named on `slide` overlay
+    # the configured layout rather than replace it: the title and section
+    # slides change variant or number and still draw the configured accent,
+    # and `columns: 2` splits the configured content body.
+    typst_compile(typst, "slide-layout-fields.typ", TMP / "mosaic-slide-layout-fields-{p}.svg", "--format", "svg")
+    for page in (1, 2):
+        require_contains(TMP / f"mosaic-slide-layout-fields-{page}.svg", "#654321")
+    require_contains(pdf_info("slide-layout-fields"), "Pages:           3")
+    require_same_line(pdf_page_text("slide-layout-fields", 3), "Left column", "Right column")
+    # Positional and named layout selection give the same slides.
+    require_contains(pdf_info("slide-layout-positional"), "Pages:           3")
+    require_contains(pdf_page_text("slide-layout-positional", 2), "Named selection of the same layout.")
+    require_same_line(pdf_page_text("slide-layout-positional", 3), "Left half", "Right half")
+    # One page per structural variant, and the academic title numbers a
+    # repeated affiliation once.
+    require_contains(pdf_info("layouts-structural"), "Pages:           12")
+    require_contains(pdf_page_text("layouts-structural", 1), "1 Institute A · 2 Institute B · 3 Institute C")
+
 def negative_expectations() -> dict[str, str]:
     expectations: dict[str, str] = {}
     path = TESTS / "invalid/expected-diagnostics.txt"
@@ -734,9 +772,14 @@ def run_negative(typst: str) -> None:
             raise TestFailure(f"expected {source} to fail")
         native = expected.startswith("native:")
         expected = expected.removeprefix("native:")
-        if not native and "mosaic:" not in log:
+        # Only the `error:` lines are the diagnostic. The rest of the log is
+        # source excerpts and package paths, and a path such as
+        # `@local/mosaic:0.0.3/src/...` would satisfy a bare "mosaic:" search
+        # for any error raised inside the package, Mosaic's or not.
+        errors = [line for line in log.splitlines() if line.startswith("error:")]
+        if not native and not any("mosaic: " in line for line in errors):
             raise TestFailure(f"{source} did not emit a Mosaic diagnostic")
-        if expected not in log:
+        if not any(expected in line and (native or "mosaic: " in line) for line in errors):
             raise TestFailure(f"{source} did not emit expected diagnostic: {expected}")
 
 
@@ -760,7 +803,10 @@ def main() -> int:
 
 if __name__ == "__main__":
     try:
-        raise SystemExit(main())
+        status = main()
     except TestFailure as error:
         print(f"test failure: {error}", file=sys.stderr)
+        print(f"outputs kept in {TMP}", file=sys.stderr)
         raise SystemExit(1)
+    shutil.rmtree(TMP, ignore_errors=True)
+    raise SystemExit(status)
