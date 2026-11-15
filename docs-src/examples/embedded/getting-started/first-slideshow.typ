@@ -30,15 +30,17 @@ No `slide` call required
 
 Explicit slides when a heading is not enough
 
-// The image layout shows one picture under the slide's heading, with an
-// optional caption beneath it.
+// The image layout takes two blocks: header, then body.
 #m.slide(
   layout: "image",
+  variant: "right",
   image: path("/docs-src/assets/images/dog.webp"),
-  caption: [The whole picture, never cropped],
-)[== A picture with a caption]
+)[== A picture beside text][
+  - The picture fills the right band.
+  - The text keeps the left.
+]
 
-// The heading is the header; one block follows for each column.
+// Three blocks: header, left column, right column.
 #m.slide(layout: "content", columns: 2)[== Two columns][
   First column
 ][

@@ -4,20 +4,16 @@
   thumbnail-gallery,
 )
 
-#import "/_includes/site.typ": unreleased
-
 #set document(title: [Image slides])
 #metadata((title: "Image")) <website-metadata>
 
 #title()
 
-Use `layout: "image"` for any slide whose main content is a picture. In many decks this is the most common explicit slide. The layout takes the picture as `image:` and its place as `position:`; #link("../content/images.html#pictures-in-layouts")[Pictures in layouts] explains both, and this page shows the three kinds of slide they make.
-
-#unreleased(calepin.elements.callout)[The `position:` argument is new, replacing the image layout's `variant:`.]
+Use `layout: "image"` for any slide whose main content is a picture. In many decks this is the most common explicit slide.
 
 = A figure with a caption
 
-The default position, `"body"`, places a header above a contained picture, with an optional `caption:` beneath. It never crops, which is what a chart or screenshot needs:
+The default `figure` variant places a header above a contained picture, with an optional `caption:` beneath. It never crops, which is what a chart or screenshot needs:
 
 ```typ
 #m.slide(layout: "image", image: path("fig/gdp.png"))[== Growth since 1950]
@@ -29,16 +25,16 @@ The default position, `"body"`, places a header above a contained picture, with 
 )[== My job]
 ```
 
-Position `"body"` takes the heading only: the slide has header, image, and caption cells but no body, so a single line of commentary belongs in `caption:`. The caption produces a native Typst `figure`, so it follows the deck's `show figure.caption` rules.
+The `figure` variant has header, image, and caption cells but no body, so a single line of commentary belongs in `caption:`. The caption produces a native Typst `figure`, so it follows the deck's `show figure.caption` rules.
 
 = A picture beside text
 
-The positions `"left"`, `"right"`, `"top"`, and `"bottom"` pair a full-bleed picture with header and body cells. A directional position takes the heading and one body: the slide's opening heading is its header and the block after it is the body. A slide with a title and nothing to say under it simply stops after the heading:
+The directional variants `left`, `right`, `top`, and `bottom` pair a full-bleed picture cell with header and body cells, filled by two positional blocks. Pass `[]` as the second block when the picture needs a title but no body:
 
 ```typ
 #m.slide(
   layout: "image",
-  position: "right",
+  variant: "right",
   image: path("fig/book.jpg"),
 )[== Readings][
   - Almost every week.
@@ -49,18 +45,18 @@ The positions `"left"`, `"right"`, `"top"`, and `"bottom"` pair a full-bleed pic
 Two arguments control the picture cell:
 
 - `tracks:` sizes it. The value is independent of the side, so `tracks: 40%` means the same thing under `left` and `right`, and the two stay mirror images.
-- `fit:` controls cropping of a picture given as a path. These positions default to `"cover"`, which fills the cell by cropping the picture. Pass `fit: "contain"` for a chart, a book cover, or any picture whose edges carry meaning. A picture given as content states its own fit, as in `m.components.image(path(..), fit: "contain")`.
+- `fit:` controls cropping. The directional variants default to `"cover"`, which fills the cell by cropping the picture. Pass `fit: "contain"` for a chart, a book cover, or any picture whose edges carry meaning.
 
 = A full-bleed picture
 
-Position `"background"` puts the picture behind a single body cell that covers the whole slide. It has no header cell, so a heading written there stays in the body, where it still titles the slide and feeds the outline. The cell inherits the deck's ordinary text color, so text over a photograph needs two things: a #link("../content/images.html#scrims")[scrim] on the picture to darken it, and a text fill override in the body:
+The `full` variant puts the picture behind a single body cell that covers the whole slide. The cell inherits the deck's ordinary text color, so text over a photograph needs two things: a `scrim:` in the image specification to darken the picture, and a text fill override in the body:
 
 ```typ
 #m.slide(
   layout: "image",
-  position: "background",
-  image: m.components.image(
-    path("fig/auditorium.jpg"),
+  variant: "full",
+  image: (
+    path: path("fig/auditorium.jpg"),
     scrim: black.transparentize(45%),
   ),
 )[
@@ -69,14 +65,16 @@ Position `"background"` puts the picture behind a single body cell that covers t
 ]
 ```
 
-Omit the body entirely for a bare picture slide with no text at all.
+Omit the body entirely for a bare picture slide with no text at all. The `full` variant also works for a custom opening slide: when no #link("title.html")[title variant] fits, write the title as ordinary text over a full-bleed picture.
 
 #embedded-example(
   calepin.elements.gallery,
   "structure/image-layout",
   frames: 4,
-  title: "The image layout at positions body, right, bottom, and background",
+  title: "The figure, right, bottom, and full variants of the image layout",
   renderer: thumbnail-gallery,
 )
+
+Image paths inside layout arguments cross the package boundary, so wrap every asset path in Typst's `path()`; see #link("../content/images.html#asset-paths")[Asset paths].
 
 Named arguments on an image slide refine the configured layout rather than replacing it; see #link("custom.html#refine-a-layout")[Refine a layout]. For image loading, fitting, scrims, and figures in ordinary cells, see #link("../content/images.html")[Images]; for a picture on a plane behind the whole grid, see #link("background.html")[Background].

@@ -1,16 +1,12 @@
 #import "/.calepin/calepin.typ" as calepin
 #import "/_includes/embedded-examples.typ": thumbnail-gallery
 
-#import "/_includes/site.typ": unreleased
-
 #set document(title: [Section slides])
 #metadata((title: "Section")) <website-metadata>
 
 #title()
 
 A section slide divides a talk into parts. It announces where the audience has arrived, carries no body content, and usually shows a number so the deck's shape stays legible.
-
-#unreleased(calepin.elements.callout)[A section picture is now `variant: "image"` placed by `position:`, where the released version has five `image-*` variants.]
 
 = Sections from headings
 
@@ -48,24 +44,15 @@ An explicit `number:` overrides the automatic counter for that slide. Omit it an
 
 Each variant borrows a classic minimalist tradition:
 
-- `plain`: the title, with an optional number and subtitle, as a plain stack. The `plain` section states no arrangement of its own; the theme places the stack and sets the title's type through `<mosaic-cell-section>`. Each theme picks its own section variant, and the default theme's is `baseline`.
+- `plain`, the default: the title alone at the slide's center.
 - `rule`: the title beneath a heavy full-width rule, the number above it.
 - `numeral`: an enormous ghost number bleeding off the top-right edge behind a lower-left title stack.
 - `baseline`: title and number tied to one baseline by a hairline.
 - `toc`: every section in the deck listed, with the current one alive and the others ghosted.
 
-The designed variants (`rule`, `numeral`, `baseline`, `toc`) each own their arrangement. They build it around the section number, so an omitted `number:` reads the automatic counter. Pass `accent:` to recolor the number, and with it the hairline of the `baseline` variant. A `subtitle:` is set caption-sized beneath the title in every variant.
+The designed variants build their composition around the section number, so an omitted `number:` reads the automatic counter. Pass `accent:` to recolor the number. A `subtitle:` is set caption-sized beneath the title in every variant.
 
-The `image` variant is the `plain` composition with a picture. A picture needs `variant: "image"`: write it together with `image:`. `position:` and `tracks:` apply only to that variant. `position:` places the picture: `"left"` (the default), `"right"`, `"top"`, or `"bottom"` for the section text beside a full-bleed picture, sized by `tracks:`, or `"background"` for the text directly over one. #link("../content/images.html#pictures-in-layouts")[Pictures in layouts] describes both arguments, which the title and image layouts share:
-
-```typ
-#m.slide(
-  layout: "section",
-  variant: "image",
-  position: "right",
-  image: path("fig/chapter.jpg"),
-)[Methods]
-```
+The image variants place the section text beside a full-bleed picture (`image-left`, `image-right`, `image-top`, `image-bottom`, sized by `tracks:`) or directly over one (`image-background`). Every image variant requires `image:`, wrapped in Typst's `path()` so the picture is found in your project rather than in the package; see #link("../content/images.html#asset-paths")[Asset paths].
 
 Written out in full, one of those slides is:
 
@@ -77,7 +64,7 @@ Written out in full, one of those slides is:
 )[Numeral section]
 ```
 
-The thumbnails below grow the same divider one argument at a time: plain, numbered, the designed text variants, then the `image` variant at each position. Open any thumbnail to see the slide at full size:
+The thumbnails below grow the same divider one argument at a time: plain, numbered, the designed text variants, then each image placement. Open any thumbnail to see the slide at full size:
 
 #thumbnail-gallery(
   calepin.elements.gallery,
