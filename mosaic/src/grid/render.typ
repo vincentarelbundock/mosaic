@@ -1,10 +1,10 @@
 // Rendering of validated grid trees for one incremental step.
 #import "../shared.typ": array-max, fail, tag
-#import "../incremental/core.typ": range-last, status
+#import "../incremental/core.typ": apply-state, range-last, status
 #import "content.typ": body-cell-ids
 #import "traversal.typ": resolved-tracks, fold-grid
 #import "../incremental/analysis.typ": max-step
-#import "../incremental/heading.typ": contains-heading, apply-state
+#import "../incremental/heading.typ": has-heading
 #import "../incremental/transform.typ": transform
 // Aliased: `fit` is the local variable name for a cell's fit mode throughout
 // this module, and the helper must not shadow it.
@@ -65,7 +65,7 @@
 
 #let fixed-content-has-heading(node) = fold-grid(
   node,
-  cell => cell.content != none and contains-heading(cell.content),
+  cell => cell.content != none and has-heading(cell.content),
   (node, child) => child,
   (node, children) => children.any(value => value),
 )
@@ -79,7 +79,7 @@
     cell => false,
     (node, child) => (
       child
-        or body-cell-ids(node.child).map(id => contents.at(id, default: none)).any(contains-heading)
+        or body-cell-ids(node.child).map(id => contents.at(id, default: none)).any(has-heading)
         or fixed-content-has-heading(node.child)
     ),
     (node, children) => children.any(value => value),
@@ -257,7 +257,7 @@
   // A fitted cell is never observed. Its content is scaled into the allocation
   // by construction, so there is nothing to report, and observation measures in
   // a region where the fitters have no allocation to solve against (see
-  // `unsolvable`) and therefore hand back the unfitted body, which would read
+  // `is-unsolvable`) and therefore hand back the unfitted body, which would read
   // as an overflow that the rendered slide does not have.
   if overflow != "off" and fit == none {
     content = observe-overflow(content, id, slide, step)

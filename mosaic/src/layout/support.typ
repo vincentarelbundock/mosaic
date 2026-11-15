@@ -1,5 +1,5 @@
 // Shared content and surface primitives for layout resolvers.
-#import "../grid/constructors.typ": styled-cell, track
+#import "../grid/constructors.typ": make-cell, track
 #import "../component/image.typ": image as mosaic-image
 #import "core.typ": validate-image
 #import "../settings.typ": compact-cell-inset
@@ -102,7 +102,7 @@
   id,
   settings,
   inset: none,
-) = styled-cell(
+) = make-cell(
   content: as-content(body),
   id: id,
   style: (
@@ -123,7 +123,7 @@
   settings,
   content-sized: false,
   inset: auto,
-) = styled-cell(
+) = make-cell(
   id: id,
   style: (
     content-sized: content-sized,

@@ -38,7 +38,7 @@
 // path, not an edge case: `steps.replace` measures its alternatives, captions
 // measure their frame, the speaker thumbnail measures a whole slide, and
 // overflow observation measures every cell whenever it is switched on.
-#let unsolvable(length) = (
+#let is-unsolvable(length) = (
   float.is-infinite(length.pt()) or float.is-nan(length.pt()) or length <= 0pt
 )
 
@@ -109,12 +109,12 @@
   shrink: true,
   body,
 ) = layout(layout-size => {
-  if unsolvable(layout-size.width) {
+  if is-unsolvable(layout-size.width) {
     return body
   }
   let content-width = measure(body).width
   let available-width = resolve-extent(width, layout-size.width)
-  if unsolvable(available-width) {
+  if is-unsolvable(available-width) {
     return body
   }
   let ratio = fit-ratio(
@@ -137,14 +137,14 @@
   body,
 ) = {
   let fitted = layout(container-size => {
-    if unsolvable(container-size.width) or unsolvable(container-size.height) {
+    if is-unsolvable(container-size.width) or is-unsolvable(container-size.height) {
       return body
     }
     // A fractional height means "the space this block is given", which is the
     // whole region here; the enclosing `block(height: height)` below makes the
     // allocation real.
     let available-height = resolve-extent(height, container-size.height)
-    if unsolvable(available-height) {
+    if is-unsolvable(available-height) {
       return body
     }
     let boxed-content = limit-content-width(body, width: container-size.width)
@@ -154,7 +154,7 @@
     }
 
     let available-width = resolve-extent(width, container-size.width)
-    if unsolvable(available-width) {
+    if is-unsolvable(available-width) {
       return body
     }
     let ratio = fit-ratio(size, width: available-width, height: available-height)
@@ -211,12 +211,12 @@
   grow: false,
   shrink: true,
 ) = layout(region => {
-  if unsolvable(region.width) or unsolvable(region.height) {
+  if is-unsolvable(region.width) or is-unsolvable(region.height) {
     return body
   }
   let available-width = resolve-extent(width, region.width)
   let available-height = resolve-extent(height, region.height)
-  if unsolvable(available-width) or unsolvable(available-height) {
+  if is-unsolvable(available-width) or is-unsolvable(available-height) {
     return body
   }
   let size = measure(body)

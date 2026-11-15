@@ -1,6 +1,6 @@
 // Private image composition shared by title and section layouts.
 #import "../shared.typ": fail
-#import "../grid/constructors.typ": styled-cell, columns, rows
+#import "../grid/constructors.typ": make-cell, columns, rows
 #import "../grid/model.typ": is-track-size
 #import "core.typ": validate-image
 #import "support.typ": track-children, image-content
@@ -105,7 +105,7 @@
 
 // Image cells are full-bleed: the photograph owns its region edge to edge and
 // any framing is the image's own business.
-#let image-cell(content) = styled-cell(
+#let image-cell(content) = make-cell(
   content: content,
   id: "image",
   style: (

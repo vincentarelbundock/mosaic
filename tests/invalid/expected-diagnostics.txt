@@ -161,3 +161,4 @@ slide-nested|slide cannot be nested inside another slide or a container
 steps-in-context|pause and steps cannot be used inside a Mosaic component, a section tagline or other layout field, a context block, a layout callback, or show-rule output
 pause-in-tagline|pause and steps cannot be used inside a Mosaic component, a section tagline or other layout field
 steps-unsupported-container|pause, steps, and note cannot be used inside binom, which the slide runtime cannot rebuild
+slide-in-container|slide cannot be nested inside another slide or a container

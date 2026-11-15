@@ -15,11 +15,22 @@
 
 Body.
 
+// The same holds for a constructed heading written in an explicit slide
+// body, while a markup heading beside it keeps the depth it was written at.
+#mosaic.slide[
+  #heading(level: 2)[In a slide body] <in-body>
+
+  === Markup subheading
+
+  Body.
+]
+
 #context {
   let headings = query(heading)
-  assert(headings.map(it => it.depth) == (1, 2), message: repr(headings))
-  assert(headings.map(it => it.level) == (1, 2), message: repr(headings))
+  assert(headings.map(it => it.depth) == (1, 2, 2, 3), message: repr(headings))
+  assert(headings.map(it => it.level) == (1, 2, 2, 3), message: repr(headings))
   assert(query(<constructed>).len() == 1)
-  assert(query(heading.where(depth: 2)).len() == 1)
-  assert(counter(page).final().first() == 2)
+  assert(query(<in-body>).len() == 1)
+  assert(query(heading.where(depth: 2)).len() == 2)
+  assert(counter(page).final().first() == 3)
 }

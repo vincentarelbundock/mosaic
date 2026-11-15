@@ -153,7 +153,7 @@
 /// ```typ
 /// #mosaic.slide(
 ///   cells: (body: [Over a photograph.]),
-///   background: mosaic.components.image("cover.webp"),
+///   background: mosaic.components.image(path("cover.webp")),
 /// )
 /// ```
 ///
