@@ -128,3 +128,15 @@ theme-definition-option-conflict|theme option "paper" conflicts with setup
 theme-definition-unknown|theme does not accept "mystery"
 theme-layouts-incomplete|theme layouts requires "title"
 too-many|grid expects 1 bodies with setup defaults or 2 bodies to override them, received 3
+slide-body-type|slide positional bodies must be content, received integer
+slide-body-none|slide positional bodies must be content, received none
+cell-inset-type|cell inset must be auto, a length, or a dictionary of sides with length values
+cell-inset-side|cell inset must be auto, a length, or a dictionary of sides with length values
+cell-content-type|cell content must be content or none
+split-stroke-key|columns stroke must be none or a native Typst stroke
+setup-paper-em|setup paper width and height must be positive absolute lengths
+setup-paper-zero|setup paper width and height must be positive absolute lengths
+setup-twice|setup already configured this deck; apply setup exactly once
+headings-empty-policy|content appears outside a slide; setup headings maps no heading level, so every slide must be an explicit slide command
+slide-footnote|footnotes are not supported on slides, where the entry would spill onto an extra page; put the note in a footer cell instead
+theme-colors-missing|theme colors is missing "surface"

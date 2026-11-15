@@ -92,6 +92,69 @@
 }
 
 #let wrapper-ids(wrappers) = wrappers.map(wrapper => wrapper.id)
+
+// How many leading styled elements two wrapper stacks share.
+#let shared-wrapper-count(first, second) = {
+  let first = wrapper-ids(first)
+  let second = wrapper-ids(second)
+  let count = 0
+  while (
+    count < calc.min(first.len(), second.len())
+      and first.at(count) == second.at(count)
+  ) {
+    count += 1
+  }
+  count
+}
+
+// A heading built with `heading(level: ..)` carries no `depth`, so a theme
+// rule written as `heading.where(depth: 2)` would pass over the very heading
+// that opened the slide. Restating the depth the compiler classified it by
+// makes the constructed heading match its markup twin; an explicit `level`
+// is kept, so the native level it resolves to does not move.
+#let resolve-heading-depth(value, depth) = {
+  let fields = value.fields()
+  if "depth" in fields {
+    return value
+  }
+  let body = fields.remove("body")
+  let target = fields.remove("label", default: none)
+  let rebuilt = heading(..fields, depth: depth, body)
+  if target == none { rebuilt } else { [#rebuilt#target] }
+}
+
+// A slide is one unbreakable full-page block, so the page has no room left
+// for a footnote's entry: Typst would move the entry to a page of its own,
+// and the deck would gain a blank slide carrying one stray line.
+#let render-deck-slide(command) = {
+  show footnote: _ => fail(
+    "footnotes are not supported on slides, where the entry would spill "
+      + "onto an extra page; put the note in a footer cell instead",
+  )
+  render-slide(command)
+}
+
+#let is-deck-marker(value) = (
+  type(value) == content
+    and value.func() == metadata
+    and value.at("label", default: none) == label("mosaic-deck-metadata")
+)
+
+// Names the levels the deck actually compiles on, which the heading policy
+// may have moved. Ordered as numbers without converting them, so a level too
+// large for an integer cannot abort the diagnostic that reports it.
+#let stray-content-error(headings) = if headings.len() == 0 {
+  (
+    "content appears outside a slide; setup headings maps no heading level, "
+      + "so every slide must be an explicit slide command"
+  )
+} else {
+  (
+    "content appears before the first heading handled by setup; expected "
+      + "one of heading levels "
+      + headings.keys().sorted(key: level => (level.len(), level)).join(", ")
+  )
+}
 // Automatic and explicit pages use the same layout-based slide command.
 #let compile-deck(body, headings: default-heading-policy) = {
   let output = ()
@@ -109,7 +172,7 @@
     if mode == "slide" {
       let body = current.sum(default: [])
       wrap-content(
-        render-slide(slide-command(
+        render-deck-slide(slide-command(
           (),
           layout: "content",
           automatic: true,
@@ -125,7 +188,7 @@
       // outline entry.
       let tagline = current.sum(default: none)
       wrap-content(
-        render-slide(slide-command(
+        render-deck-slide(slide-command(
           (),
           layout: "section",
           automatic: true,
@@ -155,15 +218,25 @@
     // as em sizes would compound). Only a genuine prefix is stripped — the
     // piece must sit inside the very styled elements that wrap the heading —
     // so a separately styled sibling keeps its own styles through `shown`.
-    let inner = if (
-      entry.wrappers.len() >= slide-wrappers.len()
-        and wrapper-ids(entry.wrappers.slice(0, slide-wrappers.len()))
-          == wrapper-ids(slide-wrappers)
+    //
+    // A piece that sits outside some of those elements narrows the slide's
+    // wrappers to the ones both share: the styles it escaped move inward,
+    // onto the heading and the pieces collected so far, instead of reaching
+    // around the whole slide and restyling content their author left
+    // outside them. Spacing never narrows; it carries no style to protect.
+    let shared = shared-wrapper-count(entry.wrappers, slide-wrappers)
+    if (
+      mode != none
+        and shared < slide-wrappers.len()
+        and not is-heading-space(value)
+        and not is-slide-command(value)
     ) {
-      wrap-content(value, entry.wrappers.slice(slide-wrappers.len()))
-    } else {
-      shown
+      let escaped = slide-wrappers.slice(shared)
+      section = wrap-content(section, escaped)
+      current = current.map(piece => wrap-content(piece, escaped))
+      slide-wrappers = slide-wrappers.slice(0, shared)
     }
+    let inner = wrap-content(value, entry.wrappers.slice(shared))
     let level = if (
       type(value) == content and value.func() == heading
     ) {
@@ -179,18 +252,23 @@
     }
     let role = heading-role(headings, level)
 
-    if is-slide-command(value) {
+    if is-deck-marker(value) {
+      // A second `setup` wraps the first one's whole output, so the nested
+      // deck arrives here as body content before its state write can report
+      // itself. Its metadata record is the first thing it emits.
+      fail("setup already configured this deck; apply setup exactly once")
+    } else if is-slide-command(value) {
       (flushed, mode, section, current) = flush-current(mode, section, current, slide-wrappers)
       if flushed != none { output.push(flushed) }
       output.push(wrap-content(
-        render-slide(value.value),
+        render-deck-slide(value.value),
         entry.wrappers,
       ))
     } else if role != none {
       (flushed, mode, section, current) = flush-current(mode, section, current, slide-wrappers)
       if flushed != none { output.push(flushed) }
       mode = role
-      section = value
+      section = resolve-heading-depth(value, level)
       current = ()
       slide-wrappers = entry.wrappers
     } else if is-heading-space(value) {
@@ -208,14 +286,7 @@
     } else if mode in ("slide", "section") {
       current.push(inner)
     } else {
-      // Name the levels the deck actually compiles on, which the heading
-      // policy may have moved.
-      fail(
-        "content appears before the first heading handled by setup; expected "
-          + "one of heading levels "
-          + headings.keys().map(level => int(level)).sorted()
-            .map(str).join(", "),
-      )
+      fail(stray-content-error(headings))
     }
   }
 

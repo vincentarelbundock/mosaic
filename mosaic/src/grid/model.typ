@@ -33,15 +33,32 @@
 
 #let axis-name(axis) = if axis == "width" { "columns" } else { "rows" }
 
+// The keys a native stroke dictionary accepts. Checked here so a misspelled
+// key reports as a Mosaic diagnostic where the stroke is declared, not as a
+// raw error from the grid line that eventually draws it.
+#let stroke-keys = ("paint", "thickness", "cap", "join", "dash", "miter-limit")
+
 #let is-stroke(value) = (
   value == none
-    or type(value) in (
-      length,
-      color,
-      gradient,
-      tiling,
-      dictionary,
-      stroke,
+    or type(value) in (length, color, gradient, tiling, stroke)
+    or (
+      type(value) == dictionary
+        and value.keys().all(key => key in stroke-keys)
+    )
+)
+
+// What a native `inset` accepts: one length for every side, or a dictionary
+// of sides.
+#let inset-sides = ("top", "right", "bottom", "left", "x", "y", "rest")
+
+#let is-inset-part(value) = type(value) in (length, ratio, relative)
+
+#let is-inset(value) = (
+  is-inset-part(value)
+    or (
+      type(value) == dictionary
+        and value.keys().all(side => side in inset-sides)
+        and value.values().all(is-inset-part)
     )
 )
 

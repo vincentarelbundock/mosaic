@@ -78,7 +78,7 @@
   if node.kind == "on" {
     _ = validate-range(node.range)
     _ = validate-states(node.before, node.after)
-    validate-shape(node.child, path: path + ".child")
+    _ = validate-shape(node.child, path: path + ".child")
   } else if node.kind != "cell" {
     if node.children.len() == 0 {
       fail(
@@ -97,14 +97,15 @@
       )
     }
     for (index, child) in node.children.enumerate() {
-      validate-shape(child, path: path + ".children[" + str(index) + "]")
+      _ = validate-shape(child, path: path + ".children[" + str(index) + "]")
     }
   }
+  node
 }
 
 #let validate(node) = {
-  validate-shape(node, path: "root")
-  _ = validate-unique-cell-ids(node, path: "root")
+  _ = validate-shape(node, path: "root")
+  validate-unique-cell-ids(node, path: "root")
 }
 
 

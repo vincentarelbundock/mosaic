@@ -27,6 +27,13 @@
     + ", or a dictionary with width and height"
 )
 
+// The printed outputs divide one slide dimension by another to scale the
+// thumbnail, and `em` has no value outside a text context, so a paper side
+// must be a positive absolute length.
+#let is-paper-side(value) = (
+  type(value) == length and value.em == 0 and value.abs > 0pt
+)
+
 #let resolve-paper(value) = {
   if type(value) == str {
     if value not in paper-aliases {
@@ -37,10 +44,11 @@
   if (
     type(value) != dictionary
       or value.keys().sorted() != ("height", "width")
-      or type(value.width) != length
-      or type(value.height) != length
   ) {
     fail(paper-error)
+  }
+  if not is-paper-side(value.width) or not is-paper-side(value.height) {
+    fail("setup paper width and height must be positive absolute lengths")
   }
   value
 }

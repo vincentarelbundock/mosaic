@@ -616,6 +616,16 @@ def run_core(typst: str, sources: list[str]) -> None:
     for page in (1, 2):
         require_contains(TMP / f"mosaic-slide-invert-cells-{page}.svg", "#fafafa")
 
+    # An inverted slide's ground covers the whole page, not just the content
+    # area inside a reclaimed page margin: one page-sized rectangle in the
+    # inverted canvas color, beside the frame's own smaller one.
+    typst_compile(typst, "slide-invert-margin.typ", TMP / "mosaic-slide-invert-margin-{p}.svg", "--format", "svg")
+    require_contains(
+        TMP / "mosaic-slide-invert-margin-1.svg",
+        '<path fill="#18181b" fill-rule="nonzero" d="M 0 0v 135h 240v -135Z "',
+        count=1,
+    )
+
     section = pdf_text("section-counter")
     require_contains(section, "1/2")
     require_contains(section, "2/2")
