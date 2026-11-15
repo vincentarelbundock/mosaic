@@ -4,7 +4,7 @@ Notable changes to Mosaic. The development version in `mosaic/typst.toml` moves 
 
 ## 0.0.3
 
-This version settles the vocabulary of the public API, one spelling per concept, and breaks several older spellings to get there. Every removed spelling fails with a message that names its replacement.
+This version settles the vocabulary of the public API, one spelling per concept, and breaks several older spellings to get there. Every removed spelling, without exception, fails with a message that names its replacement.
 
 ### Breaking
 
@@ -13,7 +13,7 @@ This version settles the vocabulary of the public API, one spelling per concept,
   - Image: `variant: "right"` becomes `position: "right"`, `variant: "full"` becomes `position: "background"`, and the default `variant: "figure"` is the default `position: "body"`. The image layout has no `variant`.
   - Title: unchanged for the four sides, and `variant: "image", position: "background"` is new.
 - A layout's `image:` is a `path(..)` or content. The dictionary form `image: (path: path("a.webp"), scrim: .., fit: .., alt: ..)` becomes `image: components.image(path("a.webp"), scrim: .., fit: .., alt: ..)`, so a picture is built by the one function that already builds pictures everywhere else. A bare string is rejected as well: it could only resolve inside the installed package.
-- `grids.track(size, child)` is removed. `grids.columns(grids.track(2fr, "a"), "b")` becomes `grids.columns(tracks: (2fr, 1fr), "a", "b")`: one size per child, the `tracks:` the layouts already took, instead of a wrapper around each child.
+- `grids.track(size, child)` is removed. `grids.columns(grids.track(2fr, "a"), "b")` becomes `grids.columns(tracks: (2fr, 1fr), "a", "b")`: one size per child, the `tracks:` the layouts already took, instead of a wrapper around each child. Calling `grids.track` fails with that rewrite.
 - `setup(headings:)` is an array indexed by heading level. `headings: ("1": "section", "2": "slide")` becomes `headings: ("section", "slide")`, with `none` for a level that opens no slide, because levels are positions and a dictionary keyed by strings of digits only imitated one.
 - Positional slide bodies follow one rule: a slide's opening heading is its header, and everything else fills the cells in order. `slide[== Title][Body]` is unchanged, and a heading that opens the first body is now lifted into the header, so the first body's destination no longer depends on how many bodies there are. `slide[Plain][Body]` on a layout with a header is an error; write `slide(cells: (header: [Plain], body: [Body]))`. A cell with a deck default from `setup(cells:)` is reached only through `cells:`; positional bodies pass over it.
 - `slide` without `#show: m.setup` is an error. It used to compile to nothing.
@@ -55,7 +55,7 @@ This version settles the vocabulary of the public API, one spelling per concept,
 - `slide(invert: true)` flips code highlighting with the ground and keeps a `raw` theme the deck set for itself, and the inverted ground reaches the page edge in a deck with a page margin.
 - Heading sizes hold under `set heading(offset: ..)`, and constructed `heading(level: ..)` headings are styled like written ones, under every theme. A `set text(size: ..)` after `setup` changes body text and no longer rescales the Default and Metropolis headings; use `base-size`.
 - A partial `spacing:` or `notes:` keeps the theme's other values: `setup(spacing: (gap: ..))` under editorial no longer resets its wider `inset`.
-- New diagnostics replace raw Typst errors or silent output: a nested `slide`, a second `setup`, `setup.with(theme: ..)`, a custom `paper` side that is not a positive absolute length, an empty title, a misspelled cell `inset` or `stroke` key, a pause at the end of a list item, and a `progress` circle painted with a gradient.
+- New diagnostics replace raw Typst errors or silent output: a nested `slide`, a second `setup`, `setup.with(theme: ..)`, a custom `paper` side that is not a positive absolute length, content written after an explicit slide, a picture given without `variant: "image"`, an empty title, a misspelled cell `inset` or `stroke` key, a pause at the end of a list item, and a `progress` circle painted with a gradient.
 
 ### Fixed
 

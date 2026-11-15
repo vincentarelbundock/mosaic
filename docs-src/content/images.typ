@@ -59,7 +59,7 @@ Three layouts are built around a picture: #link("../slides/image.html")[image], 
 ]
 ```
 
-`variant:` is a different question. It names a layout's text design, such as the title layout's `kicker` or the section layout's `baseline`, and never where a picture sits. The title and section layouts each have one variant that carries a picture, `variant: "image"`; the image layout is nothing but its picture and has no variant.
+`variant:` is a different question. It names a layout's text design, such as the title layout's `kicker` or the section layout's `baseline`, and never where a picture sits. In the title and section layouts a picture needs `variant: "image"`: write it together with `image:`. `position:` and `tracks:` apply only to that variant. The image layout is nothing but its picture and has no variant.
 
 = Slide-sized images
 

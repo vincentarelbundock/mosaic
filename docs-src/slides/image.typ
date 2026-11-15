@@ -29,11 +29,11 @@ The default position, `"body"`, places a header above a contained picture, with 
 )[== My job]
 ```
 
-This slide has header, image, and caption cells but no body, so a single line of commentary belongs in `caption:`. The caption produces a native Typst `figure`, so it follows the deck's `show figure.caption` rules.
+Position `"body"` takes the heading only: the slide has header, image, and caption cells but no body, so a single line of commentary belongs in `caption:`. The caption produces a native Typst `figure`, so it follows the deck's `show figure.caption` rules.
 
 = A picture beside text
 
-The positions `"left"`, `"right"`, `"top"`, and `"bottom"` pair a full-bleed picture with header and body cells. The slide's opening heading is its header and the block after it is the body; a slide with a title and nothing to say under it simply stops after the heading:
+The positions `"left"`, `"right"`, `"top"`, and `"bottom"` pair a full-bleed picture with header and body cells. A directional position takes the heading and one body: the slide's opening heading is its header and the block after it is the body. A slide with a title and nothing to say under it simply stops after the heading:
 
 ```typ
 #m.slide(
@@ -53,7 +53,7 @@ Two arguments control the picture cell:
 
 = A full-bleed picture
 
-Position `"background"` puts the picture behind a single body cell that covers the whole slide. The cell inherits the deck's ordinary text color, so text over a photograph needs two things: a #link("../content/images.html#scrims")[scrim] on the picture to darken it, and a text fill override in the body:
+Position `"background"` puts the picture behind a single body cell that covers the whole slide. It has no header cell, so a heading written there stays in the body, where it still titles the slide and feeds the outline. The cell inherits the deck's ordinary text color, so text over a photograph needs two things: a #link("../content/images.html#scrims")[scrim] on the picture to darken it, and a text fill override in the body:
 
 ```typ
 #m.slide(

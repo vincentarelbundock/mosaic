@@ -306,7 +306,7 @@ Two kinds of cell are out of positional reach, and `cells:` addresses both by na
 - The header, when what goes in it is not a heading. `#m.slide[Results][The estimate is positive.]` is an error on a header layout rather than a guess about which block is which.
 - A cell with a deck default from `m.setup(cells:)`, such as a recurring footer. Positional bodies pass over it, so the default shows; name the cell to replace or suppress it on one slide.
 
-Supplying more bodies than there are cells to fill is an error that lists the cells positional bodies reach.
+Supplying more bodies than there are cells to fill is an error that lists the cells positional bodies reach, and says how to reach the header when no heading was lifted. Content written after an explicit slide, outside any slide, is an error too: open a new slide with a heading, or put the content in the slide.
 
 == Named content with `cells:`
 
