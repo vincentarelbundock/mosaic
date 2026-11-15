@@ -105,6 +105,15 @@
   let layout-name = if selection == auto { "content" } else { selection }
   let allowed = layout-field-keys.at(layout-name)
   for key in fields.keys() {
+    // The image layout once chose the picture's place through `variant`; the
+    // removed spelling gets the pointer its own validator would give.
+    if layout-name == "image" and key == "variant" {
+      fail(
+        "slide layout \"image\" variant was removed; write position: "
+          + "\"body\", \"left\", \"right\", \"top\", \"bottom\", or "
+          + "\"background\"",
+      )
+    }
     if key not in allowed {
       fail(
         "slide layout " + repr(layout-name) + " has no field " + repr(key)
