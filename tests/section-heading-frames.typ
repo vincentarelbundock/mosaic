@@ -48,7 +48,7 @@
   m.slide(
     layout: m.layouts.section(
       variant: variant,
-      ..if variant == "image" {
+      ..if variant.starts-with("image") {
         (image: path("/docs-src/assets/images/dog.webp"))
       },
     ),

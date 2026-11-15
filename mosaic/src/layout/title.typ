@@ -150,8 +150,7 @@
 ///
 /// *Pictures*
 ///
-/// `variant` names the text design and `position` names the picture's place,
-/// in the vocabulary every layout with a picture shares:
+/// The `image` variant reads `position` for the picture's place:
 ///
 /// - `"left"`, `"right"`, `"top"`, `"bottom"`: a full-bleed picture beside or
 ///   above the title stack, sized by `tracks`. `auto` means `"left"`.

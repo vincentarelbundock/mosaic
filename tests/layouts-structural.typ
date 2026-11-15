@@ -29,5 +29,5 @@
 
 #mosaic.slide(layout: mosaic.layouts.section())[Plain section]
 #mosaic.slide(layout: mosaic.layouts.section(number: [01]))[Numbered section]
-#mosaic.slide(layout: mosaic.layouts.section(variant: "image", position: "bottom", image: path("/docs-src/assets/images/dog.webp")))[Image-bottom section]
-#mosaic.slide(layout: mosaic.layouts.section(variant: "image", position: "background", image: dog))[Image-background section]
+#mosaic.slide(layout: mosaic.layouts.section(variant: "image-bottom", image: path("/docs-src/assets/images/dog.webp")))[Image-bottom section]
+#mosaic.slide(layout: mosaic.layouts.section(variant: "image-background", image: dog))[Image-background section]

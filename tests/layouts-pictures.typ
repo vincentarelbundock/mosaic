@@ -1,6 +1,6 @@
-// One vocabulary places a picture in every layout that carries one:
-// `position` is "left", "right", "top", "bottom", or "background", and the
-// image layout adds "body". `variant` names the text design only.
+// Where a picture sits, in each layout that carries one. The title layout's
+// `image` variant reads `position`; the section and image layouts name the
+// place through their variants. The same five places exist in all three.
 // scripts/run-tests.py reads the pages this fixture renders.
 #import "@local/mosaic:0.0.3" as mosaic
 #import "../mosaic/src/layout/resolver.typ": resolve-layout
@@ -12,8 +12,8 @@
 #let settings = make-settings(deck: (title: [Deck], authors: [Ada]))
 #let cells(layout) = grid-test.cell-ids(resolve-layout(layout, settings))
 
-// The directional positions split the slide, picture first on the left and
-// top; `background` composes one cell with the picture behind it.
+// The directional places split the slide, picture first on the left and top;
+// the background place composes one cell with the picture behind it.
 #for (position, expected) in (
   left: ("image", "title"),
   top: ("image", "title"),
@@ -23,17 +23,18 @@
 ) {
   assert(cells(mosaic.layouts.title(variant: "image", position: position, image: river)) == expected)
   let section = expected.map(id => if id == "title" { "section" } else { id })
-  assert(cells(mosaic.layouts.section(variant: "image", position: position, image: dog)) == section)
+  assert(cells(mosaic.layouts.section(variant: "image-" + position, image: dog)) == section)
 }
-// `auto` is the left position in both layouts.
+// `auto` is the left position of the title's image variant.
 #assert(cells(mosaic.layouts.title(variant: "image", image: river)) == ("image", "title"))
-#assert(cells(mosaic.layouts.section(variant: "image", image: dog)) == ("image", "section"))
 #assert(cells(mosaic.layouts.image(dog)) == ("header", "image"))
-#assert(cells(mosaic.layouts.image(dog, position: "body")) == ("header", "image"))
-#assert(cells(mosaic.layouts.image(dog, position: "left")) == ("image", "header", "body"))
-#assert(cells(mosaic.layouts.image(dog, position: "bottom")) == ("header", "body", "image"))
-#assert(cells(mosaic.layouts.image(dog, position: "background")) == ("body",))
-#assert("variant" not in mosaic.layouts.image(dog).fields)
+#assert(cells(mosaic.layouts.image(dog, variant: "figure")) == ("header", "image"))
+#assert(cells(mosaic.layouts.image(dog, variant: "left")) == ("image", "header", "body"))
+#assert(cells(mosaic.layouts.image(dog, variant: "bottom")) == ("header", "body", "image"))
+#assert(cells(mosaic.layouts.image(dog, variant: "full")) == ("body",))
+// `position` is the title's field alone.
+#assert("position" not in mosaic.layouts.image(dog).fields)
+#assert("position" not in mosaic.layouts.section().fields)
 
 #show: mosaic.setup.with(
   title: [ZQDECK title],
@@ -79,5 +80,5 @@
   #mosaic.slide(layout: mosaic.layouts.section(variant: "plain", subtitle: [Sub]))[Plain]
   #mosaic.slide(layout: mosaic.layouts.section(variant: "rule"))[= Rule heading]
   #mosaic.slide(layout: mosaic.layouts.section(variant: "toc"))[Toc]
-  #mosaic.slide(layout: mosaic.layouts.section(variant: "image", position: "top", image: dog))[Image]
+  #mosaic.slide(layout: mosaic.layouts.section(variant: "image-top", image: dog))[Image]
 ]

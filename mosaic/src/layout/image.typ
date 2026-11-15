@@ -7,38 +7,21 @@
 #import "../shared.typ": fail
 #import "../caption-fit.typ": captioned-image
 #import "../grid/constructors.typ": make-cell, rows, track
-#import "core.typ": image-fit-modes, make-layout, validate-image
+#import "core.typ": image-fit-modes, make-layout, validate-image, validate-variant
 #import "support.typ": as-content, image-content, inset-cell
 #import "image-support.typ": (
   directional-image-layout,
   directional-positions,
-  image-positions,
   image-background-cell,
   image-cell,
   validate-directional-tracks,
 )
 
-// Where the picture sits. The image layout shares the position vocabulary of
-// the title and section layouts and adds one place of its own: `body`, the
-// picture as a figure in the body region under the header.
-#let positions = ("body",) + image-positions
-
-// The `variant` argument this layout had before `position` named the
-// picture's place. It had no text design to select, so nothing replaces it.
-#let removed-variants = (
-  figure: "body",
-  full: "background",
-  left: "left",
-  right: "right",
-  top: "top",
-  bottom: "bottom",
-)
+#let directional-variants = directional-positions
+#let variants = ("figure", "full") + directional-variants
 
 #let validate-fields(fields) = {
-  let position = fields.position
-  if type(position) != str or position not in positions {
-    fail("layout \"image\" position must be one of " + repr(positions))
-  }
+  let variant = validate-variant(fields.variant, variants, "layout \"image\"")
   if fields.image == none {
     fail("layout \"image\" requires an image")
   }
@@ -59,15 +42,15 @@
   if fields.caption != none and type(fields.caption) not in (content, str) {
     fail("layout \"image\" caption must be content, a string, or none")
   }
-  if fields.caption != none and position != "body" {
-    fail("layout \"image\" caption applies only to position \"body\"")
+  if fields.caption != none and variant != "figure" {
+    fail("layout \"image\" caption applies only to the \"figure\" variant")
   }
-  if position in directional-positions {
+  if variant in directional-variants {
     _ = validate-directional-tracks(fields.tracks, "layout \"image\" tracks")
   } else if fields.tracks != auto {
     fail(
-      "layout \"image\" tracks size a split, so they apply only to positions "
-        + repr(directional-positions),
+      "layout \"image\" tracks apply only to directional variants; pick "
+        + directional-variants.map(repr).join(", ", last: ", or "),
     )
   }
   fields
@@ -79,9 +62,9 @@
 /// argument rather than slide content, and the text regions arrange around it.
 /// The surrounding `mosaic.slide` fills only the text cells, by its one rule:
 /// the slide's opening heading is its header, and everything else fills the
-/// cells. At `"body"` the slide therefore needs nothing but that heading; at a
-/// directional position it takes the heading and one body; at `"background"`
-/// there is no `header` cell, so a heading stays in the one body.
+/// cells. The `figure` variant therefore needs nothing but that heading; a
+/// directional variant takes the heading and one body; `full` has no `header`
+/// cell, so a heading stays in its one body.
 ///
 /// ```typ
 /// #mosaic.slide(
@@ -93,49 +76,44 @@
 /// )
 /// ```
 ///
-/// *Positions*
+/// *Variants*
 ///
-/// `position` names the picture's place, in the vocabulary every layout with
-/// a picture shares, plus `"body"`:
-///
-/// - `"body"`: the picture in the body region under a `header` cell, with an
+/// - `figure`: the picture in the body region under a `header` cell, with an
 ///   optional `caption` below it. A picture given as a path is contained, so
 ///   it is never cropped, and sits centered in the region. The conventional
 ///   academic figure slide, and the default.
-/// - `"left"`, `"right"`, `"top"`, `"bottom"`: a full-bleed picture paired
-///   with a text region of `header` and `body` cells, sized by `tracks`.
-/// - `"background"`: the picture behind a single `body` cell, so text reads
-///   over the photograph. Open the body with a heading to title it, or give
-///   no body at all for a bare full-bleed slide.
-///
-/// The layout has no `variant`: it carries no text design of its own.
+/// - `left`, `right`, `top`, `bottom`: a full-bleed picture paired with a text
+///   region of `header` and `body` cells, sized by `tracks`.
+/// - `full`: the picture behind a single `body` cell, so text reads over the
+///   photograph. Open the body with a heading to title it, or give no body at
+///   all for a bare full-bleed slide.
 ///
 /// *Captions*
 ///
 /// A `caption` composes a native Typst `figure` around the picture, so it takes
 /// the deck's own `show figure.caption` styling and figure numbering. Switch the
 /// numbering off with an ordinary `set figure(numbering: none)`. Captions are
-/// accepted at position `"body"` only.
+/// accepted by the `figure` variant only.
 ///
 /// *Labels*
 ///
 /// Every resolved cell carries a label, so appearance comes from native Typst
 /// rules:
 ///
-/// - `mosaic-cell-header`: the header, at `"body"` and the directional
-///   positions.
-/// - `mosaic-cell-body`: the text region, at the directional positions and
-///   `"background"`.
-/// - `mosaic-cell-image`: the picture, at `"body"` and the directional
-///   positions. At `"background"` the picture is the body cell's background
-///   instead, so it has no image cell of its own.
+/// - `mosaic-cell-header`: the header, in the `figure` and directional
+///   variants.
+/// - `mosaic-cell-body`: the text region, in the directional and `full`
+///   variants.
+/// - `mosaic-cell-image`: the picture, in the `figure` and directional
+///   variants. The `full` variant paints the picture as the body cell's
+///   background instead, so it has no image cell of its own.
 ///
 /// *Styling*
 ///
 /// The layout is purely structural, so its looks come from rules on those
-/// labels. At `"background"` the text inherits the surrounding native text
-/// color, so quiet the photograph with the `scrim` argument of
-/// `components.image` and override the cell's text fill.
+/// labels. The `full` variant inherits the surrounding native text color, so
+/// quiet the photograph with the `scrim` argument of `components.image` and
+/// override the cell's text fill.
 ///
 /// ```typ
 /// #show label("mosaic-cell-body"): set text(fill: white)
@@ -145,7 +123,7 @@
 ///       path("photo.webp"),
 ///       scrim: black.transparentize(55%),
 ///     ),
-///     position: "background",
+///     variant: "full",
 ///   ),
 ///   [== Full bleed],
 /// )
@@ -160,60 +138,40 @@
   /// resolve inside the package rather than in the deck's project.
   /// -> content | path
   image,
-  /// Where the picture sits: `"body"`, `"left"`, `"right"`, `"top"`,
-  /// `"bottom"`, or `"background"`.
+  /// Structural arrangement of picture and text: `figure`, `full`, `left`,
+  /// `right`, `top`, or `bottom`.
   /// -> str
-  position: "body",
-  /// Caption composed below a picture at position `"body"`. Rejected at the
-  /// other positions.
+  variant: "figure",
+  /// Caption composed below a `figure` picture. Rejected by the other variants.
   /// -> content | str | none
   caption: none,
   /// How a picture given as a bare path fills its region.
   ///
-  /// - `"contain"`: fit the whole picture inside the region. The default at
-  ///   `"body"`, since a chart must never be cropped.
-  /// - `"cover"`: fill the region, cropping the overhang. The default at every
-  ///   other position.
+  /// - `"contain"`: fit the whole picture inside the region. The `figure`
+  ///   default, since a chart must never be cropped.
+  /// - `"cover"`: fill the region, cropping the overhang. The default for every
+  ///   other variant.
   ///
-  /// `auto` picks the per-position default above. Rejected beside ready-made
+  /// `auto` picks the per-variant default above. Rejected beside ready-made
   /// content, which states its own fit and cannot be rebuilt: pass
   /// `components.image(path(..), fit: ..)` there instead.
   /// -> auto | str
   fit: auto,
-  /// Sizes the split of a directional position, and is rejected at `"body"`
-  /// and `"background"`. One native Typst track size answers "how much room
-  /// does the picture get" and is side-independent, so `left` and `right`
-  /// stay mirror images without reordering anything; the text region takes
-  /// the remaining `1fr`. An array of two is in visual order instead, and
-  /// must be mirrored by hand when the position flips.
+  /// Sizes the split of a directional variant, and is rejected by `figure` and
+  /// `full`. One native Typst track size answers "how much room does the
+  /// picture get" and is side-independent, so `left` and `right` stay mirror
+  /// images without reordering anything; the text region takes the remaining
+  /// `1fr`. An array of two is in visual order instead, and must be mirrored
+  /// by hand when the variant flips.
   /// -> auto | length | ratio | relative | fraction | array
   tracks: auto,
-  /// Catches removed arguments so they fail with the spelling that replaced
-  /// them. Accepts nothing.
-  /// -> arguments
-  ..removed,
 ) = {
-  if removed.pos().len() > 0 {
-    fail("layout \"image\" takes one picture as its sole positional argument")
-  }
-  for (name, value) in removed.named() {
-    if name == "variant" {
-      fail(
-        "layout \"image\" variant was removed; write position: "
-          + repr(removed-variants.at(
-            if type(value) == str { value } else { "" },
-            default: "body",
-          )),
-      )
-    }
-    fail("layout \"image\" has no argument " + repr(name))
-  }
   let fields = validate-fields((
     caption: caption,
     fit: fit,
     image: image,
-    position: position,
     tracks: tracks,
+    variant: variant,
   ))
   make-layout("image", fields)
 }
@@ -233,7 +191,7 @@
 
 #let resolve-image-layout(command, settings) = {
   let fields = validate-fields(command.fields)
-  let default-fit = if fields.position == "body" { "contain" } else { "cover" }
+  let default-fit = if fields.variant == "figure" { "contain" } else { "cover" }
   let fitting = if fields.fit == auto { default-fit } else { fields.fit }
   // Rebuilds the picture at a given size. A picture supplied as ready-made
   // content cannot be rebuilt, so it is boxed at that size instead.
@@ -250,7 +208,7 @@
   }
   let picture = resize(100%, 100%)
 
-  if fields.position == "body" {
+  if fields.variant == "figure" {
     // Picture and caption are one figure, not two stacked regions: the caption
     // is measured, the picture takes what is left, and the picture's box hugs
     // its natural height so the caption sits directly beneath the image rather
@@ -281,10 +239,11 @@
         style: (content-sized: false, inset: settings.spacing.inset),
       )),
     )
-  } else if fields.position == "background" {
+  } else if fields.variant == "full" {
     // A background is a cell style, not a split style, so the full-bleed
-    // position composes into a single cell exactly as it does in the title
-    // and section layouts. Put a heading inside the body to title it.
+    // variant composes into a single cell exactly as the background picture
+    // of the title and section layouts does. Put a heading inside the body to
+    // title it.
     image-background-cell(
       inset-cell("body", settings),
       picture,
@@ -295,7 +254,7 @@
     // padding on top of padding. It also lets a recolored header band reach
     // the picture instead of stopping short of it across a stripe of canvas.
     directional-image-layout(
-      fields.position,
+      fields.variant,
       image-cell(picture),
       text-column(settings),
       tracks: fields.tracks,

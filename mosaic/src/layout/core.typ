@@ -3,13 +3,13 @@
 
 #let layout-field-keys = (
   content: ("columns", "tracks", "variant"),
-  image: ("caption", "fit", "image", "position", "tracks"),
+  image: ("caption", "fit", "image", "tracks", "variant"),
   title: (
     "accent", "authors", "date", "image", "position", "rule", "subtitle",
     "title", "tracks", "variant",
   ),
   section: (
-    "accent", "image", "number", "position", "subtitle", "tracks", "variant",
+    "accent", "image", "number", "subtitle", "tracks", "variant",
   ),
 )
 

@@ -17,8 +17,8 @@
   image-background-cell,
   image-cell,
   optional-fixed-image,
-  resolve-image-position,
-  validate-image-fields,
+  section-image-positions,
+  validate-section-image-fields,
 )
 
 #let text-variants = (
@@ -28,17 +28,7 @@
   "baseline",
   "toc",
 )
-#let variants = text-variants + ("image",)
-
-// The five variants that named the picture's place before `position` did.
-// Each fails with the spelling that replaced it.
-#let removed-image-variants = (
-  "image-left": "left",
-  "image-right": "right",
-  "image-top": "top",
-  "image-bottom": "bottom",
-  "image-background": "background",
-)
+#let variants = text-variants + section-image-positions.keys()
 
 // The visual recipe for each designed variant, in one place.
 //
@@ -116,21 +106,14 @@
   ),
 )
 
-// The image variant composes its text exactly as `plain` does, so it shares
-// that entry rather than repeating it.
+// Image variants compose their text exactly as `plain` does, so they share its
+// entry rather than repeating it.
 #let variant-tokens(variant) = (
   section-tokens.at(variant, default: section-tokens.plain)
 )
 
 #let validate-fields(fields, allow-auto: false) = {
   let fields = validate-accent(fields, "section", allow-auto: allow-auto)
-  if fields.variant in removed-image-variants {
-    fail(
-      "layout \"section\" variant " + repr(fields.variant)
-        + " was removed; write variant: \"image\", position: "
-        + repr(removed-image-variants.at(fields.variant)),
-    )
-  }
   _ = validate-variant(fields.variant, variants, "layout \"section\"")
   for name in ("subtitle", "number") {
     let value = fields.at(name)
@@ -138,7 +121,7 @@
       fail("layout \"section\" " + name + " must be content, a string, or none")
     }
   }
-  validate-image-fields(fields, "layout \"section\"")
+  validate-section-image-fields(fields, "layout \"section\"")
 }
 
 /// Creates a section divider grid.
@@ -172,9 +155,13 @@
 ///   baseline, tied together by a full-width hairline.
 /// - `toc`: every section in the deck listed, the current one alive with its
 ///   number, the others ghosted.
-/// - `image`: the `plain` composition with a picture, placed by `position`.
-///   Requires `image`, and is the only variant that takes one: write
-///   `variant: "image"` together with `image:`.
+/// - `image-left`, `image-right`, `image-top`, `image-bottom`: the `plain`
+///   composition beside or above a full-bleed `image` cell, sized by `tracks`.
+/// - `image-background`: the `plain` composition directly over a full-slide
+///   picture.
+///
+/// Every image variant requires `image`, and only they take one: write the
+/// variant together with `image:`.
 ///
 /// The designed text variants (`rule`, `numeral`, `baseline`, `toc`) treat an
 /// omitted `number` as the automatic section counter, so they need no argument
@@ -183,16 +170,6 @@
 /// alignment rule on the cell does not move it; the theme still decides the
 /// display size the composition scales from.
 ///
-/// *Pictures*
-///
-/// `variant` names the text design and `position` names the picture's place,
-/// in the vocabulary every layout with a picture shares:
-///
-/// - `"left"`, `"right"`, `"top"`, `"bottom"`: the section cell beside or
-///   above a full-bleed `image` cell, sized by `tracks`. `auto` means
-///   `"left"`.
-/// - `"background"`: the section text directly over a full-slide picture.
-///
 /// *Labels*
 ///
 /// Every resolved cell carries a label, so appearance comes from native Typst
@@ -200,9 +177,9 @@
 ///
 /// - `mosaic-cell-section`: the section text, in every variant. The number and
 ///   subtitle are composed inside it, so one rule reaches the whole stack.
-/// - `mosaic-cell-image`: the picture, at the four directional positions. At
-///   `"background"` the picture is the section cell's background instead, so
-///   it has no image cell of its own.
+/// - `mosaic-cell-image`: the picture, in the four directional image variants.
+///   The `image-background` variant paints the picture as the section cell's
+///   background instead, so it has no image cell of its own.
 ///
 /// Three further labels are not cells. They mark the tiers composed inside
 /// the section cell, so one tier can be restyled without the others:
@@ -215,9 +192,9 @@
 ///
 /// *Styling*
 ///
-/// The layout is structural. The `plain` and `image` arrangement and the title
-/// typography come from the `<mosaic-cell-section>` label rules the theme
-/// states. Over a
+/// The layout is structural. The arrangement of `plain` and the image variants
+/// and the title typography come from the `<mosaic-cell-section>` label rules
+/// the theme states. Over a
 /// photograph the text inherits the surrounding native text color, so quiet the
 /// picture with the `scrim` argument of `components.image` and override the
 /// cell's text fill.
@@ -226,8 +203,7 @@
 /// #show label("mosaic-cell-section"): set text(fill: white)
 /// #mosaic.slide(
 ///   layout: "section",
-///   variant: "image",
-///   position: "background",
+///   variant: "image-background",
 ///   image: mosaic.components.image(
 ///     path("cover.webp"),
 ///     scrim: black.transparentize(55%),
@@ -240,13 +216,13 @@
   /// Optional subtitle set below the section title.
   /// -> content | str | none
   subtitle: none,
-  /// Optional section number or label. `plain` and `image` set it above the
-  /// title and omit it when `none`; the designed text variants build their
+  /// Optional section number or label. `plain` and the image variants set it
+  /// above the title and omit it when `none`; the designed text variants build their
   /// composition around it and read the automatic section counter when it is
   /// `none`.
   /// -> content | str | none
   number: none,
-  /// The picture of the `image` variant, required there and rejected by the
+  /// The picture of the image variants, required there and rejected by the
   /// others. Give a native `path(..)` value, which fills its region, or
   /// ready-made content such as `components.image(path(..), scrim: ..)`,
   /// whose `scrim` quiets the photograph enough to read text over it. A bare
@@ -254,31 +230,27 @@
   /// the deck's project.
   /// -> none | content | path
   image: none,
-  /// The text design: `plain`, `rule`, `numeral`, `baseline`, `toc`, or
-  /// `image`.
+  /// Structural arrangement: `plain`, `rule`, `numeral`, `baseline`, `toc`,
+  /// `image-left`, `image-right`, `image-top`, `image-bottom`, or
+  /// `image-background`.
   /// -> str
   variant: "plain",
-  /// Where the `image` variant's picture sits, and rejected by the others:
-  /// `"left"`, `"right"`, `"top"`, `"bottom"`, or `"background"`. `auto`
-  /// means `"left"`.
-  /// -> auto | str
-  position: auto,
   /// Color of the section number, in every variant that draws one. `auto`
   /// keeps the number subordinate to the title: the semantic muted color
   /// resolved by `setup`, or the line color for the `numeral` variant, whose
   /// number is texture rather than text. Pass a color to override either. The
   /// `baseline` variant ties its number to the title with a hairline, which
   /// takes the same color and defaults to the semantic accent. `plain` and
-  /// `image` draw a number only when `number` is given, so without one there
-  /// is nothing for the color to reach.
+  /// the image variants draw a number only when `number` is given, so without
+  /// one there is nothing for the color to reach.
   /// -> color | auto
   accent: auto,
-  /// Sizes the split of a directional position, and is rejected elsewhere.
-  /// One native Typst track size sizes the picture and is side-independent, so
-  /// the `left` and `right` positions stay mirror images; the section region
-  /// takes the remaining `1fr`. An array of two is in visual order instead,
-  /// and must be mirrored by hand when the position flips. `auto` splits the
-  /// slide evenly.
+  /// Sizes the split of a directional image variant, and is rejected by the
+  /// others. One native Typst track size sizes the picture and is
+  /// side-independent, so `image-left` and `image-right` stay mirror images;
+  /// the section region takes the remaining `1fr`. An array of two is in
+  /// visual order instead, and must be mirrored by hand when the variant
+  /// flips. `auto` splits the slide evenly.
   /// -> auto | length | ratio | relative | fraction | array
   tracks: auto,
 ) = {
@@ -287,7 +259,6 @@
     number: number,
     image: image,
     variant: variant,
-    position: position,
     accent: accent,
     tracks: tracks,
   ), allow-auto: true)
@@ -541,8 +512,8 @@
   ),
 )
 
-// The designed text variants, dispatched by name; `plain` and `image` share
-// the one composition below instead.
+// The designed text variants, dispatched by name; `plain` and the image
+// variants share the one composition below instead.
 #let designed-section-resolvers = (
   rule: resolve-rule-section,
   numeral: resolve-numeral-section,
@@ -595,10 +566,10 @@
       inset: settings.spacing.inset,
     ),
   )
-  if fields.variant != "image" {
+  let position = section-image-positions.at(fields.variant, default: none)
+  if position == none {
     return section-cell
   }
-  let position = resolve-image-position(fields)
   if position in directional-positions {
     // No gutter, as in the title and image layouts: the picture is its own
     // edge, and the section cell already keeps the deck inset, so a recolored
