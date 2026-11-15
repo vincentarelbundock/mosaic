@@ -79,7 +79,12 @@
     "theme-facade-metropolis.typ",
     "theme-facades.typ",
     "theme-spacing-merge.typ",
-    "theme-default.typ"
+    "theme-default.typ",
+    "theme-lists.typ",
+    "theme-text-fill.typ",
+    "slide-invert-raw.typ",
+    "components-roles.typ",
+    "author-plain-name.typ"
   ],
   "layout": [
     "fit.typ",

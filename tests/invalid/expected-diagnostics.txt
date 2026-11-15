@@ -128,3 +128,8 @@ theme-definition-option-conflict|theme option "paper" conflicts with setup
 theme-definition-unknown|theme does not accept "mystery"
 theme-layouts-incomplete|theme layouts requires "title"
 too-many|grid expects 1 bodies with setup defaults or 2 bodies to override them, received 3
+theme-colors-missing|theme colors requires "surface"
+theme-defaults-unknown|theme defaults does not accept "mystery"
+theme-layouts-bind|theme layouts "content" must be a Mosaic grid tree or layout
+setup-theme-override|setup does not accept "theme"
+components-progress-circle-fill|progress variant "circle" requires fill and accent to be colors
