@@ -16,9 +16,13 @@
 # Universe version that does not exist, and would silently mask the real one
 # once it did.
 #
+# Only one development version is ever installed: installing removes any other
+# version under local/mosaic, so a deck still importing an old @local version
+# fails loudly instead of compiling against a stale snapshot.
+#
 # Options:
 #   --ref <ref>   Branch, tag, or commit to fetch in network mode (default: main).
-#   --uninstall   Remove the installed @local/mosaic version instead.
+#   --uninstall   Remove every installed @local/mosaic version instead.
 #
 # Environment:
 #   TYPST                The typst binary to query for the package path.
@@ -31,12 +35,14 @@ PACKAGE_NAME="mosaic"
 TYPST="${TYPST:-typst}"
 
 REF="main"
+REF_GIVEN=""
 MODE="install"
 while [ $# -gt 0 ]; do
   case "$1" in
     --ref)
       [ $# -ge 2 ] || { echo "install.sh: --ref needs an argument" >&2; exit 1; }
       REF="$2"
+      REF_GIVEN="yes"
       shift 2
       ;;
     --uninstall)
@@ -44,7 +50,7 @@ while [ $# -gt 0 ]; do
       shift
       ;;
     -h|--help)
-      sed -n '2,26p' "$0" 2>/dev/null | sed 's/^# \{0,1\}//'
+      sed -n '2,30p' "$0" 2>/dev/null | sed 's/^# \{0,1\}//'
       exit 0
       ;;
     *)
@@ -89,60 +95,94 @@ manifest_name() {
   awk -F'"' '/^name[[:space:]]*=/ { print $2; exit }' "$1"
 }
 
-# A working tree next to this script means local mode; anything else (a piped
-# script has no useful $0) means fetching the tarball. Checking the manifest's
-# name guards against a stray mosaic/ directory that is not this package.
-SCRIPT_DIR=$(CDPATH='' cd -- "$(dirname -- "$0")" 2>/dev/null && pwd) || SCRIPT_DIR=""
+# A working tree next to this script means local mode; anything else means
+# fetching the tarball. A piped script has no file of its own: $0 is the shell
+# ("sh"), whose dirname is the current directory, so $0 must be a real file
+# named install.sh before its directory counts. Otherwise the one-liner run
+# from inside a clone would install that clone and ignore --ref. Checking the
+# manifest's name guards against a stray mosaic/ directory that is not this
+# package.
+SCRIPT_DIR=""
+if [ -f "$0" ] && [ "$(basename -- "$0")" = "install.sh" ]; then
+  SCRIPT_DIR=$(CDPATH='' cd -- "$(dirname -- "$0")" 2>/dev/null && pwd) || SCRIPT_DIR=""
+fi
 SOURCE_DIR=""
 if [ -n "$SCRIPT_DIR" ] && [ -f "$SCRIPT_DIR/$PACKAGE_NAME/typst.toml" ] &&
   [ "$(manifest_name "$SCRIPT_DIR/$PACKAGE_NAME/typst.toml")" = "$PACKAGE_NAME" ]; then
   SOURCE_DIR="$SCRIPT_DIR/$PACKAGE_NAME"
 fi
 
+if [ -n "$SOURCE_DIR" ] && [ -n "$REF_GIVEN" ] && [ "$MODE" = "install" ]; then
+  echo "install.sh: --ref applies only when fetching from GitHub; this run installs the working tree at $SOURCE_DIR" >&2
+  exit 1
+fi
+
+# Every version of the development package lives in this one directory, and
+# nothing else does.
+VERSIONS_DIR="$(resolve_package_path)/local/$PACKAGE_NAME"
+
+# Remove every installed version except the one named. Only direct children
+# whose names are dotted numbers (0.0.2, 1.10.0) are touched, so nothing that
+# is not a package version can be removed from here.
+remove_versions() {
+  keep="$1"
+  [ -d "$VERSIONS_DIR" ] || return 0
+  for entry in "$VERSIONS_DIR"/*; do
+    [ -d "$entry" ] || continue
+    name=${entry##*/}
+    [ "$name" != "$keep" ] || continue
+    case "$name" in
+      *[!0-9.]* | .* | *. | *..*) continue ;;
+      *.*.*) ;;
+      *) continue ;;
+    esac
+    rm -rf "$entry"
+    echo "Removed $entry"
+  done
+}
+
+if [ "$MODE" = "uninstall" ]; then
+  remove_versions ""
+  exit 0
+fi
+
 TMP_DIR=""
 cleanup() { [ -z "$TMP_DIR" ] || rm -rf "$TMP_DIR"; }
 trap cleanup EXIT INT TERM
 
-if [ "$MODE" = "uninstall" ] && [ -z "$SOURCE_DIR" ]; then
-  # Uninstalling needs only the version number, not the whole tarball.
-  TMP_DIR=$(mktemp -d)
-  curl -fsSL "https://raw.githubusercontent.com/$REPO_SLUG/$REF/$PACKAGE_NAME/typst.toml" \
-    -o "$TMP_DIR/typst.toml"
-  MANIFEST="$TMP_DIR/typst.toml"
-elif [ -z "$SOURCE_DIR" ]; then
+if [ -z "$SOURCE_DIR" ]; then
   TMP_DIR=$(mktemp -d)
   echo "Fetching $REPO_SLUG at $REF ..."
   curl -fsSL "https://github.com/$REPO_SLUG/archive/$REF.tar.gz" |
     tar -xz -C "$TMP_DIR" --strip-components=1
   SOURCE_DIR="$TMP_DIR/$PACKAGE_NAME"
-  MANIFEST="$SOURCE_DIR/typst.toml"
-else
-  MANIFEST="$SOURCE_DIR/typst.toml"
 fi
+MANIFEST="$SOURCE_DIR/typst.toml"
 
 VERSION=$(manifest_version "$MANIFEST")
 [ -n "$VERSION" ] || { echo "install.sh: no version in $MANIFEST" >&2; exit 1; }
-TARGET_DIR="$(resolve_package_path)/local/$PACKAGE_NAME/$VERSION"
+TARGET_DIR="$VERSIONS_DIR/$VERSION"
 
-if [ "$MODE" = "uninstall" ]; then
-  rm -rf "$TARGET_DIR"
-  echo "Removed $TARGET_DIR"
-else
-  # Copy into a temporary sibling directory first and swap it into place with
-  # a single rm+mv, so a failed or interrupted copy never leaves a truncated
-  # package at $TARGET_DIR: either the old install stays intact, or the new
-  # one lands whole.
-  PARENT_DIR=$(dirname -- "$TARGET_DIR")
-  mkdir -p "$PARENT_DIR"
-  STAGE_DIR=$(mktemp -d "$PARENT_DIR/.mosaic-install.XXXXXX")
-  stage_cleanup() { [ -z "$STAGE_DIR" ] || rm -rf "$STAGE_DIR"; }
-  trap 'stage_cleanup; cleanup' EXIT INT TERM
-  cp -R "$SOURCE_DIR/." "$STAGE_DIR/"
-  # mktemp creates the stage with mode 700; the package is world-readable.
-  chmod 755 "$STAGE_DIR"
-  rm -rf "$TARGET_DIR"
-  mv "$STAGE_DIR" "$TARGET_DIR"
-  STAGE_DIR=""
-  trap cleanup EXIT INT TERM
-  echo "Installed @local/$PACKAGE_NAME:$VERSION in $TARGET_DIR"
+# Copy into a temporary sibling directory first, then swap by renaming: the old
+# install is moved aside, the new one renamed into place, and only then is the
+# old one deleted. A failed or interrupted copy therefore never leaves a
+# truncated package at $TARGET_DIR.
+mkdir -p "$VERSIONS_DIR"
+STAGE_DIR=$(mktemp -d "$VERSIONS_DIR/.mosaic-install.XXXXXX")
+OLD_DIR=""
+stage_cleanup() {
+  [ -z "$STAGE_DIR" ] || rm -rf "$STAGE_DIR"
+  [ -z "$OLD_DIR" ] || rm -rf "$OLD_DIR"
+}
+trap 'stage_cleanup; cleanup' EXIT INT TERM
+cp -R "$SOURCE_DIR/." "$STAGE_DIR/"
+# mktemp creates the stage with mode 700; the package is world-readable.
+chmod 755 "$STAGE_DIR"
+if [ -e "$TARGET_DIR" ]; then
+  OLD_DIR=$(mktemp -d "$VERSIONS_DIR/.mosaic-old.XXXXXX")
+  mv "$TARGET_DIR" "$OLD_DIR/previous"
 fi
+mv "$STAGE_DIR" "$TARGET_DIR"
+STAGE_DIR=""
+echo "Installed @local/$PACKAGE_NAME:$VERSION in $TARGET_DIR"
+remove_versions "$VERSION"

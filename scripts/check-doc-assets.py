@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import importlib.util
 import json
 import re
 import subprocess
@@ -174,7 +173,12 @@ def check_sources() -> tuple[list[ExampleCall], set[Path]]:
     # slug-prefixed files are the complete, non-stale output set.
     for slug in manual_consumers:
         base = ASSETS / slug
-        produced = set(base.parent.glob(base.name + "-*.svg"))
+        # `<name>-<digits>.svg` only, so a sibling whose name merely starts
+        # the same does not lend this producer its frames.
+        produced = {
+            path for path in base.parent.glob(base.name + "-*.svg")
+            if path.stem[len(base.name) + 1:].isdigit()
+        }
         if not produced:
             errors.append(f"{slug} has no generated SVG assets")
         pdf = base.with_suffix(".pdf")

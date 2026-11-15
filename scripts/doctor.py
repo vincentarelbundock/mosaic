@@ -5,18 +5,31 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
+import os
 import re
 import shutil
 import subprocess
+from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[1]
+
+# `make doctor` passes the binaries its own variables name, so an override such
+# as `make TYPST=/opt/typst doctor` checks the binary the other targets will
+# run. Run directly, the script falls back to the default names.
+TYPST = os.environ.get("TYPST") or "typst"
+CALEPIN = os.environ.get("CALEPIN") or "calepin"
+TYPSTDOC = os.environ.get("TYPSTDOC") or "typst-doc"
+MAKE = os.environ.get("MAKE") or "make"
 
 GROUPS = {
     "check": {
-        "commands": ("uv", "typst", "pdftotext", "pdfinfo", "pdfdetach", "ffprobe"),
+        "commands": ("uv", "git", TYPST, "pdftotext", "pdfinfo", "pdfdetach", "ffprobe"),
         "modules": ("PIL",),
     },
     "docs": {
-        "commands": ("calepin", "typst-doc", "pdftoppm", "ffmpeg", "ffprobe"),
+        # bash and sha256sum are scripts/build-docs-showcase-video.sh's; git
+        # is publish-docs' and release-stage's.
+        "commands": (CALEPIN, TYPSTDOC, "git", "pdftoppm", "ffmpeg", "ffprobe", "bash", "sha256sum"),
         "modules": ("PIL",),
     },
 }
@@ -24,44 +37,56 @@ OPTIONAL_COMMANDS = ("kpsewhich", "Rscript")
 OPTIONAL_MODULES = ("jupyter_client",)
 OPTIONAL_FONTS = ("Inter", "Source Sans 3", "Fira Sans", "Fira Mono")
 
-# make artifacts (Makefile:199) uses the "&:" grouped-target syntax, which GNU
-# Make only understands from 4.3 onward; stock macOS ships 3.81.
+# make artifacts uses the "&:" grouped-target syntax, which GNU Make only
+# understands from 4.3 onward; stock macOS ships 3.81.
 MAKE_MIN_VERSION = (4, 3)
+# scripts/build-docs-showcase-video.sh uses `mapfile` (4.0) and a negative
+# array index (4.3); stock macOS ships bash 3.2.
+BASH_MIN_VERSION = (4, 3)
 
 
-def make_version() -> tuple[int, ...] | None:
-    """Parse the version out of `make --version`'s first line, or None."""
-    make = shutil.which("make")
-    if not make:
+def tool_version(command: str, *args: str) -> tuple[int, ...] | None:
+    """Parse the first dotted number `command --version` prints, or None."""
+    path = shutil.which(command)
+    if not path:
         return None
-    result = subprocess.run([make, "--version"], text=True, capture_output=True)
+    result = subprocess.run([path, *(args or ("--version",))], text=True, capture_output=True)
     if result.returncode != 0:
         return None
     match = re.search(r"(\d+(?:\.\d+)+)", result.stdout.splitlines()[0] if result.stdout else "")
     if not match:
         return None
-    try:
-        return tuple(int(part) for part in match.group(1).split("."))
-    except ValueError:
-        return None
+    return tuple(int(part) for part in match.group(1).split("."))
 
 
-def check_make_version(missing: list[str], group: str) -> None:
-    version = make_version()
+def typst_min_version() -> tuple[int, ...]:
+    """The compiler floor the package manifest declares."""
+    manifest = (ROOT / "mosaic/typst.toml").read_text(encoding="utf-8")
+    match = re.search(r'(?m)^compiler\s*=\s*"(\d+(?:\.\d+)*)"', manifest)
+    return tuple(int(part) for part in match.group(1).split(".")) if match else (0,)
+
+
+def check_version(
+    missing: list[str], group: str, command: str, minimum: tuple[int, ...], reason: str
+) -> None:
+    version = tool_version(command)
     if version is None:
-        print(f"  [{group}] make --version: unparseable")
-        missing.append(f"{group}: make --version could not be parsed")
+        # A missing binary is already reported by the command list; only an
+        # unreadable version is news here.
+        if shutil.which(command):
+            print(f"  [{group}] {command} --version: unparseable")
+            missing.append(f"{group}: {command} --version could not be parsed")
         return
     version_str = ".".join(str(part) for part in version)
-    ok = version >= MAKE_MIN_VERSION
-    min_str = ".".join(str(part) for part in MAKE_MIN_VERSION)
-    print(f"  [{group}] make: {version_str} ({'>= ' + min_str if ok else 'MISSING, need >= ' + min_str})")
+    min_str = ".".join(str(part) for part in minimum)
+    ok = version >= minimum
+    print(f"  [{group}] {command} version: {version_str} ({'>= ' + min_str if ok else 'TOO OLD, need >= ' + min_str})")
     if not ok:
-        missing.append(f"{group}: make {version_str} is older than required {min_str} (needed for the '&:' grouped-target syntax used by `make artifacts`)")
+        missing.append(f"{group}: {command} {version_str} is older than required {min_str} ({reason})")
 
 
 def available_font_names() -> str:
-    typst = shutil.which("typst")
+    typst = shutil.which(TYPST)
     if not typst:
         return ""
     result = subprocess.run([typst, "fonts"], text=True, capture_output=True)
@@ -86,8 +111,11 @@ def main() -> int:
             print(f"  [{group}] Python module {module}: {'found' if found else 'MISSING'}")
             if not found:
                 missing.append(f"{group}: Python module {module}")
+        if group == "check":
+            check_version(missing, group, TYPST, typst_min_version(), "the compiler floor in mosaic/typst.toml")
         if group == "docs":
-            check_make_version(missing, group)
+            check_version(missing, group, MAKE, MAKE_MIN_VERSION, "the '&:' grouped-target syntax used by `make artifacts`")
+            check_version(missing, group, "bash", BASH_MIN_VERSION, "mapfile and negative array indices in scripts/build-docs-showcase-video.sh")
 
     print("Optional prerequisites:")
     for command in OPTIONAL_COMMANDS:
