@@ -26,9 +26,10 @@
 /// - `slide`: a dictionary of `number`, `total`, and `numbered`. The count is
 ///   of logical slides rather than pages, so one incremental slide is one
 ///   number however many frames it prints. Unnumbered slides (titles and
-///   sections, by default) are passed over by the count and report
-///   `numbered: false`, which is the signal deck furniture uses to quiet
-///   itself on those pages.
+///   sections, by default) are passed over by the count: they report
+///   `numbered: false` and `number: none`, because such a slide has no number
+///   of its own, and the previous slide's would be a wrong answer. Deck
+///   furniture reads either field to quiet itself on those pages.
 /// - `section`: a dictionary of `number`, `total`, and `title`. The number is
 ///   the current section's, counting slides that use the `section` layout, and
 ///   the title is that section's own text with any heading stripped. Before the
@@ -62,7 +63,9 @@
 ///   grid(
 ///     columns: (1fr, 1fr),
 ///     deck.section.title,
-///     align(right)[#deck.slide.number\/#deck.slide.total],
+///     if deck.slide.numbered {
+///       align(right)[#deck.slide.number\/#deck.slide.total]
+///     },
 ///   )
 /// }
 /// ```
@@ -75,9 +78,16 @@
   }
   // The declared metadata and the live position, in one record. The position
   // readers are the ones the progress component draws from, so the public
-  // answer and the built-in chrome cannot drift.
+  // answer and the built-in chrome cannot drift. The one difference is the
+  // number of an unnumbered slide: the counter still holds the previous
+  // slide's, which the progress component may be asked to print, but the
+  // public record does not pass a stale count off as this slide's number.
+  let slide = _state.slide-position()
+  if not slide.numbered {
+    slide.number = none
+  }
   record.settings.deck + (
-    slide: _state.slide-position(),
+    slide: slide,
     section: _state.section-position(),
   )
 }
