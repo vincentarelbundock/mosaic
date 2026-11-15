@@ -124,7 +124,7 @@ temporal-heading|headings cannot be wrapped in on, reveal, replace, or drawing; 
 theme-definition-option-conflict|theme option "paper" conflicts with setup
 theme-definition-unknown|theme does not accept "mystery"
 theme-layouts-incomplete|theme layouts requires "title"
-too-many|grid expects 1 bodies with setup defaults or 2 bodies to override them, received 3
+too-many|slide received 3 positional bodies, but on this layout they fill "body"; address any other cell by name through cells:
 slide-body-type|slide positional bodies must be content, received integer
 cell-inset-type|cell inset must be auto, a length, or a dictionary of sides with length values
 cell-inset-side|cell inset must be auto, a length, or a dictionary of sides with length values
@@ -174,3 +174,4 @@ layouts-image-position|layout "image" position must be one of
 layouts-title-background-tracks|layout "title" tracks size a split, so they apply only to positions
 layouts-section-position-scope|layout "section" position applies only to variant "image"
 layouts-title-auto-missing|layout "title" requires title content through title: or setup(title: ..); pass title: none to compose the slide without one
+slide-bodies-defaulted|slide received 3 positional bodies, but on this layout they fill "body-1" and "body-2"; address any other cell by name through cells:

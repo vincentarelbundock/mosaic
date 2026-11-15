@@ -1,6 +1,7 @@
 // Slide-content routing for canonical grid trees.
 #import "../shared.typ": fail
 #import "traversal.typ": resolve-cell-ids, fold-grid
+#import "../opening-heading.typ": split-opening-heading
 
 // The IDs of every content-bearing cell (content == none), in the same
 // depth-first declaration order that positional bodies fill. This is the
@@ -12,12 +13,20 @@
   (node, children) => children.flatten(),
 )
 
+// The cell a slide's opening heading fills.
+#let header-id = "header"
+
 // Resolve a slide's content into one id -> content map, the single internal
 // representation the renderer consumes. Setup defaults are fallbacks for
 // content-bearing cells that exist in this resolved grid. Named slide content
-// overrides those defaults; `none` explicitly suppresses one. Positional bodies
-// may either fill every cell (the full override form) or the leading cells not
-// already satisfied by defaults. Any omitted content-bearing cell becomes [].
+// overrides those defaults; `none` explicitly suppresses one.
+//
+// Positional bodies follow one rule, whatever their count. A slide's opening
+// heading is its header: when the layout has a `header` cell and the first
+// body opens with a heading, that heading fills the header, as the heading of
+// an automatic slide does. Everything else fills, in layout order, the cells
+// that have no deck default and are not the header; those cells are addressed
+// by name through `cells:`. Any omitted content-bearing cell becomes [].
 //
 // `none` means "suppress", so suppressing a cell this layout does not have is
 // already true and resolves to a no-op. That matches a setup-level default for
@@ -61,25 +70,34 @@
     }
     resolved
   } else {
-    let destination-ids = if bodies.len() == body-ids.len() {
-      body-ids
-    } else {
-      body-ids.filter(id => id not in inherited)
+    let destination-ids = body-ids.filter(
+      id => id not in inherited and id != header-id,
+    )
+    let resolved = inherited
+    let bodies = bodies
+    if header-id in body-ids and bodies.len() > 0 {
+      let opening = split-opening-heading(bodies.first())
+      if opening.heading != none {
+        resolved.insert(header-id, opening.heading)
+        bodies = bodies.slice(1)
+        if opening.rest != none {
+          bodies.insert(0, opening.rest)
+        }
+      }
     }
     if bodies.len() > destination-ids.len() {
-      if inherited.len() == 0 {
-        fail(
-          "grid expects " + str(body-ids.len())
-            + " bodies, received " + str(bodies.len()),
-        )
-      }
       fail(
-        "grid expects " + str(destination-ids.len())
-          + " bodies with setup defaults or " + str(body-ids.len())
-          + " bodies to override them, received " + str(bodies.len()),
+        "slide received " + str(bodies.len()) + " positional "
+          + (if bodies.len() == 1 { "body" } else { "bodies" })
+          + ", but on this layout they fill "
+          + (
+            if destination-ids.len() == 0 { "no cell" } else {
+              destination-ids.map(repr).join(", ", last: " and ")
+            }
+          )
+          + "; address any other cell by name through cells:",
       )
     }
-    let resolved = if destination-ids.len() == body-ids.len() { (:) } else { inherited }
     for (index, id) in destination-ids.enumerate() {
       resolved.insert(id, bodies.at(index, default: []))
     }

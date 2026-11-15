@@ -16,10 +16,16 @@
   ),
 )
 
-// A complete positional list overrides every setup default.
+// Naming every cell overrides every setup default. Positional bodies never
+// reach a defaulted cell: `footer` is addressed by name.
 #m.slide(
   layout: m.layouts.content(variant: "header-body-footer"),
-)[FULL HEADER][FULL BODY][FULL FOOTER]
+  cells: (
+    header: [FULL HEADER],
+    body: [FULL BODY],
+    footer: [FULL FOOTER],
+  ),
+)
 
 // Named content may be partial when setup supplies the remainder.
 #m.slide(

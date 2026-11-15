@@ -104,7 +104,8 @@
     "replace-wrap.typ",
     "speaker-notes-embed-text.typ",
     "theme-typography.typ",
-    "slide-invert-raw-own.typ"
+    "slide-invert-raw-own.typ",
+    "slide-opening-heading.typ"
   ],
   "layout": [
     "fit.typ",
