@@ -5,7 +5,11 @@
 // written. An automatic `==` slide, `slide[== T][B]`, and `slide` with the
 // heading and the body in one block resolve to the same header and body
 // cells; pages 1 to 3 must lay those cells out identically.
-#let grid = mosaic.grids.rows(tracks: (auto, 1fr, auto), "header", "body", "footer")
+#let grid = mosaic.grids.rows(
+  mosaic.grids.track(auto, "header"),
+  "body",
+  mosaic.grids.track(auto, "footer"),
+)
 #let defaults = (header: none, footer: [Deck footer])
 #let resolve(..bodies) = resolve-content(grid, (:), bodies.pos(), defaults: defaults)
 

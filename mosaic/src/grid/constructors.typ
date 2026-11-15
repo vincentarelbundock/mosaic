@@ -65,8 +65,7 @@
 ///
 /// ```typ
 /// #mosaic.grids.rows(
-///   tracks: (auto, 1fr),
-///   mosaic.grids.cell("header"),
+///   mosaic.grids.track(auto, mosaic.grids.cell("header")),
 ///   mosaic.grids.cell("body"),
 /// )
 /// ```
@@ -138,9 +137,6 @@
 /// )
 /// ```
 ///
-/// The `tracks:` argument of `columns` and `rows` states the same sizes in
-/// one array instead, one per child; a split takes one form or the other.
-///
 /// The wrapper is temporary: `columns` or `rows` unwraps it while constructing
 /// the split, so a `track` value never appears in a resolved tree.
 ///
@@ -173,7 +169,7 @@
 
 // The only named options a split accepts; anything else in the sink is a
 // misspelling, and `validate-keys` names it.
-#let split-options = ("gutter", "stroke", "tracks")
+#let split-options = ("gutter", "stroke")
 
 #let validate-split-child(value) = {
   let size = 1fr
@@ -190,42 +186,12 @@
   (size, child)
 }
 
-// `tracks:` means one thing across the package, here and on the layout
-// constructors: `auto` for the default sizing, or an array holding exactly one
-// native track size per child. A general split has no child that a lone size
-// could belong to, so a single value is not a shorthand here. It is the
-// container-side spelling of what `track` says child by child, and a split
-// takes one or the other, so no child ever has two sizes.
-#let validate-split-tracks(tracks, children, name) = {
-  if tracks == auto {
-    return tracks
-  }
-  if (
-    type(tracks) != array
-      or tracks.len() != children.len()
-      or not tracks.all(is-track-size)
-  ) {
-    fail(
-      name + " tracks must be auto or an array with one track size per "
-        + "child (" + str(children.len()) + " here): auto, a length, a "
-        + "ratio, or a fraction",
-    )
-  }
-  if children.any(is-track) {
-    fail(
-      name + " sizes its children through tracks: or through track(..) "
-        + "wrappers, not both",
-    )
-  }
-  tracks
-}
-
 // Canonical branch constructor. Public callers use mosaic.grids.columns()
 // and mosaic.grids.rows(), which pass a literal axis. Child normalization
 // guarantees node children and a per-child track, so the trailing `validate`
-// owns the structural checks; only the gutter, stroke, and tracks values are
-// validated here.
-#let make-split(axis, children, gutter: 0pt, stroke: none, tracks: auto) = {
+// owns the structural checks; only the gutter and stroke values are validated
+// here.
+#let make-split(axis, gutter, stroke, children) = {
   let name = axis-name(axis)
   if children.len() == 0 {
     fail(name + " must contain at least one child")
@@ -236,13 +202,12 @@
   if not is-stroke(stroke) {
     fail(name + " stroke must be none or a native Typst stroke")
   }
-  let tracks = validate-split-tracks(tracks, children, name)
   let parts = children.map(validate-split-child)
   let result = (
     mosaic: tag,
     kind: "split",
     axis: axis,
-    tracks: if tracks == auto { parts.map(part => part.at(0)) } else { tracks },
+    tracks: parts.map(part => part.at(0)),
     gutter: gutter,
     stroke: stroke,
     children: parts.map(part => part.at(1)),
@@ -274,22 +239,8 @@
 /// )
 /// ```
 ///
-/// `tracks:` states every size at once, as the layout constructors do:
-///
-/// ```typ
-/// #mosaic.grids.columns(tracks: (2fr, 1fr), "left", "right")
-/// ```
-///
 /// -> dictionary
 #let columns(
-  /// The width of each column, as an array with exactly one native track size
-  /// per child, in order: `auto` (as wide as the child's content), a length or
-  /// ratio, or a fraction such as `2fr`, which takes a share of what remains.
-  /// This is the same `tracks:` the layout constructors take. The default
-  /// `auto` leaves sizing to the children: `1fr` each, or the size a `track`
-  /// wrapper gives. An array cannot be combined with `track` wrappers.
-  /// -> auto | array
-  tracks: auto,
   /// Native Typst track size used between adjacent columns.
   /// -> auto | length | ratio | relative | fraction
   gutter: 0pt,
@@ -303,13 +254,7 @@
   ..children,
 ) = {
   _ = validate-keys(children.named(), split-options, "columns")
-  make-split(
-    "width",
-    children.pos(),
-    gutter: gutter,
-    stroke: stroke,
-    tracks: tracks,
-  )
+  make-split("width", gutter, stroke, children.pos())
 }
 
 /// Splits the available height, arranging its children as rows.
@@ -327,22 +272,11 @@
 /// )
 /// ```
 ///
-/// `tracks:` states the same sizes in one array:
-/// `rows(tracks: (auto, 1fr, auto), "header", "body", "footer")`.
-///
 /// A cell directly in an `auto` row hugs its content; see the `inset`
 /// parameter of `cell`.
 ///
 /// -> dictionary
 #let rows(
-  /// The height of each row, as an array with exactly one native track size
-  /// per child, in order: `auto` (as tall as the child's content), a length or
-  /// ratio, or a fraction such as `2fr`, which takes a share of what remains.
-  /// The default `auto` leaves sizing to the children: `1fr` each, or the size
-  /// a `track` wrapper gives. An array cannot be combined with `track`
-  /// wrappers.
-  /// -> auto | array
-  tracks: auto,
   /// Native Typst track size used between adjacent rows.
   /// -> auto | length | ratio | relative | fraction
   gutter: 0pt,
@@ -355,11 +289,7 @@
   ..children,
 ) = {
   _ = validate-keys(children.named(), split-options, "rows")
-  make-split(
-    "height",
-    children.pos(),
-    gutter: gutter,
-    stroke: stroke,
-    tracks: tracks,
-  )
+  make-split("height", gutter, stroke, children.pos())
 }
+
+

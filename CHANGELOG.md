@@ -34,7 +34,6 @@ This version settles the vocabulary of the public API, one spelling per concept,
 - `setup(font: .., base-size: ..)` works under every theme, custom themes included. A theme's headings are multiples of the base size, so the deck scales with it.
 - `themes.decorate-heading` declares a heading rule that rebuilds the heading (`show heading: it => ..`) so that it holds on every frame of an incremental slide.
 - `setup(spacing: (compact-inset: ..))` sets the depth of every compact cell (header, footer, or any cell in an `auto` row), built-in or hand-built. Raise it to `inset` for a deeper painted header.
-- `grids.columns` and `grids.rows` take `tracks:`, an array with one size per child, the argument the layouts already took: `grids.columns(tracks: (2fr, 1fr), "a", "b")` builds the same grid as `grids.columns(grids.track(2fr, "a"), "b")`. `grids.track` is unchanged; a split takes one form or the other.
 - `none` suppresses any inherited field of a title slide: `title`, `subtitle`, `date`, or `authors`.
 - `components.quote` is a superset of the native `quote`: `block:`, `quotes:`, and a label as `attribution:` keep their native meaning. `quote(role:)` and `quote(accent:)` draw a rail down the left edge; a plain quotation is unchanged.
 - The section layout's `accent:` colors the number in the `baseline` and `numeral` variants, and the `baseline` hairline with it.

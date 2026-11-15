@@ -41,7 +41,7 @@ When no built-in layout fits, write the slide's arrangement yourself. A custom s
 
 Build a custom slide in three separate layers: define its named grid, assign content to those names, and style the labeled cells with native Typst rules. The walkthrough below grows one slide through all three. The sections after it are the reference for each layer.
 
-#unreleased(calepin.elements.callout)[The `tracks:` argument of `m.grids.columns` and `m.grids.rows`, painting a cell's own block with `set block` rules, and the rule that a slide's opening heading is its header are new.]
+#unreleased(calepin.elements.callout)[Painting a cell's own block with `set block` rules and the rule that a slide's opening heading is its header are new.]
 
 = Walkthrough
 
@@ -239,8 +239,6 @@ By default, every direct child of `m.grids.columns` or `m.grids.rows` receives a
   columns: 1,
   show-captions: false,
 )
-
-The `tracks:` argument states the same sizes on the split instead, in one array with one size per child: `m.grids.columns(tracks: (2fr, 1fr), "main", "side")`. It is the argument the content layout takes for its columns. A split takes one form or the other, never both.
 
 A size is anything a native grid track accepts: `auto` for as much as the child's content needs, a fixed length, a percentage, or an `fr` share of what remains:
 

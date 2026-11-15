@@ -10,12 +10,10 @@
 #let card(fill) = m.components.card(fill: fill, accent: fill)[CARD]
 
 #m.slide(m.grids.rows(
-  tracks: (auto, 1fr),
-  m.grids.columns(
-    tracks: (1fr, auto),
+  m.grids.track(auto, m.grids.columns(
     "strip",
-    m.steps.on(2, before: "dimmed", m.grids.cell("logo")),
-  ),
+    m.grids.track(auto, m.steps.on(2, before: "dimmed", m.grids.cell("logo"))),
+  )),
   m.grids.columns(
     m.steps.on(2, before: "dimmed", m.grids.cell("cell")),
     m.steps.on(2, before: "dimmed", m.grids.rows("upper", "lower")),

@@ -7,19 +7,6 @@
   mosaic.grids.track(1fr, mosaic.grids.rows("b", "c")),
 )
 
-// `tracks:` on the split and `track` around each child are two spellings of
-// one tree.
-#assert(grid == mosaic.grids.columns(
-  tracks: (2fr, 1fr),
-  gutter: 0.6em,
-  "a",
-  mosaic.grids.rows("b", "c"),
-))
-#assert(
-  mosaic.grids.rows(mosaic.grids.track(auto, "header"), "body")
-    == mosaic.grids.rows(tracks: (auto, 1fr), "header", "body"),
-)
-
 #assert(grid.kind == "split")
 #assert(grid.axis == "width")
 #assert(grid.tracks == (2fr, 1fr))
