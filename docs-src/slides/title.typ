@@ -35,7 +35,7 @@ To change one field on one slide, name it on `slide`. This deck opens on a draft
 #m.slide(layout: "title", date: [Draft])
 ```
 
-Writing `none` drops an inherited title, subtitle, or date from that slide, and `()` drops the authors.
+Writing `none` drops an inherited subtitle or date from that slide, and `()` drops the authors. The title itself is required: replace it with other content, but it cannot be dropped.
 
 = Variants
 

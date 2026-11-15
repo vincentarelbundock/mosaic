@@ -34,7 +34,6 @@ The `title` and `section` layouts are compositions rather than bare grids. Each 
   columns: (auto, 1fr),
   [`mosaic-title-display`], [The display line of a title slide, inside `mosaic-cell-title`. This is where a theme states the title's display size and tracking.],
   [`mosaic-section-number`], [The section numeral of a section slide.],
-  [`mosaic-section-title`], [The section's title text.],
   [`mosaic-section-subtitle`], [The section's subtitle, where the variant emits one.],
 )
 
@@ -56,6 +55,7 @@ These carry rules from Mosaic itself rather than from a theme. A theme or deck r
 #table(
   columns: (auto, 1fr),
   [`mosaic-note-heading`], [The heading on a printed speaker or notes page. Set black on white, because those pages are paper whatever the deck's theme does.],
-  [`mosaic-note-body`], [The note text on those same pages. Inherits the deck's base text size.],
+  [`mosaic-note-body`], [The note text on those same pages. Inherits the deck's base text size; the released 0.0.1 sets it at a fixed 10pt.],
+  [`mosaic-section-title`], [A metadata record of each section slide's title, which the `toc` section variant queries to list the deck's sections. It carries no text, so it is not a styling target.],
   [`mosaic-overflow-warning`], [The diagnostic emitted when content exceeds its cell. Not a styling target.],
 )

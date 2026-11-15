@@ -14,13 +14,13 @@ Overflow observation is off by default, because measuring every cell on every fr
 
 For tooling that would rather read the records than stop the build, `setup(overflow: "record")` emits them and keeps compiling:
 
-```sh typst eval \
+```sh
+typst eval \
   'query(<mosaic-overflow-warning>).map(it => it.value)' \
   --in slides.typ
 ```
 
-Each record identifies the slide, frame, cell, and measured height. Typst gives a package no warning channel, so `"record"` prints nothing on its own; see the
-#link("../api/setup.html")[Setup API].
+Each record identifies the slide, frame, cell, and measured height. Typst gives a package no warning channel, so `"record"` prints nothing on its own; see the #link("../api/setup.html")[Setup API].
 
 An overflow means the slide holds more than it can show. The remedy is editorial: cut a bullet, split the slide in two, or move to a layout with more room. Mosaic deliberately offers no automatic shrink-to-fit for body content, because a deck whose type size is decided slide by slide loses the scale that holds it together.
 

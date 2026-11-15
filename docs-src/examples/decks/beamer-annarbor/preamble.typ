@@ -9,7 +9,7 @@
 // components. What is left here is only what beamer has and Mosaic does not.
 // There are no slide helpers: every beamer construction this deck needs is a
 // Mosaic layout variant or a Mosaic component, and the theme states the rest.
-#import "@local/mosaic:0.0.2" as mosaic
+#import "@local/mosaic:0.0.3" as mosaic
 #import mosaic: slide, note, fit, grids, layouts, steps, components, info
 
 // Beamer's wolverine color theme, resolved from its LaTeX mixes. `darkblue`

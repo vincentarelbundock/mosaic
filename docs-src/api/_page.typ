@@ -19,9 +19,7 @@
     #metadata((title: group-title)) <website-metadata>
     #title()
 
-    The contents below link to each definition. Function entries show the
-    signature, then a description, then the parameters with their types and
-    defaults; variable entries show the declared type.
+    The contents below link to each definition. Function entries show the signature, then a description, then the parameters with their types and defaults; variable entries show the declared type.
 
     #body
   ]

@@ -53,14 +53,14 @@ The note outputs are independent of `handout:`, so a deck can print a #link("../
 
 = On a second screen
 
-#calepin.elements.callout(kind: "warning", title: [Requires Mosaic 0.0.2])[
-  Everything below is new in 0.0.2, which is not on Typst Universe yet, so the rest of this documentation pins the released `0.0.1`. One command installs the development version — `curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh` — and then it imports as:
+#calepin.elements.callout(kind: "warning", title: [Requires Mosaic 0.0.3])[
+  Everything below is new in the development version, 0.0.3, which is not on Typst Universe yet, so the rest of this documentation pins the released `0.0.1`. One command installs the development version — `curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh` — and then it imports as:
 
   ```typ
-  #import "@local/mosaic:0.0.2" as m
+  #import "@local/mosaic:0.0.3" as m
   ```
 
-  See #link("../start/install.html")[Install] for the full instructions. Everything above works with the package as published.
+  See #link("../start/install.html")[Install] for the full instructions. Everything above works with the package as published, with one difference: the released 0.0.1 sets the note text at a fixed 10pt and its heading at 12pt rather than inheriting the deck's base size.
 ]
 
 A presenter console drives two displays: the projector shows the slide, your laptop shows the same slide with its notes, the next slide, and a clock. Typst produces a PDF, so the console is a separate program. Several free ones exist — #link("https://pympress.xyz/")[pympress], #link("https://pdfpc.github.io/")[pdfpc], #link("https://github.com/beamerpresenter/BeamerPresenter")[BeamerPresenter] — and they run on Linux, macOS, and Windows.
@@ -87,7 +87,7 @@ Because the page carries no margin of its own and the slide half is drawn unscal
 
 The notes half stays black on white whatever polarity the deck carries, because it is read off a laptop under house lights rather than projected. It uses the same labels the printed outputs do, so the rules above restyle it too.
 
-If the notes on a frame do not fit their half, the compile fails and names the frame, the same way the `speaker` and `notes` outputs do. Shorten the note, or raise `notes: (split-inset: 6mm)` in `m.setup` to give it more room.
+If the notes on a frame do not fit their half, the compile fails and names the frame, the same way the `speaker` and `notes` outputs do. Shorten the note, or lower the inset with `notes: (split-inset: 6mm)` in `m.setup` to give it more room.
 
 Keep both builds if you want a clean deck to hand out afterwards: the `split` PDF is for presenting, and `output: "slides"` gives you the file to circulate.
 

@@ -21,7 +21,7 @@ Native `place` positions images, shapes, and other Typst content independently o
 
 = Photographic backgrounds
 
-Pass a slide-sized image through the reserved `background` entry. The optional `scrim` of `m.components.image()` paints a translucent layer over the photograph so the text in front stays readable. The #link("../content/images.html#scrims")[Scrims] section covers the flat, gradient, and light options.
+Pass a slide-sized image to the `background:` argument. The optional `scrim` of `m.components.image()` paints a translucent layer over the photograph so the text in front stays readable. The #link("../content/images.html#scrims")[Scrims] section covers the flat, gradient, and light options.
 
 #embedded-example(
   calepin.elements.gallery,

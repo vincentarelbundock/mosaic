@@ -8,7 +8,7 @@
 
 As the #link("../reference/concepts.html#anatomy-of-a-slide-deck")[anatomy page] shows, every part of a slide is a native Typst layer carrying a label, and you style all of it with ordinary `set` and `show` rules. Every rule a slide renders with comes from its theme: Mosaic's engine contributes page geometry, deck information, and colors, but no slide typography of its own. Rules you write after `m.setup` layer on top of the theme's. There is no separate styling system to learn.
 
-Behind that, the engine keeps exactly one record of its own: the deck record, written once by `m.setup` and never changed afterward. It holds what you declare there, structure and geometry, plus the semantic colors and roles. Those colors are the one deliberate exception to "everything is a rule": components are functions, and no native rule can carry a surface fill or an accent color into a function call the way `set text` carries typography into text. Declaring six colors and a role palette at setup is the whole extent of it.
+Behind that, the engine keeps exactly one record of its own: the deck record, written once by `m.setup` and never changed afterward. It holds what you declare there, structure and geometry, plus the semantic colors. Those colors are the one deliberate exception to "everything is a rule": components are functions, and no native rule can carry a surface fill or an accent color into a function call the way `set text` carries typography into text. Declaring one flat palette of eight colors at setup is the whole extent of it.
 
 = Deck typography
 
@@ -38,11 +38,11 @@ Everything about the deck's palette, overriding entries, the bundled palette col
 
 Target a cell by its label. Font, size, color, and alignment are `set text`, `set par`, and `set align`; the cell's own fill, stroke, and corner radius are `set block` on the same label. The #link("../api/labels.html")[label reference] lists every label a slide emits:
 
-#calepin.elements.callout(kind: "warning", title: [Requires Mosaic 0.0.2])[
-  Painting a cell's own block with `set block` rules is new in 0.0.2, which is not on Typst Universe yet, so the snippets and examples on this page pin the development version. One command installs it — `curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh` — and then it imports as:
+#calepin.elements.callout(kind: "warning", title: [Requires Mosaic 0.0.3])[
+  Painting a cell's own block with `set block` rules is new in the development version, 0.0.3, which is not on Typst Universe yet, so the snippets and examples on this page pin the development version. One command installs it — `curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh` — and then it imports as:
 
   ```typ
-  #import "@local/mosaic:0.0.2" as m
+  #import "@local/mosaic:0.0.3" as m
   ```
 
   See #link("../start/install.html")[Install] for the full instructions.
@@ -108,7 +108,7 @@ The same scoped block builds one-off slides. To show one large number or phrase 
 ]
 ```
 
-For a slide that shows a picture on a black background, paint the background plane through its label and center the image in the `background` entry:
+For a slide that shows a picture on a black background, paint the background plane through its label and center the image on the slide's `background:` plane:
 
 ```typ
 #[
@@ -179,9 +179,7 @@ The same split covers everything a theme pins on an element rather than a label 
 
 = Styling a whole slide
 
-The grid of every slide also carries the label `<mosaic-slide>`, so one rule
-reaches every cell of a slide at once. Use it when the whole slide changes
-together. Light text over a photograph is the common case:
+The grid of every slide also carries the label `<mosaic-slide>`, so one rule reaches every cell of a slide at once. Use it when the whole slide changes together. Light text over a photograph is the common case:
 
 ```typ
 #[
@@ -194,11 +192,7 @@ together. Light text over a photograph is the common case:
 ]
 ```
 
-Naming each cell instead works, but ties the rule to the cells the layout
-happens to produce: change the variant and a cell can silently keep the deck's
-ordinary color. `<mosaic-slide>` sits outside the per-cell labels, so a
-`<mosaic-cell-*>` rule still refines it: set the slide's color once, then
-override one cell.
+Naming each cell instead works, but ties the rule to the cells the layout happens to produce: change the variant and a cell can silently keep the deck's ordinary color. `<mosaic-slide>` sits outside the per-cell labels, so a `<mosaic-cell-*>` rule still refines it: set the slide's color once, then override one cell.
 
 = Type and geometry in designed layouts
 

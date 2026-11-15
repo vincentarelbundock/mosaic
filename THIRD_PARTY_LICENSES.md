@@ -2,15 +2,9 @@
 
 ## Touying fitting utilities and frozen-state mechanism
 
-Parts of `mosaic/src/fit.typ` are adapted from Touying 0.7.4, commit
-[`a8abe0d`](https://github.com/touying-typ/touying/commit/a8abe0d832024038c4174d9bb8182f202bde1209),
-including work credited by Touying to Andreas Kröpelin / Polylux PR #91 and
-ntjess.
+Parts of `mosaic/src/fit.typ` are adapted from Touying 0.7.4, commit [`a8abe0d`](https://github.com/touying-typ/touying/commit/a8abe0d832024038c4174d9bb8182f202bde1209), including work credited by Touying to Andreas Kröpelin / Polylux PR #91 and ntjess.
 
-The selected counter/state rewind in `mosaic/src/deck-state.typ` and
-`mosaic/src/slide-runtime.typ` was informed by Touying's `_rewind-states` helper and
-subslide preamble at the same commit. Mosaic uses an explicit opt-in API and a
-renderer-local pre-slide location rather than Touying's broader configuration.
+The selected counter/state rewind in `mosaic/src/deck-state.typ` and `mosaic/src/slide/runtime.typ` was informed by Touying's `_rewind-states` helper and subslide preamble at the same commit. Mosaic uses an explicit opt-in API and a renderer-local pre-slide location rather than Touying's broader configuration.
 
 Touying copyright notice and license:
 
@@ -37,52 +31,33 @@ Touying copyright notice and license:
 
 ## SlidesCarnival presentation templates
 
-Some example decks in `docs-src/examples/decks/` are adapted from free
-presentation templates published by SlidesCarnival:
+Some example decks in `docs-src/examples/decks/` are adapted from free presentation templates published by SlidesCarnival:
 
-- `docs-src/examples/decks/editorial/`: adapted from the *Cream, Green,
-  and Black Geometric Blocks Clean Minimal Presentation* template.
-- `docs-src/examples/decks/manifesto/`: adapted from the *Minimalist White
-  Slides* template.
-- `docs-src/examples/decks/portfolio/`: adapted from the *Photojournalist
-  Portfolio* template.
+- `docs-src/examples/decks/editorial/`: adapted from the *Cream, Green, and Black Geometric Blocks Clean Minimal Presentation* template.
+- `docs-src/examples/decks/manifesto/`: adapted from the *Minimalist White Slides* template.
+- `docs-src/examples/decks/portfolio/`: adapted from the *Photojournalist Portfolio* template.
 
-Each deck is a Mosaic/Typst re-creation of the corresponding template's layout,
-built on a bundled Mosaic theme; the original PowerPoint files are not
-distributed here. The photographs bundled in each deck's `assets/` directory
-come from Pexels and Pixabay, as credited on the source templates.
+Each deck is a Mosaic/Typst re-creation of the corresponding template's layout, built on a bundled Mosaic theme; the original PowerPoint files are not distributed here. The photographs bundled in each deck's `assets/` directory come from Pexels and Pixabay, as credited on the source templates.
 
 - <https://www.slidescarnival.com/>
 
-SlidesCarnival templates are distributed under the Creative Commons Attribution
-4.0 International License (CC BY 4.0):
-<https://creativecommons.org/licenses/by/4.0/>. Attribution is given to
-SlidesCarnival with a link to its website, and the material has been adapted.
+SlidesCarnival templates are distributed under the Creative Commons Attribution 4.0 International License (CC BY 4.0): <https://creativecommons.org/licenses/by/4.0/>. Attribution is given to SlidesCarnival with a link to its website, and the material has been adapted.
 
 ## Metropolis Beamer theme
 
-Mosaic's bundled `metropolis` theme, and the `docs-src/examples/decks/metropolis/`
-deck built on it, adapt the visual design of the **Metropolis** Beamer theme
-by Matthias Vogelgesang:
+Mosaic's bundled `metropolis` theme, and the `docs-src/examples/decks/metropolis/` deck built on it, adapt the visual design of the **Metropolis** Beamer theme by Matthias Vogelgesang:
 
 - <https://github.com/matze/mtheme>
 
-The Metropolis theme is licensed under the Creative Commons
-Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0):
-<https://creativecommons.org/licenses/by-sa/4.0/>. Attribution is given to
-Matthias Vogelgesang and the adaptation is offered under the same CC BY-SA 4.0
-license. The original theme sources are not redistributed here.
+The Metropolis theme is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0): <https://creativecommons.org/licenses/by-sa/4.0/>. Attribution is given to Matthias Vogelgesang and the adaptation is offered under the same CC BY-SA 4.0 license. The original theme sources are not redistributed here.
 
 ## Calmly Touying theme
 
-The `docs-src/examples/decks/calmly/` deck re-creates the visual design of the
-**Calmly** presentation theme for Touying by Yichen Han:
+The `docs-src/examples/decks/calmly/` deck re-creates the visual design of the **Calmly** presentation theme for Touying by Yichen Han:
 
 - <https://github.com/YHan228/calmly-touying>
 
-Calmly is licensed under the MIT License. The deck is a Mosaic/Typst
-re-creation of its appearance; the original theme sources are not
-redistributed here.
+Calmly is licensed under the MIT License. The deck is a Mosaic/Typst re-creation of its appearance; the original theme sources are not redistributed here.
 
 > MIT License
 >
@@ -108,14 +83,11 @@ redistributed here.
 
 ## Simpres Touying template
 
-The `docs-src/examples/decks/simpres/` deck re-creates the visual design of the
-**Simpres** presentation template for Touying by thy0s:
+The `docs-src/examples/decks/simpres/` deck re-creates the visual design of the **Simpres** presentation template for Touying by thy0s:
 
 - <https://github.com/thy0s/touying-simpres>
 
-Simpres is licensed under the MIT License. The deck is a Mosaic/Typst
-re-creation of its appearance; the original template sources are not
-redistributed here.
+Simpres is licensed under the MIT License. The deck is a Mosaic/Typst re-creation of its appearance; the original template sources are not redistributed here.
 
 > MIT License
 >
@@ -141,14 +113,11 @@ redistributed here.
 
 ## Clean Touying and Quarto theme
 
-The `docs-src/examples/decks/quarto-clean/` deck re-creates the visual design of
-the **Clean** theme for Touying and Quarto by Kazuharu Yanagimoto:
+The `docs-src/examples/decks/quarto-clean/` deck re-creates the visual design of the **Clean** theme for Touying and Quarto by Kazuharu Yanagimoto:
 
 - <https://github.com/kazuyanagimoto/quarto-clean-typst>
 
-Clean is licensed under the MIT License. The deck is a Mosaic/Typst
-re-creation of its appearance; the original theme sources are not
-redistributed here.
+Clean is licensed under the MIT License. The deck is a Mosaic/Typst re-creation of its appearance; the original theme sources are not redistributed here.
 
 > MIT License
 >
@@ -174,7 +143,6 @@ redistributed here.
 
 ## Okabe-Ito palette
 
-The explicit color arrays in the grid and incremental tutorial examples use
-the Color Universal Design palette developed by Masataka Okabe and Kei Ito:
+The explicit color arrays in the grid and incremental tutorial examples use the Color Universal Design palette developed by Masataka Okabe and Kei Ito:
 
 - <https://jfly.uni-koeln.de/color/>
