@@ -129,7 +129,8 @@
     "slide-layout-fields.typ",
     "slide-layout-positional.typ",
     "layouts-positions.typ",
-    "layouts-title-fit-overflow.typ"
+    "layouts-title-fit-overflow.typ",
+    "layouts-title-measure.typ"
   ],
   "responsive": [
     "layouts-title-responsive.typ"

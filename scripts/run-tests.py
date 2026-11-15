@@ -1046,6 +1046,27 @@ def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
     for page in (9, 10, 11, 12):
         require_contains(TMP / f"mosaic-layouts-positions-{page}.svg", "#12ab34")
 
+    # A fitted title measures as what it occupies: non-empty and inside the
+    # slide for every placed variant, and at its natural, taller-than-the-slide
+    # size where it was never placed.
+    result = command(
+        [typst, "eval", "--root", ".", "query(<title-measure>).map(it => it.value)", "--in", "tests/layouts-title-measure.typ"],
+        capture=True,
+    )
+    measurements = json.loads(result.stdout)
+    if len(measurements) != 9:
+        raise TestFailure(f"title measure: expected 9 measurements, found {len(measurements)}")
+    for record in measurements:
+        height, region = record["height"], record["region"]
+        if record["placed"] and not 0 < height <= region:
+            raise TestFailure(
+                f"title measure: placed {record['variant']} measures {height}pt in a {region}pt slide"
+            )
+        if not record["placed"] and height <= region:
+            raise TestFailure(
+                f"title measure: unplaced {record['variant']} measures {height}pt, not its natural size"
+            )
+
 def negative_expectations() -> dict[str, str]:
     expectations: dict[str, str] = {}
     path = TESTS / "invalid/expected-diagnostics.txt"
