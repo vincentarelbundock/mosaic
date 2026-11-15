@@ -70,6 +70,37 @@
   block(width: 100%, height: 100%, body),
 )
 
+// The ground of an inverted slide in the `slides` output, painted across the
+// whole page rather than the content area. With the default zero margin the
+// two coincide; a deck that reclaims a page margin through `setup(margin:)`
+// would otherwise show the deck canvas as a border around the inverted
+// frame. The page offers no per-slide fill a scoped rule could set without
+// breaking the page run, so the ground is a placed rectangle pulled back to
+// the page origin, wherever the margins put the frame.
+#let inverted-ground(fill) = place(top + left, context {
+  if type(page.width) != length or type(page.height) != length {
+    return
+  }
+  let origin = here().position()
+  place(
+    top + left,
+    dx: -origin.x,
+    dy: -origin.y,
+    rect(width: page.width, height: page.height, fill: fill),
+  )
+})
+
+// The content a layout value carries in its own fields: a subtitle, a date, a
+// title. A resolver may render such a field from inside a `context` block or
+// a cell affix, where no content walk can see it, so a speaker note written
+// there (an automatic section tagline is the `subtitle` field) is read from
+// the field itself rather than from the resolved grid.
+#let layout-field-content(layout) = if is-layout(layout) {
+  layout.fields.values().filter(value => type(value) == content)
+} else {
+  ()
+}
+
 #let slide-frame(
   body,
   width: 100%,
@@ -316,7 +347,7 @@
   } else {
     requested-layout
   }
-  validate(resolved-grid)
+  _ = validate(resolved-grid)
   // Automatic heading slides name the cells the standard layouts carry —
   // "header" and "body" on content slides, "section" on section slides — but
   // a configured layout may not have them all: a "body" content variant has
@@ -411,8 +442,10 @@
   // Whether this slide holds any note at all, asked once rather than once per
   // frame. Note extraction is four content walks per frame, and a deck with no
   // notes would otherwise pay all of them on every page.
+  let field-content = layout-field-content(requested-layout)
   let any-notes = (
     fixed-grid-has-note(resolved-grid)
+      or has-note(field-content)
       or has-note(contents.values())
       or has-note(planes.background)
       or has-note(planes.foreground)
@@ -454,8 +487,12 @@
     let background-content = render-plane(planes.background, step, "background")
     let foreground-content = render-plane(planes.foreground, step, "foreground")
     let notes = if not any-notes { () } else {
+      // A field a resolver placed in fixed cell content is found by the grid
+      // walk already; only the notes that walk could not reach are added.
+      let grid-notes = fixed-grid-notes-at(resolved-grid, step)
       (
-        fixed-grid-notes-at(resolved-grid, step)
+        grid-notes
+          + notes-at(field-content, step).filter(note => note not in grid-notes)
           + notes-at(contents.values(), step)
           + notes-at(planes.background, step)
           + notes-at(planes.foreground, step)
@@ -487,6 +524,9 @@
       )) <mosaic-speaker-notes>
     ]))
     if output == "slides" {
+      if command.invert {
+        inverted-ground(settings.colors.canvas)
+      }
       slide-frame(frame, fill: if command.invert { settings.colors.canvas } else { none })
     } else if output == "split" {
       // Always an explicit fill: the page ground under a split page is the

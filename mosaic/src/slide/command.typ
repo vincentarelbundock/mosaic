@@ -128,7 +128,11 @@
 ///
 /// Use one of the two forms, never both on the same slide:
 ///
-/// - Positional bodies, filling cells in depth-first layout order.
+/// - Positional bodies, filling cells in depth-first layout order. A cell that
+///   already has a deck default from `setup(cells:)` is passed over unless
+///   the slide supplies a body for every cell, and a cell named `header`
+///   always counts as having one. So `slide[A]` on a header-and-body layout
+///   fills the body, and `slide[A][B]` fills the header and then the body.
 /// - A `cells:` dictionary keyed by cell id, which is order-independent and
 ///   lets a slide skip cells.
 ///
@@ -201,8 +205,8 @@
   /// from `setup`, `none` suppresses it.
   /// -> auto | content | none
   foreground: auto,
-  /// Positional cell bodies in depth-first layout order, plus any named
-  /// arguments forwarded as fields of the selected layout.
+  /// Positional cell bodies in depth-first layout order, each one content,
+  /// plus any named arguments forwarded as fields of the selected layout.
   /// -> arguments
   ..bodies
 ) = {
@@ -216,6 +220,17 @@
     }
     layout = bodies.first()
     bodies = bodies.slice(1)
+  }
+  // Checked here, where the author wrote them: an untyped body would
+  // otherwise surface as a raw join error deep in the frame transform, and
+  // `none` would compile to a silently blank cell.
+  for body in bodies {
+    if type(body) != content {
+      fail(
+        "slide positional bodies must be content, received "
+          + str(type(body)),
+      )
+    }
   }
   // The selection is validated first so an unknown layout name reports itself
   // rather than failing the field lookup that follows.

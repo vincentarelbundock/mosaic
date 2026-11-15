@@ -90,7 +90,7 @@
 }
 
 #let info(grid, id) = {
-  validate(grid)
+  _ = validate(grid)
   let inspected = inspect-cell(grid, cell-position(grid, id))
   (
     id: id,
@@ -101,11 +101,11 @@
 }
 
 #let count(grid) = {
-  validate(grid)
+  _ = validate(grid)
   count-cells(grid)
 }
 
 #let bodies(grid) = {
-  validate(grid)
+  _ = validate(grid)
   body-cell-ids(grid).len()
 }

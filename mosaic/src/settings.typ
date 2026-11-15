@@ -170,19 +170,27 @@
   (title: title, subtitle: subtitle, authors: authors, date: date)
 }
 
-#let validate-colors(colors) = {
-  if (
-    type(colors) != dictionary
-      or colors.keys().sorted() != light.keys().sorted()
-      or not colors.values().all(value => type(value) == color)
-  ) {
-    fail("invalid internal presentation colors")
+// A complete palette: every semantic color `light` declares, nothing else, and
+// a color for each. A theme definition's `colors` reaches this check as its
+// author wrote it, so each failure names the key at fault.
+#let validate-colors(colors, name) = {
+  if type(colors) != dictionary {
+    fail(name + " must be a dictionary")
+  }
+  _ = validate-keys(colors, light, name)
+  for key in light.keys() {
+    if key not in colors {
+      fail(name + " is missing " + repr(key))
+    }
+    if type(colors.at(key)) != color {
+      fail(name + " " + key + " must be a color")
+    }
   }
   colors
 }
 
 #let resolve-colors(base, overrides) = {
-  let base = validate-colors(base)
+  let base = validate-colors(base, "theme colors")
   if type(overrides) != dictionary {
     fail("setup colors must be a dictionary")
   }
@@ -234,7 +242,7 @@
   notes: (:),
   overflow: "off",
 ) = {
-  let colors = validate-colors(colors)
+  let colors = validate-colors(colors, "setup colors")
   // Every slide layout can consult the header default, so it is injected
   // here, where the other field defaults already live.
   let cells = (header: none) + validate-cells(cells)

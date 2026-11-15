@@ -2,7 +2,7 @@
 #import "../shared.typ": tag, fail, validate-keys
 #import "model.typ": (
   plane-ids, is-node, is-track, axis-name,
-  is-stroke, is-track-size,
+  is-inset, is-stroke, is-track-size,
 )
 #import "validation.typ": validate
 
@@ -107,6 +107,15 @@
     fail("cell accepts only a cell id, optional fixed content, and inset")
   }
   let id = validate-cell-id(identifier, id, "cell")
+  if content != none and type(content) != std.content {
+    fail("cell content must be content or none")
+  }
+  if inset != auto and not is-inset(inset) {
+    fail(
+      "cell inset must be auto, a length, or a dictionary of sides with "
+        + "length values",
+    )
+  }
   styled-cell(
     id: id,
     content: content,
@@ -204,7 +213,6 @@
     children: parts.map(part => part.at(1)),
   )
   validate(result)
-  result
 }
 
 /// Splits the available width, arranging its children as columns.
@@ -238,7 +246,7 @@
   gutter: 0pt,
   /// Stroke drawn along each interior column boundary, centered in the gutter.
   /// A gutter of `0pt` leaves the stroke sitting directly between the columns.
-  /// -> none | stroke
+  /// -> none | length | color | gradient | tiling | stroke | dictionary
   stroke: none,
   /// The columns: string cell ids, Mosaic grid nodes, or values wrapped with
   /// `track`. At least one is required.
@@ -270,7 +278,7 @@
   /// -> auto | length | ratio | relative | fraction
   gutter: 0pt,
   /// Stroke drawn along each interior row boundary, centered in the gutter.
-  /// -> none | stroke
+  /// -> none | length | color | gradient | tiling | stroke | dictionary
   stroke: none,
   /// The rows: string cell ids, Mosaic grid nodes, or values wrapped with
   /// `track`. At least one is required.

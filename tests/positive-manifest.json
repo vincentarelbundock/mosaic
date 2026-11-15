@@ -80,7 +80,11 @@
     "theme-facade-metropolis.typ",
     "theme-facades.typ",
     "theme-spacing-merge.typ",
-    "theme-default.typ"
+    "theme-default.typ",
+    "slide-invert-margin.typ",
+    "headings-style-escape.typ",
+    "headings-constructed-depth.typ",
+    "speaker-notes-layout-fields.typ"
   ],
   "layout": [
     "fit.typ",

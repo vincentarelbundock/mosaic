@@ -70,7 +70,7 @@
 /// -> dictionary
 #let info() = {
   let record = _state.deck-state.get()
-  if record == none or record.settings == none {
+  if record == none {
     _shared.fail("info() requires a deck; apply setup before reading it")
   }
   // The declared metadata and the live position, in one record. The position
