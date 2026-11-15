@@ -29,7 +29,7 @@
       text(size: 1.25em, weight: "bold")[Any content],
     )
   ],
-)[
+)[][
   #block(width: 52%)[
     == Place arbitrary objects
 

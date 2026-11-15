@@ -66,7 +66,7 @@
     ]
   ]
 
-  m.slide(invert: true)[
+  m.slide(invert: true)[][
     One inverted slide for the headline number: canvas and text swap within
     the same palette, and the accent and status colors carry over unchanged.
 

@@ -19,14 +19,14 @@
 
 // The table is wider than the cell. `wrap: false` keeps its columns as written
 // and scales the whole block, instead of letting the table re-lay out narrower.
-#m.slide[
+#m.slide[][
   == Regression results
 
   #m.fit(wrap: false, estimates)
 ]
 
 // The other direction: display type scaled up until it fills the cell.
-#m.slide[
+#m.slide[][
   == Response rate
 
   #m.fit(grow: true)[42%]
