@@ -24,10 +24,11 @@ This applies wherever a layout or component takes a path: the `image:` argument 
 
 = Pictures in layouts <pictures-in-layouts>
 
-Three layouts are built around a picture: #link("../slides/image.html")[image], #link("../slides/title.html")[title], and #link("../slides/section.html")[section]. All three take the picture itself the same way, as `image:`. It is one of two things:
+Three layouts are built around a picture: #link("../slides/image.html")[image], #link("../slides/title.html")[title], and #link("../slides/section.html")[section]. All three take the picture itself the same way, as `image:`. It is one of three things:
 
-- A `path(..)`, when the file is all there is to say. The layout sizes and fits it to its region.
-- Content, when the picture needs more than its file: `m.components.image(path(..), fit: .., scrim: .., alt: ..)`, described in the sections below. Any other content works too, such as a drawing made in code.
+- A `path(..)`, for the common case where the file is all there is to say. The layout sizes and fits it to its region.
+- A dictionary, when the picture needs a scrim, a fit, or alt text: `(path: path(..), alt: .., fit: .., scrim: ..)`. The keys are described in the sections below.
+- Content, when you already have a picture element: the result of `m.components.image(..)`, or a drawing made in code.
 
 Where the picture goes is chosen by the layout's `variant:`, the same argument that selects every other arrangement a layout offers:
 
@@ -43,12 +44,12 @@ For a picture on one side, `tracks:` sizes it: one track size such as `40%` is t
 // A file, placed.
 #m.slide(layout: "image", variant: "right", image: path("fig/book.jpg"))[== Readings]
 
-// A picture that needs a scrim and a description is content.
+// A picture that needs a scrim and a description is a dictionary.
 #m.slide(
   layout: "image",
   variant: "full",
-  image: m.components.image(
-    path("fig/auditorium.jpg"),
+  image: (
+    path: path("fig/auditorium.jpg"),
     scrim: black.transparentize(45%),
     alt: "A full lecture hall seen from the stage",
   ),
@@ -164,14 +165,18 @@ Not every photograph needs a scrim. Many already contain a quiet region: a sky, 
 
 == Where a scrim can be specified
 
-A scrim is always the `scrim:` argument of `m.components.image()`, wherever the picture then goes: a cell, a #link("../slides/background.html")[background] or #link("../slides/foreground.html")[foreground] plane, or the `image:` argument of a layout:
+One spelling covers every place an image can appear.
+
+On `m.components.image()`, pass it as an argument, as above. That is the form to use for images in cells and for the planes described on the #link("../slides/background.html")[Background] and #link("../slides/foreground.html")[Foreground] pages.
+
+In the `title`, `section`, and `image` layouts, `scrim` is one of the keys of the picture dictionary, alongside `path`, `alt`, and `fit`:
 
 ```typ
 #m.slide(
   layout: "section",
   variant: "image-background",
-  image: m.components.image(
-    path("cover.webp"),
+  image: (
+    path: path("cover.webp"),
     scrim: black.transparentize(45%),
     alt: "Coastal city lights at night",
   ),

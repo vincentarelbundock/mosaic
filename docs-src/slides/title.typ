@@ -58,10 +58,7 @@ Five more variants set a compact title stack with a picture, and require an `ima
   #m.slide(
     layout: "title",
     variant: "image-background",
-    image: m.components.image(
-      path("cover.webp"),
-      scrim: black.transparentize(55%),
-    ),
+    image: (path: path("cover.webp"), scrim: black.transparentize(55%)),
   )
 ]
 ```
