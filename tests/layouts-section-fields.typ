@@ -27,20 +27,20 @@
 // A directional section cell fills its region like the plain one, so a
 // `set block(fill: ..)` rule on its label paints the region and not a strip
 // around the text.
-#for position in ("left", "right", "top", "bottom") {
+#for variant in ("image-left", "image-right", "image-top", "image-bottom") {
   let resolved = resolve-layout(
-    mosaic.layouts.section(variant: "image", position: position, image: dog),
+    mosaic.layouts.section(variant: variant, image: dog),
     make-settings(),
   )
   let style = grid-test.info(resolved, "section").cell.style
   assert(
     not style.at("content-sized", default: false),
-    message: position + " section cell must fill its region",
+    message: variant + " section cell must fill its region",
   )
 }
 #[
   #show label("mosaic-cell-section"): set block(fill: rgb("#fedcba"))
   #mosaic.slide(
-    layout: mosaic.layouts.section(variant: "image", position: "left", image: dog),
+    layout: mosaic.layouts.section(variant: "image-left", image: dog),
   )[Recolored]
 ]

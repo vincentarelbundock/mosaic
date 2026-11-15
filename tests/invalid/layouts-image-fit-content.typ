@@ -2,6 +2,6 @@
 
 #mosaic.layouts.image(
   mosaic.components.image(path("/docs-src/assets/images/dog.webp")),
-  position: "left",
+  variant: "left",
   fit: "contain",
 )

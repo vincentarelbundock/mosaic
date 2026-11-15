@@ -24,8 +24,8 @@
     caption: none,
     fit: auto,
     image: none,
-    position: "body",
     tracks: auto,
+    variant: "figure",
   )),
 )
 

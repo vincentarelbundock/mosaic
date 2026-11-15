@@ -979,7 +979,7 @@ def run_core(typst: str, sources: list[str]) -> None:
     # a `=` heading whose tagline holds the pause.
     heading_frames = (
         ("section-heading-frames", "Sectionword", (
-            "theme", "automatic", "plain", "rule", "numeral", "baseline", "toc", "image",
+            "theme", "automatic", "plain", "rule", "numeral", "baseline", "toc", "image-left",
         )),
         ("title-heading-frames", "Titleword", (
             "theme", "centered", "bordered", "ruled", "kicker", "panel", "academic", "image",
@@ -1145,14 +1145,14 @@ def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
     for page, color in ((2, "#a1b2c3"), (3, "#654321"), (4, "#fedcba")):
         require_contains(TMP / f"mosaic-layouts-section-fields-{page}.svg", color)
 
-    # Positions: the title stack over a background picture follows a recolored
+    # Pictures: the title stack over a background picture follows a recolored
     # cell; suppressed fields leave the page without them; the panel rule is a
     # mark `rule: false` removes; an explicit accent replaces the semantic one
     # on the baseline hairline; and <mosaic-section-title> reaches the visible
     # title in every section variant.
-    typst_compile(typst, "layouts-positions.typ", TMP / "mosaic-layouts-positions-{p}.svg", "--format", "svg")
-    require_contains(TMP / "mosaic-layouts-positions-1.svg", "#fedcba")
-    require_contains(pdf_page_text("layouts-positions", 1), "ZQDECK")
+    typst_compile(typst, "layouts-pictures.typ", TMP / "mosaic-layouts-pictures-{p}.svg", "--format", "svg")
+    require_contains(TMP / "mosaic-layouts-pictures-1.svg", "#fedcba")
+    require_contains(pdf_page_text("layouts-pictures", 1), "ZQDECK")
     suppressed = {
         2: (("ZQDECK",), ("ZQSUB", "ZQAUTHOR", "ZQDATE")),
         3: (("ZQAUTHOR",), ("ZQDECK", "ZQSUB", "ZQDATE")),
@@ -1160,16 +1160,16 @@ def run_layout(typst: str, sources: list[str], responsive: list[str]) -> None:
         5: (("ZQDECK", "ZQSUB", "ZQAUTHOR", "ZQDATE"), ()),
     }
     for page, (absent, present) in suppressed.items():
-        text = pdf_page_text("layouts-positions", page)
+        text = pdf_page_text("layouts-pictures", page)
         for token in absent:
             require_contains(text, token, absent=True)
         for token in present:
             require_contains(text, token)
-    require_contains(TMP / "mosaic-layouts-positions-6.svg", "#13579b")
-    require_contains(TMP / "mosaic-layouts-positions-7.svg", "#13579b", absent=True)
-    require_contains(TMP / "mosaic-layouts-positions-8.svg", 'stroke="#a1b2c3"')
+    require_contains(TMP / "mosaic-layouts-pictures-6.svg", "#13579b")
+    require_contains(TMP / "mosaic-layouts-pictures-7.svg", "#13579b", absent=True)
+    require_contains(TMP / "mosaic-layouts-pictures-8.svg", 'stroke="#a1b2c3"')
     for page in (9, 10, 11, 12):
-        require_contains(TMP / f"mosaic-layouts-positions-{page}.svg", "#12ab34")
+        require_contains(TMP / f"mosaic-layouts-pictures-{page}.svg", "#12ab34")
 
     # A fitted title measures as what it occupies: non-empty and inside the
     # slide for every placed variant, and at its natural, taller-than-the-slide

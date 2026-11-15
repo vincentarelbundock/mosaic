@@ -6,11 +6,23 @@
 #import "support.typ": track-children, image-content
 
 
-// Where a picture sits, in one vocabulary for every layout that carries one.
-// The four directional positions split the slide between a full-bleed picture
-// and the text; `background` paints the picture behind the text instead.
+// Where a picture sits, as the resolvers reason about it. The four
+// directional positions split the slide between a full-bleed picture and the
+// text; `background` paints the picture behind the text instead. Only the
+// title layout exposes these words as a `position` field. The section and
+// image layouts name the same places through their variants, and map a
+// variant to its position before composing.
 #let directional-positions = ("left", "right", "top", "bottom")
 #let image-positions = directional-positions + ("background",)
+
+// The section layout's picture variants and the position each one names.
+#let section-image-positions = (
+  "image-left": "left",
+  "image-right": "right",
+  "image-top": "top",
+  "image-bottom": "bottom",
+  "image-background": "background",
+)
 
 // Two spellings, because authors ask two different questions. An array of 2 is
 // visual order — "what occupies each side" — and must be mirrored by hand when
@@ -39,19 +51,18 @@
   tracks
 }
 
-// `auto` is the side-by-side composition every layout with a picture shares.
+// `auto` is the side-by-side composition.
 #let resolve-image-position(fields) = if fields.position == auto {
   "left"
 } else {
   fields.position
 }
 
-// The picture's whole field family, validated in one place for the layouts
-// whose `image` variant composes text beside or over a photograph (title,
-// section). The variant states the text design and nothing about the picture,
-// so the three fields travel together: the picture is required exactly when
-// the variant uses one, `position` places it, and `tracks` sizes the split of
-// a directional position.
+// The title layout's picture fields, validated in one place. Its `image`
+// variant composes the stack beside or over a photograph, so the three fields
+// travel together: the picture is required exactly when the variant uses one,
+// `position` places it, and `tracks` sizes the split of a directional
+// position.
 //
 // A picture does not select the variant by itself. The resolver sees one
 // merged record, in which a field written on the slide and one inherited from
@@ -89,6 +100,38 @@
     if fields.tracks != auto {
       fail(name + " tracks apply only to variant \"image\"" + add-image-variant)
     }
+  }
+  fields
+}
+
+// The section layout's picture fields. Its picture variants name the place
+// themselves, so there is no `position` to check: the picture is required
+// exactly when the variant is one of them, and `tracks` sizes the split of the
+// four directional ones. As above, a picture does not select a variant by
+// itself, and the message names the variants to pick from.
+#let pick-section-image-variant = (
+  "; pick a picture variant: " + section-image-positions.keys().map(repr).join(", ", last: ", or ")
+)
+
+#let validate-section-image-fields(fields, name) = {
+  let position = section-image-positions.at(fields.variant, default: none)
+  if position == none {
+    if fields.image != none {
+      fail(
+        name + " variant " + repr(fields.variant) + " does not use image"
+          + pick-section-image-variant,
+      )
+    }
+  } else {
+    if fields.image == none {
+      fail(name + " variant " + repr(fields.variant) + " requires image")
+    }
+    _ = validate-image(fields.image, name + " image")
+  }
+  if position in directional-positions {
+    _ = validate-directional-tracks(fields.tracks, name + " tracks")
+  } else if fields.tracks != auto {
+    fail(name + " tracks apply only to directional image variants")
   }
   fields
 }
