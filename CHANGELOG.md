@@ -26,6 +26,7 @@ This version tightens the public API and breaks several older spellings to get t
 
 ### New
 
+- Breakable slides: `slide(breakable: true)`, or `setup(breakable: true)` for the whole deck, lets a content slide whose body outgrows the frame continue onto continuation pages, each repeating the header, footer, background, and foreground, all counted as one logical slide. It is off by default. A slide breaks only as a content slide in one step, in the `slides` output; the deck-wide switch leaves every other slide a fixed frame, and an explicit `breakable: true` there is an error. Thanks to [@nikhilweee](https://github.com/nikhilweee) for the request ([#13](https://github.com/vincentarelbundock/mosaic/issues/13)).
 - Positional bodies and `cells:` combine on one slide: a cell named in `cells:` is filled from it, and the blocks fill the rest in order, as in `slide(cells: (footer: [Source: OECD]))[== Results][Body]`. 0.0.1 rejected mixing the two.
 - `setup(font: .., base-size: ..)` works under every theme. A custom theme that declares neither option gets `font: auto` and `base-size: 24pt`, so it still accepts both; a theme states its own values under `options`, as before. A theme's headings are multiples of the base size, so the deck scales with it.
 - `themes.decorate-heading` declares a heading rule that rebuilds the heading (`show heading: it => ..`) so that it holds on every frame of an incremental slide.

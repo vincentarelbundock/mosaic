@@ -43,6 +43,7 @@
   spacing: (:),
   notes: (:),
   overflow: "off",
+  breakable: false,
   layouts: standard-layouts,
   headings: default-heading-policy,
   handout: false,
@@ -108,6 +109,7 @@
     spacing: spacing,
     notes: notes,
     overflow: overflow,
+    breakable: options.breakable,
     font: font,
     base-size: base-size,
   )

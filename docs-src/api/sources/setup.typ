@@ -210,6 +210,16 @@
   ///   shipping a clipped slide.
   /// -> str
   overflow: "off",
+  /// Whether content slides continue onto continuation pages when their body
+  /// outgrows the frame. Each continuation page repeats the slide's header,
+  /// footer, and planes, and belongs to the same logical slide.
+  ///
+  /// The deck-wide switch applies to every slide that can break: a content
+  /// slide in one step, in the `slides` output. Other slides stay fixed frames.
+  /// `slide(breakable:)` overrides it for one slide. See
+  /// #link("../presenting/overflow.html#breakable-slides")[Breakable slides].
+  /// -> bool
+  breakable: false,
   /// Partial named-layout overrides. Omitted names keep the active theme's
   /// layout.
   ///

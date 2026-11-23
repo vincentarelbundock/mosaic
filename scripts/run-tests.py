@@ -667,6 +667,25 @@ def run_core(typst: str, sources: list[str]) -> None:
     # Fixtures that were compile-only, each given the one output fact its name
     # promises. A lone slide is one page, with no leading blank.
     require_contains(pdf_info("single"), "Pages:           1")
+    # Breakable slides. The deck-wide switch paginates the references slide
+    # over three pages: title, Before, References x3, Stepped x2 (a stepped
+    # slide stays fixed), After. Each continuation page repeats the header
+    # and the footer, and the footer keeps the one logical slide number.
+    require_contains(pdf_info("breakable"), "Pages:           8")
+    for page in (3, 4, 5):
+        text = pdf_page_text("breakable", page)
+        require_contains(text, "References")
+        require_contains(text, "Footer of slide 2")
+    require_contains(pdf_page_text("breakable", 3), "Entry 1 of")
+    require_contains(pdf_page_text("breakable", 5), "Entry 18 of")
+    require_contains(pdf_page_text("breakable", 8), "Footer of slide 4")
+    # One explicit breakable slide in a deck that leaves the default off.
+    require_contains(pdf_info("breakable-slide"), "Pages:           3")
+    require_contains(pdf_page_text("breakable-slide", 2), "Long")
+    require_contains(pdf_page_text("breakable-slide", 2), "Line 12 of")
+    require_contains(pdf_page_text("breakable-slide", 3), "Short")
+    # The printed outputs keep one fixed frame per slide.
+    require_contains(pdf_info("breakable-printed"), "Pages:           2")
     # A two-column content layout sets the automatic heading beside the body,
     # so the header cell and the body cell share a baseline.
     require_same_line(pdf_text("headings-content-layout"), "Heading in the", "Body in the")

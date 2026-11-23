@@ -20,6 +20,7 @@
   layout: auto,
   numbered: auto,
   invert: false,
+  breakable: auto,
   automatic: false,
   cells: (:),
   background: auto,
@@ -31,6 +32,7 @@
   layout: layout,
   numbered: numbered,
   invert: invert,
+  breakable: breakable,
   automatic: automatic,
   cells: cells,
   background: background,
@@ -217,6 +219,22 @@
 /// `mosaic.layouts.*` value the constructor is already at hand, so pass the
 /// fields to it instead.
 ///
+/// *Breakable slides*
+///
+/// `breakable: true` lets a body that outgrows the frame continue onto
+/// continuation pages, each repeating the header, the footer, and the planes:
+///
+/// ```typ
+/// #mosaic.slide(breakable: true)[== References][
+///   #bibliography("refs.bib", title: none)
+/// ]
+/// ```
+///
+/// Only a content slide in one step breaks, and only in the `slides` output;
+/// asking for it anywhere else is an error that names the reason. `auto`
+/// follows `setup(breakable:)`, which breaks the slides that can and leaves the
+/// others fixed.
+///
 /// -> content
 #let slide(
   /// Which layout resolves this slide: `auto` for the configured content
@@ -240,6 +258,11 @@
   /// values.
   /// -> bool
   invert: false,
+  /// Whether a body that outgrows the slide continues onto continuation
+  /// pages. `auto` follows `setup(breakable:)`; see "Breakable slides" above
+  /// for which slides can break.
+  /// -> auto | bool
+  breakable: auto,
   /// Cell bodies keyed by cell id. A cell named here is not filled
   /// positionally.
   /// -> dictionary
@@ -292,6 +315,9 @@
   if type(invert) != bool {
     fail("slide invert must be a boolean")
   }
+  if breakable != auto and type(breakable) != bool {
+    fail("slide breakable must be auto or a boolean")
+  }
   if type(cells) != dictionary {
     fail("slide cells must be a dictionary")
   }
@@ -309,6 +335,7 @@
     layout: layout,
     numbered: numbered,
     invert: invert,
+    breakable: breakable,
     cells: cells,
     background: background,
     foreground: foreground,

@@ -13,6 +13,10 @@ bad-split-child|columns/rows children must be string cell IDs or Mosaic grid nod
 bad-split-gutter|columns gutter must be a native Typst track size
 bad-split-track-size|track size must be auto, a fixed or relative length, or a fractional length
 bad-state|before must be one of "visible", "hidden", "dimmed", "removed", received "ghosted"
+breakable-grid|slide breakable: the slide's grid must be unruled rows of auto tracks around one fractional track
+breakable-steps|slide breakable: a breakable slide cannot reveal in steps
+breakable-title|slide breakable: only content slides can break
+breakable-type|slide breakable must be auto or a boolean
 bare-track-wrapper|slide layout must be a Mosaic grid tree or layout
 cell-id-both|cell id must be passed positionally or through id:, not both
 cell-surface-ownership|cell accepts only a cell id, optional fixed content, and inset
@@ -74,6 +78,7 @@ reserved-cell-id|cell id "background" is reserved for the background plane
 reserved-cell-id-foreground|cell id "foreground" is reserved for the foreground plane
 setup-authors-type|setup author 1 must be a name or created with author()
 setup-auto-slide-removed|setup does not accept "auto-slide"
+setup-breakable-type|setup breakable must be a boolean
 setup-cells-empty-id|setup cells cell id must be non-empty
 setup-cells-type|setup cells must be a dictionary
 setup-cells-value|setup cells for "footer" must be content, a string, or none
