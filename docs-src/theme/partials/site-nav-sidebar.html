@@ -21,7 +21,7 @@
                     {% for section in site.sidebar_sections %}
                     {% if section.items %}
                     {% if section.title and site.sidebar_fold %}
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section"{% if section.active %} open{% endif %}>
                         <summary>{{ section.title }}</summary>
                         <ul>
                             {% for item in section.items %}
