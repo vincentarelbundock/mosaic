@@ -187,6 +187,7 @@
   vertical: false,
   shrink: (width: false, height: false),
   compact: false,
+  flow: false,
 ) = {
   // A styleless cell is a container the tree produced, not one an author named.
   // Its content is measured again by every cell inside it, so observing it too
@@ -272,8 +273,13 @@
   // so cell typography rules do not scale cell geometry.
   grid.cell(inset: 0pt, context {
     let base = text.size
+    // A flowing cell (see `render-breakable`) takes its content's height so
+    // it can break, but it is still the slide's body: its `auto` inset is
+    // the one the fixed frame gives it, so the fit check measures what the
+    // fixed frame draws and the continuation pages keep the same padding.
+    let sized = content-sized or ((auto-height or shrink.height) and not flow)
     let inset = if inset == auto {
-      configured-inset(content-sized: region-height == auto or compact)
+      configured-inset(content-sized: sized or compact)
     } else {
       inset
     }
@@ -370,6 +376,7 @@
   compact: false,
   child-compact: auto,
   dimmed: false,
+  flow: false,
 ) = {
   let measuring = shrink.width or shrink.height
   let child-shrink = shrink
@@ -391,6 +398,7 @@
       slide: slide,
       compact: child-compact,
       dimmed: dimmed,
+      flow: flow,
     )
     let sized = if removed { full } else {
       let probe = render-node(
@@ -402,6 +410,7 @@
         shrink: child-shrink,
         compact: child-compact,
         dimmed: dimmed,
+        flow: flow,
       ).at(0)
       layout(region => {
         let natural = measure(probe, width: region.width)
@@ -420,6 +429,7 @@
       shrink: child-shrink,
       compact: child-compact,
       dimmed: dimmed,
+      flow: flow,
     )
   }
   if removed {
@@ -436,6 +446,7 @@
     vertical: along != "width",
     shrink: child-shrink,
     compact: child-compact,
+    flow: flow,
   )
 }
 
@@ -476,6 +487,7 @@
   shrink: (width: false, height: false),
   compact: false,
   dimmed: false,
+  flow: false,
 ) = {
   if node.kind == "on" {
     let state = status(
@@ -497,6 +509,7 @@
       shrink: shrink,
       compact: compact,
       dimmed: dimmed or state == "dimmed",
+      flow: flow,
     )
     // A split is finished content, so the state wraps it here. A cell is
     // not wrapped yet: the state travels with it to `render-cell`, which
@@ -539,6 +552,7 @@
         shrink: shrink,
         compact: compact,
         dimmed: dimmed,
+        flow: flow,
       )
       if content != none {
         rendered.push(content)
@@ -622,7 +636,12 @@
 // is refused too: the rules would have to be redrawn around repeated rows,
 // and no built-in content layout draws them.
 #let breakable-track(node) = {
-  if node.kind != "split" or node.axis == "width" or node.stroke != none {
+  if (
+    node.kind != "split"
+      or node.axis == "width"
+      or node.stroke != none
+      or type(node.gutter) == fraction
+  ) {
     return none
   }
   let tracks = resolved-tracks(node)
@@ -646,10 +665,15 @@
 // at the foot of the frame there too.
 //
 // `under` and `over` are the full-frame planes, already sized by the caller.
-// They ride the repeated rows so they reach every page: `under` is placed
-// from the top of the first header row, before anything else draws, and
-// `over` from the bottom of the last footer row, after the body. A frame with
-// no header or footer gets an empty row to carry them.
+// They ride zero-height rows at the top of the header and the bottom of the
+// footer, so they reach every page: `under` is placed before anything else
+// draws, and `over` after the body.
+//
+// The split's gutter is laid out as explicit rows between its own tracks,
+// not as `row-gutter`, so the plane rows and the slack row add no gap the
+// fixed frame lacks. The gap between the last header row and the body
+// repeats with the header, and the gap above the first footer row with the
+// footer.
 //
 // Overflow observation is off: the flowing cell has no fixed region to
 // overflow, and the repeated rows size to their content.
@@ -665,26 +689,38 @@
     path: "grid." + str(position),
     slide: slide,
     ..if position == index {
-      (shrink: (width: false, height: true), child-compact: false)
+      (shrink: (width: false, height: true), child-compact: false, flow: true)
     },
   )
-  let above = range(index).map(row).filter(cell => cell != none)
-  let below = range(index + 1, tracks.len()).map(row).filter(cell => cell != none)
+  let gap = node.gutter
+  let gapped = gap != 0pt
+  let spacer = grid.cell(inset: 0pt, [])
+  // Rows as (size, cell) pairs, so the row sizes and the cells cannot drift.
+  let stack(cells) = {
+    let result = ()
+    for (position, cell) in cells.enumerate() {
+      if gapped and position > 0 { result.push((gap, spacer)) }
+      result.push((auto, cell))
+    }
+    result
+  }
+  let above = stack(range(index).map(row).filter(cell => cell != none))
+  let below = stack(range(index + 1, tracks.len()).map(row).filter(cell => cell != none))
   let body = row(index)
+  if gapped and above.len() > 0 { above.push((gap, spacer)) }
+  if gapped and below.len() > 0 { below.insert(0, (gap, spacer)) }
   if under != none {
-    above = (grid.cell(inset: 0pt, place(top + left, under)),) + above
+    above.insert(0, (auto, grid.cell(inset: 0pt, place(top + left, under))))
   }
   if over != none {
-    below.push(grid.cell(inset: 0pt, place(bottom + left, over)))
+    below.push((auto, grid.cell(inset: 0pt, place(bottom + left, over))))
   }
-  let rows = (auto,) * above.len() + (auto, 1fr) + (auto,) * below.len()
+  let middle = ((auto, if body == none { [] } else { body }), (1fr, spacer))
   grid(
     columns: (1fr,),
-    rows: rows,
-    row-gutter: node.gutter,
-    ..if above.len() > 0 { (grid.header(..above),) },
-    if body == none { [] } else { body },
-    [],
-    ..if below.len() > 0 { (grid.footer(..below),) },
+    rows: (above + middle + below).map(pair => pair.at(0)),
+    ..if above.len() > 0 { (grid.header(..above.map(pair => pair.at(1))),) },
+    ..middle.map(pair => pair.at(1)),
+    ..if below.len() > 0 { (grid.footer(..below.map(pair => pair.at(1))),) },
   )
 }

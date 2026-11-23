@@ -85,7 +85,7 @@ The continuation pages belong to one logical slide. `m.info().slide.number` repo
 
 A breakable slide has limits, each because the frame no longer has one fixed size:
 
-- *Content slides only.* The slide's grid must be a stack of rows, with one flowing row between header and footer rows sized to their content, which is what every built-in content layout builds. A title, section, or image slide does not break, nor does a custom grid of another shape or one that draws rules between its rows.
+- *Content slides only.* The slide's grid must be a stack of rows, with one flowing row between header and footer rows sized to their content, which is what every built-in content layout builds. A title, section, or image slide does not break, nor does a custom grid of another shape, one that draws rules between its rows, or one whose row gutter is a fraction.
 - *Columns break together.* On a content layout with several `columns:`, each column continues on the next page beside the others.
 - *One step.* A slide that reveals in steps (`m.steps.pause`, `m.steps`, or a grid `on` node) does not break, because every step would need its own run of pages.
 - *The `slides` output only.* The `speaker`, `notes`, and `split` outputs draw each frame as a fixed thumbnail, so there a breakable slide is an ordinary frame and its overflow is drawn past the edge.
