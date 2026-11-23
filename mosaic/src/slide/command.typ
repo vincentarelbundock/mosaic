@@ -230,8 +230,9 @@
 /// ]
 /// ```
 ///
-/// Only a content slide in one step breaks, and only in the `slides` output;
-/// asking for it anywhere else is an error that names the reason. `auto`
+/// Only a content slide in one step breaks; asking for it on any other slide
+/// is an error that names the reason. In the printed outputs (`speaker`,
+/// `notes`, `split`) a breakable slide is drawn as an ordinary frame. `auto`
 /// follows `setup(breakable:)`, which breaks the slides that can and leaves the
 /// others fixed.
 ///

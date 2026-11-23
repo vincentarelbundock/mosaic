@@ -703,6 +703,15 @@ def run_core(typst: str, sources: list[str]) -> None:
         footer = pdf_word_boxes("breakable-raw-grid", page)["Footmark"]
         if abs(footer[0] - fixed["Footmark"][0]) > 0.01:
             raise SystemExit(f"test failure: breakable-raw-grid page {page} footer at {footer[0]}, fixed frame at {fixed['Footmark'][0]}")
+    # A rows split nested in the flowing body: its first cell keeps the
+    # fixed frame's inset on the paginated slide. (The split between the
+    # nested rows is content-sized once the body flows, so only the first
+    # cell's position is comparable.)
+    require_contains(pdf_info("breakable-nested-grid"), "Pages:           4")
+    fixed_top = pdf_word_boxes("breakable-nested-grid", 1)["Upperstart"][0]
+    flowing_top = pdf_word_boxes("breakable-nested-grid", 2)["Upperstart"][0]
+    if abs(fixed_top - flowing_top) > 0.01:
+        raise SystemExit(f"test failure: breakable-nested-grid nested cell starts at {flowing_top}, fixed frame at {fixed_top}")
     # Planes and the inverted ground reach every continuation page: three
     # pages of the plain slide, then three of the inverted one, which alone
     # carry the page-sized rectangle in the inverted canvas color.

@@ -534,7 +534,8 @@
     let rendered = ()
     let tracks = ()
     let along = if node.axis == "width" { "width" } else { "height" }
-    let resolved = resolved-tracks(node).map(size => if (
+    let declared = resolved-tracks(node)
+    let resolved = declared.map(size => if (
       shrink.at(along) and type(size) == fraction
     ) { auto } else { size })
     for (index, child) in node.children.enumerate() {
@@ -551,6 +552,12 @@
         slide: slide,
         shrink: shrink,
         compact: compact,
+        // Inside a flowing body every fractional track turned `auto` only so
+        // the body can break; a cell there keeps the inset its declared track
+        // gives it in the fixed frame, so compactness reads the declared size.
+        ..if flow {
+          (child-compact: compact or (along == "height" and declared.at(index) == auto))
+        },
         dimmed: dimmed,
         flow: flow,
       )
