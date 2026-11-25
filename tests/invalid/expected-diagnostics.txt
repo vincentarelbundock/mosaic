@@ -13,6 +13,7 @@ bad-split-child|columns/rows children must be string cell IDs or Mosaic grid nod
 bad-split-gutter|columns gutter must be a native Typst track size
 bad-split-track-size|track size must be auto, a fixed or relative length, or a fractional length
 bad-state|before must be one of "visible", "hidden", "dimmed", "removed", received "ghosted"
+breakable-crowded|slide breakable: the cells repeated on every page fill the frame
 breakable-grid|slide breakable: the slide's grid must be unruled rows of auto tracks around one fractional track
 breakable-steps|slide breakable: a breakable slide cannot reveal in steps
 breakable-title|slide breakable: only content slides can break

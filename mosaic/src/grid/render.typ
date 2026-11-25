@@ -684,7 +684,20 @@
 //
 // Overflow observation is off: the flowing cell has no fixed region to
 // overflow, and the repeated rows size to their content.
-#let render-breakable(node, contents, step, slide: initial-slide, under: none, over: none) = {
+//
+// `repeated: true` returns only the rows every page repeats, with their gaps
+// toward the body: the caller measures them to make sure a page has room left
+// for the body. Rows that outgrow the page alone would be cut at the page edge
+// and repeated, cut the same way, on every page, so such a slide cannot break.
+#let render-breakable(
+  node,
+  contents,
+  step,
+  slide: initial-slide,
+  under: none,
+  over: none,
+  repeated: false,
+) = {
   let index = breakable-track(node)
   let tracks = resolved-tracks(node)
   let row(position) = render-child(
@@ -713,9 +726,16 @@
   }
   let above = stack(range(index).map(row).filter(cell => cell != none))
   let below = stack(range(index + 1, tracks.len()).map(row).filter(cell => cell != none))
-  let body = row(index)
   if gapped and above.len() > 0 { above.push((gap, spacer)) }
   if gapped and below.len() > 0 { below.insert(0, (gap, spacer)) }
+  if repeated {
+    return grid(
+      columns: (1fr,),
+      rows: (above + below).map(pair => pair.at(0)),
+      ..(above + below).map(pair => pair.at(1)),
+    )
+  }
+  let body = row(index)
   if under != none {
     above.insert(0, (auto, grid.cell(inset: 0pt, place(top + left, under))))
   }

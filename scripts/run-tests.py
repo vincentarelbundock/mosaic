@@ -679,6 +679,9 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(pdf_page_text("breakable", 3), "Entry 1 of")
     require_contains(pdf_page_text("breakable", 5), "Entry 18 of")
     require_contains(pdf_page_text("breakable", 8), "Footer of slide 4")
+    # Repeated rows that outgrow the frame keep the slide a fixed frame.
+    require_contains(pdf_info("breakable-crowded"), "Pages:           2")
+    require_contains(pdf_page_text("breakable-crowded", 2), "Afterward.")
     # One explicit breakable slide in a deck that leaves the default off.
     require_contains(pdf_info("breakable-slide"), "Pages:           3")
     require_contains(pdf_page_text("breakable-slide", 2), "Long")

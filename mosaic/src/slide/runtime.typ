@@ -571,7 +571,7 @@
         frame-grid,
         contents,
         step,
-        overflow: if breakable { "off" } else { settings.overflow },
+        overflow: settings.overflow,
         slide: slide,
       )
       #label("mosaic-slide")
@@ -610,12 +610,32 @@
       // ride its repeated rows instead, sized here to the frame the page
       // offers (see `render-breakable`), and an inverted slide's ground rides
       // with the background so every continuation page is inverted.
+      //
+      // The rows every page repeats must leave the body room on a page. When
+      // they do not, as when a lone positional body fills the header, the
+      // slide stays the ordinary frame, so its overflow is drawn and observed
+      // as on any fixed slide; an explicit `breakable: true` fails instead.
       let fixed = frame
       frame = [
         #show metadata: validate-frame-metadata
         #layout(region => {
+          let repeated = render-breakable(
+            frame-grid,
+            contents,
+            step,
+            slide: slide,
+            repeated: true,
+          )
+          let crowded = measure(repeated, width: region.width).height >= region.height
+          if crowded and command.breakable == true {
+            fail(
+              "slide breakable: the cells repeated on every page fill the"
+                + " frame and leave the flowing cell no room; note that a lone"
+                + " positional body fills the first cell, such as the header",
+            )
+          }
           let probe = render-breakable(frame-grid, contents, step, slide: slide)
-          if measure(probe, width: region.width).height <= region.height {
+          if crowded or measure(probe, width: region.width).height <= region.height {
             if command.invert {
               inverted-ground(settings.colors.canvas)
             }

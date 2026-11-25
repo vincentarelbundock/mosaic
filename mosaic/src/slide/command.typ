@@ -231,7 +231,10 @@
 /// ```
 ///
 /// Only a content slide in one step breaks; asking for it on any other slide
-/// is an error that names the reason. In the printed outputs (`speaker`,
+/// is an error that names the reason. Only the body breaks: the header and
+/// footer repeat on every page, so they must leave it room. A single
+/// positional body fills the header, the first cell, so write the body second
+/// or name it with `cells: (body: ..)`. In the printed outputs (`speaker`,
 /// `notes`, `split`) a breakable slide is drawn as an ordinary frame. `auto`
 /// follows `setup(breakable:)`, which breaks the slides that can and leaves the
 /// others fixed.
