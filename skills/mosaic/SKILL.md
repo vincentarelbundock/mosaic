@@ -135,6 +135,8 @@ Variants:
 
 Mosaic has no automatic shrink-to-fit for body content, by design: a deck whose type size is decided slide by slide loses the typographic scale that holds it together. An overflow means cut a bullet, split the slide, or pick a layout with more room. When one indivisible block is oversized (a wide table, a chart, a generated list), scale that block alone with `m.fit(my-table)`, which measures it against its region and scales geometrically. `m.fit(grow: true)[42%]` goes the other way, filling a cell with display type. A fitted block never overflows and so stops appearing in the overflow records, which is why it is for indivisible blocks rather than crowded slides. It also cannot contain `m.steps.pause`, `m.steps`, or `m.note`: measuring hides the body from the runtime's walk, so those would be lost. `m.fit` raises an error rather than dropping them; keep them outside the fitted block. Prose too tall for its cell is offered a wider measure before it is scaled, so fitted text fills the cell's width.
 
+Content that is long by nature, such as a bibliography, can break instead: `m.slide(breakable: true)[== References][#bibliography(..)]` continues the body onto continuation pages that repeat the header, footer, and planes and count as one logical slide, and `setup(breakable: true)` does the same deck-wide. Only a content slide in one step breaks: an explicit `breakable: true` on any other slide is an error, while the deck-wide switch leaves those slides fixed. Only the body breaks; the header and footer repeat on every page and must leave it room, so give the body as the second block (a single block fills the header) or through `cells: (body: ..)`. The printed outputs (`speaker`, `notes`, `split`) draw every slide as an ordinary frame. Text breaks between lines and lists or tables between rows; an image or fitted block taller than the page still overflows.
+
 A direct `m.layouts.content/title/section(...)` value retains its semantic layout name. A raw custom grid uses ordinary content-slide semantics.
 
 To replace a named layout deck-wide, configure it once in setup; to reuse one for selected slides, bind it with `.with`:
@@ -270,6 +272,7 @@ Key setup arguments:
 - `handout: true`: emit only the final frame of each logical slide.
 - `output:`: `"slides"` (default), `"speaker"`, `"notes"`, or `"split"`.
 - `overflow:`: `"off"` (default) observes nothing, because measuring every cell on every frame roughly doubles the layout work a deck does. `"error"` fails the compile at the end of the deck and names every offending cell with its slide and frame, which is the mode to run once before presenting. `"record"` emits queryable `<mosaic-overflow-warning>` metadata for any cell whose content exceeds its allocation and keeps compiling; it prints nothing, since Typst gives a package no warning channel.
+- `breakable: true`: content slides whose body outgrows the frame continue onto continuation pages; off by default, and `slide(breakable:)` overrides it per slide.
 - `frozen-counters:` / `frozen-states:`: values that advance once per logical slide instead of once per frame.
 
 Do not introduce a separate footer, logo, background, or foreground feature API: recurring named-cell content (`cells:`) and the `background:` / `foreground:` planes own those jobs.

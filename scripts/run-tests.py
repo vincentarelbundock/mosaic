@@ -667,6 +667,66 @@ def run_core(typst: str, sources: list[str]) -> None:
     # Fixtures that were compile-only, each given the one output fact its name
     # promises. A lone slide is one page, with no leading blank.
     require_contains(pdf_info("single"), "Pages:           1")
+    # Breakable slides. The deck-wide switch paginates the references slide
+    # over three pages: title, Before, References x3, Stepped x2 (a stepped
+    # slide stays fixed), After. Each continuation page repeats the header
+    # and the footer, and the footer keeps the one logical slide number.
+    require_contains(pdf_info("breakable"), "Pages:           8")
+    for page in (3, 4, 5):
+        text = pdf_page_text("breakable", page)
+        require_contains(text, "References")
+        require_contains(text, "Footer of slide 2")
+    require_contains(pdf_page_text("breakable", 3), "Entry 1 of")
+    require_contains(pdf_page_text("breakable", 5), "Entry 18 of")
+    require_contains(pdf_page_text("breakable", 8), "Footer of slide 4")
+    # Repeated rows that outgrow the frame keep the slide a fixed frame.
+    require_contains(pdf_info("breakable-crowded"), "Pages:           2")
+    require_contains(pdf_page_text("breakable-crowded", 2), "Afterward.")
+    # One explicit breakable slide in a deck that leaves the default off.
+    require_contains(pdf_info("breakable-slide"), "Pages:           3")
+    require_contains(pdf_page_text("breakable-slide", 2), "Long")
+    require_contains(pdf_page_text("breakable-slide", 2), "Line 12 of")
+    require_contains(pdf_page_text("breakable-slide", 3), "Short")
+    # The printed outputs keep one fixed frame per slide.
+    require_contains(pdf_info("breakable-printed"), "Pages:           2")
+    # A raw rows grid with an `auto`-inset body and a gutter: the body's first
+    # line and the footer sit where the fixed frame puts them, on the short
+    # fixed slide and on every page of the paginated one.
+    require_contains(pdf_info("breakable-raw-grid"), "Pages:           5")
+    fixed = pdf_word_boxes("breakable-raw-grid", 1)
+    for page, first in ((2, "Bodystart"), (3, "Line"), (4, "Line"), (5, "Line")):
+        boxes = command(
+            ["pdftotext", "-bbox", "-f", str(page), "-l", str(page),
+             str(TMP / "mosaic-breakable-raw-grid.pdf"), "-"],
+            capture=True,
+        ).stdout
+        tops = re.findall(r'yMin="([^"]*)"[^>]*>' + first + "<", boxes)
+        if not tops or abs(float(tops[0]) - fixed["Bodystart"][0]) > 0.01:
+            raise SystemExit(f"test failure: breakable-raw-grid page {page} body starts at {tops[:1]}, fixed frame at {fixed['Bodystart'][0]}")
+        footer = pdf_word_boxes("breakable-raw-grid", page)["Footmark"]
+        if abs(footer[0] - fixed["Footmark"][0]) > 0.01:
+            raise SystemExit(f"test failure: breakable-raw-grid page {page} footer at {footer[0]}, fixed frame at {fixed['Footmark'][0]}")
+    # A rows split nested in the flowing body: its first cell keeps the
+    # fixed frame's inset on the paginated slide. (The split between the
+    # nested rows is content-sized once the body flows, so only the first
+    # cell's position is comparable.)
+    require_contains(pdf_info("breakable-nested-grid"), "Pages:           4")
+    fixed_top = pdf_word_boxes("breakable-nested-grid", 1)["Upperstart"][0]
+    flowing_top = pdf_word_boxes("breakable-nested-grid", 2)["Upperstart"][0]
+    if abs(fixed_top - flowing_top) > 0.01:
+        raise SystemExit(f"test failure: breakable-nested-grid nested cell starts at {flowing_top}, fixed frame at {fixed_top}")
+    # Planes and the inverted ground reach every continuation page: three
+    # pages of the plain slide, then three of the inverted one, which alone
+    # carry the page-sized rectangle in the inverted canvas color.
+    require_contains(pdf_info("breakable-planes"), "Pages:           6")
+    typst_compile(typst, "breakable-planes.typ", TMP / "mosaic-breakable-planes-{p}.svg", "--format", "svg")
+    inverted_ground = '<path fill="#18181b" fill-rule="nonzero" d="M 0 0v 135h 240v -135Z "'
+    for page in range(1, 7):
+        text = pdf_page_text("breakable-planes", page)
+        require_contains(text, "Backmark")
+        require_contains(text, "Foremark")
+        svg = TMP / f"mosaic-breakable-planes-{page}.svg"
+        require_contains(svg, inverted_ground, absent=page <= 3)
     # A two-column content layout sets the automatic heading beside the body,
     # so the header cell and the body cell share a baseline.
     require_same_line(pdf_text("headings-content-layout"), "Heading in the", "Body in the")

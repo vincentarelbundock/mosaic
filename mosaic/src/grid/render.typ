@@ -187,6 +187,7 @@
   vertical: false,
   shrink: (width: false, height: false),
   compact: false,
+  flow: false,
 ) = {
   // A styleless cell is a container the tree produced, not one an author named.
   // Its content is measured again by every cell inside it, so observing it too
@@ -272,8 +273,13 @@
   // so cell typography rules do not scale cell geometry.
   grid.cell(inset: 0pt, context {
     let base = text.size
+    // A flowing cell (see `render-breakable`) takes its content's height so
+    // it can break, but it is still the slide's body: its `auto` inset is
+    // the one the fixed frame gives it, so the fit check measures what the
+    // fixed frame draws and the continuation pages keep the same padding.
+    let sized = content-sized or ((auto-height or shrink.height) and not flow)
     let inset = if inset == auto {
-      configured-inset(content-sized: region-height == auto or compact)
+      configured-inset(content-sized: sized or compact)
     } else {
       inset
     }
@@ -348,6 +354,102 @@
   node.kind == "split"
 }
 
+// One child of a split, rendered into the cell its track holds: the grid
+// cell content, or `none` when the child is removed on this step. Split out of
+// `render-node` so the breakable slide path can lay a split's tracks out as
+// separate rows of its own grid. Typst has no mutual recursion between
+// top-level functions, so `render-node` is passed in by its caller. `compact`
+// is `auto` to derive it from the track, as `render-node` does; the breakable
+// path passes `false` for the body, whose track it turns into `auto` without
+// meaning a content-sized cell.
+#let render-child(
+  render-node,
+  child,
+  track,
+  contents,
+  step,
+  path: "grid",
+  along: "height",
+  overflow: "off",
+  slide: initial-slide,
+  shrink: (width: false, height: false),
+  compact: false,
+  child-compact: auto,
+  dimmed: false,
+  flow: false,
+) = {
+  let measuring = shrink.width or shrink.height
+  let child-shrink = shrink
+  if track == auto { child-shrink.insert(along, true) }
+  let child-compact = if child-compact == auto {
+    compact or (along == "height" and track == auto)
+  } else {
+    child-compact
+  }
+  let (child-content, removed, cell) = if (
+    track == auto and not measuring and is-split-node(child)
+  ) {
+    let (full, removed, cell) = render-node(
+      child,
+      contents,
+      step,
+      path: path,
+      overflow: overflow,
+      slide: slide,
+      compact: child-compact,
+      dimmed: dimmed,
+      flow: flow,
+    )
+    let sized = if removed { full } else {
+      let probe = render-node(
+        child,
+        contents,
+        step,
+        path: path,
+        slide: slide,
+        shrink: child-shrink,
+        compact: child-compact,
+        dimmed: dimmed,
+        flow: flow,
+      ).at(0)
+      layout(region => {
+        let natural = measure(probe, width: region.width)
+        block(width: natural.width, height: natural.height, full)
+      })
+    }
+    (sized, removed, cell)
+  } else {
+    render-node(
+      child,
+      contents,
+      step,
+      path: path,
+      overflow: if measuring { "off" } else { overflow },
+      slide: slide,
+      shrink: child-shrink,
+      compact: child-compact,
+      dimmed: dimmed,
+      flow: flow,
+    )
+  }
+  if removed {
+    return none
+  }
+  render-cell(
+    child-content,
+    if cell == none { none } else { cell.style },
+    step,
+    ..if cell == none { (:) } else { (id: cell.id, states: cell.states) },
+    overflow: if measuring { "off" } else { overflow },
+    slide: slide,
+    track: track,
+    vertical: along != "width",
+    shrink: child-shrink,
+    compact: child-compact,
+    flow: flow,
+  )
+}
+
 // `contents` is the id -> content map. Each content-bearing cell looks up its
 // own content by id, so there is no positional cursor to thread or keep aligned
 // across branches and removed incremental nodes. Returns (content, removed,
@@ -385,6 +487,7 @@
   shrink: (width: false, height: false),
   compact: false,
   dimmed: false,
+  flow: false,
 ) = {
   if node.kind == "on" {
     let state = status(
@@ -406,6 +509,7 @@
       shrink: shrink,
       compact: compact,
       dimmed: dimmed or state == "dimmed",
+      flow: flow,
     )
     // A split is finished content, so the state wraps it here. A cell is
     // not wrapped yet: the state travels with it to `render-cell`, which
@@ -430,72 +534,34 @@
     let rendered = ()
     let tracks = ()
     let along = if node.axis == "width" { "width" } else { "height" }
-    let measuring = shrink.width or shrink.height
-    let resolved = resolved-tracks(node).map(size => if (
+    let declared = resolved-tracks(node)
+    let resolved = declared.map(size => if (
       shrink.at(along) and type(size) == fraction
     ) { auto } else { size })
     for (index, child) in node.children.enumerate() {
-      let child-path = path + "." + str(index)
       let track = resolved.at(index)
-      let child-shrink = shrink
-      if track == auto { child-shrink.insert(along, true) }
-      let child-compact = compact or (along == "height" and track == auto)
-      let (child-content, removed, cell) = if (
-        track == auto and not measuring and is-split-node(child)
-      ) {
-        let (full, removed, cell) = render-node(
-          child,
-          contents,
-          step,
-          path: child-path,
-          overflow: overflow,
-          slide: slide,
-          compact: child-compact,
-          dimmed: dimmed,
-        )
-        let sized = if removed { full } else {
-          let probe = render-node(
-            child,
-            contents,
-            step,
-            path: child-path,
-            slide: slide,
-            shrink: child-shrink,
-            compact: child-compact,
-            dimmed: dimmed,
-          ).at(0)
-          layout(region => {
-            let natural = measure(probe, width: region.width)
-            block(width: natural.width, height: natural.height, full)
-          })
-        }
-        (sized, removed, cell)
-      } else {
-        render-node(
-          child,
-          contents,
-          step,
-          path: child-path,
-          overflow: if measuring { "off" } else { overflow },
-          slide: slide,
-          shrink: child-shrink,
-          compact: child-compact,
-          dimmed: dimmed,
-        )
-      }
-      if not removed {
-        let content = render-cell(
-          child-content,
-          if cell == none { none } else { cell.style },
-          step,
-          ..if cell == none { (:) } else { (id: cell.id, states: cell.states) },
-          overflow: if measuring { "off" } else { overflow },
-          slide: slide,
-          track: track,
-          vertical: node.axis != "width",
-          shrink: child-shrink,
-          compact: child-compact,
-        )
+      let content = render-child(
+        render-node,
+        child,
+        track,
+        contents,
+        step,
+        path: path + "." + str(index),
+        along: along,
+        overflow: overflow,
+        slide: slide,
+        shrink: shrink,
+        compact: compact,
+        // Inside a flowing body every fractional track turned `auto` only so
+        // the body can break; a cell there keeps the inset its declared track
+        // gives it in the fixed frame, so compactness reads the declared size.
+        ..if flow {
+          (child-compact: compact or (along == "height" and declared.at(index) == auto))
+        },
+        dimmed: dimmed,
+        flow: flow,
+      )
+      if content != none {
         rendered.push(content)
         tracks.push(track)
       }
@@ -569,4 +635,119 @@
       ),
     )
   }
+}
+
+// The track of a rows root that can paginate: the one fractional track, with
+// every other track `auto`. `none` for any other shape, which a breakable
+// slide cannot lay out across pages. A rows root that strokes its boundaries
+// is refused too: the rules would have to be redrawn around repeated rows,
+// and no built-in content layout draws them.
+#let breakable-track(node) = {
+  if (
+    node.kind != "split"
+      or node.axis == "width"
+      or node.stroke != none
+      or type(node.gutter) == fraction
+  ) {
+    return none
+  }
+  let tracks = resolved-tracks(node)
+  let flexible = range(tracks.len()).filter(index => type(tracks.at(index)) == fraction)
+  if flexible.len() != 1 {
+    return none
+  }
+  let index = flexible.first()
+  if range(tracks.len()).any(other => other != index and tracks.at(other) != auto) {
+    return none
+  }
+  index
+}
+
+// A breakable slide's grid: one native grid in the page flow, which Typst
+// paginates itself. The tracks above the flowing one become a repeated grid
+// header and the tracks below it a repeated grid footer, so every
+// continuation page carries them; the flowing track is an `auto` row whose
+// cell takes its content's height, which is what lets it break. An empty
+// `1fr` row after it absorbs the slack on the last page, so the footer stays
+// at the foot of the frame there too.
+//
+// `under` and `over` are the full-frame planes, already sized by the caller.
+// They ride zero-height rows at the top of the header and the bottom of the
+// footer, so they reach every page: `under` is placed before anything else
+// draws, and `over` after the body.
+//
+// The split's gutter is laid out as explicit rows between its own tracks,
+// not as `row-gutter`, so the plane rows and the slack row add no gap the
+// fixed frame lacks. The gap between the last header row and the body
+// repeats with the header, and the gap above the first footer row with the
+// footer.
+//
+// Overflow observation is off: the flowing cell has no fixed region to
+// overflow, and the repeated rows size to their content.
+//
+// `repeated: true` returns only the rows every page repeats, with their gaps
+// toward the body: the caller measures them to make sure a page has room left
+// for the body. Rows that outgrow the page alone would be cut at the page edge
+// and repeated, cut the same way, on every page, so such a slide cannot break.
+#let render-breakable(
+  node,
+  contents,
+  step,
+  slide: initial-slide,
+  under: none,
+  over: none,
+  repeated: false,
+) = {
+  let index = breakable-track(node)
+  let tracks = resolved-tracks(node)
+  let row(position) = render-child(
+    render-node,
+    node.children.at(position),
+    if position == index { auto } else { tracks.at(position) },
+    contents,
+    step,
+    path: "grid." + str(position),
+    slide: slide,
+    ..if position == index {
+      (shrink: (width: false, height: true), child-compact: false, flow: true)
+    },
+  )
+  let gap = node.gutter
+  let gapped = gap != 0pt
+  let spacer = grid.cell(inset: 0pt, [])
+  // Rows as (size, cell) pairs, so the row sizes and the cells cannot drift.
+  let stack(cells) = {
+    let result = ()
+    for (position, cell) in cells.enumerate() {
+      if gapped and position > 0 { result.push((gap, spacer)) }
+      result.push((auto, cell))
+    }
+    result
+  }
+  let above = stack(range(index).map(row).filter(cell => cell != none))
+  let below = stack(range(index + 1, tracks.len()).map(row).filter(cell => cell != none))
+  if gapped and above.len() > 0 { above.push((gap, spacer)) }
+  if gapped and below.len() > 0 { below.insert(0, (gap, spacer)) }
+  if repeated {
+    return grid(
+      columns: (1fr,),
+      rows: (above + below).map(pair => pair.at(0)),
+      ..(above + below).map(pair => pair.at(1)),
+    )
+  }
+  let body = row(index)
+  if under != none {
+    above.insert(0, (auto, grid.cell(inset: 0pt, place(top + left, under))))
+  }
+  if over != none {
+    below.push((auto, grid.cell(inset: 0pt, place(bottom + left, over))))
+  }
+  let middle = ((auto, if body == none { [] } else { body }), (1fr, spacer))
+  grid(
+    columns: (1fr,),
+    rows: (above + middle + below).map(pair => pair.at(0)),
+    ..if above.len() > 0 { (grid.header(..above.map(pair => pair.at(1))),) },
+    ..middle.map(pair => pair.at(1)),
+    ..if below.len() > 0 { (grid.footer(..below.map(pair => pair.at(1))),) },
+  )
 }

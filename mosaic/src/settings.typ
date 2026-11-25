@@ -271,6 +271,7 @@
   spacing: (:),
   notes: (:),
   overflow: "off",
+  breakable: false,
   font: default-font,
   base-size: default-base-size,
 ) = {
@@ -286,6 +287,9 @@
   )
   let notes = validate-notes(merge-record(default-notes, notes, "notes"))
   _ = validate-choice(overflow, overflow-modes, "setup overflow")
+  if type(breakable) != bool {
+    fail("setup breakable must be a boolean")
+  }
   (
     colors: colors,
     cells: cells,
@@ -295,6 +299,7 @@
     spacing: spacing,
     notes: notes,
     overflow: overflow,
+    breakable: breakable,
     font: validate-font(font),
     base-size: validate-base-size(base-size),
   )
@@ -310,8 +315,8 @@
   if (
     type(value) != dictionary
       or value.keys().sorted() != (
-        "background", "base-size", "cells", "colors", "deck", "font",
-        "foreground", "notes", "overflow", "spacing",
+        "background", "base-size", "breakable", "cells", "colors", "deck",
+        "font", "foreground", "notes", "overflow", "spacing",
       )
   ) {
     fail("invalid internal presentation settings")

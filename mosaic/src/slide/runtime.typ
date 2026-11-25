@@ -21,8 +21,10 @@
   fixed-grid-has-note,
 )
 #import "../grid/render.typ": (
+  breakable-track,
   max-node,
   render,
+  render-breakable,
   validate-stable-grid-headings,
 )
 #import "../fit.typ": fit-ratio
@@ -314,6 +316,37 @@
   [#body#label("mosaic-" + heading-scope)]
 }
 
+// Whether this slide paginates its overflow, or why it cannot.
+//
+// An explicit `slide(breakable: true)` is strict: a slide that cannot break
+// fails, naming the reason, because the author asked for this slide. The deck
+// default `setup(breakable: true)` applies wherever it can and leaves every
+// other slide a fixed frame, so one deck-wide switch does not make every
+// title, section, or stepped slide an error.
+//
+// A breakable slide is a content slide whose grid is a stack of rows with one
+// flowing track (see `breakable-track`), shown in one step. Only the `slides`
+// output paginates: the printed outputs draw each frame as a fixed thumbnail,
+// so there a breakable slide renders as an ordinary frame.
+#let resolve-breakable(command, settings, layout-name, grid, steps, handout, output) = {
+  if command.breakable == false or (command.breakable == auto and not settings.breakable) {
+    return false
+  }
+  let reason = if layout-name != "content" {
+    "only content slides can break, and this is a " + repr(layout-name) + " slide"
+  } else if breakable-track(grid) == none {
+    "the slide's grid must be unruled rows of auto tracks around one fractional track that flows"
+  } else if not handout and steps > 1 {
+    "a breakable slide cannot reveal in steps; remove its pauses and steps, or set breakable: false"
+  } else {
+    none
+  }
+  if reason != none and command.breakable == true {
+    fail("slide breakable: " + reason)
+  }
+  reason == none and output == "slides"
+}
+
 #let select-layout(value, configured) = if value == auto {
   ("content", configured.content)
 } else if type(value) == str {
@@ -432,6 +465,15 @@
     max-step(field-content.values()),
     max-step(planes.background),
     max-step(planes.foreground),
+  )
+  let breakable = resolve-breakable(
+    command,
+    settings,
+    layout-name,
+    resolved-grid,
+    steps,
+    record.handout,
+    record.output,
   )
   logical-slide-id.step()
   let numbered = if command.numbered == auto {
@@ -552,11 +594,70 @@
       )
     }
     let frame = [
-        #show metadata: validate-frame-metadata
-        #full-slide-layer(background-content)
-        #full-slide-layer(rendered)
-        #full-slide-layer(foreground-content)
+      #show metadata: validate-frame-metadata
+      #full-slide-layer(background-content)
+      #full-slide-layer(rendered)
+      #full-slide-layer(foreground-content)
     ]
+    if breakable {
+      // A breakable slide flows only when it must. The flowing layout sizes
+      // the body to its content rather than to its track, so a slide that
+      // fits would lose a vertically centered body or a body fill that spans
+      // the frame; measured first, a slide that fits renders as the ordinary
+      // frame below, and only one that overflows paginates.
+      //
+      // The flowing grid cannot sit over a frame-sized layer, so the planes
+      // ride its repeated rows instead, sized here to the frame the page
+      // offers (see `render-breakable`), and an inverted slide's ground rides
+      // with the background so every continuation page is inverted.
+      //
+      // The rows every page repeats must leave the body room on a page. When
+      // they do not, as when a lone positional body fills the header, the
+      // slide stays the ordinary frame, so its overflow is drawn and observed
+      // as on any fixed slide; an explicit `breakable: true` fails instead.
+      let fixed = frame
+      frame = [
+        #show metadata: validate-frame-metadata
+        #layout(region => {
+          let repeated = render-breakable(
+            frame-grid,
+            contents,
+            step,
+            slide: slide,
+            repeated: true,
+          )
+          let crowded = measure(repeated, width: region.width).height >= region.height
+          if crowded and command.breakable == true {
+            fail(
+              "slide breakable: the cells repeated on every page fill the"
+                + " frame and leave the flowing cell no room; note that a lone"
+                + " positional body fills the first cell, such as the header",
+            )
+          }
+          let probe = render-breakable(frame-grid, contents, step, slide: slide)
+          if crowded or measure(probe, width: region.width).height <= region.height {
+            if command.invert {
+              inverted-ground(settings.colors.canvas)
+            }
+            slide-frame(fixed, fill: if command.invert { settings.colors.canvas } else { none })
+            return
+          }
+          let layer(body) = block(width: region.width, height: region.height, body)
+          let under = layer(background-content)
+          if command.invert {
+            under = inverted-ground(settings.colors.canvas) + under
+          }
+          [#render-breakable(
+            frame-grid,
+            contents,
+            step,
+            slide: slide,
+            under: under,
+            over: layer(foreground-content),
+          )#label("mosaic-slide")]
+        })
+      ]
+    }
     if command.invert {
       // The knocked-out ink, stated inside the frame so it overrides the
       // theme's document-level fill, plus the same statement on headings,
@@ -586,7 +687,9 @@
         notes: notes,
       )) <mosaic-speaker-notes>
     ]))
-    if output == "slides" {
+    if breakable {
+      frame
+    } else if output == "slides" {
       if command.invert {
         inverted-ground(settings.colors.canvas)
       }
