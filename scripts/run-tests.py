@@ -472,6 +472,13 @@ def run_core(typst: str, sources: list[str]) -> None:
             raise TestFailure(f"pause-handout text does not contain {expected!r}")
     require_contains(pdf_info("pause-handout"), "Pages:           1")
 
+    # Issue #10: a handout draws a revealing slide's heading like any other.
+    require_contains(pdf_info("handout-reveal-heading"), "Pages:           2")
+    revealed = pdf_word_boxes("handout-reveal-heading", 1)["Revealhead"]
+    plain = pdf_word_boxes("handout-reveal-heading", 2)["Plainhead"]
+    if abs((revealed[1] - revealed[0]) - (plain[1] - plain[0])) > 0.5:
+        raise TestFailure(f"handout-reveal-heading heading extents differ: {revealed} vs {plain}")
+
     themed_text = pdf_text("speaker-notes-theme")
     require_contains(themed_text, "Themed speaker slide")
     require_contains(themed_text, "THEMED SPEAKER NOTE")
