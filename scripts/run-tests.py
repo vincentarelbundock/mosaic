@@ -482,6 +482,10 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(pdf_page_text("appendix-edges", 1), "LANG-fr")
     require_contains(pdf_page_text("appendix-edges", 3), "1/0")
 
+    # A backup section's own toc slide lists the talk, not itself.
+    require_contains(pdf_page_text("appendix-toc", 3), "Talk alpha")
+    require_contains(pdf_page_text("appendix-toc", 3), "Backup omega", absent=True)
+
     # Issue #10: a handout draws a revealing slide's heading like any other.
     require_contains(pdf_info("handout-reveal-heading"), "Pages:           2")
     revealed = pdf_word_boxes("handout-reveal-heading", 1)["Revealhead"]

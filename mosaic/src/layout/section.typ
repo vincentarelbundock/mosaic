@@ -499,12 +499,21 @@
         fill: settings.colors.line,
         if entry.title == none { [] } else { entry.title },
       ))
-      stack(
-        spacing: tokens.item-spacing,
-        ..others(n => n < mine),
-        current,
-        ..others(n => n > mine),
-      )
+      // A backup section is never listed, its own slide included. Its body
+      // still carries the section's heading, outline entry, and labels, so it
+      // stays in the document, hidden and taking no space, rather than
+      // dropped.
+      if mine > talk {
+        place(hide(current))
+        stack(spacing: tokens.item-spacing, ..others(n => true))
+      } else {
+        stack(
+          spacing: tokens.item-spacing,
+          ..others(n => n < mine),
+          current,
+          ..others(n => n > mine),
+        )
+      }
       if fields.subtitle != none {
         v(tokens.gap-above-subtitle)
         subtitle-line(fields, settings, size: tokens.subtitle-size)
