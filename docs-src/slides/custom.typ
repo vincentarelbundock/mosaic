@@ -295,7 +295,7 @@ The Nth block always fills the Nth cell, and Mosaic never looks inside the block
 
 The last line is the one to watch: a single block on a layout with a header fills the header. Leave the header empty with `[]`, name the cell through `cells:`, or pick a layout variant without a header.
 
-Fewer blocks than cells leaves the trailing cells to their deck default from `m.setup(cells:)`, or empty, which is how a deck footer survives an ordinary `[== Title][Body]` slide. More blocks than cells is an error that names the cells there are to fill. A slide with no blocks at all is an empty slide. Content written after an explicit slide, outside any slide, is an error too: open a new slide with a heading, or put the content in the slide.
+Fewer blocks than cells leaves the trailing cells to their deck default from `m.setup(cells:)`, or empty, which is how a deck footer survives an ordinary `[== Title][Body]` slide. A default on a leading cell is replaced by any block that reaches a cell after it, so a deck with a default header fills the body by name, `m.slide(cells: (body: [Body]))`, to keep it; an empty first block would blank the header. More blocks than cells is an error that names the cells there are to fill. A slide with no blocks at all is an empty slide. Content written after an explicit slide, outside any slide, is an error too: open a new slide with a heading, or put the content in the slide.
 
 == Combining both forms
 

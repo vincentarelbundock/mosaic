@@ -349,7 +349,7 @@ Cell insets provide slide margins (`setup` uses a zero page margin). Adjacent ce
 
 A slide accepts cell content in two forms, and they combine: a cell named in `cells:` is filled from it, and the positional blocks fill the rest.
 
-**Positional bodies** fill the layout's cells in order, starting with the first: the Nth block fills the Nth cell. Content is never read. The order is the layout's: header, body, footer for the content layout; left to right within `columns`, top to bottom within `rows`, recursively through nesting. The header, a footer, and cells with a deck default all count. Fewer blocks than cells leaves the trailing cells to their deck default, or empty; more is an error naming the cells there are to fill.
+**Positional bodies** fill the layout's cells in order, starting with the first: the Nth block fills the Nth cell. Content is never read. The order is the layout's: header, body, footer for the content layout; left to right within `columns`, top to bottom within `rows`, recursively through nesting. The header, a footer, and cells with a deck default all count. Fewer blocks than cells leaves the trailing cells to their deck default, or empty; more is an error naming the cells there are to fill. A deck default on the header survives only when the body is filled by name, `slide(cells: (body: [..]))`; `slide[][..]` blanks it.
 
 ```typ
 #m.slide(layout: m.grids.columns("a", "b", "c"))[a][b][c]
