@@ -2,7 +2,7 @@
 #import "../incremental/heading.typ": decorate-heading
 #import "../shared.typ": fail
 #import "../grid/constructors.typ": make-cell
-#import "../deck-state.typ": logical-section
+#import "../deck-state.typ": logical-section, section-position
 #import "core.typ": (
   make-layout,
   validate-accent,
@@ -481,11 +481,15 @@
           weight: tokens.current-weight,
         )),
       )
+      // Only the talk's sections: those after an appendix marker number past
+      // the section total and are left out.
+      let talk = section-position().total
       let numbers = query(label("mosaic-section-record"))
         .map(entry => (
           number: logical-section.at(entry.location()).first(),
           title: entry.value.title,
         ))
+        .filter(entry => entry.number <= talk)
       // The current section is drawn from the slide's own body, never from
       // its record, so it survives a slide the records do not list and is
       // realized exactly once.

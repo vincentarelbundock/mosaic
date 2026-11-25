@@ -14,9 +14,9 @@ IMPORT = re.compile(
 )
 LET = re.compile(r"(?m)^#let\s+([A-Za-z_][A-Za-z0-9_-]*)\b")
 
-NEUTRAL_API = {"setup", "definition", "slide", "info", "note", "fit", "grids", "layouts", "steps", "components", "themes", "palettes"}
-SHARED_API = {"slide", "info", "note", "fit", "grids", "layouts", "steps", "components", "palettes"}
-THEMED_API = {"setup", "definition", "slide", "info", "note", "fit", "grids", "layouts", "steps", "components", "palettes"}
+NEUTRAL_API = {"setup", "definition", "slide", "info", "appendix", "note", "fit", "grids", "layouts", "steps", "components", "themes", "palettes"}
+SHARED_API = {"slide", "info", "appendix", "note", "fit", "grids", "layouts", "steps", "components", "palettes"}
+THEMED_API = {"setup", "definition", "slide", "info", "appendix", "note", "fit", "grids", "layouts", "steps", "components", "palettes"}
 PALETTES = {"light", "dark", "parchment", "sage", "stone", "espresso", "forest", "slate"}
 THEMED_LAYOUTS = {"content", "title", "section", "image", "author"}
 THEMED_COMPONENTS = {"card", "callout", "badge", "quote", "divider", "progress", "image", "figure"}
@@ -28,7 +28,8 @@ EXPECTED = {
     "mosaic/src/info.typ": {"info"},
     # fit.typ is not listed: it carries the vendored fitting internals beside
     # the one public entry point, and only `fit` is re-exported from the
-    # facades, which the entries above already pin.
+    # facades, which the entries above already pin. appendix.typ is not
+    # listed for the same reason: `appendix` sits beside the compiler's helpers.
     "mosaic/src/layout/api.typ": {"content", "title", "section", "image", "author"},
     "mosaic/src/incremental/api.typ": {"on", "reveal", "replace", "drawing", "pause"},
     "mosaic/src/component/api.typ": THEMED_COMPONENTS,

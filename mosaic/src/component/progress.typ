@@ -156,7 +156,9 @@
   if variant == "circle" and (type(fill) != color or type(accent) != color) {
     fail("progress variant \"circle\" requires fill and accent to be colors")
   }
-  let amount = 100% * current / total
+  // Past the total, on the backup slides after an appendix marker, the
+  // indicator stays full.
+  let amount = 100% * calc.min(current, total) / total
 
   // A renderer receives everything the built-in treatments draw from, so an
   // extension theme can add a treatment without forking this component.

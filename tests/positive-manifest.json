@@ -1,6 +1,7 @@
 {
   "core": [
     "accessibility.typ",
+    "appendix.typ",
     "author.typ",
     "auto-tracks.typ",
     "breakable.typ",

@@ -1,4 +1,7 @@
 anonymous-cell|cell id must be a non-empty string
+appendix-in-slide|appendix marks the end of the talk and belongs between slides
+appendix-twice|appendix can be marked only once in a deck
+appendix-without-setup|appendix requires a deck
 author-affiliations|author affiliations must be an array
 author-affiliation|author affiliation 1 must be content or a non-empty string
 author-corresponding|author corresponding requires email or orcid

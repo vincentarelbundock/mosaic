@@ -55,7 +55,7 @@ The footer is an ordinary cell, and there is no separate global footer feature, 
 
 `m.components.progress()` shows the current position in a deck. All frames from one incremental slide share the same slide number. Use `"1/1"` or `"1"` for numbers, `"circle"` for a compact indicator, and `"line"` for a full-width bar.
 
-#unreleased(calepin.elements.callout)[The component quiets itself on pages where its counter has no meaningful reading: a slides count on unnumbered slides (titles and sections), and a sections count before the first section slide. A bare `progress()` in a deck foreground is therefore already correct page-number chrome, and a `quiet:` argument overrides the rule (`false` always displays, `true` silences every unnumbered page). In the released `0.0.1` the component always displays, so a foreground indicator needs the `slide.numbered` guard shown at the bottom of this page. Three further things on this page are new: positional bodies fill every cell in order, `cells:` combines with positional bodies, and `slide.number` is `none` on an unnumbered slide.]
+#unreleased(calepin.elements.callout)[The component quiets itself on pages where its counter has no meaningful reading: a slides count on unnumbered slides (titles and sections), and a sections count before the first section slide. A bare `progress()` in a deck foreground is therefore already correct page-number chrome, and a `quiet:` argument overrides the rule (`false` always displays, `true` silences every unnumbered page). In the released `0.0.1` the component always displays, so a foreground indicator needs the `slide.numbered` guard shown at the bottom of this page. Four further things on this page are new: positional bodies fill every cell in order, `cells:` combines with positional bodies, `slide.number` is `none` on an unnumbered slide, and the `m.appendix` marker for backup slides.]
 
 The deck below puts a bare counter in the setup foreground and nothing else. The counter appears on the two content slides and stays quiet on the title and section pages, with no guard written anywhere; sizing comes from an ordinary `text` rule around the component, and a one-off color would go through its `accent:` argument rather than a text rule, because the component paints its own ink from the theme role:
 
@@ -104,6 +104,24 @@ The component can sit in a foreground, a cell, or another Typst container. This 
   frames: 3,
   title: "A reusable custom-grid slide function with foreground progress",
 )
+
+== Backup slides
+
+Slides kept for questions should not inflate the total the audience sees. Write `#m.appendix` once, between the last slide of the talk and the first backup slide:
+
+```typ
+== Conclusion
+Thank you.
+
+#m.appendix
+
+= Backup
+== Robustness checks
+```
+
+The totals stop at the marker, so the footer counts the talk: "12 / 30" on slide 12, and "31 / 30" on the first backup slide, which keeps its own number for a question that refers to it. Sections work the same way. A progress bar or circle stays full on backup slides, and the `toc` section variant lists only the talk's sections. `m.info()` reports the same totals, so a hand-built footline follows too.
+
+The marker is content, not a function call, so it takes no parentheses. Written inside a slide it is an error, and so is a second marker.
 
 = What the deck knows about itself
 

@@ -1,6 +1,7 @@
 // Curated public API shared by neutral Mosaic and every themed facade.
 #import "slide/command.typ": slide
 #import "info.typ": info
+#import "appendix.typ": appendix
 #import "note/command.typ": note
 #import "fit.typ": fit
 #import "grid/api.typ" as grids

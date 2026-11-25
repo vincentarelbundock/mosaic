@@ -419,6 +419,9 @@
   if kind == "slide" {
     fail("slide cannot be nested inside another slide or a container")
   }
+  if kind == "appendix" {
+    fail("appendix marks the end of the talk and belongs between slides, not inside one")
+  }
   it
 }
 

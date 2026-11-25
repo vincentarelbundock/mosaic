@@ -3,6 +3,7 @@
 #import "slide/command.typ": is-setup-guard, is-slide-command, slide-command
 #import "slide/runtime.typ": render-slide
 #import "incremental/heading.typ": resolve-heading-depth
+#import "appendix.typ": is-appendix-marker
 
 #let typst-context = (context []).func()
 
@@ -177,6 +178,7 @@
   let current = ()
   let flushed = none
   let slide-wrappers = ()
+  let appendix-seen = false
 
   // Automatic slides re-apply the user's captured set/show wrappers around
   // the rendered slide, exactly as explicit slide commands do, so deck-level
@@ -275,6 +277,16 @@
       // deck arrives here as body content before its state write can report
       // itself. Its metadata record is the first thing it emits.
       fail("setup already configured this deck; apply setup exactly once")
+    } else if is-appendix-marker(value) {
+      // The marker closes the slide before it and stands in the flow between
+      // slides, where the counters read at its location are the talk's totals.
+      if appendix-seen {
+        fail("appendix can be marked only once in a deck")
+      }
+      appendix-seen = true
+      (flushed, mode, section, current) = flush-current(mode, section, current, slide-wrappers)
+      if flushed != none { output.push(flushed) }
+      output.push(value)
     } else if is-slide-command(value) {
       (flushed, mode, section, current) = flush-current(mode, section, current, slide-wrappers)
       if flushed != none { output.push(flushed) }

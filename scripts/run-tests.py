@@ -472,6 +472,11 @@ def run_core(typst: str, sources: list[str]) -> None:
             raise TestFailure(f"pause-handout text does not contain {expected!r}")
     require_contains(pdf_info("pause-handout"), "Pages:           1")
 
+    # The toc on a backup slide lists the talk's sections, not the backup one.
+    appendix_toc = pdf_page_text("appendix", 8)
+    require_contains(appendix_toc, "Talk section B")
+    require_contains(appendix_toc, "Backup section", absent=True)
+
     # Issue #10: a handout draws a revealing slide's heading like any other.
     require_contains(pdf_info("handout-reveal-heading"), "Pages:           2")
     revealed = pdf_word_boxes("handout-reveal-heading", 1)["Revealhead"]
