@@ -67,14 +67,28 @@
 // the public answer and the built-in chrome cannot disagree. Both are
 // contextual, and both answer outside a deck as well as inside one: the
 // counters simply read zero.
+//
+// The totals count the talk, not the backup slides: with an `appendix` marker
+// in the deck they are the counts at the marker, so the slides and sections
+// after it keep numbering past the total ("31 / 30").
+#let appendix-start() = {
+  let markers = query(label("mosaic-appendix-start"))
+  if markers.len() == 0 { none } else { markers.first().location() }
+}
+
+#let talk-total(counter) = {
+  let start = appendix-start()
+  if start == none { counter.final().first() } else { counter.at(start).first() }
+}
+
 #let slide-position() = (
   number: logical-slide.get().first(),
-  total: logical-slide.final().first(),
+  total: talk-total(logical-slide),
   numbered: slide-numbered.get(),
 )
 
 #let section-position() = (
   number: logical-section.get().first(),
-  total: logical-section.final().first(),
+  total: talk-total(logical-section),
   title: section-title.get(),
 )

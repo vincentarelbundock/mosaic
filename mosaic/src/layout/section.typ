@@ -2,7 +2,7 @@
 #import "../incremental/heading.typ": decorate-heading
 #import "../shared.typ": fail
 #import "../grid/constructors.typ": make-cell
-#import "../deck-state.typ": logical-section
+#import "../deck-state.typ": logical-section, section-position
 #import "core.typ": (
   make-layout,
   validate-accent,
@@ -481,11 +481,15 @@
           weight: tokens.current-weight,
         )),
       )
+      // Only the talk's sections: those after an appendix marker number past
+      // the section total and are left out.
+      let talk = section-position().total
       let numbers = query(label("mosaic-section-record"))
         .map(entry => (
           number: logical-section.at(entry.location()).first(),
           title: entry.value.title,
         ))
+        .filter(entry => entry.number <= talk)
       // The current section is drawn from the slide's own body, never from
       // its record, so it survives a slide the records do not list and is
       // realized exactly once.
@@ -495,12 +499,21 @@
         fill: settings.colors.line,
         if entry.title == none { [] } else { entry.title },
       ))
-      stack(
-        spacing: tokens.item-spacing,
-        ..others(n => n < mine),
-        current,
-        ..others(n => n > mine),
-      )
+      // A backup section is never listed, its own slide included. Its body
+      // still carries the section's heading, outline entry, and labels, so it
+      // stays in the document, hidden and taking no space, rather than
+      // dropped.
+      if mine > talk {
+        place(hide(current))
+        stack(spacing: tokens.item-spacing, ..others(n => true))
+      } else {
+        stack(
+          spacing: tokens.item-spacing,
+          ..others(n => n < mine),
+          current,
+          ..others(n => n > mine),
+        )
+      }
       if fields.subtitle != none {
         v(tokens.gap-above-subtitle)
         subtitle-line(fields, settings, size: tokens.subtitle-size)

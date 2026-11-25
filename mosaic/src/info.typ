@@ -30,10 +30,13 @@
 ///   `numbered: false` and `number: none`, because such a slide has no number
 ///   of its own, and the previous slide's would be a wrong answer. Deck
 ///   furniture reads either field to quiet itself on those pages.
+///   With an `appendix` marker in the deck, `total` is the count at the
+///   marker, and backup slides after it number past it.
 /// - `section`: a dictionary of `number`, `total`, and `title`. The number is
 ///   the current section's, counting slides that use the `section` layout, and
 ///   the title is that section's own text with any heading stripped. Before the
 ///   deck's first section slide the number is `0` and the title is `none`.
+///   Its `total` likewise stops at an `appendix` marker.
 ///
 /// Call it inside a `context` block (slide bodies, planes, and show rules
 /// already are one):

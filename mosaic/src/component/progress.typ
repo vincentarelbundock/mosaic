@@ -137,9 +137,11 @@
   }
   if silenced { return }
   let current = position.number
-  // A deck with no section slides legitimately totals zero; the ratio below
-  // guards against dividing by it.
-  let total = calc.max(position.total, 1)
+  // A deck with no section slides legitimately totals zero, and so does a
+  // talk whose first section opens after the appendix marker. The total is
+  // shown as it is, the reading `info()` gives; only the ratio guards against
+  // dividing by it.
+  let total = position.total
   let colors = role-colors(role)
   let fill = if fill == auto { colors.fill } else { fill }
   let accent = if accent == auto { colors.accent } else { accent }
@@ -156,7 +158,13 @@
   if variant == "circle" and (type(fill) != color or type(accent) != color) {
     fail("progress variant \"circle\" requires fill and accent to be colors")
   }
-  let amount = 100% * current / total
+  // Past the total, on the backup slides after an appendix marker, the
+  // indicator stays full.
+  let amount = if current > 0 and current >= total {
+    100%
+  } else {
+    100% * current / calc.max(total, 1)
+  }
 
   // A renderer receives everything the built-in treatments draw from, so an
   // extension theme can add a treatment without forking this component.
