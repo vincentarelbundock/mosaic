@@ -4,10 +4,17 @@
 
 #let appendix-label = label("mosaic-appendix")
 
-// Like a slide command, the marker means something only to the deck compiler,
-// which drops this guard; realized anywhere else, the guard fails when no deck
-// was configured. It carries the slide command guard's label, which is what
-// the compiler recognizes.
+// The record the compiler leaves in the flow in place of the marker. The
+// totals are the counters read at its location (see `slide-position` in
+// deck-state.typ), and only the compiler emits it, so a marker that reaches
+// the document by any other road cannot move the totals.
+#let appendix-start = [#metadata((mosaic: tag, kind: "appendix-start"))#label("mosaic-appendix-start")]
+
+// The marker means something only to the deck compiler, which consumes it
+// whole: the metadata becomes `appendix-start`, and this guard is dropped.
+// Realized anywhere else (inside a slide, inside a `context` block or a
+// container, or in a document without setup), the guard fails.
+#let appendix-guard-label = label("mosaic-appendix-guard")
 #let appendix-guard = [#context {
   if deck-state.final() == none {
     fail(
@@ -15,7 +22,11 @@
         + "`#show: mosaic.setup`, before the first slide",
     )
   }
-}#label("mosaic-setup-guard")]
+  fail(
+    "appendix marks the end of the talk and belongs between slides, at the "
+      + "top level of the deck, not inside a slide or a container",
+  )
+}#appendix-guard-label]
 
 /// Marks where the talk ends and the backup slides begin.
 ///
@@ -47,4 +58,9 @@
   type(value) == content
     and value.func() == metadata
     and value.at("label", default: none) == appendix-label
+)
+
+#let is-appendix-guard(value) = (
+  type(value) == content
+    and value.at("label", default: none) == appendix-guard-label
 )

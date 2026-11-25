@@ -2,6 +2,7 @@
   "core": [
     "accessibility.typ",
     "appendix.typ",
+    "appendix-edges.typ",
     "author.typ",
     "auto-tracks.typ",
     "breakable.typ",

@@ -72,7 +72,7 @@
 // in the deck they are the counts at the marker, so the slides and sections
 // after it keep numbering past the total ("31 / 30").
 #let appendix-start() = {
-  let markers = query(label("mosaic-appendix"))
+  let markers = query(label("mosaic-appendix-start"))
   if markers.len() == 0 { none } else { markers.first().location() }
 }
 

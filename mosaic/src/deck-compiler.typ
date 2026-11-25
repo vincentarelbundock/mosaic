@@ -3,7 +3,7 @@
 #import "slide/command.typ": is-setup-guard, is-slide-command, slide-command
 #import "slide/runtime.typ": render-slide
 #import "incremental/heading.typ": resolve-heading-depth
-#import "appendix.typ": is-appendix-marker
+#import "appendix.typ": appendix-start, is-appendix-guard, is-appendix-marker
 
 #let typst-context = (context []).func()
 
@@ -246,6 +246,8 @@
         and shared < slide-wrappers.len()
         and not is-heading-space(value)
         and not is-slide-command(value)
+        and not is-appendix-marker(value)
+        and not is-appendix-guard(value)
     ) {
       let escaped = slide-wrappers.slice(shared)
       section = wrap-content(section, escaped)
@@ -272,6 +274,10 @@
       // Consumed with the slide command it follows; see `setup-guard`.
       continue
     }
+    if is-appendix-guard(value) {
+      // Consumed with the appendix marker it follows; see `appendix-guard`.
+      continue
+    }
     if is-deck-marker(value) {
       // A second `setup` wraps the first one's whole output, so the nested
       // deck arrives here as body content before its state write can report
@@ -286,7 +292,7 @@
       appendix-seen = true
       (flushed, mode, section, current) = flush-current(mode, section, current, slide-wrappers)
       if flushed != none { output.push(flushed) }
-      output.push(value)
+      output.push(appendix-start)
     } else if is-slide-command(value) {
       (flushed, mode, section, current) = flush-current(mode, section, current, slide-wrappers)
       if flushed != none { output.push(flushed) }

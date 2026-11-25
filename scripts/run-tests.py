@@ -477,6 +477,11 @@ def run_core(typst: str, sources: list[str]) -> None:
     require_contains(appendix_toc, "Talk section B")
     require_contains(appendix_toc, "Backup section", absent=True)
 
+    # The marker keeps the styles of the slide before it, and a zero total
+    # displays as it is.
+    require_contains(pdf_page_text("appendix-edges", 1), "LANG-fr")
+    require_contains(pdf_page_text("appendix-edges", 3), "1/0")
+
     # Issue #10: a handout draws a revealing slide's heading like any other.
     require_contains(pdf_info("handout-reveal-heading"), "Pages:           2")
     revealed = pdf_word_boxes("handout-reveal-heading", 1)["Revealhead"]
