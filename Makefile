@@ -2,7 +2,7 @@
 
 # Only the verbs a person types. Everything else in this file is a file rule
 # that a verb depends on, so it stays out of `make help` and out of the way.
-.PHONY: help doctor install uninstall check artifacts website publish-docs release-stage build clean distclean
+.PHONY: help doctor install uninstall check artifacts website skill publish-docs release-stage build clean distclean
 
 TYPST ?= typst
 CALEPIN ?= calepin
@@ -280,6 +280,13 @@ website: install $(API_GROUP_STAMPS) ## Render docs-src into the published docs/
 # path beginning with an underscore, including the $(SITE_DIR)/_calepin favicon
 # every page links. Last, so it exists whatever the build did before it.
 	@touch $(SITE_DIR)/.nojekyll
+
+# The authoring skill ships the website as Markdown, so an agent can open one
+# page at a time. skills/ is tracked: the generated pages are committed with the
+# skill and regenerated here after a docs-src or doc-comment change. The API
+# pages come from the same typst-doc entries the website uses.
+skill: $(API_GROUP_STAMPS) ## Regenerate the skill's Markdown copy of the website
+	$(PYTHON) scripts/build-skill-docs.py
 
 # $(SITE_DIR) is gitignored, so a routine commit never carries a rebuild of it.
 # Publishing to GitHub Pages is this deliberate step: stage the rendered site,

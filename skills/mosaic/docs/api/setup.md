@@ -1,0 +1,207 @@
+# Document setup
+
+Generated from the package sources, so it describes the development version (0.0.3) throughout; [the changelog](https://github.com/vincentarelbundock/mosaic/blob/main/CHANGELOG.md) lists what differs from the released one. Each entry shows the signature, a description, then the parameters with their types and defaults.
+
+## setup
+
+Applies Mosaic's presentation defaults and compiles headings and slide commands into pages.
+
+```typ
+setup(
+  body,
+  paper: "16-9",
+  margin: 0pt,
+  title: none,
+  subtitle: none,
+  authors: (),
+  date: none,
+  colors: (:),
+  cells: (:),
+  background: none,
+  foreground: none,
+  spacing: (:),
+  notes: (:),
+  overflow: "off",
+  breakable: false,
+  layouts: (:),
+  headings: ("section", "slide"),
+  font: (
+    "Inter",
+    "Source Sans 3",
+    "Avenir Next",
+    "Segoe UI",
+    "DejaVu Sans",
+    "Libertinus Serif",
+  ),
+  base-size: 28pt,
+  handout: false,
+  output: "slides",
+  frozen-counters: (),
+  frozen-states: ()
+) -> content
+```
+
+Install it as a document-wide show rule. Everything after it is presentation source: level-two headings become slides, and `mosaic.slide` commands become slides. A `mosaic.slide` in a document that never applied `setup` is an error.
+
+```typ
+#import "@local/mosaic:0.0.3" as mosaic
+#show: mosaic.setup.with(
+  title: [Tree-based slide grids],
+  authors: [Ada Lovelace],
+  date: [2026-08-03],
+)
+
+#mosaic.slide(layout: "title")
+
+== First slide
+Body content.
+```
+
+**Deck metadata**
+
+`title`, `subtitle`, `authors`, and `date` are the deck's canonical identity. They are written to Typst's standard document metadata, stored in Mosaic's rendering settings, and emitted as one queryable `<mosaic-deck-metadata>` record. Setup never creates a title slide by itself; `mosaic.slide(layout: "title")` inherits these values wherever the title layout's own field is `auto`.
+
+**Partial overrides**
+
+`colors`, `cells`, `spacing`, and `layouts` are all partial: keys you omit keep the active theme's value rather than reverting to a bare default. That is what lets a deck adjust one accent color or one layout without restating the theme.
+
+**Themes**
+
+This is the Default facade's setup. A themed facade such as `mosaic.themes.metropolis` exposes the same signature with different defaults, and may add its own options on top. See `themes.setup` for binding a custom theme definition.
+
+**Parameters**
+
+- `body` (`content`): The document body captured by the show rule.
+- `paper` (`str | dictionary`, default `"16-9"`): Slide aspect ratio.
+
+  - `"16-9"`: widescreen, the default.
+  - `"4-3"`: traditional projector.
+  - a `(width:, height:)` dictionary of lengths, for a custom size Typst's named papers do not cover. Both must be positive absolute lengths: an `em` has no meaning before the deck's text size exists.
+- `margin` (`auto | length | relative | dictionary`, default `0pt`): Page margin for the `slides` output. A presentation canvas is edge to edge by default, so this is `0pt` and the deck's `spacing.inset` does the spacing instead; set it to reclaim a real page margin around a custom canvas. The `speaker`, `notes`, and `split` outputs ignore this option and use their own fixed geometry. Accepts what native `page.margin` does.
+- `title` (`content | str | none`, default `none`): Canonical deck title. Title layouts inherit it when their `title` is `auto`.
+- `subtitle` (`content | str | none`, default `none`): Canonical deck subtitle. Title layouts inherit it when their `subtitle` is `auto`.
+- `authors` (`content | str | array`, default `()`): Canonical deck authorship. Title layouts inherit it when their own `authors` is `auto`. A name on its own is enough, so this reads like `title` and `subtitle` in the common case:
+
+  ```typ
+  authors: [Ada Lovelace]
+  authors: ([Ada Lovelace], [Charles Babbage])
+  ```
+
+  Wrap a name in `layouts.author` when it carries affiliations, an ORCID iD, or a contact address. Names and records mix in one array:
+
+  ```typ
+  authors: (
+    mosaic.layouts.author(
+      [Ada Lovelace],
+      affiliations: ([Analytical Society],),
+      email: "ada@example.org",
+      corresponding: true,
+    ),
+    [Charles Babbage],
+  )
+  ```
+- `date` (`content | str | none`, default `none`): Canonical display date. Title layouts inherit it when their `date` is `auto`.
+- `colors` (`dictionary`, default `(:)`): Partial semantic color overrides layered over the active theme. Omitted roles keep the theme's value.
+
+  - `canvas`: the slide page behind everything else.
+  - `surface`: raised panels, such as component frames and callouts.
+  - `text`: ordinary body text.
+  - `muted`: subtitles, captions, and other fine print.
+  - `line`: rules, borders, and other drawn separators.
+  - `accent`: the deck's one emphatic color.
+  - `warning`: the status color a component's `role: "warning"` paints with.
+  - `error`: the status color a component's `role: "error"` paints with.
+
+  ```typ
+  colors: (accent: rgb("#0072B2"))
+  ```
+- `cells` (`dictionary`, default `(:)`): Partial fallback content keyed by cell ID, used whenever a slide leaves that cell empty. Every key names a grid cell, for example `footer` or `body`; the full-slide planes have their own options below.
+
+  A slide's explicit content overrides these values, and `none` on the slide suppresses a configured default. Defaults targeting cells absent from a resolved grid are ignored, so one footer default is safe across layouts that have no footer.
+
+  ```typ
+  cells: (footer: align(right, mosaic.components.progress()))
+  ```
+- `background` (`content | str | none`, default `none`): The deck's background plane, drawn behind the grid on every slide. A slide inherits it unless it passes its own `background:`, or `none` to suppress it. The plane takes no space away from the grid.
+
+  ```typ
+  background: mosaic.components.image(path("paper.webp"))
+  ```
+- `foreground` (`content | str | none`, default `none`): The deck's foreground plane, drawn over the grid on every slide. Ordinary home for a logo, a slide number, or a progress indicator.
+
+  ```typ
+  foreground: place(bottom + right, mosaic.components.progress())
+  ```
+- `spacing` (`dictionary`, default `(:)`): Partial overrides for the grid geometry the layouts measure with. Omitted keys keep the theme's value.
+
+  - `inset`: padding inside a cell, default `1.25em`.
+  - `gap`: space between grid regions, default `0.7em`.
+  - `compact-gap`: the tighter space inside stacked metadata, default `0.35em`.
+  - `compact-inset`: the padding above and below a compact cell, one in an `auto` row that hugs its content, such as a header or footer. Compact cells keep `inset` left and right. Built-in layouts and hand-built grids both use it. `auto`, the default, takes 55% of `inset`; set it to the `inset` value for a deeper painted header.
+
+  Typographic rhythm is not here. Heading spacing and list spacing are ordinary `show` and `set` rules owned by the theme, so change them with native rules after `setup` or in your own theme's `apply`.
+- `notes` (`dictionary`, default `(:)`): Partial geometry overrides for the printed `speaker`, `notes`, and `split` outputs. Omitted keys keep the theme's value. These pages are paper, not slide canvas, so this is layout geometry only; their heading and note typography are ordinary `show` rules, changeable after `setup`.
+
+  - `margin`: the A4 page margin, default `15mm`.
+  - `split-inset`: the same inset for the `split` output's notes half, whose page carries no margin of its own so the two halves meet exactly at the midpoint, default `12mm`.
+  - `thumbnail-stroke`: the border drawn around the slide thumbnail, default `0.6pt` in the light palette's line color, whatever the deck's own palette, because these pages are white paper.
+  - `note-gap`: space between successive notes, default `3mm`.
+  - `thumbnail-gap`: space below the slide thumbnail, default `7mm`.
+  - `heading-gap`: space below the notes heading, default `4mm`.
+  - `bottom-gap`: slack held back below the notes block so a full page does not butt against the bottom margin, default `2mm`.
+
+  ```typ
+  notes: (margin: 20mm)
+  ```
+- `overflow` (`str`, default `"off"`): What to do when a cell's content is taller than the cell.
+
+  Observation measures every cell on every frame, which roughly doubles the layout work a deck does, so it is off by default and switched on for a deliberate checking pass rather than left on while you write.
+
+  - `"off"`: observe nothing. The default.
+  - `"record"`: emit queryable `<mosaic-overflow-warning>` metadata and keep compiling. Typst gives a package no warning channel, so nothing is printed; this mode is for tooling that reads the records itself.
+  - `"error"`: emit the same metadata and fail the compile, naming every offending cell. Run this before presenting, so a build stops rather than shipping a clipped slide.
+- `breakable` (`bool`, default `false`): Whether content slides continue onto continuation pages when their body outgrows the frame. Each continuation page repeats the slide's header, footer, and planes, and belongs to the same logical slide.
+
+  The deck-wide switch applies to every slide that can break: a content slide in one step, in the `slides` output. Other slides stay fixed frames. `slide(breakable:)` overrides it for one slide. See [Breakable slides](../presenting/overflow.md#breakable-slides).
+- `layouts` (`dictionary`, default `(:)`): Partial named-layout overrides. Omitted names keep the active theme's layout.
+
+  - `content`: the ordinary slide layout, also used by automatic level-two-heading slides.
+  - `title`: used by `slide(layout: "title")`.
+  - `section`: used by `slide(layout: "section")` and by automatic level-one heading slides.
+
+  Each value is either a deferred `mosaic.layouts.*` value or a low-level `mosaic.grids.*` tree. Note that this option is distinct from the `cells:` option above, which supplies inherited cell content rather than structure.
+
+  ```typ
+  layouts: (
+    content: mosaic.layouts.content(variant: "header-body", columns: 2),
+  )
+  ```
+- `headings` (`array`, default `("section", "slide")`): Which heading levels open a slide automatically, and what each one opens. An array indexed by heading level: its first entry is for `=`, its second for `==`, and so on. Each entry is `"section"` (a section slide), `"slide"` (a content slide), or `none` for a level that opens nothing. A level past the end of the array, like one marked `none`, is ordinary content inside the current slide, so it must come after the first heading that opens one.
+
+  The default reads a deck the way its outline does. A document with a deeper hierarchy passes its own array:
+
+  ```typ
+  // Parts at `=` and sections at `==` both open section slides; `===`
+  // opens a content slide.
+  headings: ("section", "section", "slide")
+  ```
+- `font` (`str | array`, default `("Inter", "Source Sans 3", "Avenir Next", "Segoe UI", "DejaVu Sans", "Libertinus Serif")`): The deck's typeface, as a family name or a list of families in order of preference. A theme option every theme has, declared or not, so `setup` takes it under any theme; the value shown is the Default theme's, and each theme declares its own under `options`. It accepts whatever native `text(font: ..)` does.
+
+  ```typ
+  font: ("EB Garamond", "Libertinus Serif")
+  ```
+- `base-size` (`length`, default `28pt`): The deck's base text size, which a theme's headings, captions, and other tiers are stated as multiples of. Like `font`, a theme option every theme has; the value shown is the Default theme's. A `set text(size:
+  ..)` after `setup` changes the body text alone.
+- `handout` (`bool`, default `false`): Whether to emit only the final frame of each logical slide, collapsing every incremental reveal into one page for printing.
+- `output` (`str`, default `"slides"`): Which document to render.
+
+  - `"slides"`: the presentation itself.
+  - `"speaker"`: each frame above the notes that apply to it.
+  - `"notes"`: the notes alone, without the slide image.
+  - `"split"`: each frame beside its notes on a double-width page, the layout pympress and pdfpc cut in half to drive two screens.
+- `frozen-counters` (`array`, default `()`): Counters restored to their pre-slide values before each continuation frame, so content repeated across the frames of one logical slide advances them once rather than once per frame.
+
+  ```typ
+  frozen-counters: (counter(figure.where(kind: image)),)
+  ```
+- `frozen-states` (`array`, default `()`): States restored to their pre-slide values before each continuation frame, the `state` counterpart of `frozen-counters`.
