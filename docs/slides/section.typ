@@ -50,7 +50,7 @@ Each variant borrows a classic minimalist tradition:
 - `baseline`: title and number tied to one baseline by a hairline.
 - `toc`: every section in the deck listed, with the current one alive and the others ghosted.
 
-The designed variants build their composition around the section number, so an omitted `number:` reads the automatic counter.
+The designed variants build their composition around the section number, so an omitted `number:` reads the automatic counter. Pass `accent:` to recolor the number. A `subtitle:` is set caption-sized beneath the title in every variant.
 
 The image variants place the section text beside a full-bleed picture (`image-left`, `image-right`, `image-top`, `image-bottom`, sized by `tracks:`) or directly over one (`image-background`). Every image variant requires `image:`, wrapped in Typst's `path()` so the picture is found in your project rather than in the package; see #link("../content/images.html#asset-paths")[Asset paths].
 

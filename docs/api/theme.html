@@ -192,6 +192,9 @@
   --calepin-border: var(--calepin-border-width) solid var(--calepin-color-border);
   --calepin-topbar-height: 3.5rem;
   --calepin-sidebar-width: 12rem;
+  /* Right-hand table-of-contents column. Defaults to the sidebar width, so
+   * overriding --calepin-sidebar-width alone still resizes both columns. */
+  --calepin-toc-width: var(--calepin-sidebar-width);
   --calepin-shell-gap: 1.5rem;
   --calepin-shadow-card: 0 10px 30px color-mix(in srgb, var(--calepin-color-text) 8%, transparent);
   --calepin-focus-ring: 0 0 0 3px color-mix(in srgb, var(--calepin-color-focus) 28%, transparent);
@@ -1480,7 +1483,7 @@ a:has(.calepin-nav-icon) {
 
 .calepin-website-shell.grid {
   display: grid;
-  grid-template-columns: var(--calepin-sidebar-width) minmax(0, 1fr) var(--calepin-sidebar-width);
+  grid-template-columns: var(--calepin-sidebar-width) minmax(0, 1fr) var(--calepin-toc-width);
   grid-template-areas: "sidebar main toc";
   gap: var(--calepin-shell-gap);
   width: min(100% - 2rem, 95rem);
@@ -3417,7 +3420,7 @@ html[data-theme="dark"] .mosaic-diagram {
     <script src="../pagefind/pagefind-component-ui.js" type="module"></script>
 
 
-<script id="calepin-website-source-data" type="application/json">"#import \"/api/_page.typ\": api-page\n\n#show: api-page.with(\"Theme authoring\")\n\n#include \"/api/generated/theme/index.typ\"\n"</script>
+<script id="calepin-website-source-data" type="application/json">"#import \"/.calepin/calepin.typ\" as calepin\n#import \"/api/_page.typ\": api-page\n\n#show: api-page.with(\"Theme authoring\", calepin.elements.callout)\n\n#include \"/api/generated/theme/index.typ\"\n"</script>
 </head><body>
 
     <header class="calepin-website-topbar calepin-site-topbar">
@@ -3541,7 +3544,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>Slides</summary>
                         <ul>
 
@@ -3580,7 +3583,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>Styles &amp; Themes</summary>
                         <ul>
 
@@ -3607,7 +3610,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>Incremental</summary>
                         <ul>
 
@@ -3630,7 +3633,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>Content</summary>
                         <ul>
 
@@ -3657,7 +3660,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>More</summary>
                         <ul>
 
@@ -3745,7 +3748,7 @@ html[data-theme="dark"] .mosaic-diagram {
             </nav>
         </aside>
         <main class="calepin-website-main calepin-content" data-pagefind-body>
-            <h1 id="theme-authoring">Theme authoring</h1><p>The contents below link to each definition. Function entries show the signature, then a description, then the parameters with their types and defaults; variable entries show the declared type.</p><nav role="doc-toc"><h2 id="contents">Contents</h2><ol style="list-style-type: none"><li><a href="#themes.setup">Turns a passive theme definition into a setup function.</a></li></ol></nav><h2 id="themes.setup">Turns a passive theme definition into a setup function.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">setup(theme) -> function</code></pre></div><strong style="display: block">Description</strong><p>Two different things are called <code>setup</code> here, and the distinction is worth stating plainly. <code>mosaic.setup</code> is the document show rule you apply to a deck. <code>mosaic.themes.setup</code> sets up nothing on its own: it takes a theme definition and <strong>returns</strong> a show rule of that same kind, with the same signature as <code>mosaic.setup</code> plus any options the theme declares. So the usual shape is a facade that names the result once,</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">let</span> setup <span class="calepin-syntax-scope-24">=</span> mosaic.themes.<span class="calepin-syntax-scope-20">setup</span>(definition)</code></pre></div><p>and decks then apply that <code>setup</code> exactly as they would a built-in theme’s. Applying the result inline works too, as the example below shows.</p><p>A theme is data, not code: you describe colors, defaults, and rules in a plain dictionary. The definition is validated here, where the setup is built, so a malformed theme fails at that line rather than somewhere inside a deck.</p><p>Every bundled theme facade also exports the <code>definition</code> its own <code>setup</code> was built from, so <code>mosaic.themes.default.definition</code> and friends are the starting points for a variation on a bundled look.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">let</span> starlight <span class="calepin-syntax-scope-24">=</span> (
+            <h1 id="theme-authoring">Theme authoring</h1><p>The contents below link to each definition. Function entries show the signature, then a description, then the parameters with their types and defaults; variable entries show the declared type.</p><div class="calepin-callout calepin-callout-warning"><div class="calepin-callout-title">Requires Mosaic 0.0.3</div><div class="calepin-callout-body">This reference is generated from the package sources, so it describes the development version throughout; <a href="https://github.com/vincentarelbundock/mosaic/blob/main/CHANGELOG.md">the changelog</a> lists what differs from the released one. This is the development version, which is not on Typst Universe yet: a deck that uses it imports <code>@local/mosaic:0.0.3</code> rather than the released <code>@preview/mosaic:0.0.1</code>. One command installs it; see <a href="../start/install.html">Install</a>.</div></div><nav role="doc-toc"><h2 id="contents">Contents</h2><ol style="list-style-type: none"><li><a href="#themes.setup">Turns a passive theme definition into a setup function.</a></li><li><a href="#themes.decorate-heading">Decorates headings with a transforming show rule that survives on every frame of an incremental slide.</a></li></ol></nav><h2 id="themes.setup">Turns a passive theme definition into a setup function.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">setup(theme) -> function</code></pre></div><strong style="display: block">Description</strong><p>Two different things are called <code>setup</code> here, and the distinction is worth stating plainly. <code>mosaic.setup</code> is the document show rule you apply to a deck. <code>mosaic.themes.setup</code> sets up nothing on its own: it takes a theme definition and <strong>returns</strong> a show rule of that same kind, with the same signature as <code>mosaic.setup</code> plus any options the theme declares. So the usual shape is a facade that names the result once,</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">let</span> setup <span class="calepin-syntax-scope-24">=</span> mosaic.themes.<span class="calepin-syntax-scope-20">setup</span>(definition)</code></pre></div><p>and decks then apply that <code>setup</code> exactly as they would a built-in theme’s. Applying the result inline works too, as the example below shows.</p><p>A theme is data, not code: you describe colors, defaults, and rules in a plain dictionary. The definition is validated here, where the setup is built, so a malformed theme fails at that line rather than somewhere inside a deck. Two things cannot be checked that early: a <code>layouts</code> function, whose result depends on the options a deck passes, and the values a deck gives the theme’s own options, which only <code>apply</code> knows how to read.</p><p>Every bundled theme facade also exports the <code>definition</code> its own <code>setup</code> was built from, so <code>mosaic.themes.default.definition</code> and friends are the starting points for a variation on a bundled look.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">let</span> starlight <span class="calepin-syntax-scope-24">=</span> (
   name: <span class="calepin-syntax-scope-3">"Starlight"</span>,
   colors: (
     canvas: <span class="calepin-syntax-scope-20">rgb</span>(<span class="calepin-syntax-scope-3">"#0b1020"</span>), surface: <span class="calepin-syntax-scope-20">rgb</span>(<span class="calepin-syntax-scope-3">"#161d33"</span>),
@@ -3754,18 +3757,28 @@ html[data-theme="dark"] .mosaic-diagram {
     warning: <span class="calepin-syntax-scope-20">rgb</span>(<span class="calepin-syntax-scope-3">"#fbbf24"</span>), error: <span class="calepin-syntax-scope-20">rgb</span>(<span class="calepin-syntax-scope-3">"#f87171"</span>),
   ),
   defaults: (overflow: <span class="calepin-syntax-scope-3">"error"</span>),
-  options: (density: <span class="calepin-syntax-scope-3">"airy"</span>),
+  options: (font: <span class="calepin-syntax-scope-3">"Inter"</span>, base-size: <span class="calepin-syntax-scope-23">28pt</span>, density: <span class="calepin-syntax-scope-3">"airy"</span>),
   apply: (body, colors: (:), options: (:)) <span class="calepin-syntax-scope-24">=></span> {
-    <span class="calepin-syntax-scope-6">set</span> <span class="calepin-syntax-scope-20">text</span>(
-      font: <span class="calepin-syntax-scope-3">"Inter"</span>,
-      size: <span class="calepin-syntax-scope-6">if</span> options.density <span class="calepin-syntax-scope-24">==</span> <span class="calepin-syntax-scope-3">"airy"</span> { <span class="calepin-syntax-scope-23">30pt</span> } <span class="calepin-syntax-scope-6">else</span> { <span class="calepin-syntax-scope-23">26pt</span> },
+    <span class="calepin-syntax-scope-6">set</span> <span class="calepin-syntax-scope-20">par</span>(leading: <span class="calepin-syntax-scope-6">if</span> options.density <span class="calepin-syntax-scope-24">==</span> <span class="calepin-syntax-scope-3">"airy"</span> { <span class="calepin-syntax-scope-23">0.9em</span> } <span class="calepin-syntax-scope-6">else</span> { <span class="calepin-syntax-scope-23">0.6em</span> })
+    <span class="calepin-syntax-scope-6">show</span> <span class="calepin-syntax-scope-20">heading</span>: <span class="calepin-syntax-scope-6">set</span> <span class="calepin-syntax-scope-20">text</span>(
+      size: options.base-size <span class="calepin-syntax-scope-24">*</span> <span class="calepin-syntax-scope-23">1.5</span>, fill: colors.accent,
     )
-    <span class="calepin-syntax-scope-6">show</span> <span class="calepin-syntax-scope-20">heading</span>: <span class="calepin-syntax-scope-6">set</span> <span class="calepin-syntax-scope-20">text</span>(fill: colors.accent)
     body
   },
 )
 
-<span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">show</span>: mosaic.themes.<span class="calepin-syntax-scope-20">setup</span>(starlight).<span class="calepin-syntax-scope-20">with</span>(density: <span class="calepin-syntax-scope-3">"dense"</span>)</code></pre></div><p><strong>Definition keys</strong></p><p>Only <code>colors</code> is required.</p><ul><li><code>colors</code>: the complete palette, one flat dictionary of colors. Six name the deck’s own chrome (<code>canvas</code>, <code>surface</code>, <code>text</code>, <code>muted</code>, <code>line</code>, <code>accent</code>) and two name the status colors components paint with (<code>warning</code>, <code>error</code>). A component’s <code>role:</code> argument selects one of these by name, so a theme states each color once and every component follows.</li><li><code>name</code>: the theme’s display name, used in its error messages. Defaults to <code>"Custom"</code>.</li><li><code>defaults</code>: ordinary <code>setup</code> options the theme presets. A deck can still override any of them. Layouts and colors do not belong here; they have their own keys.</li><li><code>options</code>: the theme’s own options and their defaults. See below.</li><li><code>layouts</code>: a complete dictionary of <code>content</code>, <code>title</code>, and <code>section</code> layouts, or a function of the resolved options returning one. Explicit and automatic slides select from the same dictionary. Defaults to the standard layouts.</li><li><code>apply</code>: <code>(body, colors: , options: ) => body</code>, holding every native show and set rule the theme owns: base typography (<code>set text(font: ..)</code>), heading, list, and cell-label rules. The engine has already filled the canvas and set the text fill from the resolved colors, so <code>apply</code> states only what the theme changes.</li></ul><p><strong>Theme options</strong></p><p>Names declared in <code>options</code> become named arguments of the returned setup function. They are consumed before ordinary setup validation and handed to <code>layouts</code> and <code>apply</code> as the <code>options</code> dictionary, so a theme can offer choices Mosaic itself knows nothing about. An option name that collides with a built-in <code>setup</code> option is an error. Every other named argument passes through as an ordinary <code>setup</code> option.</p><strong style="display: block">Arguments</strong><table><tr><td><code>theme</code></td><td><code>dictionary</code><br>The passive theme definition dictionary described above.</td></tr></table>
+<span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">show</span>: mosaic.themes.<span class="calepin-syntax-scope-20">setup</span>(starlight).<span class="calepin-syntax-scope-20">with</span>(
+  density: <span class="calepin-syntax-scope-3">"dense"</span>,
+  base-size: <span class="calepin-syntax-scope-23">24pt</span>,
+)</code></pre></div><p><strong>Definition keys</strong></p><p>Only <code>colors</code> is required.</p><ul><li><code>colors</code>: the complete palette, one flat dictionary of colors. Six name the deck’s own chrome (<code>canvas</code>, <code>surface</code>, <code>text</code>, <code>muted</code>, <code>line</code>, <code>accent</code>) and two name the status colors components paint with (<code>warning</code>, <code>error</code>). A component’s <code>role:</code> argument selects one of these by name, so a theme states each color once and every component follows.</li><li><code>name</code>: the theme’s display name, used in its error messages. Defaults to <code>"Custom"</code>.</li><li><code>defaults</code>: ordinary <code>setup</code> options the theme presets. A deck can still override any of them. Layouts and colors do not belong here; they have their own keys.</li><li><code>options</code>: the theme’s own options and their defaults. See below.</li><li><code>layouts</code>: a complete dictionary of <code>content</code>, <code>title</code>, and <code>section</code> layouts, or a function of the resolved options returning one. Explicit and automatic slides select from the same dictionary. Defaults to the standard layouts.</li><li><code>apply</code>: <code>(body, colors: , options: ) => body</code>, holding every native show and set rule the theme owns: heading, list, and cell-label rules. The engine has already filled the canvas and stated the base typography (<code>set text(fill: .., size: .., font: ..)</code>) from the resolved colors, <code>base-size</code>, and <code>font</code>, so <code>apply</code> states only what the theme changes.</li></ul><p><strong>Base typography</strong></p><p><code>font</code> and <code>base-size</code> are the two options every theme has, whether or not its definition declares them: <code>setup(font: .., base-size: ..)</code> works under every theme, bundled or custom. A theme states its own values under <code>options</code>, like any other option; one that states neither gets Typst’s own font and a 24pt base size. Both reach <code>apply</code> and a <code>layouts</code> function resolved, as <code>options.font</code> and <code>options.base-size</code>. State heading sizes as multiples of <code>options.base-size</code> rather than in <code>em</code>: an em size multiplies with Typst’s native per-level heading scale, so the same heading changes size under <code>set heading(offset: ..)</code>.</p><p><strong>Theme options</strong></p><p>Names declared in <code>options</code> become named arguments of the returned setup function. They are consumed before ordinary setup validation and handed to <code>layouts</code> and <code>apply</code> as the <code>options</code> dictionary, so a theme can offer choices Mosaic itself knows nothing about. An option name that collides with a built-in <code>setup</code> option is an error. Every other named argument passes through as an ordinary <code>setup</code> option.</p><strong style="display: block">Arguments</strong><table><tr><td><code>theme</code></td><td><code>dictionary</code><br>The passive theme definition dictionary described above.</td></tr></table><h2 id="themes.decorate-heading">Decorates headings with a transforming show rule that survives on every frame of an incremental slide.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">decorate-heading(
+  decorate,
+  level: none,
+  depth: none,
+  body
+) -> content</code></pre></div><strong style="display: block">Description</strong><p>A slide’s heading is a real <code>heading</code> element on one frame only; the other frames repeat its appearance without the element, so the outline, the bookmarks, and <code>query(heading)</code> see one heading per logical slide. Set rules (<code>show heading: set text(..)</code>) are captured and replayed automatically. A rule that rebuilds the heading (<code>show heading: it => ..</code>) cannot be, because nothing on a continuation frame matches it. Declare such a rule through this function instead and it is applied on every frame. It is used as a show rule, in a deck or in a theme’s <code>apply</code>:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">show</span>: mosaic.themes.decorate-heading.<span class="calepin-syntax-scope-20">with</span>(depth: <span class="calepin-syntax-scope-23">2</span>, it <span class="calepin-syntax-scope-24">=></span> <span class="calepin-syntax-scope-20">block</span>(width: <span class="calepin-syntax-scope-23">100%</span>)[
+  #it
+  <span class="calepin-syntax-scope-20">#</span><span class="calepin-syntax-scope-20">line</span>(length: <span class="calepin-syntax-scope-23">2em</span>)
+])</code></pre></div><p><code>decorate</code> receives the heading on the canonical frame and a block standing in for it on the others, so it must treat its argument as opaque content to place, not as an element whose fields it reads.</p><p><strong>Which headings</strong></p><p>With neither <code>depth</code> nor <code>level</code> the rule applies to every heading. <code>depth</code> is the number of <code>=</code> signs the heading was written with, which is what decides whether it opens a slide; <code>level</code> is the native level it resolves to, which differs from the depth under <code>set heading(offset: ..)</code>. Give <code>depth: 2</code> for the heading that titles a content slide. Several rules nest as native show rules do, the one declared last outermost.</p><strong style="display: block">Arguments</strong><table><tr><td><code>decorate</code></td><td><code>function</code><br>The transformation, called with the heading or its stand-in.</td></tr><tr><td><code>level</code></td><td><code>none | int</code><br>The native heading level the rule applies to, or <code>none</code> for every level.</td></tr><tr><td><code>depth</code></td><td><code>none | int</code><br>The source depth the rule applies to (<code>==</code> is depth 2), or <code>none</code> for every depth. This is what the deck compiler classifies slides by, and it differs from <code>level</code> under <code>set heading(offset: ..)</code>, so a rule meant for the heading that opens a slide selects by depth.</td></tr><tr><td><code>body</code></td><td><code>content</code><br>The content the rule is in force for; supplied by <code>show:</code>.</td></tr></table>
         </main>
 
         <aside class="calepin-website-toc is-floating">
@@ -3776,6 +3789,8 @@ html[data-theme="dark"] .mosaic-diagram {
                     <li class="level-2"><a href="#contents">Contents</a></li>
 
                     <li class="level-2"><a href="#themes.setup">Turns a passive theme definition into a setup function.</a></li>
+
+                    <li class="level-2"><a href="#themes.decorate-heading">Decorates headings with a transforming show rule that survives on every frame of an incremental slide.</a></li>
 
                 </ul>
             </nav>
@@ -4133,7 +4148,11 @@ html[data-theme="dark"] .mosaic-diagram {
   const root = document.documentElement;
   const media = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
   const storageKey = (button) => button.dataset.calepinThemeStorageKey || "calepin-theme";
-  const urlParam = (button) => button.dataset.calepinThemeParam || "";
+  // Matches theme-init.js's default so the two scripts agree on which URL
+  // param to honor when a theme omits `data-calepin-theme-param`: otherwise
+  // the init script paints the theme from `?theme=`, and the toggle button's
+  // own read (used to sync its label/icon) silently ignores it, flashing.
+  const urlParam = (button) => button.dataset.calepinThemeParam || "theme";
   const systemTheme = () => media && media.matches ? "dark" : "light";
 
   function readUrl(button) {
@@ -4290,14 +4309,11 @@ html[data-theme="dark"] .mosaic-diagram {
       menu.appendChild(li);
     });
 
-    summary.addEventListener("click", () => {
-      const open = !picker.open;
-      closeAll(open ? picker : null);
-      picker.classList.toggle("is-open", open);
-      summary.setAttribute("aria-expanded", open ? "true" : "false");
-    });
-
+    // The native <details> toggle owns the open state. While open, Pico's
+    // full-viewport summary::before overlay turns any outside click into a
+    // summary click, which closes the menu without reaching the page below.
     picker.addEventListener("toggle", () => {
+      if (picker.open) closeAll(picker);
       picker.classList.toggle("is-open", picker.open);
       summary.setAttribute("aria-expanded", picker.open ? "true" : "false");
     });

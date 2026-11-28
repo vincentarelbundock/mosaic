@@ -1,12 +1,15 @@
 #import "/.calepin/calepin.typ" as calepin
 #import "/_includes/embedded-examples.typ": embedded-example
+#import "/_includes/site.typ": unreleased
 
 #set document(title: [Overflow and fitting])
 #metadata((title: "Overflow and fitting")) <website-metadata>
 
 #title()
 
-A cell does not resize its content. A body larger than its cell is drawn past the edge, so a slide that holds too much fails silently on screen rather than at compile time. Before presenting, run a checking compile to find those slides, and scale the rare indivisible block with `m.fit`.
+#unreleased(calepin.elements.callout)[Breakable slides are new: `setup(breakable:)` and `slide(breakable:)` do not exist in the released version.]
+
+A cell does not resize its content. A body larger than its cell is drawn past the edge, so a slide that holds too much fails silently on screen rather than at compile time. Before presenting, run a checking compile to find those slides, and scale the rare indivisible block with `m.fit`. A slide whose content is long by nature, such as a list of references, can instead break onto continuation pages.
 
 = Inspecting overflowing cells
 
@@ -14,13 +17,13 @@ Overflow observation is off by default, because measuring every cell on every fr
 
 For tooling that would rather read the records than stop the build, `setup(overflow: "record")` emits them and keeps compiling:
 
-```sh typst eval \
+```sh
+typst eval \
   'query(<mosaic-overflow-warning>).map(it => it.value)' \
   --in slides.typ
 ```
 
-Each record identifies the slide, frame, cell, and measured height. Typst gives a package no warning channel, so `"record"` prints nothing on its own; see the
-#link("../api/setup.html")[Setup API].
+Each record identifies the slide, frame, cell, and measured height. Typst gives a package no warning channel, so `"record"` prints nothing on its own; see the #link("../api/setup.html")[Setup API].
 
 An overflow means the slide holds more than it can show. The remedy is editorial: cut a bullet, split the slide in two, or move to a layout with more room. Mosaic deliberately offers no automatic shrink-to-fit for body content, because a deck whose type size is decided slide by slide loses the scale that holds it together.
 
@@ -29,8 +32,7 @@ An overflow means the slide holds more than it can show. The remedy is editorial
 When a single indivisible block is the problem, a wide table, a chart, or a generated list, scale that one block with `m.fit` and leave the deck's typography alone:
 
 ```typ
-#m.slide[
-  == Regression results
+#m.slide[== Regression results][
   #m.fit(my-table)
 ]
 ```
@@ -41,7 +43,7 @@ The block is offered the cell's width first, so text and lists wrap and are then
 
 `width:` and `height:` fit to part of the region instead of all of it, and take a length, ratio, or fraction. A fitted block cannot overflow, so it no longer appears in the overflow records.
 
-Measuring a block means holding it inside a closure, which the slide runtime cannot look into. `m.steps.pause`, `m.steps`, and `m.note` are found by walking the slide's content, so inside a fitted block they would be invisible: the reveals would collapse into one frame and the notes would never reach the speaker output. `m.fit` reports that as an error instead. Keep them outside the fitted block, or fit each revealed part on its own.
+Measuring a block means holding it inside a closure, which the slide runtime cannot look into. `m.steps.pause`, `m.steps`, and `m.note` are found by walking the slide's content, so inside a fitted block they would be invisible: the reveals would collapse into one frame and the notes would never reach the speaker output. `m.fit` reports that as an error instead. Keep them outside the fitted block, or fit each revealed part on its own. #link("../incremental/steps.html#where-steps-work")[Where steps work] lists the other places the runtime cannot see into.
 
 #embedded-example(
   calepin.elements.gallery,
@@ -51,3 +53,46 @@ Measuring a block means holding it inside a closure, which the slide runtime can
 )
 
 See the #link("../api/slides.html")[Slides API] for the full `m.fit` signature.
+
+= Breakable slides
+
+A breakable slide continues on as many pages as its body needs, the way a document page does. Every continuation page repeats the slide's header and footer, and its background and foreground, and the body picks up where the previous page left off. It is the remedy for content that is long by nature and that you would otherwise split by hand, such as a bibliography.
+
+Breaking is off by default, because a slide that grows a page without asking hides the overflow you would want to hear about. Turn it on for one slide:
+
+```typ
+#import "@local/mosaic:0.0.3" as m
+#show: m.setup
+
+#m.slide(breakable: true)[== References][
+  #bibliography("refs.bib", title: none)
+]
+```
+
+Or for the whole deck, with `setup(breakable: true)`. Under the deck-wide switch every slide that can break does, and the others stay ordinary fixed frames; `slide(breakable: false)` keeps one slide fixed.
+
+```typ
+#import "@local/mosaic:0.0.3" as m
+#show: m.setup.with(breakable: true)
+
+== References
+#bibliography("refs.bib", title: none)
+```
+
+The continuation pages belong to one logical slide. `m.info().slide.number` reports the same number on each of them, so a footer that prints the slide number shows it unchanged, while the physical page number advances.
+
+== What can break
+
+A breakable slide has limits, each because the frame no longer has one fixed size:
+
+- *Content slides only.* The slide's grid must be a stack of rows, with one flowing row between header and footer rows sized to their content, which is what every built-in content layout builds. A title, section, or image slide does not break, nor does a custom grid of another shape, one that draws rules between its rows, or one whose row gutter is a fraction.
+- *Columns break together.* On a content layout with several `columns:`, each column continues on the next page beside the others.
+- *One step.* A slide that reveals in steps (`m.steps.pause`, `m.steps`, or a grid `on` node) does not break, because every step would need its own run of pages.
+- *The `slides` output only.* The `speaker`, `notes`, and `split` outputs draw each frame as a fixed thumbnail, so there a breakable slide is an ordinary frame and its overflow is drawn past the edge.
+- *Only the flowing row breaks.* The header and footer repeat on every page, so they must leave the body room on one page. A slide whose header alone outgrows the frame does not break. A slide with a single body runs into this, because that body fills the header, the first cell; write `[== Title][..]` or name the cell with `cells: (body: ..)`.
+- *Content breaks where Typst can break it.* Text breaks between lines, and lists, bibliographies, and tables break between their rows. An indivisible block taller than the page, such as an image or a block scaled with `m.fit`, still overflows.
+- *The body takes its content's height.* A slide that fits renders exactly as a fixed slide would; one that overflows sizes its body to the content on each page, so a vertically centered body sits at the top and a body fill ends where the content does on the last page.
+- *Notes stay on the first page.* Speaker notes attach to the slide's first page; the continuation pages carry none.
+- *No overflow records once it breaks.* The flowing body has no fixed region to overflow, so `setup(overflow:)` does not observe a slide that paginates. A breakable slide drawn as a fixed frame is observed like any other.
+
+`slide(breakable: true)` on a slide that cannot break is an error that names the reason. Under `setup(breakable: true)` the same slide is left as a fixed frame without a word, so a deck-wide switch never turns every title slide into an error; run the overflow check above to find the ones that still do not fit.

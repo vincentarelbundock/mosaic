@@ -4,9 +4,9 @@
 
 
 
-    <meta name="description" content="A section slide divides a talk into parts. It announces where the audience has arrived, carries no body content, and usually shows a number so the deck's shape stays legible.">
-    <meta property="og:description" content="A section slide divides a talk into parts. It announces where the audience has arrived, carries no body content, and usually shows a number so the deck's shape stays legible.">
-    <meta name="twitter:description" content="A section slide divides a talk into parts. It announces where the audience has arrived, carries no body content, and usually shows a number so the deck's shape stays legible.">
+    <meta name="description" content="A section slide divides a talk into parts. It announces where the audience has arrived, carries no body content, and usually shows a number so the deck&#39;s shape stays legible.">
+    <meta property="og:description" content="A section slide divides a talk into parts. It announces where the audience has arrived, carries no body content, and usually shows a number so the deck&#39;s shape stays legible.">
+    <meta name="twitter:description" content="A section slide divides a talk into parts. It announces where the audience has arrived, carries no body content, and usually shows a number so the deck&#39;s shape stays legible.">
 
 
 
@@ -192,6 +192,9 @@
   --calepin-border: var(--calepin-border-width) solid var(--calepin-color-border);
   --calepin-topbar-height: 3.5rem;
   --calepin-sidebar-width: 12rem;
+  /* Right-hand table-of-contents column. Defaults to the sidebar width, so
+   * overriding --calepin-sidebar-width alone still resizes both columns. */
+  --calepin-toc-width: var(--calepin-sidebar-width);
   --calepin-shell-gap: 1.5rem;
   --calepin-shadow-card: 0 10px 30px color-mix(in srgb, var(--calepin-color-text) 8%, transparent);
   --calepin-focus-ring: 0 0 0 3px color-mix(in srgb, var(--calepin-color-focus) 28%, transparent);
@@ -1480,7 +1483,7 @@ a:has(.calepin-nav-icon) {
 
 .calepin-website-shell.grid {
   display: grid;
-  grid-template-columns: var(--calepin-sidebar-width) minmax(0, 1fr) var(--calepin-sidebar-width);
+  grid-template-columns: var(--calepin-sidebar-width) minmax(0, 1fr) var(--calepin-toc-width);
   grid-template-areas: "sidebar main toc";
   gap: var(--calepin-shell-gap);
   width: min(100% - 2rem, 95rem);
@@ -3417,7 +3420,7 @@ html[data-theme="dark"] .mosaic-diagram {
     <script src="../pagefind/pagefind-component-ui.js" type="module"></script>
 
 
-<script id="calepin-website-source-data" type="application/json">"#import \"/.calepin/calepin.typ\" as calepin\n#import \"/_includes/embedded-examples.typ\": thumbnail-gallery\n\n#set document(title: [Section slides])\n#metadata((title: \"Section\")) <website-metadata>\n\n#title()\n\nA section slide divides a talk into parts. It announces where the audience has arrived, carries no body content, and usually shows a number so the deck's shape stays legible.\n\n= Sections from headings\n\nAfter `#show: m.setup`, a level-one heading is a section slide. Any text between that heading and the next `==` becomes the section's subtitle, and the numbering is automatic:\n\n```typ\n= Methods\n\nWhat the data can and cannot support.\n\n== Data\n\nThis is one slide.\n```\n\nThat is the whole mechanism for most decks. Sections declared this way also feed Typst's native `outline`, the `toc` variant described below, and the breadcrumbs on the #link(\"../presenting/navigation.html\")[Navigation] page, because the headings stay native throughout.\n\n= Explicit section slides\n\nWrite the slide with `m.slide` when it needs arguments a heading cannot carry. The section text is the slide's own content, so pass one positional block:\n\n```typ\n#m.slide(layout: \"section\")[Methods]\n\n#m.slide(\n  layout: \"section\",\n  number: [02],\n  subtitle: [How the grid resolves],\n)[Structure]\n```\n\nAn explicit `number:` overrides the automatic counter for that slide. Omit it and the designed variants read the counter themselves, which is what you want in the ordinary case. Named arguments here refine the configured section layout rather than replacing it; see #link(\"custom.html#refine-a-layout\")[Refine a layout].\n\n= Variants\n\nEach variant borrows a classic minimalist tradition:\n\n- `plain`, the default: the title alone at the slide's center.\n- `rule`: the title beneath a heavy full-width rule, the number above it.\n- `numeral`: an enormous ghost number bleeding off the top-right edge behind a lower-left title stack.\n- `baseline`: title and number tied to one baseline by a hairline.\n- `toc`: every section in the deck listed, with the current one alive and the others ghosted.\n\nThe designed variants build their composition around the section number, so an omitted `number:` reads the automatic counter.\n\nThe image variants place the section text beside a full-bleed picture (`image-left`, `image-right`, `image-top`, `image-bottom`, sized by `tracks:`) or directly over one (`image-background`). Every image variant requires `image:`, wrapped in Typst's `path()` so the picture is found in your project rather than in the package; see #link(\"../content/images.html#asset-paths\")[Asset paths].\n\nWritten out in full, one of those slides is:\n\n```typ\n#m.slide(\n  layout: \"section\",\n  variant: \"numeral\",\n  subtitle: [A ghost numeral],\n)[Numeral section]\n```\n\nThe thumbnails below grow the same divider one argument at a time: plain, numbered, the designed text variants, then each image placement. Open any thumbnail to see the slide at full size:\n\n#thumbnail-gallery(\n  calepin.elements.gallery,\n  \"structure/section-layout\",\n  11,\n  \"Section divider variants\",\n)\n"</script>
+<script id="calepin-website-source-data" type="application/json">"#import \"/.calepin/calepin.typ\" as calepin\n#import \"/_includes/embedded-examples.typ\": thumbnail-gallery\n\n#set document(title: [Section slides])\n#metadata((title: \"Section\")) \u003cwebsite-metadata\u003e\n\n#title()\n\nA section slide divides a talk into parts. It announces where the audience has arrived, carries no body content, and usually shows a number so the deck's shape stays legible.\n\n= Sections from headings\n\nAfter `#show: m.setup`, a level-one heading is a section slide. Any text between that heading and the next `==` becomes the section's subtitle, and the numbering is automatic:\n\n```typ\n= Methods\n\nWhat the data can and cannot support.\n\n== Data\n\nThis is one slide.\n```\n\nThat is the whole mechanism for most decks. Sections declared this way also feed Typst's native `outline`, the `toc` variant described below, and the breadcrumbs on the #link(\"../presenting/navigation.html\")[Navigation] page, because the headings stay native throughout.\n\n= Explicit section slides\n\nWrite the slide with `m.slide` when it needs arguments a heading cannot carry. The section text is the slide's own content, so pass one positional block:\n\n```typ\n#m.slide(layout: \"section\")[Methods]\n\n#m.slide(\n  layout: \"section\",\n  number: [02],\n  subtitle: [How the grid resolves],\n)[Structure]\n```\n\nAn explicit `number:` overrides the automatic counter for that slide. Omit it and the designed variants read the counter themselves, which is what you want in the ordinary case. Named arguments here refine the configured section layout rather than replacing it; see #link(\"custom.html#refine-a-layout\")[Refine a layout].\n\n= Variants\n\nEach variant borrows a classic minimalist tradition:\n\n- `plain`, the default: the title alone at the slide's center.\n- `rule`: the title beneath a heavy full-width rule, the number above it.\n- `numeral`: an enormous ghost number bleeding off the top-right edge behind a lower-left title stack.\n- `baseline`: title and number tied to one baseline by a hairline.\n- `toc`: every section in the deck listed, with the current one alive and the others ghosted.\n\nThe designed variants build their composition around the section number, so an omitted `number:` reads the automatic counter. Pass `accent:` to recolor the number. A `subtitle:` is set caption-sized beneath the title in every variant.\n\nThe image variants place the section text beside a full-bleed picture (`image-left`, `image-right`, `image-top`, `image-bottom`, sized by `tracks:`) or directly over one (`image-background`). Every image variant requires `image:`, wrapped in Typst's `path()` so the picture is found in your project rather than in the package; see #link(\"../content/images.html#asset-paths\")[Asset paths].\n\nWritten out in full, one of those slides is:\n\n```typ\n#m.slide(\n  layout: \"section\",\n  variant: \"numeral\",\n  subtitle: [A ghost numeral],\n)[Numeral section]\n```\n\nThe thumbnails below grow the same divider one argument at a time: plain, numbered, the designed text variants, then each image placement. Open any thumbnail to see the slide at full size:\n\n#thumbnail-gallery(\n  calepin.elements.gallery,\n  \"structure/section-layout\",\n  11,\n  \"Section divider variants\",\n)\n"</script>
 </head><body>
 
     <header class="calepin-website-topbar calepin-site-topbar">
@@ -3580,7 +3583,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>Styles &amp; Themes</summary>
                         <ul>
 
@@ -3607,7 +3610,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>Incremental</summary>
                         <ul>
 
@@ -3630,7 +3633,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>Content</summary>
                         <ul>
 
@@ -3657,7 +3660,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>More</summary>
                         <ul>
 
@@ -3696,7 +3699,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>API reference</summary>
                         <ul>
 
@@ -3757,7 +3760,7 @@ This is one slide.</code></pre></div><p>That is the whole mechanism for most dec
   layout: <span class="calepin-syntax-scope-3">"section"</span>,
   number: [02],
   subtitle: [How the grid resolves],
-)[Structure]</code></pre></div><p>An explicit <code>number:</code> overrides the automatic counter for that slide. Omit it and the designed variants read the counter themselves, which is what you want in the ordinary case. Named arguments here refine the configured section layout rather than replacing it; see <a href="custom.html#refine-a-layout">Refine a layout</a>.</p><h2 id="variants">Variants</h2><p>Each variant borrows a classic minimalist tradition:</p><ul><li><code>plain</code>, the default: the title alone at the slide’s center.</li><li><code>rule</code>: the title beneath a heavy full-width rule, the number above it.</li><li><code>numeral</code>: an enormous ghost number bleeding off the top-right edge behind a lower-left title stack.</li><li><code>baseline</code>: title and number tied to one baseline by a hairline.</li><li><code>toc</code>: every section in the deck listed, with the current one alive and the others ghosted.</li></ul><p>The designed variants build their composition around the section number, so an omitted <code>number:</code> reads the automatic counter.</p><p>The image variants place the section text beside a full-bleed picture (<code>image-left</code>, <code>image-right</code>, <code>image-top</code>, <code>image-bottom</code>, sized by <code>tracks:</code>) or directly over one (<code>image-background</code>). Every image variant requires <code>image:</code>, wrapped in Typst’s <code>path()</code> so the picture is found in your project rather than in the package; see <a href="../content/images.html#asset-paths">Asset paths</a>.</p><p>Written out in full, one of those slides is:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#m.<span class="calepin-syntax-scope-20">slide</span>(
+)[Structure]</code></pre></div><p>An explicit <code>number:</code> overrides the automatic counter for that slide. Omit it and the designed variants read the counter themselves, which is what you want in the ordinary case. Named arguments here refine the configured section layout rather than replacing it; see <a href="custom.html#refine-a-layout">Refine a layout</a>.</p><h2 id="variants">Variants</h2><p>Each variant borrows a classic minimalist tradition:</p><ul><li><code>plain</code>, the default: the title alone at the slide’s center.</li><li><code>rule</code>: the title beneath a heavy full-width rule, the number above it.</li><li><code>numeral</code>: an enormous ghost number bleeding off the top-right edge behind a lower-left title stack.</li><li><code>baseline</code>: title and number tied to one baseline by a hairline.</li><li><code>toc</code>: every section in the deck listed, with the current one alive and the others ghosted.</li></ul><p>The designed variants build their composition around the section number, so an omitted <code>number:</code> reads the automatic counter. Pass <code>accent:</code> to recolor the number. A <code>subtitle:</code> is set caption-sized beneath the title in every variant.</p><p>The image variants place the section text beside a full-bleed picture (<code>image-left</code>, <code>image-right</code>, <code>image-top</code>, <code>image-bottom</code>, sized by <code>tracks:</code>) or directly over one (<code>image-background</code>). Every image variant requires <code>image:</code>, wrapped in Typst’s <code>path()</code> so the picture is found in your project rather than in the package; see <a href="../content/images.html#asset-paths">Asset paths</a>.</p><p>Written out in full, one of those slides is:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#m.<span class="calepin-syntax-scope-20">slide</span>(
   layout: <span class="calepin-syntax-scope-3">"section"</span>,
   variant: <span class="calepin-syntax-scope-3">"numeral"</span>,
   subtitle: [A ghost numeral],
@@ -4197,7 +4200,11 @@ This is one slide.</code></pre></div><p>That is the whole mechanism for most dec
   const root = document.documentElement;
   const media = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
   const storageKey = (button) => button.dataset.calepinThemeStorageKey || "calepin-theme";
-  const urlParam = (button) => button.dataset.calepinThemeParam || "";
+  // Matches theme-init.js's default so the two scripts agree on which URL
+  // param to honor when a theme omits `data-calepin-theme-param`: otherwise
+  // the init script paints the theme from `?theme=`, and the toggle button's
+  // own read (used to sync its label/icon) silently ignores it, flashing.
+  const urlParam = (button) => button.dataset.calepinThemeParam || "theme";
   const systemTheme = () => media && media.matches ? "dark" : "light";
 
   function readUrl(button) {
@@ -4354,14 +4361,11 @@ This is one slide.</code></pre></div><p>That is the whole mechanism for most dec
       menu.appendChild(li);
     });
 
-    summary.addEventListener("click", () => {
-      const open = !picker.open;
-      closeAll(open ? picker : null);
-      picker.classList.toggle("is-open", open);
-      summary.setAttribute("aria-expanded", open ? "true" : "false");
-    });
-
+    // The native <details> toggle owns the open state. While open, Pico's
+    // full-viewport summary::before overlay turns any outside click into a
+    // summary click, which closes the menu without reaching the page below.
     picker.addEventListener("toggle", () => {
+      if (picker.open) closeAll(picker);
       picker.classList.toggle("is-open", picker.open);
       summary.setAttribute("aria-expanded", picker.open ? "true" : "false");
     });

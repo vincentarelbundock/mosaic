@@ -2,7 +2,7 @@
 #import "/_includes/embedded-examples.typ": (
   example-source, slideshow, slideshow-grid,
 )
-#import "/_includes/site.typ": repo-file
+#import "/_includes/site.typ": repo-file, unreleased
 
 #set document(title: [Themes])
 #metadata((title: "Themes")) <website-metadata>
@@ -10,6 +10,8 @@
 #title()
 
 A theme decides how a deck looks: its colors, its type, and the way each slide arranges what you put on it. Every Mosaic deck uses a theme, even one that never mentions the word. Import the package without naming a theme and you get the default theme. Name a different one and the whole deck changes at once, without a single edit to your slides.
+
+#unreleased(calepin.elements.callout)[`themes.decorate-heading` is new, and `setup(font:, base-size:)` now works under a custom theme that declares neither. Every example on this page compiles under the released version as it stands.]
 
 = Selecting themes
 
@@ -101,7 +103,7 @@ The Customizing section below takes the first three in turn, each on a bundled t
 
 = Customizing
 
-A deck reaches every part of its theme through `setup`, without writing a theme of its own: `colors:` for the palette, ordinary `set` and `show` rules for the type, and `layouts:` for the arrangements. That is as far as most decks need to go.
+A deck reaches every part of its theme through `setup`, without writing a theme of its own: `colors:` for the palette, `font:` and `base-size:` plus ordinary `set` and `show` rules for the type, and `layouts:` for the arrangements. That is as far as most decks need to go.
 
 == Colors
 
@@ -134,13 +136,13 @@ Beyond the polarity pair, the bundled `palettes` collection composes with every 
 
 == Typography
 
-A theme's typography is ordinary `set` and `show` rules. Rules you write after `#show: m.setup` layer on top of the theme's. There is no separate typography system:
+A theme's typography starts from two options every theme has, `font` and `base-size`, which `setup` takes under any theme. The rest is ordinary `set` and `show` rules. Rules you write after `#show: m.setup` layer on top of the theme's. There is no separate typography system:
 
 #example-source("appearance/type-custom")
 
 The #link("styling.html")[styling] page covers those rules in full. The #link("../api/labels.html")[label reference] lists every label a slide emits. A theme writes its own rules against that same list.
 
-Rules written that way stay in the deck that holds them. A theme's `apply` is the same list of rules in a function. Moving them there leaves the result identical. It also makes them portable. Run the base theme's `apply` first to keep the rules it already carries:
+Choices written that way stay in the deck that holds them. A theme carries the same ones: the font and base size become its `options`, and its `apply` is the same list of rules in a function. Moving them there leaves the result identical. It also makes them portable. Run the base theme's `apply` first to keep the rules it already carries:
 
 #example-source("appearance/type-apply")
 
@@ -178,9 +180,12 @@ Bind one in the deck itself to see the whole shape at once. A theme needs only `
 #let mine = (
   name: "Mine",
   colors: mosaic.palettes.light + (accent: rgb("#a23b72")),
+  options: (font: "EB Garamond", base-size: 26pt),
   apply: (body, colors: (:), options: (:)) => {
-    set text(font: "EB Garamond", size: 26pt)
-    show heading: set text(fill: colors.accent)
+    show heading: set text(
+      size: options.base-size * 1.5,
+      fill: colors.accent,
+    )
     body
   },
 )
@@ -188,7 +193,7 @@ Bind one in the deck itself to see the whole shape at once. A theme needs only `
 #show: mosaic.themes.setup(mine)
 ```
 
-Read `mosaic.themes.setup` carefully, because this page uses the name `setup` for two different things. `mosaic.setup` is the document show rule you apply to a deck. `mosaic.themes.setup` sets up nothing on its own. It takes a definition and *returns* a show rule of that kind. Its three keys map exactly onto the three sections above:
+Read `mosaic.themes.setup` carefully, because this page uses the name `setup` for two different things. `mosaic.setup` is the document show rule you apply to a deck. `mosaic.themes.setup` sets up nothing on its own. It takes a definition and *returns* a show rule of that kind. Three of its keys map exactly onto the three sections above:
 
 #table(
   columns: (auto, 1fr),
@@ -208,11 +213,28 @@ Three further keys carry the rest of a theme:
 
 == What `apply` owns
 
-Mosaic's engine emits no slide typography of its own. Every rule a slide renders with comes from the active theme. So a theme built from scratch states its whole look in `apply`, down to the labels a slide emits. The #link("../api/labels.html")[label reference] is the checklist: a theme that styles `mosaic-cell-title` but forgets `mosaic-cell-section` renders section slides in the engine's bare defaults, and nothing warns about it.
+Mosaic's engine states the base typography and nothing else: it fills the canvas, and sets the text fill from the palette's `text` color and the font and size from the resolved `font` and `base-size` options. Every other rule a slide renders with comes from the active theme. Both values reach `apply` resolved, as `options.font` and `options.base-size`; state heading sizes as multiples of `options.base-size` rather than in `em`, because an em size multiplies with Typst's own per-level heading scale and so changes under `set heading(offset: ..)`. So a theme built from scratch states the rest of its look in `apply`, down to the labels a slide emits. The #link("../api/labels.html")[label reference] is the checklist: a theme that styles `mosaic-cell-title` but forgets `mosaic-cell-section` renders section slides in the engine's bare defaults, and nothing warns about it.
 
-A theme may omit `apply`. It then changes colors and layouts only, and every slide falls back to Typst's own text defaults. A theme derived from a bundled one inherits that theme's rules and can leave `apply` alone.
+A theme may omit `apply`. It then changes colors, defaults, and layouts only, and every slide renders in the deck's font, base size, and text color with Typst's own defaults for the rest. Every theme has the `font` and `base-size` options, whether or not its definition declares them; a theme that declares neither gets Typst's own font at 24pt. A theme derived from a bundled one inherits that theme's rules and can leave `apply` alone.
 
-The engine keeps two rules of its own, on `<mosaic-note-heading>` and `<mosaic-note-body>`. They style the printed speaker and notes pages. That furniture must read black on white whatever the theme does, so the rules force the color and nothing else: the note text inherits the base size the theme's own `apply` set, rather than a size the engine picked. A theme or deck rule on the same label overrides them.
+The engine keeps two rules of its own, on `<mosaic-note-heading>` and `<mosaic-note-body>`. They style the printed speaker and notes pages. That furniture must read black on white whatever the theme does, so the rules force the color and nothing else: the note text inherits the deck's base size rather than a size of its own. A theme or deck rule on the same label overrides them.
+
+== Heading rules that rebuild the heading
+
+One kind of rule needs a helper. On a slide with several frames, the slide's heading is a real `heading` element on one frame only; the other frames repeat its appearance, so the outline and the bookmarks see one heading per slide. Mosaic replays a theme's `set` rules on those frames by itself. A rule that *rebuilds* the heading, `show heading: it => ..`, has nothing to match there, so it is declared through `themes.decorate-heading` instead, which applies it on every frame:
+
+```typ
+apply: (body, colors: (:), options: (:)) => {
+  // A short accent rule under every slide title, on every frame.
+  show: mosaic.themes.decorate-heading.with(depth: 2, it => block(width: 100%)[
+    #it
+    #line(length: 2em, stroke: 2pt + colors.accent)
+  ])
+  body
+},
+```
+
+`depth` is the number of `=` signs, so `depth: 2` selects the headings that title content slides. The function receives the heading on one frame and a stand-in on the others, so it places its argument rather than reading its fields. The same helper works in a deck, as an ordinary `#show:` rule after `setup`. The #link("../api/theme.html#themes.decorate-heading")[theme authoring API] documents its arguments.
 
 == Customize a theme
 
@@ -250,7 +272,7 @@ Once a theme is worth reusing, give it a file of its own. That file re-exports t
 #let setup = themes.setup(definition)
 ```
 
-Those are the names a deck expects to find: `setup` and `layouts` at least, plus whatever else it uses from `m`. `themes.setup` validates the definition on the spot. A malformed theme therefore fails on that line, rather than somewhere inside a deck that imports it.
+Those are the names a deck expects to find: `setup` and `layouts` at least, plus whatever else it uses from `m`. `themes.setup` validates the definition on the spot: a missing or misspelled color is named, as are unknown `defaults` keys and an incomplete `layouts` dictionary. A malformed theme therefore fails on that line, rather than somewhere inside a deck that imports it.
 
 The deck below imports a complete theme in that shape. Its three files sit beside the deck in the repository: the importable file, the definition dictionary, and the layout functions.
 
@@ -275,7 +297,7 @@ Each name in `options` becomes a named argument of the setup the definition prod
 
 Mosaic hands the resolved options to `layouts` as well as `apply`, so `layouts` may be a function of them rather than a fixed dictionary. That is what lets one option offer genuinely different arrangements rather than only a different type size.
 
-An option name that collides with a built-in `setup` option raises an error where you bind the theme. Every other named argument a deck passes falls through to `setup` as usual.
+An option name that collides with a built-in `setup` option raises an error where you bind the theme. `font` and `base-size` are the exception: they are theme options, and a theme declares its own values for them under `options`. Every other named argument a deck passes falls through to `setup` as usual.
 
 The #link("../api/theme.html")[theme authoring API] documents every definition key in full.
 
@@ -318,7 +340,7 @@ In this example, we create a new "content" slide with a custom footer. The code 
 
 That defines a variant of the content layout, bound to the name `footered`. It sets up a grid of rows: first the usual `header` cell at automatic height, then the `body` cell with an instruction to fill the available space, which is what pushes the footer to the bottom edge. Naming a track with `grids.track` gives the cell a name you can later style with a `show` rule, and sets its size.
 
-The footer track comes last, again at automatic height, and carries a cell named `footer`. Because it is declared with `grids.cell` rather than a bare name, that cell can hold default content, which then appears on every slide built from this layout without being written into a single one of them. The content opens with the text "Mosaic"; a conference abbreviation, a course name, a logo, or whatever else suits would go here. An expanding `h(1fr)` then flushes the final element right. The default display of the `progress` component is exactly what we want there: a pair `N / M` denoting the Nth slide out of M.
+The footer row comes last, again at automatic height, and carries a cell named `footer`. Because it is declared with `grids.cell` rather than a bare name, that cell can hold default content, which then appears on every slide built from this layout without being written into a single one of them. The content opens with the text "Mosaic"; a conference abbreviation, a course name, a logo, or whatever else suits would go here. An expanding `h(1fr)` then flushes the final element right. The default display of the `progress` component is exactly what we want there: a pair `N / M` denoting the Nth slide out of M.
 
 We then hand that layout to `setup` under the name `content`:
 

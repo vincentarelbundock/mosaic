@@ -1,14 +1,16 @@
 #import "/.calepin/calepin.typ" as calepin
 #import "/_includes/embedded-examples.typ": embedded-example
 
+#import "/_includes/site.typ": unreleased
+
 #set document(title: [Images])
 #metadata((title: "Images")) <website-metadata>
 
 #title()
 
-An image can sit in a cell or on a
-#link("../slides/background.html")[background] or #link("../slides/foreground.html")[foreground] plane. Image loading,
-fitting, figures, captions, and references remain native Typst. Full-slide photographic backgrounds are documented on the #link("../slides/background.html")[Background] page.
+An image can sit in a cell, in a layout that is built around one, or on a #link("../slides/background.html")[background] or #link("../slides/foreground.html")[foreground] plane. Image loading, fitting, figures, captions, and references remain native Typst. This page is where pictures are explained once: what a picture is, where a layout can put one, and how to fit, quiet, and caption it.
+
+#unreleased(calepin.elements.callout)[The title layout's five `image-*` variants are new; the released version writes `variant: "image"` with a `position:` there. Everything else on this page, the section and image layouts included, is the same in both versions.]
 
 = Asset paths <asset-paths>
 
@@ -19,6 +21,43 @@ An image or other asset named inside a layout or component argument crosses the 
 ```
 
 This applies wherever a layout or component takes a path: the `image:` argument of the #link("../slides/title.html")[title], #link("../slides/section.html")[section], and #link("../slides/image.html")[image] layouts, and the source of `m.components.image()` and `m.components.figure()`.
+
+= Pictures in layouts <pictures-in-layouts>
+
+Three layouts are built around a picture: #link("../slides/image.html")[image], #link("../slides/title.html")[title], and #link("../slides/section.html")[section]. All three take the picture itself the same way, as `image:`. It is one of three things:
+
+- A `path(..)`, for the common case where the file is all there is to say. The layout sizes and fits it to its region.
+- A dictionary, when the picture needs a scrim, a fit, or alt text: `(path: path(..), alt: .., fit: .., scrim: ..)`. The keys are described in the sections below.
+- Content, when you already have a picture element: the result of `m.components.image(..)`, or a drawing made in code.
+
+Where the picture goes is chosen by the layout's `variant:`, the same argument that selects every other arrangement a layout offers:
+
+#table(
+  columns: (auto, 1fr),
+  [Image layout], [`figure` (the default: a contained picture under a header, where a chart or a screenshot goes), `left`, `right`, `top`, `bottom` (a full-bleed picture on that side, with the text in the rest), and `full` (the picture behind the text).],
+  [Title and section layouts], [`image-left`, `image-right`, `image-top`, `image-bottom`, and `image-background`. The same five names in both.],
+)
+
+For a picture on one side, `tracks:` sizes it: one track size such as `40%` is the picture's share whichever side it is on, so left and right stay mirror images.
+
+```typ
+// A file, placed.
+#m.slide(layout: "image", variant: "right", image: path("fig/book.jpg"))[== Readings][]
+
+// A picture that needs a scrim and a description is a dictionary.
+#m.slide(
+  layout: "image",
+  variant: "full",
+  image: (
+    path: path("fig/auditorium.jpg"),
+    scrim: black.transparentize(45%),
+    alt: "A full lecture hall seen from the stage",
+  ),
+)[
+  #set text(fill: white)
+  == Who are you?
+]
+```
 
 = Slide-sized images
 
@@ -130,21 +169,21 @@ One spelling covers every place an image can appear.
 
 On `m.components.image()`, pass it as an argument, as above. That is the form to use for images in cells and for the planes described on the #link("../slides/background.html")[Background] and #link("../slides/foreground.html")[Foreground] pages.
 
-In the `title`, `section`, and `image` layouts, the image is given as a specification dictionary, and `scrim` is one of its keys alongside `path`, `alt`, and `fit`:
+In the `title`, `section`, and `image` layouts, `scrim` is one of the keys of the picture dictionary, alongside `path`, `alt`, and `fit`:
 
 ```typ
-#m.slide(layout: m.layouts.title(
-  title: [Cities after dark],
-  variant: "image",
+#m.slide(
+  layout: "section",
+  variant: "image-background",
   image: (
     path: path("cover.webp"),
     scrim: black.transparentize(45%),
     alt: "Coastal city lights at night",
   ),
-))
+)[Cities after dark]
 ```
 
-A scrim changes the picture, never the text. Light-on-dark compositions still recolor the text through the cell's label, as the #link("../slides/title.html")[Title slides] and #link("../slides/section.html")[Section slides] pages show.
+A scrim changes the picture, never the text. Light-on-dark compositions still recolor the text, with a `set text` rule in the slide body or through the cell's label, as #link("../appearance/styling.html#styling-a-whole-slide")[Styling a whole slide] shows.
 
 = Image fitting
 

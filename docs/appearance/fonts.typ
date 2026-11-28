@@ -53,12 +53,12 @@ Two things do make them go away:
 
 = Choosing your own fonts
 
-`setup` takes the typeface as an option, so one line replaces the theme's list with your own choice:
+`setup` takes the typeface as an option, so one line replaces the theme's list with your own choice. Its companion is `base-size`, the size the rest of the deck's type scales from:
 
 ```typ
 #import "@preview/mosaic:0.0.1" as m
 
-#show: m.setup.with(font: "EB Garamond")
+#show: m.setup.with(font: "EB Garamond", base-size: 24pt)
 ```
 
 The value is whatever Typst's own `text` function accepts, so a list works here too, and is worth using for a deck that will be compiled on more than one machine:
@@ -78,6 +78,8 @@ One theme sets a second face. `editorial` is the magazine voice, serif display t
   font-display: "EB Garamond",
 )
 ```
+
+Every bundled theme takes these two options. From the development version, a custom theme takes them too even when its definition does not declare them.
 
 Naming families that are all present on the machine doing the compile silences the warnings entirely, because nothing on the list is then unknown.
 

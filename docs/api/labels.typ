@@ -1,9 +1,14 @@
+#import "/.calepin/calepin.typ" as calepin
+#import "/_includes/site.typ": unreleased
+
 #set document(title: [Labels])
 #metadata((title: "Labels")) <website-metadata>
 
 #title()
 
 Every part of a rendered slide carries a Typst label, and those labels are the whole styling surface. A deck reaches them with ordinary `show` rules, and a theme's `apply` reaches the same ones. This page is the complete inventory.
+
+#unreleased(calepin.elements.callout)[`mosaic-section-title` on the visible section title and `mosaic-section-record` are new, as are `set block` rules on a cell label.]
 
 Two kinds of rules cover a labeled region, split by what they touch. Properties of the content *inside* it pass through as ordinary `set` rules. Properties of its own block, its fill, stroke, and corner radius, are `set block` rules on the same label. The #link("../appearance/styling.html")[styling] page explains that split in full.
 
@@ -33,9 +38,9 @@ The `title` and `section` layouts are compositions rather than bare grids. Each 
 #table(
   columns: (auto, 1fr),
   [`mosaic-title-display`], [The display line of a title slide, inside `mosaic-cell-title`. This is where a theme states the title's display size and tracking.],
+  [`mosaic-section-title`], [The title text of a section slide, in every variant.],
   [`mosaic-section-number`], [The section numeral of a section slide.],
-  [`mosaic-section-title`], [The section's title text.],
-  [`mosaic-section-subtitle`], [The section's subtitle, where the variant emits one.],
+  [`mosaic-section-subtitle`], [The section's subtitle, in every variant.],
 )
 
 Typography goes through these labels. Geometry does not: the spacers, rules, and offsets a variant composes itself from are produced during layout and no show rule reaches inside them. A size, weight, or color is always a label rule; an arrangement is the variant's design.
@@ -57,5 +62,6 @@ These carry rules from Mosaic itself rather than from a theme. A theme or deck r
   columns: (auto, 1fr),
   [`mosaic-note-heading`], [The heading on a printed speaker or notes page. Set black on white, because those pages are paper whatever the deck's theme does.],
   [`mosaic-note-body`], [The note text on those same pages. Inherits the deck's base text size.],
+  [`mosaic-section-record`], [A metadata record of each section slide's title, which the `toc` section variant queries to list the deck's sections. It carries no text, so it is not a styling target.],
   [`mosaic-overflow-warning`], [The diagnostic emitted when content exceeds its cell. Not a styling target.],
 )

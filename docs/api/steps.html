@@ -192,6 +192,9 @@
   --calepin-border: var(--calepin-border-width) solid var(--calepin-color-border);
   --calepin-topbar-height: 3.5rem;
   --calepin-sidebar-width: 12rem;
+  /* Right-hand table-of-contents column. Defaults to the sidebar width, so
+   * overriding --calepin-sidebar-width alone still resizes both columns. */
+  --calepin-toc-width: var(--calepin-sidebar-width);
   --calepin-shell-gap: 1.5rem;
   --calepin-shadow-card: 0 10px 30px color-mix(in srgb, var(--calepin-color-text) 8%, transparent);
   --calepin-focus-ring: 0 0 0 3px color-mix(in srgb, var(--calepin-color-focus) 28%, transparent);
@@ -1480,7 +1483,7 @@ a:has(.calepin-nav-icon) {
 
 .calepin-website-shell.grid {
   display: grid;
-  grid-template-columns: var(--calepin-sidebar-width) minmax(0, 1fr) var(--calepin-sidebar-width);
+  grid-template-columns: var(--calepin-sidebar-width) minmax(0, 1fr) var(--calepin-toc-width);
   grid-template-areas: "sidebar main toc";
   gap: var(--calepin-shell-gap);
   width: min(100% - 2rem, 95rem);
@@ -3417,7 +3420,7 @@ html[data-theme="dark"] .mosaic-diagram {
     <script src="../pagefind/pagefind-component-ui.js" type="module"></script>
 
 
-<script id="calepin-website-source-data" type="application/json">"#import \"/api/_page.typ\": api-page\n\n#show: api-page.with(\"Incremental steps\")\n\n#include \"/api/generated/steps/index.typ\"\n"</script>
+<script id="calepin-website-source-data" type="application/json">"#import \"/.calepin/calepin.typ\" as calepin\n#import \"/api/_page.typ\": api-page\n\n#show: api-page.with(\"Incremental steps\", calepin.elements.callout)\n\n#include \"/api/generated/steps/index.typ\"\n"</script>
 </head><body>
 
     <header class="calepin-website-topbar calepin-site-topbar">
@@ -3541,7 +3544,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>Slides</summary>
                         <ul>
 
@@ -3580,7 +3583,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>Styles &amp; Themes</summary>
                         <ul>
 
@@ -3607,7 +3610,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>Incremental</summary>
                         <ul>
 
@@ -3630,7 +3633,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>Content</summary>
                         <ul>
 
@@ -3657,7 +3660,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>More</summary>
                         <ul>
 
@@ -3745,17 +3748,17 @@ html[data-theme="dark"] .mosaic-diagram {
             </nav>
         </aside>
         <main class="calepin-website-main calepin-content" data-pagefind-body>
-            <h1 id="incremental-steps">Incremental steps</h1><p>The contents below link to each definition. Function entries show the signature, then a description, then the parameters with their types and defaults; variable entries show the declared type.</p><nav role="doc-toc"><h2 id="contents">Contents</h2><ol style="list-style-type: none"><li><a href="#steps.on">Shows a grid node or content only over a step range.</a></li><li><a href="#steps.reveal">Reveals content or grid nodes one step at a time.</a></li><li><a href="#steps.replace">Replaces one content block with the next on successive steps.</a></li><li><a href="#steps.drawing">Teaches Mosaic to step through a drawing library’s own command values.</a></li><li><a href="#steps.pause">Advances subsequent content to the next physical frame.</a></li></ol></nav><h2 id="steps.on">Shows a grid node or content only over a step range.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">on(
+            <h1 id="incremental-steps">Incremental steps</h1><p>The contents below link to each definition. Function entries show the signature, then a description, then the parameters with their types and defaults; variable entries show the declared type.</p><div class="calepin-callout calepin-callout-warning"><div class="calepin-callout-title">Requires Mosaic 0.0.3</div><div class="calepin-callout-body">This reference is generated from the package sources, so it describes the development version throughout; <a href="https://github.com/vincentarelbundock/mosaic/blob/main/CHANGELOG.md">the changelog</a> lists what differs from the released one. This is the development version, which is not on Typst Universe yet: a deck that uses it imports <code>@local/mosaic:0.0.3</code> rather than the released <code>@preview/mosaic:0.0.1</code>. One command installs it; see <a href="../start/install.html">Install</a>.</div></div><nav role="doc-toc"><h2 id="contents">Contents</h2><ol style="list-style-type: none"><li><a href="#steps.on">Shows a grid node or content only over a step range.</a></li><li><a href="#steps.reveal">Reveals content or grid nodes one step at a time.</a></li><li><a href="#steps.replace">Replaces one content block with the next on successive steps.</a></li><li><a href="#steps.drawing">Teaches Mosaic to step through a drawing library’s own command values.</a></li><li><a href="#steps.pause">Advances subsequent content to the next physical frame.</a></li></ol></nav><h2 id="steps.on">Shows a grid node or content only over a step range.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">on(
   range,
   before: "hidden",
   after: "hidden",
   body
-) -> content | dictionary</code></pre></div><strong style="display: block">Description</strong><p>This is the explicit form of incremental control: the range says exactly which frames the body appears on, independent of source order.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-20">slide</span>[
-  == Findings
+) -> content | dictionary</code></pre></div><strong style="display: block">Description</strong><p>This is the explicit form of incremental control: the range says exactly which frames the body appears on, independent of source order.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-20">slide</span>[== Findings][
   #mosaic.steps.<span class="calepin-syntax-scope-20">on</span>(<span class="calepin-syntax-scope-23">1</span>)[First, in isolation.]
   #mosaic.steps.<span class="calepin-syntax-scope-20">on</span>(<span class="calepin-syntax-scope-3">"2-"</span>)[Then, for the rest of the slide.]
   #mosaic.steps.<span class="calepin-syntax-scope-20">on</span>(<span class="calepin-syntax-scope-3">"2-3"</span>, after: <span class="calepin-syntax-scope-3">"dimmed"</span>)[A passing remark.]
-]</code></pre></div><p><strong>Ranges</strong></p><ul><li><code>2</code>: the single step 2.</li><li><code>"2-"</code>: step 2 onward, to the end of the slide.</li><li><code>"2-4"</code>: steps 2 through 4 inclusive.</li></ul><p><strong>States</strong></p><p><code>before</code> and <code>after</code> say what happens outside the range:</p><ul><li><code>"hidden"</code>: the body reserves its space but is not drawn.</li><li><code>"visible"</code>: the body is drawn normally.</li><li><code>"dimmed"</code>: the body is drawn muted, which is how a point stays legible after the discussion has moved on.</li></ul><p>The body may be content or a Mosaic grid node, so whole regions of a layout can appear and disappear, not just text.</p><strong style="display: block">Arguments</strong><table><tr><td><code>range</code></td><td><code>int | str</code><br>Which steps show the body: an integer, <code>"N-"</code> for open-ended, or <code>"N-M"</code> for a closed range.</td></tr><tr><td><code>before</code></td><td><code>str</code><br>How the body renders before the range: <code>"hidden"</code>, <code>"visible"</code>, or <code>"dimmed"</code>.</td></tr><tr><td><code>after</code></td><td><code>str</code><br>How the body renders after the range: <code>"hidden"</code>, <code>"visible"</code>, or <code>"dimmed"</code>.</td></tr><tr><td><code>body</code></td><td><code>content | dictionary</code><br>Content or Mosaic grid node controlled by the range.</td></tr></table><h2 id="steps.reveal">Reveals content or grid nodes one step at a time.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">reveal(
+]</code></pre></div><p><strong>Ranges</strong></p><ul><li><code>2</code>: the single step 2.</li><li><code>"2-"</code>: step 2 onward, to the end of the slide.</li><li><code>"-2"</code>: from the first step through step 2.</li><li><code>"2-4"</code>: steps 2 through 4 inclusive.</li></ul><p><strong>States</strong></p><p><code>before</code> and <code>after</code> say what happens outside the range:</p><ul><li><code>"hidden"</code>: the body reserves its space but is not drawn.</li><li><code>"visible"</code>: the body is drawn normally.</li><li><code>"dimmed"</code>: the body is drawn muted, which is how a point stays legible after the discussion has moved on. See <strong>Dimming</strong> below for what that reaches.</li><li><code>"removed"</code>: the body is absent and gives up its space, so the content around it moves.</li></ul><p>The body may be content or a Mosaic grid node, so whole regions of a layout can appear and disappear, not just text. Inside <code>steps.drawing</code> it may also be a drawing command or an array of them.</p><p><strong>List items</strong></p><p><code>on</code> around list items keeps them in the surrounding list:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-25">-</span> Always here
+#mosaic.steps.<span class="calepin-syntax-scope-20">on</span>(<span class="calepin-syntax-scope-3">"2-"</span>)[<span class="calepin-syntax-scope-25">-</span> Arrives on step 2]</code></pre></div><p>The marker of a hidden item is hidden with it, and the list keeps the place and shape it has without the timing. While an item of a bulleted list is hidden, dimmed, or removed, Mosaic hands the list to Typst as an <code>enum</code> whose “numbers” are the list’s own markers, which is the one way to give each item a marker of its own. It looks the same, but a <code>show list</code> rule of the deck does not match it on those frames; <code>show enum</code> does.</p><p><strong>Dimming</strong></p><p>Dimming sets the ink of the body to gray, which is what a set rule can do: it reaches text. A Mosaic component in the body follows, muting its own fill, border, and rail, so a dimmed card is dimmed as a whole. A fill or a stroke written on a native element (<code>rect(fill: ..)</code>, a table’s stroke) stays as written, because Typst has no way to fade a group of drawings; restate such paint for the dimmed steps if it matters.</p><p><strong>Where it works</strong></p><p>Mosaic resolves steps by walking the slide’s content, rebuilding each element around what this frame shows. It can do that for ordinary markup, for the native containers a slide is made of (blocks and boxes, lists, tables and grids, figures, shapes, transforms, columns, and math), and for everything Mosaic itself provides: the body, title, attribution, and caption of a component, and a layout’s content fields, such as a section tagline or a title slide’s subtitle. It cannot look inside a <code>context</code> block, a <code>layout</code> callback, or the output of a show rule, nor rebuild an element it does not know. A step, <code>pause</code>, or <code>note</code> placed there fails the compile rather than vanishing; move it outside.</p><p>A body that is not content is a drawing command, and has meaning only inside <code>steps.drawing</code>. Written anywhere else it is an error.</p><strong style="display: block">Arguments</strong><table><tr><td><code>range</code></td><td><code>int | str</code><br>Which steps show the body: an integer, <code>"N-"</code> for open-ended, <code>"-M"</code> for everything up to a step, or <code>"N-M"</code> for a closed range.</td></tr><tr><td><code>before</code></td><td><code>str</code><br>How the body renders before the range: <code>"hidden"</code>, <code>"visible"</code>, <code>"dimmed"</code>, or <code>"removed"</code>.</td></tr><tr><td><code>after</code></td><td><code>str</code><br>How the body renders after the range: <code>"hidden"</code>, <code>"visible"</code>, <code>"dimmed"</code>, or <code>"removed"</code>.</td></tr><tr><td><code>body</code></td><td><code>content | dictionary | any</code><br>Content or Mosaic grid node controlled by the range. Anything else is a drawing command, which only <code>steps.drawing</code> can interpret: write text as content (<code>[text]</code>), not as a string.</td></tr></table><h2 id="steps.reveal">Reveals content or grid nodes one step at a time.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">reveal(
   start: 1,
   before: "hidden",
   after: "visible",
@@ -3764,9 +3767,9 @@ html[data-theme="dark"] .mosaic-diagram {
   <span class="calepin-syntax-scope-25">-</span> Collect the data
   <span class="calepin-syntax-scope-25">-</span> Fit the model
   <span class="calepin-syntax-scope-25">-</span> Report the interval
-]</code></pre></div><p><strong>What counts as an item</strong></p><ul><li>A single content block holding list items reveals one list item per step. Any non-item siblings inside that block ride along and stay visible throughout.</li><li>Otherwise each positional argument is one item, revealed whole.</li><li>Grid nodes may be revealed too, but content and nodes cannot be mixed in one call.</li></ul><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.steps.<span class="calepin-syntax-scope-20">reveal</span>(start: <span class="calepin-syntax-scope-23">2</span>, after: <span class="calepin-syntax-scope-3">"dimmed"</span>,
+]</code></pre></div><p><strong>What counts as an item</strong></p><ul><li>A single content block holding list items reveals one list item per step. Any non-item siblings inside that block ride along and stay visible throughout.</li><li>Otherwise each positional argument is one item, revealed whole.</li><li>Grid nodes may be revealed too, but content and nodes cannot be mixed in one call.</li><li>Inside <code>steps.drawing</code>, the items may be drawing commands, one per step.</li></ul><p>A hidden item hides its marker too, and the list keeps the place and shape it has unrevealed; see <code>steps.on</code> for how a bulleted list is handled while one of its items is not plainly visible.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.steps.<span class="calepin-syntax-scope-20">reveal</span>(start: <span class="calepin-syntax-scope-23">2</span>, after: <span class="calepin-syntax-scope-3">"dimmed"</span>,
   [First claim], [Second claim], [Third claim],
-)</code></pre></div><strong style="display: block">Arguments</strong><table><tr><td><code>start</code></td><td><code>int</code><br>Step on which the first item appears. Later items follow one step apart.</td></tr><tr><td><code>before</code></td><td><code>str</code><br>How an item renders before its own step: <code>"hidden"</code>, <code>"visible"</code>, or <code>"dimmed"</code>.</td></tr><tr><td><code>after</code></td><td><code>str</code><br>How an item renders after its own step: <code>"visible"</code> keeps it on screen, <code>"dimmed"</code> mutes it as the build moves on, and <code>"hidden"</code> removes it.</td></tr><tr><td><code>..items</code></td><td><code>arguments</code><br>The items: content blocks or Mosaic grid nodes, but not both. At least one is required.</td></tr></table><h2 id="steps.replace">Replaces one content block with the next on successive steps.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">replace(start: 1, align: top + left, ..bodies) -> content</code></pre></div><strong style="display: block">Description</strong><p>Exactly one body is on screen at a time, and every body occupies the same space, so surrounding content does not shift as the slide advances. That makes it the tool for an equation that rewrites itself or a diagram that gains an annotation.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.steps.<span class="calepin-syntax-scope-20">replace</span>(
+)</code></pre></div><strong style="display: block">Arguments</strong><table><tr><td><code>start</code></td><td><code>int</code><br>Step on which the first item appears. Later items follow one step apart.</td></tr><tr><td><code>before</code></td><td><code>str</code><br>How an item renders before its own step: <code>"hidden"</code>, <code>"visible"</code>, or <code>"dimmed"</code>.</td></tr><tr><td><code>after</code></td><td><code>str</code><br>How an item renders after its own step: <code>"visible"</code> keeps it on screen, <code>"dimmed"</code> mutes it as the build moves on, and <code>"hidden"</code> removes it.</td></tr><tr><td><code>..items</code></td><td><code>arguments</code><br>The items: content blocks, Mosaic grid nodes, or drawing commands, but only one kind per call. At least one is required.</td></tr></table><h2 id="steps.replace">Replaces one content block with the next on successive steps.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">replace(start: 1, align: top + left, ..bodies) -> content</code></pre></div><strong style="display: block">Description</strong><p>Exactly one body is on screen at a time, and every body occupies the same space, so surrounding content does not shift as the slide advances. Each body is laid out at the width the slot is offered, so prose wraps as usual, and the slot is as large as the largest of them. That makes it the tool for an equation that rewrites itself or a diagram that gains an annotation.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.steps.<span class="calepin-syntax-scope-20">replace</span>(
   align: center <span class="calepin-syntax-scope-24">+</span> horizon,
   <span class="calepin-syntax-scope-25">$</span> a<span class="calepin-syntax-scope-24">^</span>2 + b<span class="calepin-syntax-scope-24">^</span>2 <span class="calepin-syntax-scope-25">$</span>,
   <span class="calepin-syntax-scope-25">$</span> a<span class="calepin-syntax-scope-24">^</span>2 + b<span class="calepin-syntax-scope-24">^</span>2 = c<span class="calepin-syntax-scope-24">^</span>2 <span class="calepin-syntax-scope-25">$</span>,
@@ -3789,14 +3792,15 @@ html[data-theme="dark"] .mosaic-diagram {
     fletcher.<span class="calepin-syntax-scope-20">edge</span>(`read()`, <span class="calepin-syntax-scope-3">"-|>"</span>),
     fletcher.<span class="calepin-syntax-scope-20">node</span>((<span class="calepin-syntax-scope-23">1</span>, <span class="calepin-syntax-scope-23">0</span>), `eof`),
   )),
-)</code></pre></div><p>Positional arguments are the commands, each of which may be wrapped in <code>on</code> or <code>reveal</code>, alone or as an array. Named arguments are forwarded untouched to <code>render</code>, which is how <code>spacing:</code> above reaches <code>fletcher.diagram</code>.</p><strong style="display: block">Arguments</strong><table><tr><td><code>render</code></td><td><code>function | none</code><br>Draws the frame. Called as <code>render(..named, commands)</code> with the named arguments given here and the array of commands this frame keeps. Usually the library’s own top-level renderer.</td></tr><tr><td><code>hide</code></td><td><code>function | none</code><br>Turns one command into its invisible counterpart, so it still reserves space and the drawing does not shift between frames. Usually the library’s own <code>hide</code>.</td></tr><tr><td><code>dim</code></td><td><code>function | none</code><br>Turns one command into its muted counterpart. Required only if some step range uses the <code>"dimmed"</code> state; omitting it makes that an error.</td></tr><tr><td><code>..args</code></td><td><code>arguments</code><br>Positionally, the drawing commands, optionally wrapped in <code>on</code> or <code>reveal</code>. By name, arguments forwarded unchanged to <code>render</code>.</td></tr></table><h2 id="steps.pause">Advances subsequent content to the next physical frame.</h2><strong style="display: block">Description</strong><p><code>content</code></p><p>This is the least ceremonious way to build a slide: drop a marker where the pause belongs, and everything after it moves to the following frame. Everything before it stays on screen, so the slide accumulates.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-20">slide</span>[
-  == Argument
+)</code></pre></div><p>Positional arguments are the commands, each of which may be wrapped in <code>on</code> or <code>reveal</code>, alone or as an array. Named arguments are forwarded untouched to <code>render</code>, which is how <code>spacing:</code> above reaches <code>fletcher.diagram</code>.</p><p><code>render</code> is required; <code>none</code> is only the placeholder that <code>drawing.with(..)</code> fills in. <code>hide</code> and <code>dim</code> are needed only by a drawing that asks for the state each one draws.</p><strong style="display: block">Arguments</strong><table><tr><td><code>render</code></td><td><code>function</code><br>Draws the frame. Called as <code>render(..named, commands)</code> with the named arguments given here and the array of commands this frame keeps. Usually the library’s own top-level renderer. Required.</td></tr><tr><td><code>hide</code></td><td><code>function | none</code><br>Turns one command into its invisible counterpart, so it still reserves space and the drawing does not shift between frames. Usually the library’s own <code>hide</code>. Required only if some step range leaves a command <code>"hidden"</code>, which is the default before and after a range; a drawing whose commands are all <code>"removed"</code> outside their range needs none.</td></tr><tr><td><code>dim</code></td><td><code>function | none</code><br>Turns one command into its muted counterpart. Required only if some step range uses the <code>"dimmed"</code> state; omitting it makes that an error.</td></tr><tr><td><code>..args</code></td><td><code>arguments</code><br>Positionally, the drawing commands, optionally wrapped in <code>on</code> or <code>reveal</code>. By name, arguments forwarded unchanged to <code>render</code>.</td></tr></table><h2 id="steps.pause">Advances subsequent content to the next physical frame.</h2><strong style="display: block">Description</strong><p><code>content</code></p><p>This is the least ceremonious way to build a slide: drop a marker where the pause belongs, and everything after it moves to the following frame. Everything before it stays on screen, so the slide accumulates.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.<span class="calepin-syntax-scope-20">slide</span>[== Argument][
   The premise.
   #mosaic.steps.pause
   The consequence.
   #mosaic.steps.pause
   The objection.
-]</code></pre></div><p>A pause is a value rather than a function, so it takes no arguments and no body. Compare <code>steps.on</code> and <code>steps.reveal</code>, which name their steps explicitly and can therefore reach frames out of source order.</p><p>Empty leading, trailing, or consecutive pauses produce no blank frames.</p>
+]</code></pre></div><p>A pause is a value rather than a function, so it takes no arguments and no body. Compare <code>steps.on</code> and <code>steps.reveal</code>, which name their steps explicitly and can therefore reach frames out of source order.</p><p>Empty leading, trailing, or consecutive pauses produce no blank frames, and neither does a stretch between two pauses that holds only spacing.</p><p>A pause splits the content it sits in, so put it between the things it separates. Between list items it goes on a line of its own:</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-25">-</span> Shown first
+#mosaic.steps.pause
+<span class="calepin-syntax-scope-25">-</span> Shown second</code></pre></div><p>The marker of a hidden item is hidden with it, and the list keeps the place and shape it has without the pauses, so its last frame is the plain list. A pause written at the end of an item (<code>- Shown first #mosaic.steps.pause</code>) would split only that item and reveal nothing, so it is an error. A pause works wherever <code>steps.on</code> does, which includes the body of a component and a layout field such as a section tagline, and excludes a <code>context</code> block, a <code>layout</code> callback, and the output of a show rule.</p>
         </main>
 
         <aside class="calepin-website-toc is-floating">
@@ -4172,7 +4176,11 @@ html[data-theme="dark"] .mosaic-diagram {
   const root = document.documentElement;
   const media = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
   const storageKey = (button) => button.dataset.calepinThemeStorageKey || "calepin-theme";
-  const urlParam = (button) => button.dataset.calepinThemeParam || "";
+  // Matches theme-init.js's default so the two scripts agree on which URL
+  // param to honor when a theme omits `data-calepin-theme-param`: otherwise
+  // the init script paints the theme from `?theme=`, and the toggle button's
+  // own read (used to sync its label/icon) silently ignores it, flashing.
+  const urlParam = (button) => button.dataset.calepinThemeParam || "theme";
   const systemTheme = () => media && media.matches ? "dark" : "light";
 
   function readUrl(button) {
@@ -4329,14 +4337,11 @@ html[data-theme="dark"] .mosaic-diagram {
       menu.appendChild(li);
     });
 
-    summary.addEventListener("click", () => {
-      const open = !picker.open;
-      closeAll(open ? picker : null);
-      picker.classList.toggle("is-open", open);
-      summary.setAttribute("aria-expanded", open ? "true" : "false");
-    });
-
+    // The native <details> toggle owns the open state. While open, Pico's
+    // full-viewport summary::before overlay turns any outside click into a
+    // summary click, which closes the menu without reaching the page below.
     picker.addEventListener("toggle", () => {
+      if (picker.open) closeAll(picker);
       picker.classList.toggle("is-open", picker.open);
       summary.setAttribute("aria-expanded", picker.open ? "true" : "false");
     });

@@ -5,6 +5,8 @@
   thumbnail-gallery,
 )
 
+#import "/_includes/site.typ": unreleased
+
 #set document(title: [Footer and progress])
 #metadata((title: "Footer and progress")) <website-metadata>
 
@@ -22,28 +24,24 @@ Most decks repeat the same source, event name, or organization in every ordinary
 )
 ```
 
-The default applies whenever the slide's layout contains a cell named `footer`. A title slide has no such cell, so it is unaffected. With a default footer, positional content supplies only the remaining cells:
+The default applies whenever the slide's layout contains a cell named `footer`. A title slide has no such cell, so it is unaffected. Positional bodies fill the cells in order, header, body, footer, so a slide that supplies two keeps the deck footer:
 
 ```typ
 #m.slide(
   layout: m.layouts.content(variant: "header-body-footer"),
-)[RESULTS][Main result]
+)[== Results][Main result]
 ```
 
-Named content can likewise omit `footer`. An explicit value overrides the deck default, while `none` suppresses it on one slide:
+A third block would replace the footer on that slide. Named content can likewise omit `footer`, and it combines with positional bodies. An explicit value overrides the deck default, while `none` suppresses it on one slide:
 
 ```typ
 #m.slide(
   layout: m.layouts.content(variant: "header-body-footer"),
-  cells: (
-    header: [APPENDIX],
-    body: [Supporting details],
-    footer: none,
-  ),
-)
+  cells: (footer: none),
+)[== Appendix][Supporting details]
 ```
 
-A complete positional body list remains valid and overrides every corresponding default. The footer is an ordinary cell, and there is no separate global footer feature, so footers cannot overlap slide numbers, progress indicators, or the slide body.
+The footer is an ordinary cell, and there is no separate global footer feature, so footers cannot overlap slide numbers, progress indicators, or the slide body.
 
 #embedded-example(
   calepin.elements.gallery,
@@ -57,9 +55,7 @@ A complete positional body list remains valid and overrides every corresponding 
 
 `m.components.progress()` shows the current position in a deck. All frames from one incremental slide share the same slide number. Use `"1/1"` or `"1"` for numbers, `"circle"` for a compact indicator, and `"line"` for a full-width bar.
 
-#calepin.elements.callout(kind: "warning", title: [Changed in Mosaic 0.0.2])[
-  From 0.0.2, which is not on Typst Universe yet, the component quiets itself on pages where its counter has no meaningful reading: a slides count on unnumbered slides (titles and sections), and a sections count before the first section slide. A bare `progress()` in a deck foreground is therefore already correct page-number chrome, and a `quiet:` argument overrides the rule (`false` always displays, `true` silences every unnumbered page). In the released `0.0.1` the component always displays, so a foreground indicator needs the `slide.numbered` guard shown at the bottom of this page. One command installs the development version — `curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh` — and then it imports as `#import "@local/mosaic:0.0.2" as m`. See #link("../start/install.html")[Install] for the full instructions.
-]
+#unreleased(calepin.elements.callout)[The component quiets itself on pages where its counter has no meaningful reading: a slides count on unnumbered slides (titles and sections), and a sections count before the first section slide. A bare `progress()` in a deck foreground is therefore already correct page-number chrome, and a `quiet:` argument overrides the rule (`false` always displays, `true` silences every unnumbered page). In the released `0.0.1` the component always displays, so a foreground indicator needs the `slide.numbered` guard shown at the bottom of this page. Four further things on this page are new: positional bodies fill every cell in order, `cells:` combines with positional bodies, `slide.number` is `none` on an unnumbered slide, and the `m.appendix` marker for backup slides.]
 
 The deck below puts a bare counter in the setup foreground and nothing else. The counter appears on the two content slides and stays quiet on the title and section pages, with no guard written anywhere; sizing comes from an ordinary `text` rule around the component, and a one-off color would go through its `accent:` argument rather than a text rule, because the component paints its own ink from the theme role:
 
@@ -109,6 +105,24 @@ The component can sit in a foreground, a cell, or another Typst container. This 
   title: "A reusable custom-grid slide function with foreground progress",
 )
 
+== Backup slides
+
+Slides kept for questions should not inflate the total the audience sees. Write `#m.appendix` once, between the last slide of the talk and the first backup slide:
+
+```typ
+== Conclusion
+Thank you.
+
+#m.appendix
+
+= Backup
+== Robustness checks
+```
+
+The totals stop at the marker, so the footer counts the talk: "12 / 30" on slide 12, and "31 / 30" on the first backup slide, which keeps its own number for a question that refers to it. Sections work the same way. A progress bar or circle stays full on backup slides, and the `toc` section variant lists only the talk's sections. `m.info()` reports the same totals, so a hand-built footline follows too.
+
+The marker is content, not a function call, so it takes no parentheses. Written inside a slide it is an error, and so is a second marker.
+
 = What the deck knows about itself
 
 When a footline needs more than one indicator, read the deck directly. `m.info()` is a contextual reader returning everything the deck knows about itself: what the deck declared on setup, and where the slide being rendered sits. It is the same reading `m.components.progress()` does, so a hand-built bar and the component can never print different numbers.
@@ -134,7 +148,7 @@ Two are the position of the slide being rendered, which is what makes the reader
 
 #table(
   columns: (auto, 1fr),
-  [`slide.number`], [This slide's logical number. All frames of one incremental slide share it, and unnumbered slides report `0`.],
+  [`slide.number`], [This slide's logical number. All frames of one incremental slide share it. It is `none` on an unnumbered slide, which has no number of its own.],
   [`slide.total`], [The deck's final count of logical slides.],
   [`slide.numbered`], [Whether this slide counts. Titles and sections are unnumbered by default, and `numbered:` on the slide decides it. This is the switch that keeps a folio or a counter off a cover.],
   [`section.number`], [The number of the section this slide is in, counting slides that use the `section` layout. Before the first section slide it is `0`.],
@@ -142,7 +156,7 @@ Two are the position of the slide being rendered, which is what makes the reader
   [`section.title`], [That section's own text, with any heading stripped, or `none` before the first section slide. A section slide reports its own section, not the previous one.],
 )
 
-Because `slide.numbered` says whether the slide counts, a footline can hold its counter slot clear on a cover rather than printing a zero into it:
+Because `slide.numbered` says whether the slide counts, a footline can hold its counter slot clear on a cover rather than printing a number that is not the cover's:
 
 ```typ
 #context {

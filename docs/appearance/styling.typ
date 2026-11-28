@@ -1,5 +1,6 @@
 #import "/.calepin/calepin.typ" as calepin
 #import "/_includes/embedded-examples.typ": embedded-example, thumbnail-gallery
+#import "/_includes/site.typ": unreleased
 
 #set document(title: [Styling cells])
 #metadata((title: "Styling cells")) <website-metadata>
@@ -8,20 +9,21 @@
 
 As the #link("../reference/concepts.html#anatomy-of-a-slide-deck")[anatomy page] shows, every part of a slide is a native Typst layer carrying a label, and you style all of it with ordinary `set` and `show` rules. Every rule a slide renders with comes from its theme: Mosaic's engine contributes page geometry, deck information, and colors, but no slide typography of its own. Rules you write after `m.setup` layer on top of the theme's. There is no separate styling system to learn.
 
-Behind that, the engine keeps exactly one record of its own: the deck record, written once by `m.setup` and never changed afterward. It holds what you declare there, structure and geometry, plus the semantic colors and roles. Those colors are the one deliberate exception to "everything is a rule": components are functions, and no native rule can carry a surface fill or an accent color into a function call the way `set text` carries typography into text. Declaring six colors and a role palette at setup is the whole extent of it.
+Behind that, the engine keeps exactly one record of its own: the deck record, written once by `m.setup` and never changed afterward. It holds what you declare there, structure and geometry, plus the semantic colors. Those colors are the one deliberate exception to "everything is a rule": components are functions, and no native rule can carry a surface fill or an accent color into a function call the way `set text` carries typography into text. Declaring one flat palette of eight colors at setup is the whole extent of it.
 
 = Deck typography
 
-Place native Typst text and heading rules after `m.setup` so they apply across the deck:
+The deck's typeface and base size are options of `m.setup` under every bundled theme. Everything else is a native Typst rule placed after `m.setup`, so that it applies across the deck:
 
 ```typ
-#show: m.setup
-#set text(font: "EB Garamond", size: 26pt)
+#show: m.setup.with(font: "EB Garamond", base-size: 26pt)
 #show heading.where(depth: 1): set text(font: "Inter", weight: "black")
-#show heading.where(depth: 2): set text(size: 1.4em)
+#show heading.where(depth: 2): set text(weight: "regular")
 ```
 
-A semantic heading feeds outlines, bookmarks, and content slides. Use `text` directly for display type that should not appear in navigation, or exclude the heading:
+`base-size` is the size the theme's headings, captions, and other tiers are stated as multiples of, so the whole deck scales with it. A `set text(size: ..)` after `m.setup` changes the body text alone: a theme's heading sizes are absolute, and do not follow it.
+
+A semantic heading feeds outlines, bookmarks, and content slides. Slides open on heading depth, the number of `=` signs, so `set heading(offset: 1)` shifts the levels the outline records without changing which headings open slides or how a theme styles them. Use `text` directly for display type that should not appear in navigation, or exclude the heading:
 
 ```typ
 #text(size: 60pt, weight: "black")[BOLD]
@@ -38,15 +40,7 @@ Everything about the deck's palette, overriding entries, the bundled palette col
 
 Target a cell by its label. Font, size, color, and alignment are `set text`, `set par`, and `set align`; the cell's own fill, stroke, and corner radius are `set block` on the same label. The #link("../api/labels.html")[label reference] lists every label a slide emits:
 
-#calepin.elements.callout(kind: "warning", title: [Requires Mosaic 0.0.2])[
-  Painting a cell's own block with `set block` rules is new in 0.0.2, which is not on Typst Universe yet, so the snippets and examples on this page pin the development version. One command installs it — `curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh` — and then it imports as:
-
-  ```typ
-  #import "@local/mosaic:0.0.2" as m
-  ```
-
-  See #link("../start/install.html")[Install] for the full instructions.
-]
+#unreleased(calepin.elements.callout)[Painting a cell's own block with `set block` rules and the `compact-inset` spacing are new.]
 
 ```typ
 #let ink = rgb("#20262d")
@@ -56,7 +50,7 @@ Target a cell by its label. Font, size, color, and alignment are `set text`, `se
 #show label("mosaic-cell-footer"): set text(fill: white)
 #show label("mosaic-cell-footer"): set block(fill: ink)
 
-#m.slide(layout: m.layouts.content())[
+#m.slide(layout: m.layouts.content(variant: "header-body-footer"))[
   == Inverted header and footer
 ][
   #lorem(36)
@@ -95,7 +89,7 @@ Rules after `#show: m.setup` override the baseline deck-wide. Scope a `set` rule
 ```typ
 #[
   #show label("mosaic-cell-body"): set align(center + horizon)
-  #m.slide[Centered for this slide only]
+  #m.slide[][Centered for this slide only]
 ]
 ```
 
@@ -108,7 +102,7 @@ The same scoped block builds one-off slides. To show one large number or phrase 
 ]
 ```
 
-For a slide that shows a picture on a black background, paint the background plane through its label and center the image in the `background` entry:
+For a slide that shows a picture on a black background, paint the background plane through its label and center the image on the slide's `background:` plane:
 
 ```typ
 #[
@@ -148,6 +142,20 @@ Because the cell's own block obeys `set block` rules, a fill, stroke, or corner 
 
 The few surfaces a layout variant paints itself — the `panel` title variant's ink panel, for instance — are that variant's design and sit above label rules; when the arrangement is wrong for your content, pick another variant or draw the slide as an ordinary grid of cells.
 
+= Header depth
+
+A cell that sits directly in an `auto` row hugs its content: the row is exactly as tall as the cell's text plus its padding. Mosaic calls these *compact cells*; headers and footers are the usual examples. A compact cell keeps the full `inset` on its left and right, so its text lines up with the body below it, and takes `compact-inset` above and below, which by default is shallower, so a painted header is not much deeper than the single line it carries. Set `compact-inset` in `setup` to change the depth of every compact cell at once:
+
+```typ
+#show: m.setup.with(spacing: (compact-inset: 1.25em))
+#show label("mosaic-cell-header"): set block(fill: rgb("#13294b"))
+#show label("mosaic-cell-header"): set text(fill: white)
+```
+
+The default, `auto`, is 55% of `inset`. Setting it equal to `inset` gives a deep band with the same padding on all four sides, which leaves room for a logo placed in the foreground beside the title. The value applies to the compact cells of the built-in layouts and of your own grids alike, so a content slide built from a custom layout and an image slide in the same deck draw the same band. A cell that passes its own `inset:` keeps it.
+
+In the released 0.0.1 the built-in headers always take the shallow padding, and a compact cell in your own grid takes the full `inset` on every side.
+
 = Properties an element pins on itself
 
 A label rule styles a region, and its `set` values flow inward to everything the region contains — until an element inside restates the property. A `==` header title is a real `heading`, and heading typography is restated at the heading element: Typst's own defaults make headings bold, and a theme's `show heading` rules adjust that (Metropolis sets depth-2 headings to `weight: "regular"`). Both sit closer to the glyphs than any rule on the surrounding cell label, so for those properties the label's value never lands. This is ordinary Typst rather than a Mosaic rule — no label rule can un-bold a heading in any document — and it is why one half of a label rule can work while the other half is silently overridden: properties nothing inside restates, such as the header's text fill, flow through untouched.
@@ -163,9 +171,7 @@ The same split covers everything a theme pins on an element rather than a label 
 
 = Styling a whole slide
 
-The grid of every slide also carries the label `<mosaic-slide>`, so one rule
-reaches every cell of a slide at once. Use it when the whole slide changes
-together. Light text over a photograph is the common case:
+The grid of every slide also carries the label `<mosaic-slide>`, so one rule reaches every cell of a slide at once. Use it when the whole slide changes together. Light text over a photograph is the common case:
 
 ```typ
 #[
@@ -178,11 +184,7 @@ together. Light text over a photograph is the common case:
 ]
 ```
 
-Naming each cell instead works, but ties the rule to the cells the layout
-happens to produce: change the variant and a cell can silently keep the deck's
-ordinary color. `<mosaic-slide>` sits outside the per-cell labels, so a
-`<mosaic-cell-*>` rule still refines it: set the slide's color once, then
-override one cell.
+Naming each cell instead works, but ties the rule to the cells the layout happens to produce: change the variant and a cell can silently keep the deck's ordinary color. `<mosaic-slide>` sits outside the per-cell labels, so a `<mosaic-cell-*>` rule still refines it: set the slide's color once, then override one cell.
 
 = Type and geometry in designed layouts
 
@@ -191,6 +193,7 @@ The `title` and `section` layouts are compositions, not bare grids: each variant
 Typography goes through labels, exactly as a cell does. Every tier a variant emits carries its own label, so a rule reaches it without knowing anything about the layout:
 
 ```typ
+#show label("mosaic-section-title"): set text(tracking: 0.02em)
 #show label("mosaic-section-number"): set text(weight: "black")
 #show label("mosaic-section-subtitle"): set text(style: "italic")
 #show label("mosaic-title-display"): set text(tracking: -0.02em)

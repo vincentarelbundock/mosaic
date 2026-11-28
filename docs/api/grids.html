@@ -192,6 +192,9 @@
   --calepin-border: var(--calepin-border-width) solid var(--calepin-color-border);
   --calepin-topbar-height: 3.5rem;
   --calepin-sidebar-width: 12rem;
+  /* Right-hand table-of-contents column. Defaults to the sidebar width, so
+   * overriding --calepin-sidebar-width alone still resizes both columns. */
+  --calepin-toc-width: var(--calepin-sidebar-width);
   --calepin-shell-gap: 1.5rem;
   --calepin-shadow-card: 0 10px 30px color-mix(in srgb, var(--calepin-color-text) 8%, transparent);
   --calepin-focus-ring: 0 0 0 3px color-mix(in srgb, var(--calepin-color-focus) 28%, transparent);
@@ -1480,7 +1483,7 @@ a:has(.calepin-nav-icon) {
 
 .calepin-website-shell.grid {
   display: grid;
-  grid-template-columns: var(--calepin-sidebar-width) minmax(0, 1fr) var(--calepin-sidebar-width);
+  grid-template-columns: var(--calepin-sidebar-width) minmax(0, 1fr) var(--calepin-toc-width);
   grid-template-areas: "sidebar main toc";
   gap: var(--calepin-shell-gap);
   width: min(100% - 2rem, 95rem);
@@ -3417,7 +3420,7 @@ html[data-theme="dark"] .mosaic-diagram {
     <script src="../pagefind/pagefind-component-ui.js" type="module"></script>
 
 
-<script id="calepin-website-source-data" type="application/json">"#import \"/api/_page.typ\": api-page\n\n#show: api-page.with(\"mosaic.grids constructors\")\n\n#include \"/api/generated/grids/index.typ\"\n"</script>
+<script id="calepin-website-source-data" type="application/json">"#import \"/.calepin/calepin.typ\" as calepin\n#import \"/api/_page.typ\": api-page\n\n#show: api-page.with(\"mosaic.grids constructors\", calepin.elements.callout)\n\n#include \"/api/generated/grids/index.typ\"\n"</script>
 </head><body>
 
     <header class="calepin-website-topbar calepin-site-topbar">
@@ -3541,7 +3544,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>Slides</summary>
                         <ul>
 
@@ -3580,7 +3583,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>Styles &amp; Themes</summary>
                         <ul>
 
@@ -3607,7 +3610,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>Incremental</summary>
                         <ul>
 
@@ -3630,7 +3633,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>Content</summary>
                         <ul>
 
@@ -3657,7 +3660,7 @@ html[data-theme="dark"] .mosaic-diagram {
 
 
 
-                    <details class="calepin-website-sidebar-section" open>
+                    <details class="calepin-website-sidebar-section">
                         <summary>More</summary>
                         <ul>
 
@@ -3745,7 +3748,7 @@ html[data-theme="dark"] .mosaic-diagram {
             </nav>
         </aside>
         <main class="calepin-website-main calepin-content" data-pagefind-body>
-            <h1 id="mosaic-grids-constructors">mosaic.grids constructors</h1><p>The contents below link to each definition. Function entries show the signature, then a description, then the parameters with their types and defaults; variable entries show the declared type.</p><nav role="doc-toc"><h2 id="contents">Contents</h2><ol style="list-style-type: none"><li><a href="#grids.cell">Creates a structural leaf cell in a Mosaic grid tree.</a></li><li><a href="#grids.track">Associates an explicit native track size with one child of <code>columns</code> or <code>rows</code>.</a></li><li><a href="#grids.columns">Splits the available width, arranging its children as columns.</a></li><li><a href="#grids.rows">Splits the available height, arranging its children as rows.</a></li></ol></nav><h2 id="grids.cell">Creates a structural leaf cell in a Mosaic grid tree.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">cell(
+            <h1 id="mosaic-grids-constructors">mosaic.grids constructors</h1><p>The contents below link to each definition. Function entries show the signature, then a description, then the parameters with their types and defaults; variable entries show the declared type.</p><div class="calepin-callout calepin-callout-warning"><div class="calepin-callout-title">Requires Mosaic 0.0.3</div><div class="calepin-callout-body">This reference is generated from the package sources, so it describes the development version throughout; <a href="https://github.com/vincentarelbundock/mosaic/blob/main/CHANGELOG.md">the changelog</a> lists what differs from the released one. This is the development version, which is not on Typst Universe yet: a deck that uses it imports <code>@local/mosaic:0.0.3</code> rather than the released <code>@preview/mosaic:0.0.1</code>. One command installs it; see <a href="../start/install.html">Install</a>.</div></div><nav role="doc-toc"><h2 id="contents">Contents</h2><ol style="list-style-type: none"><li><a href="#grids.cell">Creates a structural leaf cell in a Mosaic grid tree.</a></li><li><a href="#grids.track">Associates an explicit native track size with one child of <code>columns</code> or <code>rows</code>.</a></li><li><a href="#grids.columns">Splits the available width, arranging its children as columns.</a></li><li><a href="#grids.rows">Splits the available height, arranging its children as rows.</a></li></ol></nav><h2 id="grids.cell">Creates a structural leaf cell in a Mosaic grid tree.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">cell(
   ..identifier,
   content: none,
   id: none,
@@ -3754,7 +3757,7 @@ html[data-theme="dark"] .mosaic-diagram {
   mosaic.grids.<span class="calepin-syntax-scope-20">track</span>(<span class="calepin-syntax-scope-6">auto</span>, mosaic.grids.<span class="calepin-syntax-scope-20">cell</span>(<span class="calepin-syntax-scope-3">"header"</span>)),
   mosaic.grids.<span class="calepin-syntax-scope-20">cell</span>(<span class="calepin-syntax-scope-3">"body"</span>),
 )</code></pre></div><p><strong>Styling</strong></p><p>Cells are structural only. Every rendered cell is labeled <code>&lt;mosaic-cell-ID></code>, so appearance comes from native Typst rules: <code>set text</code> and friends for properties of the content, <code>set block</code> for the cell’s own block.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ"><span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">show</span> <span class="calepin-syntax-scope-20">label</span>(<span class="calepin-syntax-scope-3">"mosaic-cell-body"</span>): <span class="calepin-syntax-scope-6">set</span> <span class="calepin-syntax-scope-20">text</span>(size: <span class="calepin-syntax-scope-23">0.9em</span>)
-<span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">show</span> <span class="calepin-syntax-scope-20">label</span>(<span class="calepin-syntax-scope-3">"mosaic-cell-body"</span>): <span class="calepin-syntax-scope-6">set</span> <span class="calepin-syntax-scope-20">block</span>(fill: <span class="calepin-syntax-scope-20">luma</span>(<span class="calepin-syntax-scope-23">240</span>))</code></pre></div><strong style="display: block">Arguments</strong><table><tr><td><code>..identifier</code></td><td><code>arguments</code><br>The cell id, as the sole positional argument. Give it here or through <code>id:</code>.</td></tr><tr><td><code>content</code></td><td><code>content | none</code><br>Fixed content rendered in place of a slide body, so the surrounding slide supplies no block for this cell.</td></tr><tr><td><code>id</code></td><td><code>str | none</code><br>The cell id, when it is not passed positionally.</td></tr><tr><td><code>inset</code></td><td><code>auto | length | relative | dictionary</code><br>Native Typst inset applied inside the cell’s labeled block. <code>auto</code> uses the <code>spacing.inset</code> configured on <code>setup</code>.</td></tr></table><h2 id="grids.track">Associates an explicit native track size with one child of <code>columns</code> or <code>rows</code>.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">track(size, child) -> dictionary</code></pre></div><strong style="display: block">Description</strong><p>Unwrapped children of a split take <code>1fr</code> and therefore share the space evenly. Wrap one in <code>track</code> to give it a size of its own.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.grids.<span class="calepin-syntax-scope-20">rows</span>(
+<span class="calepin-syntax-scope-6">#</span><span class="calepin-syntax-scope-6">show</span> <span class="calepin-syntax-scope-20">label</span>(<span class="calepin-syntax-scope-3">"mosaic-cell-body"</span>): <span class="calepin-syntax-scope-6">set</span> <span class="calepin-syntax-scope-20">block</span>(fill: <span class="calepin-syntax-scope-20">luma</span>(<span class="calepin-syntax-scope-23">240</span>))</code></pre></div><strong style="display: block">Arguments</strong><table><tr><td><code>..identifier</code></td><td><code>arguments</code><br>The cell id, as the sole positional argument. Give it here or through <code>id:</code>.</td></tr><tr><td><code>content</code></td><td><code>content | none</code><br>Fixed content rendered in place of a slide body, so the surrounding slide supplies no block for this cell.</td></tr><tr><td><code>id</code></td><td><code>str | none</code><br>The cell id, when it is not passed positionally.</td></tr><tr><td><code>inset</code></td><td><code>auto | length | relative | dictionary</code><br>Native Typst inset applied inside the cell’s labeled block. <code>auto</code> uses the <code>spacing.inset</code> configured on <code>setup</code>, except for a compact cell, one directly in an <code>auto</code> row track, which hugs its content: it keeps <code>spacing.inset</code> left and right and takes <code>spacing.compact-inset</code> above and below, exactly like the header and footer of the built-in layouts.</td></tr></table><h2 id="grids.track">Associates an explicit native track size with one child of <code>columns</code> or <code>rows</code>.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">track(size, child) -> dictionary</code></pre></div><strong style="display: block">Description</strong><p>Unwrapped children of a split take <code>1fr</code> and therefore share the space evenly. Wrap one in <code>track</code> to give it a size of its own.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.grids.<span class="calepin-syntax-scope-20">rows</span>(
   mosaic.grids.<span class="calepin-syntax-scope-20">track</span>(<span class="calepin-syntax-scope-6">auto</span>, <span class="calepin-syntax-scope-3">"header"</span>),  <span class="calepin-syntax-scope-1">// as tall as its content</span>
   <span class="calepin-syntax-scope-3">"body"</span>,                              <span class="calepin-syntax-scope-1">// 1fr, taking the rest</span>
   mosaic.grids.<span class="calepin-syntax-scope-20">track</span>(<span class="calepin-syntax-scope-23">2em</span>, <span class="calepin-syntax-scope-3">"footer"</span>),   <span class="calepin-syntax-scope-1">// a fixed strip</span>
@@ -3763,12 +3766,12 @@ html[data-theme="dark"] .mosaic-diagram {
   stroke: <span class="calepin-syntax-scope-23">0.5pt</span> <span class="calepin-syntax-scope-24">+</span> gray,
   mosaic.grids.<span class="calepin-syntax-scope-20">track</span>(<span class="calepin-syntax-scope-23">2fr</span>, <span class="calepin-syntax-scope-3">"left"</span>),
   <span class="calepin-syntax-scope-3">"right"</span>,
-)</code></pre></div><strong style="display: block">Arguments</strong><table><tr><td><code>gutter</code></td><td><code>auto | length | ratio | relative | fraction</code><br>Native Typst track size used between adjacent columns.</td></tr><tr><td><code>stroke</code></td><td><code>none | stroke</code><br>Stroke drawn along each interior column boundary, centered in the gutter. A gutter of <code>0pt</code> leaves the stroke sitting directly between the columns.</td></tr><tr><td><code>..children</code></td><td><code>arguments</code><br>The columns: string cell ids, Mosaic grid nodes, or values wrapped with <code>track</code>. At least one is required.</td></tr></table><h2 id="grids.rows">Splits the available height, arranging its children as rows.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">rows(gutter: 0pt, stroke: none, ..children) -> dictionary</code></pre></div><strong style="display: block">Description</strong><p>Children take the same forms as in <code>columns</code>: a string cell id, a Mosaic grid node, either wrapped in <code>track</code>, or a node wrapped in <code>steps.on</code> for incremental reveal. Each unwrapped child receives a <code>1fr</code> row.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.grids.<span class="calepin-syntax-scope-20">rows</span>(
+)</code></pre></div><strong style="display: block">Arguments</strong><table><tr><td><code>gutter</code></td><td><code>auto | length | ratio | relative | fraction</code><br>Native Typst track size used between adjacent columns.</td></tr><tr><td><code>stroke</code></td><td><code>none | length | color | gradient | tiling | stroke | dictionary</code><br>Stroke drawn along each interior column boundary, centered in the gutter. A gutter of <code>0pt</code> leaves the stroke sitting directly between the columns.</td></tr><tr><td><code>..children</code></td><td><code>arguments</code><br>The columns: string cell ids, Mosaic grid nodes, or values wrapped with <code>track</code>. At least one is required.</td></tr></table><h2 id="grids.rows">Splits the available height, arranging its children as rows.</h2><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">rows(gutter: 0pt, stroke: none, ..children) -> dictionary</code></pre></div><strong style="display: block">Description</strong><p>Children take the same forms as in <code>columns</code>: a string cell id, a Mosaic grid node, either wrapped in <code>track</code>, or a node wrapped in <code>steps.on</code> for incremental reveal. Each unwrapped child receives a <code>1fr</code> row.</p><div class="sourceCode" data-lang="typ"><pre><code data-lang="typ">#mosaic.grids.<span class="calepin-syntax-scope-20">rows</span>(
   gutter: <span class="calepin-syntax-scope-23">0.7em</span>,
   mosaic.grids.<span class="calepin-syntax-scope-20">track</span>(<span class="calepin-syntax-scope-6">auto</span>, <span class="calepin-syntax-scope-3">"header"</span>),
   mosaic.grids.<span class="calepin-syntax-scope-20">columns</span>(gutter: <span class="calepin-syntax-scope-23">1em</span>, <span class="calepin-syntax-scope-3">"left"</span>, <span class="calepin-syntax-scope-3">"right"</span>),
   mosaic.grids.<span class="calepin-syntax-scope-20">track</span>(<span class="calepin-syntax-scope-6">auto</span>, <span class="calepin-syntax-scope-3">"footer"</span>),
-)</code></pre></div><strong style="display: block">Arguments</strong><table><tr><td><code>gutter</code></td><td><code>auto | length | ratio | relative | fraction</code><br>Native Typst track size used between adjacent rows.</td></tr><tr><td><code>stroke</code></td><td><code>none | stroke</code><br>Stroke drawn along each interior row boundary, centered in the gutter.</td></tr><tr><td><code>..children</code></td><td><code>arguments</code><br>The rows: string cell ids, Mosaic grid nodes, or values wrapped with <code>track</code>. At least one is required.</td></tr></table>
+)</code></pre></div><p>A cell directly in an <code>auto</code> row hugs its content; see the <code>inset</code> parameter of <code>cell</code>.</p><strong style="display: block">Arguments</strong><table><tr><td><code>gutter</code></td><td><code>auto | length | ratio | relative | fraction</code><br>Native Typst track size used between adjacent rows.</td></tr><tr><td><code>stroke</code></td><td><code>none | length | color | gradient | tiling | stroke | dictionary</code><br>Stroke drawn along each interior row boundary, centered in the gutter.</td></tr><tr><td><code>..children</code></td><td><code>arguments</code><br>The rows: string cell ids, Mosaic grid nodes, or values wrapped with <code>track</code>. At least one is required.</td></tr></table>
         </main>
 
         <aside class="calepin-website-toc is-floating">
@@ -4142,7 +4145,11 @@ html[data-theme="dark"] .mosaic-diagram {
   const root = document.documentElement;
   const media = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
   const storageKey = (button) => button.dataset.calepinThemeStorageKey || "calepin-theme";
-  const urlParam = (button) => button.dataset.calepinThemeParam || "";
+  // Matches theme-init.js's default so the two scripts agree on which URL
+  // param to honor when a theme omits `data-calepin-theme-param`: otherwise
+  // the init script paints the theme from `?theme=`, and the toggle button's
+  // own read (used to sync its label/icon) silently ignores it, flashing.
+  const urlParam = (button) => button.dataset.calepinThemeParam || "theme";
   const systemTheme = () => media && media.matches ? "dark" : "light";
 
   function readUrl(button) {
@@ -4299,14 +4306,11 @@ html[data-theme="dark"] .mosaic-diagram {
       menu.appendChild(li);
     });
 
-    summary.addEventListener("click", () => {
-      const open = !picker.open;
-      closeAll(open ? picker : null);
-      picker.classList.toggle("is-open", open);
-      summary.setAttribute("aria-expanded", open ? "true" : "false");
-    });
-
+    // The native <details> toggle owns the open state. While open, Pico's
+    // full-viewport summary::before overlay turns any outside click into a
+    // summary click, which closes the menu without reaching the page below.
     picker.addEventListener("toggle", () => {
+      if (picker.open) closeAll(picker);
       picker.classList.toggle("is-open", picker.open);
       summary.setAttribute("aria-expanded", picker.open ? "true" : "false");
     });

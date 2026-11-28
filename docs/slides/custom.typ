@@ -1,7 +1,7 @@
 #import "/.calepin/calepin.typ" as calepin
 #import "/_includes/embedded-examples.typ": embedded-example, thumbnail-gallery
 #import "/_includes/pdf-slideshow.typ": pdf-slideshow
-#import "/_includes/site.typ": asset-url
+#import "/_includes/site.typ": asset-url, unreleased
 
 #set document(title: [Custom slides])
 #metadata((title: "Custom")) <website-metadata>
@@ -41,15 +41,7 @@ When no built-in layout fits, write the slide's arrangement yourself. A custom s
 
 Build a custom slide in three separate layers: define its named grid, assign content to those names, and style the labeled cells with native Typst rules. The walkthrough below grows one slide through all three. The sections after it are the reference for each layer.
 
-#calepin.elements.callout(kind: "warning", title: [Requires Mosaic 0.0.2])[
-  Painting a cell's own block with `set block` rules is new in 0.0.2, which is not on Typst Universe yet, so the snippets and examples on this page pin the development version. One command installs it — `curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh` — and then it imports as:
-
-  ```typ
-  #import "@local/mosaic:0.0.2" as m
-  ```
-
-  See #link("../start/install.html")[Install] for the full instructions.
-]
+#unreleased(calepin.elements.callout)[Painting a cell's own block with `set block` rules, positional bodies that fill every cell in order (so a single body fills the header), and combining positional bodies with `cells:` are new.]
 
 = Walkthrough
 
@@ -173,7 +165,7 @@ A built-in layout resolves to a grid of named cells like any other, so the same 
 Describe a custom grid by splitting the available space. `m.grids.columns` places cells side by side; `m.grids.rows` stacks them. Each string is a cell ID. Import Mosaic under a short alias so the grid constructors stay namespaced and native Typst `columns()` remains available:
 
 ```typ
-#import "@local/mosaic:0.0.2" as m
+#import "@local/mosaic:0.0.3" as m
 ```
 
 Assign the grid to a binding, then pass it to `m.slide` through `layout:`. The slide's positional bodies fill the cells in source order:
@@ -237,7 +229,7 @@ Splits nest to any depth. Read a grid from the outside inward: choose the larges
 
 = Grid sizes (tracks)
 
-By default, every direct child of `m.grids.columns` or `m.grids.rows` receives a `1fr` track. Wrap a child with `m.grids.track` when it needs another size:
+By default, every direct child of `m.grids.columns` or `m.grids.rows` receives a `1fr` track, so the split divides its space evenly. Wrap a child with `m.grids.track` when it needs another size:
 
 #embedded-example(
   calepin.elements.gallery,
@@ -248,7 +240,7 @@ By default, every direct child of `m.grids.columns` or `m.grids.rows` receives a
   show-captions: false,
 )
 
-Tracks accept native `auto`, fixed lengths, percentages, and `fr` values:
+A size is anything a native grid track accepts: `auto` for as much as the child's content needs, a fixed length, a percentage, or an `fr` share of what remains:
 
 #embedded-example(
   calepin.elements.gallery,
@@ -258,6 +250,8 @@ Tracks accept native `auto`, fixed lengths, percentages, and `fr` values:
   columns: 1,
   show-captions: false,
 )
+
+A cell directly in an `auto` row hugs its content; Mosaic calls it a *compact cell*. A compact cell is padded like the header and footer of the built-in layouts: the full `inset` left and right, `compact-inset` above and below. A hand-built header therefore matches the built-in one; see #link("../appearance/styling.html#header-depth")[Header depth] to change how deep both are. Pass `inset:` to `m.grids.cell` to pad a cell differently.
 
 Fractions compose, so three tracks can center a double-width column:
 
@@ -274,7 +268,7 @@ The #link("../api/grids.html")[Grid API] lists the exact accepted forms and thei
 
 = Filling cells
 
-A slide accepts cell content in two distinct forms. Use positional content blocks (`[...][...]`) for a short grid whose traversal order is obvious, or use the named `cells:` dictionary to assign content by cell ID. Do not mix the two forms in one slide. Both forms work for a custom grid and for a built-in layout alike.
+A slide accepts cell content in two forms: positional content blocks (`[...][...]`), matched to cells by order, and the named `cells:` dictionary, which assigns content by cell ID. They combine on one slide. Both forms work for a custom grid and for a built-in layout alike.
 
 == Positional content with `[][]`
 
@@ -291,7 +285,28 @@ Place content blocks directly after the `m.slide(...)` call. Each pair of bracke
   title: "Positional bodies assigned to horizontal and vertical grids",
 )
 
-This compact form is especially useful for a one-cell slide. In a larger or reusable grid, positional meaning can become hard to see after the grid changes.
+The Nth block always fills the Nth cell, and Mosaic never looks inside the blocks. Every cell counts, the header and a footer included, so in the content layout the first block is the header:
+
+```typ
+#m.slide[== Results][The estimate is positive.]   // header, then body
+#m.slide[][The estimate is positive.]             // empty header, then body
+#m.slide[The estimate is positive.]               // the header alone
+```
+
+The last line is the one to watch: a single block on a layout with a header fills the header. Leave the header empty with `[]`, name the cell through `cells:`, or pick a layout variant without a header.
+
+Fewer blocks than cells leaves the trailing cells to their deck default from `m.setup(cells:)`, or empty, which is how a deck footer survives an ordinary `[== Title][Body]` slide. A default on a leading cell is replaced by any block that reaches a cell after it, so a deck with a default header fills the body by name, `m.slide(cells: (body: [Body]))`, to keep it; an empty first block would blank the header. More blocks than cells is an error that names the cells there are to fill. A slide with no blocks at all is an empty slide. Content written after an explicit slide, outside any slide, is an error too: open a new slide with a heading, or put the content in the slide.
+
+== Combining both forms
+
+A cell named in `cells:` is filled from it and leaves the positional pool; the blocks then fill the remaining cells in order. The usual case is a footer that belongs to one slide:
+
+```typ
+#m.slide(
+  layout: m.layouts.content(variant: "header-body-footer"),
+  cells: (footer: [Source: OECD]),
+)[== Results][The estimate is positive.]
+```
 
 == Named content with `cells:`
 
@@ -345,7 +360,10 @@ To replace a named layout throughout a deck, configure it once in `m.setup`:
 
 ```typ
 #show: m.setup.with(layouts: (
-  section: m.layouts.section(variant: "image-background", image: "chapter.jpg"),
+  section: m.layouts.section(
+    variant: "image-background",
+    image: path("chapter.jpg"),
+  ),
 ))
 ```
 
