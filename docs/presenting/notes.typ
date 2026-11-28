@@ -1,7 +1,5 @@
 #import "/.calepin/calepin.typ" as calepin
 
-#import "/_includes/site.typ": unreleased
-
 #set document(title: [Speaker notes])
 #metadata((title: "Speaker notes")) <website-metadata>
 
@@ -54,8 +52,6 @@ On those printed pages, the frame heading renders under the `<mosaic-note-headin
 The note outputs are independent of `handout:`, so a deck can print a #link("../incremental/handouts.html")[handout], a speaker script, or both.
 
 = On a second screen
-
-#unreleased(calepin.elements.callout)[Everything below is new: the `split` output and the notes embedded in the PDF. Everything above works with the released package, with one difference: the released 0.0.1 sets the note text at a fixed 10pt and its heading at 12pt rather than inheriting the deck's base size.]
 
 A presenter console drives two displays: the projector shows the slide, your laptop shows the same slide with its notes, the next slide, and a clock. Typst produces a PDF, so the console is a separate program. Several free ones exist — #link("https://pympress.xyz/")[pympress], #link("https://pdfpc.github.io/")[pdfpc], #link("https://github.com/beamerpresenter/BeamerPresenter")[BeamerPresenter] — and they run on Linux, macOS, and Windows.
 

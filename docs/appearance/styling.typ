@@ -40,7 +40,7 @@ Everything about the deck's palette, overriding entries, the bundled palette col
 
 Target a cell by its label. Font, size, color, and alignment are `set text`, `set par`, and `set align`; the cell's own fill, stroke, and corner radius are `set block` on the same label. The #link("../api/labels.html")[label reference] lists every label a slide emits:
 
-#unreleased(calepin.elements.callout)[Painting a cell's own block with `set block` rules and the `compact-inset` spacing are new.]
+#unreleased(calepin.elements.callout)[The `compact-inset` spacing is new.]
 
 ```typ
 #let ink = rgb("#20262d")
@@ -154,7 +154,7 @@ A cell that sits directly in an `auto` row hugs its content: the row is exactly 
 
 The default, `auto`, is 55% of `inset`. Setting it equal to `inset` gives a deep band with the same padding on all four sides, which leaves room for a logo placed in the foreground beside the title. The value applies to the compact cells of the built-in layouts and of your own grids alike, so a content slide built from a custom layout and an image slide in the same deck draw the same band. A cell that passes its own `inset:` keeps it.
 
-In the released 0.0.1 the built-in headers always take the shallow padding, and a compact cell in your own grid takes the full `inset` on every side.
+In the released 0.0.2 the built-in headers always take the shallow padding, and a compact cell in your own grid takes the full `inset` on every side.
 
 = Properties an element pins on itself
 
