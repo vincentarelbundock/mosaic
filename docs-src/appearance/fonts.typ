@@ -32,15 +32,15 @@ Typst reports every family in the list that it cannot find, even when a later fa
 
 ```sh
 warning: unknown font family: inter
-   ┌─ @preview/mosaic:0.0.1/src/themes/default/definition.typ:21:10
+   ┌─ @preview/mosaic:0.0.2/src/themes/default/definition.typ:20:10
    │
-21 │     font: options.font,
+20 │     font: options.font,
    │           ^^^^^^^^^^^^
 
 warning: unknown font family: source sans 3
-   ┌─ @preview/mosaic:0.0.1/src/themes/default/definition.typ:21:10
+   ┌─ @preview/mosaic:0.0.2/src/themes/default/definition.typ:20:10
    │
-21 │     font: options.font,
+20 │     font: options.font,
    │           ^^^^^^^^^^^^
 ```
 
@@ -56,7 +56,7 @@ Two things do make them go away:
 `setup` takes the typeface as an option, so one line replaces the theme's list with your own choice. Its companion is `base-size`, the size the rest of the deck's type scales from:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup.with(font: "EB Garamond", base-size: 24pt)
 ```
@@ -70,7 +70,7 @@ The value is whatever Typst's own `text` function accepts, so a list works here 
 One theme sets a second face. `editorial` is the magazine voice, serif display type over a sans body, so it takes its display face as an option of its own:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 #import m.themes.editorial: setup
 
 #show: setup.with(

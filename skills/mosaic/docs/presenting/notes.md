@@ -48,8 +48,6 @@ The note outputs are independent of `handout:`, so a deck can print a [handout](
 
 ## On a second screen
 
-> **Requires Mosaic 0.0.3.** Everything below is new: the `split` output and the notes embedded in the PDF. Everything above works with the released package, with one difference: the released 0.0.1 sets the note text at a fixed 10pt and its heading at 12pt rather than inheriting the deck's base size. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.1`. See [Install](../start/install.md).
-
 A presenter console drives two displays: the projector shows the slide, your laptop shows the same slide with its notes, the next slide, and a clock. Typst produces a PDF, so the console is a separate program. Several free ones exist — [pympress](https://pympress.xyz/), [pdfpc](https://pdfpc.github.io/), [BeamerPresenter](https://github.com/beamerpresenter/BeamerPresenter) — and they run on Linux, macOS, and Windows.
 
 Mosaic takes the route that works with all of them and needs no companion file, no sidecar format, and no configuration: the notes go on the page, and the console cuts the page in half.

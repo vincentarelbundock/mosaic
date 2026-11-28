@@ -2,14 +2,14 @@
 
 A title slide takes its content from the deck rather than from the slide, and its arrangement from a variant.
 
-> **Requires Mosaic 0.0.3.** Three things on this page are new: the five `image-*` variants, where the released version writes `variant: "image"` with a `position:`; `image-background`, which sets the title over a full-slide picture; and `none` for the title itself. The picture examples import the development version; the others compile under the released one as they stand. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.1`. See [Install](../start/install.md).
+> **Requires Mosaic 0.0.3.** Three things on this page are new: the five `image-*` variants, where the released version writes `variant: "image"` with a `position:`; `image-background`, which sets the title over a full-slide picture; and `none` for the title itself. The picture examples import the development version; the others compile under the released one as they stand. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.2`. See [Install](../start/install.md).
 
 ## A simple title slide
 
 Declare the title information once in `m.setup`, then place `m.slide(layout: "title")` where the deck opens:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup.with(
   title: [The Optimal Number of Naps],
@@ -70,7 +70,7 @@ The thumbnails below all render the same title information: one deck title and s
 Written out in full, one of those decks is this:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #let ccp = [Centre for Comparative Politics]
 #let eis = [European Institute for Social Data]
@@ -126,7 +126,7 @@ When no variant draws the page you want, not even `image-background`, build the 
 The deck below composes a full-slide photograph on the slide's `background:` plane, anchors the heading to the top edge, and pins the byline to the bottom, an arrangement no built-in variant draws. The `scrim:` on the background image quiets the photograph exactly as it does on the image variants, and `numbered: false` keeps the cover out of the slide count the way named title layouts stay out of it automatically.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 #import "_title-info.typ": info
 
 #show: m.setup.with(..info)

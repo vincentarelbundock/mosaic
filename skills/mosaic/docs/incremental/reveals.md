@@ -7,7 +7,7 @@ The timing commands introduced on the [Steps and pauses](steps.md) page apply to
 Wrap a list in `m.steps.reveal` to show one more item on each step.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 #set text(size: 22pt)
@@ -29,7 +29,7 @@ Wrap a list in `m.steps.reveal` to show one more item on each step.
 Revealed grid cells can start removed, allowing visible cells to use the space until the next panel arrives.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #let grid = m.grids.columns(
   ..m.steps.reveal(
@@ -78,7 +78,7 @@ Revealed grid cells can start removed, allowing visible cells to use the space u
 Use `m.steps.on` for a word, sentence, or other element that appears only at selected steps. Ranges may be integers, open ranges such as `"3-"`, closed ranges such as `"2-4"`, or everything up to a step, such as `"-2"`; `before` and `after` control the surrounding steps.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 #set text(size: 22pt)
@@ -104,7 +104,7 @@ Use `m.steps.on` for a word, sentence, or other element that appears only at sel
 Use `m.steps.replace` to revise a word or larger fragment without moving surrounding content; the largest alternative determines the stable slot.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 #set text(size: 22pt)
@@ -140,7 +140,7 @@ Draw a figure progressively when you want to explain its geometry in the order i
 This example adapts the [Bloch sphere from Scientific Diagrams](https://diagrams.janosh.dev/bloch-sphere).
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 #import "@preview/cetz:0.5.2"
 
 #show: m.setup
@@ -258,7 +258,7 @@ This example adapts the [Bloch sphere from Scientific Diagrams](https://diagrams
 Reveal a diagram path gradually when you want the audience to follow one relationship at a time. Connect `m.steps.drawing` to Fletcher, then use ordinary Mosaic timing functions around nodes and edges.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 #import "@preview/fletcher:0.5.8" as fletcher
 
 #show: m.setup

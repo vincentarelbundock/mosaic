@@ -1,9 +1,9 @@
 # Install
 
-Mosaic requires Typst 0.15 or newer. The released version, 0.0.1, is published on [Typst Universe](https://typst.app/universe/package/mosaic), so using it needs no installation step: the first compile downloads the package.
+Mosaic requires Typst 0.15 or newer. The released version, 0.0.2, is published on [Typst Universe](https://typst.app/universe/package/mosaic), so using it needs no installation step: the first compile downloads the package.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 ```
 
 ## The development version

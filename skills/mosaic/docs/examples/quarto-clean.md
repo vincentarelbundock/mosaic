@@ -110,7 +110,7 @@ While Clean is a Touying theme, it is designed to be used from #link("https://qu
 // the difference between them rather than a whole look. It starts from
 // Default's exported definition and overrides four things: the two accents,
 // the type, two layouts, and the handful of rules Clean owns.
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.2" as mosaic
 #import mosaic: slide, note, fit, grids, layouts, steps, components
 
 #let base = mosaic.themes.default.definition

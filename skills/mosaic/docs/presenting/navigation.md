@@ -21,7 +21,7 @@ A `show outline.entry` rule replaces the entry. `it.body()` is the title, `it.el
 Its own heading is outlined like any other, so it appears in its own outline unless it carries `#heading(outlined: false)` or a narrower `target:` excludes it.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 #set text(size: 22pt)
@@ -62,7 +62,7 @@ Present the main estimates.
 `query(heading.where(level: 1, outlined: true))` returns the section headings in document order, each with a `body` to print and a `location()` to link to. Slice them and place the chunks in a native `grid`.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 #set text(size: 22pt)
@@ -132,7 +132,7 @@ It takes no `outline` and no query, and fits itself to the slide.
 Use native contextual `query` with a selector ending at `here()` to find the active section and slide headings. Their `body` fields provide the labels, and `location()` provides a link target.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #let active-heading(level) = {
   let headings = query(
@@ -180,7 +180,7 @@ Explain the model.
 Use `query(heading.where(level: 1, outlined: true))` to collect every outlined section heading. Each result provides a label through `body` and a destination through `location()`. Compare it with the last matching heading before `here()` to style the active section differently.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #let section-links() = context {
   let sections = query(heading.where(level: 1, outlined: true))

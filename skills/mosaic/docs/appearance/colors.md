@@ -63,7 +63,7 @@ To recolor an entire slide at once, use the `<mosaic-slide>` label described und
 Beyond per-entry overrides, every facade exports `palettes`, a curated collection of complete color schemes in one Japandi voice: oat and greige grounds, wood-tone and dried-plant accents, and status colors that whisper. Each entry is the same flat eight-color dictionary `colors:` accepts, so any of them repaints any theme with one line:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup.with(colors: m.palettes.espresso)
 ```
@@ -88,7 +88,7 @@ The galleries below all render the same five-slide deck under the default theme:
 The deck lives in one [shared file](https://github.com/vincentarelbundock/mosaic/blob/main/docs-src/examples/embedded/appearance/_palette-deck.typ) exporting a single `deck` function, exactly like the running example on the [Themes](themes.md) page. Each wrapper imports it, names one bundled palette, and renders:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 #import "_palette-deck.typ": deck
 
 #show: m.setup.with(colors: m.palettes.espresso)
@@ -100,7 +100,7 @@ The dark schemes swap in the dark syntax highlighting theme on their own; polari
 
 ## Inverting one slide
 
-> **Requires Mosaic 0.0.3.** `invert: true` itself is in the released version. Code highlighting that follows the inverted ground, and a ground that reaches the page edge under a page margin, are new. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.1`. See [Install](../start/install.md).
+> **Requires Mosaic 0.0.3.** `invert: true` itself is in the released version. Code highlighting that follows the inverted ground, and a ground that reaches the page edge under a page margin, are new. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.2`. See [Install](../start/install.md).
 
 The last slide of every gallery above is the same command:
 

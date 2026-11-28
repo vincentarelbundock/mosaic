@@ -2,7 +2,7 @@
 
 An image can sit in a cell, in a layout that is built around one, or on a [background](../slides/background.md) or [foreground](../slides/foreground.md) plane. Image loading, fitting, figures, captions, and references remain native Typst. This page is where pictures are explained once: what a picture is, where a layout can put one, and how to fit, quiet, and caption it.
 
-> **Requires Mosaic 0.0.3.** The title layout's five `image-*` variants are new; the released version writes `variant: "image"` with a `position:` there. Everything else on this page, the section and image layouts included, is the same in both versions. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.1`. See [Install](../start/install.md).
+> **Requires Mosaic 0.0.3.** The title layout's five `image-*` variants are new; the released version writes `variant: "image"` with a `position:` there. Everything else on this page, the section and image layouts included, is the same in both versions. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.2`. See [Install](../start/install.md).
 
 ## Asset paths
 
@@ -144,7 +144,7 @@ Three kinds of paint cover almost every case:
 - A *flat light color* such as `white.transparentize(25%)` washes the picture out instead, which keeps the deck's ordinary dark text readable and needs no color rule at all.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 
@@ -278,7 +278,7 @@ A scrim changes the picture, never the text. Light-on-dark compositions still re
 The orange lines frame the full area of each cell. On the left, the white space between the frame and the picture is the cell's inset. The right cell shows more of the original picture because `contain` keeps the whole image visible, whereas `cover` crops it to fill the available image area.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 
@@ -319,7 +319,7 @@ The orange lines frame the full area of each cell. On the left, the white space 
 Cells have an `inset` by default. To make an image cover the full cell, including that content margin, set the inset to `0pt`. The defaults of `m.components.image()` then cover the complete cell. Declare that fixed image content and the zero inset directly with `cell`.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 
@@ -358,7 +358,7 @@ Cells have an `inset` by default. To make an image cover the full cell, includin
 `m.components.figure()` composes a native Typst `figure`, so captions take the deck's own `show figure.caption` styling, and numbering and references work as usual. Switch numbering off with an ordinary `set figure(numbering: none)`. Writing the `figure` out yourself works too, and is the way in when the body is a table, a diagram, or anything else that is not a picture.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 #set page(fill: rgb("#f4f1ea"))

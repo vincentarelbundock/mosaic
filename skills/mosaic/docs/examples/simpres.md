@@ -118,7 +118,7 @@ A complete 9-frame deck. Assets, Makefile, and the compiled PDF are in the [repo
 // This is a design, not a transcription. It states the palette and the few
 // structural gestures that make Simpres recognizable, and leaves everything
 // else to Mosaic's defaults.
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.2" as mosaic
 #import mosaic: slide, note, fit, grids, layouts, steps, components
 #import "@preview/cetz:0.5.2"
 

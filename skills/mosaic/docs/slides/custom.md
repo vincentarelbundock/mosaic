@@ -4,7 +4,7 @@ When no built-in layout fits, write the slide's arrangement yourself. A custom s
 
 Build a custom slide in three separate layers: define its named grid, assign content to those names, and style the labeled cells with native Typst rules. The walkthrough below grows one slide through all three. The sections after it are the reference for each layer.
 
-> **Requires Mosaic 0.0.3.** Painting a cell's own block with `set block` rules, positional bodies that fill every cell in order (so a single body fills the header), and combining positional bodies with `cells:` are new. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.1`. See [Install](../start/install.md).
+> **Requires Mosaic 0.0.3.** Positional bodies that fill every cell in order (so a single body fills the header), and combining positional bodies with `cells:`, are new. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.2`. See [Install](../start/install.md).
 
 ## Walkthrough
 
@@ -118,13 +118,13 @@ A built-in layout resolves to a grid of named cells like any other, so the same 
 Describe a custom grid by splitting the available space. `m.grids.columns` places cells side by side; `m.grids.rows` stacks them. Each string is a cell ID. Import Mosaic under a short alias so the grid constructors stay namespaced and native Typst `columns()` remains available:
 
 ```typ
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.2" as m
 ```
 
 Assign the grid to a binding, then pass it to `m.slide` through `layout:`. The slide's positional bodies fill the cells in source order:
 
 ```typ
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 
 // Outline each cell so the grid structure is visible. Cells are structural, so
@@ -145,7 +145,7 @@ Assign the grid to a binding, then pass it to `m.slide` through `layout:`. The s
 Use `m.grids.rows` for equal-height rows instead:
 
 ```typ
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 
 // Outline each cell so the grid structure is visible. Cells are structural, so
@@ -170,7 +170,7 @@ Each example on this page outlines its cells so the structure is visible. Those 
 Any child of a split can be another grid, so a region can carry its own division. Here the outer `columns` gives `a` the left half and stacks `b` and `c` on the right:
 
 ```typ
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 
 // Outline each cell so the grid structure is visible. Cells are structural, so
@@ -192,7 +192,7 @@ Any child of a split can be another grid, so a region can carry its own division
 Two stacked `columns` splits make a 2 x 2 arrangement:
 
 ```typ
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 
 // Outline each cell so the grid structure is visible. Cells are structural, so
@@ -217,7 +217,7 @@ Two stacked `columns` splits make a 2 x 2 arrangement:
 Splits nest to any depth. Read a grid from the outside inward: choose the largest split first, then replace any child that needs another division with a nested `columns` or `rows`. Keep descriptive IDs and indentation so the tree stays visible in source:
 
 ```typ
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 
 // Outline each cell so the grid structure is visible. Cells are structural, so
@@ -251,7 +251,7 @@ Splits nest to any depth. Read a grid from the outside inward: choose the larges
 By default, every direct child of `m.grids.columns` or `m.grids.rows` receives a `1fr` track, so the split divides its space evenly. Wrap a child with `m.grids.track` when it needs another size:
 
 ```typ
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 
 // Outline each cell so the grid structure is visible. Cells are structural, so
@@ -272,7 +272,7 @@ By default, every direct child of `m.grids.columns` or `m.grids.rows` receives a
 A size is anything a native grid track accepts: `auto` for as much as the child's content needs, a fixed length, a percentage, or an `fr` share of what remains:
 
 ```typ
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 
 // Outline each cell so the grid structure is visible. Cells are structural, so
@@ -295,7 +295,7 @@ A cell directly in an `auto` row hugs its content; Mosaic calls it a **compact c
 Fractions compose, so three tracks can center a double-width column:
 
 ```typ
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 
 // Outline each cell so the grid structure is visible. Cells are structural, so
@@ -332,7 +332,7 @@ Place content blocks directly after the `m.slide(...)` call. Each pair of bracke
 ```
 
 ```typ
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 #set text(size: 22pt)
@@ -396,7 +396,7 @@ A cell named in `cells:` is filled from it and leaves the positional pool; the b
 Pass a dictionary to the named `cells:` argument to associate each body with an explicit cell ID. Assignment then remains independent of the grid's traversal order. In the example below the same IDs also anchor the styling: one `show` rule per cell label tints each cell, which is why the grid structure stays visible in the rendered slide.
 
 ```typ
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 

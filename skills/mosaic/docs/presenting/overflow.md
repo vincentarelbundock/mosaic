@@ -1,6 +1,6 @@
 # Overflow and fitting
 
-> **Requires Mosaic 0.0.3.** Breakable slides are new: `setup(breakable:)` and `slide(breakable:)` do not exist in the released version. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.1`. See [Install](../start/install.md).
+> **Requires Mosaic 0.0.3.** Breakable slides are new: `setup(breakable:)` and `slide(breakable:)` do not exist in the released version. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.2`. See [Install](../start/install.md).
 
 A cell does not resize its content. A body larger than its cell is drawn past the edge, so a slide that holds too much fails silently on screen rather than at compile time. Before presenting, run a checking compile to find those slides, and scale the rare indivisible block with `m.fit`. A slide whose content is long by nature, such as a list of references, can instead break onto continuation pages.
 
@@ -39,7 +39,7 @@ The block is offered the cell's width first, so text and lists wrap and are then
 Measuring a block means holding it inside a closure, which the slide runtime cannot look into. `m.steps.pause`, `m.steps`, and `m.note` are found by walking the slide's content, so inside a fitted block they would be invisible: the reveals would collapse into one frame and the notes would never reach the speaker output. `m.fit` reports that as an error instead. Keep them outside the fitted block, or fit each revealed part on its own. [Where steps work](../incremental/steps.md#where-steps-work) lists the other places the runtime cannot see into.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 #set text(size: 22pt)

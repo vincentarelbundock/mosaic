@@ -7,7 +7,7 @@ Cells occupy the main slide body. The background plane sits behind them, coverin
 Native `place` positions images, shapes, and other Typst content independently of the grid.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 #set text(size: 22pt)
@@ -32,7 +32,7 @@ Native `place` positions images, shapes, and other Typst content independently o
 Pass a slide-sized image to the `background:` argument. The optional `scrim` of `m.components.image()` paints a translucent layer over the photograph so the text in front stays readable. The [Scrims](../content/images.md#scrims) section covers the flat, gradient, and light options.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 #set page(fill: rgb("#f4f1ea"))

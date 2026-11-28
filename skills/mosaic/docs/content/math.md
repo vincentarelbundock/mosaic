@@ -7,7 +7,7 @@ Typst's native math notation works inside Mosaic slides. Incremental commands ca
 The timing commands documented on the [Reveal and replace](../incremental/reveals.md) page work inside math as well. Wrapping each term in `m.steps.replace` annotates one part of an equation at a time, and because the largest alternative sets the slot, the surrounding math never moves.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 #set text(size: 20pt)
@@ -81,7 +81,7 @@ The timing commands documented on the [Reveal and replace](../incremental/reveal
 The [MiTeX package](https://typst.app/universe/package/mitex/) converts LaTeX math source into Typst content. Import `mi` for inline equations and `mitex` for display equations, useful when reusing existing equations or collaborating with LaTeX authors.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 #import "@preview/mitex:0.2.7": mi, mitex
 
 #show: m.setup
@@ -111,7 +111,7 @@ The [MiTeX package](https://typst.app/universe/package/mitex/) converts LaTeX ma
 The [ctheorems package](https://typst.app/universe/package/ctheorems/) provides numbered, referenceable theorem and proof environments. Define the environments once, install its `thmrules` show rule, and use them normally inside a Mosaic slide.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 #import "@preview/ctheorems:1.1.3": thmbox, thmproof, thmrules
 
 #show: thmrules.with(qed-symbol: $square$)

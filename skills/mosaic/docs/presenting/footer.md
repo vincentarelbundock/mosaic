@@ -32,7 +32,7 @@ A third block would replace the footer on that slide. Named content can likewise
 The footer is an ordinary cell, and there is no separate global footer feature, so footers cannot overlap slide numbers, progress indicators, or the slide body.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup.with(
   cells: (footer: [Mosaic · Engineering]),
@@ -71,12 +71,14 @@ The footer is an ordinary cell, and there is no separate global footer feature, 
 
 `m.components.progress()` shows the current position in a deck. All frames from one incremental slide share the same slide number. Use `"1/1"` or `"1"` for numbers, `"circle"` for a compact indicator, and `"line"` for a full-width bar.
 
-> **Requires Mosaic 0.0.3.** The component quiets itself on pages where its counter has no meaningful reading: a slides count on unnumbered slides (titles and sections), and a sections count before the first section slide. A bare `progress()` in a deck foreground is therefore already correct page-number chrome, and a `quiet:` argument overrides the rule (`false` always displays, `true` silences every unnumbered page). In the released `0.0.1` the component always displays, so a foreground indicator needs the `slide.numbered` guard shown at the bottom of this page. Four further things on this page are new: positional bodies fill every cell in order, `cells:` combines with positional bodies, `slide.number` is `none` on an unnumbered slide, and the `m.appendix` marker for backup slides. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.1`. See [Install](../start/install.md).
+The component quiets itself on pages where its counter has no meaningful reading: a slides count on unnumbered slides (titles and sections), and a sections count before the first section slide. A bare `progress()` in a deck foreground is therefore already correct page-number chrome. A `quiet:` argument overrides the rule: `false` always displays, and `true` silences every unnumbered page.
+
+> **Requires Mosaic 0.0.3.** Four things on this page are new: positional bodies fill every cell in order, `cells:` combines with positional bodies, `slide.number` is `none` on an unnumbered slide, and the `m.appendix` marker for backup slides. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.2`. See [Install](../start/install.md).
 
 The deck below puts a bare counter in the setup foreground and nothing else. The counter appears on the two content slides and stays quiet on the title and section pages, with no guard written anywhere; sizing comes from an ordinary `text` rule around the component, and a one-off color would go through its `accent:` argument rather than a text rule, because the component paints its own ink from the theme role:
 
 ```typ
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup.with(
   title: [Quarterly review],
@@ -110,7 +112,7 @@ A recurring progress line along the bottom edge is one foreground entry in setup
 ```
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup.with(
   layouts: (content: m.layouts.content(variant: "body")),
@@ -135,7 +137,7 @@ A recurring progress line along the bottom edge is one foreground entry in setup
 ```
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 
@@ -170,7 +172,7 @@ A recurring progress line along the bottom edge is one foreground entry in setup
 The component can sit in a foreground, a cell, or another Typst container. This example adds a foreground bar to a custom grid:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 

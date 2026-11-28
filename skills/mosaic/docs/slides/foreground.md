@@ -7,7 +7,7 @@ Cells occupy the main slide body. The foreground plane sits above them, covering
 Foreground content is painted over the slide body. Use native `place` calls to position images, logos, text, shapes, labels, or counters independently of the grid.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 
@@ -54,7 +54,7 @@ A logo is the usual reason to reach for the plane, and it is the case `setup` ha
 Any slide can still replace the deck's foreground with one of its own, or hide it with `foreground: none`. The fourth slide below does exactly that.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup.with(
   foreground: [

@@ -4,7 +4,7 @@ You write one slide; Mosaic can reveal, replace, or remove parts of it over a se
 
 The features and API described in this section were heavily influenced by the [Touying package](https://touying-typ.github.io/docs/intro).
 
-> **Requires Mosaic 0.0.3.** Steps inside tables, math, components, and layout fields, described under [Where steps work](label("where-steps-work")), are new; the commands themselves are the same in the released version. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.1`. See [Install](../start/install.md).
+> **Requires Mosaic 0.0.3.** Steps inside tables, math, components, and layout fields, described under [Where steps work](label("where-steps-work")), are new; the commands themselves are the same in the released version. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.2`. See [Install](../start/install.md).
 
 ## Commands
 

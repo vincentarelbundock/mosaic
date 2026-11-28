@@ -59,7 +59,7 @@ The `full` variant puts the picture behind a single body cell that covers the wh
 Omit the body entirely for a bare picture slide with no text at all. The `full` variant also works for a custom opening slide: when no [title variant](title.md) fits, write the title as ordinary text over a full-bleed picture.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 

@@ -36,7 +36,7 @@ Where to look first:
 | Margins, aspect ratio, counters, accessibility, Touying | `docs/help/faq.md` |
 | A complete deck to imitate | `docs/examples.md`, then `docs/examples/<deck>.md` |
 
-Guide pages describe the released version (`@preview/mosaic:0.0.1`); a quoted **Requires Mosaic 0.0.3** callout marks what needs the development version. The API pages describe the development version throughout. When this file and a page disagree, trust the page and fix this file (step 16).
+Guide pages describe the released version (`@preview/mosaic:0.0.2`); a quoted **Requires Mosaic 0.0.3** callout marks what needs the development version. The API pages describe the development version throughout. When this file and a page disagree, trust the page and fix this file (step 16).
 
 The pages are generated from the website sources by `scripts/build-skill-docs.py`. Never edit `docs/` by hand: in the Mosaic repository, edit `docs-src/` or the package's `///` comments and run `make skill`.
 
@@ -44,7 +44,7 @@ The pages are generated from the website sources by `scripts/build-skill-docs.py
 
 1. Inspect the existing deck and preserve its import spelling and theme. Do not replace a themed facade with the root facade unless asked.
 2. Check that Typst is available with `typst --version`.
-3. The released package, `#import "@preview/mosaic:0.0.1"`, downloads from Typst Universe on first compile and needs no installation step. The development version, `#import "@local/mosaic:0.0.3"`, must be installed before it resolves — either as a snapshot of the repository via the one-liner below, or with `make install` from a clone to use the working tree:
+3. The released package, `#import "@preview/mosaic:0.0.2"`, downloads from Typst Universe on first compile and needs no installation step. The development version, `#import "@local/mosaic:0.0.3"`, must be installed before it resolves — either as a snapshot of the repository via the one-liner below, or with `make install` from a clone to use the working tree:
 
    ```sh
    curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/install.sh | sh
