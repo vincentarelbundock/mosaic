@@ -9,6 +9,37 @@ Mosaic builds slide decks as ordinary Typst documents. A deck is a sequence of s
 
 Prefer the smallest authoring surface that fits the request: headings for ordinary slides, named layouts for title and section slides, and low-level grids only for genuinely custom composition.
 
+## 0. The full documentation, one page at a time
+
+This file is the working summary. The whole Mosaic website, every guide page, the generated API reference with every parameter's type and default, and the full source of eight example decks, sits beside it as Markdown in `docs/`. Do not read it all. Open [docs/index.md](docs/index.md), which lists every page with its section headings, then open only the page the task needs. Guide pages carry each embedded example's complete Typst source in place of the rendered slides.
+
+Where to look first:
+
+| Task | Open |
+| --- | --- |
+| Exact signature, parameter, type, or default of any function | `docs/api/<group>.md`: `setup`, `slides` (`slide`, `info`, `appendix`, `note`, `fit`), `steps`, `grids`, `layouts`, `components`, `theme` |
+| Which label to target with a `show` rule | `docs/api/labels.md` |
+| Title, section, image, or content slide variants | `docs/slides/title.md`, `section.md`, `image.md`, `content.md` |
+| Hand-built grids, tracks, filling cells, refining a layout | `docs/slides/custom.md` |
+| Backgrounds, logos, scrims, pictures in layouts, figures | `docs/slides/background.md`, `foreground.md`, `docs/content/images.md` |
+| Cell styling, pinned properties, inverting cells | `docs/appearance/styling.md` |
+| Palettes, dark decks, `invert:` | `docs/appearance/colors.md` |
+| Fonts and font warnings | `docs/appearance/fonts.md` |
+| Choosing, customizing, or writing a theme | `docs/appearance/themes.md`, then `docs/api/theme.md` |
+| Pauses, steps, reveals, CeTZ and Fletcher drawings, handouts | `docs/incremental/*.md` |
+| Cards, callouts, badges, quotes, dividers | `docs/content/components.md` |
+| Math reveals, MiTeX, theorems; citations and source notes | `docs/content/math.md`, `citations.md` |
+| Footers, progress, `m.info()`, appendix | `docs/presenting/footer.md` |
+| Outline, breadcrumbs, links | `docs/presenting/navigation.md` |
+| Speaker notes, `split` output, pdfpc | `docs/presenting/notes.md` |
+| Overflow checks, `m.fit`, breakable slides | `docs/presenting/overflow.md` |
+| Margins, aspect ratio, counters, accessibility, Touying | `docs/help/faq.md` |
+| A complete deck to imitate | `docs/examples.md`, then `docs/examples/<deck>.md` |
+
+Guide pages describe the released version (`@preview/mosaic:0.0.1`); a quoted **Requires Mosaic 0.0.3** callout marks what needs the development version. The API pages describe the development version throughout. When this file and a page disagree, trust the page and fix this file (step 16).
+
+The pages are generated from the website sources by `scripts/build-skill-docs.py`. Never edit `docs/` by hand: in the Mosaic repository, edit `docs-src/` or the package's `///` comments and run `make skill`.
+
 ## 1. Establish the environment
 
 1. Inspect the existing deck and preserve its import spelling and theme. Do not replace a themed facade with the root facade unless asked.
@@ -553,6 +584,7 @@ For changes inside the Mosaic repository:
 make install
 make check
 make website
+make skill   # after any docs-src or /// doc-comment change: regenerates docs/ here
 ```
 
 Completion requires:
@@ -574,6 +606,7 @@ After completing the task, reflect on the session and update *this* SKILL.md if 
    - Did a compilation failure reveal a missing diagnostic step, or did the Mosaic API drift from what this file documents?
 2. **Decide**:
    - Generalizable lesson about how this skill should work → update this SKILL.md with the Edit tool.
+   - A gap or error in `docs/` → fix the website source in `docs-src/` (or the `///` comment) and regenerate with `make skill`; never patch `docs/` directly.
    - One-off or user-specific lesson → do not update; consider auto memory instead.
    - Nothing notable → say so explicitly and skip the edit.
 3. **Edit**: make small, surgical changes — refine a sentence, add a bullet or example. Do not rewrite sections wholesale. Never remove this reflection step itself.
