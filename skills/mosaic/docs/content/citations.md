@@ -7,7 +7,7 @@ Mosaic adds no citation machinery. A deck is an ordinary Typst document, so `#ci
 Load a BibTeX or Hayagriva file with `#bibliography` on a closing slide. Set the style once with `#set bibliography(style: ...)` so the in-text citations and the reference list agree, and pass `title: none` so the slide's own heading names the list instead of the generated one.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup.with(layouts: (content: m.layouts.content(variant: "body")))
 #set text(size: 18pt)
@@ -41,12 +41,12 @@ The usual Typst citation forms all apply. `@key` produces a normal citation, `#c
 
 Typst moves a footnote entry to the bottom of the page region that holds its marker. A Mosaic slide is a fixed-size frame, so there is no room below the content for the entry, and Typst would push it onto a page of its own. Mosaic therefore rejects a native `#footnote` on a slide with a compile error rather than let the note text land on an extra frame.
 
-> **Requires Mosaic 0.0.3.** Rejecting `#footnote` with an error is new; the released version lets the entry spill onto an extra frame. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.1`. See [Install](../start/install.md).
+> **Requires Mosaic 0.0.3.** Rejecting `#footnote` with an error is new; the released version lets the entry spill onto an extra frame. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.2`. See [Install](../start/install.md).
 
 Put the notes in a cell instead. An `auto`-height row at the bottom of the grid holds them, sized down and dimmed, and they stay on the slide that references them:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 // A body cell over an auto-height strip that holds the notes for this slide.
 #let cited = m.grids.rows(

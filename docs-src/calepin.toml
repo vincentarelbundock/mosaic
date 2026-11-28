@@ -50,7 +50,7 @@ depth = 3
   aria-label = "Bluesky"
 
 [[footer.item]]
-label = "Mosaic 0.0.1 · Built with Typst and Calepin."
+label = "Mosaic 0.0.2 · Built with Typst and Calepin."
 
 
 [sidebar]

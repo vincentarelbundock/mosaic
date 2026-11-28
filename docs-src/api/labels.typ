@@ -8,7 +8,7 @@
 
 Every part of a rendered slide carries a Typst label, and those labels are the whole styling surface. A deck reaches them with ordinary `show` rules, and a theme's `apply` reaches the same ones. This page is the complete inventory.
 
-#unreleased(calepin.elements.callout)[`mosaic-section-title` on the visible section title and `mosaic-section-record` are new, as are `set block` rules on a cell label.]
+#unreleased(calepin.elements.callout)[`mosaic-section-title` on the visible section title and `mosaic-section-record` are new.]
 
 Two kinds of rules cover a labeled region, split by what they touch. Properties of the content *inside* it pass through as ordinary `set` rules. Properties of its own block, its fill, stroke, and corner radius, are `set block` rules on the same label. The #link("../appearance/styling.html")[styling] page explains that split in full.
 

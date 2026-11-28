@@ -1,6 +1,6 @@
 # Mosaic documentation
 
-The Mosaic website as Markdown, generated from `docs-src/` by `scripts/build-skill-docs.py`. Do not edit these files; edit the website sources and run `make skill`. Pages describe the released version (0.0.1) unless a callout says a feature requires the development version (0.0.3); the API reference describes the development version throughout.
+The Mosaic website as Markdown, generated from `docs-src/` by `scripts/build-skill-docs.py`. Do not edit these files; edit the website sources and run `make skill`. Pages describe the released version (0.0.2) unless a callout says a feature requires the development version (0.0.3); the API reference describes the development version throughout.
 
 Each entry lists the page's sections, so open only the page a task needs.
 

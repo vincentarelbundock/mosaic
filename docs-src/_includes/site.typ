@@ -41,5 +41,5 @@
   kind: "warning",
   title: [Requires Mosaic #development-version],
 )[
-  #what This is the development version, which is not on Typst Universe yet: a deck that uses it imports #raw("@local/mosaic:" + development-version) rather than the released #raw("@preview/mosaic:0.0.1"). One command installs it; see #link(root-prefix() + "start/install.html")[Install].
+  #what This is the development version, which is not on Typst Universe yet: a deck that uses it imports #raw("@local/mosaic:" + development-version) rather than the released #raw("@preview/mosaic:0.0.2"). One command installs it; see #link(root-prefix() + "start/install.html")[Install].
 ]

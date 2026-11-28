@@ -1,4 +1,4 @@
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 
 // Deck-wide baseline: one native block rule fills every header cell, and a

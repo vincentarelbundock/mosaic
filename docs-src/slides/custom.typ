@@ -41,7 +41,7 @@ When no built-in layout fits, write the slide's arrangement yourself. A custom s
 
 Build a custom slide in three separate layers: define its named grid, assign content to those names, and style the labeled cells with native Typst rules. The walkthrough below grows one slide through all three. The sections after it are the reference for each layer.
 
-#unreleased(calepin.elements.callout)[Painting a cell's own block with `set block` rules, positional bodies that fill every cell in order (so a single body fills the header), and combining positional bodies with `cells:` are new.]
+#unreleased(calepin.elements.callout)[Positional bodies that fill every cell in order (so a single body fills the header), and combining positional bodies with `cells:`, are new.]
 
 = Walkthrough
 
@@ -165,7 +165,7 @@ A built-in layout resolves to a grid of named cells like any other, so the same 
 Describe a custom grid by splitting the available space. `m.grids.columns` places cells side by side; `m.grids.rows` stacks them. Each string is a cell ID. Import Mosaic under a short alias so the grid constructors stay namespaced and native Typst `columns()` remains available:
 
 ```typ
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.2" as m
 ```
 
 Assign the grid to a binding, then pass it to `m.slide` through `layout:`. The slide's positional bodies fill the cells in source order:

@@ -101,7 +101,7 @@ Mosaic supports the two presentation aspect ratios built into Typst:
 Choose one with the `paper` argument.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup.with(paper: "16-9")
 
@@ -113,7 +113,7 @@ Choose one with the `paper` argument.
 ```
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup.with(paper: "4-3")
 
@@ -155,8 +155,6 @@ typst compile --pdf-standard ua-1 main.typ
 Three authoring requirements follow from the standard. First, PDF/UA-1 requires a properly nested heading tree that opens at level one. The built-in title layout tags the deck title as that level-one heading (kept out of the outline and the bookmarks, so navigation is unchanged), so a deck of `m.slide(layout: "title")` followed by `==` content slides exports as is. A hand-built cover, such as the image layout's `full` variant with the type written by hand, carries no heading of its own, so write its title as one rather than as plain text: `#heading(level: 1, outlined: false)[My talk]`, or `= My talk` to bookmark it too. Inside a slide body a heading renders in place and opens no slide; only headings at the top level of the document do that. Second, the document needs a title, which `setup(title: ..)` provides. Third, figures and math carry no description on their own: pass an `alt` string to `image` (or `m.components.image`) and to `math.equation` so a screen reader can voice them. Every equation counts, inline ones included, so `$x$` in prose becomes `#math.equation(alt: "x", $x$)`; math nested inside an equation that already has `alt` needs none of its own. An equation inside a steps command is rebuilt for each frame, so a missing `alt` there is reported against Mosaic's `incremental/transform.typ` rather than your line; the equation to fix is in that slide's stepped content.
 
 Theme chrome takes care of itself. Every built-in theme marks its progress ring, line, folio, or statusline as decoration, and Mono does the same for the `$` prompt before each slide heading, so a screen reader reads the slide's content and never the furniture. A `foreground:` or `background:` plane the deck supplies is content by default; wrap it in `pdf.artifact(..)` when it is decoration, and leave it alone when it carries meaning, such as a cover photograph with an `alt` string.
-
-> **Requires Mosaic 0.0.3.** The tagged title slide and the artifacted chrome are new. On the released 0.0.1 the title slide contributes no heading, so the deck must open with a `=` section heading before any `==` content slides, and the theme's slide number is announced on every slide. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.1`. See [Install](../start/install.md).
 
 ```typ
 #image("plot.png", alt: "Estimates rise steadily from 2010 to 2020.")
@@ -210,7 +208,7 @@ Another slide.
 ```
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 
 ## Methods
@@ -235,7 +233,7 @@ Mosaic, in contrast, is designed as a thin layer on Typst, rather than a framewo
 Here, for instance, a deck is given a dark page, red text, and larger headers, without a single Mosaic-specific styling command:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 #set page(fill: rgb("#111827"))
 #set text(fill: red)

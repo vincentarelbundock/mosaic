@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #let section-links() = context {
   let sections = query(heading.where(level: 1, outlined: true))

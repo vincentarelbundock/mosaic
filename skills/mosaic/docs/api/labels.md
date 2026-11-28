@@ -2,7 +2,7 @@
 
 Every part of a rendered slide carries a Typst label, and those labels are the whole styling surface. A deck reaches them with ordinary `show` rules, and a theme's `apply` reaches the same ones. This page is the complete inventory.
 
-> **Requires Mosaic 0.0.3.** `mosaic-section-title` on the visible section title and `mosaic-section-record` are new, as are `set block` rules on a cell label. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.1`. See [Install](../start/install.md).
+> **Requires Mosaic 0.0.3.** `mosaic-section-title` on the visible section title and `mosaic-section-record` are new. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.2`. See [Install](../start/install.md).
 
 Two kinds of rules cover a labeled region, split by what they touch. Properties of the content **inside** it pass through as ordinary `set` rules. Properties of its own block, its fill, stroke, and corner radius, are `set block` rules on the same label. The [styling](../appearance/styling.md) page explains that split in full.
 

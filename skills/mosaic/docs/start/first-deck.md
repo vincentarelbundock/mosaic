@@ -3,7 +3,7 @@
 First, import Mosaic and apply its setup rule:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 ```
 
@@ -17,7 +17,7 @@ The example below is a complete deck in that shape. It declares its title and au
 
 ```typ
 // Configure the deck once: identity, layouts, and a progress line.
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup.with(
   title: [Getting started],

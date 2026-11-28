@@ -21,7 +21,7 @@ Mosaic recognizes four layouts by name: `"content"`, `"title"`, `"section"`, and
 The content layout comes in four variants: `body`, `header-body`, `body-footer`, and `header-body-footer`. Each theme picks one; the default theme uses `header-body`. Ask a slide for another with `variant:`. The `==` heading then fills the header, the next block fills the body, and a third block fills the footer:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 
 #m.slide(layout: "content", variant: "header-body-footer")[
@@ -40,7 +40,7 @@ See [Footer and progress](../presenting/footer.md#default-footer-content) for re
 For a side-by-side comparison, set `columns: 2` and supply three [positional blocks](custom.md#filling-cells): header, left, right. Write the header as a `==` heading so the slide keeps its place in the outline:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 
 #m.slide(layout: "content", columns: 2)[== Three exams, equal weight][

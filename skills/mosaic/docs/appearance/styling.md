@@ -33,7 +33,7 @@ Everything about the deck's palette, overriding entries, the bundled palette col
 
 Target a cell by its label. Font, size, color, and alignment are `set text`, `set par`, and `set align`; the cell's own fill, stroke, and corner radius are `set block` on the same label. The [label reference](../api/labels.md) lists every label a slide emits:
 
-> **Requires Mosaic 0.0.3.** Painting a cell's own block with `set block` rules and the `compact-inset` spacing are new. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.1`. See [Install](../start/install.md).
+> **Requires Mosaic 0.0.3.** The `compact-inset` spacing is new. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.2`. See [Install](../start/install.md).
 
 ```typ
 #let ink = rgb("#20262d")
@@ -53,7 +53,7 @@ Target a cell by its label. Font, size, color, and alignment are `set text`, `se
 ```
 
 ```typ
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 #set page(fill: rgb("#f4f0e8"))
 #set text(fill: rgb("#20262d"))
@@ -148,7 +148,7 @@ Because the cell's own block obeys `set block` rules, a fill, stroke, or corner 
 ```
 
 ```typ
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 
 // Deck-wide baseline: one native block rule fills every header cell, and a
@@ -194,7 +194,7 @@ A cell that sits directly in an `auto` row hugs its content: the row is exactly 
 
 The default, `auto`, is 55% of `inset`. Setting it equal to `inset` gives a deep band with the same padding on all four sides, which leaves room for a logo placed in the foreground beside the title. The value applies to the compact cells of the built-in layouts and of your own grids alike, so a content slide built from a custom layout and an image slide in the same deck draw the same band. A cell that passes its own `inset:` keeps it.
 
-In the released 0.0.1 the built-in headers always take the shallow padding, and a compact cell in your own grid takes the full `inset` on every side.
+In the released 0.0.2 the built-in headers always take the shallow padding, and a compact cell in your own grid takes the full `inset` on every side.
 
 ## Properties an element pins on itself
 
@@ -261,7 +261,7 @@ Bundle repeated cell rules in a function and apply it once with `#show:`:
 ```
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 
 #let colors = (
@@ -304,7 +304,7 @@ Bundle repeated cell rules in a function and apply it once with `#show:`:
 ```
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 // A reusable custom look is a set of deck-wide rules on the content layout's
 // structural cells. Bundle them in one transformer and apply it once.
@@ -361,7 +361,7 @@ A [theme](themes.md) packages this pattern for a whole deck, and writing one is 
 `slide(invert: true)`, described under [Inverting one slide](colors.md#inverting-one-slide), swaps a whole slide's canvas and text within the palette. When you want finer control, invert selected cells with the same label rules as above. Pair each fill with the text color that reads against it, and apply both halves in the same rule: a `set block` rule fills the cell's own block and a neighboring `set text` colors the content inside it, so a helper that takes a `(fill, text)` pair can repaint any set of cells:
 
 ```typ
-#import "@local/mosaic:0.0.3" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 
 // A fill and the text that reads against it are one decision, so bind each

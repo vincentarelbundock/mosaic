@@ -7,7 +7,7 @@
 // components slide on surface panels and the three roles; and the last slide
 // inverts, showing the swap `slide(invert: true)` performs within the active
 // palette.
-#import "@preview/mosaic:0.0.1": layouts
+#import "@preview/mosaic:0.0.2": layouts
 #let author = layouts.author
 
 #let deck(m) = {

@@ -15,7 +15,7 @@ A complete 14-frame deck. Assets, Makefile, and the compiled PDF are in the [rep
 // surface() into `show label("mosaic-cell-ID")` rules.
 #import "preamble.typ": *
 #assert((
-  "setup", "slide", "note", "surface",
+  "setup", "slide", "note",
   "grids", "layouts", "steps", "components",
 ).all(name => name in m))
 #show: m.setup.with(title: [Greyscale], colors: greyscale)
@@ -367,7 +367,7 @@ A complete 14-frame deck. Assets, Makefile, and the compiled PDF are in the [rep
 // Deck-specific preamble. The look is the bundled default theme under a
 // custom greyscale palette, passed to `m.setup(colors: ..)` in main.typ; the
 // helpers below belong only to this deck.
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #let ink = rgb("#111111")
 #let paper = rgb("#f7f7f5")

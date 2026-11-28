@@ -464,7 +464,7 @@ A complete 17-frame deck. Assets, Makefile, and the compiled PDF are in the [rep
 // together with this deck's visual constants; importing this file with `*`
 // re-exports everything to main.typ. The helpers below belong to this deck's
 // content rather than to the theme.
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.2" as mosaic
 #import mosaic.themes.editorial as m
 
 // ── Colors ─────────────────────────────────────────────────────────────────

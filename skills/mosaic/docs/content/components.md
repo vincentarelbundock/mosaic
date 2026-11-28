@@ -2,14 +2,14 @@
 
 `m.components` provides reusable Typst content to place inside cells, or inside any native Typst composition. None of these create slides or grids on their own; they are values you place in a cell, a background, a foreground, or any native Typst composition. A component is transparent to Mosaic's own commands: a pause, a step, or a note written inside a `card`, `callout`, `quote`, `badge`, `divider`, or `figure` works as it does in the cell around it, and a dimmed component mutes its fill and border along with its text. Each function has an independent example and gallery. One member, `m.components.progress()`, is documented with the deck infrastructure on the [Footer and progress](../presenting/footer.md) page; it is ordinary content all the same and can sit in any cell.
 
-> **Requires Mosaic 0.0.3.** Steps and notes inside a component, and the quote's rail and native arguments, are new. The examples on this page compile under the released version as they stand. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.1`. See [Install](../start/install.md).
+> **Requires Mosaic 0.0.3.** Steps and notes inside a component, and the quote's rail and native arguments, are new. The examples on this page compile under the released version as they stand. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.2`. See [Install](../start/install.md).
 
 ## `card()`
 
 Wrap content in a clipped, bordered panel.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 
@@ -54,7 +54,7 @@ Wrap content in a clipped, bordered panel.
 Emphasize content with a colored side stripe and an optional title.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 
@@ -74,7 +74,7 @@ Emphasize content with a colored side stripe and an optional title.
 Create a compact inline badge with configurable corners and text styling.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 
@@ -100,7 +100,7 @@ Create a compact inline badge with configurable corners and text styling.
 Typeset a borderless quotation with an optional attribution. A `role:` other than `neutral`, or an explicit `accent:`, draws a rail down its left edge in that color; a plain quotation has none. The component is a superset of Typst's own `quote`, so `block:`, `quotes:`, and a label passed as `attribution:` keep their native meaning.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 #set page(fill: rgb("#f3f0e9"))
@@ -124,7 +124,7 @@ Typeset a borderless quotation with an optional attribution. A `role:` other tha
 Separate content with a horizontal line, with or without a label.
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 
 #show: m.setup
 

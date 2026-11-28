@@ -4,8 +4,6 @@
   thumbnail-gallery-items,
 )
 
-#import "/_includes/site.typ": unreleased
-
 #set document(title: [FAQ])
 #metadata((
   title: "FAQ",
@@ -165,8 +163,6 @@ Three authoring requirements follow from the standard. First, PDF/UA-1 requires 
 
 Theme chrome takes care of itself. Every built-in theme marks its progress ring, line, folio, or statusline as decoration, and Mono does the same for the `$` prompt before each slide heading, so a screen reader reads the slide's content and never the furniture. A `foreground:` or `background:` plane the deck supplies is content by default; wrap it in `pdf.artifact(..)` when it is decoration, and leave it alone when it carries meaning, such as a cover photograph with an `alt` string.
 
-#unreleased(calepin.elements.callout)[The tagged title slide and the artifacted chrome are new. On the released 0.0.1 the title slide contributes no heading, so the deck must open with a `=` section heading before any `==` content slides, and the theme's slide number is announced on every slide.]
-
 ```typ
 #image("plot.png", alt: "Estimates rise steadily from 2010 to 2020.")
 
@@ -224,7 +220,7 @@ Here is a simple deck, with the Touying implementation on the left, and Mosaic o
   Another slide.
   ```],
   [```typ
-  #import "@preview/mosaic:0.0.1" as m
+  #import "@preview/mosaic:0.0.2" as m
   #show: m.setup
 
   = Methods
@@ -250,7 +246,7 @@ Mosaic, in contrast, is designed as a thin layer on Typst, rather than a framewo
 Here, for instance, a deck is given a dark page, red text, and larger headers, without a single Mosaic-specific styling command:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 #show: m.setup
 #set page(fill: rgb("#111827"))
 #set text(fill: red)

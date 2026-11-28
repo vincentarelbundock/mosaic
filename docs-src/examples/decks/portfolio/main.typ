@@ -8,7 +8,7 @@
 // surface() into `show label("mosaic-cell-ID")` rules.
 #import "preamble.typ": *
 #assert((
-  "setup", "slide", "note", "surface",
+  "setup", "slide", "note",
   "grids", "layouts", "steps", "components",
 ).all(name => name in m))
 #show: m.setup.with(title: [Greyscale], colors: greyscale)

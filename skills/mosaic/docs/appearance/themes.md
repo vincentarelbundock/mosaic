@@ -2,7 +2,7 @@
 
 A theme decides how a deck looks: its colors, its type, and the way each slide arranges what you put on it. Every Mosaic deck uses a theme, even one that never mentions the word. Import the package without naming a theme and you get the default theme. Name a different one and the whole deck changes at once, without a single edit to your slides.
 
-> **Requires Mosaic 0.0.3.** `themes.decorate-heading` is new, and `setup(font:, base-size:)` now works under a custom theme that declares neither. Every example on this page compiles under the released version as it stands. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.1`. See [Install](../start/install.md).
+> **Requires Mosaic 0.0.3.** `themes.decorate-heading` is new, and `setup(font:, base-size:)` now works under a custom theme that declares neither. Every example on this page compiles under the released version as it stands. This is the development version, which is not on Typst Universe yet: a deck that uses it imports `@local/mosaic:0.0.3` rather than the released `@preview/mosaic:0.0.2`. See [Install](../start/install.md).
 
 ## Selecting themes
 
@@ -19,7 +19,7 @@ Five themes ship with the Mosaic package, and each is a design voice rather than
 There is no dark theme, because darkness is a palette rather than a design; the Colors section below flips a deck with one line. Import a theme as `m` and the whole deck follows it:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.2" as mosaic
 #import mosaic.themes.metropolis as m
 
 #show: m.setup.with(
@@ -42,12 +42,12 @@ The default import is the bundled default theme. These two spellings are the sam
 
 ```typ
 // Default spelling
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 ```
 
 ```typ
 // Explicit spelling
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.2" as mosaic
 #import mosaic.themes.default as m
 ```
 
@@ -84,7 +84,7 @@ Each example imports that one name and ends with `#deck(m)`, which keeps the lis
 Five short wrappers each import a different theme and render the running example:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.2" as mosaic
 #import mosaic.themes.default as m
 #import "_tour-deck.typ": deck
 
@@ -111,7 +111,7 @@ A deck reaches every part of its theme through `setup`, without writing a theme 
 A theme's palette is one flat dictionary of eight colors; the [Colors](colors.md) page describes what each entry paints. Pass `colors:` to `setup` to repaint any of them. The override is partial. Naming one color keeps the rest of the theme's palette:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.2" as mosaic
 #import mosaic.themes.default as m
 #import "_tour-deck.typ": deck
 
@@ -136,7 +136,7 @@ Both decks below run the default theme. Only the one on the right passes a dicti
 Polarity is a palette, not a theme. The package bundles one dark palette, and passing it to `colors:` flips any theme to a dark deck; everything adapts on its own, as the [Colors](colors.md#bundled-palettes) page explains:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 #import "_tour-deck.typ": deck
 
 #show: m.setup.with(colors: m.palettes.dark)
@@ -153,7 +153,7 @@ Beyond the polarity pair, the bundled `palettes` collection composes with every 
 A theme's typography starts from two options every theme has, `font` and `base-size`, which `setup` takes under any theme. The rest is ordinary `set` and `show` rules. Rules you write after `#show: m.setup` layer on top of the theme's. There is no separate typography system:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.2" as mosaic
 #import mosaic.themes.default as m
 #import "_tour-deck.typ": deck
 
@@ -173,7 +173,7 @@ The [styling](styling.md) page covers those rules in full. The [label reference]
 Choices written that way stay in the deck that holds them. A theme carries the same ones: the font and base size become its `options`, and its `apply` is the same list of rules in a function. Moving them there leaves the result identical. It also makes them portable. Run the base theme's `apply` first to keep the rules it already carries:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.2" as mosaic
 #import mosaic.themes.default as m
 #import "_tour-deck.typ": deck
 
@@ -201,7 +201,7 @@ Choices written that way stay in the deck that holds them. A theme carries the s
 Every theme supplies three configurable slide layouts: `content`, `title`, and `section`. To customize them, pass a `layouts:` dictionary to `setup`. A replacement is either another built-in layout or a grid of your own:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.2" as mosaic
 #import mosaic.themes.default as m
 
 #import "_tour-deck.typ": deck
@@ -235,7 +235,7 @@ Everything above lives in the deck that uses it. Move on when you start copying 
 Bind one in the deck itself to see the whole shape at once. A theme needs only `colors`:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.2" as mosaic
 
 #let mine = (
   name: "Mine",
@@ -299,7 +299,7 @@ apply: (body, colors: (:), options: (:)) => {
 Every bundled theme exports the `definition` behind its own `setup`. Varying a bundled look is therefore an ordinary dictionary merge:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.2" as mosaic
 #import mosaic.themes.metropolis as base
 
 #let mine = base.definition + (
@@ -324,7 +324,7 @@ Once a theme is worth reusing, give it a file of its own. That file re-exports t
 
 ```typ
 // mytheme.typ
-#import "@preview/mosaic:0.0.1": slide, note, fit, grids, steps, components, themes
+#import "@preview/mosaic:0.0.2": slide, note, fit, grids, steps, components, themes
 #import "definition.typ": definition
 #import "layouts.typ" as layouts
 #let setup = themes.setup(definition)
@@ -352,10 +352,10 @@ It is the running example once more, this time under a theme of its own:
 
 ```typ
 // A theme with one option of its own, in the importable shape a deck expects.
-#import "@preview/mosaic:0.0.1": (
+#import "@preview/mosaic:0.0.2": (
   slide, note, fit, grids, steps, components, themes, layouts,
 )
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.2" as mosaic
 
 #let base = mosaic.themes.default.definition
 
@@ -448,7 +448,7 @@ We then hand that layout to `setup` under the name `content`:
 For completeness, the whole deck:
 
 ```typ
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.2" as mosaic
 #import mosaic.themes.metropolis as m
 
 // a slide is composed of a grid

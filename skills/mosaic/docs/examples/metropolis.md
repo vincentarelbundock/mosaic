@@ -241,7 +241,7 @@ subsequent decisions #cite(<bellman1957>).
 // that belong to this deck's content rather than to the theme:
 //   - fletcher  : node/edge diagrams (the state machine)
 //   - cetz      : general vector drawing (the Bloch sphere)
-#import "@preview/mosaic:0.0.1" as mosaic
+#import "@preview/mosaic:0.0.2" as mosaic
 #import mosaic.themes.metropolis as m
 #import "@preview/fletcher:0.5.8" as fletcher
 #import "@preview/cetz:0.5.2"

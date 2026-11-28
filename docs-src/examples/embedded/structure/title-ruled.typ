@@ -1,4 +1,4 @@
-#import "@preview/mosaic:0.0.1" as m
+#import "@preview/mosaic:0.0.2" as m
 #import "_title-info.typ": info
 
 #show: m.setup.with(..info)
