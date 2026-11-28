@@ -27,3 +27,21 @@ curl -fsSL https://raw.githubusercontent.com/vincentarelbundock/mosaic/main/inst
 ```
 
 To work on Mosaic itself, clone [the repository](https://github.com/vincentarelbundock/mosaic) and run `make install`, which runs the same script against the working tree instead of fetching a snapshot; `make uninstall` removes it.
+
+## A skill for AI coding assistants
+
+The repository ships an [agent skill](https://agentskills.io) that teaches an AI coding assistant to write and debug Mosaic decks. Its `SKILL.md` is a working tutorial: the authoring workflow, the common slide types, the setup options, and how to diagnose a failed compile. Beside it, a `docs/` folder holds this whole website as Markdown, including every guide page with its example sources, the API reference with each parameter's type and default, and the source of every example deck. The assistant opens one page at a time when a task needs it, so the full documentation is available without filling its context.
+
+Install it with the [`skills`](https://github.com/vercel-labs/skills) command-line tool, which needs Node.js. It detects the assistants on your machine and asks which of them should get the skill:
+
+```sh
+npx skills add vincentarelbundock/mosaic
+```
+
+That installs the skill into the current project, where it can be committed for everyone who works there. Add `--global` to install it for your user account instead, in every project. The assistant then uses the skill on its own whenever a task involves Mosaic slides.
+
+The skill tracks the repository's `main` branch, so it describes the development version and marks what the released version lacks, as this site does. To pick up a newer version later:
+
+```sh
+npx skills update mosaic
+```

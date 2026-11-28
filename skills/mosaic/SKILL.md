@@ -1,6 +1,6 @@
 ---
 name: mosaic
-description: Complete tutorial and workflow for creating slide decks with the Mosaic package for Typst. Use when creating, editing, styling, debugging, or verifying Typst presentations built with Mosaic, or when the user mentions Mosaic slides, Typst slides, slide grids, named cells, themes, incremental reveals, speaker notes, handouts, or Mosaic compilation errors. Also covers common slide types: title, section divider, bulleted content, two-column, figure, image-beside-text, full-bleed photograph, big-number, and table slides.
+description: "Complete tutorial and workflow for creating slide decks with the Mosaic package for Typst. Use when creating, editing, styling, debugging, or verifying Typst presentations built with Mosaic, or when the user mentions Mosaic slides, Typst slides, slide grids, named cells, themes, incremental reveals, speaker notes, handouts, or Mosaic compilation errors. Also covers common slide types: title, section divider, bulleted content, two-column, figure, image-beside-text, full-bleed photograph, big-number, and table slides."
 ---
 
 # Mosaic for Typst

@@ -6,7 +6,7 @@ Each entry lists the page's sections, so open only the page a task needs.
 
 ## Start
 
-- [Install](start/install.md): The development version
+- [Install](start/install.md): The development version; A skill for AI coding assistants
 - [Get started](start/first-deck.md)
 - [Concepts](reference/concepts.md): Vocabulary; Anatomy of a slide deck
 - [Examples](examples.md)
